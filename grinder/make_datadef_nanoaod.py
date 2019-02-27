@@ -11,11 +11,10 @@ import warnings
 import os
 import difflib
 
-uproot_xrootd_opts = dict(chunkbytes=30*1024, limitbytes=20*(1024**2))
 fnaleos = "root://cmsxrootd.fnal.gov/"
-#coffeabeans2016 = "/eos/uscms/store/group/lpccoffea/coffeabeans/nano_2016"
-coffeabeans2016 = "/eos/uscms/store/group/lpcstop/noreplica/NanoTuples/v1a"
-coffeabeans2017 = "/eos/uscms/store/group/lpccoffea/coffeabeans/nano_2017"
+#coffeabeans2016 = ["/eos/uscms/store/group/lpccoffea/coffeabeans/nano_2016"]
+coffeabeans2016 = ["/eos/uscms/store/group/lpccoffea/coffeabeans/nano_2016","/eos/uscms/store/group/lpcstop/noreplica/NanoTuples/v1a"]
+coffeabeans2017 = ["/eos/uscms/store/group/lpccoffea/coffeabeans/nano_2017"]
 
 def parse_xsec(cfgfile):
     xsec_dict = {}
@@ -53,22 +52,20 @@ def parse_xsec(cfgfile):
 
 xsections = parse_xsec("data/xsec.conf")
 datadef = {}
-for dataset in xsections.keys():
-    print("looking into",coffeabeans2016+"/"+dataset)
-    try:
-        os.system("find "+coffeabeans2016+"/"+dataset+" -name *.root > "+dataset+".txt")
-    except:
-        print(dataset, "not found")
-        continue
-    else:
-        print(dataset,"found")
+for folder in coffeabeans2016:
+    print("Opening",folder)
+    for dataset in xsections.keys():
+        print("Looking into",folder+"/"+dataset)
+        os.system("find "+folder+"/"+dataset+" -name *.root > "+dataset+".txt")
         flist = open(dataset+".txt")
         urllist = [fnaleos+path.strip() for path in flist]
         xs = xsections[dataset]
-        datadef[dataset] = {
-            'files': urllist,
-            'xs': xs,
-        }
+        if urllist:
+            datadef[dataset] = {
+                'files': urllist,
+                'xs': xs,
+                }
+
 with open("data/coffeabeans2016.json", "w") as fout:
     json.dump(datadef, fout, indent=4)
 os.system("rm *.txt")
