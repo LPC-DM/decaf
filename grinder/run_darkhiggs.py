@@ -14,7 +14,7 @@ import numpy as np
 from fnal_column_analysis_tools import hist
 from saiyan import Builder
 
-with open("metadata/datadef.json") as fin:
+with open("data/coffeabeans2016.json") as fin:
     datadef = json.load(fin)
 
 # [pb]
@@ -23,11 +23,6 @@ lumi = 1000.  # [1/pb]
 
 dataset = hist.Cat("dataset", "Primary dataset")
 
-gencat = hist.Bin("AK8Puppijet0_isHadronicV", "Matched", [0,1,2,3,9,10,11])
-# one can relabel intervals, although process mapping obviates this
-titles = ["QCD", "V(light) matched", "V(c) matched", "V(b) matched", "Top W(ud)+b", "Top W(cs)+b"]
-for i,v in enumerate(gencat.identifiers()):
-    setattr(v, 'label', titles[i])
 
 jetpt = hist.Bin("AK8Puppijet0_pt", "Jet $p_T$", [450, 500, 550, 600, 675, 800, 1000])
 jetpt_coarse = hist.Bin("AK8Puppijet0_pt", "Jet $p_T$", [450, 800])

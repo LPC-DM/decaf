@@ -2,15 +2,19 @@
 
 source /cvmfs/sft.cern.ch/lcg/views/LCG_94python3/x86_64-slc6-gcc62-opt/setup.sh
 
-pip install --user uproot
-pip install --user --upgrade uproot-methods
+pip install --user uproot==3.3.2
+pip install --user --upgrade uproot-methods==0.3.3
 # 1.14 is kindof old but pinned by other packages it seems
 # pip install --user --upgrade numpy
 
 # get dependencies for it
-pip install --user fnal-column-analysis-tools
+#pip install --user fnal-column-analysis-tools
+pip install --index-url https://test.pypi.org/simple/ --no-deps saiyan
+
 # get latest and greatest
-git clone git@github.com:CoffeaTeam/fnal-column-analysis-tools.git
+#git clone git@github.com:CoffeaTeam/fnal-column-analysis-tools.git
+git clone https://github.com/CoffeaTeam/fnal-column-analysis-tools.git
+git clone https://github.com/mcremone/saiyan.git
 
 # progressbar, sliders, etc.
 jupyter nbextension enable --py widgetsnbextension
