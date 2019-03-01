@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 import uproot, uproot_methods
 import numpy as np
-from saiyan import Builder
+from Builder import Initialize
 
 
-def analysis(dataset, file):
-
+def analysis(dataset, hists, file):
+    print("Dealing with:",dataset)
     tree = uproot.open(file)["Events"]
+    run_tree = uproot.open(file)["Runs"]
+    sumw = run_tree.array("genEventSumw")[0]
+
     e = Initialize({'pt':tree.array("Electron_pt"),
                     'eta':tree.array("Electron_eta"),
                     'phi':tree.array("Electron_phi"),
@@ -110,15 +113,17 @@ def analysis(dataset, file):
     oneA = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)
 
     sr = zeroL.sum()&skinny.sum()
-
+    
+    arrays = []
     hout = {}
     for k in hists.keys():
         h = hists[k].copy(content=False)
-        if k == 'sumw':
-            h.fill(dataset=dataset, sumw=genW)
+        if k == 'recoil':
+            h.fill(dataset=dataset,recoil=met[sr].pt.flatten())
         else:
             h.fill(dataset=dataset, **arrays, weight=weight)
         hout[k] = h
-    return dataset, tree.numentries, hout
+    
 
-
+    return dataset, sumw, tree.numentries, hout
+        

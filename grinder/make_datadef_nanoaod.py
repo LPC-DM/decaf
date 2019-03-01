@@ -56,9 +56,10 @@ for folder in coffeabeans2016:
     print("Opening",folder)
     for dataset in xsections.keys():
         print("Looking into",folder+"/"+dataset)
-        os.system("find "+folder+"/"+dataset+" -name *.root > "+dataset+".txt")
+        os.system("find "+folder+"/"+dataset+" -name \'*.root\' > "+dataset+".txt")
         flist = open(dataset+".txt")
-        urllist = [fnaleos+path.strip() for path in flist]
+#        urllist = [fnaleos+path.strip() for path in flist]
+        urllist = [path.strip() for path in flist]
         xs = xsections[dataset]
         if urllist:
             datadef[dataset] = {
