@@ -24,17 +24,9 @@ with open("data/coffeabeans2016.json") as fin:
 
 dataset_xs = {k: v['xs'] for k,v in datadef.items()}
 lumi = 1000.  # [1/pb]
-dataset = hist.Cat("dataset", "Primary dataset")
-
-
 monojet_recoil_binning = [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0]
-recoil = hist.Bin("recoil","Hadronic Recoil",monojet_recoil_binning)
-
-hists = {}
-hists['recoil'] = hist.Hist("Events", dataset, recoil)
 
 tstart = time.time()
-#for h in hists.values(): h.clear()
 nevents = defaultdict(lambda: 0.)
 
 def clean(val, default):
@@ -46,6 +38,9 @@ fileslice = slice(None)
 with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
     futures = set()
     for dataset, info in datadef.items():
+        hists = {}
+        hists['recoil'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("recoil","Hadronic Recoil",monojet_recoil_binning))
+        for h in hists.values(): h.clear()
         if options.dataset:
             if options.dataset in dataset:
                 futures.update(executor.submit(analysis, dataset, hists, file) for file in info['files'][fileslice])
