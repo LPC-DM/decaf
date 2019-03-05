@@ -27,8 +27,10 @@ lumi = 1000.  # [1/pb]
 monojet_recoil_binning = [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0]
 
 tstart = time.time()
-nevents = defaultdict(lambda: 0.)
-sumw = defaultdict(lambda: 0.)
+#nevents = defaultdict(lambda: 0.)
+#sumw = defaultdict(lambda: 0.)
+nevents = 0
+sumw = 0
 
 def clean(val, default):
     val[np.isnan(val)|(val==-999.)] = default
@@ -56,8 +58,8 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
                 finished = set(job for job in futures if job.done())
                 for job in finished:
                     dataset, sumws, nentries, hout = job.result()
-                    nevents[dataset] += nentries
-                    sumw[dataset] += sumws
+                    nevents += nentries
+                    sumw += sumws
                     for k in hout.keys():
                         hists[k] += hout[k]
                     processed += 1
@@ -72,18 +74,17 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
             raise
 
 
-        scale = {}
-        print(dataset,"nevents:",nevents[dataset],"sumw:",sumw[dataset])
-        scale[dataset] = lumi*dataset_xs[dataset] / sumw[dataset]
-
-        for h in hists.values(): h.scale(scale, axis="dataset")
+        print(dataset,"nevents:",nevents,"sumw:",sumw)
+        scale = lumi*dataset_xs[dataset] / sumw
+        print("xsec weight",scale)
+        for h in hists.values(): h.scale(scale)
 
         dt = time.time() - tstart
 
-        print("%.2f us*cpu/event" % (1e6*dt*nworkers/sum(nevents.values()), ))
+        print("%.2f us*cpu/event" % (1e6*dt*nworkers/nevents, ))
         nbins = sum(sum(arr.size for arr in h._sumw.values()) for h in hists.values())
         nfilled = sum(sum(np.sum(arr>0) for arr in h._sumw.values()) for h in hists.values())
-        print("Processed %.1fM events" % (sum(nevents.values())/1e6, ))
+        print("Processed %.1fM events" % (nevents/1e6, ))
         print("Filled %.1f bins" % nbins)
         print("Nonzero bins: %.1f%%" % (100*nfilled/nbins, ))
 
