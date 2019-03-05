@@ -13,20 +13,21 @@ import uproot, uproot_methods
 import numpy as np
 from fnal_column_analysis_tools import hist
 #from saiyan import Builder
-from analysis.darkhiggs import analysis
+from analysis.darkhiggs import analysis,hists
 
 parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 parser.add_option('-y', '--year', help='year', dest='year')
+parser.add_option('-s', '--selection', help='selection', dest='selection')
+parser.add_option('-l', '--lumi', help='lumi', dest='lumi')
 (options, args) = parser.parse_args()
 
 with open("../beans/"+options.year+".json") as fin:
     datadef = json.load(fin)
 
 dataset_xs = {k: v['xs'] for k,v in datadef.items()}
-lumi = 1000.  # [1/pb]
-monojet_recoil_binning = [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0]
-
+lumi = 1000.
+if options.lumi: lumi=lumi*float(options.lumi)
 tstart = time.time()
 nevents = 0
 sumw = 0
@@ -40,12 +41,10 @@ fileslice = slice(None)
 with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
     futures = set()
     for dataset, info in datadef.items():
-        hists = {}
-        hists['recoil'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("recoil","Hadronic Recoil",monojet_recoil_binning))
         for h in hists.values(): h.clear()
         if options.dataset:
             if options.dataset in dataset:
-                futures.update(executor.submit(analysis, dataset_xs[dataset], dataset, hists, file) for file in info['files'][fileslice])
+                futures.update(executor.submit(analysis, options.selection, dataset_xs[dataset], dataset, hists, file) for file in info['files'][fileslice])
             else:
                 continue
         else:

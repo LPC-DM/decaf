@@ -2,9 +2,30 @@
 import uproot, uproot_methods
 import numpy as np
 from Builder import Initialize
+from fnal_column_analysis_tools import hist
+
+hists = {}
+hists['recoil'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("recoil","Hadronic Recoil",[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0]))
+hists['mindphi'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("mindphi","Min dPhi(MET,AK4s)",15,0,6.28))
+hists['fjmass'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("fjmass","AK15 Jet Mass",50,20,250))
+hists['j1pt'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("j1pt","AK4 Leading Jet Pt",50,30,500))
+hists['fj1pt'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("fj1pt","AK15 Leading Jet Pt",50,200,700))
+hists['njets'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("njets","AK4 Number of Jets",6,0,5))
+hists['nfjets'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("nfjets","AK15 Number of Jets",4,0,3))
+hists['TvsQCD'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("TvsQCD","TvsQCD",15,0,1))
+hists['WvsQCD'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("WvsQCD","WvsQCD",15,0,1))
+hists['ZvsQCD'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZvsQCD","ZvsQCD",15,0,1))
+hists['VvsQCD'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("VvsQCD","VvsQCD",15,0,1))
+hists['ZHbbvsQCD'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZHbbvsQCD","ZHbbvsQCD",15,0,1))
+hists['ZHccvsQCD'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZHccvsQCD","ZHccvsQCD",15,0,1))
+hists['WcqvsQCD'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("WcqvsQCD","WcqvsQCD",15,0,1))
+hists['WqqvsQCD'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("WqqvsQCD","WqqvsQCD",15,0,1))
+hists['ZbbvsQCD'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZbbvsQCD","ZbbvsQCD",15,0,1))
+hists['ZccvsQCD'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZccvsQCD","ZccvsQCD",15,0,1))
+hists['ZqqvsQCD'] = hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZqqvsQCD","ZqqvsQCD",15,0,1))
 
 
-def analysis(isMC, dataset, hists, file):
+def analysis(selection, isMC, dataset, hists, file):
     print("Dealing with:",dataset)
     tree = uproot.open(file)["Events"]
     genw = 1
@@ -13,7 +34,6 @@ def analysis(isMC, dataset, hists, file):
         genw = tree.array("genWeight")
         run_tree = uproot.open(file)["Runs"]
         sumw = run_tree.array("genEventSumw")[0]
-    arrays = {}
 
     e = Initialize({'pt':tree.array("Electron_pt"),
                     'eta':tree.array("Electron_eta"),
@@ -69,7 +89,24 @@ def analysis(isMC, dataset, hists, file):
                      'eta':tree.array('AK15Puppi_eta'),
                      'phi':tree.array('AK15Puppi_phi'),
                      'mass':tree.array('AK15Puppi_mass'),
-                     'jetId':tree.array('AK15Puppi_jetId')})
+                     'jetId':tree.array('AK15Puppi_jetId'),
+                     'probTbcq':tree.array('AK15Puppi_probTbcq'),
+                     'probTbqq':tree.array('AK15Puppi_probTbqq'),
+                     'probTbc':tree.array('AK15Puppi_probTbc'),
+                     'probTbq':tree.array('AK15Puppi_probTbq'),
+                     'probWcq':tree.array('AK15Puppi_probWcq'),
+                     'probWqq':tree.array('AK15Puppi_probWqq'),
+                     'probZbb':tree.array('AK15Puppi_probZbb'),
+                     'probZcc':tree.array('AK15Puppi_probZcc'),
+                     'probZqq':tree.array('AK15Puppi_probZqq'),
+                     'probHbb':tree.array('AK15Puppi_probHbb'),
+                     'probHcc':tree.array('AK15Puppi_probHcc'),
+                     'probHqqqq':tree.array('AK15Puppi_probHqqqq'),
+                     'probQCDbb':tree.array('AK15Puppi_probQCDbb'),
+                     'probQCDcc':tree.array('AK15Puppi_probQCDcc'),
+                     'probQCDb':tree.array('AK15Puppi_probQCDb'),
+                     'probQCDc':tree.array('AK15Puppi_probQCDc'),
+                     'probQCDothers':tree.array('AK15Puppi_probQCDothers')})
     fj['isgood'] = (fj.pt > 200)&(abs(fj.eta)<2.4)&(fj.jetId > 0)
     fj['isclean'] =~fj.match(pho,1.5)&~fj.match(mu,1.5)&~fj.match(e,1.5)&fj.isgood
     fj_good=fj[fj.isgood]
@@ -77,6 +114,18 @@ def analysis(isMC, dataset, hists, file):
     fj_ntot=fj.counts
     fj_ngood=fj_good.counts
     fj_nclean=fj_clean.counts
+    fj['probQCD'] = fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
+    fj['TvsQCD'] = (fj.probTbcq+fj.probTbqq)/fj.probQCD
+    fj['WvsQCD'] = (fj.probWcq+fj.probWqq)/fj.probQCD
+    fj['ZvsQCD'] = (fj.probZbb+fj.probZcc+fj.probZqq)/fj.probQCD
+    fj['VvsQCD'] = (fj.probZbb+fj.probZcc+fj.probZqq+fj.probWcq+fj.probWqq)/fj.probQCD
+    fj['ZHbbvsQCD'] = (fj.probZbb+fj.probHbb)/fj.probQCD
+    fj['ZHccvsQCD'] = (fj.probZcc+fj.probHcc)/fj.probQCD
+    fj['WcqvsQCD'] = fj.probWcq/fj.probQCD
+    fj['WqqvsQCD'] = fj.probWqq/fj.probQCD
+    fj['ZbbvsQCD'] = fj.probZbb/fj.probQCD
+    fj['ZccvsQCD'] = fj.probZcc/fj.probQCD
+    fj['ZqqvsQCD'] = fj.probZqq/fj.probQCD
 
     j = Initialize({'pt':tree.array('Jet_pt'),
                     'eta':tree.array('Jet_eta'),
@@ -101,26 +150,70 @@ def analysis(isMC, dataset, hists, file):
 
     diele = e_loose.distincts().i0+e_loose.distincts().i1
     dimu = m_loose.distincts().i0+m_loose.distincts().i1
-    uwm = met+m_loose
-    uwe = met+e_loose
-    uzmm = met+dimu
-    uzee = met+diele
-    upho = met+pho_loose
 
-    skinny = (j_nclean>0)&(j_clean.pt.max()>100)
-    loose = (fj_nclean>0)
-    zeroL = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(met.pt>200)&(abs(met.delta_phi(j_clean)).min()>0.5)
-    oneM = (e_nloose==0)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)
-    oneE = (e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
-    twoM = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)
-    twoE = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
-    oneA = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)
-    sr = zeroL&skinny
-    arrays['recoil'] = met.pt
+    u={}
+    u["zeroL"] = met
+    u["oneM"] = met+m_loose
+    u["oneE"] = met+e_loose
+    u["twoM"] = met+dimu
+    u["twoE"] = met+diele
+    u["oneA"] = met+pho_loose
+
+    skinny={}
+    loose={}
+    inclusive={}
+    for k in u.keys():
+        if k == selection:
+            skinny[k] = (j_nclean>0)&(j_clean.pt.max()>100)&(abs(u[k].delta_phi(j_clean)).min()>0.5)
+            loose[k] = (fj_nclean>0)&(fj_clean.pt.max()>200)&(abs(u[k].delta_phi(j_clean)).min()>0.8)
+            inclusive[k] = skinny[k]|loose[k]
+ 
+    selections={}
+    selections["zeroL"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
+    selections["oneM"] = (e_nloose==0)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)
+    selections["oneE"] = (e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
+    selections["twoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(dimu.mass>60)&(dimu.mass<120)
+    selections["twoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele.mass>60)&(diele.mass<120)
+    selections["oneA"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)
+
+    for k in u.keys():
+        if k ==selection:
+            skinny[k] = skinny[k]&selections[k]&(u[k].pt>200)
+            loose[k] = loose[k]&selections[k]&(u[k].pt>200)
+            inclusive[k] = inclusive[k]&selections[k]&(u[k].pt>200)
+
+    variables = {}
+    variables['fjmass'] = fj_clean.mass
+    variables['j1pt'] = j_clean.pt.max()
+    variables['fj1pt'] = fj_clean.pt.max()
+    variables['njets'] = j_nclean
+    variables['nfjets'] = fj_nclean
+    variables['TvsQCD'] = fj.TvsQCD
+    variables['WvsQCD'] = fj.WvsQCD
+    variables['ZvsQCD'] = fj.ZvsQCD
+    variables['VvsQCD'] = fj.VvsQCD
+    variables['ZHbbvsQCD'] = fj.ZHbbvsQCD
+    variables['ZHccvsQCD'] = fj.ZHccvsQCD
+    variables['WcqvsQCD'] = fj.WcqvsQCD
+    variables['WqqvsQCD'] = fj.WqqvsQCD
+    variables['ZbbvsQCD'] = fj.ZbbvsQCD
+    variables['ZccvsQCD'] = fj.ZccvsQCD
+    variables['ZqqvsQCD'] = fj.ZqqvsQCD
+    
+
     hout = {}
     for k in hists.keys():
         h = hists[k].copy(content=False)
-        h.fill(dataset=dataset, **arrays, weight=genw*sr)
+        for r in u.keys():
+            if r ==selection:
+                if k == 'recoil':
+                    h.fill(dataset=dataset, recoil=u[r].pt, weight=genw*inclusive[r])
+                elif k == 'mindphi':
+                    h.fill(dataset=dataset, mindphi=abs(u[k].delta_phi(j_clean)).min(), weight=genw*inclusive[r])
+                else:
+                    h.fill(dataset=dataset, **variables, weight=genw*inclusive[r])
+            else:
+                continue
         hout[k] = h
     
 
