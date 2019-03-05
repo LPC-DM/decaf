@@ -7,6 +7,7 @@ from Builder import Initialize
 def analysis(dataset, hists, file):
     print("Dealing with:",dataset)
     tree = uproot.open(file)["Events"]
+    genw = tree.array("genWeight")
     run_tree = uproot.open(file)["Runs"]
     sumw = run_tree.array("genEventSumw")[0]
 
@@ -119,7 +120,7 @@ def analysis(dataset, hists, file):
     for k in hists.keys():
         h = hists[k].copy(content=False)
         if k == 'recoil':
-            h.fill(dataset=dataset,recoil=met[sr].pt.flatten())
+            h.fill(dataset=dataset,recoil=met[sr].pt.flatten(), weight=genw)
         else:
             h.fill(dataset=dataset, **arrays, weight=weight)
         hout[k] = h

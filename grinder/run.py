@@ -28,6 +28,7 @@ monojet_recoil_binning = [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0
 
 tstart = time.time()
 nevents = defaultdict(lambda: 0.)
+sumw = defaultdict(lambda: 0.)
 
 def clean(val, default):
     val[np.isnan(val)|(val==-999.)] = default
@@ -54,8 +55,9 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
             while len(futures) > 0:
                 finished = set(job for job in futures if job.done())
                 for job in finished:
-                    dataset, sumw, nentries, hout = job.result()
+                    dataset, sumws, nentries, hout = job.result()
                     nevents[dataset] += nentries
+                    sumw[dataset] += sumws
                     for k in hout.keys():
                         hists[k] += hout[k]
                     processed += 1
@@ -71,8 +73,8 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
 
 
         scale = {}
-        print(dataset,"nevents:",nevents[dataset],"sumw:",sumw)
-        scale[dataset] = lumi*dataset_xs[dataset] / sumw
+        print(dataset,"nevents:",nevents[dataset],"sumw:",sumw[dataset])
+        scale[dataset] = lumi*dataset_xs[dataset] / sumw[dataset]
 
         for h in hists.values(): h.scale(scale, axis="dataset")
 
