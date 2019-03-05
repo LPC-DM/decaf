@@ -13,21 +13,14 @@ import uproot, uproot_methods
 import numpy as np
 from fnal_column_analysis_tools import hist
 #from saiyan import Builder
-from darkhiggs import analysis
-from process import *
+from analysis.darkhiggs import analysis
 
 parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
+parser.add_option('-y', '--year', help='year', dest='year')
 (options, args) = parser.parse_args()
 
-pds = {}
-for k,v in processes.items():
-    if v[1]=='MC':
-        pds[k] = v[2]  
-    else:
-        pds[k] = -1
-
-with open("data/coffeabeans2016.json") as fin:
+with open("../beans/"+options.year+".json") as fin:
     datadef = json.load(fin)
 
 dataset_xs = {k: v['xs'] for k,v in datadef.items()}
@@ -35,8 +28,6 @@ lumi = 1000.  # [1/pb]
 monojet_recoil_binning = [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0]
 
 tstart = time.time()
-#nevents = defaultdict(lambda: 0.)
-#sumw = defaultdict(lambda: 0.)
 nevents = 0
 sumw = 0
 
@@ -83,9 +74,8 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
 
 
         print(dataset,"nevents:",nevents,"sumw:",sumw)
-        #        scale = lumi*dataset_xs[dataset] / sumw
-        scale = lumi*pds[dataset] / sumw
-        print("xsec:",pds[dataset],"xsec weight:",scale)
+        scale = lumi*dataset_xs[dataset] / sumw
+        print("xsec:",dataset_xs[dataset],"xsec weight:",scale)
         for h in hists.values(): h.scale(scale)
 
         dt = time.time() - tstart
@@ -98,6 +88,6 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
         print("Nonzero bins: %.1f%%" % (100*nfilled/nbins, ))
 
         # Pickle is not very fast or memory efficient, will be replaced by something better soon
-        with gzip.open("hists/"+dataset+".pkl.gz", "wb") as fout:
+        with gzip.open("../pods/"+options.year+"/"+dataset+".pkl.gz", "wb") as fout:
             pickle.dump(hists, fout)
 
