@@ -4,13 +4,17 @@ import numpy as np
 from Builder import Initialize
 
 
-def analysis(dataset, hists, file):
+def analysis(isMC, dataset, hists, file):
     print("Dealing with:",dataset)
     tree = uproot.open(file)["Events"]
-    genw = tree.array("genWeight")
-    run_tree = uproot.open(file)["Runs"]
-    sumw = run_tree.array("genEventSumw")[0]
+    genw = 1
+    sumw = 1
+    if isMC != -1:
+        genw = tree.array("genWeight")
+        run_tree = uproot.open(file)["Runs"]
+        sumw = run_tree.array("genEventSumw")[0]
     arrays = {}
+
     e = Initialize({'pt':tree.array("Electron_pt"),
                     'eta':tree.array("Electron_eta"),
                     'phi':tree.array("Electron_phi"),

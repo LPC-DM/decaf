@@ -19,7 +19,9 @@ parser.add_option('-y', '--year', help='year', dest='year')
 fnaleos = "root://cmsxrootd.fnal.gov/"
 
 beans={}
-beans['2016'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/nano_2016","/eos/uscms/store/group/lpcstop/noreplica/NanoTuples/v1a"]
+beans['2016'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/nano_2016",
+                 "/eos/uscms/store/group/lpcstop/noreplica/NanoTuples/v1a",
+                 "/eos/uscms/store/user/hqu/NanoTuples/v1d"]
 beans['2017'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/nano_2017"]
 
 def parse_xsec(cfgfile):

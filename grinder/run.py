@@ -45,7 +45,7 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
         for h in hists.values(): h.clear()
         if options.dataset:
             if options.dataset in dataset:
-                futures.update(executor.submit(analysis, dataset, hists, file) for file in info['files'][fileslice])
+                futures.update(executor.submit(analysis, dataset_xs[dataset], dataset, hists, file) for file in info['files'][fileslice])
             else:
                 continue
         else:
@@ -74,7 +74,8 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
 
 
         print(dataset,"nevents:",nevents,"sumw:",sumw)
-        scale = lumi*dataset_xs[dataset] / sumw
+        scale = 1
+        if dataset_xs[dataset]!= -1: scale = lumi*dataset_xs[dataset] / sumw
         print("xsec:",dataset_xs[dataset],"xsec weight:",scale)
         for h in hists.values(): h.scale(scale)
         print("bin content:",h.project('dataset').values()[()])
