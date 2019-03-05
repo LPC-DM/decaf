@@ -14,10 +14,18 @@ import numpy as np
 from fnal_column_analysis_tools import hist
 #from saiyan import Builder
 from darkhiggs import analysis
+from process import *
 
 parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 (options, args) = parser.parse_args()
+
+pds = {}
+for k,v in processes.items():
+    if v[1]=='MC':
+        pds[k] = v[2]  
+    else:
+        pds[k] = -1
 
 with open("data/coffeabeans2016.json") as fin:
     datadef = json.load(fin)
@@ -75,8 +83,9 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
 
 
         print(dataset,"nevents:",nevents,"sumw:",sumw)
-        scale = lumi*dataset_xs[dataset] / sumw
-        print("xsec weight",scale)
+        #        scale = lumi*dataset_xs[dataset] / sumw
+        scale = lumi*pds[dataset] / sumw
+        print("xsec:",pds[dataset],"xsec weight:",scale)
         for h in hists.values(): h.scale(scale)
 
         dt = time.time() - tstart
