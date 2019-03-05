@@ -120,7 +120,7 @@ def analysis(dataset, hists, file):
     for k in hists.keys():
         h = hists[k].copy(content=False)
         if k == 'recoil':
-            h.fill(dataset=dataset,recoil=met[sr].pt.flatten(), weight=genw)
+            h.fill(dataset=dataset,recoil=met[sr].pt.flatten())#, weight=genw)
         else:
             h.fill(dataset=dataset, **arrays, weight=weight)
         hout[k] = h
