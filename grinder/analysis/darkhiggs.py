@@ -10,7 +10,7 @@ def analysis(dataset, hists, file):
     genw = tree.array("genWeight")
     run_tree = uproot.open(file)["Runs"]
     sumw = run_tree.array("genEventSumw")[0]
-
+    arrays = {}
     e = Initialize({'pt':tree.array("Electron_pt"),
                     'eta':tree.array("Electron_eta"),
                     'phi':tree.array("Electron_phi"),
@@ -103,26 +103,20 @@ def analysis(dataset, hists, file):
     uzee = met+diele
     upho = met+pho_loose
 
-    highest_pt = j_clean.pt.argmax()
-    skinny = (j_nclean>0)&(j_clean.pt[highest_pt]>100)
+    skinny = (j_nclean>0)&(j_clean.pt.max()>100)
     loose = (fj_nclean>0)
-    zeroL = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(met.pt>200)&(met.delta_phi(met.closest(j_clean))>0.5)
+    zeroL = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(met.pt>200)&(abs(met.delta_phi(j_clean)).min()>0.5)
     oneM = (e_nloose==0)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)
     oneE = (e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
     twoM = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)
     twoE = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
     oneA = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)
-
-    sr = zeroL.sum()&skinny.sum()
-    
-    arrays = []
+    sr = zeroL&skinny
+    arrays['recoil'] = met.pt
     hout = {}
     for k in hists.keys():
         h = hists[k].copy(content=False)
-        if k == 'recoil':
-            h.fill(dataset=dataset,recoil=met[sr].pt.flatten(), weight=genw)
-        else:
-            h.fill(dataset=dataset, **arrays, weight=weight)
+        h.fill(dataset=dataset, **arrays, weight=genw*sr)
         hout[k] = h
     
 

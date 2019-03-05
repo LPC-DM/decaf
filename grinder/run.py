@@ -77,7 +77,7 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
         scale = lumi*dataset_xs[dataset] / sumw
         print("xsec:",dataset_xs[dataset],"xsec weight:",scale)
         for h in hists.values(): h.scale(scale)
-
+        print("bin content:",h.project('dataset').values()[()])
         dt = time.time() - tstart
 
         print("%.2f us*cpu/event" % (1e6*dt*nworkers/nevents, ))
