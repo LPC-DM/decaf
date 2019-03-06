@@ -13,7 +13,7 @@ import uproot, uproot_methods
 import numpy as np
 from fnal_column_analysis_tools import hist
 #from saiyan import Builder
-from analysis.darkhiggs import analysis,hists
+from analysis.darkhiggs import analysis,hists,samples
 
 parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
@@ -27,11 +27,11 @@ with open("../beans/"+options.year+".json") as fin:
 
 dataset_xs = {k: v['xs'] for k,v in datadef.items()}
 lumi = 1000.
-if options.lumi: lumi=lumi*float(options.lumi)
-tstart = time.time()
 nevents = 0
 sumw = 0
+if options.lumi: lumi=lumi*float(options.lumi)
 
+tstart = time.time()
 def clean(val, default):
     val[np.isnan(val)|(val==-999.)] = default
     return val
@@ -44,11 +44,28 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
         for h in hists.values(): h.clear()
         if options.dataset:
             if options.dataset in dataset:
-                futures.update(executor.submit(analysis, options.selection, dataset_xs[dataset], dataset, hists, file) for file in info['files'][fileslice])
+                if options.selection:
+                    futures.update(executor.submit(analysis, options.selection, dataset_xs[dataset], dataset, hists, file) for file in info['files'][fileslice])
+                else:
+                    for k in samples.keys():
+                        for i in range (0,len(samples[k])):
+                            if samples[k][i] in dataset:
+                                futures.update(executor.submit(analysis, k, dataset_xs[dataset], dataset, hists, file) for file in info['files'][fileslice])
+                    continue
             else:
                 continue
         else:
-            futures.update(executor.submit(analysis, dataset, hists, file) for file in info['files'][fileslice])
+            if options.selection:
+                for i in range (0,len(samples[options.selection])):
+                    if samples[options.selection][i] in dataset:
+                        futures.update(executor.submit(analysis, options.selection, dataset_xs[dataset], dataset, hists, file) for file in info['files'][fileslice])
+                continue
+            else:
+                for k in samples.keys():
+                    for i in range (0,len(samples[k])):
+                        if samples[k][i] in dataset:
+                            futures.update(executor.submit(analysis, k, dataset_xs[dataset], dataset, hists, file) for file in info['files'][fileslice])
+                continue
         try:
             total = len(futures)
             processed = 0
