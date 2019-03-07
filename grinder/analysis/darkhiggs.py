@@ -220,8 +220,8 @@ def analysis(selection, xsec, dataset, hists, file):
                     h.fill(dataset=dataset, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*inclusive[r])
                 else:
                     h.fill(dataset=dataset, **variables, weight=genw*inclusive[r])
+                hout[k+'_'+r] = h
             else:
                 continue
-        hout[k] = h
     
     return dataset, sumw, tree.numentries, hout

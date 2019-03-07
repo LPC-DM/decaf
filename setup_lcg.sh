@@ -2,6 +2,7 @@
 
 source /cvmfs/sft.cern.ch/lcg/views/LCG_94python3/x86_64-slc6-gcc62-opt/setup.sh
 
+pip install --user fnal-column-analysis-tools
 pip install --user uproot==3.3.2
 pip install --user --upgrade uproot-methods==0.3.3
 # 1.14 is kindof old but pinned by other packages it seems
