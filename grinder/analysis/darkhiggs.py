@@ -36,10 +36,11 @@ samples = {
     "isoneA":('GJets','QCD','SinglePhoton')
 }
 
-def analysis(selection, xsec, dataset, file):
+def analysis(selection, year, xsec, dataset, file):
     tree = uproot.open(file)["Events"]
     genw = 1
     sumw = 1
+
     if xsec != -1:
         genw = tree.array("genWeight")
         run_tree = uproot.open(file)["Runs"]
@@ -49,13 +50,22 @@ def analysis(selection, xsec, dataset, file):
                     'eta':tree.array("Electron_eta"),
                     'phi':tree.array("Electron_phi"),
                     'mass':tree.array("Electron_mass"),
-                    'iso':tree.array('Electron_pfRelIso03_all'),
                     'dxy':tree.array('Electron_dxy'),
-                    'dz':tree.array('Electron_dz'),
-                    'loose_id':tree.array('Electron_mvaSpring16GP_WP90'),
-                    'tight_id':tree.array('Electron_mvaSpring16GP_WP80')})
-    e['isloose'] = (e.pt>7)&(abs(e.eta)<2.4)&(abs(e.dxy)<0.05)&(abs(e.dz)<0.2)&(e.iso<0.4)&(e.loose_id)
-    e['istight'] = (e.pt>30)&(abs(e.eta)<2.4)&(abs(e.dxy)<0.05)&(abs(e.dz)<0.2)&(e.tight_id)&(e.iso<0.06)
+                    'dz':tree.array('Electron_dz')})
+
+    if '2016' in year:
+        e['loose_id'] = tree.array('Electron_mvaSpring16GP_WP90')
+        e['tight_id']  = tree.array('Electron_mvaSpring16GP_WP80')
+        e['iso'] = tree.array('Electron_pfRelIso03_all')
+        e['isloose'] = (e.pt>7)&(abs(e.eta)<2.4)&(abs(e.dxy)<0.05)&(abs(e.dz)<0.2)&(e.iso<0.4)&(e.loose_id)
+        e['istight'] = (e.pt>30)&(abs(e.eta)<2.4)&(abs(e.dxy)<0.05)&(abs(e.dz)<0.2)&(e.tight_id)&(e.iso<0.06)
+
+    elif '2017' in year:
+        e['loose_id'] = tree.array('Electron_mvaFall17Iso_WP90')
+        e['tight_id'] = tree.array('Electron_mvaFall17Iso_WP80')
+        e['isloose'] = (e.pt>7)&(abs(e.eta)<2.4)&(abs(e.dxy)<0.05)&(abs(e.dz)<0.2)&(e.loose_id)                    
+        e['istight'] = (e.pt>30)&(abs(e.eta)<2.4)&(abs(e.dxy)<0.05)&(abs(e.dz)<0.2)&(e.tight_id)
+
     e_loose = e[e.isloose]
     e_tight = e[e.istight]
     e_ntot = e.counts
@@ -77,9 +87,13 @@ def analysis(selection, xsec, dataset, file):
                       'eta':tree.array('Tau_eta'),
                       'phi':tree.array('Tau_phi'),
                       'mass':tree.array('Tau_mass'),
-                      'decayMode':tree.array('Tau_idDecayMode'),
-                      'id':tree.array('Tau_idMVAnew')})
-    tau['isloose']=(tau.counts>0)&(tau.pt>18)&(abs(tau.eta)<2.3)&(tau.decayMode)&((tau.id&2)!=0)
+                      'decayMode':tree.array('Tau_idDecayMode')})
+    if '2016' in year:
+        tau['id'] = tree.array('Tau_idMVAnew')
+        tau['isloose']=(tau.counts>0)&(tau.pt>18)&(abs(tau.eta)<2.3)&(tau.decayMode)&((tau.id&2)!=0)
+    elif '2017' in year:
+        #Need to find equivalent for 2017
+        tau['isloose']=(tau.counts>0)&(tau.pt>18)&(abs(tau.eta)<2.3)&(tau.decayMode)
     tau_loose=tau[tau.isloose]
     tau_ntot=tau.counts
     tau_nloose=tau_loose.counts
