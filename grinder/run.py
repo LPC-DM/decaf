@@ -25,6 +25,8 @@ parser.add_option('-l', '--lumi', help='lumi', dest='lumi')
 with open("../beans/"+options.year+".json") as fin:
     datadef = json.load(fin)
 
+for h in hists.values(): h.clear()
+
 dataset_xs = {k: v['xs'] for k,v in datadef.items()}
 lumi = 1000.
 nevents = 0
@@ -41,31 +43,13 @@ fileslice = slice(None)
 with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
     futures = set()
     for dataset, info in datadef.items():
-        for h in hists.values(): h.clear()
-        if options.dataset:
-            if options.dataset in dataset:
-                if options.selection:
-                    futures.update(executor.submit(analysis, options.selection, dataset_xs[dataset], dataset, hists, file) for file in info['files'][fileslice])
-                else:
-                    for k in samples.keys():
-                        for i in range (0,len(samples[k])):
-                            if samples[k][i] in dataset:
-                                futures.update(executor.submit(analysis, k, dataset_xs[dataset], dataset, hists, file) for file in info['files'][fileslice])
-                    continue
-            else:
-                continue
-        else:
-            if options.selection:
-                for i in range (0,len(samples[options.selection])):
-                    if samples[options.selection][i] in dataset:
-                        futures.update(executor.submit(analysis, options.selection, dataset_xs[dataset], dataset, hists, file) for file in info['files'][fileslice])
-                continue
-            else:
-                for k in samples.keys():
-                    for i in range (0,len(samples[k])):
-                        if samples[k][i] in dataset:
-                            futures.update(executor.submit(analysis, k, dataset_xs[dataset], dataset, hists, file) for file in info['files'][fileslice])
-                continue
+        if options.dataset and options.dataset not in dataset: continue
+        for k,v in samples.items():
+            if options.selection and options.selection not in k: continue    
+            for i in range (0,len(v)):
+                if v[i] not in dataset: continue
+                print(dataset)
+                futures.update(executor.submit(analysis, k, dataset_xs[dataset], dataset, hists, file) for file in info['files'][fileslice])
         try:
             total = len(futures)
             processed = 0
@@ -77,8 +61,8 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
                     sumw += sumws
                     for k in hout.keys():
                         hists[k] += hout[k]
-                    processed += 1
                     print("Processing: done with % 4d / % 4d files" % (processed, total))
+                    processed += 1
                 futures -= finished
             del finished
         except KeyboardInterrupt:
@@ -94,7 +78,6 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
         if dataset_xs[dataset]!= -1: scale = lumi*dataset_xs[dataset] / sumw
         print("xsec:",dataset_xs[dataset],"xsec weight:",scale)
         for h in hists.values(): h.scale(scale)
-        print("bin content:",h.project('dataset').values()[()])
         dt = time.time() - tstart
 
         print("%.2f us*cpu/event" % (1e6*dt*nworkers/nevents, ))

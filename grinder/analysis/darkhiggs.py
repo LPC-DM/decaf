@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import uproot, uproot_methods
 import numpy as np
+np.seterr(divide='ignore', invalid='ignore')
 from Builder import Initialize
 from fnal_column_analysis_tools import hist
 
@@ -12,8 +13,6 @@ hists = {
     'njets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("njets","AK4 Number of Jets",6,0,5)),
     'nfjets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("nfjets","AK15 Number of Jets",4,0,3)),
     'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("fjmass","AK15 Jet Mass",50,20,250)),
-}
-'''
     'TvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("TvsQCD","TvsQCD",15,0,1)),
     'WvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("WvsQCD","WvsQCD",15,0,1)),
     'ZvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZvsQCD","ZvsQCD",15,0,1)),
@@ -25,24 +24,23 @@ hists = {
     'ZbbvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZbbvsQCD","ZbbvsQCD",15,0,1)),
     'ZccvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZccvsQCD","ZccvsQCD",15,0,1)),
     'ZqqvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZqqvsQCD","ZqqvsQCD",15,0,1))
-'''
+}
 
 
 samples = {
-    "iszeroL":['ZJets','WJets','DY','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','MET'],
-    "isoneM":['WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','MET'],
-    "isoneE":['WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','SingleElectron'],
-    "istwoM":['WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','VH_HToBB','WminusH','WplusH','ttHTobb','MET'],
-    "istwoE":['WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','VH_HToBB','WminusH','WplusH','ttHTobb','SingleElectron'],
-    "isoneA":['GJets','QCD','SinglePhoton']
+    "iszeroL":('ZJets','WJets','DY','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','MET'),
+    "isoneM":('WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','MET'),
+    "isoneE":('WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','SingleElectron'),
+    "istwoM":('WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','VH_HToBB','WminusH','WplusH','ttHTobb','MET'),
+    "istwoE":('WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','VH_HToBB','WminusH','WplusH','ttHTobb','SingleElectron'),
+    "isoneA":('GJets','QCD','SinglePhoton')
 }
 
-def analysis(selection, isMC, dataset, hists, file):
-    print("Dealing with:",dataset)
+def analysis(selection, xsec, dataset, hists, file):
     tree = uproot.open(file)["Events"]
     genw = 1
     sumw = 1
-    if isMC != -1:
+    if xsec != -1:
         genw = tree.array("genWeight")
         run_tree = uproot.open(file)["Runs"]
         sumw = run_tree.array("genEventSumw")[0]
@@ -75,13 +73,11 @@ def analysis(selection, isMC, dataset, hists, file):
     m_loose=mu[mu.isloose]
     mu_ntot = mu.counts
     mu_nloose = m_loose.counts
-
     tau = Initialize({'pt':tree.array('Tau_pt'),
                       'eta':tree.array('Tau_eta'),
                       'phi':tree.array('Tau_phi'),
                       'mass':tree.array('Tau_mass'),
                       'decayMode':tree.array('Tau_idDecayMode'),
-                      'decayModeNew':tree.array('Tau_idDecayModeNewDMs'),
                       'id':tree.array('Tau_idMVAnew')})
     tau['isloose']=(tau.counts>0)&(tau.pt>18)&(abs(tau.eta)<2.3)&(tau.decayMode)&((tau.id&2)!=0)
     tau_loose=tau[tau.isloose]
@@ -199,20 +195,19 @@ def analysis(selection, isMC, dataset, hists, file):
     variables['fj1pt'] = fj_clean.pt.max()
     variables['njets'] = j_nclean
     variables['nfjets'] = fj_nclean
-    variables['fjmass'] = fj_clean[fj_clean.pt.argmax()].mass.flatten()
-    '''
-    variables['TvsQCD'] = fj_clean[fj_clean.pt.argmax()].TvsQCD
-    variables['WvsQCD'] = fj_clean[fj_clean.pt.argmax()].WvsQCD
-    variables['ZvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZvsQCD
-    variables['VvsQCD'] = fj_clean[fj_clean.pt.argmax()].VvsQCD
-    variables['ZHbbvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZHbbvsQCD
-    variables['ZHccvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZHccvsQCD
-    variables['WcqvsQCD'] = fj_clean[fj_clean.pt.argmax()].WcqvsQCD
-    variables['WqqvsQCD'] = fj_clean[fj_clean.pt.argmax()].WqqvsQCD
-    variables['ZbbvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZbbvsQCD
-    variables['ZccvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZccvsQCD
-    variables['ZqqvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZqqvsQCD
-    '''
+    variables['fjmass'] = fj_clean[fj_clean.pt.argmax()].mass.sum()
+    variables['TvsQCD'] = fj_clean[fj_clean.pt.argmax()].TvsQCD.sum()
+    variables['WvsQCD'] = fj_clean[fj_clean.pt.argmax()].WvsQCD.sum()
+    variables['ZvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZvsQCD.sum()
+    variables['VvsQCD'] = fj_clean[fj_clean.pt.argmax()].VvsQCD.sum()
+    variables['ZHbbvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZHbbvsQCD.sum()
+    variables['ZHccvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZHccvsQCD.sum()
+    variables['WcqvsQCD'] = fj_clean[fj_clean.pt.argmax()].WcqvsQCD.sum()
+    variables['WqqvsQCD'] = fj_clean[fj_clean.pt.argmax()].WqqvsQCD.sum()
+    variables['ZbbvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZbbvsQCD.sum()
+    variables['ZccvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZccvsQCD.sum()
+    variables['ZqqvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZqqvsQCD.sum()
+    
 
     hout = {}
     for k in hists.keys():
@@ -229,6 +224,4 @@ def analysis(selection, isMC, dataset, hists, file):
                 continue
         hout[k] = h
     
-
     return dataset, sumw, tree.numentries, hout
-        
