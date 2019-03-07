@@ -6,24 +6,24 @@ from Builder import Initialize
 from fnal_column_analysis_tools import hist
 
 hists = {
-    'recoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("recoil","Hadronic Recoil",[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
-    'mindphi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("mindphi","Min dPhi(MET,AK4s)",15,0,6.28)),
-    'j1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("j1pt","AK4 Leading Jet Pt",50,30,500)),
-    'fj1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("fj1pt","AK15 Leading Jet Pt",50,200,700)),
-    'njets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("njets","AK4 Number of Jets",6,0,5)),
-    'nfjets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("nfjets","AK15 Number of Jets",4,0,3)),
-    'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("fjmass","AK15 Jet Mass",50,20,250)),
-    'TvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("TvsQCD","TvsQCD",15,0,1)),
-    'WvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("WvsQCD","WvsQCD",15,0,1)),
-    'ZvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZvsQCD","ZvsQCD",15,0,1)),
-    'VvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("VvsQCD","VvsQCD",15,0,1)),
-    'ZHbbvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZHbbvsQCD","ZHbbvsQCD",15,0,1)),
-    'ZHccvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZHccvsQCD","ZHccvsQCD",15,0,1)),
-    'WcqvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("WcqvsQCD","WcqvsQCD",15,0,1)),
-    'WqqvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("WqqvsQCD","WqqvsQCD",15,0,1)),
-    'ZbbvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZbbvsQCD","ZbbvsQCD",15,0,1)),
-    'ZccvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZccvsQCD","ZccvsQCD",15,0,1)),
-    'ZqqvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Bin("ZqqvsQCD","ZqqvsQCD",15,0,1))
+    'recoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("recoil","Hadronic Recoil",[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
+    'mindphi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("mindphi","Min dPhi(MET,AK4s)",15,0,6.28)),
+    'j1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("j1pt","AK4 Leading Jet Pt",50,30,500)),
+    'fj1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("fj1pt","AK15 Leading Jet Pt",50,200,700)),
+    'njets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("njets","AK4 Number of Jets",6,0,5)),
+    'nfjets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("nfjets","AK15 Number of Jets",4,0,3)),
+    'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("fjmass","AK15 Jet Mass",50,20,250)),
+    'TvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("TvsQCD","TvsQCD",15,0,1)),
+    'WvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("WvsQCD","WvsQCD",15,0,1)),
+    'ZvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("ZvsQCD","ZvsQCD",15,0,1)),
+    'VvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("VvsQCD","VvsQCD",15,0,1)),
+    'ZHbbvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("ZHbbvsQCD","ZHbbvsQCD",15,0,1)),
+    'ZHccvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("ZHccvsQCD","ZHccvsQCD",15,0,1)),
+    'WcqvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("WcqvsQCD","WcqvsQCD",15,0,1)),
+    'WqqvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("WqqvsQCD","WqqvsQCD",15,0,1)),
+    'ZbbvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("ZbbvsQCD","ZbbvsQCD",15,0,1)),
+    'ZccvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("ZccvsQCD","ZccvsQCD",15,0,1)),
+    'ZqqvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("ZqqvsQCD","ZqqvsQCD",15,0,1))
 }
 
 
@@ -213,15 +213,13 @@ def analysis(selection, xsec, dataset, file):
     for k in hists.keys():
         h = hists[k].copy(content=False)
         for r in u.keys():
-            if selection in r:
-                if k == 'recoil':
-                    h.fill(dataset=dataset, recoil=u[r].pt, weight=genw*inclusive[r])
-                elif k == 'mindphi':
-                    h.fill(dataset=dataset, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*inclusive[r])
-                else:
-                    h.fill(dataset=dataset, **variables, weight=genw*inclusive[r])
-                hout[k+'_'+r] = h
+            if selection not in r: continue
+            if k == 'recoil':
+                h.fill(dataset=dataset, region=r, recoil=u[r].pt, weight=genw*inclusive[r])
+            elif k == 'mindphi':
+                h.fill(dataset=dataset, region=r, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*inclusive[r])
             else:
-                continue
+                h.fill(dataset=dataset, region=r, **variables, weight=genw*inclusive[r])
+        hout[k] = h
     
     return dataset, sumw, tree.numentries, hout
