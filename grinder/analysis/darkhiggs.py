@@ -36,7 +36,7 @@ samples = {
     "isoneA":('GJets','QCD','SinglePhoton')
 }
 
-def analysis(selection, xsec, dataset, hists, file):
+def analysis(selection, xsec, dataset, file):
     tree = uproot.open(file)["Events"]
     genw = 1
     sumw = 1

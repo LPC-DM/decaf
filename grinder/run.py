@@ -13,7 +13,7 @@ import uproot, uproot_methods
 import numpy as np
 from fnal_column_analysis_tools import hist
 #from saiyan import Builder
-from analysis.darkhiggs import analysis,hists,samples
+from analysis.darkhiggs import analysis,samples
 
 parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
@@ -25,8 +25,8 @@ parser.add_option('-l', '--lumi', help='lumi', dest='lumi')
 with open("../beans/"+options.year+".json") as fin:
     datadef = json.load(fin)
 
-for h in hists.values(): h.clear()
-
+#for h in hists.values(): h.clear()
+hists = {}
 dataset_xs = {k: v['xs'] for k,v in datadef.items()}
 lumi = 1000.
 nevents = 0
@@ -49,7 +49,7 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
             for i in range (0,len(v)):
                 if v[i] not in dataset: continue
                 print(dataset)
-                futures.update(executor.submit(analysis, k, dataset_xs[dataset], dataset, hists, file) for file in info['files'][fileslice])
+                futures.update(executor.submit(analysis, k, dataset_xs[dataset], dataset, file) for file in info['files'][fileslice])
         try:
             total = len(futures)
             processed = 0
@@ -60,7 +60,8 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
                     nevents += nentries
                     sumw += sumws
                     for k in hout.keys():
-                        hists[k] += hout[k]
+                        if k in hists: hists[k] += hout[k]
+                        else: hists[k]= hout[k]
                     print("Processing: done with % 4d / % 4d files" % (processed, total))
                     processed += 1
                 futures -= finished
