@@ -28,7 +28,7 @@ hists = {
 
 
 samples = {
-    "iszeroL":('ZJets','WJets','DY','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','MET'),
+    "iszeroL":('WJets','DY','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB'),
     "isoneM":('WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','MET'),
     "isoneE":('WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','SingleElectron'),
     "istwoM":('WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','VH_HToBB','WminusH','WplusH','ttHTobb','MET'),
@@ -162,10 +162,10 @@ def analysis(selection, xsec, dataset, file):
     u={}
     u["iszeroL"] = met
     u["isoneM"] = met+m_loose
-    u["isoneE"] = met+e_loose
-    u["istwoM"] = met+dimu
-    u["istwoE"] = met+diele
-    u["isoneA"] = met+pho_loose
+    u["isoneE"] = met+e_loose[e_loose.pt.argmax()]
+    u["istwoM"] = met+dimu[dimu.pt.argmax()]
+    u["istwoE"] = met+diele[diele.pt.argmax()]
+    u["isoneA"] = met+pho_loose[pho_loose.pt.argmax()]
 
     skinny={}
     loose={}
