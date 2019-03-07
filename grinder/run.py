@@ -49,8 +49,9 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
             for i in range (0,len(v)):
                 if v[i] not in dataset: continue
                 print(dataset)
-                futures.update(executor.submit(analysis, k, dataset_xs[dataset], dataset, file) for file in info['files'][fileslice])
+                futures.update(executor.submit(analysis, k, options.year, dataset_xs[dataset], dataset, file) for file in info['files'][fileslice])
         if(len(futures)==0): continue
+
         try:
             total = len(futures)
             processed = 0
