@@ -80,9 +80,9 @@ def analysis(selection, year, xsec, dataset, file):
                      'dxy':tree.array('Muon_dxy'),
                      'dz':tree.array('Muon_dz')})
     mu['isloose']=(mu.counts>0)&(mu.pt>5)&(abs(mu.eta)<2.4)&(abs(mu.dxy)<0.5)&(abs(mu.dz)<1.0)&(mu.iso<0.4)
-    m_loose=mu[mu.isloose]
+    mu_loose=mu[mu.isloose]
     mu_ntot = mu.counts
-    mu_nloose = m_loose.counts
+    mu_nloose = mu_loose.counts
     tau = Initialize({'pt':tree.array('Tau_pt'),
                       'eta':tree.array('Tau_eta'),
                       'phi':tree.array('Tau_phi'),
@@ -171,15 +171,15 @@ def analysis(selection, year, xsec, dataset, file):
                       'mass':0})
 
     diele = e_loose.distincts().i0+e_loose.distincts().i1
-    dimu = m_loose.distincts().i0+m_loose.distincts().i1
+    dimu = mu_loose.distincts().i0+mu_loose.distincts().i1
 
     u={}
     u["iszeroL"] = met
-    u["isoneM"] = met
-    u["isoneE"] = met
-    u["istwoM"] = met
-    u["istwoE"] = met
-    u["isoneA"] = met
+    u["isoneM"] = met+mu_loose[mu_loose.pt.argmax()].sum()
+    u["isoneE"] = met+e_loose[e_loose.pt.argmax()].sum()
+    u["istwoM"] = met+dimu[dimu.pt.argmax()].sum()
+    u["istwoE"] = met+diele[diele.pt.argmax()].sum()
+    u["isoneA"] = met+pho_loose[pho_loose.pt.argmax()].sum()
 
     skinny={}
     loose={}
