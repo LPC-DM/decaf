@@ -179,7 +179,11 @@ def analysis(selection, year, xsec, dataset, file):
     u["iszeroL"] = met
     u["isoneM"] = met+mu_loose[mu_loose.pt.argmax()].sum()
     u["isoneE"] = met+e_loose[e_loose.pt.argmax()].sum()
-    u["istwoM"] = met+dimu[dimu.pt.argmax()].sum()
+    #Temporary patch to avoid crashes when finding max of completely empty array
+    if dimu.size < 0:
+        u["istwoM"] = met+dimu[dimu.pt.argmax()].sum()
+    else:
+        u["istwoM"] = met
     u["istwoE"] = met+diele[diele.pt.argmax()].sum()
     u["isoneA"] = met+pho_loose[pho_loose.pt.argmax()].sum()
 
