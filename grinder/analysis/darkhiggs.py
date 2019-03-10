@@ -28,7 +28,7 @@ hists = {
 
 
 samples = {
-    "iszeroL":('TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB'),
+    "iszeroL":('ZJets','WJets','DY','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','MET'),
     "isoneM":('WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','MET'),
     "isoneE":('WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','SingleElectron'),
     "istwoM":('WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','VH_HToBB','WminusH','WplusH','ttHTobb','MET'),
@@ -172,7 +172,9 @@ def analysis(selection, year, xsec, dataset, file):
 
     diele = e_loose.distincts().i0+e_loose.distincts().i1
     dimu = mu_loose.distincts().i0+mu_loose.distincts().i1
-
+    print('before',file,mu_nloose)
+    print(dimu[dimu.pt.argmax()].sum())
+    print('after',file,dataset)
     u={}
     u["iszeroL"] = met
     u["isoneM"] = met+mu_loose[mu_loose.pt.argmax()].sum()

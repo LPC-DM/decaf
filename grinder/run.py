@@ -38,7 +38,7 @@ def clean(val, default):
     val[np.isnan(val)|(val==-999.)] = default
     return val
 
-nworkers = 22
+nworkers = 1
 fileslice = slice(None)
 with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
     futures = set()
@@ -49,7 +49,9 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
             for i in range (0,len(v)):
                 if v[i] not in dataset: continue
                 print(dataset)
-                futures.update(executor.submit(analysis, k, options.year, dataset_xs[dataset], dataset, file) for file in info['files'][fileslice])
+#                futures.update(executor.submit(analysis, k, options.year, dataset_xs[dataset], dataset, file) for file in info['files'][fileslice])
+                for file in info['files'][fileslice]:
+                    analysis(k, options.year, dataset_xs[dataset], dataset, file)
         if(len(futures)==0): continue
 
         try:
