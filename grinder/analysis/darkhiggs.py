@@ -176,30 +176,30 @@ def analysis(selection, year, xsec, dataset, file):
     u={}
     u["iszeroL"] = met
 
-    if mu_loose.size > 0:
-        u["isoneM"] = met+mu_loose[mu_loose.pt.argmax()].sum()
-    else:
+    if (mu_loose.content==None).all():
         u["isoneM"] = met
-
-    if e_loose.size > 0:
-        u["isoneE"] = met+e_loose[e_loose.pt.argmax()].sum()
     else:
+        u["isoneM"] = met+mu_loose[mu_loose.pt.argmax()].sum()
+
+    if (e_loose.content==None).all():
         u["isoneE"] = met
-
-    if dimu.size > 0:
-        u["istwoM"] = met+dimu[dimu.pt.argmax()].sum()
     else:
+        u["isoneE"] = met+e_loose[e_loose.pt.argmax()].sum()
+
+    if (dimu.content==None).all():
         u["istwoM"] = met
-
-    if diele.size > 0:
-        u["istwoE"] = met+diele[diele.pt.argmax()].sum()
     else:
+        u["istwoM"] = met+dimu[dimu.pt.argmax()].sum()
+
+    if (diele.content==None).all():
         u["istwoE"] = met
-
-    if pho_loose.size > 0:
-        u["isoneA"] = met+pho_loose[pho_loose.pt.argmax()].sum()
     else:
+        u["istwoE"] = met+diele[diele.pt.argmax()].sum()
+
+    if (pho_loose.content==None).all():
         u["isoneA"] = met
+    else:
+        u["isoneA"] = met+pho_loose[pho_loose.pt.argmax()].sum()
 
     skinny={}
     loose={}
