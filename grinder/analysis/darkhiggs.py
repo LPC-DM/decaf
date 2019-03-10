@@ -176,30 +176,30 @@ def analysis(selection, year, xsec, dataset, file):
     u={}
     u["iszeroL"] = met
 
-    if (mu_loose.content==None).all():
-        u["isoneM"] = met
-    else:
+    if mu_loose.content.size>0:
         u["isoneM"] = met+mu_loose[mu_loose.pt.argmax()].sum()
-
-    if (e_loose.content==None).all():
-        u["isoneE"] = met
     else:
+        u["isoneM"] = met
+
+    if e_loose.content.size>0:
         u["isoneE"] = met+e_loose[e_loose.pt.argmax()].sum()
-
-    if (dimu.content==None).all():
-        u["istwoM"] = met
     else:
+        u["isoneE"] = met
+
+    if dimu.content.size>0:
         u["istwoM"] = met+dimu[dimu.pt.argmax()].sum()
-
-    if (diele.content==None).all():
-        u["istwoE"] = met
     else:
+        u["istwoM"] = met
+
+    if diele.content.size>0:
         u["istwoE"] = met+diele[diele.pt.argmax()].sum()
-
-    if (pho_loose.content==None).all():
-        u["isoneA"] = met
     else:
+        u["istwoE"] = met
+
+    if pho_loose.content.size>0:
         u["isoneA"] = met+pho_loose[pho_loose.pt.argmax()].sum()
+    else:
+        u["isoneA"] = met
 
     skinny={}
     loose={}
@@ -214,8 +214,14 @@ def analysis(selection, year, xsec, dataset, file):
     selections["iszeroL"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
     selections["isoneM"] = (e_nloose==0)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)
     selections["isoneE"] = (e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
-    selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(dimu.mass>60)&(dimu.mass<120)
-    selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele.mass>60)&(diele.mass<120)
+    if dimu.content.size > 0:
+        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(dimu[dimu.pt.argmax()].mass.sum()>60)&(dimu[dimu.pt.argmax()].mass.sum()<120)
+    else:
+        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)
+    if diele.content.size > 0:
+        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele[diele.pt.argmax()].mass.sum()>60)&(diele[diele.pt.argmax()].mass.sum()<120)
+    else:
+        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
     selections["isoneA"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)
 
     for k in u.keys():
