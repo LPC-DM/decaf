@@ -172,20 +172,34 @@ def analysis(selection, year, xsec, dataset, file):
 
     diele = e_loose.distincts().i0+e_loose.distincts().i1
     dimu = mu_loose.distincts().i0+mu_loose.distincts().i1
-    print('before',file,mu_nloose)
-    print(dimu[dimu.pt.argmax()].sum())
-    print('after',file,dataset)
+
     u={}
     u["iszeroL"] = met
-    u["isoneM"] = met+mu_loose[mu_loose.pt.argmax()].sum()
-    u["isoneE"] = met+e_loose[e_loose.pt.argmax()].sum()
-    #Temporary patch to avoid crashes when finding max of completely empty array
-    if dimu.size < 0:
+
+    if mu_loose.size > 0:
+        u["isoneM"] = met+mu_loose[mu_loose.pt.argmax()].sum()
+    else:
+        u["isoneM"] = met
+
+    if e_loose.size > 0:
+        u["isoneE"] = met+e_loose[e_loose.pt.argmax()].sum()
+    else:
+        u["isoneE"] = met
+
+    if dimu.size > 0:
         u["istwoM"] = met+dimu[dimu.pt.argmax()].sum()
     else:
         u["istwoM"] = met
-    u["istwoE"] = met+diele[diele.pt.argmax()].sum()
-    u["isoneA"] = met+pho_loose[pho_loose.pt.argmax()].sum()
+
+    if diele.size > 0:
+        u["istwoE"] = met+diele[diele.pt.argmax()].sum()
+    else:
+        u["istwoE"] = met
+
+    if pho_loose.size > 0:
+        u["isoneA"] = met+pho_loose[pho_loose.pt.argmax()].sum()
+    else:
+        u["isoneA"] = met
 
     skinny={}
     loose={}
