@@ -251,18 +251,18 @@ def analysis(selection, year, xsec, dataset, file):
     # Filler; does not matter anyway since fj_clean is empty
     #For a proper fix, need to make sure we are not using max on an empty numpy array
     else:
-        variables['fjmass'] = fj_clean.pt.max()
-        variables['TvsQCD'] = fj_clean.pt.max()
-        variables['WvsQCD'] = fj_clean.pt.max()
-        variables['ZvsQCD'] = fj_clean.pt.max()
-        variables['VvsQCD'] = fj_clean.pt.max()
-        variables['ZHbbvsQCD'] = fj_clean.pt.max()
-        variables['ZHccvsQCD'] = fj_clean.pt.max()
-        variables['WcqvsQCD'] = fj_clean.pt.max()
-        variables['WqqvsQCD'] = fj_clean.pt.max()
-        variables['ZbbvsQCD'] = fj_clean.pt.max()
-        variables['ZccvsQCD'] = fj_clean.pt.max()
-        variables['ZqqvsQCD'] = fj_clean.pt.max()
+        variables['fjmass'] = -1
+        variables['TvsQCD'] = -1
+        variables['WvsQCD'] = -1
+        variables['ZvsQCD'] = -1
+        variables['VvsQCD'] = -1
+        variables['ZHbbvsQCD'] = -1
+        variables['ZHccvsQCD'] = -1
+        variables['WcqvsQCD'] = -1
+        variables['WqqvsQCD'] = -1
+        variables['ZbbvsQCD'] = -1
+        variables['ZccvsQCD'] = -1
+        variables['ZqqvsQCD'] = -1
 
     hout = {}
     for k in hists.keys():
