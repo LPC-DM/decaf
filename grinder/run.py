@@ -29,8 +29,6 @@ with open("../beans/"+options.year+".json") as fin:
 hists = {}
 dataset_xs = {k: v['xs'] for k,v in datadef.items()}
 lumi = 1000.
-nevents = 0
-sumw = 0
 if options.lumi: lumi=lumi*float(options.lumi)
 
 tstart = time.time()
@@ -43,6 +41,8 @@ fileslice = slice(None)
 with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
     futures = set()
     for dataset, info in datadef.items():
+        nevents = 0
+        sumw = 0
         if options.dataset and options.dataset not in dataset: continue
         for k,v in samples.items():
             if options.selection and options.selection not in k: continue    
