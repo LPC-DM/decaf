@@ -38,7 +38,7 @@ def clean(val, default):
     val[np.isnan(val)|(val==-999.)] = default
     return val
 
-nworkers = 22
+nworkers = 15
 fileslice = slice(None)
 with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
     futures = set()

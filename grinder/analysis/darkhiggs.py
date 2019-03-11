@@ -28,11 +28,11 @@ hists = {
 
 
 samples = {
-    "iszeroL":('ZJets','WJets','DY','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','MET'),
-    "isoneM":('WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','MET'),
-    "isoneE":('WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','QCD','VH_HToBB','WminusH','WplusH','ttHTobb','GluGluHToBB','VBFHToBB','SingleElectron'),
-    "istwoM":('WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','VH_HToBB','WminusH','WplusH','ttHTobb','MET'),
-    "istwoE":('WJets','DYJetsToLL','TT_TuneCUETP8M2T4','ST_t-channel','ST_tW','WW_TuneCUETP8M1','WZ_TuneCUETP8M1','ZZ_TuneCUETP8M1','VH_HToBB','WminusH','WplusH','ttHTobb','SingleElectron'),
+    "iszeroL":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET'),
+    "isoneM":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET'),
+    "isoneE":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','SingleElectron'),
+    "istwoM":('WJets','DY','TT','ST','WW','WZ','ZZ','HToBB','MET'),
+    "istwoE":('WJets','DY','TT','ST','WW','WZ','ZZ','HToBB','SingleElectron'),
     "isoneA":('GJets','QCD','SinglePhoton')
 }
 

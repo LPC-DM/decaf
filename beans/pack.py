@@ -14,6 +14,7 @@ from optparse import OptionParser
 from process import *
 
 parser = OptionParser()
+parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 parser.add_option('-y', '--year', help='year', dest='year')
 (options, args) = parser.parse_args()
 fnaleos = "root://cmsxrootd.fnal.gov/"
@@ -70,6 +71,7 @@ datadef = {}
 for folder in beans[options.year]:
     print("Opening",folder)
     for dataset in xsections.keys():
+        if options.dataset and options.dataset not in dataset: continue
         print("Looking into",folder+"/"+dataset)
         os.system("find "+folder+"/"+dataset+" -name \'*.root\' > "+dataset+".txt")
         flist = open(dataset+".txt")
