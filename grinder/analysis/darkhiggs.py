@@ -235,19 +235,34 @@ def analysis(selection, year, xsec, dataset, file):
     variables['fj1pt'] = fj_clean.pt.max()
     variables['njets'] = j_nclean
     variables['nfjets'] = fj_nclean
-    variables['fjmass'] = fj_clean[fj_clean.pt.argmax()].mass.sum()
-    variables['TvsQCD'] = fj_clean[fj_clean.pt.argmax()].TvsQCD.sum()
-    variables['WvsQCD'] = fj_clean[fj_clean.pt.argmax()].WvsQCD.sum()
-    variables['ZvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZvsQCD.sum()
-    variables['VvsQCD'] = fj_clean[fj_clean.pt.argmax()].VvsQCD.sum()
-    variables['ZHbbvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZHbbvsQCD.sum()
-    variables['ZHccvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZHccvsQCD.sum()
-    variables['WcqvsQCD'] = fj_clean[fj_clean.pt.argmax()].WcqvsQCD.sum()
-    variables['WqqvsQCD'] = fj_clean[fj_clean.pt.argmax()].WqqvsQCD.sum()
-    variables['ZbbvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZbbvsQCD.sum()
-    variables['ZccvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZccvsQCD.sum()
-    variables['ZqqvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZqqvsQCD.sum()
-    
+    if fj_clean.content.size > 0:
+        variables['fjmass'] = fj_clean[fj_clean.pt.argmax()].mass.sum()
+        variables['TvsQCD'] = fj_clean[fj_clean.pt.argmax()].TvsQCD.sum()
+        variables['WvsQCD'] = fj_clean[fj_clean.pt.argmax()].WvsQCD.sum()
+        variables['ZvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZvsQCD.sum()
+        variables['VvsQCD'] = fj_clean[fj_clean.pt.argmax()].VvsQCD.sum()
+        variables['ZHbbvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZHbbvsQCD.sum()
+        variables['ZHccvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZHccvsQCD.sum()
+        variables['WcqvsQCD'] = fj_clean[fj_clean.pt.argmax()].WcqvsQCD.sum()
+        variables['WqqvsQCD'] = fj_clean[fj_clean.pt.argmax()].WqqvsQCD.sum()
+        variables['ZbbvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZbbvsQCD.sum()
+        variables['ZccvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZccvsQCD.sum()
+        variables['ZqqvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZqqvsQCD.sum()
+    # Filler; does not matter anyway since fj_clean is empty
+    #For a proper fix, need to make sure we are not using max on an empty numpy array
+    else:
+        variables['fjmass'] = fj_clean.pt.max()
+        variables['TvsQCD'] = fj_clean.pt.max()
+        variables['WvsQCD'] = fj_clean.pt.max()
+        variables['ZvsQCD'] = fj_clean.pt.max()
+        variables['VvsQCD'] = fj_clean.pt.max()
+        variables['ZHbbvsQCD'] = fj_clean.pt.max()
+        variables['ZHccvsQCD'] = fj_clean.pt.max()
+        variables['WcqvsQCD'] = fj_clean.pt.max()
+        variables['WqqvsQCD'] = fj_clean.pt.max()
+        variables['ZbbvsQCD'] = fj_clean.pt.max()
+        variables['ZccvsQCD'] = fj_clean.pt.max()
+        variables['ZqqvsQCD'] = fj_clean.pt.max()
 
     hout = {}
     for k in hists.keys():
