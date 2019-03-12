@@ -1,0 +1,11 @@
+__pycache__
+*~
+*#
+fnal-column-analysis-tools
+saiyan
+*.ipynb_checkpoints
+*log
+*err
+*out
+*.nfs0000003717774a2d000002c7
+docker_stderror
