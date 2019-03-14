@@ -1,3 +1,0 @@
-#!/cvmfs/sft.cern.ch/lcg/releases/Python/3.6.5-56635/x86_64-slc6-gcc62-opt/bin/python3
-from numba.pycc import main
-main()
