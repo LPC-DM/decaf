@@ -21,9 +21,9 @@ source /cvmfs/sft.cern.ch/lcg/views/LCG_94python3/x86_64-slc6-gcc62-opt/setup.sh
 #python xrd_setup.py install --user
 #cd ${_CONDOR_SCRATCH_DIR}/decaf
 #rm -rf xrootd-4.8.4
-export PATH=${_CONDOR_SCRATCH_DIR}/uscms/home/matteoc/.local/bin:$PATH
-export PYTHONPATH=${_CONDOR_SCRATCH_DIR}/uscms/home/matteoc/.local/lib/python3.6/site-packages:$PYTHONPATH
-export PYTHONPATH=$(find ${_CONDOR_SCRATCH_DIR}/uscms/home/matteoc/.local/lib/python3.6/site-packages/ -name *.egg |tr '\n' ':')$PYTHONPATH
+#export PATH=${_CONDOR_SCRATCH_DIR}/uscms/home/$USER/.local/bin:$PATH
+export PYTHONPATH=${_CONDOR_SCRATCH_DIR}/site-packages:$PYTHONPATH
+export PYTHONPATH=$(find ${_CONDOR_SCRATCH_DIR}/site-packages/ -name *.egg |tr '\n' ':')$PYTHONPATH
 echo "Updated python path: " $PYTHONPATH
 #source setup_lcg.sh  ## if a bash script, use .sh instead of .csh
 cd grinder
@@ -33,6 +33,7 @@ echo "selection: " $selection
 echo "dataset: " $sample
 echo "python run.py --year $year --lumi $lumi --selection $selection --dataset $sample"
 python run.py --year $year --lumi $lumi --selection $selection --dataset $sample
-ls ../pods/2017
+ls pods/$year/$selection/$sample.pkl.gz
+cp pods/$year/$selection/$sample.pkl.gz ${_CONDOR_SCRATCH_DIR}/
 #cd ${_CONDOR_SCRATCH_DIR}
 #rm -rf decaf

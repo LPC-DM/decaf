@@ -87,8 +87,8 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
                 print("Processed %.1fM events" % (nevents/1e6, ))
                 print("Filled %.1f bins" % nbins)
                 print("Nonzero bins: %.1f%%" % (100*nfilled/nbins, ))
-                os.system("mkdir -p ../pods/"+options.year+"/"+selection)
+                os.system("mkdir -p pods/"+options.year+"/"+selection)
                 # Pickle is not very fast or memory efficient, will be replaced by something better soon
-                with gzip.open("../pods/"+options.year+"/"+selection+"/"+dataset+".pkl.gz", "wb") as fout:
+                with gzip.open("pods/"+options.year+"/"+selection+"/"+dataset+".pkl.gz", "wb") as fout:
                     pickle.dump(hists, fout)
 

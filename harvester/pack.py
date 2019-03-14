@@ -89,6 +89,6 @@ for folder in beans[options.year]:
                 }
         os.system("rm "+dataset+".txt")
 
-
-with open("../beans/"+options.year+".json", "w") as fout:
+os.system("mkdir -p beans")
+with open("beans/"+options.year+".json", "w") as fout:
     json.dump(datadef, fout, indent=4)
