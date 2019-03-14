@@ -1,0 +1,8 @@
+#!/cvmfs/sft.cern.ch/lcg/releases/Python/3.6.5-56635/x86_64-slc6-gcc62-opt/bin/python3
+# -*- coding: UTF-8 -*-
+from __future__ import print_function, division, absolute_import
+
+from numba.numba_entry import main
+
+if __name__ == "__main__":
+    main()

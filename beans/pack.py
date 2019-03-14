@@ -75,8 +75,12 @@ for folder in beans[options.year]:
         print("Looking into",folder+"/"+dataset)
         os.system("find "+folder+"/"+dataset+" -name \'*.root\' > "+dataset+".txt")
         flist = open(dataset+".txt")
-#        urllist = [fnaleos+path.strip() for path in flist]
-        urllist = [path.strip() for path in flist]
+        urllist = []
+        for path in flist:
+            s = path.strip().split('/')
+            eospath = fnaleos
+            for i in range (3,len(s)): eospath=eospath+'/'+s[i]
+            urllist.append(eospath)
         xs = xsections[dataset]
         if urllist:
             datadef[dataset] = {
