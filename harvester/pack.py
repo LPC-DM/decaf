@@ -87,7 +87,8 @@ for folder in beans[options.year]:
                 'files': urllist,
                 'xs': xs,
                 }
+        os.system("rm "+dataset+".txt")
+
 
 with open("../beans/"+options.year+".json", "w") as fout:
     json.dump(datadef, fout, indent=4)
-os.system("rm *.txt")
