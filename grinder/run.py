@@ -23,7 +23,7 @@ parser.add_option('-s', '--selection', help='selection', dest='selection')
 parser.add_option('-l', '--lumi', help='lumi', dest='lumi')
 (options, args) = parser.parse_args()
 
-with open("../beans/"+options.year+".json") as fin:
+with open("../harvester/beans/"+options.year+".json") as fin:
     datadef = json.load(fin)
 
 #for h in hists.values(): h.clear()

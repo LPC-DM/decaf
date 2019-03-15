@@ -27,13 +27,13 @@ export PYTHONPATH=$(find ${_CONDOR_SCRATCH_DIR}/site-packages/ -name *.egg |tr '
 echo "Updated python path: " $PYTHONPATH
 #source setup_lcg.sh  ## if a bash script, use .sh instead of .csh
 cd grinder
-echo "year: " $year
-echo "lumi: " $lumi
-echo "selection: " $selection
-echo "dataset: " $sample
-echo "python run.py --year $year --lumi $lumi --selection $selection --dataset $sample"
-python run.py --year $year --lumi $lumi --selection $selection --dataset $sample
-ls pods/$year/$selection/$sample.pkl.gz
-cp pods/$year/$selection/$sample.pkl.gz ${_CONDOR_SCRATCH_DIR}/
+#echo "year: " $year
+#echo "lumi: " $lumi
+#echo "selection: " $selection
+#echo "dataset: " $sample
+echo "python run.py --year ${1} --lumi ${2} --selection ${3} --dataset ${4}"
+python run.py --year ${1} --lumi ${2} --selection ${3} --dataset ${4}
+ls pods/${1}/${3}/${4}.pkl.gz
+cp pods/${1}/${3}/${4}.pkl.gz ${_CONDOR_SCRATCH_DIR}/${1}_${3}_${4}.pkl.gz
 #cd ${_CONDOR_SCRATCH_DIR}
 #rm -rf decaf

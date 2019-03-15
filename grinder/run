@@ -3,10 +3,12 @@ Executable = run.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = run.sh
-Output = condor/out/$(Cluster)_\$(Process).stdout
-Error = condor/err/$(Cluster)_\$(Process).stderr
-Log = condor/log/$(Cluster)_\$(Process).log
+Output = pods/$ENV(YEAR)/$ENV(SELECTION)/condor/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
+Error = pods/$ENV(YEAR)/$ENV(SELECTION)/condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
+Log = pods/$ENV(YEAR)/$ENV(SELECTION)/condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
+TransferOutputRemaps = "$ENV(YEAR)_$ENV(SELECTION)_$ENV(SAMPLE).pkl.gz=$ENV(PWD)/pods/$ENV(YEAR)/$ENV(SELECTION)/$ENV(SAMPLE).pkl.gz"
 x509userproxy = $ENV(X509_USER_PROXY)
-Arguments = $year $lumi $selection $sample
+Arguments = $ENV(YEAR) $ENV(LUMI) $ENV(SELECTION) $ENV(SAMPLE)
 request_cpus = 8
+request_memory = 4100
 Queue 1
