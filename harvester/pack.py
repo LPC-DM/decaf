@@ -25,6 +25,15 @@ beans['2016'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/nano_2016",
                  "/eos/uscms/store/user/hqu/NanoTuples/v1d"]
 beans['2017'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/nano_2017"]
 
+def split(arr, size):
+     arrs = []
+     while len(arr) > size:
+         pice = arr[:size]
+         arrs.append(pice)
+         arr   = arr[size:]
+     arrs.append(arr)
+     return arrs
+
 def parse_xsec(cfgfile):
     xsec_dict = {}
     with open(cfgfile) as f:
@@ -76,17 +85,22 @@ for folder in beans[options.year]:
         os.system("find "+folder+"/"+dataset+" -name \'*.root\' > "+dataset+".txt")
         flist = open(dataset+".txt")
         urllist = []
+        #print('file lenght:',len(flist.readlines()))
         for path in flist:
             s = path.strip().split('/')
             eospath = fnaleos
             for i in range (3,len(s)): eospath=eospath+'/'+s[i]
             urllist.append(eospath)
         xs = xsections[dataset]
+        print('list lenght:',len(urllist))
+        urllists = split(urllist, 250)
+        print(len(urllists))
         if urllist:
-            datadef[dataset] = {
-                'files': urllist,
-                'xs': xs,
-                }
+            for i in range(0,len(urllists)) :
+                 datadef[dataset+str(i)] = {
+                      'files': urllists[i],
+                      'xs': xs,
+                      }
         os.system("rm "+dataset+".txt")
 
 os.system("mkdir -p beans")

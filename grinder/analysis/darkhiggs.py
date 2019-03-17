@@ -205,10 +205,10 @@ def analysis(selection, year, xsec, dataset, file):
     loose={}
     inclusive={}
     for k in u.keys():
-        if selection in k:
-            skinny[k] = (j_nclean>0)&(j_clean.pt.max()>100)&(abs(u[k].delta_phi(j_clean)).min()>0.5)
-            loose[k] = (fj_nclean>0)&(fj_clean.pt.max()>200)&(abs(u[k].delta_phi(j_clean)).min()>0.8)
-            inclusive[k] = skinny[k]|loose[k]
+#        if selection in k:
+        skinny[k] = (j_nclean>0)&(j_clean.pt.max()>100)&(abs(u[k].delta_phi(j_clean)).min()>0.5)
+        loose[k] = (fj_nclean>0)&(fj_clean.pt.max()>200)&(abs(u[k].delta_phi(j_clean)).min()>0.8)
+        inclusive[k] = skinny[k]|loose[k]
  
     selections={}
     selections["iszeroL"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
@@ -225,10 +225,10 @@ def analysis(selection, year, xsec, dataset, file):
     selections["isoneA"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)
 
     for k in u.keys():
-        if selection in k:
-            skinny[k] = skinny[k]&selections[k]&(u[k].pt>200)
-            loose[k] = loose[k]&selections[k]&(u[k].pt>200)
-            inclusive[k] = inclusive[k]&selections[k]&(u[k].pt>200)
+#        if selection in k:
+        skinny[k] = skinny[k]&selections[k]&(u[k].pt>200)
+        loose[k] = loose[k]&selections[k]&(u[k].pt>200)
+        inclusive[k] = inclusive[k]&selections[k]&(u[k].pt>200)
 
     variables = {}
     variables['j1pt'] = j_clean.pt.max()
@@ -267,14 +267,17 @@ def analysis(selection, year, xsec, dataset, file):
     hout = {}
     for k in hists.keys():
         h = hists[k].copy(content=False)
-        for r in u.keys():
-            if selection not in r: continue
+        i = 0
+        while i < len(selection):
+#            if selection not in r: continue
+            r = selection[i]
             if k == 'recoil':
                 h.fill(dataset=dataset, region=r, recoil=u[r].pt, weight=genw*inclusive[r])
             elif k == 'mindphi':
                 h.fill(dataset=dataset, region=r, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*inclusive[r])
             else:
                 h.fill(dataset=dataset, region=r, **variables, weight=genw*inclusive[r])
+            i += 1
         hout[k] = h
     
     return dataset, sumw, tree.numentries, hout

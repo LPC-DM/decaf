@@ -13,27 +13,11 @@ rm decaf.tgz
 rm pylocal.tgz
 cd decaf
 source /cvmfs/sft.cern.ch/lcg/views/LCG_94python3/x86_64-slc6-gcc62-opt/setup.sh
-#wget https://github.com/xrootd/xrootd/archive/v4.8.4.tar.gz
-#tar zxf v4.8.4.tar.gz && rm v4.8.4.tar.gz
-#cp xrd_setup.py xrootd-4.8.4/bindings/python/
-#cd xrootd-4.8.4/bindings/python/
-##python xrd_setup.py install --install-option="--prefix=${_CONDOR_SCRATCH_DIR}/uscms/home/matteoc/.local/lib/python3.6/site-packages"
-#python xrd_setup.py install --user
-#cd ${_CONDOR_SCRATCH_DIR}/decaf
-#rm -rf xrootd-4.8.4
-#export PATH=${_CONDOR_SCRATCH_DIR}/uscms/home/$USER/.local/bin:$PATH
 export PYTHONPATH=${_CONDOR_SCRATCH_DIR}/site-packages:$PYTHONPATH
 export PYTHONPATH=$(find ${_CONDOR_SCRATCH_DIR}/site-packages/ -name *.egg |tr '\n' ':')$PYTHONPATH
 echo "Updated python path: " $PYTHONPATH
-#source setup_lcg.sh  ## if a bash script, use .sh instead of .csh
 cd grinder
-#echo "year: " $year
-#echo "lumi: " $lumi
-#echo "selection: " $selection
-#echo "dataset: " $sample
-echo "python run.py --year ${1} --lumi ${2} --selection ${3} --dataset ${4}"
-python run.py --year ${1} --lumi ${2} --selection ${3} --dataset ${4}
-ls pods/${1}/${3}/${4}.pkl.gz
-cp pods/${1}/${3}/${4}.pkl.gz ${_CONDOR_SCRATCH_DIR}/${1}_${3}_${4}.pkl.gz
-#cd ${_CONDOR_SCRATCH_DIR}
-#rm -rf decaf
+echo "python run.py --year ${1} --lumi ${2} --dataset ${3}"
+python run.py --year ${1} --lumi ${2} --dataset ${3}
+ls pods/${1}/${3}.pkl.gz
+cp pods/${1}/${3}.pkl.gz ${_CONDOR_SCRATCH_DIR}/${1}_${3}.pkl.gz
