@@ -10,5 +10,5 @@ TransferOutputRemaps = "$ENV(YEAR)_$ENV(SAMPLE).pkl.gz=$ENV(PWD)/pods/$ENV(YEAR)
 x509userproxy = $ENV(X509_USER_PROXY)
 Arguments = $ENV(YEAR) $ENV(LUMI) $ENV(SAMPLE)
 request_cpus = 8
-#request_memory = 4100
+request_memory = 3100
 Queue 1

@@ -61,6 +61,7 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
                 finished = set(job for job in futures if job.done())
                 for job in finished:
                     dataset, sumws, nentries, hout = job.result()
+                    #dataset, nentries, hout = job.result()
                     nevents += nentries
                     sumw += sumws
                     for k in hout.keys():
@@ -76,9 +77,9 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
         except:
             for job in futures: job.cancel()
             raise
-        print(dataset,"nevents:",nevents,"sumw:",sumw)
+        print(dataset,"nevents:",nevents,"sumw:",sumw,"sumw from hist:",hists['sumw'].values(overflow='all')[(dataset,)][1]-hists['sumw'].values(overflow='all')[(dataset,)][0])
         scale = 1
-        if dataset_xs[dataset]!= -1: scale = lumi*dataset_xs[dataset] / sumw
+        if dataset_xs[dataset]!= -1: scale = lumi*dataset_xs[dataset]# / sumw
         print("xsec:",dataset_xs[dataset],"xsec weight:",scale)
         for h in hists.values(): h.scale(scale)
         dt = time.time() - tstart

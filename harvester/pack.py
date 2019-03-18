@@ -16,6 +16,7 @@ from process import *
 parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 parser.add_option('-y', '--year', help='year', dest='year')
+parser.add_option('-p', '--pack', help='pack', dest='pack')
 (options, args) = parser.parse_args()
 fnaleos = "root://cmsxrootd.fnal.gov/"
 
@@ -86,20 +87,25 @@ for folder in beans[options.year]:
         flist = open(dataset+".txt")
         urllist = []
         #print('file lenght:',len(flist.readlines()))
+        xs = xsections[dataset]
+        #sumw = 0
         for path in flist:
             s = path.strip().split('/')
             eospath = fnaleos
             for i in range (3,len(s)): eospath=eospath+'/'+s[i]
+            #if xs != -1:
+            #     run_tree = uproot.open(eospath)["Runs"]
+            #     sumw += run_tree.array("genEventSumw")[0]
             urllist.append(eospath)
-        xs = xsections[dataset]
         print('list lenght:',len(urllist))
-        urllists = split(urllist, 250)
+        urllists = split(urllist, int(options.pack))
         print(len(urllists))
         if urllist:
             for i in range(0,len(urllists)) :
-                 datadef[dataset+str(i)] = {
+                 datadef[dataset+"____"+str(i)] = {
                       'files': urllists[i],
                       'xs': xs,
+                      #'sumw': sumw,
                       }
         os.system("rm "+dataset+".txt")
 

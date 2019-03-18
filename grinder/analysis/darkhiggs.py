@@ -6,6 +6,7 @@ from Builder import Initialize
 from fnal_column_analysis_tools import hist
 
 hists = {
+    'sumw': hist.Hist("sumw", hist.Cat("dataset", "Primary dataset"), hist.Bin("sumw", "Weight value", [0.])),
     'recoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("recoil","Hadronic Recoil",[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
     'mindphi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("mindphi","Min dPhi(MET,AK4s)",15,0,6.28)),
     'j1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("j1pt","AK4 Leading Jet Pt",50,30,500)),
@@ -268,16 +269,18 @@ def analysis(selection, year, xsec, dataset, file):
     for k in hists.keys():
         h = hists[k].copy(content=False)
         i = 0
-        while i < len(selection):
-#            if selection not in r: continue
-            r = selection[i]
-            if k == 'recoil':
-                h.fill(dataset=dataset, region=r, recoil=u[r].pt, weight=genw*inclusive[r])
-            elif k == 'mindphi':
-                h.fill(dataset=dataset, region=r, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*inclusive[r])
-            else:
-                h.fill(dataset=dataset, region=r, **variables, weight=genw*inclusive[r])
-            i += 1
+        if k == 'sumw':
+            h.fill(dataset=dataset, sumw=genw)
+        else:
+            while i < len(selection):
+                r = selection[i]
+                if k == 'recoil':
+                    h.fill(dataset=dataset, region=r, recoil=u[r].pt, weight=genw*inclusive[r])
+                elif k == 'mindphi':
+                    h.fill(dataset=dataset, region=r, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*inclusive[r])
+                else:
+                    h.fill(dataset=dataset, region=r, **variables, weight=genw*inclusive[r])
+                i += 1
         hout[k] = h
     
     return dataset, sumw, tree.numentries, hout
