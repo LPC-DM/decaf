@@ -77,14 +77,14 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
         except:
             for job in futures: job.cancel()
             raise
-        print(dataset,"nevents:",nevents,"sumw:",sumw,"sumw from hist:",hists['sumw'].values(overflow='all')[(dataset,)][1]-hists['sumw'].values(overflow='all')[(dataset,)][0])
+        print(dataset,"nevents:",nevents,"sumw:",sumw,"sumw from hist:",hists['sumw'].values(overflow='all')[(dataset,)][1])
         scale = 1
         if dataset_xs[dataset]!= -1: scale = lumi*dataset_xs[dataset]# / sumw
         print("xsec:",dataset_xs[dataset],"xsec weight:",scale)
         for key in hists.keys():
             if key=='sumw': continue
             hists[key].scale(scale)
-        print('after scaling:',hists['sumw'].values(overflow='all')[(dataset,)][1]-hists['sumw'].values(overflow='all')[(dataset,)][0])
+        print('after scaling:',hists['sumw'].values(overflow='all')[(dataset,)][1])
         dt = time.time() - tstart
         
         print("%.2f us*cpu/event" % (1e6*dt*nworkers/nevents, ))
