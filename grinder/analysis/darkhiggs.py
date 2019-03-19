@@ -270,7 +270,7 @@ def analysis(selection, year, xsec, dataset, file):
         h = hists[k].copy(content=False)
         i = 0
         if k == 'sumw':
-            h.fill(dataset=dataset, sumw=genw)
+            h.fill(dataset=dataset, sumw=1, weight=sumw)
         else:
             while i < len(selection):
                 r = selection[i]
