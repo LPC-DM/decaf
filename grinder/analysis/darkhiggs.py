@@ -4,6 +4,7 @@ import numpy as np
 np.seterr(divide='ignore', invalid='ignore')
 from Builder import Initialize
 from fnal_column_analysis_tools import hist
+from triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
 
 hists = {
     'sumw': hist.Hist("sumw", hist.Cat("dataset", "Primary dataset"), hist.Bin("sumw", "Weight value", [0.])),
@@ -42,11 +43,28 @@ def analysis(selection, year, xsec, dataset, file):
     genw = 1
     sumw = 1
 
+    ###
+    #For MC, retrieve the LHE weights, to take into account NLO destructive interference, and their sum
+    ###
     if xsec != -1:
         genw = tree.array("genWeight")
         run_tree = uproot.open(file)["Runs"]
         sumw = run_tree.array("genEventSumw")[0]
+    ###
+    #Importing the trigger paths per year from trigger.py and constructing the trigger boolean
+    ###
+    met_trigger = {path:tree.array(path) for path in met_trigger_paths[year]}
+    isMET = np.prod([met_trigger[key] for key in met_trigger_paths[year]], axis=0)
 
+    singleele_trigger = {path:tree.array(path) for path in singleele_trigger_paths[year]}
+    isSingleEle = np.prod([singleele_trigger[key] for key in singleele_trigger_paths[year]], axis=0)
+
+    singlepho_trigger = {path:tree.array(path) for path in singlepho_trigger_paths[year]}
+    isSinglePho = np.prod([singlepho_trigger[key] for key in singlepho_trigger_paths[year]], axis=0)
+
+    ###
+    #Initialize physics objects
+    ###
     e = Initialize({'pt':tree.array("Electron_pt"),
                     'eta':tree.array("Electron_eta"),
                     'phi':tree.array("Electron_phi"),
@@ -171,6 +189,9 @@ def analysis(selection, year, xsec, dataset, file):
                       'phi':tree.array("MET_phi"),
                       'mass':0})
 
+    ###
+    #Calculating derivatives
+    ###
     diele = e_loose.distincts().i0+e_loose.distincts().i1
     dimu = mu_loose.distincts().i0+mu_loose.distincts().i1
     
@@ -202,6 +223,9 @@ def analysis(selection, year, xsec, dataset, file):
     else:
         u["isoneA"] = met
 
+    ###
+    #Event selection
+    ###
     skinny={}
     loose={}
     inclusive={}
