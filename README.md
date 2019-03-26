@@ -68,3 +68,13 @@ python run.py --year 2017 --lumi 41.53 --dataset TTJets_TuneCP5_13TeV-amcatnloFX
 
 In this example, histograms for the 0 batch of the 2017 TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8 NanoAOD are being generated. The ```--year``` and the ```--lumi``` options are compulsory, ```--dataset``` is optional. Launching the script without the ```--dataset``` option will make the script run over all the batches for all the datasets. If, for example, ```--dataset TTJets``` is used, the module will run over all batches and all the datasets that match the ```TTJets``` string.
 
+### Running with Condor
+
+Condor will allow to parallelize jobs by running across multiple cores:
+
+```
+python submit.py --year 2017 --lumi 41.53 -t
+```
+
+This way jobs to generate the full set of 2017 histograms will be submitted to condor. the ```-t``` will allow for tarring the working environment and the necessary dependences to run on condor nodes. The module has a ```--dataset``` option that works like described before for ```run.py```. Will allow you to run on a single batch, dataset, or batches/datasets that match the input string.
+
