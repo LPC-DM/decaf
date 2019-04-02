@@ -21,3 +21,5 @@ def get_pu_weight(year, nvtx):
     corr[mc_pu==0.] = 1.
     return lookup_tools.dense_lookup.dense_lookup(corr, fdata["pileup"].edges)
 
+def get_nlo_weight(gen):
+    

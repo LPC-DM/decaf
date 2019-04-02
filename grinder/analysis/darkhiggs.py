@@ -189,6 +189,33 @@ def analysis(selection, year, xsec, dataset, file):
                       'phi':tree.array("MET_phi"),
                       'mass':0})
 
+    gen = Initialize({'pt':tree.array('GenPart_pt'),
+                      'eta':tree.array('GenPart_eta'),
+                      'phi':tree.array('GenPart_phi'),
+                      'mass':tree.array('GenPart_mass'),
+                      'pdgid':tree.array('GenPart_pdgId'),
+                      'status':tree.array('GenPart_status'), 
+                      'flags':tree.array('GenPart_statusFlags'),
+                      'motherid':tree.array('GenPart_genPartIdxMother')})
+    
+    genLastCopy = gen[gen.flags&(1 << 13)==0]
+    genTops = genLastCopy[abs(genLastCopy.pdgid)==6]
+    genWs = genLastCopy[abs(genLastCopy.pdgid)==24]
+    genZs = genLastCopy[abs(genLastCopy.pdgid)==23]
+    genAs = genLastCopy[abs(genLastCopy.pdgid)==22]
+    genHs = genLastCopy[abs(genLastCopy.pdgid)==25]
+
+    weight["nlo"] = 1
+    if genTops.counts == 2: weight["nlo"] = np.sqrt(get_top_weight(genTops[0].pt) * get_top_weight(genTops[1].pt))
+    if genTops.counts == 0:
+        if (genWs.counts==1)&(genZs.counts==0)&(genAs.counts==0)&(genHs.counts==0):
+            weight["nlo"] = get_nlo_weight('w',genWs[0].pt)
+        elif (genWs.counts==0)&(genZs.counts==1)&(genAs.counts==0)&(genHs.counts==0):
+            weight["nlo"] = get_nlo_weight('z',genZs[0].pt)
+        elif (genWs.counts==0)&(genZs.counts==0)&(genAs.counts==1)&(genHs.counts==0):
+            weight["nlo"] = get_nlo_weight('a',genAs[0].pt)
+
+
     ###
     #Calculating derivatives
     ###
