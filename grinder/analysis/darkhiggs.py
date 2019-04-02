@@ -6,6 +6,15 @@ from Builder import Initialize
 from fnal_column_analysis_tools import hist
 from analysis.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
 from analysis.corrections import get_ttbar_weight, get_nlo_weight
+from analysis.thresholds import (loose_ele_pt, tight_ele_pt, loose_ele_eta, loose_ele_dxy, loose_ele_dz, loose_ele_iso, tight_ele_iso,
+                                 loose_muo_pt, loose_muo_eta, loose_muo_dxy, loose_muo_dz, loose_muo_iso,
+                                 loose_tau_pt, loose_tau_eta,
+                                 loose_pho_pt, loose_pho_eta,
+                                 fat_jet_pt, fat_jet_eta, fat_jet_deltaR,
+                                 jet_pt, jet_eta, jet_deltaR,
+                                 dimuo_low_mass, dimuo_high_mass, diele_low_mass, diele_high_mass,
+                                 skinny_jet_pt_min, skinny_dphi_min, loose_jet_pt_min, loose_dphi_min, recoil_min)
+
 
 hists = {
     'sumw': hist.Hist("sumw", hist.Cat("dataset", "Primary dataset"), hist.Bin("sumw", "Weight value", [0.])),
@@ -70,7 +79,7 @@ def analysis(selection, year, xsec, dataset, file):
             singleele_trigger[path] = tree.array(path)
         except KeyError:
             print("No trigger bit in file for path ",path)
-            
+
     passSingleEleTrig = np.prod([singleele_trigger[key] for key in singleele_trigger], axis=0)
 
     singlepho_trigger = {}
@@ -96,14 +105,14 @@ def analysis(selection, year, xsec, dataset, file):
         e['loose_id'] = tree.array('Electron_mvaSpring16GP_WP90')
         e['tight_id']  = tree.array('Electron_mvaSpring16GP_WP80')
         e['iso'] = tree.array('Electron_pfRelIso03_all')
-        e['isloose'] = (e.pt>7)&(abs(e.eta)<2.4)&(abs(e.dxy)<0.05)&(abs(e.dz)<0.2)&(e.iso<0.4)&(e.loose_id)
-        e['istight'] = (e.pt>30)&(abs(e.eta)<2.4)&(abs(e.dxy)<0.05)&(abs(e.dz)<0.2)&(e.tight_id)&(e.iso<0.06)
+        e['isloose'] = (e.pt>loose_ele_pt)&(abs(e.eta)<loose_ele_eta)&(abs(e.dxy)<loose_ele_dxy)&(abs(e.dz)<loose_ele_dz)&(e.iso<loose_ele_iso)&(e.loose_id)
+        e['istight'] = (e.pt>tight_ele_pt)&(abs(e.eta)<loose_ele_eta)&(abs(e.dxy)<loose_ele_dxy)&(abs(e.dz)<loose_ele_dz)&(e.iso<tight_ele_iso)&(e.tight_id)
 
     elif '2017' in year:
         e['loose_id'] = tree.array('Electron_mvaFall17Iso_WP90')
         e['tight_id'] = tree.array('Electron_mvaFall17Iso_WP80')
-        e['isloose'] = (e.pt>7)&(abs(e.eta)<2.4)&(abs(e.dxy)<0.05)&(abs(e.dz)<0.2)&(e.loose_id)                    
-        e['istight'] = (e.pt>30)&(abs(e.eta)<2.4)&(abs(e.dxy)<0.05)&(abs(e.dz)<0.2)&(e.tight_id)
+        e['isloose'] = (e.pt>loose_ele_pt)&(abs(e.eta)<loose_ele_eta)&(abs(e.dxy)<loose_ele_dxy)&(abs(e.dz)<loose_ele_dz)&(e.loose_id)
+        e['istight'] = (e.pt>tight_ele_pt)&(abs(e.eta)<loose_ele_eta)&(abs(e.dxy)<loose_ele_dxy)&(abs(e.dz)<loose_ele_dz)&(e.tight_id)
 
     e_loose = e[e.isloose]
     e_tight = e[e.istight]
@@ -118,7 +127,7 @@ def analysis(selection, year, xsec, dataset, file):
                      'iso':tree.array('Muon_pfRelIso04_all'),
                      'dxy':tree.array('Muon_dxy'),
                      'dz':tree.array('Muon_dz')})
-    mu['isloose']=(mu.counts>0)&(mu.pt>5)&(abs(mu.eta)<2.4)&(abs(mu.dxy)<0.5)&(abs(mu.dz)<1.0)&(mu.iso<0.4)
+    mu['isloose']=(mu.counts>0)&(mu.pt>loose_muo_pt)&(abs(mu.eta)<loose_muo_eta)&(abs(mu.dxy)<loose_muo_dxy)&(abs(mu.dz)<loose_muo_dz)&(mu.iso<loose_muo_iso)
     mu_loose=mu[mu.isloose]
     mu_ntot = mu.counts
     mu_nloose = mu_loose.counts
@@ -129,10 +138,10 @@ def analysis(selection, year, xsec, dataset, file):
                       'decayMode':tree.array('Tau_idDecayMode')})
     if '2016' in year:
         tau['id'] = tree.array('Tau_idMVAnew')
-        tau['isloose']=(tau.counts>0)&(tau.pt>18)&(abs(tau.eta)<2.3)&(tau.decayMode)&((tau.id&2)!=0)
+        tau['isloose']=(tau.counts>0)&(tau.pt>loose_tau_pt)&(abs(tau.eta)<loose_tau_eta)&(tau.decayMode)&((tau.id&2)!=0)
     elif '2017' in year:
         #Need to find equivalent for 2017
-        tau['isloose']=(tau.counts>0)&(tau.pt>18)&(abs(tau.eta)<2.3)&(tau.decayMode)
+        tau['isloose']=(tau.counts>0)&(tau.pt>loose_tau_pt)&(abs(tau.eta)<loose_tau_eta)&(tau.decayMode)
     tau_loose=tau[tau.isloose]
     tau_ntot=tau.counts
     tau_nloose=tau_loose.counts
@@ -141,7 +150,7 @@ def analysis(selection, year, xsec, dataset, file):
                       'eta':tree.array('Photon_eta'),
                       'phi':tree.array('Photon_phi'),
                       'mass':tree.array('Photon_mass')})
-    pho['isloose'] = (pho.counts>0)&(pho.pt>15)*(abs(pho.eta)<2.5)
+    pho['isloose'] = (pho.counts>0)&(pho.pt>loose_pho_pt)*(abs(pho.eta)<loose_pho_eta)
     pho_loose=pho[pho.isloose]
     pho_ntot=pho.counts
     pho_nloose=pho_loose.counts
@@ -180,8 +189,8 @@ def analysis(selection, year, xsec, dataset, file):
     fj['ZbbvsQCD'] = fj.probZbb/fj.probQCD
     fj['ZccvsQCD'] = fj.probZcc/fj.probQCD
     fj['ZqqvsQCD'] = fj.probZqq/fj.probQCD
-    fj['isgood'] = (fj.pt > 200)&(abs(fj.eta)<2.4)&(fj.jetId > 0)
-    fj['isclean'] =~fj.match(pho,1.5)&~fj.match(mu,1.5)&~fj.match(e,1.5)&fj.isgood
+    fj['isgood'] = (fj.pt > fat_jet_pt)&(abs(fj.eta)<fat_jet_eta)&(fj.jetId > 0)
+    fj['isclean'] =~fj.match(pho,fat_jet_deltaR)&~fj.match(mu,fat_jet_deltaR)&~fj.match(e,fat_jet_deltaR)&fj.isgood
     fj_good=fj[fj.isgood]
     fj_clean=fj[fj.isclean]
     fj_ntot=fj.counts
@@ -193,9 +202,9 @@ def analysis(selection, year, xsec, dataset, file):
                     'phi':tree.array('Jet_phi'),
                     'mass':tree.array('Jet_mass'),
                     'id':tree.array('Jet_jetId')})
-    j['isgood'] = (j.pt>25)&(abs(j.eta)<4.5)&((j.id&2)!=0)
-    j['isclean'] = ~j.match(e,0.4)&~j.match(mu,0.4)&~j.match(pho,0.4)&j.isgood
-    j['isiso'] =  ~(j.match(fj,1.5))&j.isclean
+    j['isgood'] = (j.pt>jet_pt)&(abs(j.eta)<jet_eta)&((j.id&2)!=0)
+    j['isclean'] = ~j.match(e,jet_deltaR)&~j.match(mu,jet_deltaR)&~j.match(pho,jet_deltaR)&j.isgood
+    j['isiso'] =  ~(j.match(fj,fat_jet_deltaR))&j.isclean
     j_good = j[j.isgood]
     j_clean = j[j.isclean]
     j_iso = j[j.isiso]
@@ -214,10 +223,10 @@ def analysis(selection, year, xsec, dataset, file):
                       'phi':tree.array('GenPart_phi'),
                       'mass':tree.array('GenPart_mass'),
                       'pdgid':tree.array('GenPart_pdgId'),
-                      'status':tree.array('GenPart_status'), 
+                      'status':tree.array('GenPart_status'),
                       'flags':tree.array('GenPart_statusFlags'),
                       'motherid':tree.array('GenPart_genPartIdxMother')})
-    
+
     genLastCopy = gen[gen.flags&(1 << 13)==0]
     genTops = genLastCopy[abs(genLastCopy.pdgid)==6]
     genWs = genLastCopy[abs(genLastCopy.pdgid)==24]
@@ -241,7 +250,7 @@ def analysis(selection, year, xsec, dataset, file):
     ###
     diele = e_loose.distincts().i0+e_loose.distincts().i1
     dimu = mu_loose.distincts().i0+mu_loose.distincts().i1
-    
+
     u={}
     u["iszeroL"] = met
 
@@ -278,29 +287,29 @@ def analysis(selection, year, xsec, dataset, file):
     inclusive={}
     for k in u.keys():
 #        if selection in k:
-        skinny[k] = (j_nclean>0)&(j_clean.pt.max()>100)&(abs(u[k].delta_phi(j_clean)).min()>0.5)
-        loose[k] = (fj_nclean>0)&(fj_clean.pt.max()>200)&(abs(u[k].delta_phi(j_clean)).min()>0.8)
+        skinny[k] = (j_nclean>0)&(j_clean.pt.max()>skinny_jet_pt_min)&(abs(u[k].delta_phi(j_clean)).min()>skinny_dphi_min)
+        loose[k] = (fj_nclean>0)&(fj_clean.pt.max()>loose_jet_pt_min)&(abs(u[k].delta_phi(j_clean)).min()>loose_dphi_min)
         inclusive[k] = skinny[k]|loose[k]
- 
+
     selections={}
     selections["iszeroL"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
     selections["isoneM"] = (e_nloose==0)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
     selections["isoneE"] = (e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)
     if dimu.content.size > 0:
-        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(dimu[dimu.pt.argmax()].mass.sum()>60)&(dimu[dimu.pt.argmax()].mass.sum()<120)&(passMetTrig)
+        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(dimu[dimu.pt.argmax()].mass.sum()>dimuo_low_mass)&(dimu[dimu.pt.argmax()].mass.sum()<dimuo_high_mass)&(passMetTrig)
     else:
         selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
     if diele.content.size > 0:
-        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele[diele.pt.argmax()].mass.sum()>60)&(diele[diele.pt.argmax()].mass.sum()<120)&(passSingleEleTrig)
+        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele[diele.pt.argmax()].mass.sum()>diele_low_mass)&(diele[diele.pt.argmax()].mass.sum()<diele_high_mass)&(passSingleEleTrig)
     else:
         selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)
     selections["isoneA"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)&(passSinglePhoTrig)
 
     for k in u.keys():
 #        if selection in k:
-        skinny[k] = skinny[k]&selections[k]&(u[k].pt>200)
-        loose[k] = loose[k]&selections[k]&(u[k].pt>200)
-        inclusive[k] = inclusive[k]&selections[k]&(u[k].pt>200)
+        skinny[k] = skinny[k]&selections[k]&(u[k].pt>recoil_min)
+        loose[k] = loose[k]&selections[k]&(u[k].pt>recoil_min)
+        inclusive[k] = inclusive[k]&selections[k]&(u[k].pt>recoil_min)
 
     variables = {}
     variables['j1pt'] = j_clean.pt.max()
@@ -353,5 +362,5 @@ def analysis(selection, year, xsec, dataset, file):
                     h.fill(dataset=dataset, region=r, **variables, weight=genw*inclusive[r])
                 i += 1
         hout[k] = h
-    
+
     return dataset, sumw, tree.numentries, hout
