@@ -4,7 +4,7 @@ import numpy as np
 np.seterr(divide='ignore', invalid='ignore')
 from Builder import Initialize
 from fnal_column_analysis_tools import hist
-from triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
+from analysis.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
 
 hists = {
     'sumw': hist.Hist("sumw", hist.Cat("dataset", "Primary dataset"), hist.Bin("sumw", "Weight value", [0.])),
@@ -53,14 +53,33 @@ def analysis(selection, year, xsec, dataset, file):
     ###
     #Importing the trigger paths per year from trigger.py and constructing the trigger boolean
     ###
-    met_trigger = {path:tree.array(path) for path in met_trigger_paths[year]}
-    isMET = np.prod([met_trigger[key] for key in met_trigger_paths[year]], axis=0)
 
-    singleele_trigger = {path:tree.array(path) for path in singleele_trigger_paths[year]}
-    isSingleEle = np.prod([singleele_trigger[key] for key in singleele_trigger_paths[year]], axis=0)
+    met_trigger = {}
+    for path in met_trigger_paths[year]:
+        try:
+            met_trigger[path] = tree.array(path)
+        except KeyError:
+            print("No trigger bit in file for path ",path)
 
-    singlepho_trigger = {path:tree.array(path) for path in singlepho_trigger_paths[year]}
-    isSinglePho = np.prod([singlepho_trigger[key] for key in singlepho_trigger_paths[year]], axis=0)
+    passMetTrig = np.prod([met_trigger[key] for key in met_trigger], axis=0)
+
+    singleele_trigger = {}
+    for path in singleele_trigger_paths[year]:
+        try:
+            singleele_trigger[path] = tree.array(path)
+        except KeyError:
+            print("No trigger bit in file for path ",path)
+            
+    passSingleEleTrig = np.prod([singleele_trigger[key] for key in singleele_trigger], axis=0)
+
+    singlepho_trigger = {}
+    for path in singlepho_trigger_paths[year]:
+        try:
+            singlepho_trigger[path] = tree.array(path)
+        except KeyError:
+            print("No trigger bit in file for path ",path)
+
+    passSinglePhoTrig = np.prod([singlepho_trigger[key] for key in singlepho_trigger], axis=0)
 
     ###
     #Initialize physics objects
@@ -263,18 +282,18 @@ def analysis(selection, year, xsec, dataset, file):
         inclusive[k] = skinny[k]|loose[k]
  
     selections={}
-    selections["iszeroL"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
-    selections["isoneM"] = (e_nloose==0)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)
-    selections["isoneE"] = (e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
+    selections["iszeroL"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
+    selections["isoneM"] = (e_nloose==0)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
+    selections["isoneE"] = (e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)
     if dimu.content.size > 0:
-        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(dimu[dimu.pt.argmax()].mass.sum()>60)&(dimu[dimu.pt.argmax()].mass.sum()<120)
+        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(dimu[dimu.pt.argmax()].mass.sum()>60)&(dimu[dimu.pt.argmax()].mass.sum()<120)&(passMetTrig)
     else:
-        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)
+        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
     if diele.content.size > 0:
-        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele[diele.pt.argmax()].mass.sum()>60)&(diele[diele.pt.argmax()].mass.sum()<120)
+        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele[diele.pt.argmax()].mass.sum()>60)&(diele[diele.pt.argmax()].mass.sum()<120)&(passSingleEleTrig)
     else:
-        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
-    selections["isoneA"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)
+        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)
+    selections["isoneA"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)&(passSinglePhoTrig)
 
     for k in u.keys():
 #        if selection in k:
