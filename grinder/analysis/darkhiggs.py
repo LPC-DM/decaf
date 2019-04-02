@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import uproot, uproot_methods
 import numpy as np
-np.seterr(divide='ignore', invalid='ignore')
+np.seterr(divide='ignore', invalid='ignore', over='ignore')
 from Builder import Initialize
 from fnal_column_analysis_tools import hist
 from analysis.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
@@ -60,8 +60,8 @@ def analysis(selection, year, xsec, dataset, file):
         try:
             met_trigger[path] = tree.array(path)
         except KeyError:
-            print("No trigger bit in file for path ",path)
-
+            #print("No trigger bit in file for path ",path)
+            pass
     passMetTrig = np.prod([met_trigger[key] for key in met_trigger], axis=0)
 
     singleele_trigger = {}
@@ -69,8 +69,8 @@ def analysis(selection, year, xsec, dataset, file):
         try:
             singleele_trigger[path] = tree.array(path)
         except KeyError:
-            print("No trigger bit in file for path ",path)
-            
+            #print("No trigger bit in file for path ",path)
+            pass
     passSingleEleTrig = np.prod([singleele_trigger[key] for key in singleele_trigger], axis=0)
 
     singlepho_trigger = {}
@@ -78,8 +78,8 @@ def analysis(selection, year, xsec, dataset, file):
         try:
             singlepho_trigger[path] = tree.array(path)
         except KeyError:
-            print("No trigger bit in file for path ",path)
-
+            #print("No trigger bit in file for path ",path)
+            pass
     passSinglePhoTrig = np.prod([singlepho_trigger[key] for key in singlepho_trigger], axis=0)
 
     ###
@@ -225,15 +225,18 @@ def analysis(selection, year, xsec, dataset, file):
     genAs = genLastCopy[abs(genLastCopy.pdgid)==22]
     genHs = genLastCopy[abs(genLastCopy.pdgid)==25]
 
+    isTT = (genTops.counts==2)
+    isW  = (genTops.counts==0)&(genWs.counts==1)&(genZs.counts==0)&(genAs.counts==0)&(genHs.counts==0)
+    isZ  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==1)&(genAs.counts==0)&(genHs.counts==0)
+    isA  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==1)&(genHs.counts==0)
+
+
+    weight = {}
     weight["nlo"] = 1
-    if genTops.counts == 2: weight["nlo"] = np.sqrt(get_ttbar_weight(genTops[0].pt) * get_top_weight(genTops[1].pt))
-    if genTops.counts == 0:
-        if (genWs.counts==1)&(genZs.counts==0)&(genAs.counts==0)&(genHs.counts==0):
-            weight["nlo"] = get_nlo_weight('w',genWs[0].pt)
-        elif (genWs.counts==0)&(genZs.counts==1)&(genAs.counts==0)&(genHs.counts==0):
-            weight["nlo"] = get_nlo_weight('z',genZs[0].pt)
-        elif (genWs.counts==0)&(genZs.counts==0)&(genAs.counts==1)&(genHs.counts==0):
-            weight["nlo"] = get_nlo_weight('a',genAs[0].pt)
+    if('TTJets' in dataset): weight["nlo"] = np.sqrt(get_ttbar_weight(genTops[0].pt.sum()) * get_ttbar_weight(genTops[1].pt.sum()))
+    elif('WJets' in dataset): weight["nlo"] = get_nlo_weight('w',genWs[0].pt.sum())
+    elif('DY' in dataset or 'ZJets' in dataset): weight["nlo"] = get_nlo_weight('z',genZs[0].pt.sum())
+    elif('GJets' in dataset): weight["nlo"] = get_nlo_weight('a',genAs[0].pt.sum())
 
 
     ###
@@ -346,11 +349,11 @@ def analysis(selection, year, xsec, dataset, file):
             while i < len(selection):
                 r = selection[i]
                 if k == 'recoil':
-                    h.fill(dataset=dataset, region=r, recoil=u[r].pt, weight=genw*inclusive[r])
+                    h.fill(dataset=dataset, region=r, recoil=u[r].pt, weight=genw*weight['nlo']*inclusive[r])
                 elif k == 'mindphi':
-                    h.fill(dataset=dataset, region=r, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*inclusive[r])
+                    h.fill(dataset=dataset, region=r, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*weight['nlo']*inclusive[r])
                 else:
-                    h.fill(dataset=dataset, region=r, **variables, weight=genw*inclusive[r])
+                    h.fill(dataset=dataset, region=r, **variables, weight=genw*weight['nlo']*inclusive[r])
                 i += 1
         hout[k] = h
     

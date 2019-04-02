@@ -25,20 +25,23 @@ def get_ttbar_weight(pt):
     return np.exp(0.0615 - 0.0005 * np.clip(pt, 0, 800))
 
 def get_nlo_weight(type, pt):
-
-    kfactor = uproot.open("../data/nlo/kfactor.root")
+    #print('The pT is:',pt)
+    kfactor = uproot.open("data/nlo/kfactors.root")
     sf_qcd = 1
     sf_ewk = 1
     #sf_qcd2j = 1
 
+    lo = {}
     lo['z'] = "ZJets_LO/inv_pt"    
     lo['w'] = "WJets_LO/inv_pt"
     lo['a'] = "GJets_LO/inv_pt_G"
 
+    nlo = {}
     nlo['z'] = "ZJets_012j_NLO/nominal"
     nlo['w'] = "WJets_012j_NLO/nominal"
     nlo['a'] = "GJets_1j_NLO/nominal_G"
 
+    ewk = {}
     ewk['z'] = "EWKcorr/Z"
     ewk['w'] = "EWKcorr/W"
     ewk['a'] = "EWKcorr/photon"
@@ -50,4 +53,5 @@ def get_nlo_weight(type, pt):
     sf_qcd = NLO / LO
     sf_ewk = EWK / NLO
 
-    return lookup_tools.dense_lookup.dense_lookup(sf_qcd*sf_ewk, kfactor[nlo[type]].edges)
+    correction=lookup_tools.dense_lookup.dense_lookup(sf_qcd*sf_ewk, kfactor[nlo[type]].edges)
+    return correction(pt)
