@@ -5,6 +5,7 @@ np.seterr(divide='ignore', invalid='ignore')
 from Builder import Initialize
 from fnal_column_analysis_tools import hist
 from analysis.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
+from analysis.corrections import get_ttbar_weight, get_nlo_weight
 
 hists = {
     'sumw': hist.Hist("sumw", hist.Cat("dataset", "Primary dataset"), hist.Bin("sumw", "Weight value", [0.])),
@@ -225,7 +226,7 @@ def analysis(selection, year, xsec, dataset, file):
     genHs = genLastCopy[abs(genLastCopy.pdgid)==25]
 
     weight["nlo"] = 1
-    if genTops.counts == 2: weight["nlo"] = np.sqrt(get_top_weight(genTops[0].pt) * get_top_weight(genTops[1].pt))
+    if genTops.counts == 2: weight["nlo"] = np.sqrt(get_ttbar_weight(genTops[0].pt) * get_top_weight(genTops[1].pt))
     if genTops.counts == 0:
         if (genWs.counts==1)&(genZs.counts==0)&(genAs.counts==0)&(genHs.counts==0):
             weight["nlo"] = get_nlo_weight('w',genWs[0].pt)
