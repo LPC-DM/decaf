@@ -6,6 +6,10 @@ from Builder import Initialize
 from fnal_column_analysis_tools import hist
 from analysis.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
 from analysis.corrections import get_ttbar_weight, get_nlo_weight
+from analysis.ids import e_id, isLooseElectron, isTightElectron
+from analysis.ids import mu_id, isLooseMuon
+from analysis.ids import tau_id, isLooseTau
+from analysis.ids import pho_id, isLoosePhoton
 
 hists = {
     'sumw': hist.Hist("sumw", hist.Cat("dataset", "Primary dataset"), hist.Bin("sumw", "Weight value", [0.])),
@@ -91,20 +95,13 @@ def analysis(selection, year, xsec, dataset, file):
                     'mass':tree.array("Electron_mass"),
                     'dxy':tree.array('Electron_dxy'),
                     'dz':tree.array('Electron_dz')})
-
-    if '2016' in year:
-        e['loose_id'] = tree.array('Electron_mvaSpring16GP_WP90')
-        e['tight_id']  = tree.array('Electron_mvaSpring16GP_WP80')
-        e['iso'] = tree.array('Electron_pfRelIso03_all')
-        e['isloose'] = (e.pt>7)&(abs(e.eta)<2.4)&(abs(e.dxy)<0.05)&(abs(e.dz)<0.2)&(e.iso<0.4)&(e.loose_id)
-        e['istight'] = (e.pt>30)&(abs(e.eta)<2.4)&(abs(e.dxy)<0.05)&(abs(e.dz)<0.2)&(e.tight_id)&(e.iso<0.06)
-
-    elif '2017' in year:
-        e['loose_id'] = tree.array('Electron_mvaFall17Iso_WP90')
-        e['tight_id'] = tree.array('Electron_mvaFall17Iso_WP80')
-        e['isloose'] = (e.pt>7)&(abs(e.eta)<2.4)&(abs(e.dxy)<0.05)&(abs(e.dz)<0.2)&(e.loose_id)                    
-        e['istight'] = (e.pt>30)&(abs(e.eta)<2.4)&(abs(e.dxy)<0.05)&(abs(e.dz)<0.2)&(e.tight_id)
-
+    for key in e_id[year]:
+        try:
+            e[key] = tree.array(e_id[year][key])
+        except KeyError:
+            e[key] = e.pt.zeros_like()
+    e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,year)
+    e['istight'] = isTightElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,year)
     e_loose = e[e.isloose]
     e_tight = e[e.istight]
     e_ntot = e.counts
@@ -115,24 +112,28 @@ def analysis(selection, year, xsec, dataset, file):
                      'eta':tree.array("Muon_eta"),
                      'phi':tree.array("Muon_phi"),
                      'mass':tree.array("Muon_mass"),
-                     'iso':tree.array('Muon_pfRelIso04_all'),
                      'dxy':tree.array('Muon_dxy'),
                      'dz':tree.array('Muon_dz')})
-    mu['isloose']=(mu.counts>0)&(mu.pt>5)&(abs(mu.eta)<2.4)&(abs(mu.dxy)<0.5)&(abs(mu.dz)<1.0)&(mu.iso<0.4)
+    for key in mu_id[year]:
+        try:
+            mu[key] = tree.array(mu_id[year][key])
+        except KeyError:
+            mu[key] = mu.pt.zeros_like()
+    mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,year)
     mu_loose=mu[mu.isloose]
     mu_ntot = mu.counts
     mu_nloose = mu_loose.counts
+
     tau = Initialize({'pt':tree.array('Tau_pt'),
                       'eta':tree.array('Tau_eta'),
                       'phi':tree.array('Tau_phi'),
-                      'mass':tree.array('Tau_mass'),
-                      'decayMode':tree.array('Tau_idDecayMode')})
-    if '2016' in year:
-        tau['id'] = tree.array('Tau_idMVAnew')
-        tau['isloose']=(tau.counts>0)&(tau.pt>18)&(abs(tau.eta)<2.3)&(tau.decayMode)&((tau.id&2)!=0)
-    elif '2017' in year:
-        #Need to find equivalent for 2017
-        tau['isloose']=(tau.counts>0)&(tau.pt>18)&(abs(tau.eta)<2.3)&(tau.decayMode)
+                      'mass':tree.array('Tau_mass')})
+    for key in tau_id[year]:
+        try:
+            tau[key] = tree.array(tau_id[year][key])
+        except KeyError:
+            tau[key] = tau.pt.zeros_like()
+    tau['isloose']=isLooseTau(tau.pt,tau.eta,tau.decayMode,tau.id,year)
     tau_loose=tau[tau.isloose]
     tau_ntot=tau.counts
     tau_nloose=tau_loose.counts
@@ -141,7 +142,12 @@ def analysis(selection, year, xsec, dataset, file):
                       'eta':tree.array('Photon_eta'),
                       'phi':tree.array('Photon_phi'),
                       'mass':tree.array('Photon_mass')})
-    pho['isloose'] = (pho.counts>0)&(pho.pt>15)*(abs(pho.eta)<2.5)
+    for key in pho_id[year]:
+        try:
+            pho[key] = tree.array(pho_id[year][key])
+        except KeyError:
+            pho[key] = pho.pt.zeros_like()
+    pho['isloose']=isLoosePhoton(pho.pt,pho.eta,year)
     pho_loose=pho[pho.isloose]
     pho_ntot=pho.counts
     pho_nloose=pho_loose.counts
@@ -338,7 +344,6 @@ def analysis(selection, year, xsec, dataset, file):
         variables['ZbbvsQCD'] = -1
         variables['ZccvsQCD'] = -1
         variables['ZqqvsQCD'] = -1
-
     hout = {}
     for k in hists.keys():
         h = hists[k].copy(content=False)
