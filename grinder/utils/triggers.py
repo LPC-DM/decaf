@@ -1,3 +1,7 @@
+###
+# From https://github.com/sidnarayanan/PandaAnalysis/blob/0e411591911ae83dcbdc428496e7700445e844ae/Flat/src/CommonOps.cc#L38-L155
+###
+
 met_trigger_paths = {}
 met_trigger_paths["2016"] = ["HLT_PFMET170_NoiseCleaned",
                              "HLT_PFMET170_HBHECleaned",

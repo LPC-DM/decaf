@@ -5,7 +5,8 @@ np.seterr(divide='ignore', invalid='ignore', over='ignore')
 from Builder import Initialize
 from fnal_column_analysis_tools import hist
 from utils.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
-from utils.corrections import get_ttbar_weight, get_nlo_weight
+from utils.corrections import get_ttbar_weight, get_nlo_weight, get_pu_weight
+from utils.corrections import get_met_trig_weight, get_met_zmm_trig_weight, get_ele_trig_weight, get_pho_trig_weight
 from utils.ids import e_id, isLooseElectron, isTightElectron
 from utils.ids import mu_id, isLooseMuon
 from utils.ids import tau_id, isLooseTau
@@ -44,17 +45,28 @@ samples = {
 }
 
 def analysis(selection, year, xsec, dataset, file):
+    weight = {}
     tree = uproot.open(file)["Events"]
     genw = 1
     sumw = 1
 
     ###
-    #For MC, retrieve the LHE weights, to take into account NLO destructive interference, and their sum
+    # For MC, retrieve the LHE weights, to take into account NLO destructive interference, and their sum
     ###
     if xsec != -1:
         genw = tree.array("genWeight")
         run_tree = uproot.open(file)["Runs"]
         sumw = run_tree.array("genEventSumw")[0]
+        #nScaleWeights = run_tree.array("nLHEScaleSumw")
+
+    ###
+    # Calculate PU weight and systematic variations
+    ###
+
+    nvtx = tree.array("PV_npvs")
+    weight["pu"],weight["puUp"],weight["puDown"] = get_pu_weight(nvtx,year)
+    #print(weight["pu"],weight["puUp"],weight["puDown"])
+
     ###
     #Importing the trigger paths per year from trigger.py and constructing the trigger boolean
     ###
@@ -236,8 +248,6 @@ def analysis(selection, year, xsec, dataset, file):
     isZ  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==1)&(genAs.counts==0)&(genHs.counts==0)
     isA  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==1)&(genHs.counts==0)
 
-
-    weight = {}
     weight["nlo"] = 1
     if('TTJets' in dataset): weight["nlo"] = np.sqrt(get_ttbar_weight(genTops[0].pt.sum()) * get_ttbar_weight(genTops[1].pt.sum()))
     elif('WJets' in dataset): weight["nlo"] = get_nlo_weight('w',genWs[0].pt.sum())
@@ -248,8 +258,10 @@ def analysis(selection, year, xsec, dataset, file):
     ###
     #Calculating derivatives
     ###
-    diele = e_loose.distincts().i0+e_loose.distincts().i1
-    dimu = mu_loose.distincts().i0+mu_loose.distincts().i1
+    ele_pairs = e_loose.distincts()
+    diele = ele_pairs.i0+ele_pairs.i1
+    mu_pairs = mu_loose.distincts()
+    dimu = mu_pairs.i0+mu_pairs.i1
     
     u={}
     u["iszeroL"] = met
@@ -278,6 +290,23 @@ def analysis(selection, year, xsec, dataset, file):
         u["isoneA"] = met+pho_loose[pho_loose.pt.argmax()].sum()
     else:
         u["isoneA"] = met
+
+    weight["trig"] = {}
+    weight["trig"]["iszeroL"] = get_met_trig_weight(u["iszeroL"].pt,year)
+    weight["trig"]["isoneM"] = get_met_trig_weight(u["isoneM"].pt,year)
+    weight["trig"]["istwoM"] = get_met_zmm_trig_weight(u["istwoM"].pt,year)
+    weight["trig"]["isoneE"] = 1
+    if e_loose.content.size>0:
+        weight["trig"]["isoneE"] = get_ele_trig_weight(e_loose[e_loose.pt.argmax()].eta.sum(), e_loose[e_loose.pt.argmax()].pt.sum(), np.full_like(e_loose[e_loose.pt.argmax()].eta.sum(),-99),np.full_like(e_loose[e_loose.pt.argmax()].pt.sum(),-99),year)
+    weight["trig"]["istwoE"] = 1
+    if diele.content.size>0:
+        weight["trig"]["istwoE"] = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),year)
+    weight["trig"]["isoneA"] = 1
+    if pho_loose.content.size>0:
+        weight["trig"]["isoneA"] = get_pho_trig_weight(pho_loose[pho_loose.pt.argmax()].pt.sum(),year)
+    #print(weight["trig"]["iszeroL"],weight["trig"]["isoneM"],weight["trig"]["istwoM"])
+    #print(weight["trig"]["isoneE"],weight["trig"]["istwoE"])
+    #print(weight["trig"]["isoneA"])
 
     ###
     #Event selection
