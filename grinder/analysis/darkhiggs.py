@@ -8,7 +8,7 @@ from utils.triggers import met_trigger_paths, singleele_trigger_paths, singlepho
 from utils.corrections import get_ttbar_weight, get_nlo_weight, get_pu_weight
 from utils.corrections import get_met_trig_weight, get_met_zmm_trig_weight, get_ele_trig_weight, get_pho_trig_weight
 from utils.ids import e_id, isLooseElectron, isTightElectron
-from utils.ids import mu_id, isLooseMuon
+from utils.ids import mu_id, isLooseMuon, isTightMuon
 from utils.ids import tau_id, isLooseTau
 from utils.ids import pho_id, isLoosePhoton
 
@@ -132,9 +132,12 @@ def analysis(selection, year, xsec, dataset, file):
         except KeyError:
             mu[key] = mu.pt.zeros_like()
     mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,year)
+    mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.tight_id,year)
     mu_loose=mu[mu.isloose]
+    mu_tight=mu[mu.istight]
     mu_ntot = mu.counts
     mu_nloose = mu_loose.counts
+    mu_ntight = mu_tight.counts
 
     tau = Initialize({'pt':tree.array('Tau_pt'),
                       'eta':tree.array('Tau_eta'),

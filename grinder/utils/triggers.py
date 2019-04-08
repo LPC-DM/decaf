@@ -19,12 +19,9 @@ met_trigger_paths["2017"] = ["HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60",
                              "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight",
                              "HLT_PFMETNoMu130_PFMHTNoMu130_IDTight",
                              "HLT_PFMETNoMu140_PFMHTNoMu140_IDTight"]
-met_trigger_paths["2018"] = ["HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_PFHT60",
-                             "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60",
-                             "HLT_PFMETNoMu110_PFMHTNoMu110_IDTight",
-                             "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight",
-                             "HLT_PFMETNoMu130_PFMHTNoMu130_IDTight",
-                             "HLT_PFMETNoMu140_PFMHTNoMu140_IDTight"]
+met_trigger_paths["2018"] = ["HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60_v",
+                             "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v",
+                             "HLT_PFMETNoMu140_PFMHTNoMu140_IDTight_v"]
 
 singleele_trigger_paths = {}
 singleele_trigger_paths["2016"] = ["HLT_Ele27_WP85_Gsf",
@@ -39,9 +36,8 @@ singleele_trigger_paths["2016"] = ["HLT_Ele27_WP85_Gsf",
 singleele_trigger_paths["2017"] = ["HLT_Ele35_WPTight_Gsf",
                                    "HLT_Ele38_WPTight_Gsf",
                                    "HLT_Ele40_WPTight_Gsf"]
-singleele_trigger_paths["2018"] = ["HLT_Ele35_WPTight_Gsf",
-                                   "HLT_Ele38_WPTight_Gsf",
-                                   "HLT_Ele40_WPTight_Gsf"]
+singleele_trigger_paths["2018"] = ["HLT_Ele35_WPTight_Gsf_v",
+                                   "HLT_Ele115_CaloIdVT_GsfTrkIdT_v"]
 
 singlepho_trigger_paths = {}
 singlepho_trigger_paths["2016"] = ["HLT_Photon175",

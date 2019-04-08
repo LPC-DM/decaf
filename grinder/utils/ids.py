@@ -20,6 +20,8 @@ def isLooseElectron(pt,eta,dxy,dz,iso,loose_id,year):
         mask = (pt>7)&(abs(eta)<2.4)&(abs(dxy)<0.05)&(abs(dz)<0.2)&(iso<0.4)&(loose_id)
     elif year=='2017':
         mask = (pt>7)&(abs(eta)<2.4)&(abs(dxy)<0.05)&(abs(dz)<0.2)&(loose_id)
+    elif year=='2018':
+        mask = (pt>10)&(abs(eta)<2.5)&(loose_id)
     return mask
 
 def isTightElectron(pt,eta,dxy,dz,iso,tight_id,year):
@@ -28,6 +30,8 @@ def isTightElectron(pt,eta,dxy,dz,iso,tight_id,year):
         return ((pt>30)&(abs(eta)<2.4)&(abs(dxy)<0.05)&(abs(dz)<0.2)&(tight_id)&(iso<0.06))
     elif year=='2017':
         return ((pt>30)&(abs(eta)<2.4)&(abs(dxy)<0.05)&(abs(dz)<0.2)&(tight_id))
+    elif year=='2018':
+        return ((pt>40)&(abs(eta)<2.5)&(tight_id))
     return mask
 
 mu_id = {}
@@ -41,6 +45,7 @@ mu_id['2016']['iso'] = 'Muon_pfRelIso04_all'
 #mu_id['2017']['loose_id'] = 'Electron_mvaFall17Iso_WP90'
 #mu_id['2017']['tight_id'] = 'Electron_mvaFall17Iso_WP80'
 mu_id['2017']['iso'] = 'Muon_pfRelIso04_all'
+mu_id['2018']['tight_id'] = 'Muon_tightId'
 
 def isLooseMuon(pt,eta,dxy,dz,iso,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
@@ -48,14 +53,18 @@ def isLooseMuon(pt,eta,dxy,dz,iso,year):
         mask = (pt>5)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4)
     elif year=='2017':
         mask = (pt>5)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4)
+    elif year=='2018':
+        mask = (pt>10)&(abs(eta)<2.4)
     return mask
 
-def isTightMuon(pt,eta,dxy,dz,iso,year):
+def isTightMuon(pt,eta,dxy,dz,iso,tight_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
         mask = (pt>5)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4)
     elif year=='2017':
         mask = (pt>5)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4)
+    elif year=='2018':
+        mask = (pt>10)&(abs(eta)<2.4)&(tight_id)
     return mask
 
 tau_id = {}
