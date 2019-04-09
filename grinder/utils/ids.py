@@ -80,10 +80,10 @@ tau_id['2016']['decayMode'] = 'Tau_idDecayMode'
 tau_id['2017']['id'] = 'Null'
 tau_id['2017']['decayMode'] = 'Tau_idDecayMode'
 
-def isLooseTau(pt,eta,decayMode,id,year):
+def isLooseTau(pt,eta,decayMode,_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>18)&(abs(eta)<2.3)&(decayMode)&((id&2)!=0)
+        mask = (pt>18)&(abs(eta)<2.3)&(decayMode)#&((_id&2)!=0)
     elif year=='2017':
         mask = (pt>18)&(abs(eta)<2.3)&(decayMode)
     return mask
