@@ -63,6 +63,7 @@ The generation of histograms can be launched from the ```grinder``` folder. Curr
 Phyton futures allows for running on multiple processor on a single node. The number of processor is currently hardcoded and set to 8. To run the local histogram generation:
 
 ```
+cd ../grinder
 python run.py --year 2017 --lumi 41.53 --dataset TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8____0
 ```
 
