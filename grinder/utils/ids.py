@@ -47,6 +47,7 @@ mu_id['2016']['tight_id'] = 'Muon_tightId'
 #mu_id['2017']['tight_id'] = 'Electron_mvaFall17Iso_WP80'
 mu_id['2017']['iso'] = 'Muon_pfRelIso04_all'
 mu_id['2017']['tight_id'] = 'Muon_tightId'
+mu_id['2018']['iso'] = 'Null'
 mu_id['2018']['tight_id'] = 'Muon_tightId'
 
 def isLooseMuon(pt,eta,dxy,dz,iso,year):
