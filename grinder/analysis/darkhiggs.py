@@ -14,6 +14,7 @@ from utils.ids import pho_id, isLoosePhoton
 
 hists = {
     'sumw': hist.Hist("sumw", hist.Cat("dataset", "Primary dataset"), hist.Bin("sumw", "Weight value", [0.])),
+    'CaloMinusPfOverRecoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("CaloMinusPfOverRecoil","Calo - Pf / Recoil",15,0,1)),
     'recoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("recoil","Hadronic Recoil",[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
     'mindphi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("mindphi","Min dPhi(MET,AK4s)",15,0,6.28)),
     'j1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("j1pt","AK4 Leading Jet Pt",50,30,500)),
@@ -230,6 +231,11 @@ def analysis(selection, year, xsec, dataset, file):
                       'phi':tree.array("MET_phi"),
                       'mass':0})
 
+    calomet = Initialize({'pt':tree.array("CaloMET_pt"),
+                      'eta':0,
+                      'phi':tree.array("CaloMET_phi"),
+                      'mass':0})
+
     gen = Initialize({'pt':tree.array('GenPart_pt'),
                       'eta':tree.array('GenPart_eta'),
                       'phi':tree.array('GenPart_phi'),
@@ -387,6 +393,8 @@ def analysis(selection, year, xsec, dataset, file):
                 r = selection[i]
                 if k == 'recoil':
                     h.fill(dataset=dataset, region=r, recoil=u[r].pt, weight=genw*weight['nlo']*inclusive[r])
+                elif k == 'CaloMinusPfOverRecoil':
+                    h.fill(dataset=dataset, region=r, CaloMinusPfOverRecoil= calomet.pt - met.pt / u[r].pt, weight=genw*weight['nlo']*inclusive[r])
                 elif k == 'mindphi':
                     h.fill(dataset=dataset, region=r, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*weight['nlo']*inclusive[r])
                 else:
