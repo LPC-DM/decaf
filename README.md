@@ -79,3 +79,5 @@ python submit.py --year 2017 --lumi 41.53 -t
 
 This way jobs to generate the full set of 2017 histograms will be submitted to condor. the ```-t``` will allow for tarring the working environment and the necessary dependences to run on condor nodes. The module has a ```--dataset``` option that works like described before for ```run.py```. Will allow you to run on a single batch, dataset, or batches/datasets that match the input string.
 
+## Plot
+
