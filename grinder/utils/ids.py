@@ -86,7 +86,7 @@ def isLooseTau(pt,eta,decayMode,_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
         mask = (pt>18)&(abs(eta)<2.3)&(decayMode)#&((_id&2)!=0)
-   elif year=='2017':
+    elif year=='2017':
         mask = (pt>20)&(abs(eta)<2.3)&(decayMode)
     elif year=='2018':
         mask = (pt>20)&(abs(eta)<2.3)&(decayMode)&((id&2)!=0)
