@@ -10,7 +10,7 @@ from utils.corrections import get_met_trig_weight, get_met_zmm_trig_weight, get_
 from utils.ids import e_id, isLooseElectron, isTightElectron
 from utils.ids import mu_id, isLooseMuon, isTightMuon
 from utils.ids import tau_id, isLooseTau
-from utils.ids import pho_id, isLoosePhoton
+from utils.ids import pho_id, isLoosePhoton, isTightPhoton
 from utils.metfilters import met_filter_flags
 
 hists = {
@@ -174,10 +174,13 @@ def analysis(selection, year, xsec, dataset, file):
             pho[key] = tree.array(pho_id[year][key])
         except KeyError:
             pho[key] = pho.pt.zeros_like()
-    pho['isloose']=isLoosePhoton(pho.pt,pho.eta,year)
+    pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho.loose_id,pho.eleveto,year)
+    pho['istight']=isTightPhoton(pho.pt,pho.eta,pho.tight_id,pho.eleveto,year)
     pho_loose=pho[pho.isloose]
+    pho_tight=pho[pho.istight]
     pho_ntot=pho.counts
     pho_nloose=pho_loose.counts
+    pho_ntight=pho_tight.counts
 
     fj = Initialize({'pt':tree.array('AK15Puppi_pt'),
                      'eta':tree.array('AK15Puppi_eta'),
@@ -305,8 +308,8 @@ def analysis(selection, year, xsec, dataset, file):
     else:
         u["istwoE"] = met
 
-    if pho_loose.content.size>0:
-        u["isoneA"] = met+pho_loose[pho_loose.pt.argmax()].sum()
+    if pho_tight.content.size>0:
+        u["isoneA"] = met+pho_tight[pho_tight.pt.argmax()].sum()
     else:
         u["isoneA"] = met
 
@@ -321,8 +324,8 @@ def analysis(selection, year, xsec, dataset, file):
     if diele.content.size>0:
         weight["trig"]["istwoE"] = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),year)
     weight["trig"]["isoneA"] = 1
-    if pho_loose.content.size>0:
-        weight["trig"]["isoneA"] = get_pho_trig_weight(pho_loose[pho_loose.pt.argmax()].pt.sum(),year)
+    if pho_tight.content.size>0:
+        weight["trig"]["isoneA"] = get_pho_trig_weight(pho_tight[pho_tight.pt.argmax()].pt.sum(),year)
     #print(weight["trig"]["iszeroL"],weight["trig"]["isoneM"],weight["trig"]["istwoM"])
     #print(weight["trig"]["isoneE"],weight["trig"]["istwoE"])
     #print(weight["trig"]["isoneA"])
@@ -351,7 +354,7 @@ def analysis(selection, year, xsec, dataset, file):
         selections["istwoE"] = (e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele[diele.pt.argmax()].mass.sum()>60)&(diele[diele.pt.argmax()].mass.sum()<120)&(passSingleEleTrig)&(passMetFilters)
     else:
         selections["istwoE"] = (e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)&(passMetFilters)
-    selections["isoneA"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)&(passSinglePhoTrig)&(passMetFilters)
+    selections["isoneA"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1)&(passSinglePhoTrig)&(passMetFilters)
 
     for k in u.keys():
 #        if selection in k:
