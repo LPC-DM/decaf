@@ -42,15 +42,11 @@ mu_id['2016'] = {}
 mu_id['2017'] = {}
 mu_id['2018'] = {}
 
-#mu_id['2016']['loose_id'] = 'Electron_mvaSpring16GP_WP90'
-#mu_id['2016']['tight_id'] = 'Electron_mvaSpring16GP_WP80'
 mu_id['2016']['iso'] = 'Muon_pfRelIso04_all'
 mu_id['2016']['tight_id'] = 'Muon_tightId'
-#mu_id['2017']['loose_id'] = 'Electron_mvaFall17Iso_WP90'
-#mu_id['2017']['tight_id'] = 'Electron_mvaFall17Iso_WP80'
 mu_id['2017']['iso'] = 'Muon_pfRelIso04_all'
 mu_id['2017']['tight_id'] = 'Muon_tightId'
-mu_id['2018']['iso'] = 'Null'
+mu_id['2018']['iso'] = 'Muon_pfRelIso04_all'
 mu_id['2018']['tight_id'] = 'Muon_tightId'
 
 def isLooseMuon(pt,eta,dxy,dz,iso,year):
@@ -60,7 +56,7 @@ def isLooseMuon(pt,eta,dxy,dz,iso,year):
     elif year=='2017':
         mask = (pt>5)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4)
     elif year=='2018':
-        mask = (pt>10)&(abs(eta)<2.4)
+        mask = (pt>20)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4) #dxy and dz cuts are missing from loose_id; very loose isolation is 0.4
     return mask
 
 def isTightMuon(pt,eta,dxy,dz,iso,tight_id,year):
@@ -70,7 +66,7 @@ def isTightMuon(pt,eta,dxy,dz,iso,tight_id,year):
     elif year=='2017':
         mask = (pt>5)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4)
     elif year=='2018':
-        mask = (pt>10)&(abs(eta)<2.4)&(tight_id)
+        mask = (pt>20)&(abs(eta)<2.4)&(tight_id)&(iso<0.15) #dxy and dz cuts are baked on tight_id; tight isolation is 0.15
     return mask
 
 tau_id = {}
