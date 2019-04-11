@@ -183,7 +183,7 @@ def analysis(selection, year, xsec, dataset, file):
                      'eta':tree.array('AK15Puppi_eta'),
                      'phi':tree.array('AK15Puppi_phi'),
                      'mass':tree.array('AK15Puppi_mass'),
-                     'jetId':tree.array('AK15Puppi_jetId'),
+                     'id':tree.array('AK15Puppi_jetId'),
                      'probTbcq':tree.array('AK15Puppi_probTbcq'),
                      'probTbqq':tree.array('AK15Puppi_probTbqq'),
                      'probTbc':tree.array('AK15Puppi_probTbc'),
@@ -205,7 +205,7 @@ def analysis(selection, year, xsec, dataset, file):
     fj['TvsQCD'] = fj.probTbcq+fj.probTbqq+fj.probTbc+fj.probTbq
     fj['hSvsQCD'] = (fj.probZbb + fj.probHbb) / (fj.probZbb+fj.probHbb+fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
     fj['VvsQCD'] = (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq) / (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
-    fj['isgood'] = (fj.pt > 200)&(abs(fj.eta)<2.4)&(fj.jetId > 0)
+    fj['isgood'] = (fj.pt > 200)&(abs(fj.eta)<2.4)&((fj.id&2)!=0)
     fj['isclean'] =~fj.match(pho,1.5)&~fj.match(mu,1.5)&~fj.match(e,1.5)&fj.isgood
     fj_good=fj[fj.isgood]
     fj_clean=fj[fj.isclean]
@@ -217,8 +217,12 @@ def analysis(selection, year, xsec, dataset, file):
                     'eta':tree.array('Jet_eta'),
                     'phi':tree.array('Jet_phi'),
                     'mass':tree.array('Jet_mass'),
-                    'id':tree.array('Jet_jetId')})
-    j['isgood'] = (j.pt>25)&(abs(j.eta)<4.5)&((j.id&2)!=0)
+                    'id':tree.array('Jet_jetId'),
+                    'nhf':tree.array('Jet_neHEF'),
+                    'nef':tree.array('Jet_neEmEF'),
+                    'chf':tree.array('Jet_chHEF'),
+                    'cef':tree.array('Jet_chEmEF')})
+    j['isgood'] = (j.pt>25)&(abs(j.eta)<2.4)&((j.id&2)!=0)&(j.nhf<0.8)&(j.nef<0.99)&(j.chf>0.1)&(j.cef<0.99)
     j['isclean'] = ~j.match(e,0.4)&~j.match(mu,0.4)&~j.match(pho,0.4)&j.isgood
     j['isiso'] =  ~(j.match(fj,1.5))&j.isclean
     j_good = j[j.isgood]
