@@ -34,7 +34,7 @@ def isTightElectron(pt,eta,dxy,dz,iso,tight_id,year):
     elif year=='2017':
         return ((pt>30)&(abs(eta)<2.4)&(abs(dxy)<0.05)&(abs(dz)<0.2)&(tight_id))
     elif year=='2018':
-        return ((pt>40)&(abs(eta)<2.5)&(tight_id))
+        return ((pt>35)&(abs(eta)<2.5)&(tight_id))
     return mask
 
 mu_id = {}
