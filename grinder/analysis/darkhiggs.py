@@ -84,7 +84,9 @@ def analysis(selection, year, xsec, dataset, file):
         except KeyError:
             #print("No trigger bit in file for path ",path)
             pass
-    passMetTrig = np.prod([met_trigger[key] for key in met_trigger], axis=0)
+    passMetTrig = False
+    for path in met_trigger:
+        passMetTrig |= met_trigger[path]
 
     singleele_trigger = {}
     for path in singleele_trigger_paths[year]:
@@ -93,7 +95,9 @@ def analysis(selection, year, xsec, dataset, file):
         except KeyError:
             #print("No trigger bit in file for path ",path)
             pass
-    passSingleEleTrig = np.prod([singleele_trigger[key] for key in singleele_trigger], axis=0)
+    passSingleEleTrig = False
+    for path in singleele_trigger:
+        passSingleEleTrig |= singleele_trigger[path] 
 
     singlepho_trigger = {}
     for path in singlepho_trigger_paths[year]:
@@ -102,7 +106,9 @@ def analysis(selection, year, xsec, dataset, file):
         except KeyError:
             #print("No trigger bit in file for path ",path)
             pass
-    passSinglePhoTrig = np.prod([singlepho_trigger[key] for key in singlepho_trigger], axis=0)
+    passSinglePhoTrig = False
+    for path in singlepho_trigger:
+        passSinglePhoTrig |= singlepho_trigger[path] 
 
     ###
     #Initialize physics objects
@@ -330,7 +336,7 @@ def analysis(selection, year, xsec, dataset, file):
         inclusive[k] = skinny[k]|loose[k]
  
     selections={}
-    selections["iszeroL"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)#&(passMetTrig)&(passMetFilters)
+    selections["iszeroL"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)&(passMetFilters)
     selections["isoneM"] = (e_nloose==0)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)&(passMetFilters)
     selections["isoneE"] = (e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)&(passMetFilters)
     if dimu.content.size > 0:
