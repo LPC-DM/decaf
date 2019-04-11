@@ -285,12 +285,12 @@ def analysis(selection, year, xsec, dataset, file):
     u={}
     u["iszeroL"] = met
 
-    if mu_loose.content.size>0:
+    if mu_tight.content.size>0:
         u["isoneM"] = met+mu_loose[mu_loose.pt.argmax()].sum()
     else:
         u["isoneM"] = met
 
-    if e_loose.content.size>0:
+    if e_tight.content.size>0:
         u["isoneE"] = met+e_loose[e_loose.pt.argmax()].sum()
     else:
         u["isoneE"] = met
@@ -315,8 +315,8 @@ def analysis(selection, year, xsec, dataset, file):
     weight["trig"]["isoneM"] = get_met_trig_weight(u["isoneM"].pt,year)
     weight["trig"]["istwoM"] = get_met_zmm_trig_weight(u["istwoM"].pt,year)
     weight["trig"]["isoneE"] = 1
-    if e_loose.content.size>0:
-        weight["trig"]["isoneE"] = get_ele_trig_weight(e_loose[e_loose.pt.argmax()].eta.sum(), e_loose[e_loose.pt.argmax()].pt.sum(), np.full_like(e_loose[e_loose.pt.argmax()].eta.sum(),-99),np.full_like(e_loose[e_loose.pt.argmax()].pt.sum(),-99),year)
+    if e_tight.content.size>0:
+        weight["trig"]["isoneE"] = get_ele_trig_weight(e_tight[e_tight.pt.argmax()].eta.sum(), e_tight[e_tight.pt.argmax()].pt.sum(), np.full_like(e_tight[e_tight.pt.argmax()].eta.sum(),-99),np.full_like(e_tight[e_tight.pt.argmax()].pt.sum(),-99),year)
     weight["trig"]["istwoE"] = 1
     if diele.content.size>0:
         weight["trig"]["istwoE"] = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),year)
@@ -341,16 +341,16 @@ def analysis(selection, year, xsec, dataset, file):
  
     selections={}
     selections["iszeroL"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)&(passMetFilters)
-    selections["isoneM"] = (e_nloose==0)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)&(passMetFilters)
-    selections["isoneE"] = (e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)&(passMetFilters)
+    selections["isoneM"] = (e_nloose==0)&(mu_ntight==1)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)&(passMetFilters)
+    selections["isoneE"] = (e_ntight==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)&(passMetFilters)
     if dimu.content.size > 0:
-        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(dimu[dimu.pt.argmax()].mass.sum()>60)&(dimu[dimu.pt.argmax()].mass.sum()<120)&(passMetTrig)&(passMetFilters)
+        selections["istwoM"] = (e_nloose==0)&(mu_ntight==1)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(dimu[dimu.pt.argmax()].mass.sum()>60)&(dimu[dimu.pt.argmax()].mass.sum()<120)&(passMetTrig)&(passMetFilters)
     else:
-        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)&(passMetFilters)
+        selections["istwoM"] = (e_nloose==0)&(mu_ntight==1)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)&(passMetFilters)
     if diele.content.size > 0:
-        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele[diele.pt.argmax()].mass.sum()>60)&(diele[diele.pt.argmax()].mass.sum()<120)&(passSingleEleTrig)&(passMetFilters)
+        selections["istwoE"] = (e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele[diele.pt.argmax()].mass.sum()>60)&(diele[diele.pt.argmax()].mass.sum()<120)&(passSingleEleTrig)&(passMetFilters)
     else:
-        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)&(passMetFilters)
+        selections["istwoE"] = (e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)&(passMetFilters)
     selections["isoneA"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)&(passSinglePhoTrig)&(passMetFilters)
 
     for k in u.keys():
