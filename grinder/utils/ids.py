@@ -117,5 +117,5 @@ def isTightPhoton(pt,eta,tight_id,eleveto,year):
     elif year=='2017':
         mask = (pt>15)*(abs(eta)<2.5)
     elif year=='2018':
-        mask = (pt>180)&(abs(eta)<2.5)&(tight_id)&(eleveto) # Trigger threshold is at 175
+        mask = (pt>210)&(abs(eta)<2.5)&(tight_id)&(eleveto) # Trigger threshold is at 175
     return mask

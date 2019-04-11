@@ -18,8 +18,8 @@ hists = {
     'CaloMinusPfOverRecoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("CaloMinusPfOverRecoil","Calo - Pf / Recoil",15,0,1)),
     'recoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("recoil","Hadronic Recoil",[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
     'mindphi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("mindphi","Min dPhi(MET,AK4s)",15,0,6.28)),
-    'j1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("j1pt","AK4 Leading Jet Pt",50,30,500)),
-    'fj1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("fj1pt","AK15 Leading Jet Pt",50,200,700)),
+    'j1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("j1pt","AK4 Leading Jet Pt",50,30,1250)),
+    'fj1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("fj1pt","AK15 Leading Jet Pt",50,200,1250)),
     'njets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("njets","AK4 Number of Jets",6,0,5)),
     'nfjets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("nfjets","AK15 Number of Jets",4,0,3)),
     'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("fjmass","AK15 Jet Mass",50,20,250)),
@@ -358,9 +358,9 @@ def analysis(selection, year, xsec, dataset, file):
 
     for k in u.keys():
 #        if selection in k:
-        skinny[k] = skinny[k]&selections[k]&(u[k].pt>200)
-        loose[k] = loose[k]&selections[k]&(u[k].pt>200)
-        inclusive[k] = inclusive[k]&selections[k]&(u[k].pt>200)
+        skinny[k] = skinny[k]&selections[k]&(u[k].pt>250)
+        loose[k] = loose[k]&selections[k]&(u[k].pt>250)
+        inclusive[k] = inclusive[k]&selections[k]&(u[k].pt>250)
 
     variables = {}
     variables['j1pt'] = j_clean.pt.max()
@@ -391,7 +391,7 @@ def analysis(selection, year, xsec, dataset, file):
                 if k == 'recoil':
                     h.fill(dataset=dataset, region=r, recoil=u[r].pt, weight=genw*weight['nlo']*inclusive[r])
                 elif k == 'CaloMinusPfOverRecoil':
-                    h.fill(dataset=dataset, region=r, CaloMinusPfOverRecoil= calomet.pt - met.pt / u[r].pt, weight=genw*weight['nlo']*inclusive[r])
+                    h.fill(dataset=dataset, region=r, CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[r].pt, weight=genw*weight['nlo']*inclusive[r])
                 elif k == 'mindphi':
                     h.fill(dataset=dataset, region=r, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*weight['nlo']*inclusive[r])
                 else:
