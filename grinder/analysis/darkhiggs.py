@@ -286,12 +286,12 @@ def analysis(selection, year, xsec, dataset, file):
     u["iszeroL"] = met
 
     if mu_tight.content.size>0:
-        u["isoneM"] = met+mu_loose[mu_loose.pt.argmax()].sum()
+        u["isoneM"] = met+mu_tight[mu_tight.pt.argmax()].sum()
     else:
         u["isoneM"] = met
 
     if e_tight.content.size>0:
-        u["isoneE"] = met+e_loose[e_loose.pt.argmax()].sum()
+        u["isoneE"] = met+e_tight[e_tight.pt.argmax()].sum()
     else:
         u["isoneE"] = met
 
