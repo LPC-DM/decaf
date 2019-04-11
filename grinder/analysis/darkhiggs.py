@@ -31,10 +31,10 @@ hists = {
 samples = {
     "iszeroL":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET'),
     "isoneM":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET'),
-    "isoneE":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','SingleElectron'),
+    "isoneE":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','SingleElectron','EGamma'),
     "istwoM":('WJets','DY','TT','ST','WW','WZ','ZZ','HToBB','MET'),
-    "istwoE":('WJets','DY','TT','ST','WW','WZ','ZZ','HToBB','SingleElectron'),
-    "isoneA":('GJets','QCD','SinglePhoton')
+    "istwoE":('WJets','DY','TT','ST','WW','WZ','ZZ','HToBB','SingleElectron','EGamma'),
+    "isoneA":('GJets','QCD','SinglePhoton','EGamma')
 }
 
 def analysis(selection, year, xsec, dataset, file):
