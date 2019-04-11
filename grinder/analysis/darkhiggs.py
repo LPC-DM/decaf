@@ -23,16 +23,8 @@ hists = {
     'nfjets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("nfjets","AK15 Number of Jets",4,0,3)),
     'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("fjmass","AK15 Jet Mass",50,20,250)),
     'TvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("TvsQCD","TvsQCD",15,0,1)),
-    'WvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("WvsQCD","WvsQCD",15,0,1)),
-    'ZvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("ZvsQCD","ZvsQCD",15,0,1)),
+    'hSvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("hSvsQCD","hSvsQCD",15,0,1)),
     'VvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("VvsQCD","VvsQCD",15,0,1)),
-    'ZHbbvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("ZHbbvsQCD","ZHbbvsQCD",15,0,1)),
-    'ZHccvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("ZHccvsQCD","ZHccvsQCD",15,0,1)),
-    'WcqvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("WcqvsQCD","WcqvsQCD",15,0,1)),
-    'WqqvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("WqqvsQCD","WqqvsQCD",15,0,1)),
-    'ZbbvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("ZbbvsQCD","ZbbvsQCD",15,0,1)),
-    'ZccvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("ZccvsQCD","ZccvsQCD",15,0,1)),
-    'ZqqvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("ZqqvsQCD","ZqqvsQCD",15,0,1))
 }
 
 
@@ -191,17 +183,9 @@ def analysis(selection, year, xsec, dataset, file):
                      'probQCDc':tree.array('AK15Puppi_probQCDc'),
                      'probQCDothers':tree.array('AK15Puppi_probQCDothers')})
     fj['probQCD'] = fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
-    fj['TvsQCD'] = (fj.probTbcq+fj.probTbqq)/fj.probQCD
-    fj['WvsQCD'] = (fj.probWcq+fj.probWqq)/fj.probQCD
-    fj['ZvsQCD'] = (fj.probZbb+fj.probZcc+fj.probZqq)/fj.probQCD
-    fj['VvsQCD'] = (fj.probZbb+fj.probZcc+fj.probZqq+fj.probWcq+fj.probWqq)/fj.probQCD
-    fj['ZHbbvsQCD'] = (fj.probZbb+fj.probHbb)/fj.probQCD
-    fj['ZHccvsQCD'] = (fj.probZcc+fj.probHcc)/fj.probQCD
-    fj['WcqvsQCD'] = fj.probWcq/fj.probQCD
-    fj['WqqvsQCD'] = fj.probWqq/fj.probQCD
-    fj['ZbbvsQCD'] = fj.probZbb/fj.probQCD
-    fj['ZccvsQCD'] = fj.probZcc/fj.probQCD
-    fj['ZqqvsQCD'] = fj.probZqq/fj.probQCD
+    fj['TvsQCD'] = fj.probTbcq+fj.probTbqq+fj.probTbc+fj.probTbq
+    fj['hSvsQCD'] = (fj.probZbb + fj.probHbb) / (fj.probZbb+fj.probHbb+fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
+    fj['VvsQCD'] = (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq) / (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
     fj['isgood'] = (fj.pt > 200)&(abs(fj.eta)<2.4)&(fj.jetId > 0)
     fj['isclean'] =~fj.match(pho,1.5)&~fj.match(mu,1.5)&~fj.match(e,1.5)&fj.isgood
     fj_good=fj[fj.isgood]
@@ -236,32 +220,35 @@ def analysis(selection, year, xsec, dataset, file):
                       'phi':tree.array("CaloMET_phi"),
                       'mass':0})
 
-    gen = Initialize({'pt':tree.array('GenPart_pt'),
-                      'eta':tree.array('GenPart_eta'),
-                      'phi':tree.array('GenPart_phi'),
-                      'mass':tree.array('GenPart_mass'),
-                      'pdgid':tree.array('GenPart_pdgId'),
-                      'status':tree.array('GenPart_status'), 
-                      'flags':tree.array('GenPart_statusFlags'),
-                      'motherid':tree.array('GenPart_genPartIdxMother')})
-    
-    genLastCopy = gen[gen.flags&(1 << 13)==0]
-    genTops = genLastCopy[abs(genLastCopy.pdgid)==6]
-    genWs = genLastCopy[abs(genLastCopy.pdgid)==24]
-    genZs = genLastCopy[abs(genLastCopy.pdgid)==23]
-    genAs = genLastCopy[abs(genLastCopy.pdgid)==22]
-    genHs = genLastCopy[abs(genLastCopy.pdgid)==25]
-
-    isTT = (genTops.counts==2)
-    isW  = (genTops.counts==0)&(genWs.counts==1)&(genZs.counts==0)&(genAs.counts==0)&(genHs.counts==0)
-    isZ  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==1)&(genAs.counts==0)&(genHs.counts==0)
-    isA  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==1)&(genHs.counts==0)
-
     weight["nlo"] = 1
-    if('TTJets' in dataset): weight["nlo"] = np.sqrt(get_ttbar_weight(genTops[0].pt.sum()) * get_ttbar_weight(genTops[1].pt.sum()))
-    elif('WJets' in dataset): weight["nlo"] = get_nlo_weight('w',genWs[0].pt.sum())
-    elif('DY' in dataset or 'ZJets' in dataset): weight["nlo"] = get_nlo_weight('z',genZs[0].pt.sum())
-    elif('GJets' in dataset): weight["nlo"] = get_nlo_weight('a',genAs[0].pt.sum())
+    if xsec != -1:
+        gen = Initialize({'pt':tree.array('GenPart_pt'),
+                          'eta':tree.array('GenPart_eta'),
+                          'phi':tree.array('GenPart_phi'),
+                          'mass':tree.array('GenPart_mass'),
+                          'pdgid':tree.array('GenPart_pdgId'),
+                          'status':tree.array('GenPart_status'), 
+                          'flags':tree.array('GenPart_statusFlags'),
+                          'motherid':tree.array('GenPart_genPartIdxMother')})
+        
+        genLastCopy = gen[gen.flags&(1 << 13)==0]
+        genTops = genLastCopy[abs(genLastCopy.pdgid)==6]
+        genWs = genLastCopy[abs(genLastCopy.pdgid)==24]
+        genZs = genLastCopy[abs(genLastCopy.pdgid)==23]
+        genAs = genLastCopy[abs(genLastCopy.pdgid)==22]
+        genHs = genLastCopy[abs(genLastCopy.pdgid)==25]
+
+        isTT = (genTops.counts==2)
+        isW  = (genTops.counts==0)&(genWs.counts==1)&(genZs.counts==0)&(genAs.counts==0)&(genHs.counts==0)
+        isZ  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==1)&(genAs.counts==0)&(genHs.counts==0)
+        isA  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==1)&(genHs.counts==0)
+
+        if('TTJets' in dataset): weight["nlo"] = np.sqrt(get_ttbar_weight(genTops[0].pt.sum()) * get_ttbar_weight(genTops[1].pt.sum()))
+        elif('WJets' in dataset): weight["nlo"] = get_nlo_weight('w',genWs[0].pt.sum())
+        elif('DY' in dataset or 'ZJets' in dataset): weight["nlo"] = get_nlo_weight('z',genZs[0].pt.sum())
+        elif('GJets' in dataset): weight["nlo"] = get_nlo_weight('a',genAs[0].pt.sum())
+
+
 
 
     ###
@@ -330,7 +317,7 @@ def analysis(selection, year, xsec, dataset, file):
         inclusive[k] = skinny[k]|loose[k]
  
     selections={}
-    selections["iszeroL"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
+    selections["iszeroL"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)#&(passMetTrig)
     selections["isoneM"] = (e_nloose==0)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
     selections["isoneE"] = (e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)
     if dimu.content.size > 0:
@@ -357,31 +344,15 @@ def analysis(selection, year, xsec, dataset, file):
     if fj_clean.content.size > 0:
         variables['fjmass'] = fj_clean[fj_clean.pt.argmax()].mass.sum()
         variables['TvsQCD'] = fj_clean[fj_clean.pt.argmax()].TvsQCD.sum()
-        variables['WvsQCD'] = fj_clean[fj_clean.pt.argmax()].WvsQCD.sum()
-        variables['ZvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZvsQCD.sum()
+        variables['hSvsQCD'] = fj_clean[fj_clean.pt.argmax()].hSvsQCD.sum()
         variables['VvsQCD'] = fj_clean[fj_clean.pt.argmax()].VvsQCD.sum()
-        variables['ZHbbvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZHbbvsQCD.sum()
-        variables['ZHccvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZHccvsQCD.sum()
-        variables['WcqvsQCD'] = fj_clean[fj_clean.pt.argmax()].WcqvsQCD.sum()
-        variables['WqqvsQCD'] = fj_clean[fj_clean.pt.argmax()].WqqvsQCD.sum()
-        variables['ZbbvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZbbvsQCD.sum()
-        variables['ZccvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZccvsQCD.sum()
-        variables['ZqqvsQCD'] = fj_clean[fj_clean.pt.argmax()].ZqqvsQCD.sum()
     # Filler; does not matter anyway since fj_clean is empty
     #For a proper fix, need to make sure we are not using max on an empty numpy array
     else:
         variables['fjmass'] = -1
         variables['TvsQCD'] = -1
-        variables['WvsQCD'] = -1
-        variables['ZvsQCD'] = -1
+        variables['hSvsQCD'] = -1
         variables['VvsQCD'] = -1
-        variables['ZHbbvsQCD'] = -1
-        variables['ZHccvsQCD'] = -1
-        variables['WcqvsQCD'] = -1
-        variables['WqqvsQCD'] = -1
-        variables['ZbbvsQCD'] = -1
-        variables['ZccvsQCD'] = -1
-        variables['ZqqvsQCD'] = -1
     hout = {}
     for k in hists.keys():
         h = hists[k].copy(content=False)

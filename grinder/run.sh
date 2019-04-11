@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-export USER=matteoc
+export USER=${4}
+echo "User is: ${4}"
 echo "Starting job on " `date` #Date/time of start of job
 echo "Running on: `uname -a`" #Condor job is running on this node
 echo "System software: `cat /etc/redhat-release`" #Operating System on that node
