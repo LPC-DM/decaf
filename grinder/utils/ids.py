@@ -100,7 +100,7 @@ pho_id['2018']['loose_id'] = 'Photon_mvaID_WP90'
 pho_id['2018']['tight_id'] = 'Photon_mvaID_WP80'
 pho_id['2018']['eleveto']   = 'Photon_electronVeto'
 
-def isLoosePhoton(pt,eta,year):
+def isLoosePhoton(pt,eta,year,loose_id,eleveto):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
         mask = (pt>15)*(abs(eta)<2.5)
@@ -110,12 +110,12 @@ def isLoosePhoton(pt,eta,year):
         mask = (pt>20)&(abs(eta)<2.5)&(loose_id)&(eleveto)
     return mask
 
-def isTightPhoton(pt,eta,year):
+def isTightPhoton(pt,eta,year,tight_id,eleveto):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
         mask = (pt>15)*(abs(eta)<2.5)
     elif year=='2017':
         mask = (pt>15)*(abs(eta)<2.5)
     elif year=='2018':
-        mask = (pt>180)&(abs(eta)<2.5)&(loose_id)&(eleveto) # Trigger threshold is at 175
+        mask = (pt>180)&(abs(eta)<2.5)&(tight_id)&(eleveto) # Trigger threshold is at 175
     return mask
