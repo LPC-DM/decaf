@@ -38,6 +38,18 @@ samples = {
 }
 
 def analysis(selection, year, xsec, dataset, file):
+    ###
+    # Analysis level cuts
+    ###
+    jet_pt_cut     = 25.0
+    jet_eta_cut    = 2.7
+    jet_id_sel     = 2 # Tight
+    jet_nhf_cut    = 0.8 # From monojet analysis
+    fatjet_pt_cut  = 200.0
+    fatjet_eta_cut = 2.7 
+    fatjet_id_sel  = 2 # Tight
+    fatjet_nhf_cut = 0.8 # From monojet analysis
+
     weight = {}
     tree = uproot.open(file)["Events"]
     genw = 1
@@ -186,7 +198,7 @@ def analysis(selection, year, xsec, dataset, file):
     fj['TvsQCD'] = fj.probTbcq+fj.probTbqq+fj.probTbc+fj.probTbq
     fj['hSvsQCD'] = (fj.probZbb + fj.probHbb) / (fj.probZbb+fj.probHbb+fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
     fj['VvsQCD'] = (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq) / (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
-    fj['isgood'] = (fj.pt > 200)&(abs(fj.eta)<2.4)&(fj.jetId > 0)
+    fj['isgood'] = (fj.pt > fatjet_pt_cut)&(abs(fj.eta)<fatjet_eta_cut)&((fj.jetId&fatjet_id_sel)!=0)
     fj['isclean'] =~fj.match(pho,1.5)&~fj.match(mu,1.5)&~fj.match(e,1.5)&fj.isgood
     fj_good=fj[fj.isgood]
     fj_clean=fj[fj.isclean]
@@ -198,8 +210,9 @@ def analysis(selection, year, xsec, dataset, file):
                     'eta':tree.array('Jet_eta'),
                     'phi':tree.array('Jet_phi'),
                     'mass':tree.array('Jet_mass'),
+                    'nhf':tree.array('Jet_neHEF'),
                     'id':tree.array('Jet_jetId')})
-    j['isgood'] = (j.pt>25)&(abs(j.eta)<4.5)&((j.id&2)!=0)
+    j['isgood'] = (j.pt>jet_pt_cut)&(abs(j.eta)<jet_eta_cut)&((j.id&jet_id_sel)!=0)&(j.nhf<jet_nhf_cut)
     j['isclean'] = ~j.match(e,0.4)&~j.match(mu,0.4)&~j.match(pho,0.4)&j.isgood
     j['isiso'] =  ~(j.match(fj,1.5))&j.isclean
     j_good = j[j.isgood]
