@@ -115,7 +115,7 @@ def get_nlo_weight(type, pt):
     EWK = kfactor[ewk[type]].values
 
     sf_qcd = NLO / LO
-    sf_ewk = EWK / NLO
+    sf_ewk = EWK / LO
 
     correction=lookup_tools.dense_lookup.dense_lookup(sf_qcd*sf_ewk, kfactor[nlo[type]].edges)
     return correction(pt)
