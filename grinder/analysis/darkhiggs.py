@@ -11,6 +11,7 @@ from utils.ids import e_id, isLooseElectron, isTightElectron
 from utils.ids import mu_id, isLooseMuon, isTightMuon
 from utils.ids import tau_id, isLooseTau
 from utils.ids import pho_id, isLoosePhoton
+from utils.metfilters import met_filter_flags
 
 hists = {
     'sumw': hist.Hist("sumw", hist.Cat("dataset", "Primary dataset"), hist.Bin("sumw", "Weight value", [0.])),
@@ -59,6 +60,18 @@ def analysis(selection, year, xsec, dataset, file):
     nvtx = tree.array("PV_npvs")
     weight["pu"],weight["puUp"],weight["puDown"] = get_pu_weight(nvtx,year)
     #print(weight["pu"],weight["puUp"],weight["puDown"])
+
+    ###
+    #Importing the MET filters per year from metfilters.py and constructing the filter boolean
+    ###
+
+    met_filters = {}
+    for flag in met_filter_flags[year]:
+        try:
+            met_filters[flag] = tree.array(flag)
+        except KeyError:
+            pass
+    passMetFilters = np.prod([met_filters[key] for key in met_filters], axis=0)
 
     ###
     #Importing the trigger paths per year from trigger.py and constructing the trigger boolean
@@ -317,18 +330,18 @@ def analysis(selection, year, xsec, dataset, file):
         inclusive[k] = skinny[k]|loose[k]
  
     selections={}
-    selections["iszeroL"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)#&(passMetTrig)
-    selections["isoneM"] = (e_nloose==0)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
-    selections["isoneE"] = (e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)
+    selections["iszeroL"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)#&(passMetTrig)&(passMetFilters)
+    selections["isoneM"] = (e_nloose==0)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)&(passMetFilters)
+    selections["isoneE"] = (e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)&(passMetFilters)
     if dimu.content.size > 0:
-        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(dimu[dimu.pt.argmax()].mass.sum()>60)&(dimu[dimu.pt.argmax()].mass.sum()<120)&(passMetTrig)
+        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(dimu[dimu.pt.argmax()].mass.sum()>60)&(dimu[dimu.pt.argmax()].mass.sum()<120)&(passMetTrig)&(passMetFilters)
     else:
-        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
+        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)&(passMetFilters)
     if diele.content.size > 0:
-        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele[diele.pt.argmax()].mass.sum()>60)&(diele[diele.pt.argmax()].mass.sum()<120)&(passSingleEleTrig)
+        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele[diele.pt.argmax()].mass.sum()>60)&(diele[diele.pt.argmax()].mass.sum()<120)&(passSingleEleTrig)&(passMetFilters)
     else:
-        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)
-    selections["isoneA"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)&(passSinglePhoTrig)
+        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)&(passMetFilters)
+    selections["isoneA"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)&(passSinglePhoTrig)&(passMetFilters)
 
     for k in u.keys():
 #        if selection in k:
