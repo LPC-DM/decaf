@@ -29,8 +29,14 @@ with open("../harvester/beans/"+options.year+".json") as fin:
 #for h in hists.values(): h.clear()
 hists = {}
 dataset_xs = {k: v['xs'] for k,v in datadef.items()}
-lumi = 1000.
-if options.lumi: lumi=lumi*float(options.lumi)
+
+lumis = {}
+lumis['2016']=35.9
+lumis['2017']=41.53
+lumis['2018']=59.69
+lumi = 1000.*float(lumis[options.year])
+if options.lumi: lumi=1000.*float(options.lumi)
+print(lumi)
 
 tstart = time.time()
 def clean(val, default):
