@@ -4,15 +4,16 @@ import numpy as np
 
 e_id = {}
 e_id['2016'] = {}
-e_id['2017'] = {}
-e_id['2018'] = {}
-
 e_id['2016']['loose_id'] = 'Electron_mvaSpring16GP_WP90'
 e_id['2016']['tight_id'] = 'Electron_mvaSpring16GP_WP80'
 e_id['2016']['iso'] = 'Electron_pfRelIso03_all'
+
+e_id['2017'] = e_id['2016']
 e_id['2017']['loose_id'] = 'Electron_mvaFall17Iso_WP90'
 e_id['2017']['tight_id'] = 'Electron_mvaFall17Iso_WP80'
 e_id['2017']['iso'] = 'Null'
+
+e_id['2018'] = e_id['2016']
 e_id['2018']['loose_id'] = 'Electron_mvaFall17V2Iso_WP90'
 e_id['2018']['tight_id'] = 'Electron_mvaFall17V2Iso_WP80'
 e_id['2018']['iso'] = 'Null'
@@ -39,13 +40,14 @@ def isTightElectron(pt,eta,dxy,dz,iso,tight_id,year):
 
 mu_id = {}
 mu_id['2016'] = {}
-mu_id['2017'] = {}
-mu_id['2018'] = {}
-
 mu_id['2016']['iso'] = 'Muon_pfRelIso04_all'
 mu_id['2016']['tight_id'] = 'Muon_tightId'
+
+mu_id['2017'] = mu_id['2016']
 mu_id['2017']['iso'] = 'Muon_pfRelIso04_all'
 mu_id['2017']['tight_id'] = 'Muon_tightId'
+
+mu_id['2018'] = mu_id['2016']
 mu_id['2018']['iso'] = 'Muon_pfRelIso04_all'
 mu_id['2018']['tight_id'] = 'Muon_tightId'
 
@@ -71,13 +73,14 @@ def isTightMuon(pt,eta,dxy,dz,iso,tight_id,year):
 
 tau_id = {}
 tau_id['2016'] = {}
-tau_id['2017'] = {}
-tau_id['2018'] = {}
-
 tau_id['2016']['id'] = 'Tau_idMVAnew'
 tau_id['2016']['decayMode'] = 'Tau_idDecayMode'
+
+tau_id['2017'] = tau_id['2016']
 tau_id['2017']['id'] = 'Null'
 tau_id['2017']['decayMode'] = 'Tau_idDecayMode'
+
+tau_id['2018'] = tau_id['2016']
 tau_id['2018']['id'] = 'Tau_idMVAoldDM2017v2'
 tau_id['2018']['decayMode'] = 'Tau_idDecayMode'
 
@@ -93,12 +96,20 @@ def isLooseTau(pt,eta,decayMode,_id,year):
 
 pho_id = {}
 pho_id['2016'] = {}
-pho_id['2017'] = {}
-pho_id['2018'] = {}
+pho_id['2016']['loose_id'] = 'Null'
+pho_id['2016']['tight_id'] = 'Null'
+pho_id['2016']['eleveto']  = 'Null'
 
+pho_id['2017'] = pho_id['2016']
+pho_id['2017']['loose_id'] = 'Null'
+pho_id['2017']['tight_id'] = 'Null'
+pho_id['2017']['eleveto']  = 'Null'
+
+pho_id['2018'] = pho_id['2016']
 pho_id['2018']['loose_id'] = 'Photon_mvaID_WP90'
 pho_id['2018']['tight_id'] = 'Photon_mvaID_WP80'
 pho_id['2018']['eleveto']   = 'Photon_electronVeto'
+
 
 def isLoosePhoton(pt,eta,loose_id,eleveto,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
