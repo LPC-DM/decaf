@@ -7,6 +7,7 @@ from fnal_column_analysis_tools import hist
 from utils.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
 from utils.corrections import get_ttbar_weight, get_nlo_weight, get_pu_weight
 from utils.corrections import get_met_trig_weight, get_met_zmm_trig_weight, get_ele_trig_weight, get_pho_trig_weight
+from utils.corrections import get_bad_ecal_weight
 from utils.ids import e_id, isLooseElectron, isTightElectron
 from utils.ids import mu_id, isLooseMuon, isTightMuon
 from utils.ids import tau_id, isLooseTau
