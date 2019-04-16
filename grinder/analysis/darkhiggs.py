@@ -76,10 +76,8 @@ def analysis(selection, year, xsec, dataset, file):
 
     met_filters = {}
     for flag in met_filter_flags[year]:
-        try:
+        if flag in tree:
             met_filters[flag] = tree.array(flag)
-        except KeyError:
-            pass
     passMetFilters = np.prod([met_filters[key] for key in met_filters], axis=0)
 
     ###
@@ -88,33 +86,24 @@ def analysis(selection, year, xsec, dataset, file):
 
     met_trigger = {}
     for path in met_trigger_paths[year]:
-        try:
+        if path in tree:
             met_trigger[path] = tree.array(path)
-        except KeyError:
-            #print("No trigger bit in file for path ",path)
-            pass
     passMetTrig = False
     for path in met_trigger:
         passMetTrig |= met_trigger[path]
 
     singleele_trigger = {}
     for path in singleele_trigger_paths[year]:
-        try:
+        if path in tree:
             singleele_trigger[path] = tree.array(path)
-        except KeyError:
-            #print("No trigger bit in file for path ",path)
-            pass
     passSingleEleTrig = False
     for path in singleele_trigger:
         passSingleEleTrig |= singleele_trigger[path] 
 
     singlepho_trigger = {}
     for path in singlepho_trigger_paths[year]:
-        try:
+        if path in tree:
             singlepho_trigger[path] = tree.array(path)
-        except KeyError:
-            #print("No trigger bit in file for path ",path)
-            pass
     passSinglePhoTrig = False
     for path in singlepho_trigger:
         passSinglePhoTrig |= singlepho_trigger[path] 
@@ -129,10 +118,9 @@ def analysis(selection, year, xsec, dataset, file):
                     'dxy':tree.array('Electron_dxy'),
                     'dz':tree.array('Electron_dz')})
     for key in e_id[year]:
-        try:
+        e[key] = e.pt.zeros_like()
+        if e_id[year][key] in tree:
             e[key] = tree.array(e_id[year][key])
-        except KeyError:
-            e[key] = e.pt.zeros_like()
     e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,year)
     e['istight'] = isTightElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,year)
     e_loose = e[e.isloose]
@@ -148,10 +136,9 @@ def analysis(selection, year, xsec, dataset, file):
                      'dxy':tree.array('Muon_dxy'),
                      'dz':tree.array('Muon_dz')})
     for key in mu_id[year]:
-        try:
+        mu[key] = mu.pt.zeros_like()
+        if mu_id[year][key] in tree:
             mu[key] = tree.array(mu_id[year][key])
-        except KeyError:
-            mu[key] = mu.pt.zeros_like()
     mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,year)
     mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.tight_id,year)
     mu_loose=mu[mu.isloose]
@@ -165,10 +152,9 @@ def analysis(selection, year, xsec, dataset, file):
                       'phi':tree.array('Tau_phi'),
                       'mass':tree.array('Tau_mass')})
     for key in tau_id[year]:
-        try:
+        tau[key] = tau.pt.zeros_like()
+        if tau_id[year][key] in tree:
             tau[key] = tree.array(tau_id[year][key])
-        except KeyError:
-            tau[key] = tau.pt.zeros_like()
     tau['isloose']=isLooseTau(tau.pt,tau.eta,tau.decayMode,tau.id,year)
     tau_loose=tau[tau.isloose]
     tau_ntot=tau.counts
@@ -179,10 +165,9 @@ def analysis(selection, year, xsec, dataset, file):
                       'phi':tree.array('Photon_phi'),
                       'mass':tree.array('Photon_mass')})
     for key in pho_id[year]:
-        try:
+        pho[key] = pho.pt.zeros_like()
+        if pho_id[year][key] in tree:
             pho[key] = tree.array(pho_id[year][key])
-        except KeyError:
-            pho[key] = pho.pt.zeros_like()
     pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho.loose_id,pho.eleveto,year)
     pho['istight']=isTightPhoton(pho.pt,pho.eta,pho.tight_id,pho.eleveto,year)
     pho_loose=pho[pho.isloose]
@@ -283,9 +268,6 @@ def analysis(selection, year, xsec, dataset, file):
         elif('DY' in dataset or 'ZJets' in dataset): weight["nlo"] = get_nlo_weight('z',genZs[0].pt.sum())
         elif('GJets' in dataset): weight["nlo"] = get_nlo_weight('a',genAs[0].pt.sum())
 
-
-
-
     ###
     #Calculating derivatives
     ###
@@ -297,44 +279,44 @@ def analysis(selection, year, xsec, dataset, file):
     u={}
     u["iszeroL"] = met
 
-    if mu_tight.content.size>0:
-        u["isoneM"] = met+mu_tight[mu_tight.pt.argmax()].sum()
-    else:
-        u["isoneM"] = met
+#    if mu_tight.content.size>0:
+    u["isoneM"] = met+mu_tight[mu_tight.pt.argmax()].sum()
+#    else:
+#        u["isoneM"] = met
 
-    if e_tight.content.size>0:
-        u["isoneE"] = met+e_tight[e_tight.pt.argmax()].sum()
-    else:
-        u["isoneE"] = met
+#    if e_tight.content.size>0:
+    u["isoneE"] = met+e_tight[e_tight.pt.argmax()].sum()
+#    else:
+#        u["isoneE"] = met
 
-    if dimu.content.size>0:
-        u["istwoM"] = met+dimu[dimu.pt.argmax()].sum()
-    else:
-        u["istwoM"] = met
+#    if dimu.content.size>0:
+    u["istwoM"] = met+dimu[dimu.pt.argmax()].sum()
+#    else:
+#        u["istwoM"] = met
 
-    if diele.content.size>0:
-        u["istwoE"] = met+diele[diele.pt.argmax()].sum()
-    else:
-        u["istwoE"] = met
+#    if diele.content.size>0:
+    u["istwoE"] = met+diele[diele.pt.argmax()].sum()
+#    else:
+#        u["istwoE"] = met
 
-    if pho_tight.content.size>0:
-        u["isoneA"] = met+pho_tight[pho_tight.pt.argmax()].sum()
-    else:
-        u["isoneA"] = met
+#    if pho_tight.content.size>0:
+    u["isoneA"] = met+pho_tight[pho_tight.pt.argmax()].sum()
+#    else:
+#        u["isoneA"] = met
 
     weight["trig"] = {}
     weight["trig"]["iszeroL"] = get_met_trig_weight(u["iszeroL"].pt,year)
     weight["trig"]["isoneM"] = get_met_trig_weight(u["isoneM"].pt,year)
     weight["trig"]["istwoM"] = get_met_zmm_trig_weight(u["istwoM"].pt,year)
     weight["trig"]["isoneE"] = 1
-    if e_tight.content.size>0:
-        weight["trig"]["isoneE"] = get_ele_trig_weight(e_tight[e_tight.pt.argmax()].eta.sum(), e_tight[e_tight.pt.argmax()].pt.sum(), np.full_like(e_tight[e_tight.pt.argmax()].eta.sum(),-99),np.full_like(e_tight[e_tight.pt.argmax()].pt.sum(),-99),year)
+#    if e_tight.content.size>0:
+    weight["trig"]["isoneE"] = get_ele_trig_weight(e_tight[e_tight.pt.argmax()].eta.sum(), e_tight[e_tight.pt.argmax()].pt.sum(), np.full_like(e_tight[e_tight.pt.argmax()].eta.sum(),-99),np.full_like(e_tight[e_tight.pt.argmax()].pt.sum(),-99),year)
     weight["trig"]["istwoE"] = 1
-    if diele.content.size>0:
-        weight["trig"]["istwoE"] = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),year)
+    #if diele.content.size>0:
+    weight["trig"]["istwoE"] = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),year)
     weight["trig"]["isoneA"] = 1
-    if pho_tight.content.size>0:
-        weight["trig"]["isoneA"] = get_pho_trig_weight(pho_tight[pho_tight.pt.argmax()].pt.sum(),year)
+    #if pho_tight.content.size>0:
+    weight["trig"]["isoneA"] = get_pho_trig_weight(pho_tight[pho_tight.pt.argmax()].pt.sum(),year)
     #print(weight["trig"]["iszeroL"],weight["trig"]["isoneM"],weight["trig"]["istwoM"])
     #print(weight["trig"]["isoneE"],weight["trig"]["istwoE"])
     #print(weight["trig"]["isoneA"])
@@ -353,11 +335,11 @@ def analysis(selection, year, xsec, dataset, file):
         selections["isoneM"][s] = selections["isoneM"][s]&(e_nloose==0)&(mu_ntight==1)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
         selections["isoneE"][s] = selections["isoneE"][s]&(e_ntight==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)
         selections["istwoM"][s] = selections["istwoM"][s]&(e_nloose==0)&(mu_ntight==1)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
-        if dimu.content.size > 0:
-            selections["istwoM"][s] = selections["istwoM"][s]&(e_nloose==0)&(mu_ntight==1)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(dimu[dimu.pt.argmax()].mass.sum()>60)&(dimu[dimu.pt.argmax()].mass.sum()<120)&(passMetTrig)
+    #    if dimu.content.size > 0:
+        selections["istwoM"][s] = selections["istwoM"][s]&(e_nloose==0)&(mu_ntight==1)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(dimu[dimu.pt.argmax()].mass.sum()>60)&(dimu[dimu.pt.argmax()].mass.sum()<120)&(passMetTrig)
         selections["istwoE"][s] = selections["istwoE"][s]&(e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)
-        if diele.content.size > 0:
-            selections["istwoE"][s] = selections["istwoE"][s]&(e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele[diele.pt.argmax()].mass.sum()>60)&(diele[diele.pt.argmax()].mass.sum()<120)&(passSingleEleTrig)
+        #if diele.content.size > 0:
+        selections["istwoE"][s] = selections["istwoE"][s]&(e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele[diele.pt.argmax()].mass.sum()>60)&(diele[diele.pt.argmax()].mass.sum()<120)&(passSingleEleTrig)
         selections["isoneA"][s] = selections["isoneA"][s]&(e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1)&(passSinglePhoTrig)
  
     variables = {}
@@ -369,18 +351,18 @@ def analysis(selection, year, xsec, dataset, file):
     variables['fj1phi'] = fj_clean.phi.max()
     variables['njets'] = j_nclean
     variables['nfjets'] = fj_nclean
-    if fj_clean.content.size > 0:
-        variables['fjmass'] = fj_clean[fj_clean.pt.argmax()].mass.sum()
-        variables['TvsQCD'] = fj_clean[fj_clean.pt.argmax()].TvsQCD.sum()
-        variables['hSvsQCD'] = fj_clean[fj_clean.pt.argmax()].hSvsQCD.sum()
-        variables['VvsQCD'] = fj_clean[fj_clean.pt.argmax()].VvsQCD.sum()
+#    if fj_clean.content.size > 0:
+    variables['fjmass'] = fj_clean[fj_clean.pt.argmax()].mass.sum()
+    variables['TvsQCD'] = fj_clean[fj_clean.pt.argmax()].TvsQCD.sum()
+    variables['hSvsQCD'] = fj_clean[fj_clean.pt.argmax()].hSvsQCD.sum()
+    variables['VvsQCD'] = fj_clean[fj_clean.pt.argmax()].VvsQCD.sum()
     # Filler; does not matter anyway since fj_clean is empty
     #For a proper fix, need to make sure we are not using max on an empty numpy array
-    else:
-        variables['fjmass'] = -1
-        variables['TvsQCD'] = -1
-        variables['hSvsQCD'] = -1
-        variables['VvsQCD'] = -1
+    #else:
+    #    variables['fjmass'] = -1
+    #    variables['TvsQCD'] = -1
+    #    variables['hSvsQCD'] = -1
+    #    variables['VvsQCD'] = -1
     hout = {}
     for k in hists.keys():
         h = hists[k].copy(content=False)
