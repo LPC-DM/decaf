@@ -130,3 +130,12 @@ def isTightPhoton(pt,eta,tight_id,eleveto,year):
     elif year=='2018':
         mask = (pt>210)&(abs(eta)<2.5)&(tight_id)&(eleveto) # Trigger threshold is at 175
     return mask
+
+
+def isGoodFatJet(pt,eta, id):
+    mask = (pt > 200)&(abs(eta)<2.4)&((id&2)!=0)
+    return mask
+
+def isGoodJet(pt, eta, id, nhf, nef, chf, cef):
+    mask = (pt>25) & (abs(eta)<2.4) & ((id&2)=0) & (nhf<0.8) & (nef<0.99) & (chf>0.1) & (cef<0.99)
+    return mask
