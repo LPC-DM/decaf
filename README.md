@@ -67,7 +67,7 @@ cd ../grinder
 python run.py --year 2017 --lumi 41.53 --dataset TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8____0
 ```
 
-In this example, histograms for the 0 batch of the 2017 TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8 NanoAOD are being generated. The ```--year``` and the ```--lumi``` options are compulsory, ```--dataset``` is optional. Launching the script without the ```--dataset``` option will make the script run over all the batches for all the datasets. If, for example, ```--dataset TTJets``` is used, the module will run over all batches and all the datasets that match the ```TTJets``` string.
+In this example, histograms for the 0 batch of the 2017 TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8 NanoAOD are being generated. The ```--year``` option is compulsory and the ```--dataset``` is optional. The ```--lumi``` is optional. If not provided, it will default to the hard-coded lumi values in ```run.py```. Launching the script without the ```--dataset``` option will make the script run over all the batches for all the datasets. If, for example, ```--dataset TTJets``` is used, the module will run over all batches and all the datasets that match the ```TTJets``` string.
 
 ### Running with Condor
 

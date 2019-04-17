@@ -31,9 +31,10 @@ hists = {}
 dataset_xs = {k: v['xs'] for k,v in datadef.items()}
 
 lumis = {}
-lumis['2016']=35.9
+#Values from https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable
+lumis['2016']=35.92
 lumis['2017']=41.53
-lumis['2018']=59.69
+lumis['2018']=59.97
 lumi = 1000.*float(lumis[options.year])
 if options.lumi: lumi=1000.*float(options.lumi)
 print(lumi)
