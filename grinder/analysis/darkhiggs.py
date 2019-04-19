@@ -12,6 +12,7 @@ from utils.ids import e_id, isLooseElectron, isTightElectron
 from utils.ids import mu_id, isLooseMuon, isTightMuon
 from utils.ids import tau_id, isLooseTau
 from utils.ids import pho_id, isLoosePhoton, isTightPhoton
+from utils.ids import isGoodJet, isGoodFatJet
 from utils.metfilters import met_filter_flags
 
 hists = {
@@ -28,9 +29,12 @@ hists = {
     'njets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("njets","AK4 Number of Jets",6,0,5)),
     'nfjets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("nfjets","AK15 Number of Jets",4,0,3)),
     'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("fjmass","AK15 Jet Mass",50,20,250)),
-    #'l1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("l1pt","Leading Lepton Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
-    #'l1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("l1eta","Leading Lepton Eta",35,-3.5,3.5)),
-    #'l1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("l1phi","Leading Lepton Phi",35,-3.5,3.5)),
+    'e1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("l1pt","Leading Electron Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
+    'e1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("l1eta","Leading Electron Eta",48,-2.4,2.4)),
+    'e1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("l1phi","Leading Electron Phi",64,-3.2,3.2)),
+    'mu1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("l1pt","Leading Muon Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
+    'mu1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("l1eta","Leading Muon Eta",48,-2.4,2.4)),
+    'mu1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("l1phi","Leading Muon Phi",64,-3.2,3.2)),
     'TvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("TvsQCD","TvsQCD",15,0,1)),
     'hSvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("hSvsQCD","hSvsQCD",15,0,1)),
     'VvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("selection", "Selection"), hist.Bin("VvsQCD","VvsQCD",15,0,1)),
@@ -47,7 +51,7 @@ samples = {
     "isoneA":('GJets','QCD','SinglePhoton','EGamma')
 }
 
-def analysis(selection, year, xsec, dataset, file):
+def analysis(selected_regions, year, xsec, dataset, file):
     weight = {}
     tree = uproot.open(file)["Events"]
     genw = 1
@@ -320,13 +324,13 @@ def analysis(selection, year, xsec, dataset, file):
     weight["trig"]["iszeroL"] = get_met_trig_weight(u["iszeroL"].pt,year)
     weight["trig"]["isoneM"] = get_met_trig_weight(u["isoneM"].pt,year)
     weight["trig"]["istwoM"] = get_met_zmm_trig_weight(u["istwoM"].pt,year)
-    weight["trig"]["isoneE"] = 1
+#    weight["trig"]["isoneE"] = 1
 #    if e_tight.content.size>0:
     weight["trig"]["isoneE"] = get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),year)
-    weight["trig"]["istwoE"] = 1
+    #    weight["trig"]["istwoE"] = 1
     #if diele.content.size>0:
     weight["trig"]["istwoE"] = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),year)
-    weight["trig"]["isoneA"] = 1
+    #    weight["trig"]["isoneA"] = 1
     #if pho_tight.content.size>0:
     weight["trig"]["isoneA"] = get_pho_trig_weight(leading_pho.pt.sum(),year)
     #print(weight["trig"]["iszeroL"],weight["trig"]["isoneM"],weight["trig"]["istwoM"])
@@ -336,23 +340,22 @@ def analysis(selection, year, xsec, dataset, file):
     ###
     #Event selection
     ###
-    selections={}
+    
+    selections = {}
+    selections["baggy"] = (fj_nclean>0)&(fj_clean.pt.max()>200)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250)&(passMetFilters)
+    selections["skinny"] = ~((fj_nclean>0) & (fj_clean.pt.max()>200)) & (j_nclean>0) & (j_clean.pt.max()>100) & (abs(u[k].delta_phi(j_clean)).min()>0.5) & (u[k].pt>250) & (passMetFilters)
+    selections["inclusive"] = selections["skinny"]|selections["baggy"]
+    
+    regions = {}
     for k in u.keys():
-        selections[k]={} 
-        selections[k]["baggy"] = (fj_nclean>0)&(fj_clean.pt.max()>200)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250)&(passMetFilters)
-        selections[k]["skinny"] = ~((fj_nclean>0)&(fj_clean.pt.max()>200))&(j_nclean>0)&(j_clean.pt.max()>100)&(abs(u[k].delta_phi(j_clean)).min()>0.5)&(u[k].pt>250)&(passMetFilters)
-        selections[k]["inclusive"] = selections[k]["skinny"]|selections[k]["baggy"]
+        regions[k] = {}
     for s in ["baggy","skinny","inclusive"]:
-        selections["iszeroL"][s] = selections["iszeroL"][s]&(e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
-        selections["isoneM"][s] = selections["isoneM"][s]&(e_nloose==0)&(mu_ntight==1)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
-        selections["isoneE"][s] = selections["isoneE"][s]&(e_ntight==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)
-        selections["istwoM"][s] = selections["istwoM"][s]&(e_nloose==0)&(mu_ntight==1)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
-    #    if dimu.content.size > 0:
-        selections["istwoM"][s] = selections["istwoM"][s]&(e_nloose==0)&(mu_ntight==1)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(leading_dimu.mass.sum()>60)&(leading_dimu.mass.sum()<120)&(passMetTrig)
-        selections["istwoE"][s] = selections["istwoE"][s]&(e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)
-        #if diele.content.size > 0:
-        selections["istwoE"][s] = selections["istwoE"][s]&(e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120)&(passSingleEleTrig)
-        selections["isoneA"][s] = selections["isoneA"][s]&(e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1)&(passSinglePhoTrig)
+        regions["iszeroL"][s] = selections[s]&(e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
+        regions["isoneM"][s] = selections[s]&(e_nloose==0)&(mu_ntight==1)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
+        regions["isoneE"][s] = selections[s] & (e_ntight==1) & (mu_nloose==0) & (tau_nloose==0) & (pho_nloose==0) & (passSingleEleTrig)
+        regions["istwoM"][s] = selections[s]&(e_nloose==0) & (mu_ntight==1) & (mu_nloose==2) & (tau_nloose==0) & (pho_nloose==0) & (leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120) & (passMetTrig)
+        regions["istwoE"][s] = selections[s] & (e_ntight==1) & (e_nloose==2) & (mu_nloose==0) & (tau_nloose==0) & (pho_nloose==0) & (leading_diele.mass.sum()>60) & (leading_diele.mass.sum()<120) & (passSingleEleTrig)
+        regions["isoneA"][s] = selections[s]&(e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1)&(passSinglePhoTrig)
  
     variables = {}
     variables['j1pt'] = leading_j.pt.sum()
@@ -361,20 +364,19 @@ def analysis(selection, year, xsec, dataset, file):
     variables['fj1pt'] = leading_fj.pt.sum()
     variables['fj1eta'] = leading_fj.eta.sum()
     variables['fj1phi'] = leading_fj.phi.sum()
+    variables['e1pt'] = leading_e.pt.sum()
+    variables['e1phi'] = leading_e.phi.sum()
+    variables['e1eta'] = leading_e.eta.sum()
+    variables['mu1pt'] = leading_mu.pt.sum()
+    variables['mu1phi'] = leading_mu.phi.sum()
+    variables['mu1eta'] = leading_mu.eta.sum()
     variables['njets'] = j_nclean
     variables['nfjets'] = fj_nclean
-#    if fj_clean.content.size > 0:
     variables['fjmass'] = leading_fj.mass.sum()
     variables['TvsQCD'] = leading_fj.TvsQCD.sum()
     variables['hSvsQCD'] = leading_fj.hSvsQCD.sum()
     variables['VvsQCD'] = leading_fj.VvsQCD.sum()
-    # Filler; does not matter anyway since fj_clean is empty
-    #For a proper fix, need to make sure we are not using max on an empty numpy array
-    #else:
-    #    variables['fjmass'] = -1
-    #    variables['TvsQCD'] = -1
-    #    variables['hSvsQCD'] = -1
-    #    variables['VvsQCD'] = -1
+
     hout = {}
     for k in hists.keys():
         h = hists[k].copy(content=False)
@@ -382,25 +384,17 @@ def analysis(selection, year, xsec, dataset, file):
         if k == 'sumw':
             h.fill(dataset=dataset, sumw=1, weight=sumw)
         else:
-            while i < len(selection):
-                r = selection[i]
-                if k == 'recoil':
-                    h.fill(dataset=dataset, region=r, selection='inclusive', recoil=u[r].pt, weight=genw*weight['nlo']*selections[r]['inclusive'])
-                    h.fill(dataset=dataset, region=r, selection='baggy', recoil=u[r].pt, weight=genw*weight['nlo']*selections[r]['baggy'])
-                    h.fill(dataset=dataset, region=r, selection='skinny', recoil=u[r].pt, weight=genw*weight['nlo']*selections[r]['skinny'])
-                elif k == 'CaloMinusPfOverRecoil':
-                    h.fill(dataset=dataset, region=r, selection='inclusive', CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[r].pt, weight=genw*weight['nlo']*selections[r]['inclusive'])
-                    h.fill(dataset=dataset, region=r, selection='baggy', CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[r].pt, weight=genw*weight['nlo']*selections[r]['baggy'])
-                    h.fill(dataset=dataset, region=r, selection='skinny', CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[r].pt, weight=genw*weight['nlo']*selections[r]['skinny'])
-
-                elif k == 'mindphi':
-                    h.fill(dataset=dataset, region=r, selection='inclusive', mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*weight['nlo']*selections[r]['inclusive'])
-                    h.fill(dataset=dataset, region=r, selection='baggy', mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*weight['nlo']*selections[r]['baggy'])
-                    h.fill(dataset=dataset, region=r, selection='skinny', mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*weight['nlo']*selections[r]['skinny'])
-                else:
-                    h.fill(dataset=dataset, region=r, selection='inclusive', **variables, weight=genw*weight['nlo']*selections[r]['inclusive'])
-                    h.fill(dataset=dataset, region=r, selection='baggy', **variables, weight=genw*weight['nlo']*selections[r]['baggy'])
-                    h.fill(dataset=dataset, region=r, selection='skinny', **variables, weight=genw*weight['nlo']*selections[r]['skinny'])
+            while i < len(selected_regions):
+                for s in selections:
+                    r = selected_regions[i]
+                    if k == 'recoil':
+                        h.fill(dataset=dataset, region=r, selection=s, recoil=u[r].pt, weight=genw*weight['nlo']*regions[r][s])
+                    elif k == 'CaloMinusPfOverRecoil':
+                        h.fill(dataset=dataset, region=r, selection=s, CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[r].pt, weight=genw*weight['nlo']*regions[r][s])
+                    elif k == 'mindphi':
+                            h.fill(dataset=dataset, region=r, selection=s, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*weight['nlo']*regions[r][s])
+                    else:
+                    h.fill(dataset=dataset, region=r, selection=s, **variables, weight=genw*weight['nlo']*regions[r][s])
                 i += 1
         hout[k] = h
     
