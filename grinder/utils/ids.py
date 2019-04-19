@@ -132,10 +132,10 @@ def isTightPhoton(pt,eta,tight_id,eleveto,year):
     return mask
 
 
-def isGoodFatJet(pt,eta, id):
-    mask = (pt > 200)&(abs(eta)<2.4)&((id&2)!=0)
+def isGoodFatJet(pt,eta, jet_id):
+    mask = (pt > 200)&(abs(eta)<2.4)&((jet_id&2)!=0)
     return mask
 
-def isGoodJet(pt, eta, id, nhf, nef, chf, cef):
-    mask = (pt>25) & (abs(eta)<2.4) & ((id&2)=0) & (nhf<0.8) & (nef<0.99) & (chf>0.1) & (cef<0.99)
+def isGoodJet(pt, eta, jet_id, nhf, nef, chf, cef):
+    mask = (pt>25) & (abs(eta)<2.4) & ((jet_id&2)!=0) & (nhf<0.8) & (nef<0.99) & (chf>0.1) & (cef<0.99)
     return mask

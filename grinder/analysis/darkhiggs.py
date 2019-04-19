@@ -392,9 +392,9 @@ def analysis(selected_regions, year, xsec, dataset, file):
                     elif k == 'CaloMinusPfOverRecoil':
                         h.fill(dataset=dataset, region=r, selection=s, CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[r].pt, weight=genw*weight['nlo']*regions[r][s])
                     elif k == 'mindphi':
-                            h.fill(dataset=dataset, region=r, selection=s, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*weight['nlo']*regions[r][s])
+                        h.fill(dataset=dataset, region=r, selection=s, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*weight['nlo']*regions[r][s])
                     else:
-                    h.fill(dataset=dataset, region=r, selection=s, **variables, weight=genw*weight['nlo']*regions[r][s])
+                        h.fill(dataset=dataset, region=r, selection=s, **variables, weight=genw*weight['nlo']*regions[r][s])
                 i += 1
         hout[k] = h
     
