@@ -8,7 +8,7 @@ from fnal_column_analysis_tools import hist
 from utils.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
 from utils.corrections import get_ttbar_weight, get_nlo_weight, get_pu_weight
 from utils.corrections import get_met_trig_weight, get_met_zmm_trig_weight, get_ele_trig_weight, get_pho_trig_weight
-from utils.corrections import get_bad_ecal_weight
+from utils.corrections import get_ecal_bad_calib
 from utils.ids import e_id, isLooseElectron, isTightElectron
 from utils.ids import mu_id, isLooseMuon, isTightMuon
 from utils.ids import tau_id, isLooseTau
@@ -84,6 +84,13 @@ def analysis(selected_regions, year, xsec, dataset, file):
         if flag in tree:
             met_filters[flag] = tree.array(flag)
     passMetFilters = np.prod([met_filters[key] for key in met_filters], axis=0)
+
+    # Special MET filter for ecalBadCalib
+    #https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#How_to_run_ecal_BadCalibReducedM
+    run_number = tree.array("run")
+    lumi_number = tree.array("luminosityBlock")
+    event_number = tree.array("event")
+    passEcalBadCalib = get_ecal_bad_calib(run_number,lumi_number,event_number,year,dataset)
 
     ###
     #Importing the trigger paths per year from trigger.py and constructing the trigger boolean
@@ -366,8 +373,8 @@ def analysis(selected_regions, year, xsec, dataset, file):
     selections = {}
     for k in u.keys():
         selections[k] = {}
-        selections[k]["baggy"] = (fj_nclean>0)&(fj_clean.pt.max()>200)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250)&(passMetFilters)
-        selections[k]["skinny"] = ~((fj_nclean>0) & (fj_clean.pt.max()>200)) & (j_nclean>0) & (j_clean.pt.max()>100) & (abs(u[k].delta_phi(j_clean)).min()>0.5) & (u[k].pt>250) & (passMetFilters)
+        selections[k]["baggy"] = (fj_nclean>0)&(fj_clean.pt.max()>200)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250)&(passMetFilters)&(passEcalBadCalib)
+        selections[k]["skinny"] = ~((fj_nclean>0) & (fj_clean.pt.max()>200)) & (j_nclean>0) & (j_clean.pt.max()>100) & (abs(u[k].delta_phi(j_clean)).min()>0.5) & (u[k].pt>250) & (passMetFilters) & (passEcalBadCalib)
         selections[k]["inclusive"] = selections[k]["skinny"]|selections[k]["baggy"]
 
     for s in ["baggy","skinny","inclusive"]:
