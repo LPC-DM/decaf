@@ -286,52 +286,30 @@ def analysis(selected_regions, year, xsec, dataset, file):
 
     leading_mu = mu_tight[mu_tight.pt.argmax()]
     leading_e = e_tight[e_tight.pt.argmax()]
-    leading_dimu = dimu[dimu.pt.argmax()]
-    leading_diele = diele[diele.pt.argmax()]
+    leading_dimu = leading_mu
+    if dimu.content.size>0:
+        leading_dimu = dimu[dimu.pt.argmax()]
+    leading_diele = leading_e
+    if diele.content.size>0:
+        leading_diele = diele[diele.pt.argmax()]
     leading_pho = pho_tight[pho_tight.pt.argmax()]
     leading_j = j_clean[j_clean.pt.argmax()]
     leading_fj = fj_clean[fj_clean.pt.argmax()]
     
     u={}
     u["iszeroL"] = met
-
-#    if mu_tight.content.size>0:
     u["isoneM"] = met+leading_mu.sum()
-#    else:
-#        u["isoneM"] = met
-
-#    if e_tight.content.size>0:
     u["isoneE"] = met+leading_e.sum()
-#    else:
-#        u["isoneE"] = met
-
-#    if dimu.content.size>0:
     u["istwoM"] = met+leading_dimu.sum()
-#    else:
-#        u["istwoM"] = met
-
-#    if diele.content.size>0:
     u["istwoE"] = met+leading_diele.sum()
-#    else:
-#        u["istwoE"] = met
-
-#    if pho_tight.content.size>0:
     u["isoneA"] = met+leading_pho.sum()
-#    else:
-#        u["isoneA"] = met
 
     weight["trig"] = {}
     weight["trig"]["iszeroL"] = get_met_trig_weight(u["iszeroL"].pt,year)
     weight["trig"]["isoneM"] = get_met_trig_weight(u["isoneM"].pt,year)
     weight["trig"]["istwoM"] = get_met_zmm_trig_weight(u["istwoM"].pt,year)
-#    weight["trig"]["isoneE"] = 1
-#    if e_tight.content.size>0:
     weight["trig"]["isoneE"] = get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),year)
-    #    weight["trig"]["istwoE"] = 1
-    #if diele.content.size>0:
     weight["trig"]["istwoE"] = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),year)
-    #    weight["trig"]["isoneA"] = 1
-    #if pho_tight.content.size>0:
     weight["trig"]["isoneA"] = get_pho_trig_weight(leading_pho.pt.sum(),year)
     #print(weight["trig"]["iszeroL"],weight["trig"]["isoneM"],weight["trig"]["istwoM"])
     #print(weight["trig"]["isoneE"],weight["trig"]["istwoE"])
