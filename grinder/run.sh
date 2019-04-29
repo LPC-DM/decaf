@@ -20,5 +20,5 @@ echo "Updated python path: " $PYTHONPATH
 cd grinder
 echo "python run.py --year ${1} --dataset ${2}"
 python run.py --year ${1} --dataset ${2}
-ls pods/${1}/${3}.pkl.gz
-cp pods/${1}/${3}.pkl.gz ${_CONDOR_SCRATCH_DIR}/${1}_${3}.pkl.gz
+ls pods/${1}/${2}.pkl.gz
+cp pods/${1}/${2}.pkl.gz ${_CONDOR_SCRATCH_DIR}/${1}_${2}.pkl.gz
