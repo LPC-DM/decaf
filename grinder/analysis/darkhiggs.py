@@ -115,6 +115,11 @@ def analysis(selected_regions, year, xsec, dataset, file):
     ###
     #Initialize physics objects
     ###
+    empty_object = Initialize({'pt':np.zeros(1),
+                               'eta':np.zeros(1),
+                               'phi':np.zeros(1),
+                               'mass':np.zeros(1)})
+
     e = Initialize({'pt':tree.array("Electron_pt"),
                     'eta':tree.array("Electron_eta"),
                     'phi':tree.array("Electron_phi"),
@@ -282,19 +287,32 @@ def analysis(selected_regions, year, xsec, dataset, file):
 
     ###
     #Getting leading pT objects
+    #We need protection in case there are no objects in the array!
     ###
+    leading_mu = empty_object
+    leading_e = empty_object
+    leading_dimu = empty_object
+    leading_diele = empty_object
+    leading_pho = empty_object
+    leading_j = empty_object
+    leading_fj = empty_object
 
-    leading_mu = mu_tight[mu_tight.pt.argmax()]
-    leading_e = e_tight[e_tight.pt.argmax()]
-    leading_dimu = leading_mu
+    if mu_tight.content.size>0:
+        leading_mu = mu_tight[mu_tight.pt.argmax()]
+    if e_tight.content.size>0:
+        leading_e = e_tight[e_tight.pt.argmax()]
+    
     if dimu.content.size>0:
         leading_dimu = dimu[dimu.pt.argmax()]
-    leading_diele = leading_e
     if diele.content.size>0:
         leading_diele = diele[diele.pt.argmax()]
-    leading_pho = pho_tight[pho_tight.pt.argmax()]
-    leading_j = j_clean[j_clean.pt.argmax()]
-    leading_fj = fj_clean[fj_clean.pt.argmax()]
+    
+    if pho_tight.content.size>0:
+        leading_pho = pho_tight[pho_tight.pt.argmax()]
+    if j_clean.content.size>0:
+        leading_j = j_clean[j_clean.pt.argmax()]
+    if fj_clean.content.size>0:
+        leading_fj = fj_clean[fj_clean.pt.argmax()]
     
     u={}
     u["iszeroL"] = met
@@ -309,7 +327,10 @@ def analysis(selected_regions, year, xsec, dataset, file):
     weight["trig"]["isoneM"] = get_met_trig_weight(u["isoneM"].pt,year)
     weight["trig"]["istwoM"] = get_met_zmm_trig_weight(u["istwoM"].pt,year)
     weight["trig"]["isoneE"] = get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),year)
-    weight["trig"]["istwoE"] = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),year)
+    ### FIXME
+    weight["trig"]["istwoE"] = get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),year)
+    #weight["trig"]["istwoE"] = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),
+    #                                               ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),year)
     weight["trig"]["isoneA"] = get_pho_trig_weight(leading_pho.pt.sum(),year)
     #print(weight["trig"]["iszeroL"],weight["trig"]["isoneM"],weight["trig"]["istwoM"])
     #print(weight["trig"]["isoneE"],weight["trig"]["istwoE"])
