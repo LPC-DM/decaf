@@ -99,7 +99,7 @@ for folder in beans[options.year]:
             #if xs != -1:
             #     run_tree = uproot.open(eospath)["Runs"]
             #     sumw += run_tree.array("genEventSumw")[0]
-            urllist.append(eospath)
+            if (not ('failed' in eospath)): urllist.append(eospath)
         print('list lenght:',len(urllist))
         urllists = split(urllist, int(options.pack))
         print(len(urllists))
