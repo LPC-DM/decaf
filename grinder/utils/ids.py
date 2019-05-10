@@ -98,17 +98,17 @@ pho_id = {}
 pho_id['2016'] = {}
 pho_id['2016']['loose_id'] = 'Photon_mvaID_WP90'
 pho_id['2016']['tight_id'] = 'Photon_mvaID_WP80'
-pho_id['2016']['eleveto']   = 'Photon_electronVeto'
+pho_id['2016']['eleveto']  = 'Photon_electronVeto'
 
 pho_id['2017'] = pho_id['2016']
 pho_id['2017']['loose_id'] = 'Photon_mvaID_WP90'
 pho_id['2017']['tight_id'] = 'Photon_mvaID_WP80'
-pho_id['2017']['eleveto']   = 'Photon_electronVeto'
+pho_id['2017']['eleveto']  = 'Photon_electronVeto'
 
 pho_id['2018'] = pho_id['2016']
 pho_id['2018']['loose_id'] = 'Photon_mvaID_WP90'
 pho_id['2018']['tight_id'] = 'Photon_mvaID_WP80'
-pho_id['2018']['eleveto']   = 'Photon_electronVeto'
+pho_id['2018']['eleveto']  = 'Photon_electronVeto'
 
 
 def isLoosePhoton(pt,eta,loose_id,eleveto,year):
