@@ -79,5 +79,26 @@ python submit.py --year 2017 --lumi 41.53 -t
 
 This way jobs to generate the full set of 2017 histograms will be submitted to condor. the ```-t``` will allow for tarring the working environment and the necessary dependences to run on condor nodes. The module has a ```--dataset``` option that works like described before for ```run.py```. Will allow you to run on a single batch, dataset, or batches/datasets that match the input string.
 
-## Plot
+## Anaconda 
+### OSX Installation
+* Download Anaconda Python 3.7 from [here!](https://repo.anaconda.com/archive/Anaconda3-2019.03-MacOSX-x86_64.pkg) and install 
+* Run the terminal, you would see BASE which is this is default Anaconda environment. In order to Install virtual Anaconda environment 
 
+```
+conda env create -f osx.yml
+
+```
+* You have a new environment named 'coffea'. To switch the environment base to coffea environment, type to a terminal:
+```
+conda activate  coffea
+```
+* for deactivation close terminal or type the command:
+```
+conda deactivate
+```
+### Ubuntu Installation
+* (18.04)
+```
+conda env create -f ubuntu.yml
+
+```
