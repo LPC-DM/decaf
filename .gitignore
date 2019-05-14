@@ -8,4 +8,5 @@ saiyan
 *err
 *out
 *.nfs0000003717774a2d000002c7
+/maker/*stack
 docker_stderror
