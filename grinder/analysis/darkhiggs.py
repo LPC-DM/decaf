@@ -3,7 +3,7 @@ import uproot, uproot_methods
 import awkward
 import numpy as np
 np.seterr(divide='ignore', invalid='ignore', over='ignore')
-from Builder import Initialize
+from fnal_column_analysis_tools.arrays import Initialize
 from fnal_column_analysis_tools import hist
 from utils.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
 from utils.corrections import get_ttbar_weight, get_nlo_weight, get_pu_weight
