@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 import uproot, uproot_methods
+import awkward
 import numpy as np
 np.seterr(divide='ignore', invalid='ignore', over='ignore')
-from Builder import Initialize
+from fnal_column_analysis_tools.arrays import Initialize
 from fnal_column_analysis_tools import hist
 from utils.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
 from utils.corrections import get_ttbar_weight, get_nlo_weight, get_pu_weight
@@ -115,6 +116,20 @@ def analysis(selected_regions, year, xsec, dataset, file):
     ###
     #Initialize physics objects
     ###
+
+    num_events = tree.array("MET_pt").size
+
+    many_zeros = np.zeros(num_events)
+    many_ones  = np.ones(num_events,dtype=int)
+
+    jagged_zeros=awkward.JaggedArray.fromcounts(many_ones,many_zeros)
+
+
+    empty_jagged = Initialize({'pt':jagged_zeros,
+                               'eta':jagged_zeros,
+                               'phi':jagged_zeros,
+                               'mass':jagged_zeros})
+
     e = Initialize({'pt':tree.array("Electron_pt"),
                     'eta':tree.array("Electron_eta"),
                     'phi':tree.array("Electron_phi"),
@@ -127,7 +142,11 @@ def analysis(selected_regions, year, xsec, dataset, file):
             e[key] = tree.array(e_id[year][key])
     e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,year)
     e['istight'] = isTightElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,year)
-    e_loose = e[e.isloose]
+
+    e_loose = empty_jagged
+    if e[e.isloose].content.size > 0:
+        e_loose = e[e.isloose]
+
     e_tight = e[e.istight]
     e_ntot = e.counts
     e_nloose = e_loose.counts
@@ -277,25 +296,43 @@ def analysis(selected_regions, year, xsec, dataset, file):
     ###
     ele_pairs = e_loose.distincts()
     diele = ele_pairs.i0+ele_pairs.i1
+  
     mu_pairs = mu_loose.distincts()
     dimu = mu_pairs.i0+mu_pairs.i1
 
     ###
     #Getting leading pT objects
+    #We need protection in case there are no objects in the array!
     ###
+    leading_mu = empty_jagged
+    leading_e = empty_jagged
+    leading_dimu = empty_jagged
+    leading_diele = empty_jagged
+    leading_pho = empty_jagged
+    leading_j = empty_jagged
+    leading_fj = empty_jagged
 
-    leading_mu = mu_tight[mu_tight.pt.argmax()]
-    leading_e = e_tight[e_tight.pt.argmax()]
-    leading_dimu = leading_mu
+    if mu_tight.content.size>0:
+        leading_mu = mu_tight[mu_tight.pt.argmax()]
+    if e_tight.content.size>0:
+        leading_e = e_tight[e_tight.pt.argmax()]
     if dimu.content.size>0:
         leading_dimu = dimu[dimu.pt.argmax()]
-    leading_diele = leading_e
     if diele.content.size>0:
         leading_diele = diele[diele.pt.argmax()]
-    leading_pho = pho_tight[pho_tight.pt.argmax()]
-    leading_j = j_clean[j_clean.pt.argmax()]
-    leading_fj = fj_clean[fj_clean.pt.argmax()]
     
+    if pho_tight.content.size>0:
+        leading_pho = pho_tight[pho_tight.pt.argmax()]
+
+    if j_clean.content.size>0:
+        leading_j = j_clean[j_clean.pt.argmax()]
+    if fj_clean.content.size>0:
+        leading_fj = fj_clean[fj_clean.pt.argmax()]
+    else:
+        leading_fj["TvsQCD"] = np.zeros(num_events)
+        leading_fj["hSvsQCD"] = np.zeros(num_events)
+        leading_fj["VvsQCD"] = np.zeros(num_events)
+
     u={}
     u["iszeroL"] = met
     u["isoneM"] = met+leading_mu.sum()
@@ -309,7 +346,14 @@ def analysis(selected_regions, year, xsec, dataset, file):
     weight["trig"]["isoneM"] = get_met_trig_weight(u["isoneM"].pt,year)
     weight["trig"]["istwoM"] = get_met_zmm_trig_weight(u["istwoM"].pt,year)
     weight["trig"]["isoneE"] = get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),year)
-    weight["trig"]["istwoE"] = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),year)
+
+    if(ele_pairs.i0.content.size > 0):
+        weight["trig"]["istwoE"] = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),
+                                                   ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),year)
+    else:
+        weight["trig"]["istwoE"] = get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), 
+                                                       np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),year)
+
     weight["trig"]["isoneA"] = get_pho_trig_weight(leading_pho.pt.sum(),year)
     #print(weight["trig"]["iszeroL"],weight["trig"]["isoneM"],weight["trig"]["istwoM"])
     #print(weight["trig"]["isoneE"],weight["trig"]["istwoE"])
@@ -352,7 +396,7 @@ def analysis(selected_regions, year, xsec, dataset, file):
     variables['fjmass'] = leading_fj.mass.sum()
     variables['TvsQCD'] = leading_fj.TvsQCD.sum()
     variables['hSvsQCD'] = leading_fj.hSvsQCD.sum()
-    variables['VvsQCD'] = leading_fj.VvsQCD.sum()
+    variables['VvsQCD'] = leading_fj.VvsQCD.sum()        
 
     hout = {}
     for k in hists.keys():
