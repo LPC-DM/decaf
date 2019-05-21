@@ -96,27 +96,27 @@ def isLooseTau(pt,eta,decayMode,_id,year):
 
 pho_id = {}
 pho_id['2016'] = {}
-pho_id['2016']['loose_id'] = 'Null'
-pho_id['2016']['tight_id'] = 'Null'
-pho_id['2016']['eleveto']  = 'Null'
+pho_id['2016']['loose_id'] = 'Photon_mvaID_WP90'
+pho_id['2016']['tight_id'] = 'Photon_mvaID_WP80'
+pho_id['2016']['eleveto']  = 'Photon_electronVeto'
 
 pho_id['2017'] = pho_id['2016']
-pho_id['2017']['loose_id'] = 'Null'
-pho_id['2017']['tight_id'] = 'Null'
-pho_id['2017']['eleveto']  = 'Null'
+pho_id['2017']['loose_id'] = 'Photon_mvaID_WP90'
+pho_id['2017']['tight_id'] = 'Photon_mvaID_WP80'
+pho_id['2017']['eleveto']  = 'Photon_electronVeto'
 
 pho_id['2018'] = pho_id['2016']
 pho_id['2018']['loose_id'] = 'Photon_mvaID_WP90'
 pho_id['2018']['tight_id'] = 'Photon_mvaID_WP80'
-pho_id['2018']['eleveto']   = 'Photon_electronVeto'
+pho_id['2018']['eleveto']  = 'Photon_electronVeto'
 
 
 def isLoosePhoton(pt,eta,loose_id,eleveto,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>15)*(abs(eta)<2.5)
+        mask = (pt>20)&(abs(eta)<2.5)&(loose_id)&(eleveto)
     elif year=='2017':
-        mask = (pt>15)*(abs(eta)<2.5)
+        mask = (pt>20)&(abs(eta)<2.5)&(loose_id)&(eleveto)
     elif year=='2018':
         mask = (pt>20)&(abs(eta)<2.5)&(loose_id)&(eleveto)
     return mask
@@ -124,11 +124,11 @@ def isLoosePhoton(pt,eta,loose_id,eleveto,year):
 def isTightPhoton(pt,eta,tight_id,eleveto,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>15)*(abs(eta)<2.5)
+        mask = (pt>185)&(abs(eta)<2.5)&(tight_id)&(eleveto) # Trigger threshold is at 175
     elif year=='2017':
-        mask = (pt>15)*(abs(eta)<2.5)
+        mask = (pt>210)&(abs(eta)<2.5)&(tight_id)&(eleveto) # Trigger threshold is at 200
     elif year=='2018':
-        mask = (pt>210)&(abs(eta)<2.5)&(tight_id)&(eleveto) # Trigger threshold is at 175
+        mask = (pt>210)&(abs(eta)<2.5)&(tight_id)&(eleveto) # Trigger threshold is at 200
     return mask
 
 
