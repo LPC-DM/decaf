@@ -4,13 +4,13 @@ import numpy as np
 
 e_id = {}
 e_id['2016'] = {}
-e_id['2016']['loose_id'] = 'Electron_mvaSpring16GP_WP90'
-e_id['2016']['tight_id'] = 'Electron_mvaSpring16GP_WP80'
-e_id['2016']['iso'] = 'Electron_pfRelIso03_all'
+e_id['2016']['loose_id'] = 'Electron_mvaFall17V2Iso_WP90'
+e_id['2016']['tight_id'] = 'Electron_mvaFall17V2Iso_WP80'
+e_id['2016']['iso'] = 'Null'
 
 e_id['2017'] = e_id['2016']
-e_id['2017']['loose_id'] = 'Electron_mvaFall17Iso_WP90'
-e_id['2017']['tight_id'] = 'Electron_mvaFall17Iso_WP80'
+e_id['2017']['loose_id'] = 'Electron_mvaFall17V2Iso_WP90'
+e_id['2017']['tight_id'] = 'Electron_mvaFall17V2Iso_WP80'
 e_id['2017']['iso'] = 'Null'
 
 e_id['2018'] = e_id['2016']
@@ -21,21 +21,21 @@ e_id['2018']['iso'] = 'Null'
 def isLooseElectron(pt,eta,dxy,dz,iso,loose_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>7)&(abs(eta)<2.4)&(abs(dxy)<0.05)&(abs(dz)<0.2)&(iso<0.4)&(loose_id)
+        mask = ((pt>10)&(abs(eta)<2.5)&(loose_id))
     elif year=='2017':
-        mask = (pt>7)&(abs(eta)<2.4)&(abs(dxy)<0.05)&(abs(dz)<0.2)&(loose_id)
+        mask = ((pt>10)&(abs(eta)<2.5)&(loose_id))
     elif year=='2018':
-        mask = (pt>10)&(abs(eta)<2.5)&(loose_id)
+        mask = ((pt>10)&(abs(eta)<2.5)&(loose_id))
     return mask
 
 def isTightElectron(pt,eta,dxy,dz,iso,tight_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        return ((pt>30)&(abs(eta)<2.4)&(abs(dxy)<0.05)&(abs(dz)<0.2)&(tight_id)&(iso<0.06))
+        mask = ((pt>30)&(abs(eta)<2.5)&(tight_id)) # Trigger: HLT_Ele27_WPTight_Gsf_v
     elif year=='2017':
-        return ((pt>30)&(abs(eta)<2.4)&(abs(dxy)<0.05)&(abs(dz)<0.2)&(tight_id))
+        mask = ((pt>38)&(abs(eta)<2.5)&(tight_id)) # Trigger: HLT_Ele35_WPTight_Gsf_v
     elif year=='2018':
-        return ((pt>35)&(abs(eta)<2.5)&(tight_id))
+        mask = ((pt>35)&(abs(eta)<2.5)&(tight_id)) # Trigger: HLT_Ele32_WPTight_Gsf_v
     return mask
 
 mu_id = {}
