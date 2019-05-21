@@ -52,23 +52,25 @@ mu_id['2018']['iso'] = 'Muon_pfRelIso04_all'
 mu_id['2018']['tight_id'] = 'Muon_tightId'
 
 def isLooseMuon(pt,eta,dxy,dz,iso,year):
+    #dxy and dz cuts are missing from loose_id; very loose isolation is 0.4
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>5)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4)
+        mask = (pt>20)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4)
     elif year=='2017':
-        mask = (pt>5)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4)
+        mask = (pt>20)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4)
     elif year=='2018':
-        mask = (pt>20)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4) #dxy and dz cuts are missing from loose_id; very loose isolation is 0.4
+        mask = (pt>20)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4)
     return mask
 
 def isTightMuon(pt,eta,dxy,dz,iso,tight_id,year):
+    #dxy and dz cuts are baked on tight_id; tight isolation is 0.15
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>5)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4)
+        mask = (pt>20)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
     elif year=='2017':
-        mask = (pt>5)&(abs(eta)<2.4)&(abs(dxy)<0.5)&(abs(dz)<1.0)&(iso<0.4)
+        mask = (pt>20)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
     elif year=='2018':
-        mask = (pt>20)&(abs(eta)<2.4)&(tight_id)&(iso<0.15) #dxy and dz cuts are baked on tight_id; tight isolation is 0.15
+        mask = (pt>20)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
     return mask
 
 tau_id = {}
