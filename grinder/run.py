@@ -13,20 +13,17 @@ from optparse import OptionParser
 import uproot, uproot_methods
 import numpy as np
 from fnal_column_analysis_tools import hist
-#from saiyan import Builder
 from analysis.darkhiggs import analysis,samples
 
 parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 parser.add_option('-y', '--year', help='year', dest='year')
-#parser.add_option('-s', '--selection', help='selection', dest='selection')
 parser.add_option('-l', '--lumi', help='lumi', dest='lumi')
 (options, args) = parser.parse_args()
 
 with open("../harvester/beans/"+options.year+".json") as fin:
     datadef = json.load(fin)
 
-#for h in hists.values(): h.clear()
 hists = {}
 dataset_xs = {k: v['xs'] for k,v in datadef.items()}
 
@@ -40,14 +37,11 @@ if options.lumi: lumi=1000.*float(options.lumi)
 print(lumi)
 
 tstart = time.time()
-def clean(val, default):
-    val[np.isnan(val)|(val==-999.)] = default
-    return val
 
 nworkers = 8
 fileslice = slice(None)
-with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
-    futures = set()
+with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor: ##
+    futures = set() ##
     for dataset, info in datadef.items():
         nevents = 0
         sumw = 0
@@ -59,31 +53,35 @@ with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor:
                 if v[i] not in dataset: continue
                 selections.append(selection)
         print(dataset,selections)
-        futures.update(executor.submit(analysis, selections, options.year, dataset_xs[dataset], dataset, file) for file in info['files'][fileslice])
-        if(len(futures)==0): continue
+        ## futures.update(exector.submit(function, item) for item in items)
+        # So need to put selections, options.year, dataset_xs, dataset, and file in an items dict
+        futures.update(executor.submit(analysis, selections, options.year, dataset_xs[dataset], dataset, file) for file in info['files'][fileslice]) ##
+        if(len(futures)==0): continue ##
         try:
             total = len(futures)
             processed = 0
-            while len(futures) > 0:
-                finished = set(job for job in futures if job.done())
-                for job in finished:
+            while len(futures) > 0: ##
+                finished = set(job for job in futures if job.done()) ##
+                for job in finished: ##
+                    #accumulator += job.result() <- this is only hout for the processor framework. Need another way to get the other three
                     dataset, sumws, nentries, hout = job.result()
-                    #dataset, nentries, hout = job.result()
                     nevents += nentries
                     sumw += sumws
                     for k in hout.keys():
                         if k in hists: hists[k] += hout[k]
                         else: hists[k]= hout[k]
                     print("Processing: done with % 4d / % 4d files" % (processed, total))
+                    # Might be replaced with pbar, whateve rthat is?
                     processed += 1
-                futures -= finished
-            del finished
-        except KeyboardInterrupt:
-            print("Ok quitter")
-            for job in futures: job.cancel()
-        except:
-            for job in futures: job.cancel()
-            raise
+                futures -= finished ##
+            del finished ##
+        except KeyboardInterrupt: ##
+            print("Ok quitter") ##
+            for job in futures: job.cancel() ##
+        except: ## 
+            for job in futures: job.cancel() ##
+            raise ##
+
         print(dataset,"nevents:",nevents,"sumw:",sumw,"sumw from hist:",hists['sumw'].values(overflow='all')[(dataset,)][1])
         scale = 1
         if dataset_xs[dataset]!= -1: scale = lumi*dataset_xs[dataset]# / sumw
