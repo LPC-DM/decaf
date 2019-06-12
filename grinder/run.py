@@ -37,21 +37,16 @@ if options.lumi: lumi=1000.*float(options.lumi)
 print(lumi)
 
 tstart = time.time()
-
-nworkers = 8
-fileslice = slice(None)
-with concurrent.futures.ProcessPoolExecutor(max_workers=nworkers) as executor: ##
-    futures = set() ##
-    for dataset, info in datadef.items():
-        nevents = 0
-        sumw = 0
-        selections = []
-        if options.dataset and options.dataset not in dataset: continue
-        for selection,v in samples.items():
-            #if options.selection and options.selection not in selection: continue    
-            for i in range (0,len(v)):
-                if v[i] not in dataset: continue
-                selections.append(selection)
+for dataset, info in datadef.items():
+    nevents = 0
+    sumw = 0
+    selections = []
+    if options.dataset and options.dataset not in dataset: continue
+    for selection,v in samples.items():
+        #if options.selection and options.selection not in selection: continue    
+        for i in range (0,len(v)):
+            if v[i] not in dataset: continue
+            selections.append(selection)
         print(dataset,selections)
         ## futures.update(exector.submit(function, item) for item in items)
         # So need to put selections, options.year, dataset_xs, dataset, and file in an items dict
