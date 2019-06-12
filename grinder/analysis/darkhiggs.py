@@ -27,7 +27,7 @@ samples = {
     "isoneA":('GJets','QCD','SinglePhoton','EGamma')
 }
 
-class Processor(processor.ProcessorABC):
+class AnalysisProcessor(processor.ProcessorABC):
     def __init__(self, selected_regions, year, xsec, lumi):
         self._selected_regions = selected_regions
         self._year = year
@@ -61,6 +61,9 @@ class Processor(processor.ProcessorABC):
             'VvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("VvsQCD","VvsQCD",15,0,1)),
         }
         self._accumulator = hists
+        @property
+        def accumulator(self):
+            return self._accumulator
 
         def process(self, df):
 
@@ -151,7 +154,7 @@ class Processor(processor.ProcessorABC):
                             'mass':df['Electron_mass']})
 
             #checking content size, if zero, initialize to empty object
-            if !(e.content.size > 0): e = empty_obj
+            if not (e.content.size > 0): e = empty_obj
             
             for key in e_id[self._year]:
                 e[key] = e.pt.zeros_like()
@@ -176,7 +179,7 @@ class Processor(processor.ProcessorABC):
                              'mass':df['Muon_mass']})
 
             #checking content size, if zero, initialize to empty object
-            if !(mu.content.size > 0): mu = empty_obj
+            if not (mu.content.size > 0): mu = empty_obj
             
             for key in mu_id[self._year]:
                 mu[key] = mu.pt.zeros_like()
@@ -204,7 +207,7 @@ class Processor(processor.ProcessorABC):
                               'mass':df['Tau_mass']})
 
             #checking content size, if zero, initialize to empty object
-            if !(tau.content.size > 0): tau = empty_obj
+            if not (tau.content.size > 0): tau = empty_obj
 
             for key in tau_id[self._year]:
                 tau[key] = tau.pt.zeros_like()
@@ -226,7 +229,7 @@ class Processor(processor.ProcessorABC):
                               'mass':df['Photon_mass']})
 
             #checking content size, if zero, initialize to empty object
-            if !(pho.content.size > 0): pho = empty_obj
+            if not (pho.content.size > 0): pho = empty_obj
 
             for key in pho_id[self._year]:
                 pho[key] = pho.pt.zeros_like()
@@ -254,7 +257,7 @@ class Processor(processor.ProcessorABC):
                              'mass':df['AK15Puppi_mass']})
 
             #checking content size, if zero, initialize to empty object
-            if !(fj.content.size > 0): fj = empty_obj
+            if not (fj.content.size > 0): fj = empty_obj
 
             for key in fj_id[self._year]:
                 fj[key] = fj.pt.zeros_like()
@@ -289,7 +292,7 @@ class Processor(processor.ProcessorABC):
                             'mass':df['Jet_mass']})
 
             #checking content size, if zero, initialize to empty object
-            if !(j.content.size > 0): j = empty_obj
+            if not (j.content.size > 0): j = empty_obj
 
             for key in j_id[self._year]:
                 j[key] = j.pt.zeros_like()
@@ -362,7 +365,7 @@ class Processor(processor.ProcessorABC):
                                                                ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),self._year))
             weights['istwoE'].add('passSingleEleTrig',passSingleEleTrig)
             #weights.add('trig_istwoE', get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), 
-                                                               np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),self._year))
+            #                                                   np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),self._year))
             weights['isoneA'].add('trig', get_pho_trig_weight(leading_pho.pt.sum(),self._year))
             weights['isoneA'].add('passSinglePhoTrig',passSinglePhoTrig)
 
@@ -468,7 +471,7 @@ class Processor(processor.ProcessorABC):
             scale = {}
             for dataset in accumulator['sumw'].items():
                 if self._xsec[dataset]!= -1: scale[dataset] = self._lumi*self._xsec[dataset]
-                else scale[dataset] = 1
+                else: scale[dataset] = 1
 
             for h in accumulator.values():
                 if isinstance(h, hist.Hist):

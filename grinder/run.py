@@ -9,7 +9,7 @@ from optparse import OptionParser
 import uproot
 import numpy as np
 from coffea import hist, processor
-from analysis.darkhiggs import Processor,samples
+from analysis.darkhiggs import AnalysisProcessor,samples
 
 parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
@@ -43,7 +43,7 @@ for dataset, info in samplefiles.items():
             if v[i] not in dataset: continue
             selections.append(selection)
 
-processor_instance=Processor(selected_regions=selections, year=options.year, xsec=xsec, lumi=lumi)
+processor_instance=AnalysisProcessor(selected_regions=selections, year=options.year, xsec=xsec, lumi=lumi)
 tstart = time.time()
 output = processor.run_uproot_job(filelist,
                                   treename='Events',
