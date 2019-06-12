@@ -4,8 +4,8 @@ import cloudpickle
 import pprint
 import numpy as np
 np.seterr(divide='ignore', invalid='ignore', over='ignore')
-from fnal_column_analysis_tools.arrays import Initialize
-from fnal_column_analysis_tools import hist, processor
+from coffea.arrays import Initialize
+from coffea import hist, processor
 from utils.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
 from utils.corrections import get_ttbar_weight, get_nlo_weight, get_pu_weight
 from utils.corrections import get_met_trig_weight, get_met_zmm_trig_weight, get_ele_trig_weight, get_pho_trig_weight
@@ -28,11 +28,11 @@ samples = {
 }
 
 class Processor(processor.ProcessorABC):
-    def __init__(self, selected_regions, year, xsec, dataset_xs):
+    def __init__(self, selected_regions, year, xsec, lumi):
         self._selected_regions = selected_regions
         self._year = year
         self._xsec = xsec
-        self._dataset_xs = dataset_xs
+        self._lumi = lumi
         
         hists = processor.dict_accumulator()
         hist.Hist.DEFAULT_DTYPE = 'f'
@@ -71,7 +71,7 @@ class Processor(processor.ProcessorABC):
             ###
             # For MC, retrieve the LHE weights, to take into account NLO destructive interference, and their sum
             ###
-            if self._xsec != -1:
+            if self._xsec[dataset] != -1:
                 genw = df['genWeight']
                 sumw = genw.sum()
 
@@ -367,7 +367,7 @@ class Processor(processor.ProcessorABC):
             weights['isoneA'].add('passSinglePhoTrig',passSinglePhoTrig)
 
             wnlo = 1
-            if self._xsec != -1:
+            if self._xsec[dataset] != -1:
                 gen = Initialize({'pt':df['GenPart_pt'],
                                   'eta':df['GenPart_eta'],
                                   'phi':df['GenPart_phi'],
@@ -467,7 +467,7 @@ class Processor(processor.ProcessorABC):
 
             scale = {}
             for dataset in accumulator['sumw'].items():
-                if self._dataset_xs[dataset]!= -1: scale[dataset] = lumi*self._dataset_xs[dataset]
+                if self._xsec[dataset]!= -1: scale[dataset] = self._lumi*self._xsec[dataset]
                 else scale[dataset] = 1
 
             for h in accumulator.values():

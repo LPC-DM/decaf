@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import uproot, uproot_methods
 import numpy as np
-from fnal_column_analysis_tools.arrays import Initialize
-from fnal_column_analysis_tools import hist, lookup_tools
+from coffea.arrays import Initialize
+from coffea import hist, lookup_tools
 
 '''
 def get_pu_weight(year, nvtx):
