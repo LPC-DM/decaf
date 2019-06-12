@@ -32,13 +32,15 @@ if __name__ == '__main__':
         for file in files[:args.limit]:
             filelist.append((dataset, file))
 
-    processor_instance = BoostedHbbProcessor(corrections=corrections, columns=allcolumns, debug=args.debug, year=args.year)
-
     tstart = time.time()
-    if args.executor == 'futures':
-        processor.futures_executor(filelist, work_function, combined_accumulator, workers=args.workers)
-
-    processor_instance.postprocess(final_accumulator)
+    output = processor.run_uproot_job(filelist,
+                                  treename='Events',
+                                  processor_instance=BoostedHbbProcessor(corrections=corrections, columns=allcolumns, debug=args.debug, year=args.year),
+                                  executor=processor.futures_executor,
+                                  executor_args={'workers': 8, 'function_args': {'flatten': True}},
+                                  chunksize=500000,
+                                 )
+    processor_instance.postprocess(output)
 
     nbins = sum(sum(arr.size for arr in h._sumw.values()) for h in final_accumulator.values() if isinstance(h, hist.Hist))
     nfilled = sum(sum(np.sum(arr > 0) for arr in h._sumw.values()) for h in final_accumulator.values() if isinstance(h, hist.Hist))
