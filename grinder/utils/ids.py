@@ -154,8 +154,8 @@ j_id['2016']['nhf'] = 'Jet_neHEF'
 j_id['2016']['nef'] = 'Jet_neEmEF'
 j_id['2016']['chf'] = 'Jet_chHEF'
 j_id['2016']['cef'] = 'Jet_chEmEF'
-j_id['2017'] =	fj_id['2016']
-j_id['2018'] =	fj_id['2016']
+j_id['2017'] =	j_id['2016']
+j_id['2018'] =	j_id['2016']
 
 def isGoodJet(pt, eta, jet_id, nhf, nef, chf, cef):
     mask = (pt>25) & (abs(eta)<2.4) & ((jet_id&2)!=0) & (nhf<0.8) & (nef<0.99) & (chf>0.1) & (cef<0.99)

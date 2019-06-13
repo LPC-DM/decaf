@@ -30,14 +30,17 @@ with open("../harvester/beans/"+options.year+".json") as fin:
     samplefiles = json.load(fin)
     
 xsec = {k: v['xs'] for k,v in samplefiles.items()}
-filelist = []
+filelist = {}
 selections = []
 fileslice = slice(None)
 
 for dataset, info in samplefiles.items():
     if options.dataset and options.dataset not in dataset: continue
+    print(dataset)
+    files = []
     for file in info['files'][fileslice]:
-        filelist.append((dataset, file))
+        files.append(file)
+    filelist[dataset] = files
     for selection,v in samples.items():
         for i in range (0,len(v)):
             if v[i] not in dataset: continue

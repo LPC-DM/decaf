@@ -34,42 +34,40 @@ class AnalysisProcessor(processor.ProcessorABC):
         self._xsec = xsec
         self._lumi = lumi
         
-        hists = processor.dict_accumulator()
-        hist.Hist.DEFAULT_DTYPE = 'f'
-        hists = {
-            'sumw': hist.Hist("sumw", hist.Cat("dataset", "Primary dataset"), hist.Bin("sumw", "Weight value", [0.])),
-            'CaloMinusPfOverRecoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("CaloMinusPfOverRecoil","Calo - Pf / Recoil",35,0,1)),
-            'recoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("recoil","Hadronic Recoil",[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
-            'mindphi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mindphi","Min dPhi(MET,AK4s)",15,0,6.28)),
-            'j1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("j1pt","AK4 Leading Jet Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
-            'j1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("j1eta","AK4 Leading Jet Eta",35,-3.5,3.5)),
-            'j1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("j1phi","AK4 Leading Jet Phi",35,-3.5,3.5)),
-            'fj1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fj1pt","AK15 Leading Jet Pt",[200.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
-            'fj1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fj1eta","AK15 Leading Jet Eta",35,-3.5,3.5)),
-            'fj1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fj1phi","AK15 Leading Jet Phi",35,-3.5,3.5)),
-            'njets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("njets","AK4 Number of Jets",6,0,5)),
-            'nfjets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjets","AK15 Number of Jets",4,0,3)),
-            'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fjmass","AK15 Jet Mass",50,20,250)),
-            'e1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1pt","Leading Electron Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
-            'e1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1eta","Leading Electron Eta",48,-2.4,2.4)),
-            'e1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1phi","Leading Electron Phi",64,-3.2,3.2)),
-            'mu1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mu1pt","Leading Muon Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
-            'mu1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mu1eta","Leading Muon Eta",48,-2.4,2.4)),
-            'mu1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mu1phi","Leading Muon Phi",64,-3.2,3.2)),
-            'TvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("TvsQCD","TvsQCD",15,0,1)),
-            'hSvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("hSvsQCD","hSvsQCD",15,0,1)),
-            'VvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("VvsQCD","VvsQCD",15,0,1)),
-        }
-        self._accumulator = hists
-        @property
-        def accumulator(self):
-            return self._accumulator
+        self._accumulator = processor.dict_accumulator({
+                'sumw': hist.Hist("sumw", hist.Cat("dataset", "Primary dataset"), hist.Bin("sumw", "Weight value", [0.])),
+                'CaloMinusPfOverRecoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("CaloMinusPfOverRecoil","Calo - Pf / Recoil",35,0,1)),
+                'recoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("recoil","Hadronic Recoil",[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
+                'mindphi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mindphi","Min dPhi(MET,AK4s)",15,0,6.28)),
+                'j1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("j1pt","AK4 Leading Jet Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
+                'j1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("j1eta","AK4 Leading Jet Eta",35,-3.5,3.5)),
+                'j1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("j1phi","AK4 Leading Jet Phi",35,-3.5,3.5)),
+                'fj1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fj1pt","AK15 Leading Jet Pt",[200.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
+                'fj1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fj1eta","AK15 Leading Jet Eta",35,-3.5,3.5)),
+                'fj1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fj1phi","AK15 Leading Jet Phi",35,-3.5,3.5)),
+                'njets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("njets","AK4 Number of Jets",6,0,5)),
+                'nfjets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjets","AK15 Number of Jets",4,0,3)),
+                'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fjmass","AK15 Jet Mass",50,20,250)),
+                'e1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1pt","Leading Electron Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
+                'e1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1eta","Leading Electron Eta",48,-2.4,2.4)),
+                'e1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1phi","Leading Electron Phi",64,-3.2,3.2)),
+                'mu1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mu1pt","Leading Muon Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
+                'mu1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mu1eta","Leading Muon Eta",48,-2.4,2.4)),
+                'mu1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mu1phi","Leading Muon Phi",64,-3.2,3.2)),
+                'TvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("TvsQCD","TvsQCD",15,0,1)),
+                'hSvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("hSvsQCD","hSvsQCD",15,0,1)),
+                'VvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("VvsQCD","VvsQCD",15,0,1)),
+                })
 
-        def process(self, df):
+    @property
+    def accumulator(self):
+        return self._accumulator
+
+    def process(self, df):
 
             dataset = df['dataset']
-            genw = 1
-            sumw = 1
+            genw = np.ones_like(df['MET_pt'])
+            sumw = 1.
 
             ###
             # For MC, retrieve the LHE weights, to take into account NLO destructive interference, and their sum
@@ -108,16 +106,16 @@ class AnalysisProcessor(processor.ProcessorABC):
             
             singleele_trigger = {}
             for path in singleele_trigger_paths[self._year]:
-                if path in tree:
-                    singleele_trigger[path] = tree.array(path)
+                if path in df:
+                    singleele_trigger[path] = df[path]
             passSingleEleTrig = False
             for path in singleele_trigger:
                 passSingleEleTrig |= singleele_trigger[path] 
 
             singlepho_trigger = {}
             for path in singlepho_trigger_paths[self._year]:
-                if path in tree:
-                    singlepho_trigger[path] = tree.array(path)
+                if path in df:
+                    singlepho_trigger[path] = df[path]
             passSinglePhoTrig = False
             for path in singlepho_trigger:
                 passSinglePhoTrig |= singlepho_trigger[path]
@@ -143,10 +141,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             #Define first and empty object that will use as protection against arrays with size 0
             #Will use MET to set the correct size for the arrays
 
-            empty_obj = Initialize({'pt':met.pt.zeros_like(),
-                                    'eta':met.pt.zeros_like(),
-                                    'phi':met.pt.zeros_like(),
-                                    'mass':met.pt.zeros_like()})
+            empty_obj = Initialize({'pt':np.zeros_like(met.pt),
+                                    'eta':np.zeros_like(met.pt),
+                                    'phi':np.zeros_like(met.pt),
+                                    'mass':np.zeros_like(met.pt)})
 
             e = Initialize({'pt':df['Electron_pt'],
                             'eta':df['Electron_eta'],
@@ -189,11 +187,11 @@ class AnalysisProcessor(processor.ProcessorABC):
             mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,self._year)
             mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.tight_id,self._year)
 
-            mu_loose = empty_jagged
+            mu_loose = empty_obj
             if mu[mu.isloose].content.size > 0:
                 mu_loose=mu[mu.isloose]
 
-            mu_tight = empty_jagged
+            mu_tight = empty_obj
             if mu[mu.istight].content.size > 0:
                 mu_tight=mu[mu.istight]
 
@@ -216,8 +214,9 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             
             tau['isloose']=isLooseTau(tau.pt,tau.eta,tau.decayMode,tau.id,self._year)
-            tau_loose = empty_jagged
-            if tau[tau.isloose].content()>0:
+            tau_loose = empty_obj
+
+            if tau[tau.isloose].content.size>0:
                 tau_loose=tau[tau.isloose]
                 
             tau_ntot=tau.counts
@@ -239,12 +238,12 @@ class AnalysisProcessor(processor.ProcessorABC):
             pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho.loose_id,pho.eleveto,self._year)
             pho['istight']=isTightPhoton(pho.pt,pho.eta,pho.tight_id,pho.eleveto,self._year)
 
-            pho_loose = empty_jagged
-            if pho[pho.isloose].content()>0:
+            pho_loose = empty_obj
+            if pho[pho.isloose].content.size>0:
                 pho_loose=pho[pho.isloose]
 
-            pho_tight = empty_jagged
-            if pho[pho.istight].content()>0:
+            pho_tight = empty_obj
+            if pho[pho.istight].content.size>0:
                 pho_tight=pho[pho.istight]
                 
             pho_ntot=pho.counts
@@ -315,15 +314,29 @@ class AnalysisProcessor(processor.ProcessorABC):
             j_nclean=j_clean.counts
             j_niso=j_iso.counts
 
+            ###
+            #Getting leading pT objects
+            ###
+            leading_mu = mu_tight[mu_tight.pt.argmax()]
+            leading_e = e_tight[e_tight.pt.argmax()]
+            leading_pho = pho_tight[pho_tight.pt.argmax()]
+            leading_j = j_clean[j_clean.pt.argmax()]
+            leading_fj = fj_clean[fj_clean.pt.argmax()]
 
             ###
             #Calculating derivatives
             ###
             ele_pairs = e_loose.distincts()
-            diele = ele_pairs.i0+ele_pairs.i1
+            diele = e_loose[e_loose.pt.argmax()]
+            if ele_pairs.i0.content.size>0:
+                diele = ele_pairs.i0+ele_pairs.i1
+            leading_diele = diele[diele.pt.argmax()]
   
             mu_pairs = mu_loose.distincts()
-            dimu = mu_pairs.i0+mu_pairs.i1
+            dimu = mu_loose[mu_loose.pt.argmax()]
+            if mu_pairs.i0.content.size>0:
+                dimu = mu_pairs.i0+mu_pairs.i1
+            leading_dimu = dimu[dimu.pt.argmax()]
 
             u={}
             u["iszeroL"] = met
@@ -332,19 +345,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             u["istwoM"] = met+leading_dimu.sum()
             u["istwoE"] = met+leading_diele.sum()
             u["isoneA"] = met+leading_pho.sum()
-
-            ###
-            #Getting leading pT objects
-            ###
-            leading_mu = mu_tight[mu_tight.pt.argmax()]
-            leading_e = e_tight[e_tight.pt.argmax()]
-            leading_dimu = dimu[dimu.pt.argmax()]
-            leading_diele = diele[diele.pt.argmax()]
-            leading_pho = pho_tight[pho_tight.pt.argmax()]
-            leading_j = j_clean[j_clean.pt.argmax()]
-            leading_fj = fj_clean[fj_clean.pt.argmax()]
             
-
             ###
             #Calculating weights
             ###
@@ -369,7 +370,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             weights['isoneA'].add('trig', get_pho_trig_weight(leading_pho.pt.sum(),self._year))
             weights['isoneA'].add('passSinglePhoTrig',passSinglePhoTrig)
 
-            wnlo = 1
+            wnlo = np.ones_like(df['MET_pt'])
             if self._xsec[dataset] != -1:
                 gen = Initialize({'pt':df['GenPart_pt'],
                                   'eta':df['GenPart_eta'],
@@ -420,7 +421,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             for k in u.keys():
                 selections.add(k+'baggy', (fj_nclean>0)&(fj_clean.pt.max()>200)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250))
                 selections.add(k+'skinny', ~((fj_nclean>0)&(fj_clean.pt.max()>200))&(j_nclean>0)&(j_clean.pt.max()>100)&(abs(u[k].delta_phi(j_clean)).min()>0.5)&(u[k].pt>250))
-                selections.add(k+'inclusive', (~((fj_nclean>0)&(fj_clean.pt.max()>200))&(j_nclean>0)&(j_clean.pt.max()>100)&(abs(u[k].delta_phi(j_clean)).min()>0.5)&(u[k].pt>250))) | ((fj_nclean>0)&(fj_clean.pt.max()>200)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250))
+                selections.add(k+'inclusive', (~((fj_nclean>0)&(fj_clean.pt.max()>200))&(j_nclean>0)&(j_clean.pt.max()>100)&(abs(u[k].delta_phi(j_clean)).min()>0.5)&(u[k].pt>250)) | ((fj_nclean>0)&(fj_clean.pt.max()>200)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250)))
 
             regions = {}
             for k in u.keys():
@@ -446,30 +447,41 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['TvsQCD'] = leading_fj.TvsQCD.sum()
             variables['hSvsQCD'] = leading_fj.hSvsQCD.sum()
             variables['VvsQCD'] = leading_fj.VvsQCD.sum()
-            variables['recoil'] = u[r].pt
-            variables['CaloMinusPfOverRecoil'] = abs(calomet.pt - met.pt) / u[r].pt
-            variables['mindphi'] = abs(u[r].delta_phi(j_clean)).min()
+            #variables['recoil'] = u[r].pt
+            #variables['CaloMinusPfOverRecoil'] = abs(calomet.pt - met.pt) / u[r].pt
+            #variables['mindphi'] = abs(u[r].delta_phi(j_clean)).min()
 
             hout = self.accumulator.identity()
             for histname, h in hout.items():
                 if not isinstance(h, hist.Hist):
                     continue
+                i = 0
                 if histname == 'sumw':
                     h.fill(dataset=dataset, sumw=1, weight=sumw)                
                 else:
                     while i < len(self._selected_regions):
                         r = self._selected_regions[i]
                         for s in ["baggy","skinny","inclusive"]:
-                            weight = weights.weight()
-                            cut = selection.all(*regions[region])
-                            h.fill(dataset=dataset, region=region, jet_selection=jet_selection, **variables, weight=weight*cut)
+                            weight = weights[r].weight()
+                            cut = selections.all(*regions[r+'_'+s])
+                            if histname == 'recoil':
+                                h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, weight=weight*cut)
+                            elif histname == 'CaloMinusPfOverRecoil':
+                                h.fill(dataset=dataset, region=r, jet_selection=s, CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[r].pt, weight=weight*cut)
+                            elif histname == 'mindphi':
+                                h.fill(dataset=dataset, region=r, jet_selection=s, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=weight*cut)
+                            else:
+                                h.fill(dataset=dataset, region=r, jet_selection=s, **variables, weight=weight*cut)
                         i += 1
             return hout
 
-        def postprocess(self, accumulator):
+    def postprocess(self, accumulator):
 
             scale = {}
-            for dataset in accumulator['sumw'].items():
+            #print(accumulator['sumw'].values())
+            for dataset in accumulator.values():
+                if isinstance(dataset, hist.Hist): continue
+                print(dataset)
                 if self._xsec[dataset]!= -1: scale[dataset] = self._lumi*self._xsec[dataset]
                 else: scale[dataset] = 1
 
