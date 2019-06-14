@@ -36,7 +36,6 @@ fileslice = slice(None)
 
 for dataset, info in samplefiles.items():
     if options.dataset and options.dataset not in dataset: continue
-    print(dataset)
     files = []
     for file in info['files'][fileslice]:
         files.append(file)
@@ -46,26 +45,26 @@ for dataset, info in samplefiles.items():
             if v[i] not in dataset: continue
             selections.append(selection)
 
-processor_instance=AnalysisProcessor(selected_regions=selections, year=options.year, xsec=xsec, lumi=lumi)
-tstart = time.time()
-output = processor.run_uproot_job(filelist,
-                                  treename='Events',
-                                  processor_instance=processor_instance,
-                                  executor=processor.futures_executor,
-                                  executor_args={'workers': options.workers},
-                                  chunksize=500000,
-                                  )
-processor_instance.postprocess(output)
+    processor_instance=AnalysisProcessor(selected_regions=selections, year=options.year, xsec=xsec, lumi=lumi)
+    tstart = time.time()
+    output = processor.run_uproot_job(filelist,
+                                      treename='Events',
+                                      processor_instance=processor_instance,
+                                      executor=processor.futures_executor,
+                                      executor_args={'workers': options.workers, 'pre_workers': 1},
+                                      chunksize=500000,
+                                      )
+    processor_instance.postprocess(output)
     
-nbins = sum(sum(arr.size for arr in h._sumw.values()) for h in final_accumulator.values() if isinstance(h, hist.Hist))
-nfilled = sum(sum(np.sum(arr > 0) for arr in h._sumw.values()) for h in final_accumulator.values() if isinstance(h, hist.Hist))
-print("Filled %.1fM bins" % (nbins/1e6, ))
-print("Nonzero bins: %.1f%%" % (100*nfilled/nbins, ))
+    nbins = sum(sum(arr.size for arr in h._sumw.values()) for h in output.values() if isinstance(h, hist.Hist))
+    nfilled = sum(sum(np.sum(arr > 0) for arr in h._sumw.values()) for h in output.values() if isinstance(h, hist.Hist))
+    print("Filled %.1fM bins" % (nbins/1e6, ))
+    print("Nonzero bins: %.1f%%" % (100*nfilled/nbins, ))
 
-# Pickle is not very fast or memory efficient, will be replaced by something better soon
-with lz4f.open(args.output, mode="wb", compression_level=5) as fout:
-    cloudpickle.dump(output, fout)
+    # Pickle is not very fast or memory efficient, will be replaced by something better soon
+    with lz4f.open("pods/"+options.year+"/"+dataset+".pkl.gz", mode="wb", compression_level=5) as fout:
+        cloudpickle.dump(output, fout)
         
-dt = time.time() - tstart
-nworkers = args.workers
-print("%.2f us*cpu overall" % (1e6*dt*nworkers, ))
+    dt = time.time() - tstart
+    nworkers = options.workers
+    print("%.2f us*cpu overall" % (1e6*dt*nworkers, ))

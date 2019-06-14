@@ -478,10 +478,8 @@ class AnalysisProcessor(processor.ProcessorABC):
     def postprocess(self, accumulator):
 
             scale = {}
-            #print(accumulator['sumw'].values())
-            for dataset in accumulator.values():
-                if isinstance(dataset, hist.Hist): continue
-                print(dataset)
+            for d in accumulator['sumw'].identifiers('dataset'):
+                dataset = d.name
                 if self._xsec[dataset]!= -1: scale[dataset] = self._lumi*self._xsec[dataset]
                 else: scale[dataset] = 1
 
