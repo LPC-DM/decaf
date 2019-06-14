@@ -4,6 +4,7 @@ import pickle
 import json
 import time
 import cloudpickle
+import gzip
 from optparse import OptionParser
 
 import uproot
@@ -62,7 +63,8 @@ for dataset, info in samplefiles.items():
     print("Nonzero bins: %.1f%%" % (100*nfilled/nbins, ))
 
     # Pickle is not very fast or memory efficient, will be replaced by something better soon
-    with lz4f.open("pods/"+options.year+"/"+dataset+".pkl.gz", mode="wb", compression_level=5) as fout:
+    #    with lz4f.open("pods/"+options.year+"/"+dataset+".pkl.gz", mode="xb", compression_level=5) as fout:
+    with gzip.open("pods/"+options.year+"/"+dataset+".pkl.gz", "wb") as fout:
         cloudpickle.dump(output, fout)
         
     dt = time.time() - tstart

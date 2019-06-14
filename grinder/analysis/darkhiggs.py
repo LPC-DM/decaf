@@ -3,6 +3,7 @@ import lz4.frame as lz4f
 import cloudpickle
 import pprint
 import numpy as np
+import awkward
 np.seterr(divide='ignore', invalid='ignore', over='ignore')
 from coffea.arrays import Initialize
 from coffea import hist, processor
@@ -141,10 +142,11 @@ class AnalysisProcessor(processor.ProcessorABC):
             #Define first and empty object that will use as protection against arrays with size 0
             #Will use MET to set the correct size for the arrays
 
-            empty_obj = Initialize({'pt':np.zeros_like(met.pt),
-                                    'eta':np.zeros_like(met.pt),
-                                    'phi':np.zeros_like(met.pt),
-                                    'mass':np.zeros_like(met.pt)})
+            empty_jagged = awkward.JaggedArray.fromcounts(np.ones_like(met.pt, dtype=int),np.zeros_like(met.pt))
+            empty_obj = Initialize({'pt':empty_jagged,
+                                    'eta':empty_jagged,
+                                    'phi':empty_jagged,
+                                    'mass':empty_jagged})
 
             e = Initialize({'pt':df['Electron_pt'],
                             'eta':df['Electron_eta'],
@@ -187,11 +189,11 @@ class AnalysisProcessor(processor.ProcessorABC):
             mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,self._year)
             mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.tight_id,self._year)
 
-            mu_loose = empty_obj
+            mu_loose = mu
             if mu[mu.isloose].content.size > 0:
                 mu_loose=mu[mu.isloose]
 
-            mu_tight = empty_obj
+            mu_tight = mu
             if mu[mu.istight].content.size > 0:
                 mu_tight=mu[mu.istight]
 
@@ -214,7 +216,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             
             tau['isloose']=isLooseTau(tau.pt,tau.eta,tau.decayMode,tau.id,self._year)
-            tau_loose = empty_obj
+            tau_loose = tau
 
             if tau[tau.isloose].content.size>0:
                 tau_loose=tau[tau.isloose]
@@ -238,11 +240,11 @@ class AnalysisProcessor(processor.ProcessorABC):
             pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho.loose_id,pho.eleveto,self._year)
             pho['istight']=isTightPhoton(pho.pt,pho.eta,pho.tight_id,pho.eleveto,self._year)
 
-            pho_loose = empty_obj
+            pho_loose = pho
             if pho[pho.isloose].content.size>0:
                 pho_loose=pho[pho.isloose]
 
-            pho_tight = empty_obj
+            pho_tight = pho
             if pho[pho.istight].content.size>0:
                 pho_tight=pho[pho.istight]
                 

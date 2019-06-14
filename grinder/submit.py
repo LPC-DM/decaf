@@ -12,9 +12,7 @@ import os
 from optparse import OptionParser
 import uproot, uproot_methods
 import numpy as np
-from fnal_column_analysis_tools import hist
-#from saiyan import Builder
-from analysis.darkhiggs import analysis,samples
+from coffea import hist
 
 parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
