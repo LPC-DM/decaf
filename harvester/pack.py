@@ -105,7 +105,7 @@ for folder in beans[options.year]:
         print(len(urllists))
         if urllist:
             for i in range(0,len(urllists)) :
-                 datadef[dataset+"____"+str(i)] = {
+                 datadef[dataset+"____"+str(i)+"_"] = {
                       'files': urllists[i],
                       'xs': xs,
                       #'sumw': sumw,
