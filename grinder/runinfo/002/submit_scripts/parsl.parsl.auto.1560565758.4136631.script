@@ -1,0 +1,22 @@
+
+source /cvmfs/sft.cern.ch/lcg/views/LCG_95apython3/x86_64-centos7-gcc7-opt/setup.sh
+export PATH=`pwd`/.local/bin:$PATH
+export PYTHONPATH=`pwd`/.local/lib/python3.6/site-packages:$PYTHONPATH
+
+export X509_USER_PROXY=`pwd`/x509up_u45169
+mkdir -p decaf_parsl
+
+export CORES=$(getconf _NPROCESSORS_ONLN)
+echo "Found cores : $CORES"
+WORKERCOUNT=1
+
+CMD ( ) {
+process_worker_pool.py  --max_workers=8 -p 0 -c 1 -m None --poll 10 --task_url=tcp://fermicloud023.fnal.gov:54046 --result_url=tcp://fermicloud023.fnal.gov:54476 --logdir=.//decaf_parsl --block_id=4 --hb_period=30 --hb_threshold=120 
+}
+for COUNT in $(seq 1 1 $WORKERCOUNT)
+do
+    echo "Launching worker: $COUNT"
+    CMD &
+done
+wait
+echo "All workers done"

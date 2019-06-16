@@ -7,3 +7,6 @@ else
 fi
 
 export PYTHONPATH=~/.local/lib/python3.6/site-packages:$PYTHONPATH
+#export PATH=~/.local/bin:$PATH
+
+cat $HOME/private/$USER.txt | voms-proxy-init -voms cms --valid 140:00 -pwstdin
