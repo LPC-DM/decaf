@@ -1,0 +1,10 @@
+universe = vanilla
+Executable = pack.sh
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Transfer_Input_Files = pack.sh
+Output = condor/$ENV(YEAR)/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
+Error = condor/$ENV(YEAR)/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
+Log = condor/$ENV(YEAR)/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
+Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(USER)
+Queue 1
