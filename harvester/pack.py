@@ -17,6 +17,7 @@ parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 parser.add_option('-y', '--year', help='year', dest='year')
 parser.add_option('-p', '--pack', help='pack', dest='pack')
+parser.add_option('-k', '--keep', action="store_true", dest="keep")
 (options, args) = parser.parse_args()
 fnaleos = "root://cmsxrootd.fnal.gov/"
 
@@ -84,11 +85,17 @@ for folder in beans[options.year]:
         print("Looking into",folder+"/"+dataset)
         filenames = folder+"/"+dataset+" -name \'nano_*.root\'"
         os.system("find "+filenames+" > "+dataset+".txt")
-        flist = open(dataset+".txt")
+        with open(dataset+".txt") as flist:
+             new_content=flist.read().replace('/eos/uscms',fnaleos)
+        with open(dataset+".txt", 'w') as flist:
+             flist.write(new_content)
+        if options.keep and open(dataset+".txt").read(1): 
+             os.system("mkdir -p beans/"+options.year)
+             os.system("cp "+dataset+".txt beans/"+options.year)
         urllist = []
         xs = xsections[dataset]
-        for eospath in flist:
-            eospath.replace('/eos/uscms',fnaleos)
+        for path in open(dataset+".txt"):
+            eospath = path.strip()
             if (not ('failed' in eospath)): urllist.append(eospath)
         print('list lenght:',len(urllist))
         urllists = split(urllist, int(options.pack))
