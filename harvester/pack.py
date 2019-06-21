@@ -87,10 +87,8 @@ for folder in beans[options.year]:
         flist = open(dataset+".txt")
         urllist = []
         xs = xsections[dataset]
-        for path in flist:
-            s = path.strip().split('/')
-            eospath = fnaleos
-            for i in range (3,len(s)): eospath=eospath+'/'+s[i]
+        for eospath in flist:
+            eospath.replace('/eos/uscms',fnaleos)
             if (not ('failed' in eospath)): urllist.append(eospath)
         print('list lenght:',len(urllist))
         urllists = split(urllist, int(options.pack))

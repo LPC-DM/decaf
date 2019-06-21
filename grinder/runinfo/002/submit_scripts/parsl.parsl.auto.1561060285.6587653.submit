@@ -1,0 +1,23 @@
+
+universe                = vanilla
+should_transfer_files   = YES
+when_to_transfer_output = ON_EXIT_OR_EVICT
+Transfer_Executable     = false
+transfer_input_files    = /uscms/homes/m/matteoc/decaf/grinder/runinfo/002/submit_scripts/parsl.parsl.auto.1561060285.6587653.script,/uscms/home/matteoc/.local,/uscms/home/matteoc/x509up_u45169
+machine_count           = 1
+output                  = /uscms/homes/m/matteoc/decaf/grinder/runinfo/002/submit_scripts/parsl.parsl.auto.1561060285.6587653.stdout
+error                   = /uscms/homes/m/matteoc/decaf/grinder/runinfo/002/submit_scripts/parsl.parsl.auto.1561060285.6587653.stderr
+executable              = /bin/bash
+arguments               = parsl.parsl.auto.1561060285.6587653.script
+requirements            = 
++projectname            = 
+leave_in_queue          = TRUE
+environment             = "JOBNAME='parsl.parsl.auto.1561060285.6587653'"
+
+transfer_output_files = decaf_parsl
+RequestMemory = 16384
+RequestCpus = 8
+
+
+queue
+
