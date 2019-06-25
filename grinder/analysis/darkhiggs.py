@@ -76,7 +76,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             if self._xsec[dataset] != -1:
                 genw = df['genWeight']
                 sumw = genw.sum()
-            print(sumw)
             ###
             # Calculate PU weight and systematic variations
             ###
