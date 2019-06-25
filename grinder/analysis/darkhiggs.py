@@ -76,7 +76,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             if self._xsec[dataset] != -1:
                 genw = df['genWeight']
                 sumw = genw.sum()
-
+            print(sumw)
             ###
             # Calculate PU weight and systematic variations
             ###
@@ -485,7 +485,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 if self._xsec[dataset]!= -1: scale[dataset] = self._lumi*self._xsec[dataset]
                 else: scale[dataset] = 1
 
-            for h in accumulator.values():
+            for histname, h in accumulator.items():
+                if histname == 'sumw': continue
                 if isinstance(h, hist.Hist):
                     h.scale(scale, axis="dataset")
 
