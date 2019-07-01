@@ -39,6 +39,24 @@ hists = {
     'TvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("TvsQCD","TvsQCD",15,0,1)),
     'hSvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("hSvsQCD","hSvsQCD",15,0,1)),
     'VvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("VvsQCD","VvsQCD",15,0,1)),
+    'probTbcq': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probTbcq","probTbcq",15,0,1)),
+    'probTbqq': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probTbqq","probTbqq",15,0,1)),
+    'probTbc': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probTbc","probTbc",15,0,1)),
+    'probTbq': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probTbq","probTbq",15,0,1)),
+    'probWcq': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probWcq","probWcq",15,0,1)),
+    'probWqq': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probWqq","probWqq",15,0,1)),
+    'probZbb': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probZbb","probZbb",15,0,1)),
+    'probZcc': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probZcc","probZcc",15,0,1)),
+    'probZqq': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probZqq","probZqq",15,0,1)),
+    'probHbb': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probHbb","probHbb",15,0,1)),
+    'probHcc': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probHcc","probHcc",15,0,1)),
+    'probHqqqq': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probHqqqq","probHqqqq",15,0,1)),
+    'probQCDbb': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probQCDbb","probQCDbb",15,0,1)),
+    'probQCDcc': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probQCDcc","probQCDcc",15,0,1)),
+    'probQCDb': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probQCDb","probQCDb",15,0,1)),
+    'probQCDc': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probQCDc","probQCDc",15,0,1)),
+    'probQCDothers': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probQCDothers","probQCDothers",15,0,1)),
+    
 
 }
 
@@ -221,6 +239,23 @@ def analysis(selected_regions, year, xsec, dataset, file):
                      'probQCDb':tree.array('AK15Puppi_probQCDb'),
                      'probQCDc':tree.array('AK15Puppi_probQCDc'),
                      'probQCDothers':tree.array('AK15Puppi_probQCDothers')})
+    fj['probTbcq'] = fj.probTbcq
+    fj['probTbqq'] = fj.probTbqq
+    fj['probTbc'] = fj.probTbc
+    fj['probTbq'] = fj.probTbq
+    fj['probWcq'] = fj.probWcq
+    fj['probWqq'] = fj.probWqq
+    fj['probZbb'] = fj.probZbb
+    fj['probZcc'] = fj.probZcc
+    fj['probZqq'] = fj.probZqq
+    fj['probHbb'] = fj.probHbb
+    fj['probHcc'] = fj.probHcc
+    fj['probHqqqq'] = fj.probHqqqq
+    fj['probQCDbb'] = fj.probQCDbb
+    fj['probQCDcc'] = fj.probQCDcc
+    fj['probQCDb'] = fj.probQCDb
+    fj['probQCDc'] = fj.probQCDc
+    fj['probQCDothers'] = fj.probQCDothers
     fj['probQCD'] = fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
     fj['TvsQCD'] = fj.probTbcq+fj.probTbqq+fj.probTbc+fj.probTbq
     fj['hSvsQCD'] = (fj.probZbb + fj.probHbb) / (fj.probZbb+fj.probHbb+fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
@@ -332,6 +367,23 @@ def analysis(selected_regions, year, xsec, dataset, file):
         leading_fj["TvsQCD"] = np.zeros(num_events)
         leading_fj["hSvsQCD"] = np.zeros(num_events)
         leading_fj["VvsQCD"] = np.zeros(num_events)
+        leading_fj['probTbcq']      = np.zeros(num_events)
+        leading_fj['probTbqq']      = np.zeros(num_events)
+        leading_fj['probTbc']       = np.zeros(num_events)
+        leading_fj['probTbq']       = np.zeros(num_events)
+        leading_fj['probWcq']       = np.zeros(num_events)
+        leading_fj['probWqq']       = np.zeros(num_events)
+        leading_fj['probZbb']       = np.zeros(num_events)
+        leading_fj['probZcc']       = np.zeros(num_events)
+        leading_fj['probZqq']       = np.zeros(num_events)
+        leading_fj['probHbb']       = np.zeros(num_events)
+        leading_fj['probHcc']       = np.zeros(num_events)
+        leading_fj['probHqqqq']     = np.zeros(num_events)
+        leading_fj['probQCDbb']     = np.zeros(num_events)
+        leading_fj['probQCDcc']     = np.zeros(num_events)
+        leading_fj['probQCDb']      = np.zeros(num_events)
+        leading_fj['probQCDc']      = np.zeros(num_events)
+        leading_fj['probQCDothers'] = np.zeros(num_events)
 
     u={}
     u["iszeroL"] = met
@@ -397,6 +449,23 @@ def analysis(selected_regions, year, xsec, dataset, file):
     variables['TvsQCD'] = leading_fj.TvsQCD.sum()
     variables['hSvsQCD'] = leading_fj.hSvsQCD.sum()
     variables['VvsQCD'] = leading_fj.VvsQCD.sum()        
+    variables['probTbcq']      = leading_fj.probTbcq.sum()
+    variables['probTbqq']      = leading_fj.probTbqq.sum()
+    variables['probTbc']       = leading_fj.probTbc.sum()
+    variables['probTbq']       = leading_fj.probTbq.sum()
+    variables['probWcq']       = leading_fj.probWcq.sum()
+    variables['probWqq']       = leading_fj.probWqq.sum()
+    variables['probZbb']       = leading_fj.probZbb.sum()
+    variables['probZcc']       = leading_fj.probZcc.sum()
+    variables['probZqq']       = leading_fj.probZqq.sum()
+    variables['probHbb']       = leading_fj.probHbb.sum()
+    variables['probHcc']       = leading_fj.probHcc.sum()
+    variables['probHqqqq']     = leading_fj.probHqqqq.sum()
+    variables['probQCDbb']     = leading_fj.probQCDbb.sum()
+    variables['probQCDcc']     = leading_fj.probQCDcc.sum()
+    variables['probQCDb']      = leading_fj.probQCDb.sum()
+    variables['probQCDc']      = leading_fj.probQCDc.sum()
+    variables['probQCDothers'] = leading_fj.probQCDothers.sum()
 
     hout = {}
     for k in hists.keys():
