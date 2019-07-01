@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import uproot, uproot_methods
 import numpy as np
-from Builder import Initialize
+from fnal_column_analysis_tools.arrays import Initialize
 from fnal_column_analysis_tools import hist, lookup_tools
 
 '''
@@ -119,3 +119,10 @@ def get_nlo_weight(type, pt):
 
     correction=lookup_tools.dense_lookup.dense_lookup(sf_qcd*sf_ewk, kfactor[nlo[type]].edges)
     return correction(pt)
+
+def get_bad_ecal_weight(eta,phi):
+    badecal = "data/badecal/hotjets-runBCDEFGH.root"
+    fbadecal = uproot.open(badecal)
+    badecal_corr = fbadecal["h2jet"].values
+    correction=lookup_tools.dense_lookup.dense_lookup(badecal_corr, fbadecal["h2jet"].edges)
+    return correction(eta,phi)

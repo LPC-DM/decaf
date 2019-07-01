@@ -53,4 +53,4 @@ singlepho_trigger_paths["2016"] = ["HLT_Photon175",
                                    "HLT_ECALHT800",
                                    "HLT_CaloJet500_NoJetID"]
 singlepho_trigger_paths["2017"] = singlepho_trigger_paths["2016"]
-singlepho_trigger_paths["2018"] = singlepho_trigger_paths["2016"]
+singlepho_trigger_paths["2018"] = ["HLT_Photon200"]

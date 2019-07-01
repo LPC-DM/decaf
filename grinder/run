@@ -7,8 +7,7 @@ Output = pods/$ENV(YEAR)/condor/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
 Error = pods/$ENV(YEAR)/condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
 Log = pods/$ENV(YEAR)/condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(YEAR)_$ENV(SAMPLE).pkl.gz=$ENV(PWD)/pods/$ENV(YEAR)/$ENV(SAMPLE).pkl.gz"
-x509userproxy = $ENV(X509_USER_PROXY)
-Arguments = $ENV(YEAR) $ENV(LUMI) $ENV(SAMPLE) $ENV(USER)
+Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(USER)
 request_cpus = 8
-request_memory = 5000
+request_memory = 10000
 Queue 1

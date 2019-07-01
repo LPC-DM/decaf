@@ -1,30 +1,45 @@
 #!/usr/bin/env python
 import uproot, uproot_methods
+import awkward
 import numpy as np
 np.seterr(divide='ignore', invalid='ignore', over='ignore')
-from Builder import Initialize
+from fnal_column_analysis_tools.arrays import Initialize
 from fnal_column_analysis_tools import hist
 from utils.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
 from utils.corrections import get_ttbar_weight, get_nlo_weight, get_pu_weight
 from utils.corrections import get_met_trig_weight, get_met_zmm_trig_weight, get_ele_trig_weight, get_pho_trig_weight
+from utils.corrections import get_bad_ecal_weight
 from utils.ids import e_id, isLooseElectron, isTightElectron
 from utils.ids import mu_id, isLooseMuon, isTightMuon
 from utils.ids import tau_id, isLooseTau
-from utils.ids import pho_id, isLoosePhoton
+from utils.ids import pho_id, isLoosePhoton, isTightPhoton
+from utils.ids import isGoodJet, isGoodFatJet
+from utils.metfilters import met_filter_flags
 
 hists = {
     'sumw': hist.Hist("sumw", hist.Cat("dataset", "Primary dataset"), hist.Bin("sumw", "Weight value", [0.])),
-    'CaloMinusPfOverRecoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("CaloMinusPfOverRecoil","Calo - Pf / Recoil",15,0,1)),
-    'recoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("recoil","Hadronic Recoil",[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
-    'mindphi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("mindphi","Min dPhi(MET,AK4s)",15,0,6.28)),
-    'j1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("j1pt","AK4 Leading Jet Pt",50,30,500)),
-    'fj1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("fj1pt","AK15 Leading Jet Pt",50,200,700)),
-    'njets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("njets","AK4 Number of Jets",6,0,5)),
-    'nfjets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("nfjets","AK15 Number of Jets",4,0,3)),
-    'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("fjmass","AK15 Jet Mass",50,20,250)),
-    'TvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("TvsQCD","TvsQCD",15,0,1)),
-    'hSvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("hSvsQCD","hSvsQCD",15,0,1)),
-    'VvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Bin("VvsQCD","VvsQCD",15,0,1)),
+    'CaloMinusPfOverRecoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("CaloMinusPfOverRecoil","Calo - Pf / Recoil",35,0,1)),
+    'recoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("recoil","Hadronic Recoil",[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
+    'mindphi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mindphi","Min dPhi(MET,AK4s)",15,0,6.28)),
+    'j1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("j1pt","AK4 Leading Jet Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
+    'j1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("j1eta","AK4 Leading Jet Eta",35,-3.5,3.5)),
+    'j1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("j1phi","AK4 Leading Jet Phi",35,-3.5,3.5)),
+    'fj1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fj1pt","AK15 Leading Jet Pt",[200.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
+    'fj1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fj1eta","AK15 Leading Jet Eta",35,-3.5,3.5)),
+    'fj1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fj1phi","AK15 Leading Jet Phi",35,-3.5,3.5)),
+    'njets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("njets","AK4 Number of Jets",6,0,5)),
+    'nfjets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjets","AK15 Number of Jets",4,0,3)),
+    'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fjmass","AK15 Jet Mass",50,20,250)),
+    'e1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1pt","Leading Electron Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
+    'e1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1eta","Leading Electron Eta",48,-2.4,2.4)),
+    'e1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1phi","Leading Electron Phi",64,-3.2,3.2)),
+    'mu1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mu1pt","Leading Muon Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
+    'mu1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mu1eta","Leading Muon Eta",48,-2.4,2.4)),
+    'mu1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mu1phi","Leading Muon Phi",64,-3.2,3.2)),
+    'TvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("TvsQCD","TvsQCD",15,0,1)),
+    'hSvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("hSvsQCD","hSvsQCD",15,0,1)),
+    'VvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("VvsQCD","VvsQCD",15,0,1)),
+
 }
 
 
@@ -37,7 +52,7 @@ samples = {
     "isoneA":('GJets','QCD','SinglePhoton','EGamma')
 }
 
-def analysis(selection, year, xsec, dataset, file):
+def analysis(selected_regions, year, xsec, dataset, file):
     weight = {}
     tree = uproot.open(file)["Events"]
     genw = 1
@@ -61,39 +76,60 @@ def analysis(selection, year, xsec, dataset, file):
     #print(weight["pu"],weight["puUp"],weight["puDown"])
 
     ###
+    #Importing the MET filters per year from metfilters.py and constructing the filter boolean
+    ###
+
+    met_filters = {}
+    for flag in met_filter_flags[year]:
+        if flag in tree:
+            met_filters[flag] = tree.array(flag)
+    passMetFilters = np.prod([met_filters[key] for key in met_filters], axis=0)
+
+    ###
     #Importing the trigger paths per year from trigger.py and constructing the trigger boolean
     ###
 
     met_trigger = {}
     for path in met_trigger_paths[year]:
-        try:
+        if path in tree:
             met_trigger[path] = tree.array(path)
-        except KeyError:
-            #print("No trigger bit in file for path ",path)
-            pass
-    passMetTrig = np.prod([met_trigger[key] for key in met_trigger], axis=0)
+    passMetTrig = False
+    for path in met_trigger:
+        passMetTrig |= met_trigger[path]
 
     singleele_trigger = {}
     for path in singleele_trigger_paths[year]:
-        try:
+        if path in tree:
             singleele_trigger[path] = tree.array(path)
-        except KeyError:
-            #print("No trigger bit in file for path ",path)
-            pass
-    passSingleEleTrig = np.prod([singleele_trigger[key] for key in singleele_trigger], axis=0)
+    passSingleEleTrig = False
+    for path in singleele_trigger:
+        passSingleEleTrig |= singleele_trigger[path] 
 
     singlepho_trigger = {}
     for path in singlepho_trigger_paths[year]:
-        try:
+        if path in tree:
             singlepho_trigger[path] = tree.array(path)
-        except KeyError:
-            #print("No trigger bit in file for path ",path)
-            pass
-    passSinglePhoTrig = np.prod([singlepho_trigger[key] for key in singlepho_trigger], axis=0)
+    passSinglePhoTrig = False
+    for path in singlepho_trigger:
+        passSinglePhoTrig |= singlepho_trigger[path] 
 
     ###
     #Initialize physics objects
     ###
+
+    num_events = tree.array("MET_pt").size
+
+    many_zeros = np.zeros(num_events)
+    many_ones  = np.ones(num_events,dtype=int)
+
+    jagged_zeros=awkward.JaggedArray.fromcounts(many_ones,many_zeros)
+
+
+    empty_jagged = Initialize({'pt':jagged_zeros,
+                               'eta':jagged_zeros,
+                               'phi':jagged_zeros,
+                               'mass':jagged_zeros})
+
     e = Initialize({'pt':tree.array("Electron_pt"),
                     'eta':tree.array("Electron_eta"),
                     'phi':tree.array("Electron_phi"),
@@ -101,13 +137,16 @@ def analysis(selection, year, xsec, dataset, file):
                     'dxy':tree.array('Electron_dxy'),
                     'dz':tree.array('Electron_dz')})
     for key in e_id[year]:
-        try:
+        e[key] = e.pt.zeros_like()
+        if e_id[year][key] in tree:
             e[key] = tree.array(e_id[year][key])
-        except KeyError:
-            e[key] = e.pt.zeros_like()
     e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,year)
     e['istight'] = isTightElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,year)
-    e_loose = e[e.isloose]
+
+    e_loose = empty_jagged
+    if e[e.isloose].content.size > 0:
+        e_loose = e[e.isloose]
+
     e_tight = e[e.istight]
     e_ntot = e.counts
     e_nloose = e_loose.counts
@@ -120,10 +159,9 @@ def analysis(selection, year, xsec, dataset, file):
                      'dxy':tree.array('Muon_dxy'),
                      'dz':tree.array('Muon_dz')})
     for key in mu_id[year]:
-        try:
+        mu[key] = mu.pt.zeros_like()
+        if mu_id[year][key] in tree:
             mu[key] = tree.array(mu_id[year][key])
-        except KeyError:
-            mu[key] = mu.pt.zeros_like()
     mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,year)
     mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.tight_id,year)
     mu_loose=mu[mu.isloose]
@@ -137,10 +175,9 @@ def analysis(selection, year, xsec, dataset, file):
                       'phi':tree.array('Tau_phi'),
                       'mass':tree.array('Tau_mass')})
     for key in tau_id[year]:
-        try:
+        tau[key] = tau.pt.zeros_like()
+        if tau_id[year][key] in tree:
             tau[key] = tree.array(tau_id[year][key])
-        except KeyError:
-            tau[key] = tau.pt.zeros_like()
     tau['isloose']=isLooseTau(tau.pt,tau.eta,tau.decayMode,tau.id,year)
     tau_loose=tau[tau.isloose]
     tau_ntot=tau.counts
@@ -151,20 +188,22 @@ def analysis(selection, year, xsec, dataset, file):
                       'phi':tree.array('Photon_phi'),
                       'mass':tree.array('Photon_mass')})
     for key in pho_id[year]:
-        try:
+        pho[key] = pho.pt.zeros_like()
+        if pho_id[year][key] in tree:
             pho[key] = tree.array(pho_id[year][key])
-        except KeyError:
-            pho[key] = pho.pt.zeros_like()
-    pho['isloose']=isLoosePhoton(pho.pt,pho.eta,year)
+    pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho.loose_id,pho.eleveto,year)
+    pho['istight']=isTightPhoton(pho.pt,pho.eta,pho.tight_id,pho.eleveto,year)
     pho_loose=pho[pho.isloose]
+    pho_tight=pho[pho.istight]
     pho_ntot=pho.counts
     pho_nloose=pho_loose.counts
+    pho_ntight=pho_tight.counts
 
     fj = Initialize({'pt':tree.array('AK15Puppi_pt'),
                      'eta':tree.array('AK15Puppi_eta'),
                      'phi':tree.array('AK15Puppi_phi'),
                      'mass':tree.array('AK15Puppi_mass'),
-                     'jetId':tree.array('AK15Puppi_jetId'),
+                     'id':tree.array('AK15Puppi_jetId'),
                      'probTbcq':tree.array('AK15Puppi_probTbcq'),
                      'probTbqq':tree.array('AK15Puppi_probTbqq'),
                      'probTbc':tree.array('AK15Puppi_probTbc'),
@@ -186,7 +225,7 @@ def analysis(selection, year, xsec, dataset, file):
     fj['TvsQCD'] = fj.probTbcq+fj.probTbqq+fj.probTbc+fj.probTbq
     fj['hSvsQCD'] = (fj.probZbb + fj.probHbb) / (fj.probZbb+fj.probHbb+fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
     fj['VvsQCD'] = (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq) / (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
-    fj['isgood'] = (fj.pt > 200)&(abs(fj.eta)<2.4)&(fj.jetId > 0)
+    fj['isgood'] = isGoodFatJet(fj.pt, fj.eta, fj.id)
     fj['isclean'] =~fj.match(pho,1.5)&~fj.match(mu,1.5)&~fj.match(e,1.5)&fj.isgood
     fj_good=fj[fj.isgood]
     fj_clean=fj[fj.isclean]
@@ -198,8 +237,12 @@ def analysis(selection, year, xsec, dataset, file):
                     'eta':tree.array('Jet_eta'),
                     'phi':tree.array('Jet_phi'),
                     'mass':tree.array('Jet_mass'),
-                    'id':tree.array('Jet_jetId')})
-    j['isgood'] = (j.pt>25)&(abs(j.eta)<4.5)&((j.id&2)!=0)
+                    'id':tree.array('Jet_jetId'),
+                    'nhf':tree.array('Jet_neHEF'),
+                    'nef':tree.array('Jet_neEmEF'),
+                    'chf':tree.array('Jet_chHEF'),
+                    'cef':tree.array('Jet_chEmEF')})
+    j['isgood'] = isGoodJet(j.pt, j.eta, j.id, j.nhf, j.nef, j.chf, j.cef)
     j['isclean'] = ~j.match(e,0.4)&~j.match(mu,0.4)&~j.match(pho,0.4)&j.isgood
     j['isiso'] =  ~(j.match(fj,1.5))&j.isclean
     j_good = j[j.isgood]
@@ -248,58 +291,70 @@ def analysis(selection, year, xsec, dataset, file):
         elif('DY' in dataset or 'ZJets' in dataset): weight["nlo"] = get_nlo_weight('z',genZs[0].pt.sum())
         elif('GJets' in dataset): weight["nlo"] = get_nlo_weight('a',genAs[0].pt.sum())
 
-
-
-
     ###
     #Calculating derivatives
     ###
     ele_pairs = e_loose.distincts()
     diele = ele_pairs.i0+ele_pairs.i1
+  
     mu_pairs = mu_loose.distincts()
     dimu = mu_pairs.i0+mu_pairs.i1
+
+    ###
+    #Getting leading pT objects
+    #We need protection in case there are no objects in the array!
+    ###
+    leading_mu = empty_jagged
+    leading_e = empty_jagged
+    leading_dimu = empty_jagged
+    leading_diele = empty_jagged
+    leading_pho = empty_jagged
+    leading_j = empty_jagged
+    leading_fj = empty_jagged
+
+    if mu_tight.content.size>0:
+        leading_mu = mu_tight[mu_tight.pt.argmax()]
+    if e_tight.content.size>0:
+        leading_e = e_tight[e_tight.pt.argmax()]
+    if dimu.content.size>0:
+        leading_dimu = dimu[dimu.pt.argmax()]
+    if diele.content.size>0:
+        leading_diele = diele[diele.pt.argmax()]
     
+    if pho_tight.content.size>0:
+        leading_pho = pho_tight[pho_tight.pt.argmax()]
+
+    if j_clean.content.size>0:
+        leading_j = j_clean[j_clean.pt.argmax()]
+    if fj_clean.content.size>0:
+        leading_fj = fj_clean[fj_clean.pt.argmax()]
+    else:
+        leading_fj["TvsQCD"] = np.zeros(num_events)
+        leading_fj["hSvsQCD"] = np.zeros(num_events)
+        leading_fj["VvsQCD"] = np.zeros(num_events)
+
     u={}
     u["iszeroL"] = met
-
-    if mu_loose.content.size>0:
-        u["isoneM"] = met+mu_loose[mu_loose.pt.argmax()].sum()
-    else:
-        u["isoneM"] = met
-
-    if e_loose.content.size>0:
-        u["isoneE"] = met+e_loose[e_loose.pt.argmax()].sum()
-    else:
-        u["isoneE"] = met
-
-    if dimu.content.size>0:
-        u["istwoM"] = met+dimu[dimu.pt.argmax()].sum()
-    else:
-        u["istwoM"] = met
-
-    if diele.content.size>0:
-        u["istwoE"] = met+diele[diele.pt.argmax()].sum()
-    else:
-        u["istwoE"] = met
-
-    if pho_loose.content.size>0:
-        u["isoneA"] = met+pho_loose[pho_loose.pt.argmax()].sum()
-    else:
-        u["isoneA"] = met
+    u["isoneM"] = met+leading_mu.sum()
+    u["isoneE"] = met+leading_e.sum()
+    u["istwoM"] = met+leading_dimu.sum()
+    u["istwoE"] = met+leading_diele.sum()
+    u["isoneA"] = met+leading_pho.sum()
 
     weight["trig"] = {}
     weight["trig"]["iszeroL"] = get_met_trig_weight(u["iszeroL"].pt,year)
     weight["trig"]["isoneM"] = get_met_trig_weight(u["isoneM"].pt,year)
     weight["trig"]["istwoM"] = get_met_zmm_trig_weight(u["istwoM"].pt,year)
-    weight["trig"]["isoneE"] = 1
-    if e_loose.content.size>0:
-        weight["trig"]["isoneE"] = get_ele_trig_weight(e_loose[e_loose.pt.argmax()].eta.sum(), e_loose[e_loose.pt.argmax()].pt.sum(), np.full_like(e_loose[e_loose.pt.argmax()].eta.sum(),-99),np.full_like(e_loose[e_loose.pt.argmax()].pt.sum(),-99),year)
-    weight["trig"]["istwoE"] = 1
-    if diele.content.size>0:
-        weight["trig"]["istwoE"] = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),year)
-    weight["trig"]["isoneA"] = 1
-    if pho_loose.content.size>0:
-        weight["trig"]["isoneA"] = get_pho_trig_weight(pho_loose[pho_loose.pt.argmax()].pt.sum(),year)
+    weight["trig"]["isoneE"] = get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),year)
+
+    if(ele_pairs.i0.content.size > 0):
+        weight["trig"]["istwoE"] = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),
+                                                   ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),year)
+    else:
+        weight["trig"]["istwoE"] = get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), 
+                                                       np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),year)
+
+    weight["trig"]["isoneA"] = get_pho_trig_weight(leading_pho.pt.sum(),year)
     #print(weight["trig"]["iszeroL"],weight["trig"]["isoneM"],weight["trig"]["istwoM"])
     #print(weight["trig"]["isoneE"],weight["trig"]["istwoE"])
     #print(weight["trig"]["isoneA"])
@@ -307,52 +362,42 @@ def analysis(selection, year, xsec, dataset, file):
     ###
     #Event selection
     ###
-    skinny={}
-    loose={}
-    inclusive={}
+    
+    selections = {}
     for k in u.keys():
-#        if selection in k:
-        skinny[k] = (j_nclean>0)&(j_clean.pt.max()>100)&(abs(u[k].delta_phi(j_clean)).min()>0.5)
-        loose[k] = (fj_nclean>0)&(fj_clean.pt.max()>200)&(abs(u[k].delta_phi(j_clean)).min()>0.8)
-        inclusive[k] = skinny[k]|loose[k]
+        selections[k] = {}
+        selections[k]["baggy"] = (fj_nclean>0)&(fj_clean.pt.max()>200)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250)&(passMetFilters)
+        selections[k]["skinny"] = ~((fj_nclean>0) & (fj_clean.pt.max()>200)) & (j_nclean>0) & (j_clean.pt.max()>100) & (abs(u[k].delta_phi(j_clean)).min()>0.5) & (u[k].pt>250) & (passMetFilters)
+        selections[k]["inclusive"] = selections[k]["skinny"]|selections[k]["baggy"]
+
+    for s in ["baggy","skinny","inclusive"]:
+        selections["iszeroL"][s] = selections["iszeroL"][s]&(e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
+        selections["isoneM"][s] = selections["isoneM"][s]&(e_nloose==0)&(mu_ntight==1)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
+        selections["isoneE"][s] = selections["isoneE"][s]&(e_ntight==1) & (mu_nloose==0) & (tau_nloose==0) & (pho_nloose==0) & (passSingleEleTrig)
+        selections["istwoM"][s] = selections["istwoM"][s]&(e_nloose==0) & (mu_ntight==1) & (mu_nloose==2) & (tau_nloose==0) & (pho_nloose==0) & (leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120) & (passMetTrig)
+        selections["istwoE"][s] = selections["istwoE"][s] & (e_ntight==1) & (e_nloose==2) & (mu_nloose==0) & (tau_nloose==0) & (pho_nloose==0) & (leading_diele.mass.sum()>60) & (leading_diele.mass.sum()<120) & (passSingleEleTrig)
+        selections["isoneA"][s] = selections["isoneA"][s]&(e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1)&(passSinglePhoTrig)
  
-    selections={}
-    selections["iszeroL"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)#&(passMetTrig)
-    selections["isoneM"] = (e_nloose==0)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
-    selections["isoneE"] = (e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)
-    if dimu.content.size > 0:
-        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(dimu[dimu.pt.argmax()].mass.sum()>60)&(dimu[dimu.pt.argmax()].mass.sum()<120)&(passMetTrig)
-    else:
-        selections["istwoM"] = (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)&(passMetTrig)
-    if diele.content.size > 0:
-        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(diele[diele.pt.argmax()].mass.sum()>60)&(diele[diele.pt.argmax()].mass.sum()<120)&(passSingleEleTrig)
-    else:
-        selections["istwoE"] = (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(passSingleEleTrig)
-    selections["isoneA"] = (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==1)&(passSinglePhoTrig)
-
-    for k in u.keys():
-#        if selection in k:
-        skinny[k] = skinny[k]&selections[k]&(u[k].pt>200)
-        loose[k] = loose[k]&selections[k]&(u[k].pt>200)
-        inclusive[k] = inclusive[k]&selections[k]&(u[k].pt>200)
-
     variables = {}
-    variables['j1pt'] = j_clean.pt.max()
-    variables['fj1pt'] = fj_clean.pt.max()
+    variables['j1pt'] = leading_j.pt.sum()
+    variables['j1eta'] = leading_j.eta.sum()
+    variables['j1phi'] = leading_j.phi.sum()
+    variables['fj1pt'] = leading_fj.pt.sum()
+    variables['fj1eta'] = leading_fj.eta.sum()
+    variables['fj1phi'] = leading_fj.phi.sum()
+    variables['e1pt'] = leading_e.pt.sum()
+    variables['e1phi'] = leading_e.phi.sum()
+    variables['e1eta'] = leading_e.eta.sum()
+    variables['mu1pt'] = leading_mu.pt.sum()
+    variables['mu1phi'] = leading_mu.phi.sum()
+    variables['mu1eta'] = leading_mu.eta.sum()
     variables['njets'] = j_nclean
     variables['nfjets'] = fj_nclean
-    if fj_clean.content.size > 0:
-        variables['fjmass'] = fj_clean[fj_clean.pt.argmax()].mass.sum()
-        variables['TvsQCD'] = fj_clean[fj_clean.pt.argmax()].TvsQCD.sum()
-        variables['hSvsQCD'] = fj_clean[fj_clean.pt.argmax()].hSvsQCD.sum()
-        variables['VvsQCD'] = fj_clean[fj_clean.pt.argmax()].VvsQCD.sum()
-    # Filler; does not matter anyway since fj_clean is empty
-    #For a proper fix, need to make sure we are not using max on an empty numpy array
-    else:
-        variables['fjmass'] = -1
-        variables['TvsQCD'] = -1
-        variables['hSvsQCD'] = -1
-        variables['VvsQCD'] = -1
+    variables['fjmass'] = leading_fj.mass.sum()
+    variables['TvsQCD'] = leading_fj.TvsQCD.sum()
+    variables['hSvsQCD'] = leading_fj.hSvsQCD.sum()
+    variables['VvsQCD'] = leading_fj.VvsQCD.sum()        
+
     hout = {}
     for k in hists.keys():
         h = hists[k].copy(content=False)
@@ -360,16 +405,17 @@ def analysis(selection, year, xsec, dataset, file):
         if k == 'sumw':
             h.fill(dataset=dataset, sumw=1, weight=sumw)
         else:
-            while i < len(selection):
-                r = selection[i]
-                if k == 'recoil':
-                    h.fill(dataset=dataset, region=r, recoil=u[r].pt, weight=genw*weight['nlo']*inclusive[r])
-                elif k == 'CaloMinusPfOverRecoil':
-                    h.fill(dataset=dataset, region=r, CaloMinusPfOverRecoil= calomet.pt - met.pt / u[r].pt, weight=genw*weight['nlo']*inclusive[r])
-                elif k == 'mindphi':
-                    h.fill(dataset=dataset, region=r, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*weight['nlo']*inclusive[r])
-                else:
-                    h.fill(dataset=dataset, region=r, **variables, weight=genw*weight['nlo']*inclusive[r])
+            while i < len(selected_regions):
+                r = selected_regions[i]
+                for s in ["baggy","skinny","inclusive"]:
+                    if k == 'recoil':
+                        h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, weight=genw*weight['nlo']*selections[r][s])
+                    elif k == 'CaloMinusPfOverRecoil':
+                        h.fill(dataset=dataset, region=r, jet_selection=s, CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[r].pt, weight=genw*weight['nlo']*selections[r][s])
+                    elif k == 'mindphi':
+                        h.fill(dataset=dataset, region=r, jet_selection=s, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=genw*weight['nlo']*selections[r][s])
+                    else:
+                        h.fill(dataset=dataset, region=r, jet_selection=s, **variables, weight=genw*weight['nlo']*selections[r][s])
                 i += 1
         hout[k] = h
     

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-export USER=${4}
-echo "User is: ${4}"
+export USER=${3}
+echo "User is: ${3}"
 echo "Starting job on " `date` #Date/time of start of job
 echo "Running on: `uname -a`" #Condor job is running on this node
 echo "System software: `cat /etc/redhat-release`" #Operating System on that node
@@ -18,7 +18,7 @@ export PYTHONPATH=${_CONDOR_SCRATCH_DIR}/site-packages:$PYTHONPATH
 export PYTHONPATH=$(find ${_CONDOR_SCRATCH_DIR}/site-packages/ -name *.egg |tr '\n' ':')$PYTHONPATH
 echo "Updated python path: " $PYTHONPATH
 cd grinder
-echo "python run.py --year ${1} --lumi ${2} --dataset ${3}"
-python run.py --year ${1} --lumi ${2} --dataset ${3}
-ls pods/${1}/${3}.pkl.gz
-cp pods/${1}/${3}.pkl.gz ${_CONDOR_SCRATCH_DIR}/${1}_${3}.pkl.gz
+echo "python run.py --year ${1} --dataset ${2}"
+python run.py --year ${1} --dataset ${2}
+ls pods/${1}/${2}.pkl.gz
+cp pods/${1}/${2}.pkl.gz ${_CONDOR_SCRATCH_DIR}/${1}_${2}.pkl.gz
