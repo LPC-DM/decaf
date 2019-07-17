@@ -1,0 +1,23 @@
+[I 16:09:14.760 NotebookApp] Serving notebooks from local directory: /uscms/homes/m/matteoc/decaf
+[I 16:09:14.760 NotebookApp] The Jupyter Notebook is running at:
+[I 16:09:14.760 NotebookApp] http://127.0.0.1:9094/?token=f86804baf135534a4df7c63a32978e61ed97f9b960657cb7
+[I 16:09:14.760 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 16:09:14.761 NotebookApp] 
+    
+    Copy/paste this URL into your browser when you connect for the first time,
+    to login with a token:
+        http://127.0.0.1:9094/?token=f86804baf135534a4df7c63a32978e61ed97f9b960657cb7
+[I 16:09:24.540 NotebookApp] 302 GET /?token=f86804baf135534a4df7c63a32978e61ed97f9b960657cb7 (127.0.0.1) 1.13ms
+[I 16:09:45.755 NotebookApp] Kernel started: 23ecc75c-78aa-4c5e-844e-c653e51e5929
+[I 16:09:47.471 NotebookApp] Adapting to protocol v5.1 for kernel 23ecc75c-78aa-4c5e-844e-c653e51e5929
+[I 16:11:45.745 NotebookApp] Saving file at /grinder/run_parsl.ipynb
+[I 16:13:45.726 NotebookApp] Saving file at /grinder/run_parsl.ipynb
+[I 16:15:45.741 NotebookApp] Saving file at /grinder/run_parsl.ipynb
+[I 16:19:45.726 NotebookApp] Saving file at /grinder/run_parsl.ipynb
+[I 16:21:45.735 NotebookApp] Saving file at /grinder/run_parsl.ipynb
+[I 16:23:45.735 NotebookApp] Saving file at /grinder/run_parsl.ipynb
+[I 16:25:45.745 NotebookApp] Saving file at /grinder/run_parsl.ipynb
+[I 16:27:45.740 NotebookApp] Saving file at /grinder/run_parsl.ipynb
+[I 16:33:29.439 NotebookApp] Shutting down on /api/shutdown request.
+[I 16:33:29.440 NotebookApp] Shutting down 1 kernel
+[I 16:33:34.466 NotebookApp] Kernel shutdown: 23ecc75c-78aa-4c5e-844e-c653e51e5929

@@ -1,0 +1,1266 @@
+2019-06-20 14:51:08.252 parsl.dataflow.dflow:80 [DEBUG]  Starting DataFlowKernel with config
+Config(
+    app_cache=True, 
+    checkpoint_files=None, 
+    checkpoint_mode=None, 
+    checkpoint_period=None, 
+    data_management_max_threads=10, 
+    executors=[HighThroughputExecutor(
+        address='fermicloud023.fnal.gov', 
+        cores_per_worker=1, 
+        heartbeat_period=30, 
+        heartbeat_threshold=120, 
+        interchange_port_range=(55000, 56000), 
+        label='decaf_parsl', 
+        launch_cmd='process_worker_pool.py {debug} {max_workers} -p {prefetch_capacity} -c {cores_per_worker} -m {mem_per_worker} --poll {poll_period} --task_url={task_url} --result_url={result_url} --logdir={logdir} --block_id={{block_id}} --hb_period={heartbeat_period} --hb_threshold={heartbeat_threshold} ', 
+        managed=True, 
+        max_workers=8, 
+        mem_per_worker=None, 
+        poll_period=10, 
+        prefetch_capacity=0, 
+        provider=CondorProvider(
+            channel=LocalChannel(
+                envs={}, 
+                script_dir=None, 
+                userhome='/uscms/homes/m/matteoc/decaf/grinder'
+            ), 
+            cmd_timeout=60, 
+            environment={}, 
+            init_blocks=16, 
+            launcher=SingleNodeLauncher(), 
+            max_blocks=200, 
+            min_blocks=0, 
+            nodes_per_block=1, 
+            parallelism=1, 
+            project='', 
+            requirements='', 
+            scheduler_options='\ntransfer_output_files = decaf_parsl\nRequestMemory = 16384\nRequestCpus = 8\n', 
+            transfer_input_files=['/uscms/home/matteoc/.local', '/uscms/home/matteoc/x509up_u45169'], 
+            walltime='00:10:00', 
+            worker_init='\nsource /cvmfs/sft.cern.ch/lcg/views/LCG_95apython3/x86_64-centos7-gcc7-opt/setup.sh\nexport PATH=`pwd`/.local/bin:$PATH\nexport PYTHONPATH=`pwd`/.local/lib/python3.6/site-packages:$PYTHONPATH\n\nexport X509_USER_PROXY=`pwd`/x509up_u45169\nmkdir -p decaf_parsl\n'
+        ), 
+        storage_access=[], 
+        suppress_failure=False, 
+        worker_debug=False, 
+        worker_logdir_root='./', 
+        worker_port_range=(54000, 55000), 
+        worker_ports=None, 
+        working_dir=None
+    )], 
+    lazy_errors=True, 
+    monitoring=None, 
+    retries=0, 
+    run_dir='runinfo', 
+    strategy=None, 
+    usage_tracking=False
+)
+2019-06-20 14:51:08.252 parsl.dataflow.dflow:81 [INFO]  Parsl version: 0.8.0
+2019-06-20 14:51:08.253 parsl.dataflow.usage_tracking.usage:126 [DEBUG]  Tracking status: False
+2019-06-20 14:51:08.253 parsl.dataflow.usage_tracking.usage:127 [DEBUG]  Testing mode   : False
+2019-06-20 14:51:08.253 parsl.dataflow.dflow:103 [INFO]  Run id is: 78cc2a39-bac5-4526-a327-0ff470630867
+2019-06-20 14:51:08.887 parsl.dataflow.memoization:52 [INFO]  App caching initialized
+2019-06-20 14:51:08.897 parsl.executors.high_throughput.executor:430 [DEBUG]  Starting queue management thread
+2019-06-20 14:51:08.898 parsl.executors.high_throughput.executor:307 [DEBUG]  [MTHREAD] queue management worker starting
+2019-06-20 14:51:08.898 parsl.executors.high_throughput.executor:434 [DEBUG]  Started queue management thread
+2019-06-20 14:51:08.919 parsl.executors.high_throughput.executor:266 [DEBUG]  Created management thread: <Thread(Thread-4, started daemon 140487759484672)>
+2019-06-20 14:51:08.919 parsl.executors.high_throughput.executor:240 [DEBUG]  Launch command: process_worker_pool.py  --max_workers=8 -p 0 -c 1 -m None --poll 10 --task_url=tcp://fermicloud023.fnal.gov:54206 --result_url=tcp://fermicloud023.fnal.gov:54939 --logdir=.//decaf_parsl --block_id={block_id} --hb_period=30 --hb_threshold=120 
+2019-06-20 14:51:08.920 parsl.executors.high_throughput.executor:243 [DEBUG]  Starting HighThroughputExecutor with provider:
+CondorProvider(
+    channel=LocalChannel(
+        envs={}, 
+        script_dir='/uscms/homes/m/matteoc/decaf/grinder/runinfo/002/submit_scripts', 
+        userhome='/uscms/homes/m/matteoc/decaf/grinder'
+    ), 
+    cmd_timeout=60, 
+    environment={}, 
+    init_blocks=16, 
+    launcher=SingleNodeLauncher(), 
+    max_blocks=200, 
+    min_blocks=0, 
+    nodes_per_block=1, 
+    parallelism=1, 
+    project='', 
+    requirements='', 
+    scheduler_options='\ntransfer_output_files = decaf_parsl\nRequestMemory = 16384\nRequestCpus = 8\n', 
+    transfer_input_files=['/uscms/home/matteoc/.local', '/uscms/home/matteoc/x509up_u45169'], 
+    walltime='00:10:00', 
+    worker_init='\nsource /cvmfs/sft.cern.ch/lcg/views/LCG_95apython3/x86_64-centos7-gcc7-opt/setup.sh\nexport PATH=`pwd`/.local/bin:$PATH\nexport PYTHONPATH=`pwd`/.local/lib/python3.6/site-packages:$PYTHONPATH\n\nexport X509_USER_PROXY=`pwd`/x509up_u45169\nmkdir -p decaf_parsl\n'
+)
+2019-06-20 14:51:08.924 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:51:22.143 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 0->1616953.0
+2019-06-20 14:51:22.144 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:51:23.525 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 1->1616954.0
+2019-06-20 14:51:23.525 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:51:25.658 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 2->1616955.0
+2019-06-20 14:51:25.658 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:51:26.839 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 3->1616956.0
+2019-06-20 14:51:26.839 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:51:28.470 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 4->1616957.0
+2019-06-20 14:51:28.470 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:51:29.856 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 5->1616958.0
+2019-06-20 14:51:29.857 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:51:31.135 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 6->1616959.0
+2019-06-20 14:51:31.136 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:51:33.018 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 7->1616960.0
+2019-06-20 14:51:33.019 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:51:43.228 parsl.executors.high_throughput.executor:248 [ERROR]  Scaling out failed: Unable to scale out condor provider: Command 'condor_submit /uscms/homes/m/matteoc/decaf/grinder/runinfo/002/submit_scripts/parsl.parsl.auto.1561060293.0192792.submit' failed with return code 1 and standard output 'Submitting job(s)Querying the CMS LPC pool and trying to find an available schedd...
+
+Attempting to submit jobs to lpcschedd1.fnal.gov' and standard error 'ERROR: Failed to connect to local queue manager
+AUTHENTICATE:1003:Failed to authenticate with any method
+AUTHENTICATE:1004:Failed to authenticate using GSI
+GSI:5008:Failed to look up server host address for GSI connection to server with IP 131.225.188.55 and DN /DC=org/DC=incommon/C=US/ST=IL/L=Batavia/O=Fermi Research Alliance/OU=Fermilab/CN=lpcschedd1.fnal.gov.  Is DNS correctly configured?  This server name check can be bypassed by making GSI_SKIP_HOST_CHECK_CERT_REGEX match the DN, or by disabling all hostname checks by setting GSI_SKIP_HOST_CHECK=true or defining GSI_DAEMON_NAME.'
+2019-06-20 14:53:28.731 parsl.addresses:27 [DEBUG]  Finding address by using local hostname
+2019-06-20 14:53:28.731 parsl.addresses:29 [DEBUG]  Address found: fermicloud023.fnal.gov
+2019-06-20 14:53:28.734 parsl.executors.high_throughput.executor:171 [DEBUG]  Initializing HighThroughputExecutor
+2019-06-20 14:53:28.737 parsl.dataflow.rundirs:36 [DEBUG]  Parsl run initializing in rundir: runinfo/003
+2019-06-20 14:53:28.746 parsl.dataflow.dflow:80 [DEBUG]  Starting DataFlowKernel with config
+Config(
+    app_cache=True, 
+    checkpoint_files=None, 
+    checkpoint_mode=None, 
+    checkpoint_period=None, 
+    data_management_max_threads=10, 
+    executors=[HighThroughputExecutor(
+        address='fermicloud023.fnal.gov', 
+        cores_per_worker=1, 
+        heartbeat_period=30, 
+        heartbeat_threshold=120, 
+        interchange_port_range=(55000, 56000), 
+        label='decaf_parsl', 
+        launch_cmd='process_worker_pool.py {debug} {max_workers} -p {prefetch_capacity} -c {cores_per_worker} -m {mem_per_worker} --poll {poll_period} --task_url={task_url} --result_url={result_url} --logdir={logdir} --block_id={{block_id}} --hb_period={heartbeat_period} --hb_threshold={heartbeat_threshold} ', 
+        managed=True, 
+        max_workers=8, 
+        mem_per_worker=None, 
+        poll_period=10, 
+        prefetch_capacity=0, 
+        provider=CondorProvider(
+            channel=LocalChannel(
+                envs={}, 
+                script_dir=None, 
+                userhome='/uscms/homes/m/matteoc/decaf/grinder'
+            ), 
+            cmd_timeout=60, 
+            environment={}, 
+            init_blocks=16, 
+            launcher=SingleNodeLauncher(), 
+            max_blocks=200, 
+            min_blocks=0, 
+            nodes_per_block=1, 
+            parallelism=1, 
+            project='', 
+            requirements='', 
+            scheduler_options='\ntransfer_output_files = decaf_parsl\nRequestMemory = 16384\nRequestCpus = 8\n', 
+            transfer_input_files=['/uscms/home/matteoc/.local', '/uscms/home/matteoc/x509up_u45169'], 
+            walltime='00:10:00', 
+            worker_init='\nsource /cvmfs/sft.cern.ch/lcg/views/LCG_95apython3/x86_64-centos7-gcc7-opt/setup.sh\nexport PATH=`pwd`/.local/bin:$PATH\nexport PYTHONPATH=`pwd`/.local/lib/python3.6/site-packages:$PYTHONPATH\n\nexport X509_USER_PROXY=`pwd`/x509up_u45169\nmkdir -p decaf_parsl\n'
+        ), 
+        storage_access=[], 
+        suppress_failure=False, 
+        worker_debug=False, 
+        worker_logdir_root='./', 
+        worker_port_range=(54000, 55000), 
+        worker_ports=None, 
+        working_dir=None
+    )], 
+    lazy_errors=True, 
+    monitoring=None, 
+    retries=0, 
+    run_dir='runinfo', 
+    strategy=None, 
+    usage_tracking=False
+)
+2019-06-20 14:53:28.747 parsl.dataflow.dflow:81 [INFO]  Parsl version: 0.8.0
+2019-06-20 14:53:28.747 parsl.dataflow.usage_tracking.usage:126 [DEBUG]  Tracking status: False
+2019-06-20 14:53:28.747 parsl.dataflow.usage_tracking.usage:127 [DEBUG]  Testing mode   : False
+2019-06-20 14:53:28.748 parsl.dataflow.dflow:103 [INFO]  Run id is: bd1e390f-dca7-4e54-9afb-dd266b1f506c
+2019-06-20 14:53:28.773 parsl.dataflow.memoization:52 [INFO]  App caching initialized
+2019-06-20 14:53:28.782 parsl.executors.high_throughput.executor:430 [DEBUG]  Starting queue management thread
+2019-06-20 14:53:28.783 parsl.executors.high_throughput.executor:307 [DEBUG]  [MTHREAD] queue management worker starting
+2019-06-20 14:53:28.783 parsl.executors.high_throughput.executor:434 [DEBUG]  Started queue management thread
+2019-06-20 14:53:28.802 parsl.executors.high_throughput.executor:266 [DEBUG]  Created management thread: <Thread(Thread-5, started daemon 140487423940352)>
+2019-06-20 14:53:28.802 parsl.executors.high_throughput.executor:240 [DEBUG]  Launch command: process_worker_pool.py  --max_workers=8 -p 0 -c 1 -m None --poll 10 --task_url=tcp://fermicloud023.fnal.gov:54840 --result_url=tcp://fermicloud023.fnal.gov:54682 --logdir=.//decaf_parsl --block_id={block_id} --hb_period=30 --hb_threshold=120 
+2019-06-20 14:53:28.802 parsl.executors.high_throughput.executor:243 [DEBUG]  Starting HighThroughputExecutor with provider:
+CondorProvider(
+    channel=LocalChannel(
+        envs={}, 
+        script_dir='/uscms/homes/m/matteoc/decaf/grinder/runinfo/003/submit_scripts', 
+        userhome='/uscms/homes/m/matteoc/decaf/grinder'
+    ), 
+    cmd_timeout=60, 
+    environment={}, 
+    init_blocks=16, 
+    launcher=SingleNodeLauncher(), 
+    max_blocks=200, 
+    min_blocks=0, 
+    nodes_per_block=1, 
+    parallelism=1, 
+    project='', 
+    requirements='', 
+    scheduler_options='\ntransfer_output_files = decaf_parsl\nRequestMemory = 16384\nRequestCpus = 8\n', 
+    transfer_input_files=['/uscms/home/matteoc/.local', '/uscms/home/matteoc/x509up_u45169'], 
+    walltime='00:10:00', 
+    worker_init='\nsource /cvmfs/sft.cern.ch/lcg/views/LCG_95apython3/x86_64-centos7-gcc7-opt/setup.sh\nexport PATH=`pwd`/.local/bin:$PATH\nexport PYTHONPATH=`pwd`/.local/lib/python3.6/site-packages:$PYTHONPATH\n\nexport X509_USER_PROXY=`pwd`/x509up_u45169\nmkdir -p decaf_parsl\n'
+)
+2019-06-20 14:53:28.807 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:53:38.265 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 0->1616961.0
+2019-06-20 14:53:38.266 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:53:40.353 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 1->1616962.0
+2019-06-20 14:53:40.354 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:53:42.139 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 2->1616963.0
+2019-06-20 14:53:42.139 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:53:43.975 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 3->1616964.0
+2019-06-20 14:53:43.976 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:53:45.312 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 4->1616965.0
+2019-06-20 14:53:45.312 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:53:51.512 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 5->1616966.0
+2019-06-20 14:53:51.514 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:53:53.251 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 6->1616967.0
+2019-06-20 14:53:53.251 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:53:54.534 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 7->1616968.0
+2019-06-20 14:53:54.535 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:53:55.818 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 8->1616969.0
+2019-06-20 14:53:55.818 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:53:57.300 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 9->1616970.0
+2019-06-20 14:53:57.301 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:53:58.584 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 10->1616971.0
+2019-06-20 14:53:58.584 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:54:05.286 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 11->1616972.0
+2019-06-20 14:54:05.287 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:54:07.374 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 12->1616973.0
+2019-06-20 14:54:07.375 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:54:08.868 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 13->1616974.0
+2019-06-20 14:54:08.869 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:54:10.804 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 14->1616975.0
+2019-06-20 14:54:10.805 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:54:12.840 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 15->1616976.0
+2019-06-20 14:54:12.841 parsl.dataflow.strategy:125 [DEBUG]  Scaling strategy: None
+2019-06-20 14:54:42.662 parsl.executors.high_throughput.executor:171 [DEBUG]  Initializing HighThroughputExecutor
+2019-06-20 14:54:42.664 parsl.dataflow.dflow:687 [INFO]  Task 0 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.664 parsl.dataflow.dflow:697 [DEBUG]  Task 0 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592de9668 state=pending> parent=None>
+2019-06-20 14:54:42.664 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.665 parsl.dataflow.dflow:463 [INFO]  Task 0 launched on executor decaf_parsl
+2019-06-20 14:54:42.665 parsl.dataflow.dflow:687 [INFO]  Task 1 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.666 parsl.dataflow.dflow:697 [DEBUG]  Task 1 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592ded5f8 state=pending> parent=None>
+2019-06-20 14:54:42.666 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.666 parsl.dataflow.dflow:463 [INFO]  Task 1 launched on executor decaf_parsl
+2019-06-20 14:54:42.667 parsl.dataflow.dflow:687 [INFO]  Task 2 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.667 parsl.dataflow.dflow:697 [DEBUG]  Task 2 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592ded860 state=pending> parent=None>
+2019-06-20 14:54:42.667 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.668 parsl.dataflow.dflow:463 [INFO]  Task 2 launched on executor decaf_parsl
+2019-06-20 14:54:42.668 parsl.dataflow.dflow:687 [INFO]  Task 3 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.668 parsl.dataflow.dflow:697 [DEBUG]  Task 3 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592ded9b0 state=pending> parent=None>
+2019-06-20 14:54:42.668 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.669 parsl.dataflow.dflow:463 [INFO]  Task 3 launched on executor decaf_parsl
+2019-06-20 14:54:42.669 parsl.dataflow.dflow:687 [INFO]  Task 4 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.669 parsl.dataflow.dflow:697 [DEBUG]  Task 4 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dedb00 state=pending> parent=None>
+2019-06-20 14:54:42.669 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.670 parsl.dataflow.dflow:463 [INFO]  Task 4 launched on executor decaf_parsl
+2019-06-20 14:54:42.670 parsl.dataflow.dflow:687 [INFO]  Task 5 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.670 parsl.dataflow.dflow:697 [DEBUG]  Task 5 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dedc50 state=pending> parent=None>
+2019-06-20 14:54:42.671 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.671 parsl.dataflow.dflow:463 [INFO]  Task 5 launched on executor decaf_parsl
+2019-06-20 14:54:42.671 parsl.dataflow.dflow:687 [INFO]  Task 6 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.672 parsl.dataflow.dflow:697 [DEBUG]  Task 6 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dedda0 state=pending> parent=None>
+2019-06-20 14:54:42.672 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.672 parsl.dataflow.dflow:463 [INFO]  Task 6 launched on executor decaf_parsl
+2019-06-20 14:54:42.673 parsl.dataflow.dflow:687 [INFO]  Task 7 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.673 parsl.dataflow.dflow:697 [DEBUG]  Task 7 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dedef0 state=pending> parent=None>
+2019-06-20 14:54:42.673 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.673 parsl.dataflow.dflow:463 [INFO]  Task 7 launched on executor decaf_parsl
+2019-06-20 14:54:42.674 parsl.dataflow.dflow:687 [INFO]  Task 8 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.674 parsl.dataflow.dflow:697 [DEBUG]  Task 8 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592e02080 state=pending> parent=None>
+2019-06-20 14:54:42.674 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.675 parsl.dataflow.dflow:463 [INFO]  Task 8 launched on executor decaf_parsl
+2019-06-20 14:54:42.675 parsl.dataflow.dflow:687 [INFO]  Task 9 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.675 parsl.dataflow.dflow:697 [DEBUG]  Task 9 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592e021d0 state=pending> parent=None>
+2019-06-20 14:54:42.675 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.676 parsl.dataflow.dflow:463 [INFO]  Task 9 launched on executor decaf_parsl
+2019-06-20 14:54:42.676 parsl.dataflow.dflow:687 [INFO]  Task 10 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.676 parsl.dataflow.dflow:697 [DEBUG]  Task 10 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592e02320 state=pending> parent=None>
+2019-06-20 14:54:42.677 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.677 parsl.dataflow.dflow:463 [INFO]  Task 10 launched on executor decaf_parsl
+2019-06-20 14:54:42.678 parsl.dataflow.dflow:687 [INFO]  Task 11 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.678 parsl.dataflow.dflow:697 [DEBUG]  Task 11 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592e02470 state=pending> parent=None>
+2019-06-20 14:54:42.678 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.678 parsl.dataflow.dflow:463 [INFO]  Task 11 launched on executor decaf_parsl
+2019-06-20 14:54:42.679 parsl.dataflow.dflow:687 [INFO]  Task 12 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.679 parsl.dataflow.dflow:697 [DEBUG]  Task 12 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592e025c0 state=pending> parent=None>
+2019-06-20 14:54:42.679 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.680 parsl.dataflow.dflow:463 [INFO]  Task 12 launched on executor decaf_parsl
+2019-06-20 14:54:42.680 parsl.dataflow.dflow:687 [INFO]  Task 13 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.680 parsl.dataflow.dflow:697 [DEBUG]  Task 13 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592e02710 state=pending> parent=None>
+2019-06-20 14:54:42.680 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.681 parsl.dataflow.dflow:463 [INFO]  Task 13 launched on executor decaf_parsl
+2019-06-20 14:54:42.681 parsl.dataflow.dflow:687 [INFO]  Task 14 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.681 parsl.dataflow.dflow:697 [DEBUG]  Task 14 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592e02860 state=pending> parent=None>
+2019-06-20 14:54:42.681 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.682 parsl.dataflow.dflow:463 [INFO]  Task 14 launched on executor decaf_parsl
+2019-06-20 14:54:42.682 parsl.dataflow.dflow:687 [INFO]  Task 15 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.682 parsl.dataflow.dflow:697 [DEBUG]  Task 15 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592e029b0 state=pending> parent=None>
+2019-06-20 14:54:42.683 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.683 parsl.dataflow.dflow:463 [INFO]  Task 15 launched on executor decaf_parsl
+2019-06-20 14:54:42.683 parsl.dataflow.dflow:687 [INFO]  Task 16 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.684 parsl.dataflow.dflow:697 [DEBUG]  Task 16 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592e02b00 state=pending> parent=None>
+2019-06-20 14:54:42.684 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.684 parsl.dataflow.dflow:463 [INFO]  Task 16 launched on executor decaf_parsl
+2019-06-20 14:54:42.685 parsl.dataflow.dflow:687 [INFO]  Task 17 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.685 parsl.dataflow.dflow:697 [DEBUG]  Task 17 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592e02c50 state=pending> parent=None>
+2019-06-20 14:54:42.685 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.685 parsl.dataflow.dflow:463 [INFO]  Task 17 launched on executor decaf_parsl
+2019-06-20 14:54:42.686 parsl.dataflow.dflow:687 [INFO]  Task 18 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.686 parsl.dataflow.dflow:697 [DEBUG]  Task 18 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592e02da0 state=pending> parent=None>
+2019-06-20 14:54:42.686 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.687 parsl.dataflow.dflow:463 [INFO]  Task 18 launched on executor decaf_parsl
+2019-06-20 14:54:42.687 parsl.dataflow.dflow:687 [INFO]  Task 19 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.687 parsl.dataflow.dflow:697 [DEBUG]  Task 19 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592e02ef0 state=pending> parent=None>
+2019-06-20 14:54:42.687 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.688 parsl.dataflow.dflow:463 [INFO]  Task 19 launched on executor decaf_parsl
+2019-06-20 14:54:42.688 parsl.dataflow.dflow:687 [INFO]  Task 20 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.688 parsl.dataflow.dflow:697 [DEBUG]  Task 20 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d8b080 state=pending> parent=None>
+2019-06-20 14:54:42.688 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.689 parsl.dataflow.dflow:463 [INFO]  Task 20 launched on executor decaf_parsl
+2019-06-20 14:54:42.689 parsl.dataflow.dflow:687 [INFO]  Task 21 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.689 parsl.dataflow.dflow:697 [DEBUG]  Task 21 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d8b1d0 state=pending> parent=None>
+2019-06-20 14:54:42.690 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.690 parsl.dataflow.dflow:463 [INFO]  Task 21 launched on executor decaf_parsl
+2019-06-20 14:54:42.690 parsl.dataflow.dflow:687 [INFO]  Task 22 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.691 parsl.dataflow.dflow:697 [DEBUG]  Task 22 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d8b320 state=pending> parent=None>
+2019-06-20 14:54:42.691 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.691 parsl.dataflow.dflow:463 [INFO]  Task 22 launched on executor decaf_parsl
+2019-06-20 14:54:42.692 parsl.dataflow.dflow:687 [INFO]  Task 23 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.692 parsl.dataflow.dflow:697 [DEBUG]  Task 23 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d8b470 state=pending> parent=None>
+2019-06-20 14:54:42.692 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.693 parsl.dataflow.dflow:463 [INFO]  Task 23 launched on executor decaf_parsl
+2019-06-20 14:54:42.693 parsl.dataflow.dflow:687 [INFO]  Task 24 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.693 parsl.dataflow.dflow:697 [DEBUG]  Task 24 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d8b5c0 state=pending> parent=None>
+2019-06-20 14:54:42.693 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.694 parsl.dataflow.dflow:463 [INFO]  Task 24 launched on executor decaf_parsl
+2019-06-20 14:54:42.694 parsl.dataflow.dflow:687 [INFO]  Task 25 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.694 parsl.dataflow.dflow:697 [DEBUG]  Task 25 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d8b710 state=pending> parent=None>
+2019-06-20 14:54:42.694 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.695 parsl.dataflow.dflow:463 [INFO]  Task 25 launched on executor decaf_parsl
+2019-06-20 14:54:42.695 parsl.dataflow.dflow:687 [INFO]  Task 26 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.695 parsl.dataflow.dflow:697 [DEBUG]  Task 26 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d8b860 state=pending> parent=None>
+2019-06-20 14:54:42.696 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.696 parsl.dataflow.dflow:463 [INFO]  Task 26 launched on executor decaf_parsl
+2019-06-20 14:54:42.696 parsl.dataflow.dflow:687 [INFO]  Task 27 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.697 parsl.dataflow.dflow:697 [DEBUG]  Task 27 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d8b9b0 state=pending> parent=None>
+2019-06-20 14:54:42.697 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.697 parsl.dataflow.dflow:463 [INFO]  Task 27 launched on executor decaf_parsl
+2019-06-20 14:54:42.697 parsl.dataflow.dflow:687 [INFO]  Task 28 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.698 parsl.dataflow.dflow:697 [DEBUG]  Task 28 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d8bb00 state=pending> parent=None>
+2019-06-20 14:54:42.698 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.699 parsl.dataflow.dflow:463 [INFO]  Task 28 launched on executor decaf_parsl
+2019-06-20 14:54:42.699 parsl.dataflow.dflow:687 [INFO]  Task 29 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.699 parsl.dataflow.dflow:697 [DEBUG]  Task 29 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d8bc50 state=pending> parent=None>
+2019-06-20 14:54:42.699 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.700 parsl.dataflow.dflow:463 [INFO]  Task 29 launched on executor decaf_parsl
+2019-06-20 14:54:42.700 parsl.dataflow.dflow:687 [INFO]  Task 30 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.700 parsl.dataflow.dflow:697 [DEBUG]  Task 30 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d8bda0 state=pending> parent=None>
+2019-06-20 14:54:42.700 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.701 parsl.dataflow.dflow:463 [INFO]  Task 30 launched on executor decaf_parsl
+2019-06-20 14:54:42.701 parsl.dataflow.dflow:687 [INFO]  Task 31 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.701 parsl.dataflow.dflow:697 [DEBUG]  Task 31 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d8bef0 state=pending> parent=None>
+2019-06-20 14:54:42.702 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.702 parsl.dataflow.dflow:463 [INFO]  Task 31 launched on executor decaf_parsl
+2019-06-20 14:54:42.702 parsl.dataflow.dflow:687 [INFO]  Task 32 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.703 parsl.dataflow.dflow:697 [DEBUG]  Task 32 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d99080 state=pending> parent=None>
+2019-06-20 14:54:42.703 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.703 parsl.dataflow.dflow:463 [INFO]  Task 32 launched on executor decaf_parsl
+2019-06-20 14:54:42.703 parsl.dataflow.dflow:687 [INFO]  Task 33 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.704 parsl.dataflow.dflow:697 [DEBUG]  Task 33 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d991d0 state=pending> parent=None>
+2019-06-20 14:54:42.704 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.704 parsl.dataflow.dflow:463 [INFO]  Task 33 launched on executor decaf_parsl
+2019-06-20 14:54:42.705 parsl.dataflow.dflow:687 [INFO]  Task 34 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.705 parsl.dataflow.dflow:697 [DEBUG]  Task 34 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d99320 state=pending> parent=None>
+2019-06-20 14:54:42.705 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.706 parsl.dataflow.dflow:463 [INFO]  Task 34 launched on executor decaf_parsl
+2019-06-20 14:54:42.706 parsl.dataflow.dflow:687 [INFO]  Task 35 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.706 parsl.dataflow.dflow:697 [DEBUG]  Task 35 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d99470 state=pending> parent=None>
+2019-06-20 14:54:42.706 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.707 parsl.dataflow.dflow:463 [INFO]  Task 35 launched on executor decaf_parsl
+2019-06-20 14:54:42.707 parsl.dataflow.dflow:687 [INFO]  Task 36 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.707 parsl.dataflow.dflow:697 [DEBUG]  Task 36 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d995c0 state=pending> parent=None>
+2019-06-20 14:54:42.707 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.708 parsl.dataflow.dflow:463 [INFO]  Task 36 launched on executor decaf_parsl
+2019-06-20 14:54:42.708 parsl.dataflow.dflow:687 [INFO]  Task 37 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.708 parsl.dataflow.dflow:697 [DEBUG]  Task 37 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d99710 state=pending> parent=None>
+2019-06-20 14:54:42.709 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.709 parsl.dataflow.dflow:463 [INFO]  Task 37 launched on executor decaf_parsl
+2019-06-20 14:54:42.709 parsl.dataflow.dflow:687 [INFO]  Task 38 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.710 parsl.dataflow.dflow:697 [DEBUG]  Task 38 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d99860 state=pending> parent=None>
+2019-06-20 14:54:42.710 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.710 parsl.dataflow.dflow:463 [INFO]  Task 38 launched on executor decaf_parsl
+2019-06-20 14:54:42.710 parsl.dataflow.dflow:687 [INFO]  Task 39 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.711 parsl.dataflow.dflow:697 [DEBUG]  Task 39 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d999b0 state=pending> parent=None>
+2019-06-20 14:54:42.711 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.711 parsl.dataflow.dflow:463 [INFO]  Task 39 launched on executor decaf_parsl
+2019-06-20 14:54:42.712 parsl.dataflow.dflow:687 [INFO]  Task 40 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.712 parsl.dataflow.dflow:697 [DEBUG]  Task 40 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d99b00 state=pending> parent=None>
+2019-06-20 14:54:42.712 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.713 parsl.dataflow.dflow:463 [INFO]  Task 40 launched on executor decaf_parsl
+2019-06-20 14:54:42.713 parsl.dataflow.dflow:687 [INFO]  Task 41 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.713 parsl.dataflow.dflow:697 [DEBUG]  Task 41 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d99c50 state=pending> parent=None>
+2019-06-20 14:54:42.713 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.714 parsl.dataflow.dflow:463 [INFO]  Task 41 launched on executor decaf_parsl
+2019-06-20 14:54:42.714 parsl.dataflow.dflow:687 [INFO]  Task 42 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.714 parsl.dataflow.dflow:697 [DEBUG]  Task 42 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d99da0 state=pending> parent=None>
+2019-06-20 14:54:42.714 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.715 parsl.dataflow.dflow:463 [INFO]  Task 42 launched on executor decaf_parsl
+2019-06-20 14:54:42.715 parsl.dataflow.dflow:687 [INFO]  Task 43 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.715 parsl.dataflow.dflow:697 [DEBUG]  Task 43 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d99ef0 state=pending> parent=None>
+2019-06-20 14:54:42.716 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.716 parsl.dataflow.dflow:463 [INFO]  Task 43 launched on executor decaf_parsl
+2019-06-20 14:54:42.716 parsl.dataflow.dflow:687 [INFO]  Task 44 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.717 parsl.dataflow.dflow:697 [DEBUG]  Task 44 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592da6080 state=pending> parent=None>
+2019-06-20 14:54:42.717 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.717 parsl.dataflow.dflow:463 [INFO]  Task 44 launched on executor decaf_parsl
+2019-06-20 14:54:42.718 parsl.dataflow.dflow:687 [INFO]  Task 45 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.718 parsl.dataflow.dflow:697 [DEBUG]  Task 45 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592da61d0 state=pending> parent=None>
+2019-06-20 14:54:42.718 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.718 parsl.dataflow.dflow:463 [INFO]  Task 45 launched on executor decaf_parsl
+2019-06-20 14:54:42.719 parsl.dataflow.dflow:687 [INFO]  Task 46 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.719 parsl.dataflow.dflow:697 [DEBUG]  Task 46 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592da6320 state=pending> parent=None>
+2019-06-20 14:54:42.719 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.721 parsl.dataflow.dflow:463 [INFO]  Task 46 launched on executor decaf_parsl
+2019-06-20 14:54:42.721 parsl.dataflow.dflow:687 [INFO]  Task 47 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.721 parsl.dataflow.dflow:697 [DEBUG]  Task 47 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592da6470 state=pending> parent=None>
+2019-06-20 14:54:42.721 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.722 parsl.dataflow.dflow:463 [INFO]  Task 47 launched on executor decaf_parsl
+2019-06-20 14:54:42.722 parsl.dataflow.dflow:687 [INFO]  Task 48 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.722 parsl.dataflow.dflow:697 [DEBUG]  Task 48 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592da65c0 state=pending> parent=None>
+2019-06-20 14:54:42.723 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.723 parsl.dataflow.dflow:463 [INFO]  Task 48 launched on executor decaf_parsl
+2019-06-20 14:54:42.723 parsl.dataflow.dflow:687 [INFO]  Task 49 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.723 parsl.dataflow.dflow:697 [DEBUG]  Task 49 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592da6710 state=pending> parent=None>
+2019-06-20 14:54:42.724 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.724 parsl.dataflow.dflow:463 [INFO]  Task 49 launched on executor decaf_parsl
+2019-06-20 14:54:42.724 parsl.dataflow.dflow:687 [INFO]  Task 50 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.725 parsl.dataflow.dflow:697 [DEBUG]  Task 50 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592da6860 state=pending> parent=None>
+2019-06-20 14:54:42.725 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.725 parsl.dataflow.dflow:463 [INFO]  Task 50 launched on executor decaf_parsl
+2019-06-20 14:54:42.726 parsl.dataflow.dflow:687 [INFO]  Task 51 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.726 parsl.dataflow.dflow:697 [DEBUG]  Task 51 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592da69b0 state=pending> parent=None>
+2019-06-20 14:54:42.726 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.727 parsl.dataflow.dflow:463 [INFO]  Task 51 launched on executor decaf_parsl
+2019-06-20 14:54:42.727 parsl.dataflow.dflow:687 [INFO]  Task 52 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.727 parsl.dataflow.dflow:697 [DEBUG]  Task 52 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592da6b00 state=pending> parent=None>
+2019-06-20 14:54:42.727 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.728 parsl.dataflow.dflow:463 [INFO]  Task 52 launched on executor decaf_parsl
+2019-06-20 14:54:42.728 parsl.dataflow.dflow:687 [INFO]  Task 53 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.728 parsl.dataflow.dflow:697 [DEBUG]  Task 53 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592da6c50 state=pending> parent=None>
+2019-06-20 14:54:42.728 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.729 parsl.dataflow.dflow:463 [INFO]  Task 53 launched on executor decaf_parsl
+2019-06-20 14:54:42.729 parsl.dataflow.dflow:687 [INFO]  Task 54 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.729 parsl.dataflow.dflow:697 [DEBUG]  Task 54 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592da6da0 state=pending> parent=None>
+2019-06-20 14:54:42.730 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.730 parsl.dataflow.dflow:463 [INFO]  Task 54 launched on executor decaf_parsl
+2019-06-20 14:54:42.730 parsl.dataflow.dflow:687 [INFO]  Task 55 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.731 parsl.dataflow.dflow:697 [DEBUG]  Task 55 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592da6ef0 state=pending> parent=None>
+2019-06-20 14:54:42.731 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.731 parsl.dataflow.dflow:463 [INFO]  Task 55 launched on executor decaf_parsl
+2019-06-20 14:54:42.731 parsl.dataflow.dflow:687 [INFO]  Task 56 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.732 parsl.dataflow.dflow:697 [DEBUG]  Task 56 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592db3080 state=pending> parent=None>
+2019-06-20 14:54:42.732 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.732 parsl.dataflow.dflow:463 [INFO]  Task 56 launched on executor decaf_parsl
+2019-06-20 14:54:42.733 parsl.dataflow.dflow:687 [INFO]  Task 57 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.733 parsl.dataflow.dflow:697 [DEBUG]  Task 57 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592db31d0 state=pending> parent=None>
+2019-06-20 14:54:42.733 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.734 parsl.dataflow.dflow:463 [INFO]  Task 57 launched on executor decaf_parsl
+2019-06-20 14:54:42.734 parsl.dataflow.dflow:687 [INFO]  Task 58 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.734 parsl.dataflow.dflow:697 [DEBUG]  Task 58 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592db3320 state=pending> parent=None>
+2019-06-20 14:54:42.734 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.735 parsl.dataflow.dflow:463 [INFO]  Task 58 launched on executor decaf_parsl
+2019-06-20 14:54:42.735 parsl.dataflow.dflow:687 [INFO]  Task 59 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.735 parsl.dataflow.dflow:697 [DEBUG]  Task 59 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592db3470 state=pending> parent=None>
+2019-06-20 14:54:42.735 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.736 parsl.dataflow.dflow:463 [INFO]  Task 59 launched on executor decaf_parsl
+2019-06-20 14:54:42.736 parsl.dataflow.dflow:687 [INFO]  Task 60 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.736 parsl.dataflow.dflow:697 [DEBUG]  Task 60 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592db35c0 state=pending> parent=None>
+2019-06-20 14:54:42.737 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.737 parsl.dataflow.dflow:463 [INFO]  Task 60 launched on executor decaf_parsl
+2019-06-20 14:54:42.737 parsl.dataflow.dflow:687 [INFO]  Task 61 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.737 parsl.dataflow.dflow:697 [DEBUG]  Task 61 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592db3710 state=pending> parent=None>
+2019-06-20 14:54:42.738 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.738 parsl.dataflow.dflow:463 [INFO]  Task 61 launched on executor decaf_parsl
+2019-06-20 14:54:42.738 parsl.dataflow.dflow:687 [INFO]  Task 62 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.739 parsl.dataflow.dflow:697 [DEBUG]  Task 62 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592db3860 state=pending> parent=None>
+2019-06-20 14:54:42.739 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.739 parsl.dataflow.dflow:463 [INFO]  Task 62 launched on executor decaf_parsl
+2019-06-20 14:54:42.740 parsl.dataflow.dflow:687 [INFO]  Task 63 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.740 parsl.dataflow.dflow:697 [DEBUG]  Task 63 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592db39b0 state=pending> parent=None>
+2019-06-20 14:54:42.740 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.741 parsl.dataflow.dflow:463 [INFO]  Task 63 launched on executor decaf_parsl
+2019-06-20 14:54:42.741 parsl.dataflow.dflow:687 [INFO]  Task 64 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.741 parsl.dataflow.dflow:697 [DEBUG]  Task 64 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592db3b00 state=pending> parent=None>
+2019-06-20 14:54:42.741 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.742 parsl.dataflow.dflow:463 [INFO]  Task 64 launched on executor decaf_parsl
+2019-06-20 14:54:42.742 parsl.dataflow.dflow:687 [INFO]  Task 65 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.742 parsl.dataflow.dflow:697 [DEBUG]  Task 65 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592db3c50 state=pending> parent=None>
+2019-06-20 14:54:42.742 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.743 parsl.dataflow.dflow:463 [INFO]  Task 65 launched on executor decaf_parsl
+2019-06-20 14:54:42.743 parsl.dataflow.dflow:687 [INFO]  Task 66 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.743 parsl.dataflow.dflow:697 [DEBUG]  Task 66 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592db3da0 state=pending> parent=None>
+2019-06-20 14:54:42.744 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.744 parsl.dataflow.dflow:463 [INFO]  Task 66 launched on executor decaf_parsl
+2019-06-20 14:54:42.744 parsl.dataflow.dflow:687 [INFO]  Task 67 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.745 parsl.dataflow.dflow:697 [DEBUG]  Task 67 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592db3ef0 state=pending> parent=None>
+2019-06-20 14:54:42.745 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.745 parsl.dataflow.dflow:463 [INFO]  Task 67 launched on executor decaf_parsl
+2019-06-20 14:54:42.746 parsl.dataflow.dflow:687 [INFO]  Task 68 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.746 parsl.dataflow.dflow:697 [DEBUG]  Task 68 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dc2080 state=pending> parent=None>
+2019-06-20 14:54:42.746 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.746 parsl.dataflow.dflow:463 [INFO]  Task 68 launched on executor decaf_parsl
+2019-06-20 14:54:42.747 parsl.dataflow.dflow:687 [INFO]  Task 69 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.747 parsl.dataflow.dflow:697 [DEBUG]  Task 69 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dc21d0 state=pending> parent=None>
+2019-06-20 14:54:42.747 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.748 parsl.dataflow.dflow:463 [INFO]  Task 69 launched on executor decaf_parsl
+2019-06-20 14:54:42.748 parsl.dataflow.dflow:687 [INFO]  Task 70 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.748 parsl.dataflow.dflow:697 [DEBUG]  Task 70 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dc2320 state=pending> parent=None>
+2019-06-20 14:54:42.748 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.749 parsl.dataflow.dflow:463 [INFO]  Task 70 launched on executor decaf_parsl
+2019-06-20 14:54:42.749 parsl.dataflow.dflow:687 [INFO]  Task 71 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.749 parsl.dataflow.dflow:697 [DEBUG]  Task 71 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dc2470 state=pending> parent=None>
+2019-06-20 14:54:42.749 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.750 parsl.dataflow.dflow:463 [INFO]  Task 71 launched on executor decaf_parsl
+2019-06-20 14:54:42.750 parsl.dataflow.dflow:687 [INFO]  Task 72 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.750 parsl.dataflow.dflow:697 [DEBUG]  Task 72 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dc25c0 state=pending> parent=None>
+2019-06-20 14:54:42.751 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.751 parsl.dataflow.dflow:463 [INFO]  Task 72 launched on executor decaf_parsl
+2019-06-20 14:54:42.751 parsl.dataflow.dflow:687 [INFO]  Task 73 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.752 parsl.dataflow.dflow:697 [DEBUG]  Task 73 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dc2710 state=pending> parent=None>
+2019-06-20 14:54:42.752 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.752 parsl.dataflow.dflow:463 [INFO]  Task 73 launched on executor decaf_parsl
+2019-06-20 14:54:42.752 parsl.dataflow.dflow:687 [INFO]  Task 74 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.753 parsl.dataflow.dflow:697 [DEBUG]  Task 74 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dc2860 state=pending> parent=None>
+2019-06-20 14:54:42.753 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.753 parsl.dataflow.dflow:463 [INFO]  Task 74 launched on executor decaf_parsl
+2019-06-20 14:54:42.754 parsl.dataflow.dflow:687 [INFO]  Task 75 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.754 parsl.dataflow.dflow:697 [DEBUG]  Task 75 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dc29b0 state=pending> parent=None>
+2019-06-20 14:54:42.754 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.755 parsl.dataflow.dflow:463 [INFO]  Task 75 launched on executor decaf_parsl
+2019-06-20 14:54:42.755 parsl.dataflow.dflow:687 [INFO]  Task 76 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.755 parsl.dataflow.dflow:697 [DEBUG]  Task 76 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dc2b00 state=pending> parent=None>
+2019-06-20 14:54:42.755 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.756 parsl.dataflow.dflow:463 [INFO]  Task 76 launched on executor decaf_parsl
+2019-06-20 14:54:42.756 parsl.dataflow.dflow:687 [INFO]  Task 77 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.756 parsl.dataflow.dflow:697 [DEBUG]  Task 77 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dc2c50 state=pending> parent=None>
+2019-06-20 14:54:42.756 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.757 parsl.dataflow.dflow:463 [INFO]  Task 77 launched on executor decaf_parsl
+2019-06-20 14:54:42.757 parsl.dataflow.dflow:687 [INFO]  Task 78 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.757 parsl.dataflow.dflow:697 [DEBUG]  Task 78 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dc2da0 state=pending> parent=None>
+2019-06-20 14:54:42.758 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.758 parsl.dataflow.dflow:463 [INFO]  Task 78 launched on executor decaf_parsl
+2019-06-20 14:54:42.758 parsl.dataflow.dflow:687 [INFO]  Task 79 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.759 parsl.dataflow.dflow:697 [DEBUG]  Task 79 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592dc2ef0 state=pending> parent=None>
+2019-06-20 14:54:42.759 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.759 parsl.dataflow.dflow:463 [INFO]  Task 79 launched on executor decaf_parsl
+2019-06-20 14:54:42.759 parsl.dataflow.dflow:687 [INFO]  Task 80 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.760 parsl.dataflow.dflow:697 [DEBUG]  Task 80 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d50080 state=pending> parent=None>
+2019-06-20 14:54:42.760 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.760 parsl.dataflow.dflow:463 [INFO]  Task 80 launched on executor decaf_parsl
+2019-06-20 14:54:42.761 parsl.dataflow.dflow:687 [INFO]  Task 81 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.761 parsl.dataflow.dflow:697 [DEBUG]  Task 81 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d501d0 state=pending> parent=None>
+2019-06-20 14:54:42.761 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.762 parsl.dataflow.dflow:463 [INFO]  Task 81 launched on executor decaf_parsl
+2019-06-20 14:54:42.762 parsl.dataflow.dflow:687 [INFO]  Task 82 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.762 parsl.dataflow.dflow:697 [DEBUG]  Task 82 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d50320 state=pending> parent=None>
+2019-06-20 14:54:42.762 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.763 parsl.dataflow.dflow:463 [INFO]  Task 82 launched on executor decaf_parsl
+2019-06-20 14:54:42.763 parsl.dataflow.dflow:687 [INFO]  Task 83 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.763 parsl.dataflow.dflow:697 [DEBUG]  Task 83 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d50470 state=pending> parent=None>
+2019-06-20 14:54:42.763 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.764 parsl.dataflow.dflow:463 [INFO]  Task 83 launched on executor decaf_parsl
+2019-06-20 14:54:42.764 parsl.dataflow.dflow:687 [INFO]  Task 84 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.764 parsl.dataflow.dflow:697 [DEBUG]  Task 84 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d505c0 state=pending> parent=None>
+2019-06-20 14:54:42.765 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.765 parsl.dataflow.dflow:463 [INFO]  Task 84 launched on executor decaf_parsl
+2019-06-20 14:54:42.765 parsl.dataflow.dflow:687 [INFO]  Task 85 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.766 parsl.dataflow.dflow:697 [DEBUG]  Task 85 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d50710 state=pending> parent=None>
+2019-06-20 14:54:42.766 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.766 parsl.dataflow.dflow:463 [INFO]  Task 85 launched on executor decaf_parsl
+2019-06-20 14:54:42.767 parsl.dataflow.dflow:687 [INFO]  Task 86 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.767 parsl.dataflow.dflow:697 [DEBUG]  Task 86 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d50860 state=pending> parent=None>
+2019-06-20 14:54:42.767 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.767 parsl.dataflow.dflow:463 [INFO]  Task 86 launched on executor decaf_parsl
+2019-06-20 14:54:42.768 parsl.dataflow.dflow:687 [INFO]  Task 87 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.768 parsl.dataflow.dflow:697 [DEBUG]  Task 87 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d509b0 state=pending> parent=None>
+2019-06-20 14:54:42.768 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.769 parsl.dataflow.dflow:463 [INFO]  Task 87 launched on executor decaf_parsl
+2019-06-20 14:54:42.769 parsl.dataflow.dflow:687 [INFO]  Task 88 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.769 parsl.dataflow.dflow:697 [DEBUG]  Task 88 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d50b00 state=pending> parent=None>
+2019-06-20 14:54:42.769 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.770 parsl.dataflow.dflow:463 [INFO]  Task 88 launched on executor decaf_parsl
+2019-06-20 14:54:42.770 parsl.dataflow.dflow:687 [INFO]  Task 89 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.770 parsl.dataflow.dflow:697 [DEBUG]  Task 89 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d50c50 state=pending> parent=None>
+2019-06-20 14:54:42.770 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.771 parsl.dataflow.dflow:463 [INFO]  Task 89 launched on executor decaf_parsl
+2019-06-20 14:54:42.771 parsl.dataflow.dflow:687 [INFO]  Task 90 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.771 parsl.dataflow.dflow:697 [DEBUG]  Task 90 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d50da0 state=pending> parent=None>
+2019-06-20 14:54:42.772 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.772 parsl.dataflow.dflow:463 [INFO]  Task 90 launched on executor decaf_parsl
+2019-06-20 14:54:42.772 parsl.dataflow.dflow:687 [INFO]  Task 91 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.773 parsl.dataflow.dflow:697 [DEBUG]  Task 91 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d50ef0 state=pending> parent=None>
+2019-06-20 14:54:42.773 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.773 parsl.dataflow.dflow:463 [INFO]  Task 91 launched on executor decaf_parsl
+2019-06-20 14:54:42.774 parsl.dataflow.dflow:687 [INFO]  Task 92 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.774 parsl.dataflow.dflow:697 [DEBUG]  Task 92 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d5c080 state=pending> parent=None>
+2019-06-20 14:54:42.774 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.775 parsl.dataflow.dflow:463 [INFO]  Task 92 launched on executor decaf_parsl
+2019-06-20 14:54:42.775 parsl.dataflow.dflow:687 [INFO]  Task 93 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.775 parsl.dataflow.dflow:697 [DEBUG]  Task 93 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d5c1d0 state=pending> parent=None>
+2019-06-20 14:54:42.775 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.776 parsl.dataflow.dflow:463 [INFO]  Task 93 launched on executor decaf_parsl
+2019-06-20 14:54:42.776 parsl.dataflow.dflow:687 [INFO]  Task 94 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.776 parsl.dataflow.dflow:697 [DEBUG]  Task 94 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d5c320 state=pending> parent=None>
+2019-06-20 14:54:42.776 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.777 parsl.dataflow.dflow:463 [INFO]  Task 94 launched on executor decaf_parsl
+2019-06-20 14:54:42.777 parsl.dataflow.dflow:687 [INFO]  Task 95 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.777 parsl.dataflow.dflow:697 [DEBUG]  Task 95 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d5c470 state=pending> parent=None>
+2019-06-20 14:54:42.778 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.778 parsl.dataflow.dflow:463 [INFO]  Task 95 launched on executor decaf_parsl
+2019-06-20 14:54:42.778 parsl.dataflow.dflow:687 [INFO]  Task 96 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.779 parsl.dataflow.dflow:697 [DEBUG]  Task 96 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d5c5c0 state=pending> parent=None>
+2019-06-20 14:54:42.779 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.779 parsl.dataflow.dflow:463 [INFO]  Task 96 launched on executor decaf_parsl
+2019-06-20 14:54:42.779 parsl.dataflow.dflow:687 [INFO]  Task 97 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.780 parsl.dataflow.dflow:697 [DEBUG]  Task 97 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d5c710 state=pending> parent=None>
+2019-06-20 14:54:42.780 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.780 parsl.dataflow.dflow:463 [INFO]  Task 97 launched on executor decaf_parsl
+2019-06-20 14:54:42.781 parsl.dataflow.dflow:687 [INFO]  Task 98 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.781 parsl.dataflow.dflow:697 [DEBUG]  Task 98 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d5c860 state=pending> parent=None>
+2019-06-20 14:54:42.781 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.782 parsl.dataflow.dflow:463 [INFO]  Task 98 launched on executor decaf_parsl
+2019-06-20 14:54:42.782 parsl.dataflow.dflow:687 [INFO]  Task 99 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.782 parsl.dataflow.dflow:697 [DEBUG]  Task 99 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d5c9b0 state=pending> parent=None>
+2019-06-20 14:54:42.782 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.783 parsl.dataflow.dflow:463 [INFO]  Task 99 launched on executor decaf_parsl
+2019-06-20 14:54:42.783 parsl.dataflow.dflow:687 [INFO]  Task 100 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.783 parsl.dataflow.dflow:697 [DEBUG]  Task 100 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d5cb00 state=pending> parent=None>
+2019-06-20 14:54:42.783 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.784 parsl.dataflow.dflow:463 [INFO]  Task 100 launched on executor decaf_parsl
+2019-06-20 14:54:42.784 parsl.dataflow.dflow:687 [INFO]  Task 101 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.784 parsl.dataflow.dflow:697 [DEBUG]  Task 101 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d5cc50 state=pending> parent=None>
+2019-06-20 14:54:42.785 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.785 parsl.dataflow.dflow:463 [INFO]  Task 101 launched on executor decaf_parsl
+2019-06-20 14:54:42.785 parsl.dataflow.dflow:687 [INFO]  Task 102 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.786 parsl.dataflow.dflow:697 [DEBUG]  Task 102 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d5cda0 state=pending> parent=None>
+2019-06-20 14:54:42.786 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.786 parsl.dataflow.dflow:463 [INFO]  Task 102 launched on executor decaf_parsl
+2019-06-20 14:54:42.787 parsl.dataflow.dflow:687 [INFO]  Task 103 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.787 parsl.dataflow.dflow:697 [DEBUG]  Task 103 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d5cef0 state=pending> parent=None>
+2019-06-20 14:54:42.787 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.787 parsl.dataflow.dflow:463 [INFO]  Task 103 launched on executor decaf_parsl
+2019-06-20 14:54:42.788 parsl.dataflow.dflow:687 [INFO]  Task 104 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.788 parsl.dataflow.dflow:697 [DEBUG]  Task 104 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d67080 state=pending> parent=None>
+2019-06-20 14:54:42.788 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.789 parsl.dataflow.dflow:463 [INFO]  Task 104 launched on executor decaf_parsl
+2019-06-20 14:54:42.789 parsl.dataflow.dflow:687 [INFO]  Task 105 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.789 parsl.dataflow.dflow:697 [DEBUG]  Task 105 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d671d0 state=pending> parent=None>
+2019-06-20 14:54:42.789 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.790 parsl.dataflow.dflow:463 [INFO]  Task 105 launched on executor decaf_parsl
+2019-06-20 14:54:42.790 parsl.dataflow.dflow:687 [INFO]  Task 106 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.790 parsl.dataflow.dflow:697 [DEBUG]  Task 106 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d67320 state=pending> parent=None>
+2019-06-20 14:54:42.790 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.791 parsl.dataflow.dflow:463 [INFO]  Task 106 launched on executor decaf_parsl
+2019-06-20 14:54:42.791 parsl.dataflow.dflow:687 [INFO]  Task 107 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.791 parsl.dataflow.dflow:697 [DEBUG]  Task 107 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d67470 state=pending> parent=None>
+2019-06-20 14:54:42.792 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.792 parsl.dataflow.dflow:463 [INFO]  Task 107 launched on executor decaf_parsl
+2019-06-20 14:54:42.792 parsl.dataflow.dflow:687 [INFO]  Task 108 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.793 parsl.dataflow.dflow:697 [DEBUG]  Task 108 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d675c0 state=pending> parent=None>
+2019-06-20 14:54:42.793 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.793 parsl.dataflow.dflow:463 [INFO]  Task 108 launched on executor decaf_parsl
+2019-06-20 14:54:42.793 parsl.dataflow.dflow:687 [INFO]  Task 109 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.794 parsl.dataflow.dflow:697 [DEBUG]  Task 109 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d67710 state=pending> parent=None>
+2019-06-20 14:54:42.794 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.794 parsl.dataflow.dflow:463 [INFO]  Task 109 launched on executor decaf_parsl
+2019-06-20 14:54:42.795 parsl.dataflow.dflow:687 [INFO]  Task 110 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.795 parsl.dataflow.dflow:697 [DEBUG]  Task 110 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d67860 state=pending> parent=None>
+2019-06-20 14:54:42.795 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.796 parsl.dataflow.dflow:463 [INFO]  Task 110 launched on executor decaf_parsl
+2019-06-20 14:54:42.796 parsl.dataflow.dflow:687 [INFO]  Task 111 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.796 parsl.dataflow.dflow:697 [DEBUG]  Task 111 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d679b0 state=pending> parent=None>
+2019-06-20 14:54:42.796 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.797 parsl.dataflow.dflow:463 [INFO]  Task 111 launched on executor decaf_parsl
+2019-06-20 14:54:42.797 parsl.dataflow.dflow:687 [INFO]  Task 112 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.797 parsl.dataflow.dflow:697 [DEBUG]  Task 112 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d67b00 state=pending> parent=None>
+2019-06-20 14:54:42.797 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.798 parsl.dataflow.dflow:463 [INFO]  Task 112 launched on executor decaf_parsl
+2019-06-20 14:54:42.798 parsl.dataflow.dflow:687 [INFO]  Task 113 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.798 parsl.dataflow.dflow:697 [DEBUG]  Task 113 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d67c50 state=pending> parent=None>
+2019-06-20 14:54:42.799 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.799 parsl.dataflow.dflow:463 [INFO]  Task 113 launched on executor decaf_parsl
+2019-06-20 14:54:42.799 parsl.dataflow.dflow:687 [INFO]  Task 114 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.800 parsl.dataflow.dflow:697 [DEBUG]  Task 114 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d67da0 state=pending> parent=None>
+2019-06-20 14:54:42.800 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.800 parsl.dataflow.dflow:463 [INFO]  Task 114 launched on executor decaf_parsl
+2019-06-20 14:54:42.800 parsl.dataflow.dflow:687 [INFO]  Task 115 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.801 parsl.dataflow.dflow:697 [DEBUG]  Task 115 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d67ef0 state=pending> parent=None>
+2019-06-20 14:54:42.801 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.801 parsl.dataflow.dflow:463 [INFO]  Task 115 launched on executor decaf_parsl
+2019-06-20 14:54:42.802 parsl.dataflow.dflow:687 [INFO]  Task 116 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.802 parsl.dataflow.dflow:697 [DEBUG]  Task 116 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d75080 state=pending> parent=None>
+2019-06-20 14:54:42.802 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.803 parsl.dataflow.dflow:463 [INFO]  Task 116 launched on executor decaf_parsl
+2019-06-20 14:54:42.803 parsl.dataflow.dflow:687 [INFO]  Task 117 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.803 parsl.dataflow.dflow:697 [DEBUG]  Task 117 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d751d0 state=pending> parent=None>
+2019-06-20 14:54:42.803 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.804 parsl.dataflow.dflow:463 [INFO]  Task 117 launched on executor decaf_parsl
+2019-06-20 14:54:42.804 parsl.dataflow.dflow:687 [INFO]  Task 118 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.804 parsl.dataflow.dflow:697 [DEBUG]  Task 118 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d75320 state=pending> parent=None>
+2019-06-20 14:54:42.804 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.805 parsl.dataflow.dflow:463 [INFO]  Task 118 launched on executor decaf_parsl
+2019-06-20 14:54:42.805 parsl.dataflow.dflow:687 [INFO]  Task 119 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:54:42.805 parsl.dataflow.dflow:697 [DEBUG]  Task 119 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc592d75470 state=pending> parent=None>
+2019-06-20 14:54:42.806 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:54:42.806 parsl.dataflow.dflow:463 [INFO]  Task 119 launched on executor decaf_parsl
+2019-06-20 15:08:41.238 parsl.dataflow.dflow:687 [INFO]  Task 120 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 15:08:41.240 parsl.dataflow.dflow:697 [DEBUG]  Task 120 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc5924a5f28 state=pending> parent=None>
+2019-06-20 15:08:41.241 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET')
+2019-06-20 15:08:41.241 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 1 ms
+2019-06-20 15:08:41.243 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 2 ms
+2019-06-20 15:08:41.245 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 3 ms
+2019-06-20 15:08:41.248 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 4 ms
+2019-06-20 15:08:41.253 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 5 ms
+2019-06-20 15:08:41.258 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 6 ms
+2019-06-20 15:08:41.265 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 7 ms
+2019-06-20 15:08:41.272 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 8 ms
+2019-06-20 15:08:41.280 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 9 ms
+2019-06-20 15:08:41.290 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 10 ms
+2019-06-20 15:08:41.300 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 11 ms
+2019-06-20 15:08:41.312 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 12 ms
+2019-06-20 15:08:41.324 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 13 ms
+2019-06-20 15:08:41.338 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 14 ms
+2019-06-20 15:08:41.352 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 15 ms
+2019-06-20 15:08:41.367 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 16 ms
+2019-06-20 15:08:41.384 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 17 ms
+2019-06-20 15:08:41.402 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 18 ms
+2019-06-20 15:08:41.420 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 19 ms
+2019-06-20 15:08:41.439 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 20 ms
+2019-06-20 15:08:41.460 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 21 ms
+2019-06-20 15:08:41.481 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 22 ms
+2019-06-20 15:08:41.504 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 23 ms
+2019-06-20 15:08:41.527 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 24 ms
+2019-06-20 15:08:41.552 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 25 ms
+2019-06-20 15:08:41.577 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 26 ms
+2019-06-20 15:08:41.604 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 27 ms
+2019-06-20 15:08:41.631 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 28 ms
+2019-06-20 15:08:41.660 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 29 ms
+2019-06-20 15:08:41.689 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 30 ms
+2019-06-20 15:08:41.720 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 31 ms
+2019-06-20 15:08:41.752 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 32 ms
+2019-06-20 15:08:41.784 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 33 ms
+2019-06-20 15:08:41.818 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 34 ms
+2019-06-20 15:08:41.852 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 35 ms
+2019-06-20 15:08:41.888 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 36 ms
+2019-06-20 15:08:41.925 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 37 ms
+2019-06-20 15:08:41.962 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 38 ms
+2019-06-20 15:08:42.003 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 39 ms
+2019-06-20 15:08:42.043 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 40 ms
+2019-06-20 15:08:42.084 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 41 ms
+2019-06-20 15:08:42.125 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 42 ms
+2019-06-20 15:08:42.168 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 43 ms
+2019-06-20 15:08:42.211 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 44 ms
+2019-06-20 15:08:42.256 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 45 ms
+2019-06-20 15:08:42.302 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 46 ms
+2019-06-20 15:08:42.349 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 47 ms
+2019-06-20 15:08:42.396 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 48 ms
+2019-06-20 15:08:42.445 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 49 ms
+2019-06-20 15:08:42.495 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 50 ms
+2019-06-20 15:08:42.546 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 51 ms
+2019-06-20 15:08:42.598 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 52 ms
+2019-06-20 15:08:42.650 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 53 ms
+2019-06-20 15:08:42.704 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 54 ms
+2019-06-20 15:08:42.759 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 55 ms
+2019-06-20 15:08:42.815 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 56 ms
+2019-06-20 15:08:42.871 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 57 ms
+2019-06-20 15:08:42.929 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 58 ms
+2019-06-20 15:08:42.988 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 59 ms
+2019-06-20 15:08:43.048 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 60 ms
+2019-06-20 15:08:43.108 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 61 ms
+2019-06-20 15:08:43.170 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 62 ms
+2019-06-20 15:08:43.232 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 63 ms
+2019-06-20 15:08:43.296 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 64 ms
+2019-06-20 15:08:43.360 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 65 ms
+2019-06-20 15:08:43.426 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 66 ms
+2019-06-20 15:08:43.493 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 67 ms
+2019-06-20 15:08:43.561 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 68 ms
+2019-06-20 15:08:43.629 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 69 ms
+2019-06-20 15:08:43.699 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 70 ms
+2019-06-20 15:08:43.769 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 71 ms
+2019-06-20 15:08:43.841 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 72 ms
+2019-06-20 15:08:43.914 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 73 ms
+2019-06-20 15:08:43.987 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 74 ms
+2019-06-20 15:08:44.062 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 75 ms
+2019-06-20 15:08:44.138 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 76 ms
+2019-06-20 15:08:44.215 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 77 ms
+2019-06-20 15:08:44.293 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 78 ms
+2019-06-20 15:08:44.371 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 79 ms
+2019-06-20 15:08:44.451 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 80 ms
+2019-06-20 15:08:44.532 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 81 ms
+2019-06-20 15:08:44.613 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 82 ms
+2019-06-20 15:08:44.696 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 83 ms
+2019-06-20 15:08:44.780 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 84 ms
+2019-06-20 15:08:44.865 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 85 ms
+2019-06-20 15:08:44.950 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 86 ms
+2019-06-20 15:08:45.037 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 87 ms
+2019-06-20 15:08:45.125 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 88 ms
+2019-06-20 15:08:45.214 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 89 ms
+2019-06-20 15:08:45.304 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 90 ms
+2019-06-20 15:08:45.394 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 91 ms
+2019-06-20 15:08:45.486 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 92 ms
+2019-06-20 15:08:45.579 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 93 ms
+2019-06-20 15:08:45.673 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 94 ms
+2019-06-20 15:08:45.768 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 95 ms
+2019-06-20 15:08:45.863 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 96 ms
+2019-06-20 15:08:45.960 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 97 ms
+2019-06-20 15:08:46.058 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 98 ms
+2019-06-20 15:08:46.157 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 99 ms
+2019-06-20 15:08:46.256 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 100 ms
+2019-06-20 15:08:46.357 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 101 ms
+2019-06-20 15:08:46.459 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 102 ms
+2019-06-20 15:08:46.562 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 103 ms
+2019-06-20 15:08:46.665 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 104 ms
+2019-06-20 15:08:46.770 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 105 ms
+2019-06-20 15:08:46.876 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 106 ms
+2019-06-20 15:08:46.983 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 107 ms
+2019-06-20 15:08:47.090 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 108 ms
+2019-06-20 15:08:47.199 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 109 ms
+2019-06-20 15:08:47.309 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 110 ms
+2019-06-20 15:08:47.420 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 111 ms
+2019-06-20 15:08:47.531 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 112 ms
+2019-06-20 15:08:47.644 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 113 ms
+2019-06-20 15:08:47.758 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 114 ms
+2019-06-20 15:08:47.873 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 115 ms
+2019-06-20 15:08:47.988 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 116 ms
+2019-06-20 15:08:48.105 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 117 ms
+2019-06-20 15:08:48.223 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 118 ms
+2019-06-20 15:08:48.341 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 119 ms
+2019-06-20 15:08:48.461 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 120 ms
+2019-06-20 15:08:48.582 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 121 ms
+2019-06-20 15:08:48.704 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 122 ms
+2019-06-20 15:08:48.827 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 123 ms
+2019-06-20 15:08:48.950 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 124 ms
+2019-06-20 15:08:49.075 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 125 ms
+2019-06-20 15:08:49.201 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 126 ms
+2019-06-20 15:08:49.327 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 127 ms
+2019-06-20 15:26:27.646 parsl.dataflow.dflow:687 [INFO]  Task 121 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 15:26:27.649 parsl.dataflow.dflow:697 [DEBUG]  Task 121 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc5924830f0 state=pending> parent=None>
+2019-06-20 15:26:27.650 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET')
+2019-06-20 15:26:27.650 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 1 ms
+2019-06-20 15:26:27.656 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 2 ms
+2019-06-20 15:26:27.659 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 3 ms
+2019-06-20 15:26:27.664 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 4 ms
+2019-06-20 15:26:27.669 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 5 ms
+2019-06-20 15:26:27.674 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 6 ms
+2019-06-20 15:26:27.681 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 7 ms
+2019-06-20 15:26:27.690 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 8 ms
+2019-06-20 15:26:27.699 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 9 ms
+2019-06-20 15:26:27.708 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 10 ms
+2019-06-20 15:26:27.724 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 11 ms
+2019-06-20 15:26:27.736 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 12 ms
+2019-06-20 15:26:27.749 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 13 ms
+2019-06-20 15:26:27.762 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 14 ms
+2019-06-20 15:26:27.776 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 15 ms
+2019-06-20 15:26:27.792 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 16 ms
+2019-06-20 15:26:27.808 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 17 ms
+2019-06-20 15:26:27.826 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 18 ms
+2019-06-20 15:26:27.844 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 19 ms
+2019-06-20 15:26:27.863 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 20 ms
+2019-06-20 15:26:27.884 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 21 ms
+2019-06-20 15:26:27.905 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 22 ms
+2019-06-20 15:26:27.927 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 23 ms
+2019-06-20 15:26:27.951 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 24 ms
+2019-06-20 15:26:27.975 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 25 ms
+2019-06-20 15:26:28.001 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 26 ms
+2019-06-20 15:26:28.027 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 27 ms
+2019-06-20 15:26:28.054 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 28 ms
+2019-06-20 15:26:28.083 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 29 ms
+2019-06-20 15:26:28.112 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 30 ms
+2019-06-20 15:26:28.143 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 31 ms
+2019-06-20 15:26:28.174 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 32 ms
+2019-06-20 15:26:28.206 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 33 ms
+2019-06-20 15:26:28.240 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 34 ms
+2019-06-20 15:26:28.274 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 35 ms
+2019-06-20 15:26:28.309 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 36 ms
+2019-06-20 15:26:28.346 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 37 ms
+2019-06-20 15:26:28.383 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 38 ms
+2019-06-20 15:26:28.421 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 39 ms
+2019-06-20 15:26:28.461 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 40 ms
+2019-06-20 15:26:28.501 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 41 ms
+2019-06-20 15:26:28.543 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 42 ms
+2019-06-20 15:26:28.585 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 43 ms
+2019-06-20 15:26:28.628 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 44 ms
+2019-06-20 15:26:28.673 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 45 ms
+2019-06-20 15:26:28.718 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 46 ms
+2019-06-20 15:26:28.764 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 47 ms
+2019-06-20 15:26:28.812 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 48 ms
+2019-06-20 15:26:28.860 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 49 ms
+2019-06-20 15:26:28.910 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 50 ms
+2019-06-20 15:26:28.960 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 51 ms
+2019-06-20 15:26:29.011 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 52 ms
+2019-06-20 15:26:29.064 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 53 ms
+2019-06-20 15:26:29.117 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 54 ms
+2019-06-20 15:26:29.172 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 55 ms
+2019-06-20 15:26:29.227 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 56 ms
+2019-06-20 15:26:29.284 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 57 ms
+2019-06-20 15:26:29.341 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 58 ms
+2019-06-20 15:26:29.400 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 59 ms
+2019-06-20 15:26:29.459 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 60 ms
+2019-06-20 15:26:29.520 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 61 ms
+2019-06-20 15:26:29.581 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 62 ms
+2019-06-20 15:26:29.644 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 63 ms
+2019-06-20 15:26:29.708 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 64 ms
+2019-06-20 15:26:29.772 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 65 ms
+2019-06-20 15:26:29.838 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 66 ms
+2019-06-20 15:26:29.904 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 67 ms
+2019-06-20 15:26:29.972 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 68 ms
+2019-06-20 15:26:30.040 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 69 ms
+2019-06-20 15:26:30.110 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 70 ms
+2019-06-20 15:26:30.180 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 71 ms
+2019-06-20 15:26:30.252 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 72 ms
+2019-06-20 15:26:30.325 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 73 ms
+2019-06-20 15:26:30.399 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 74 ms
+2019-06-20 15:26:30.474 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 75 ms
+2019-06-20 15:26:30.550 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 76 ms
+2019-06-20 15:26:30.627 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 77 ms
+2019-06-20 15:26:30.705 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 78 ms
+2019-06-20 15:26:30.784 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 79 ms
+2019-06-20 15:26:30.864 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 80 ms
+2019-06-20 15:26:30.945 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 81 ms
+2019-06-20 15:26:31.027 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 82 ms
+2019-06-20 15:26:31.110 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 83 ms
+2019-06-20 15:26:31.194 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 84 ms
+2019-06-20 15:26:31.279 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 85 ms
+2019-06-20 15:26:31.365 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 86 ms
+2019-06-20 15:26:31.451 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 87 ms
+2019-06-20 15:26:31.539 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 88 ms
+2019-06-20 15:26:31.628 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 89 ms
+2019-06-20 15:26:31.718 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 90 ms
+2019-06-20 15:26:31.808 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 91 ms
+2019-06-20 15:26:31.900 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 92 ms
+2019-06-20 15:26:31.993 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 93 ms
+2019-06-20 15:26:32.087 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 94 ms
+2019-06-20 15:26:32.182 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 95 ms
+2019-06-20 15:26:32.278 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 96 ms
+2019-06-20 15:26:32.374 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 97 ms
+2019-06-20 15:26:32.472 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 98 ms
+2019-06-20 15:26:32.571 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 99 ms
+2019-06-20 15:26:32.671 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 100 ms
+2019-06-20 15:26:33.502 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 101 ms
+2019-06-20 15:26:33.604 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 102 ms
+2019-06-20 15:26:33.706 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 103 ms
+2019-06-20 15:26:33.810 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 104 ms
+2019-06-20 15:26:33.914 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 105 ms
+2019-06-20 15:26:34.020 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 106 ms
+2019-06-20 15:26:34.126 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 107 ms
+2019-06-20 15:26:34.234 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 108 ms
+2019-06-20 15:26:34.343 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 109 ms
+2019-06-20 15:26:34.453 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 110 ms
+2019-06-20 15:26:34.564 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 111 ms
+2019-06-20 15:26:34.675 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 112 ms
+2019-06-20 15:26:34.788 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 113 ms
+2019-06-20 15:26:34.902 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 114 ms
+2019-06-20 15:26:35.017 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 115 ms
+2019-06-20 15:26:35.132 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 116 ms
+2019-06-20 15:26:35.249 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 117 ms
+2019-06-20 15:26:35.367 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 118 ms
+2019-06-20 15:26:35.486 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 119 ms
+2019-06-20 15:26:35.606 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 120 ms
+2019-06-20 15:26:35.727 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 121 ms
+2019-06-20 15:26:35.849 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 122 ms
+2019-06-20 15:26:35.972 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 123 ms
+2019-06-20 15:26:36.095 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 124 ms
+2019-06-20 15:26:36.220 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 125 ms
+2019-06-20 15:26:36.346 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 126 ms
+2019-06-20 15:26:36.473 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 127 ms
+2019-06-20 15:26:36.601 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 128 ms
+2019-06-20 15:26:36.729 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 129 ms
+2019-06-20 15:26:36.859 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 130 ms
+2019-06-20 15:26:36.990 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 131 ms
+2019-06-20 15:26:37.122 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 132 ms
+2019-06-20 15:26:37.255 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 133 ms
+2019-06-20 15:26:37.388 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 134 ms
+2019-06-20 15:26:37.523 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 135 ms
+2019-06-20 15:26:37.659 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 136 ms
+2019-06-20 15:26:37.796 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 137 ms
+2019-06-20 15:26:37.934 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 138 ms
+2019-06-20 15:26:38.072 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 139 ms
+2019-06-20 15:26:38.212 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 140 ms
+2019-06-20 15:26:38.353 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 141 ms
+2019-06-20 15:26:38.495 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 142 ms
+2019-06-20 15:26:38.637 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 143 ms
+2019-06-20 15:26:38.781 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 144 ms
+2019-06-20 15:26:38.926 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 145 ms
+2019-06-20 15:26:39.072 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 146 ms
+2019-06-20 15:26:39.219 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 147 ms
+2019-06-20 15:26:39.367 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 148 ms
+2019-06-20 15:26:39.515 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 149 ms
+2019-06-20 15:26:39.665 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 150 ms
+2019-06-20 15:26:39.816 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 151 ms
+2019-06-20 15:26:39.968 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 152 ms
+2019-06-20 15:26:40.121 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 153 ms
+2019-06-20 15:26:40.274 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 154 ms
+2019-06-20 15:26:40.429 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 155 ms
+2019-06-20 15:26:40.585 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 156 ms
+2019-06-20 15:26:40.742 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 157 ms
+2019-06-20 15:26:40.899 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 158 ms
+2019-06-20 15:26:41.058 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 159 ms
+2019-06-20 15:26:41.218 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 160 ms
+2019-06-20 15:26:41.379 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 161 ms
+2019-06-20 15:26:41.540 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 162 ms
+2019-06-20 15:26:41.704 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 163 ms
+2019-06-20 15:26:41.868 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 164 ms
+2019-06-20 15:26:42.032 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 165 ms
+2019-06-20 15:26:42.198 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 166 ms
+2019-06-20 15:26:42.365 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 167 ms
+2019-06-20 15:26:42.533 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 168 ms
+2019-06-20 15:26:42.701 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 169 ms
+2019-06-20 15:26:42.871 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 170 ms
+2019-06-20 15:26:43.042 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 171 ms
+2019-06-20 15:26:43.214 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 172 ms
+2019-06-20 15:26:43.386 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 173 ms
+2019-06-20 15:26:43.560 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 174 ms
+2019-06-20 15:26:44.206 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 175 ms
+2019-06-20 15:26:44.381 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 176 ms
+2019-06-20 15:26:44.558 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 177 ms
+2019-06-20 15:26:44.735 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 178 ms
+2019-06-20 15:26:44.914 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 179 ms
+2019-06-20 15:26:45.094 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 180 ms
+2019-06-20 15:26:45.274 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 181 ms
+2019-06-20 15:26:45.456 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 182 ms
+2019-06-20 15:26:45.639 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 183 ms
+2019-06-20 15:26:45.823 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 184 ms
+2019-06-20 15:26:46.007 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 185 ms
+2019-06-20 15:26:46.193 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 186 ms
+2019-06-20 15:26:46.380 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 187 ms
+2019-06-20 15:26:46.568 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 188 ms
+2019-06-20 15:26:46.757 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 189 ms
+2019-06-20 15:26:46.947 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 190 ms
+2019-06-20 15:26:47.138 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 191 ms
+2019-06-20 15:26:47.330 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 192 ms
+2019-06-20 15:26:47.523 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 193 ms
+2019-06-20 15:26:47.717 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 194 ms
+2019-06-20 15:26:47.911 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 195 ms
+2019-06-20 15:26:48.107 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 196 ms
+2019-06-20 15:26:48.304 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 197 ms
+2019-06-20 15:26:48.502 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 198 ms
+2019-06-20 15:26:48.701 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 199 ms
+2019-06-20 15:26:48.900 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 200 ms
+2019-06-20 15:26:49.101 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 201 ms
+2019-06-20 15:26:49.303 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 202 ms
+2019-06-20 15:26:49.506 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 203 ms
+2019-06-20 15:26:49.710 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 204 ms
+2019-06-20 15:26:49.914 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 205 ms
+2019-06-20 15:26:50.120 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 206 ms
+2019-06-20 15:40:25.521 parsl.addresses:27 [DEBUG]  Finding address by using local hostname
+2019-06-20 15:40:25.522 parsl.addresses:29 [DEBUG]  Address found: fermicloud023.fnal.gov
+2019-06-20 15:40:25.524 parsl.executors.high_throughput.executor:171 [DEBUG]  Initializing HighThroughputExecutor
+2019-06-20 15:40:28.664 parsl.addresses:27 [DEBUG]  Finding address by using local hostname
+2019-06-20 15:40:28.665 parsl.addresses:29 [DEBUG]  Address found: fermicloud023.fnal.gov
+2019-06-20 15:40:28.666 parsl.executors.high_throughput.executor:171 [DEBUG]  Initializing HighThroughputExecutor
+2019-06-20 15:45:45.827 parsl.dataflow.dflow:687 [INFO]  Task 122 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 15:45:46.133 parsl.dataflow.dflow:697 [DEBUG]  Task 122 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7fc590544320 state=pending> parent=None>
+2019-06-20 15:45:46.133 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7fc592dee730> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET')
+2019-06-20 15:45:46.134 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 1 ms
+2019-06-20 15:45:46.135 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 2 ms
+2019-06-20 15:45:46.137 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 3 ms
+2019-06-20 15:45:46.141 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 4 ms
+2019-06-20 15:45:46.145 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 5 ms
+2019-06-20 15:45:46.151 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 6 ms
+2019-06-20 15:45:46.157 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 7 ms
+2019-06-20 15:45:46.164 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 8 ms
+2019-06-20 15:45:46.173 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 9 ms
+2019-06-20 15:45:46.182 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 10 ms
+2019-06-20 15:45:46.192 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 11 ms
+2019-06-20 15:45:46.204 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 12 ms
+2019-06-20 15:45:46.216 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 13 ms
+2019-06-20 15:45:46.229 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 14 ms
+2019-06-20 15:45:46.244 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 15 ms
+2019-06-20 15:45:46.259 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 16 ms
+2019-06-20 15:45:46.275 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 17 ms
+2019-06-20 15:45:46.293 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 18 ms
+2019-06-20 15:45:46.311 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 19 ms
+2019-06-20 15:45:46.330 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 20 ms
+2019-06-20 15:45:46.351 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 21 ms
+2019-06-20 15:45:46.372 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 22 ms
+2019-06-20 15:45:46.394 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 23 ms
+2019-06-20 15:45:46.418 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 24 ms
+2019-06-20 15:45:46.442 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 25 ms
+2019-06-20 15:45:46.468 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 26 ms
+2019-06-20 15:45:46.494 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 27 ms
+2019-06-20 15:45:46.522 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 28 ms
+2019-06-20 15:45:46.550 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 29 ms
+2019-06-20 15:45:46.580 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 30 ms
+2019-06-20 15:45:46.610 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 31 ms
+2019-06-20 15:45:46.641 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 32 ms
+2019-06-20 15:45:46.674 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 33 ms
+2019-06-20 15:45:46.707 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 34 ms
+2019-06-20 15:45:46.742 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 35 ms
+2019-06-20 15:45:46.777 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 36 ms
+2019-06-20 15:45:46.814 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 37 ms
+2019-06-20 15:45:46.852 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 38 ms
+2019-06-20 15:45:46.890 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 39 ms
+2019-06-20 15:45:46.929 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 40 ms
+2019-06-20 15:45:46.970 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 41 ms
+2019-06-20 15:45:47.011 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 42 ms
+2019-06-20 15:45:47.054 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 43 ms
+2019-06-20 15:45:47.097 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 44 ms
+2019-06-20 15:45:47.142 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 45 ms
+2019-06-20 15:45:47.188 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 46 ms
+2019-06-20 15:45:47.234 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 47 ms
+2019-06-20 15:45:47.282 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 48 ms
+2019-06-20 15:45:47.330 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 49 ms
+2019-06-20 15:45:47.380 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 50 ms
+2019-06-20 15:45:47.431 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 51 ms
+2019-06-20 15:45:47.482 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 52 ms
+2019-06-20 15:45:47.535 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 53 ms
+2019-06-20 15:45:47.588 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 54 ms
+2019-06-20 15:45:47.643 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 55 ms
+2019-06-20 15:45:47.698 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 56 ms
+2019-06-20 15:45:47.755 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 57 ms
+2019-06-20 15:45:47.813 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 58 ms
+2019-06-20 15:45:47.872 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 59 ms
+2019-06-20 15:45:47.931 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 60 ms
+2019-06-20 15:45:47.992 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 61 ms
+2019-06-20 15:45:48.054 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 62 ms
+2019-06-20 15:45:48.116 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 63 ms
+2019-06-20 15:45:48.180 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 64 ms
+2019-06-20 15:45:48.245 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 65 ms
+2019-06-20 15:45:48.311 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 66 ms
+2019-06-20 15:45:48.377 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 67 ms
+2019-06-20 15:45:48.445 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 68 ms
+2019-06-20 15:45:48.514 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 69 ms
+2019-06-20 15:45:48.584 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 70 ms
+2019-06-20 15:45:48.654 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 71 ms
+2019-06-20 15:45:48.726 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 72 ms
+2019-06-20 15:45:48.799 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 73 ms
+2019-06-20 15:45:48.873 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 74 ms
+2019-06-20 15:45:48.947 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 75 ms
+2019-06-20 15:45:49.023 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 76 ms
+2019-06-20 15:45:49.100 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 77 ms
+2019-06-20 15:45:49.178 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 78 ms
+2019-06-20 15:45:49.256 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 79 ms
+2019-06-20 15:45:49.336 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 80 ms
+2019-06-20 15:45:49.417 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 81 ms
+2019-06-20 15:45:49.499 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 82 ms
+2019-06-20 15:45:49.582 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 83 ms
+2019-06-20 15:45:49.665 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 84 ms
+2019-06-20 15:45:49.750 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 85 ms
+2019-06-20 15:45:49.836 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 86 ms
+2019-06-20 15:45:49.923 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 87 ms
+2019-06-20 15:45:50.010 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 88 ms
+2019-06-20 15:45:50.099 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 89 ms
+2019-06-20 15:45:50.189 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 90 ms
+2019-06-20 15:45:50.280 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 91 ms
+2019-06-20 15:45:50.372 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 92 ms
+2019-06-20 15:45:50.465 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 93 ms
+2019-06-20 15:45:50.558 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 94 ms
+2019-06-20 15:45:50.653 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 95 ms
+2019-06-20 15:45:50.749 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 96 ms
+2019-06-20 15:45:50.846 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 97 ms
+2019-06-20 15:45:50.943 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 98 ms
+2019-06-20 15:45:51.042 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 99 ms
+2019-06-20 15:45:51.142 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 100 ms
+2019-06-20 15:45:51.243 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 101 ms
+2019-06-20 15:45:51.345 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 102 ms
+2019-06-20 15:45:51.447 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 103 ms
+2019-06-20 15:45:51.551 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 104 ms
+2019-06-20 15:45:51.656 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 105 ms
+2019-06-20 15:45:51.762 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 106 ms
+2019-06-20 15:45:51.868 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 107 ms
+2019-06-20 15:45:52.188 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 108 ms
+2019-06-20 15:45:52.297 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 109 ms
+2019-06-20 15:45:52.407 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 110 ms
+2019-06-20 15:45:52.518 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 111 ms
+2019-06-20 15:45:52.630 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 112 ms
+2019-06-20 15:45:52.742 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 113 ms
+2019-06-20 15:45:52.856 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 114 ms
+2019-06-20 15:45:52.971 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 115 ms
+2019-06-20 15:45:53.087 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 116 ms
+2019-06-20 15:45:53.204 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 117 ms
+2019-06-20 15:45:53.321 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 118 ms
+2019-06-20 15:45:53.440 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 119 ms
+2019-06-20 15:45:53.560 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 120 ms
+2019-06-20 15:45:53.681 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 121 ms
+2019-06-20 15:45:53.803 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 122 ms
+2019-06-20 15:45:53.926 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 123 ms
+2019-06-20 15:45:54.050 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 124 ms
+2019-06-20 15:45:54.175 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 125 ms
+2019-06-20 15:45:54.301 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 126 ms
+2019-06-20 15:45:54.428 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 127 ms
+2019-06-20 15:45:54.556 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 128 ms
+2019-06-20 15:45:54.685 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 129 ms
+2019-06-20 15:45:54.815 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 130 ms
+2019-06-20 15:45:54.946 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 131 ms
+2019-06-20 15:45:55.077 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 132 ms
+2019-06-20 15:45:55.210 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 133 ms
+2019-06-20 15:45:55.344 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 134 ms
+2019-06-20 15:45:55.479 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 135 ms
+2019-06-20 15:45:55.615 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 136 ms
+2019-06-20 15:45:55.751 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 137 ms
+2019-06-20 15:45:55.889 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 138 ms
+2019-06-20 15:45:56.028 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 139 ms
+2019-06-20 15:45:56.168 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 140 ms
+2019-06-20 15:45:56.309 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 141 ms
+2019-06-20 15:45:56.451 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 142 ms
+2019-06-20 15:45:56.593 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 143 ms
+2019-06-20 15:45:56.737 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 144 ms
+2019-06-20 15:45:56.882 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 145 ms
+2019-06-20 15:45:57.028 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 146 ms
+2019-06-20 15:45:57.175 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 147 ms
+2019-06-20 15:45:57.323 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 148 ms
+2019-06-20 15:45:57.472 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 149 ms
+2019-06-20 15:45:57.621 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 150 ms
+2019-06-20 15:45:57.772 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 151 ms
+2019-06-20 15:45:57.924 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 152 ms
+2019-06-20 15:45:58.078 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 153 ms
+2019-06-20 15:45:58.231 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 154 ms
+2019-06-20 15:45:58.386 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 155 ms
+2019-06-20 15:45:58.542 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 156 ms
+2019-06-20 15:45:58.699 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 157 ms
+2019-06-20 15:45:58.857 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 158 ms
+2019-06-20 15:45:59.016 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 159 ms
+2019-06-20 15:45:59.176 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 160 ms
+2019-06-20 15:45:59.336 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 161 ms
+2019-06-20 15:45:59.498 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 162 ms
+2019-06-20 15:45:59.661 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 163 ms
+2019-06-20 15:45:59.825 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 164 ms
+2019-06-20 15:45:59.990 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 165 ms
+2019-06-20 15:46:00.156 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 166 ms
+2019-06-20 15:46:00.323 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 167 ms
+2019-06-20 15:46:00.491 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 168 ms
+2019-06-20 15:46:00.659 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 169 ms
+2019-06-20 15:46:00.829 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 170 ms
+2019-06-20 15:46:01.000 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 171 ms
+2019-06-20 15:46:01.172 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 172 ms
+2019-06-20 15:46:01.345 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 173 ms
+2019-06-20 15:46:01.519 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 174 ms
+2019-06-20 15:46:01.694 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 175 ms
+2019-06-20 15:46:01.870 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 176 ms
+2019-06-20 15:46:02.046 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 177 ms
+2019-06-20 15:46:02.224 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 178 ms
+2019-06-20 15:46:02.403 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 179 ms
+2019-06-20 15:46:02.583 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 180 ms
+2019-06-20 15:46:02.764 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 181 ms
+2019-06-20 15:46:02.945 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 182 ms
+2019-06-20 15:46:03.128 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 183 ms
+2019-06-20 15:46:03.312 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 184 ms
+2019-06-20 15:46:03.497 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 185 ms
+2019-06-20 15:46:03.683 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 186 ms
+2019-06-20 15:46:03.870 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 187 ms
+2019-06-20 15:46:04.057 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 188 ms
+2019-06-20 15:46:04.861 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 189 ms
+2019-06-20 15:46:05.050 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 190 ms
+2019-06-20 15:46:05.241 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 191 ms
+2019-06-20 15:46:05.432 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 192 ms
+2019-06-20 15:46:05.625 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 193 ms
+2019-06-20 15:46:05.819 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 194 ms
+2019-06-20 15:46:06.013 parsl.executors.high_throughput.zmq_pipes:90 [DEBUG]  Not sending due to full zmq pipe, timeout: 195 ms
+2019-06-20 15:46:20.181 parsl.dataflow.dflow:822 [INFO]  DFK cleanup initiated
+2019-06-20 15:46:20.183 parsl.dataflow.dflow:733 [INFO]  Summary of tasks in DFK:
+2019-06-20 15:46:20.183 parsl.dataflow.dflow:764 [INFO]  Tasks in state States.pending: 120, 121, 122
+2019-06-20 15:46:20.183 parsl.dataflow.dflow:764 [INFO]  Tasks in state States.launched: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119
+2019-06-20 15:46:20.184 parsl.dataflow.dflow:771 [INFO]  End of summary
+2019-06-20 15:46:20.184 parsl.dataflow.dflow:846 [INFO]  Terminating flow_control and strategy threads

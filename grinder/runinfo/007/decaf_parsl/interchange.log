@@ -1,0 +1,30 @@
+2019-06-25 16:10:39.917 interchange:145 [INFO]  Attempting connection to client at 127.0.0.1 on ports: 55240,55135,55916
+2019-06-25 16:10:39.924 interchange:158 [INFO]  Connected to client
+2019-06-25 16:10:39.926 interchange:186 [INFO]  Bound to ports 54106,54241 for incoming worker connections
+2019-06-25 16:10:39.926 interchange:200 [INFO]  Platform info: {'parsl_v': '0.8.0', 'python_v': '3.6.5', 'os': 'Linux', 'hname': 'fermicloud023.fnal.gov', 'dir': '/uscms/homes/m/matteoc/decaf/grinder'}
+2019-06-25 16:10:39.927 interchange:318 [INFO]  Incoming ports bound
+2019-06-25 16:10:39.927 interchange:235 [INFO]  [TASK_PULL_THREAD] Starting
+2019-06-25 16:14:01.667 interchange:376 [INFO]  [MAIN] Adding manager: b'a6a5d3a25f0d' to ready queue
+2019-06-25 16:14:01.668 interchange:378 [INFO]  [MAIN] Registration info for manager b'a6a5d3a25f0d': {'parsl_v': '0.8.0', 'python_v': '3.6.5', 'worker_count': 8, 'block_id': '0', 'prefetch_capacity': 0, 'max_capacity': 8, 'os': 'Linux', 'hname': 'matteoc-61382446-0-cmswn1950.fnal.gov', 'dir': '/storage/local/data1/condor/execute/dir_15355'}
+2019-06-25 16:14:01.668 interchange:395 [INFO]  [MAIN] Manager b'a6a5d3a25f0d' has compatible Parsl version 0.8.0
+2019-06-25 16:14:01.668 interchange:397 [INFO]  [MAIN] Manager b'a6a5d3a25f0d' has compatible Python version 3.6
+2019-06-25 16:18:57.354 interchange:376 [INFO]  [MAIN] Adding manager: b'c3aa10b39329' to ready queue
+2019-06-25 16:18:57.354 interchange:378 [INFO]  [MAIN] Registration info for manager b'c3aa10b39329': {'parsl_v': '0.8.0', 'python_v': '3.6.5', 'worker_count': 8, 'block_id': '1', 'prefetch_capacity': 0, 'max_capacity': 8, 'os': 'Linux', 'hname': 'matteoc-61382447-0-cmswn2028.fnal.gov', 'dir': '/storage/local/data1/condor/execute/dir_37507'}
+2019-06-25 16:18:57.354 interchange:395 [INFO]  [MAIN] Manager b'c3aa10b39329' has compatible Parsl version 0.8.0
+2019-06-25 16:18:57.354 interchange:397 [INFO]  [MAIN] Manager b'c3aa10b39329' has compatible Python version 3.6
+2019-06-25 16:18:57.355 interchange:376 [INFO]  [MAIN] Adding manager: b'4eb7d2b834bf' to ready queue
+2019-06-25 16:18:57.355 interchange:378 [INFO]  [MAIN] Registration info for manager b'4eb7d2b834bf': {'parsl_v': '0.8.0', 'python_v': '3.6.5', 'worker_count': 8, 'block_id': '2', 'prefetch_capacity': 0, 'max_capacity': 8, 'os': 'Linux', 'hname': 'matteoc-61382448-0-cmswn2028.fnal.gov', 'dir': '/storage/local/data1/condor/execute/dir_37508'}
+2019-06-25 16:18:57.356 interchange:395 [INFO]  [MAIN] Manager b'4eb7d2b834bf' has compatible Parsl version 0.8.0
+2019-06-25 16:18:57.356 interchange:397 [INFO]  [MAIN] Manager b'4eb7d2b834bf' has compatible Python version 3.6
+2019-06-25 16:30:54.382 interchange:376 [INFO]  [MAIN] Adding manager: b'25f32fc2f6b7' to ready queue
+2019-06-25 16:30:54.383 interchange:378 [INFO]  [MAIN] Registration info for manager b'25f32fc2f6b7': {'parsl_v': '0.8.0', 'python_v': '3.6.5', 'worker_count': 8, 'block_id': '3', 'prefetch_capacity': 0, 'max_capacity': 8, 'os': 'Linux', 'hname': 'matteoc-61382449-0-cmswn1644.fnal.gov', 'dir': '/storage/local/data1/condor/execute/dir_8907'}
+2019-06-25 16:30:54.383 interchange:395 [INFO]  [MAIN] Manager b'25f32fc2f6b7' has compatible Parsl version 0.8.0
+2019-06-25 16:30:54.383 interchange:397 [INFO]  [MAIN] Manager b'25f32fc2f6b7' has compatible Python version 3.6
+2019-06-25 16:33:07.805 interchange:376 [INFO]  [MAIN] Adding manager: b'c7eaee7ded18' to ready queue
+2019-06-25 16:33:07.805 interchange:378 [INFO]  [MAIN] Registration info for manager b'c7eaee7ded18': {'parsl_v': '0.8.0', 'python_v': '3.6.5', 'worker_count': 8, 'block_id': '4', 'prefetch_capacity': 0, 'max_capacity': 8, 'os': 'Linux', 'hname': 'matteoc-61382450-0-cmswn1990.fnal.gov', 'dir': '/storage/local/data1/condor/execute/dir_311'}
+2019-06-25 16:33:07.806 interchange:395 [INFO]  [MAIN] Manager b'c7eaee7ded18' has compatible Parsl version 0.8.0
+2019-06-25 16:33:07.806 interchange:397 [INFO]  [MAIN] Manager b'c7eaee7ded18' has compatible Python version 3.6
+2019-06-25 16:33:08.321 interchange:376 [INFO]  [MAIN] Adding manager: b'73d12f720dbf' to ready queue
+2019-06-25 16:33:08.321 interchange:378 [INFO]  [MAIN] Registration info for manager b'73d12f720dbf': {'parsl_v': '0.8.0', 'python_v': '3.6.5', 'worker_count': 8, 'block_id': '5', 'prefetch_capacity': 0, 'max_capacity': 8, 'os': 'Linux', 'hname': 'matteoc-61382451-0-cmswn2009.fnal.gov', 'dir': '/storage/local/data1/condor/execute/dir_5989'}
+2019-06-25 16:33:08.321 interchange:395 [INFO]  [MAIN] Manager b'73d12f720dbf' has compatible Parsl version 0.8.0
+2019-06-25 16:33:08.322 interchange:397 [INFO]  [MAIN] Manager b'73d12f720dbf' has compatible Python version 3.6

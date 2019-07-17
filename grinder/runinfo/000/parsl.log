@@ -1,0 +1,707 @@
+2019-06-20 14:44:03.774 parsl.dataflow.dflow:80 [DEBUG]  Starting DataFlowKernel with config
+Config(
+    app_cache=True, 
+    checkpoint_files=None, 
+    checkpoint_mode=None, 
+    checkpoint_period=None, 
+    data_management_max_threads=10, 
+    executors=[HighThroughputExecutor(
+        address='fermicloud023.fnal.gov', 
+        cores_per_worker=1, 
+        heartbeat_period=30, 
+        heartbeat_threshold=120, 
+        interchange_port_range=(55000, 56000), 
+        label='decaf_parsl', 
+        launch_cmd='process_worker_pool.py {debug} {max_workers} -p {prefetch_capacity} -c {cores_per_worker} -m {mem_per_worker} --poll {poll_period} --task_url={task_url} --result_url={result_url} --logdir={logdir} --block_id={{block_id}} --hb_period={heartbeat_period} --hb_threshold={heartbeat_threshold} ', 
+        managed=True, 
+        max_workers=8, 
+        mem_per_worker=None, 
+        poll_period=10, 
+        prefetch_capacity=0, 
+        provider=CondorProvider(
+            channel=LocalChannel(
+                envs={}, 
+                script_dir=None, 
+                userhome='/uscms/homes/m/matteoc/decaf/grinder'
+            ), 
+            cmd_timeout=60, 
+            environment={}, 
+            init_blocks=16, 
+            launcher=SingleNodeLauncher(), 
+            max_blocks=200, 
+            min_blocks=0, 
+            nodes_per_block=1, 
+            parallelism=1, 
+            project='', 
+            requirements='', 
+            scheduler_options='\ntransfer_output_files = decaf_parsl\nRequestMemory = 16384\nRequestCpus = 8\n', 
+            transfer_input_files=['/uscms/home/matteoc/.local', '/uscms/home/matteoc/x509up_u45169'], 
+            walltime='00:10:00', 
+            worker_init='\nsource /cvmfs/sft.cern.ch/lcg/views/LCG_95apython3/x86_64-centos7-gcc7-opt/setup.sh\nexport PATH=`pwd`/.local/bin:$PATH\nexport PYTHONPATH=`pwd`/.local/lib/python3.6/site-packages:$PYTHONPATH\n\nexport X509_USER_PROXY=`pwd`/x509up_u45169\nmkdir -p decaf_parsl\n'
+        ), 
+        storage_access=[], 
+        suppress_failure=False, 
+        worker_debug=False, 
+        worker_logdir_root='./', 
+        worker_port_range=(54000, 55000), 
+        worker_ports=None, 
+        working_dir=None
+    )], 
+    lazy_errors=True, 
+    monitoring=None, 
+    retries=0, 
+    run_dir='runinfo', 
+    strategy=None, 
+    usage_tracking=False
+)
+2019-06-20 14:44:03.775 parsl.dataflow.dflow:81 [INFO]  Parsl version: 0.8.0
+2019-06-20 14:44:03.775 parsl.dataflow.usage_tracking.usage:126 [DEBUG]  Tracking status: False
+2019-06-20 14:44:03.775 parsl.dataflow.usage_tracking.usage:127 [DEBUG]  Testing mode   : False
+2019-06-20 14:44:03.775 parsl.dataflow.dflow:103 [INFO]  Run id is: 185b2948-7236-4ee0-880a-d655f13f6f0b
+2019-06-20 14:44:04.858 parsl.dataflow.memoization:52 [INFO]  App caching initialized
+2019-06-20 14:44:04.869 parsl.executors.high_throughput.executor:430 [DEBUG]  Starting queue management thread
+2019-06-20 14:44:04.870 parsl.executors.high_throughput.executor:307 [DEBUG]  [MTHREAD] queue management worker starting
+2019-06-20 14:44:04.870 parsl.executors.high_throughput.executor:434 [DEBUG]  Started queue management thread
+2019-06-20 14:44:04.891 parsl.executors.high_throughput.executor:266 [DEBUG]  Created management thread: <Thread(Thread-4, started daemon 139949202458368)>
+2019-06-20 14:44:04.892 parsl.executors.high_throughput.executor:240 [DEBUG]  Launch command: process_worker_pool.py  --max_workers=8 -p 0 -c 1 -m None --poll 10 --task_url=tcp://fermicloud023.fnal.gov:54283 --result_url=tcp://fermicloud023.fnal.gov:54328 --logdir=.//decaf_parsl --block_id={block_id} --hb_period=30 --hb_threshold=120 
+2019-06-20 14:44:04.892 parsl.executors.high_throughput.executor:243 [DEBUG]  Starting HighThroughputExecutor with provider:
+CondorProvider(
+    channel=LocalChannel(
+        envs={}, 
+        script_dir='/uscms/homes/m/matteoc/decaf/grinder/runinfo/000/submit_scripts', 
+        userhome='/uscms/homes/m/matteoc/decaf/grinder'
+    ), 
+    cmd_timeout=60, 
+    environment={}, 
+    init_blocks=16, 
+    launcher=SingleNodeLauncher(), 
+    max_blocks=200, 
+    min_blocks=0, 
+    nodes_per_block=1, 
+    parallelism=1, 
+    project='', 
+    requirements='', 
+    scheduler_options='\ntransfer_output_files = decaf_parsl\nRequestMemory = 16384\nRequestCpus = 8\n', 
+    transfer_input_files=['/uscms/home/matteoc/.local', '/uscms/home/matteoc/x509up_u45169'], 
+    walltime='00:10:00', 
+    worker_init='\nsource /cvmfs/sft.cern.ch/lcg/views/LCG_95apython3/x86_64-centos7-gcc7-opt/setup.sh\nexport PATH=`pwd`/.local/bin:$PATH\nexport PYTHONPATH=`pwd`/.local/lib/python3.6/site-packages:$PYTHONPATH\n\nexport X509_USER_PROXY=`pwd`/x509up_u45169\nmkdir -p decaf_parsl\n'
+)
+2019-06-20 14:44:04.897 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:44:07.783 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 0->1616930.0
+2019-06-20 14:44:07.783 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:44:10.467 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 1->1616931.0
+2019-06-20 14:44:10.468 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:44:11.597 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 2->1616932.0
+2019-06-20 14:44:11.597 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:44:19.250 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 3->1616933.0
+2019-06-20 14:44:19.251 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:44:20.582 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 4->1616934.0
+2019-06-20 14:44:20.583 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:44:22.666 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 5->1616935.0
+2019-06-20 14:44:22.666 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:44:34.002 parsl.addresses:27 [DEBUG]  Finding address by using local hostname
+2019-06-20 14:44:34.218 parsl.addresses:29 [DEBUG]  Address found: fermicloud023.fnal.gov
+2019-06-20 14:44:34.220 parsl.executors.high_throughput.executor:171 [DEBUG]  Initializing HighThroughputExecutor
+2019-06-20 14:44:34.224 parsl.dataflow.rundirs:36 [DEBUG]  Parsl run initializing in rundir: runinfo/001
+2019-06-20 14:44:34.234 parsl.dataflow.dflow:80 [DEBUG]  Starting DataFlowKernel with config
+Config(
+    app_cache=True, 
+    checkpoint_files=None, 
+    checkpoint_mode=None, 
+    checkpoint_period=None, 
+    data_management_max_threads=10, 
+    executors=[HighThroughputExecutor(
+        address='fermicloud023.fnal.gov', 
+        cores_per_worker=1, 
+        heartbeat_period=30, 
+        heartbeat_threshold=120, 
+        interchange_port_range=(55000, 56000), 
+        label='decaf_parsl', 
+        launch_cmd='process_worker_pool.py {debug} {max_workers} -p {prefetch_capacity} -c {cores_per_worker} -m {mem_per_worker} --poll {poll_period} --task_url={task_url} --result_url={result_url} --logdir={logdir} --block_id={{block_id}} --hb_period={heartbeat_period} --hb_threshold={heartbeat_threshold} ', 
+        managed=True, 
+        max_workers=8, 
+        mem_per_worker=None, 
+        poll_period=10, 
+        prefetch_capacity=0, 
+        provider=CondorProvider(
+            channel=LocalChannel(
+                envs={}, 
+                script_dir=None, 
+                userhome='/uscms/homes/m/matteoc/decaf/grinder'
+            ), 
+            cmd_timeout=60, 
+            environment={}, 
+            init_blocks=16, 
+            launcher=SingleNodeLauncher(), 
+            max_blocks=200, 
+            min_blocks=0, 
+            nodes_per_block=1, 
+            parallelism=1, 
+            project='', 
+            requirements='', 
+            scheduler_options='\ntransfer_output_files = decaf_parsl\nRequestMemory = 16384\nRequestCpus = 8\n', 
+            transfer_input_files=['/uscms/home/matteoc/.local', '/uscms/home/matteoc/x509up_u45169'], 
+            walltime='00:10:00', 
+            worker_init='\nsource /cvmfs/sft.cern.ch/lcg/views/LCG_95apython3/x86_64-centos7-gcc7-opt/setup.sh\nexport PATH=`pwd`/.local/bin:$PATH\nexport PYTHONPATH=`pwd`/.local/lib/python3.6/site-packages:$PYTHONPATH\n\nexport X509_USER_PROXY=`pwd`/x509up_u45169\nmkdir -p decaf_parsl\n'
+        ), 
+        storage_access=[], 
+        suppress_failure=False, 
+        worker_debug=False, 
+        worker_logdir_root='./', 
+        worker_port_range=(54000, 55000), 
+        worker_ports=None, 
+        working_dir=None
+    )], 
+    lazy_errors=True, 
+    monitoring=None, 
+    retries=0, 
+    run_dir='runinfo', 
+    strategy=None, 
+    usage_tracking=False
+)
+2019-06-20 14:44:34.234 parsl.dataflow.dflow:81 [INFO]  Parsl version: 0.8.0
+2019-06-20 14:44:34.234 parsl.dataflow.usage_tracking.usage:126 [DEBUG]  Tracking status: False
+2019-06-20 14:44:34.234 parsl.dataflow.usage_tracking.usage:127 [DEBUG]  Testing mode   : False
+2019-06-20 14:44:34.235 parsl.dataflow.dflow:103 [INFO]  Run id is: 88b01d4c-55e1-416d-a8f8-f98b506fc5e2
+2019-06-20 14:44:34.253 parsl.dataflow.memoization:52 [INFO]  App caching initialized
+2019-06-20 14:44:34.263 parsl.executors.high_throughput.executor:430 [DEBUG]  Starting queue management thread
+2019-06-20 14:44:34.263 parsl.executors.high_throughput.executor:307 [DEBUG]  [MTHREAD] queue management worker starting
+2019-06-20 14:44:34.263 parsl.executors.high_throughput.executor:434 [DEBUG]  Started queue management thread
+2019-06-20 14:44:34.283 parsl.executors.high_throughput.executor:266 [DEBUG]  Created management thread: <Thread(Thread-5, started daemon 139948934022912)>
+2019-06-20 14:44:34.284 parsl.executors.high_throughput.executor:240 [DEBUG]  Launch command: process_worker_pool.py  --max_workers=8 -p 0 -c 1 -m None --poll 10 --task_url=tcp://fermicloud023.fnal.gov:54783 --result_url=tcp://fermicloud023.fnal.gov:54020 --logdir=.//decaf_parsl --block_id={block_id} --hb_period=30 --hb_threshold=120 
+2019-06-20 14:44:34.284 parsl.executors.high_throughput.executor:243 [DEBUG]  Starting HighThroughputExecutor with provider:
+CondorProvider(
+    channel=LocalChannel(
+        envs={}, 
+        script_dir='/uscms/homes/m/matteoc/decaf/grinder/runinfo/001/submit_scripts', 
+        userhome='/uscms/homes/m/matteoc/decaf/grinder'
+    ), 
+    cmd_timeout=60, 
+    environment={}, 
+    init_blocks=16, 
+    launcher=SingleNodeLauncher(), 
+    max_blocks=200, 
+    min_blocks=0, 
+    nodes_per_block=1, 
+    parallelism=1, 
+    project='', 
+    requirements='', 
+    scheduler_options='\ntransfer_output_files = decaf_parsl\nRequestMemory = 16384\nRequestCpus = 8\n', 
+    transfer_input_files=['/uscms/home/matteoc/.local', '/uscms/home/matteoc/x509up_u45169'], 
+    walltime='00:10:00', 
+    worker_init='\nsource /cvmfs/sft.cern.ch/lcg/views/LCG_95apython3/x86_64-centos7-gcc7-opt/setup.sh\nexport PATH=`pwd`/.local/bin:$PATH\nexport PYTHONPATH=`pwd`/.local/lib/python3.6/site-packages:$PYTHONPATH\n\nexport X509_USER_PROXY=`pwd`/x509up_u45169\nmkdir -p decaf_parsl\n'
+)
+2019-06-20 14:44:34.288 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:44:45.560 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 0->1616937.0
+2019-06-20 14:44:45.562 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:44:47.348 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 1->1616938.0
+2019-06-20 14:44:47.349 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:44:48.782 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 2->1616939.0
+2019-06-20 14:44:48.782 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:44:50.064 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 3->1616940.0
+2019-06-20 14:44:50.065 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:44:51.848 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 4->1616941.0
+2019-06-20 14:44:51.848 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:44:55.888 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 5->1616942.0
+2019-06-20 14:44:55.889 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:44:57.721 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 6->1616943.0
+2019-06-20 14:44:57.722 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:45:04.271 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 7->1616944.0
+2019-06-20 14:45:04.273 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:45:12.325 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 8->1616945.0
+2019-06-20 14:45:12.326 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:45:14.163 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 9->1616946.0
+2019-06-20 14:45:14.163 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:45:15.849 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 10->1616947.0
+2019-06-20 14:45:15.850 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:45:17.282 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 11->1616948.0
+2019-06-20 14:45:17.283 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:45:18.667 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 12->1616949.0
+2019-06-20 14:45:18.667 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:45:20.083 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 13->1616950.0
+2019-06-20 14:45:20.083 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:45:21.467 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 14->1616951.0
+2019-06-20 14:45:21.467 parsl.providers.condor.condor:184 [DEBUG]  Attempting to launch with blocksize: 1
+2019-06-20 14:45:22.800 parsl.executors.high_throughput.executor:547 [DEBUG]  Launched block 15->1616952.0
+2019-06-20 14:45:22.801 parsl.dataflow.strategy:125 [DEBUG]  Scaling strategy: None
+2019-06-20 14:47:25.024 parsl.executors.high_throughput.executor:171 [DEBUG]  Initializing HighThroughputExecutor
+2019-06-20 14:47:25.026 parsl.dataflow.dflow:687 [INFO]  Task 0 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.026 parsl.dataflow.dflow:697 [DEBUG]  Task 0 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7e16d8 state=pending> parent=None>
+2019-06-20 14:47:25.027 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.027 parsl.dataflow.dflow:463 [INFO]  Task 0 launched on executor decaf_parsl
+2019-06-20 14:47:25.028 parsl.dataflow.dflow:687 [INFO]  Task 1 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.028 parsl.dataflow.dflow:697 [DEBUG]  Task 1 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7ea780 state=pending> parent=None>
+2019-06-20 14:47:25.028 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.029 parsl.dataflow.dflow:463 [INFO]  Task 1 launched on executor decaf_parsl
+2019-06-20 14:47:25.029 parsl.dataflow.dflow:687 [INFO]  Task 2 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.029 parsl.dataflow.dflow:697 [DEBUG]  Task 2 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7ea940 state=pending> parent=None>
+2019-06-20 14:47:25.029 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.030 parsl.dataflow.dflow:463 [INFO]  Task 2 launched on executor decaf_parsl
+2019-06-20 14:47:25.030 parsl.dataflow.dflow:687 [INFO]  Task 3 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.030 parsl.dataflow.dflow:697 [DEBUG]  Task 3 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7eab00 state=pending> parent=None>
+2019-06-20 14:47:25.030 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.031 parsl.dataflow.dflow:463 [INFO]  Task 3 launched on executor decaf_parsl
+2019-06-20 14:47:25.031 parsl.dataflow.dflow:687 [INFO]  Task 4 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.031 parsl.dataflow.dflow:697 [DEBUG]  Task 4 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7eac50 state=pending> parent=None>
+2019-06-20 14:47:25.032 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.032 parsl.dataflow.dflow:463 [INFO]  Task 4 launched on executor decaf_parsl
+2019-06-20 14:47:25.032 parsl.dataflow.dflow:687 [INFO]  Task 5 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.033 parsl.dataflow.dflow:697 [DEBUG]  Task 5 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7eada0 state=pending> parent=None>
+2019-06-20 14:47:25.033 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.033 parsl.dataflow.dflow:463 [INFO]  Task 5 launched on executor decaf_parsl
+2019-06-20 14:47:25.034 parsl.dataflow.dflow:687 [INFO]  Task 6 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.034 parsl.dataflow.dflow:697 [DEBUG]  Task 6 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7eaef0 state=pending> parent=None>
+2019-06-20 14:47:25.034 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.034 parsl.dataflow.dflow:463 [INFO]  Task 6 launched on executor decaf_parsl
+2019-06-20 14:47:25.035 parsl.dataflow.dflow:687 [INFO]  Task 7 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.035 parsl.dataflow.dflow:697 [DEBUG]  Task 7 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7f8080 state=pending> parent=None>
+2019-06-20 14:47:25.035 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.036 parsl.dataflow.dflow:463 [INFO]  Task 7 launched on executor decaf_parsl
+2019-06-20 14:47:25.036 parsl.dataflow.dflow:687 [INFO]  Task 8 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.036 parsl.dataflow.dflow:697 [DEBUG]  Task 8 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7f81d0 state=pending> parent=None>
+2019-06-20 14:47:25.036 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.037 parsl.dataflow.dflow:463 [INFO]  Task 8 launched on executor decaf_parsl
+2019-06-20 14:47:25.037 parsl.dataflow.dflow:687 [INFO]  Task 9 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.037 parsl.dataflow.dflow:697 [DEBUG]  Task 9 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7f8320 state=pending> parent=None>
+2019-06-20 14:47:25.038 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.038 parsl.dataflow.dflow:463 [INFO]  Task 9 launched on executor decaf_parsl
+2019-06-20 14:47:25.038 parsl.dataflow.dflow:687 [INFO]  Task 10 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.039 parsl.dataflow.dflow:697 [DEBUG]  Task 10 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7f8470 state=pending> parent=None>
+2019-06-20 14:47:25.039 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.039 parsl.dataflow.dflow:463 [INFO]  Task 10 launched on executor decaf_parsl
+2019-06-20 14:47:25.039 parsl.dataflow.dflow:687 [INFO]  Task 11 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.040 parsl.dataflow.dflow:697 [DEBUG]  Task 11 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7f85c0 state=pending> parent=None>
+2019-06-20 14:47:25.040 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.041 parsl.dataflow.dflow:463 [INFO]  Task 11 launched on executor decaf_parsl
+2019-06-20 14:47:25.041 parsl.dataflow.dflow:687 [INFO]  Task 12 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.041 parsl.dataflow.dflow:697 [DEBUG]  Task 12 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7f8710 state=pending> parent=None>
+2019-06-20 14:47:25.041 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.042 parsl.dataflow.dflow:463 [INFO]  Task 12 launched on executor decaf_parsl
+2019-06-20 14:47:25.042 parsl.dataflow.dflow:687 [INFO]  Task 13 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.042 parsl.dataflow.dflow:697 [DEBUG]  Task 13 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7f8860 state=pending> parent=None>
+2019-06-20 14:47:25.042 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.043 parsl.dataflow.dflow:463 [INFO]  Task 13 launched on executor decaf_parsl
+2019-06-20 14:47:25.043 parsl.dataflow.dflow:687 [INFO]  Task 14 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.043 parsl.dataflow.dflow:697 [DEBUG]  Task 14 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7f89b0 state=pending> parent=None>
+2019-06-20 14:47:25.043 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.044 parsl.dataflow.dflow:463 [INFO]  Task 14 launched on executor decaf_parsl
+2019-06-20 14:47:25.044 parsl.dataflow.dflow:687 [INFO]  Task 15 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.044 parsl.dataflow.dflow:697 [DEBUG]  Task 15 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7f8b00 state=pending> parent=None>
+2019-06-20 14:47:25.045 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.045 parsl.dataflow.dflow:463 [INFO]  Task 15 launched on executor decaf_parsl
+2019-06-20 14:47:25.045 parsl.dataflow.dflow:687 [INFO]  Task 16 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.046 parsl.dataflow.dflow:697 [DEBUG]  Task 16 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7f8c50 state=pending> parent=None>
+2019-06-20 14:47:25.046 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.046 parsl.dataflow.dflow:463 [INFO]  Task 16 launched on executor decaf_parsl
+2019-06-20 14:47:25.046 parsl.dataflow.dflow:687 [INFO]  Task 17 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.047 parsl.dataflow.dflow:697 [DEBUG]  Task 17 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7f8da0 state=pending> parent=None>
+2019-06-20 14:47:25.047 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.047 parsl.dataflow.dflow:463 [INFO]  Task 17 launched on executor decaf_parsl
+2019-06-20 14:47:25.048 parsl.dataflow.dflow:687 [INFO]  Task 18 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.048 parsl.dataflow.dflow:697 [DEBUG]  Task 18 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7f8ef0 state=pending> parent=None>
+2019-06-20 14:47:25.048 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.049 parsl.dataflow.dflow:463 [INFO]  Task 18 launched on executor decaf_parsl
+2019-06-20 14:47:25.049 parsl.dataflow.dflow:687 [INFO]  Task 19 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.049 parsl.dataflow.dflow:697 [DEBUG]  Task 19 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e803080 state=pending> parent=None>
+2019-06-20 14:47:25.049 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.050 parsl.dataflow.dflow:463 [INFO]  Task 19 launched on executor decaf_parsl
+2019-06-20 14:47:25.050 parsl.dataflow.dflow:687 [INFO]  Task 20 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.050 parsl.dataflow.dflow:697 [DEBUG]  Task 20 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e8031d0 state=pending> parent=None>
+2019-06-20 14:47:25.050 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.051 parsl.dataflow.dflow:463 [INFO]  Task 20 launched on executor decaf_parsl
+2019-06-20 14:47:25.051 parsl.dataflow.dflow:687 [INFO]  Task 21 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.051 parsl.dataflow.dflow:697 [DEBUG]  Task 21 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e803320 state=pending> parent=None>
+2019-06-20 14:47:25.051 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.052 parsl.dataflow.dflow:463 [INFO]  Task 21 launched on executor decaf_parsl
+2019-06-20 14:47:25.052 parsl.dataflow.dflow:687 [INFO]  Task 22 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.052 parsl.dataflow.dflow:697 [DEBUG]  Task 22 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e803470 state=pending> parent=None>
+2019-06-20 14:47:25.053 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.053 parsl.dataflow.dflow:463 [INFO]  Task 22 launched on executor decaf_parsl
+2019-06-20 14:47:25.053 parsl.dataflow.dflow:687 [INFO]  Task 23 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.054 parsl.dataflow.dflow:697 [DEBUG]  Task 23 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e8035c0 state=pending> parent=None>
+2019-06-20 14:47:25.054 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.054 parsl.dataflow.dflow:463 [INFO]  Task 23 launched on executor decaf_parsl
+2019-06-20 14:47:25.054 parsl.dataflow.dflow:687 [INFO]  Task 24 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.055 parsl.dataflow.dflow:697 [DEBUG]  Task 24 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e803710 state=pending> parent=None>
+2019-06-20 14:47:25.055 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.055 parsl.dataflow.dflow:463 [INFO]  Task 24 launched on executor decaf_parsl
+2019-06-20 14:47:25.056 parsl.dataflow.dflow:687 [INFO]  Task 25 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.056 parsl.dataflow.dflow:697 [DEBUG]  Task 25 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e803860 state=pending> parent=None>
+2019-06-20 14:47:25.056 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.057 parsl.dataflow.dflow:463 [INFO]  Task 25 launched on executor decaf_parsl
+2019-06-20 14:47:25.057 parsl.dataflow.dflow:687 [INFO]  Task 26 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.057 parsl.dataflow.dflow:697 [DEBUG]  Task 26 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e8039b0 state=pending> parent=None>
+2019-06-20 14:47:25.057 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.058 parsl.dataflow.dflow:463 [INFO]  Task 26 launched on executor decaf_parsl
+2019-06-20 14:47:25.058 parsl.dataflow.dflow:687 [INFO]  Task 27 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.058 parsl.dataflow.dflow:697 [DEBUG]  Task 27 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e803b00 state=pending> parent=None>
+2019-06-20 14:47:25.058 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.059 parsl.dataflow.dflow:463 [INFO]  Task 27 launched on executor decaf_parsl
+2019-06-20 14:47:25.059 parsl.dataflow.dflow:687 [INFO]  Task 28 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.059 parsl.dataflow.dflow:697 [DEBUG]  Task 28 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e803c50 state=pending> parent=None>
+2019-06-20 14:47:25.059 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.060 parsl.dataflow.dflow:463 [INFO]  Task 28 launched on executor decaf_parsl
+2019-06-20 14:47:25.060 parsl.dataflow.dflow:687 [INFO]  Task 29 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.060 parsl.dataflow.dflow:697 [DEBUG]  Task 29 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e803da0 state=pending> parent=None>
+2019-06-20 14:47:25.061 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.061 parsl.dataflow.dflow:463 [INFO]  Task 29 launched on executor decaf_parsl
+2019-06-20 14:47:25.061 parsl.dataflow.dflow:687 [INFO]  Task 30 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.062 parsl.dataflow.dflow:697 [DEBUG]  Task 30 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e803ef0 state=pending> parent=None>
+2019-06-20 14:47:25.062 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.062 parsl.dataflow.dflow:463 [INFO]  Task 30 launched on executor decaf_parsl
+2019-06-20 14:47:25.063 parsl.dataflow.dflow:687 [INFO]  Task 31 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.063 parsl.dataflow.dflow:697 [DEBUG]  Task 31 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e811080 state=pending> parent=None>
+2019-06-20 14:47:25.063 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.064 parsl.dataflow.dflow:463 [INFO]  Task 31 launched on executor decaf_parsl
+2019-06-20 14:47:25.064 parsl.dataflow.dflow:687 [INFO]  Task 32 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.064 parsl.dataflow.dflow:697 [DEBUG]  Task 32 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e8111d0 state=pending> parent=None>
+2019-06-20 14:47:25.064 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.065 parsl.dataflow.dflow:463 [INFO]  Task 32 launched on executor decaf_parsl
+2019-06-20 14:47:25.065 parsl.dataflow.dflow:687 [INFO]  Task 33 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.065 parsl.dataflow.dflow:697 [DEBUG]  Task 33 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e811320 state=pending> parent=None>
+2019-06-20 14:47:25.065 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.066 parsl.dataflow.dflow:463 [INFO]  Task 33 launched on executor decaf_parsl
+2019-06-20 14:47:25.066 parsl.dataflow.dflow:687 [INFO]  Task 34 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.066 parsl.dataflow.dflow:697 [DEBUG]  Task 34 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e811470 state=pending> parent=None>
+2019-06-20 14:47:25.067 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.067 parsl.dataflow.dflow:463 [INFO]  Task 34 launched on executor decaf_parsl
+2019-06-20 14:47:25.067 parsl.dataflow.dflow:687 [INFO]  Task 35 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.068 parsl.dataflow.dflow:697 [DEBUG]  Task 35 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e8115c0 state=pending> parent=None>
+2019-06-20 14:47:25.068 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.068 parsl.dataflow.dflow:463 [INFO]  Task 35 launched on executor decaf_parsl
+2019-06-20 14:47:25.068 parsl.dataflow.dflow:687 [INFO]  Task 36 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.069 parsl.dataflow.dflow:697 [DEBUG]  Task 36 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e811710 state=pending> parent=None>
+2019-06-20 14:47:25.069 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.069 parsl.dataflow.dflow:463 [INFO]  Task 36 launched on executor decaf_parsl
+2019-06-20 14:47:25.070 parsl.dataflow.dflow:687 [INFO]  Task 37 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.070 parsl.dataflow.dflow:697 [DEBUG]  Task 37 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e811860 state=pending> parent=None>
+2019-06-20 14:47:25.070 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.070 parsl.dataflow.dflow:463 [INFO]  Task 37 launched on executor decaf_parsl
+2019-06-20 14:47:25.071 parsl.dataflow.dflow:687 [INFO]  Task 38 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.071 parsl.dataflow.dflow:697 [DEBUG]  Task 38 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e8119b0 state=pending> parent=None>
+2019-06-20 14:47:25.071 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.072 parsl.dataflow.dflow:463 [INFO]  Task 38 launched on executor decaf_parsl
+2019-06-20 14:47:25.072 parsl.dataflow.dflow:687 [INFO]  Task 39 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.072 parsl.dataflow.dflow:697 [DEBUG]  Task 39 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e811b00 state=pending> parent=None>
+2019-06-20 14:47:25.072 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.073 parsl.dataflow.dflow:463 [INFO]  Task 39 launched on executor decaf_parsl
+2019-06-20 14:47:25.073 parsl.dataflow.dflow:687 [INFO]  Task 40 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.073 parsl.dataflow.dflow:697 [DEBUG]  Task 40 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e811c50 state=pending> parent=None>
+2019-06-20 14:47:25.073 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.074 parsl.dataflow.dflow:463 [INFO]  Task 40 launched on executor decaf_parsl
+2019-06-20 14:47:25.074 parsl.dataflow.dflow:687 [INFO]  Task 41 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.074 parsl.dataflow.dflow:697 [DEBUG]  Task 41 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e811da0 state=pending> parent=None>
+2019-06-20 14:47:25.075 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.075 parsl.dataflow.dflow:463 [INFO]  Task 41 launched on executor decaf_parsl
+2019-06-20 14:47:25.075 parsl.dataflow.dflow:687 [INFO]  Task 42 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.076 parsl.dataflow.dflow:697 [DEBUG]  Task 42 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e811ef0 state=pending> parent=None>
+2019-06-20 14:47:25.076 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.076 parsl.dataflow.dflow:463 [INFO]  Task 42 launched on executor decaf_parsl
+2019-06-20 14:47:25.077 parsl.dataflow.dflow:687 [INFO]  Task 43 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.077 parsl.dataflow.dflow:697 [DEBUG]  Task 43 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7a0080 state=pending> parent=None>
+2019-06-20 14:47:25.077 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.077 parsl.dataflow.dflow:463 [INFO]  Task 43 launched on executor decaf_parsl
+2019-06-20 14:47:25.078 parsl.dataflow.dflow:687 [INFO]  Task 44 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.078 parsl.dataflow.dflow:697 [DEBUG]  Task 44 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7a01d0 state=pending> parent=None>
+2019-06-20 14:47:25.078 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.079 parsl.dataflow.dflow:463 [INFO]  Task 44 launched on executor decaf_parsl
+2019-06-20 14:47:25.079 parsl.dataflow.dflow:687 [INFO]  Task 45 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.079 parsl.dataflow.dflow:697 [DEBUG]  Task 45 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7a0320 state=pending> parent=None>
+2019-06-20 14:47:25.079 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.080 parsl.dataflow.dflow:463 [INFO]  Task 45 launched on executor decaf_parsl
+2019-06-20 14:47:25.080 parsl.dataflow.dflow:687 [INFO]  Task 46 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.080 parsl.dataflow.dflow:697 [DEBUG]  Task 46 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7a0470 state=pending> parent=None>
+2019-06-20 14:47:25.080 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.081 parsl.dataflow.dflow:463 [INFO]  Task 46 launched on executor decaf_parsl
+2019-06-20 14:47:25.081 parsl.dataflow.dflow:687 [INFO]  Task 47 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.081 parsl.dataflow.dflow:697 [DEBUG]  Task 47 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7a05c0 state=pending> parent=None>
+2019-06-20 14:47:25.082 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.084 parsl.dataflow.dflow:463 [INFO]  Task 47 launched on executor decaf_parsl
+2019-06-20 14:47:25.084 parsl.dataflow.dflow:687 [INFO]  Task 48 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.084 parsl.dataflow.dflow:697 [DEBUG]  Task 48 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7a0710 state=pending> parent=None>
+2019-06-20 14:47:25.084 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.085 parsl.dataflow.dflow:463 [INFO]  Task 48 launched on executor decaf_parsl
+2019-06-20 14:47:25.085 parsl.dataflow.dflow:687 [INFO]  Task 49 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.085 parsl.dataflow.dflow:697 [DEBUG]  Task 49 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7a0860 state=pending> parent=None>
+2019-06-20 14:47:25.086 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.086 parsl.dataflow.dflow:463 [INFO]  Task 49 launched on executor decaf_parsl
+2019-06-20 14:47:25.086 parsl.dataflow.dflow:687 [INFO]  Task 50 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.087 parsl.dataflow.dflow:697 [DEBUG]  Task 50 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7a09b0 state=pending> parent=None>
+2019-06-20 14:47:25.087 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.087 parsl.dataflow.dflow:463 [INFO]  Task 50 launched on executor decaf_parsl
+2019-06-20 14:47:25.087 parsl.dataflow.dflow:687 [INFO]  Task 51 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.088 parsl.dataflow.dflow:697 [DEBUG]  Task 51 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7a0b00 state=pending> parent=None>
+2019-06-20 14:47:25.088 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.088 parsl.dataflow.dflow:463 [INFO]  Task 51 launched on executor decaf_parsl
+2019-06-20 14:47:25.089 parsl.dataflow.dflow:687 [INFO]  Task 52 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.089 parsl.dataflow.dflow:697 [DEBUG]  Task 52 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7a0c50 state=pending> parent=None>
+2019-06-20 14:47:25.089 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.090 parsl.dataflow.dflow:463 [INFO]  Task 52 launched on executor decaf_parsl
+2019-06-20 14:47:25.090 parsl.dataflow.dflow:687 [INFO]  Task 53 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.090 parsl.dataflow.dflow:697 [DEBUG]  Task 53 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7a0da0 state=pending> parent=None>
+2019-06-20 14:47:25.090 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.091 parsl.dataflow.dflow:463 [INFO]  Task 53 launched on executor decaf_parsl
+2019-06-20 14:47:25.091 parsl.dataflow.dflow:687 [INFO]  Task 54 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.091 parsl.dataflow.dflow:697 [DEBUG]  Task 54 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7a0ef0 state=pending> parent=None>
+2019-06-20 14:47:25.091 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.092 parsl.dataflow.dflow:463 [INFO]  Task 54 launched on executor decaf_parsl
+2019-06-20 14:47:25.092 parsl.dataflow.dflow:687 [INFO]  Task 55 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.092 parsl.dataflow.dflow:697 [DEBUG]  Task 55 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7ad080 state=pending> parent=None>
+2019-06-20 14:47:25.093 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.093 parsl.dataflow.dflow:463 [INFO]  Task 55 launched on executor decaf_parsl
+2019-06-20 14:47:25.093 parsl.dataflow.dflow:687 [INFO]  Task 56 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.093 parsl.dataflow.dflow:697 [DEBUG]  Task 56 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7ad1d0 state=pending> parent=None>
+2019-06-20 14:47:25.094 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.094 parsl.dataflow.dflow:463 [INFO]  Task 56 launched on executor decaf_parsl
+2019-06-20 14:47:25.094 parsl.dataflow.dflow:687 [INFO]  Task 57 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.095 parsl.dataflow.dflow:697 [DEBUG]  Task 57 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7ad320 state=pending> parent=None>
+2019-06-20 14:47:25.095 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.095 parsl.dataflow.dflow:463 [INFO]  Task 57 launched on executor decaf_parsl
+2019-06-20 14:47:25.096 parsl.dataflow.dflow:687 [INFO]  Task 58 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.096 parsl.dataflow.dflow:697 [DEBUG]  Task 58 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7ad470 state=pending> parent=None>
+2019-06-20 14:47:25.096 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.096 parsl.dataflow.dflow:463 [INFO]  Task 58 launched on executor decaf_parsl
+2019-06-20 14:47:25.097 parsl.dataflow.dflow:687 [INFO]  Task 59 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.097 parsl.dataflow.dflow:697 [DEBUG]  Task 59 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7ad5c0 state=pending> parent=None>
+2019-06-20 14:47:25.097 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.098 parsl.dataflow.dflow:463 [INFO]  Task 59 launched on executor decaf_parsl
+2019-06-20 14:47:25.098 parsl.dataflow.dflow:687 [INFO]  Task 60 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.098 parsl.dataflow.dflow:697 [DEBUG]  Task 60 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7ad710 state=pending> parent=None>
+2019-06-20 14:47:25.098 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.099 parsl.dataflow.dflow:463 [INFO]  Task 60 launched on executor decaf_parsl
+2019-06-20 14:47:25.099 parsl.dataflow.dflow:687 [INFO]  Task 61 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.099 parsl.dataflow.dflow:697 [DEBUG]  Task 61 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7ad860 state=pending> parent=None>
+2019-06-20 14:47:25.099 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.100 parsl.dataflow.dflow:463 [INFO]  Task 61 launched on executor decaf_parsl
+2019-06-20 14:47:25.100 parsl.dataflow.dflow:687 [INFO]  Task 62 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.100 parsl.dataflow.dflow:697 [DEBUG]  Task 62 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7ad9b0 state=pending> parent=None>
+2019-06-20 14:47:25.101 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.101 parsl.dataflow.dflow:463 [INFO]  Task 62 launched on executor decaf_parsl
+2019-06-20 14:47:25.101 parsl.dataflow.dflow:687 [INFO]  Task 63 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.102 parsl.dataflow.dflow:697 [DEBUG]  Task 63 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7adb00 state=pending> parent=None>
+2019-06-20 14:47:25.102 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.102 parsl.dataflow.dflow:463 [INFO]  Task 63 launched on executor decaf_parsl
+2019-06-20 14:47:25.102 parsl.dataflow.dflow:687 [INFO]  Task 64 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.103 parsl.dataflow.dflow:697 [DEBUG]  Task 64 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7adc50 state=pending> parent=None>
+2019-06-20 14:47:25.103 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.103 parsl.dataflow.dflow:463 [INFO]  Task 64 launched on executor decaf_parsl
+2019-06-20 14:47:25.104 parsl.dataflow.dflow:687 [INFO]  Task 65 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.104 parsl.dataflow.dflow:697 [DEBUG]  Task 65 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7adda0 state=pending> parent=None>
+2019-06-20 14:47:25.104 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.105 parsl.dataflow.dflow:463 [INFO]  Task 65 launched on executor decaf_parsl
+2019-06-20 14:47:25.105 parsl.dataflow.dflow:687 [INFO]  Task 66 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.105 parsl.dataflow.dflow:697 [DEBUG]  Task 66 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7adef0 state=pending> parent=None>
+2019-06-20 14:47:25.105 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.106 parsl.dataflow.dflow:463 [INFO]  Task 66 launched on executor decaf_parsl
+2019-06-20 14:47:25.106 parsl.dataflow.dflow:687 [INFO]  Task 67 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.106 parsl.dataflow.dflow:697 [DEBUG]  Task 67 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7b8080 state=pending> parent=None>
+2019-06-20 14:47:25.106 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.107 parsl.dataflow.dflow:463 [INFO]  Task 67 launched on executor decaf_parsl
+2019-06-20 14:47:25.107 parsl.dataflow.dflow:687 [INFO]  Task 68 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.107 parsl.dataflow.dflow:697 [DEBUG]  Task 68 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7b81d0 state=pending> parent=None>
+2019-06-20 14:47:25.108 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.108 parsl.dataflow.dflow:463 [INFO]  Task 68 launched on executor decaf_parsl
+2019-06-20 14:47:25.108 parsl.dataflow.dflow:687 [INFO]  Task 69 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.108 parsl.dataflow.dflow:697 [DEBUG]  Task 69 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7b8320 state=pending> parent=None>
+2019-06-20 14:47:25.109 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.109 parsl.dataflow.dflow:463 [INFO]  Task 69 launched on executor decaf_parsl
+2019-06-20 14:47:25.109 parsl.dataflow.dflow:687 [INFO]  Task 70 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.110 parsl.dataflow.dflow:697 [DEBUG]  Task 70 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7b8470 state=pending> parent=None>
+2019-06-20 14:47:25.110 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.110 parsl.dataflow.dflow:463 [INFO]  Task 70 launched on executor decaf_parsl
+2019-06-20 14:47:25.111 parsl.dataflow.dflow:687 [INFO]  Task 71 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.111 parsl.dataflow.dflow:697 [DEBUG]  Task 71 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7b85c0 state=pending> parent=None>
+2019-06-20 14:47:25.111 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.111 parsl.dataflow.dflow:463 [INFO]  Task 71 launched on executor decaf_parsl
+2019-06-20 14:47:25.112 parsl.dataflow.dflow:687 [INFO]  Task 72 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.112 parsl.dataflow.dflow:697 [DEBUG]  Task 72 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7b8710 state=pending> parent=None>
+2019-06-20 14:47:25.112 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.113 parsl.dataflow.dflow:463 [INFO]  Task 72 launched on executor decaf_parsl
+2019-06-20 14:47:25.113 parsl.dataflow.dflow:687 [INFO]  Task 73 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.113 parsl.dataflow.dflow:697 [DEBUG]  Task 73 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7b8860 state=pending> parent=None>
+2019-06-20 14:47:25.113 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.114 parsl.dataflow.dflow:463 [INFO]  Task 73 launched on executor decaf_parsl
+2019-06-20 14:47:25.114 parsl.dataflow.dflow:687 [INFO]  Task 74 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.114 parsl.dataflow.dflow:697 [DEBUG]  Task 74 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7b89b0 state=pending> parent=None>
+2019-06-20 14:47:25.114 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.115 parsl.dataflow.dflow:463 [INFO]  Task 74 launched on executor decaf_parsl
+2019-06-20 14:47:25.115 parsl.dataflow.dflow:687 [INFO]  Task 75 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.115 parsl.dataflow.dflow:697 [DEBUG]  Task 75 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7b8b00 state=pending> parent=None>
+2019-06-20 14:47:25.116 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.116 parsl.dataflow.dflow:463 [INFO]  Task 75 launched on executor decaf_parsl
+2019-06-20 14:47:25.116 parsl.dataflow.dflow:687 [INFO]  Task 76 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.116 parsl.dataflow.dflow:697 [DEBUG]  Task 76 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7b8c50 state=pending> parent=None>
+2019-06-20 14:47:25.117 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.117 parsl.dataflow.dflow:463 [INFO]  Task 76 launched on executor decaf_parsl
+2019-06-20 14:47:25.117 parsl.dataflow.dflow:687 [INFO]  Task 77 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.118 parsl.dataflow.dflow:697 [DEBUG]  Task 77 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7b8da0 state=pending> parent=None>
+2019-06-20 14:47:25.118 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.118 parsl.dataflow.dflow:463 [INFO]  Task 77 launched on executor decaf_parsl
+2019-06-20 14:47:25.119 parsl.dataflow.dflow:687 [INFO]  Task 78 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.119 parsl.dataflow.dflow:697 [DEBUG]  Task 78 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7b8ef0 state=pending> parent=None>
+2019-06-20 14:47:25.119 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.119 parsl.dataflow.dflow:463 [INFO]  Task 78 launched on executor decaf_parsl
+2019-06-20 14:47:25.120 parsl.dataflow.dflow:687 [INFO]  Task 79 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.120 parsl.dataflow.dflow:697 [DEBUG]  Task 79 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7c7080 state=pending> parent=None>
+2019-06-20 14:47:25.120 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.121 parsl.dataflow.dflow:463 [INFO]  Task 79 launched on executor decaf_parsl
+2019-06-20 14:47:25.121 parsl.dataflow.dflow:687 [INFO]  Task 80 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.121 parsl.dataflow.dflow:697 [DEBUG]  Task 80 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7c71d0 state=pending> parent=None>
+2019-06-20 14:47:25.121 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.122 parsl.dataflow.dflow:463 [INFO]  Task 80 launched on executor decaf_parsl
+2019-06-20 14:47:25.122 parsl.dataflow.dflow:687 [INFO]  Task 81 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.122 parsl.dataflow.dflow:697 [DEBUG]  Task 81 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7c7320 state=pending> parent=None>
+2019-06-20 14:47:25.122 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.123 parsl.dataflow.dflow:463 [INFO]  Task 81 launched on executor decaf_parsl
+2019-06-20 14:47:25.123 parsl.dataflow.dflow:687 [INFO]  Task 82 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.123 parsl.dataflow.dflow:697 [DEBUG]  Task 82 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7c7470 state=pending> parent=None>
+2019-06-20 14:47:25.124 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.124 parsl.dataflow.dflow:463 [INFO]  Task 82 launched on executor decaf_parsl
+2019-06-20 14:47:25.124 parsl.dataflow.dflow:687 [INFO]  Task 83 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.125 parsl.dataflow.dflow:697 [DEBUG]  Task 83 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7c75c0 state=pending> parent=None>
+2019-06-20 14:47:25.125 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.125 parsl.dataflow.dflow:463 [INFO]  Task 83 launched on executor decaf_parsl
+2019-06-20 14:47:25.126 parsl.dataflow.dflow:687 [INFO]  Task 84 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.126 parsl.dataflow.dflow:697 [DEBUG]  Task 84 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7c7710 state=pending> parent=None>
+2019-06-20 14:47:25.126 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.126 parsl.dataflow.dflow:463 [INFO]  Task 84 launched on executor decaf_parsl
+2019-06-20 14:47:25.127 parsl.dataflow.dflow:687 [INFO]  Task 85 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.127 parsl.dataflow.dflow:697 [DEBUG]  Task 85 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7c7860 state=pending> parent=None>
+2019-06-20 14:47:25.127 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.128 parsl.dataflow.dflow:463 [INFO]  Task 85 launched on executor decaf_parsl
+2019-06-20 14:47:25.128 parsl.dataflow.dflow:687 [INFO]  Task 86 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.128 parsl.dataflow.dflow:697 [DEBUG]  Task 86 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7c79b0 state=pending> parent=None>
+2019-06-20 14:47:25.128 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.129 parsl.dataflow.dflow:463 [INFO]  Task 86 launched on executor decaf_parsl
+2019-06-20 14:47:25.129 parsl.dataflow.dflow:687 [INFO]  Task 87 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.129 parsl.dataflow.dflow:697 [DEBUG]  Task 87 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7c7b00 state=pending> parent=None>
+2019-06-20 14:47:25.129 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.130 parsl.dataflow.dflow:463 [INFO]  Task 87 launched on executor decaf_parsl
+2019-06-20 14:47:25.130 parsl.dataflow.dflow:687 [INFO]  Task 88 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.130 parsl.dataflow.dflow:697 [DEBUG]  Task 88 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7c7c50 state=pending> parent=None>
+2019-06-20 14:47:25.131 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.131 parsl.dataflow.dflow:463 [INFO]  Task 88 launched on executor decaf_parsl
+2019-06-20 14:47:25.131 parsl.dataflow.dflow:687 [INFO]  Task 89 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.131 parsl.dataflow.dflow:697 [DEBUG]  Task 89 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7c7da0 state=pending> parent=None>
+2019-06-20 14:47:25.132 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.132 parsl.dataflow.dflow:463 [INFO]  Task 89 launched on executor decaf_parsl
+2019-06-20 14:47:25.132 parsl.dataflow.dflow:687 [INFO]  Task 90 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.133 parsl.dataflow.dflow:697 [DEBUG]  Task 90 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7c7ef0 state=pending> parent=None>
+2019-06-20 14:47:25.133 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.134 parsl.dataflow.dflow:463 [INFO]  Task 90 launched on executor decaf_parsl
+2019-06-20 14:47:25.134 parsl.dataflow.dflow:687 [INFO]  Task 91 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.134 parsl.dataflow.dflow:697 [DEBUG]  Task 91 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7d3080 state=pending> parent=None>
+2019-06-20 14:47:25.134 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.135 parsl.dataflow.dflow:463 [INFO]  Task 91 launched on executor decaf_parsl
+2019-06-20 14:47:25.135 parsl.dataflow.dflow:687 [INFO]  Task 92 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.135 parsl.dataflow.dflow:697 [DEBUG]  Task 92 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7d31d0 state=pending> parent=None>
+2019-06-20 14:47:25.135 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.136 parsl.dataflow.dflow:463 [INFO]  Task 92 launched on executor decaf_parsl
+2019-06-20 14:47:25.136 parsl.dataflow.dflow:687 [INFO]  Task 93 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.136 parsl.dataflow.dflow:697 [DEBUG]  Task 93 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7d3320 state=pending> parent=None>
+2019-06-20 14:47:25.137 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.137 parsl.dataflow.dflow:463 [INFO]  Task 93 launched on executor decaf_parsl
+2019-06-20 14:47:25.137 parsl.dataflow.dflow:687 [INFO]  Task 94 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.138 parsl.dataflow.dflow:697 [DEBUG]  Task 94 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7d3470 state=pending> parent=None>
+2019-06-20 14:47:25.138 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.138 parsl.dataflow.dflow:463 [INFO]  Task 94 launched on executor decaf_parsl
+2019-06-20 14:47:25.139 parsl.dataflow.dflow:687 [INFO]  Task 95 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.139 parsl.dataflow.dflow:697 [DEBUG]  Task 95 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7d35c0 state=pending> parent=None>
+2019-06-20 14:47:25.139 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.139 parsl.dataflow.dflow:463 [INFO]  Task 95 launched on executor decaf_parsl
+2019-06-20 14:47:25.140 parsl.dataflow.dflow:687 [INFO]  Task 96 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.140 parsl.dataflow.dflow:697 [DEBUG]  Task 96 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7d3710 state=pending> parent=None>
+2019-06-20 14:47:25.140 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.141 parsl.dataflow.dflow:463 [INFO]  Task 96 launched on executor decaf_parsl
+2019-06-20 14:47:25.141 parsl.dataflow.dflow:687 [INFO]  Task 97 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.141 parsl.dataflow.dflow:697 [DEBUG]  Task 97 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7d3860 state=pending> parent=None>
+2019-06-20 14:47:25.141 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.142 parsl.dataflow.dflow:463 [INFO]  Task 97 launched on executor decaf_parsl
+2019-06-20 14:47:25.142 parsl.dataflow.dflow:687 [INFO]  Task 98 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.142 parsl.dataflow.dflow:697 [DEBUG]  Task 98 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7d39b0 state=pending> parent=None>
+2019-06-20 14:47:25.142 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.143 parsl.dataflow.dflow:463 [INFO]  Task 98 launched on executor decaf_parsl
+2019-06-20 14:47:25.143 parsl.dataflow.dflow:687 [INFO]  Task 99 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.143 parsl.dataflow.dflow:697 [DEBUG]  Task 99 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7d3b00 state=pending> parent=None>
+2019-06-20 14:47:25.143 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.144 parsl.dataflow.dflow:463 [INFO]  Task 99 launched on executor decaf_parsl
+2019-06-20 14:47:25.144 parsl.dataflow.dflow:687 [INFO]  Task 100 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.144 parsl.dataflow.dflow:697 [DEBUG]  Task 100 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7d3c50 state=pending> parent=None>
+2019-06-20 14:47:25.145 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.145 parsl.dataflow.dflow:463 [INFO]  Task 100 launched on executor decaf_parsl
+2019-06-20 14:47:25.145 parsl.dataflow.dflow:687 [INFO]  Task 101 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.146 parsl.dataflow.dflow:697 [DEBUG]  Task 101 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7d3da0 state=pending> parent=None>
+2019-06-20 14:47:25.146 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.146 parsl.dataflow.dflow:463 [INFO]  Task 101 launched on executor decaf_parsl
+2019-06-20 14:47:25.147 parsl.dataflow.dflow:687 [INFO]  Task 102 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.147 parsl.dataflow.dflow:697 [DEBUG]  Task 102 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7d3ef0 state=pending> parent=None>
+2019-06-20 14:47:25.147 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.147 parsl.dataflow.dflow:463 [INFO]  Task 102 launched on executor decaf_parsl
+2019-06-20 14:47:25.148 parsl.dataflow.dflow:687 [INFO]  Task 103 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.148 parsl.dataflow.dflow:697 [DEBUG]  Task 103 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e760080 state=pending> parent=None>
+2019-06-20 14:47:25.148 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.149 parsl.dataflow.dflow:463 [INFO]  Task 103 launched on executor decaf_parsl
+2019-06-20 14:47:25.149 parsl.dataflow.dflow:687 [INFO]  Task 104 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.149 parsl.dataflow.dflow:697 [DEBUG]  Task 104 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7601d0 state=pending> parent=None>
+2019-06-20 14:47:25.149 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.150 parsl.dataflow.dflow:463 [INFO]  Task 104 launched on executor decaf_parsl
+2019-06-20 14:47:25.150 parsl.dataflow.dflow:687 [INFO]  Task 105 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.150 parsl.dataflow.dflow:697 [DEBUG]  Task 105 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e760320 state=pending> parent=None>
+2019-06-20 14:47:25.151 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.151 parsl.dataflow.dflow:463 [INFO]  Task 105 launched on executor decaf_parsl
+2019-06-20 14:47:25.151 parsl.dataflow.dflow:687 [INFO]  Task 106 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.151 parsl.dataflow.dflow:697 [DEBUG]  Task 106 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e760470 state=pending> parent=None>
+2019-06-20 14:47:25.152 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.152 parsl.dataflow.dflow:463 [INFO]  Task 106 launched on executor decaf_parsl
+2019-06-20 14:47:25.152 parsl.dataflow.dflow:687 [INFO]  Task 107 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.153 parsl.dataflow.dflow:697 [DEBUG]  Task 107 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7605c0 state=pending> parent=None>
+2019-06-20 14:47:25.153 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.153 parsl.dataflow.dflow:463 [INFO]  Task 107 launched on executor decaf_parsl
+2019-06-20 14:47:25.154 parsl.dataflow.dflow:687 [INFO]  Task 108 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.154 parsl.dataflow.dflow:697 [DEBUG]  Task 108 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e760710 state=pending> parent=None>
+2019-06-20 14:47:25.154 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.154 parsl.dataflow.dflow:463 [INFO]  Task 108 launched on executor decaf_parsl
+2019-06-20 14:47:25.155 parsl.dataflow.dflow:687 [INFO]  Task 109 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.155 parsl.dataflow.dflow:697 [DEBUG]  Task 109 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e760860 state=pending> parent=None>
+2019-06-20 14:47:25.155 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.156 parsl.dataflow.dflow:463 [INFO]  Task 109 launched on executor decaf_parsl
+2019-06-20 14:47:25.156 parsl.dataflow.dflow:687 [INFO]  Task 110 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.156 parsl.dataflow.dflow:697 [DEBUG]  Task 110 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e7609b0 state=pending> parent=None>
+2019-06-20 14:47:25.156 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.157 parsl.dataflow.dflow:463 [INFO]  Task 110 launched on executor decaf_parsl
+2019-06-20 14:47:25.157 parsl.dataflow.dflow:687 [INFO]  Task 111 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.157 parsl.dataflow.dflow:697 [DEBUG]  Task 111 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e760b00 state=pending> parent=None>
+2019-06-20 14:47:25.157 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.158 parsl.dataflow.dflow:463 [INFO]  Task 111 launched on executor decaf_parsl
+2019-06-20 14:47:25.158 parsl.dataflow.dflow:687 [INFO]  Task 112 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.158 parsl.dataflow.dflow:697 [DEBUG]  Task 112 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e760c50 state=pending> parent=None>
+2019-06-20 14:47:25.158 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.159 parsl.dataflow.dflow:463 [INFO]  Task 112 launched on executor decaf_parsl
+2019-06-20 14:47:25.159 parsl.dataflow.dflow:687 [INFO]  Task 113 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.159 parsl.dataflow.dflow:697 [DEBUG]  Task 113 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e760da0 state=pending> parent=None>
+2019-06-20 14:47:25.160 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.160 parsl.dataflow.dflow:463 [INFO]  Task 113 launched on executor decaf_parsl
+2019-06-20 14:47:25.160 parsl.dataflow.dflow:687 [INFO]  Task 114 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.161 parsl.dataflow.dflow:697 [DEBUG]  Task 114 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e760ef0 state=pending> parent=None>
+2019-06-20 14:47:25.161 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.161 parsl.dataflow.dflow:463 [INFO]  Task 114 launched on executor decaf_parsl
+2019-06-20 14:47:25.162 parsl.dataflow.dflow:687 [INFO]  Task 115 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.162 parsl.dataflow.dflow:697 [DEBUG]  Task 115 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e76d080 state=pending> parent=None>
+2019-06-20 14:47:25.162 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.162 parsl.dataflow.dflow:463 [INFO]  Task 115 launched on executor decaf_parsl
+2019-06-20 14:47:25.163 parsl.dataflow.dflow:687 [INFO]  Task 116 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.163 parsl.dataflow.dflow:697 [DEBUG]  Task 116 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e76d1d0 state=pending> parent=None>
+2019-06-20 14:47:25.163 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.164 parsl.dataflow.dflow:463 [INFO]  Task 116 launched on executor decaf_parsl
+2019-06-20 14:47:25.164 parsl.dataflow.dflow:687 [INFO]  Task 117 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.164 parsl.dataflow.dflow:697 [DEBUG]  Task 117 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e76d320 state=pending> parent=None>
+2019-06-20 14:47:25.164 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.165 parsl.dataflow.dflow:463 [INFO]  Task 117 launched on executor decaf_parsl
+2019-06-20 14:47:25.165 parsl.dataflow.dflow:687 [INFO]  Task 118 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.165 parsl.dataflow.dflow:697 [DEBUG]  Task 118 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e76d470 state=pending> parent=None>
+2019-06-20 14:47:25.165 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.166 parsl.dataflow.dflow:463 [INFO]  Task 118 launched on executor decaf_parsl
+2019-06-20 14:47:25.166 parsl.dataflow.dflow:687 [INFO]  Task 119 submitted for App derive_chunks, waiting on tasks []
+2019-06-20 14:47:25.166 parsl.dataflow.dflow:697 [DEBUG]  Task 119 set to pending state with AppFuture: <AppFuture super=<AppFuture at 0x7f482e76d5c0 state=pending> parent=None>
+2019-06-20 14:47:25.167 parsl.executors.high_throughput.executor:514 [DEBUG]  Pushing function <function derive_chunks at 0x7f482e827f28> to queue with args ("'root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/MET/NanoTuples-2018_Run...", 'Events', 500000, 'MET____0_')
+2019-06-20 14:47:25.167 parsl.dataflow.dflow:463 [INFO]  Task 119 launched on executor decaf_parsl

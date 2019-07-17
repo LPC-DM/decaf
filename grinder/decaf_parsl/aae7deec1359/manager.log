@@ -1,0 +1,32 @@
+2019-06-20 20:15:43.739 parsl:524 Rank:0 [INFO]  Python version: 3.6.5 (default, Feb 13 2019, 14:55:26) 
+[GCC 8.2.0]
+2019-06-20 20:15:43.740 parsl:525 Rank:0 [INFO]  Debug logging: False
+2019-06-20 20:15:43.740 parsl:526 Rank:0 [INFO]  Log dir: .//decaf_parsl
+2019-06-20 20:15:43.740 parsl:527 Rank:0 [INFO]  Manager ID: aae7deec1359
+2019-06-20 20:15:43.740 parsl:528 Rank:0 [INFO]  Block ID: 3
+2019-06-20 20:15:43.740 parsl:529 Rank:0 [INFO]  cores_per_worker: 1
+2019-06-20 20:15:43.740 parsl:530 Rank:0 [INFO]  mem_per_worker: None
+2019-06-20 20:15:43.740 parsl:531 Rank:0 [INFO]  task_url: tcp://fermicloud023.fnal.gov:54840
+2019-06-20 20:15:43.740 parsl:532 Rank:0 [INFO]  result_url: tcp://fermicloud023.fnal.gov:54682
+2019-06-20 20:15:43.740 parsl:533 Rank:0 [INFO]  max_workers: 8
+2019-06-20 20:15:43.741 parsl:534 Rank:0 [INFO]  poll_period: 10
+2019-06-20 20:15:43.741 parsl:535 Rank:0 [INFO]  Prefetch capacity: 0
+2019-06-20 20:15:43.741 parsl:107 Rank:0 [INFO]  Manager started
+2019-06-20 20:15:43.754 parsl:121 Rank:0 [INFO]  Manager connected
+2019-06-20 20:15:43.757 parsl:140 Rank:0 [INFO]  Manager will spawn 8 workers
+2019-06-20 20:15:43.796 parsl:188 Rank:0 [INFO]  [TASK PULL THREAD] starting
+2019-06-20 20:15:43.798 parsl:323 Rank:0 [INFO]  Loop start
+2019-06-20 20:17:54.893 parsl:254 Rank:0 [CRITICAL]  [TASK_PULL_THREAD] Missing contact with interchange beyond heartbeat_threshold
+2019-06-20 20:17:54.894 parsl:256 Rank:0 [CRITICAL]  [TASK_PULL_THREAD] Exiting
+2019-06-20 20:17:54.894 parsl:328 Rank:0 [CRITICAL]  [MAIN] Received kill event, terminating worker processes
+2019-06-20 20:17:54.900 parsl:293 Rank:0 [CRITICAL]  [RESULT_PUSH_THREAD] Exiting
+2019-06-20 20:17:54.901 parsl:335 Rank:0 [CRITICAL]  Terminating worker <Process(Process-1, started)>:True
+2019-06-20 20:17:54.909 parsl:335 Rank:0 [CRITICAL]  Terminating worker <Process(Process-2, started)>:True
+2019-06-20 20:17:54.916 parsl:335 Rank:0 [CRITICAL]  Terminating worker <Process(Process-3, started)>:True
+2019-06-20 20:17:54.925 parsl:335 Rank:0 [CRITICAL]  Terminating worker <Process(Process-4, started)>:True
+2019-06-20 20:17:54.931 parsl:335 Rank:0 [CRITICAL]  Terminating worker <Process(Process-5, started)>:True
+2019-06-20 20:17:54.939 parsl:335 Rank:0 [CRITICAL]  Terminating worker <Process(Process-6, started)>:True
+2019-06-20 20:17:54.946 parsl:335 Rank:0 [CRITICAL]  Terminating worker <Process(Process-7, started)>:True
+2019-06-20 20:17:54.953 parsl:335 Rank:0 [CRITICAL]  Terminating worker <Process(Process-8, started)>:True
+2019-06-20 20:17:54.962 parsl:343 Rank:0 [INFO]  process_worker_pool ran for 131.20009112358093 seconds
+2019-06-20 20:17:54.962 parsl:555 Rank:0 [INFO]  process_worker_pool exiting

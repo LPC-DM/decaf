@@ -1,0 +1,6 @@
+2019-06-20 14:44:34.276 interchange:145 [INFO]  Attempting connection to client at 127.0.0.1 on ports: 55456,55706,55030
+2019-06-20 14:44:34.279 interchange:158 [INFO]  Connected to client
+2019-06-20 14:44:34.280 interchange:186 [INFO]  Bound to ports 54783,54020 for incoming worker connections
+2019-06-20 14:44:34.281 interchange:200 [INFO]  Platform info: {'parsl_v': '0.8.0', 'python_v': '3.6.5', 'os': 'Linux', 'hname': 'fermicloud023.fnal.gov', 'dir': '/uscms/homes/m/matteoc/decaf/grinder'}
+2019-06-20 14:44:34.282 interchange:318 [INFO]  Incoming ports bound
+2019-06-20 14:44:34.283 interchange:235 [INFO]  [TASK_PULL_THREAD] Starting
