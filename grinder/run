@@ -9,5 +9,5 @@ Log = pods/$ENV(YEAR)/condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(YEAR)_$ENV(SAMPLE).pkl.gz=$ENV(PWD)/pods/$ENV(YEAR)/$ENV(SAMPLE).pkl.gz"
 Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(USER)
 request_cpus = 8
-request_memory = 10000
+request_memory = 16000
 Queue 1
