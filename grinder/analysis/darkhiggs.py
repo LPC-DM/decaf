@@ -28,7 +28,9 @@ hists = {
     'fj1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fj1eta","AK15 Leading Jet Eta",35,-3.5,3.5)),
     'fj1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fj1phi","AK15 Leading Jet Phi",35,-3.5,3.5)),
     'njets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("njets","AK4 Number of Jets",6,0,5)),
-    'nfjets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjets","AK15 Number of Jets",4,0,3)),
+    'nftot': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjtot","AK15 Number of Jets",4,0,3)),
+    'nfjgood': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjgood","AK15 Number of Good Jets",4,0,3)),
+    'nfjclean': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjclean","AK15 Number of cleaned Jets",4,0,3)),
     'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fjmass","AK15 Jet Mass",50,20,250)),
     'e1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1pt","Leading Electron Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
     'e1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1eta","Leading Electron Eta",48,-2.4,2.4)),
@@ -56,7 +58,7 @@ hists = {
     'probQCDb': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probQCDb","probQCDb",15,0,1)),
     'probQCDc': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probQCDc","probQCDc",15,0,1)),
     'probQCDothers': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probQCDothers","probQCDothers",15,0,1)),
-    
+
 
 }
 
@@ -261,7 +263,8 @@ def analysis(selected_regions, year, xsec, dataset, file):
     fj['hSvsQCD'] = (fj.probZbb + fj.probHbb) / (fj.probZbb+fj.probHbb+fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
     fj['VvsQCD'] = (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq) / (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
     fj['isgood'] = isGoodFatJet(fj.pt, fj.eta, fj.id)
-    fj['isclean'] =~fj.match(pho,1.5)&~fj.match(mu,1.5)&~fj.match(e,1.5)&fj.isgood
+    #fj['isclean'] =~fj.match(pho,1.5)&~fj.match(mu,1.5)&~fj.match(e,1.5)&fj.isgood
+    fj['isclean'] =~fj.match(pho_tight,1.5)&~fj.match(mu_tight,1.5)&~fj.match(e_tight,1.5)&fj.isgood
     fj_good=fj[fj.isgood]
     fj_clean=fj[fj.isclean]
     fj_ntot=fj.counts
@@ -444,7 +447,9 @@ def analysis(selected_regions, year, xsec, dataset, file):
     variables['mu1phi'] = leading_mu.phi.sum()
     variables['mu1eta'] = leading_mu.eta.sum()
     variables['njets'] = j_nclean
-    variables['nfjets'] = fj_nclean
+    variables['nfjtot'] = fj_ntot
+    variables['nfjgood'] = fj_ngood
+    variables['nfjclean'] = fj_nclean
     variables['fjmass'] = leading_fj.mass.sum()
     variables['TvsQCD'] = leading_fj.TvsQCD.sum()
     variables['hSvsQCD'] = leading_fj.hSvsQCD.sum()
