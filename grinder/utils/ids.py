@@ -144,7 +144,7 @@ fj_id['2017'] = fj_id['2016']
 fj_id['2018'] = fj_id['2016']
 
 def isGoodFatJet(pt,eta, jet_id):
-    mask = (pt > 200)&(abs(eta)<2.4)&((jet_id&2)!=0)
+    mask = (pt > 150)&(abs(eta)<2.4)&((jet_id&2)!=0)
     return mask
 
 j_id = {}

@@ -265,7 +265,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     fj[key] = df[fj_id[self._year][key]]
 
             fj['isgood'] = isGoodFatJet(fj.pt, fj.eta, fj.id)
-            fj['isclean'] =~fj.match(pho,1.5)&~fj.match(mu,1.5)&~fj.match(e,1.5)&fj.isgood
+            fj['isclean'] =~fj.match(pho_tight,1.5)&~fj.match(mu_tight,1.5)&~fj.match(e_tight,1.5)&fj.isgood
 
             for key in deep[self._year]:
                 fj[key] = fj.pt.zeros_like()
@@ -300,8 +300,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                     j[key] = df[j_id[self._year][key]]
 
             j['isgood'] = isGoodJet(j.pt, j.eta, j.id, j.nhf, j.nef, j.chf, j.cef)
-            j['isclean'] = ~j.match(e,0.4)&~j.match(mu,0.4)&~j.match(pho,0.4)&j.isgood
-            j['isiso'] =  ~(j.match(fj,1.5))&j.isclean
+            j['isclean'] = ~j.match(e_tight,0.4)&~j.match(mu_tight,0.4)&~j.match(pho_tight,0.4)&j.isgood
+            j['isiso'] =  ~(j.match(fj_clean,1.5))&j.isclean
 
             j_good = j
             if j[j.isgood].content.size > 0: j_good = j[j.isgood]
