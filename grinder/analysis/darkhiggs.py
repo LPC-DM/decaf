@@ -281,7 +281,7 @@ def analysis(selected_regions, year, xsec, dataset, file):
                     'chf':tree.array('Jet_chHEF'),
                     'cef':tree.array('Jet_chEmEF')})
     j['isgood'] = isGoodJet(j.pt, j.eta, j.id, j.nhf, j.nef, j.chf, j.cef)
-    j['isclean'] = ~j.match(e,0.4)&~j.match(mu,0.4)&~j.match(pho,0.4)&j.isgood
+    j['isclean'] = ~j.match(e_tight,0.4)&~j.match(mu_tight,0.4)&~j.match(pho_tight,0.4)&j.isgood
     j['isiso'] =  ~(j.match(fj,1.5))&j.isclean
     j_good = j[j.isgood]
     j_clean = j[j.isclean]
