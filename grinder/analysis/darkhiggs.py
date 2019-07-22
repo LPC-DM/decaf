@@ -430,8 +430,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             for k in u.keys():
                 weights[k].add('nlo',wnlo)
                 weights[k].add('genw',genw)
-                weights[k].add('pileup',pu,puUp,puDown)
+                #weights[k].add('pileup',pu,puUp,puDown)
                 weights[k].add('passMetFilters',np.prod([met_filters[key] for key in met_filters], axis=0))
+
+            #print(weights['iszeroL']._weightStats)
 
 
             ###
