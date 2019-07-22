@@ -294,6 +294,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             #checking content size, if zero, initialize to empty object
             if not (j.content.size > 0): j = empty_obj
 
+            #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation102X
+            j['deepcsv'] = df['Jet_btagDeepB']
+            j['deepflv'] = df['Jet_btagDeepFlavB']
+
             for key in j_id[self._year]:
                 j[key] = j.pt.zeros_like()
                 if j_id[self._year][key] in df:
@@ -302,6 +306,12 @@ class AnalysisProcessor(processor.ProcessorABC):
             j['isgood'] = isGoodJet(j.pt, j.eta, j.id, j.nhf, j.nef, j.chf, j.cef)
             j['isclean'] = ~j.match(e_tight,0.4)&~j.match(mu_tight,0.4)&~j.match(pho_tight,0.4)&j.isgood
             j['isiso'] =  ~(j.match(fj_clean,1.5))&j.isclean
+            j['isdcsvL'] = (j.deepcsv>0.1241)&j.isiso
+            j['isdflvL'] = (j.deepflv>0.0494)&j.isiso
+            j['isdcsvM'] = (j.deepcsv>0.4184)&j.isiso
+            j['isdflvM'] = (j.deepflv>0.2770)&j.isiso
+            j['isdcsvT'] = (j.deepcsv>0.7527)&j.isiso
+            j['isdflvT'] = (j.deepflv>0.7264)&j.isiso
 
             j_good = j
             if j[j.isgood].content.size > 0: j_good = j[j.isgood]
@@ -309,11 +319,29 @@ class AnalysisProcessor(processor.ProcessorABC):
             if j[j.isclean].content.size > 0: j_clean = j[j.isclean]
             j_iso = j
             if j[j.isiso].content.size > 0: j_iso = j[j.isiso]
+            j_dcsvL = j
+            if j[j.isdcsvL].content.size > 0: j_iso = j[j.isdcsvL]
+            j_dflvL = j
+            if j[j.isdflvL].content.size > 0: j_iso = j[j.isdflvL]
+            j_dcsvM = j
+            if j[j.isdcsvM].content.size > 0: j_iso = j[j.isdcsvM]
+            j_dflvM = j
+            if j[j.isdflvM].content.size > 0: j_iso = j[j.isdflvM]
+            j_dcsvT = j
+            if j[j.isdcsvT].content.size > 0: j_iso = j[j.isdcsvT]
+            j_dflvT = j
+            if j[j.isdflvT].content.size > 0: j_iso = j[j.isdflvT]
 
             j_ntot=j.counts
             j_ngood=j_good.counts
             j_nclean=j_clean.counts
             j_niso=j_iso.counts
+            j_ndcsvL=j_dcsvL.counts
+            j_ndflvL=j_dflvL.counts
+            j_ndcsvM=j_dcsvM.counts
+            j_ndflvM=j_dflvM.counts
+            j_ndcsvT=j_dcsvT.counts
+            j_ndflvT=j_dflvT.counts
 
             ###
             #Getting leading pT objects
