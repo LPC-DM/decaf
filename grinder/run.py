@@ -55,7 +55,6 @@ for dataset, info in samplefiles.items():
                                       executor_args={'workers': options.workers, 'pre_workers': 1},
                                       chunksize=500000,
                                       )
-    processor_instance.postprocess(output)
     
     nbins = sum(sum(arr.size for arr in h._sumw.values()) for h in output.values() if isinstance(h, hist.Hist))
     nfilled = sum(sum(np.sum(arr > 0) for arr in h._sumw.values()) for h in output.values() if isinstance(h, hist.Hist))
