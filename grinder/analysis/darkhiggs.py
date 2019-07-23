@@ -416,11 +416,13 @@ class AnalysisProcessor(processor.ProcessorABC):
             weights['istwoM'].add('pass_trig',passMetTrig)
             weights['isoneE'].add('trig',get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),self._year))
             weights['isoneE'].add('passSingleEleTrig',passSingleEleTrig)
-            weights['istwoE'].add('trig', get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),
-                                                               ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),self._year))
+
+            diele_trig_weight = get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),self._year)
+            if ele_pairs.i0.content.size>0:
+                diele_trig_weight = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),self._year)
+
+            weights['istwoE'].add('trig', diele_trig_weight)
             weights['istwoE'].add('passSingleEleTrig',passSingleEleTrig)
-            #weights.add('trig_istwoE', get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), 
-            #                                                   np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),self._year))
             weights['isoneA'].add('trig', get_pho_trig_weight(leading_pho.pt.sum(),self._year))
             weights['isoneA'].add('passSinglePhoTrig',passSinglePhoTrig)
 
