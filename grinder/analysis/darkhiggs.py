@@ -433,7 +433,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 #weights[k].add('pileup',pu,puUp,puDown)
                 weights[k].add('passMetFilters',np.prod([met_filters[key] for key in met_filters], axis=0))
 
-            print(weights['iszeroL']._weightStats)
+            #print(weights['iszeroL']._weightStats)
 
 
             ###
@@ -509,12 +509,13 @@ class AnalysisProcessor(processor.ProcessorABC):
             return hout
 
     def postprocess(self, accumulator):
-
             scale = {}
             for d in accumulator['sumw'].identifiers('dataset'):
                 dataset = d.name
+                print(dataset,accumulator['recoil'].project('jet_selection','baggy').project('region','iszeroL').project('dataset', dataset).values(overflow='all')[()][1])
                 if self._xsec[dataset]!= -1: scale[dataset] = self._lumi*self._xsec[dataset]
                 else: scale[dataset] = 1
+                print('xsec',dataset,scale[dataset])
 
             for histname, h in accumulator.items():
                 if histname == 'sumw': continue
