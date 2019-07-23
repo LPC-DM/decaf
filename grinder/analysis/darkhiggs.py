@@ -433,7 +433,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 #weights[k].add('pileup',pu,puUp,puDown)
                 weights[k].add('passMetFilters',np.prod([met_filters[key] for key in met_filters], axis=0))
 
-            #print(weights['iszeroL']._weightStats)
+            print(weights['iszeroL']._weightStats)
 
 
             ###
@@ -495,6 +495,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                         r = self._selected_regions[i]
                         for s in ["baggy","skinny","inclusive"]:
                             weight = weights[r].weight()
+                            #print(weight)
                             cut = selections.all(*regions[r+'_'+s])
                             if histname == 'recoil':
                                 h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, weight=weight*cut)
