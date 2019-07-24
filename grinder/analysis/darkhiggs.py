@@ -53,7 +53,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             'ndflvM': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("ndflvM","AK4 Number of deepFlavor Medium Jets",6,0,5)),
             'ndcsvT': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("ndcsvT","AK4 Number of deepCSV Tight Jets",6,0,5)),
             'ndflvT': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("ndflvT","AK4 Number of deepFlavor Tight Jets",6,0,5)),
-            'nfjets': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjets","AK15 Number of Jets",4,0,3)),
+            'nfjtot': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjtot","AK15 Number of Jets",4,0,3)),
+            'nfjgood': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjgood","AK15 Number of Good Jets",4,0,3)),
+            'nfjclean': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjclean","AK15 Number of cleaned Jets",4,0,3)),
             'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fjmass","AK15 Jet Mass",50,20,250)),
             'e1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1pt","Leading Electron Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
             'e1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1eta","Leading Electron Eta",48,-2.4,2.4)),
@@ -92,58 +94,6 @@ class AnalysisProcessor(processor.ProcessorABC):
     def process(self, df):
 
             dataset = df['dataset']
-            genw = np.ones_like(df['MET_pt'])
-            sumw = 1.
-
-            ###
-            # For MC, retrieve the LHE weights, to take into account NLO destructive interference, and their sum
-            ###
-            if self._xsec[dataset] != -1:
-                genw = df['genWeight']
-                sumw = genw.sum()
-            ###
-            # Calculate PU weight and systematic variations
-            ###
-
-            nvtx = df['PV_npvs']
-            pu,puUp,puDown = get_pu_weight(nvtx,self._year)
-
-            ###
-            #Importing the MET filters per year from metfilters.py and constructing the filter boolean
-            ###
-
-            met_filters = {}
-            for flag in met_filter_flags[self._year]:
-                if flag in df:
-                    met_filters[flag] = df[flag]
-
-            ###
-            #Importing the trigger paths per year from trigger.py and constructing the trigger boolean
-            ###
-
-            met_trigger = {}
-            for path in met_trigger_paths[self._year]:
-                if path in df:
-                    met_trigger[path] = df[path]
-            passMetTrig = False
-            for path in met_trigger:
-                passMetTrig |= met_trigger[path]
-            
-            singleele_trigger = {}
-            for path in singleele_trigger_paths[self._year]:
-                if path in df:
-                    singleele_trigger[path] = df[path]
-            passSingleEleTrig = False
-            for path in singleele_trigger:
-                passSingleEleTrig |= singleele_trigger[path] 
-
-            singlepho_trigger = {}
-            for path in singlepho_trigger_paths[self._year]:
-                if path in df:
-                    singlepho_trigger[path] = df[path]
-            passSinglePhoTrig = False
-            for path in singlepho_trigger:
-                passSinglePhoTrig |= singlepho_trigger[path]
 
             ###
             #Initialize global quantities (MET ecc.)
@@ -178,7 +128,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                             'mass':df['Electron_mass']})
 
             #checking content size, if zero, initialize to empty object
-            if not (e.content.size > 0): e = empty_obj
+            #if not (e.content.size > 0): e = empty_obj
             
             for key in e_id[self._year]:
                 e[key] = e.pt.zeros_like()
@@ -187,11 +137,16 @@ class AnalysisProcessor(processor.ProcessorABC):
             e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,self._year)
             e['istight'] = isTightElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,self._year)
 
-            e_loose = e
-            if e[e.isloose].content.size > 0: e_loose = e[e.isloose]
+            leading_e = e[e.pt.argmax()]
+            leading_e = leading_e[leading_e.istight]
 
-            e_tight = e
-            if e[e.istight].content.size > 0: e_tight = e[e.istight]
+            #e_loose = e
+            #if e[e.isloose].content.size > 0: 
+            e_loose = e[e.isloose]
+
+            #e_tight = e
+            #if e[e.istight].content.size > 0: 
+            e_tight = e[e.istight]
             
             e_ntot = e.counts
             e_nloose = e_loose.counts
@@ -203,7 +158,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                              'mass':df['Muon_mass']})
 
             #checking content size, if zero, initialize to empty object
-            if not (mu.content.size > 0): mu = empty_obj
+            #if not (mu.content.size > 0): mu = empty_obj
             
             for key in mu_id[self._year]:
                 mu[key] = mu.pt.zeros_like()
@@ -213,13 +168,16 @@ class AnalysisProcessor(processor.ProcessorABC):
             mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,self._year)
             mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.tight_id,self._year)
 
-            mu_loose = mu
-            if mu[mu.isloose].content.size > 0:
-                mu_loose=mu[mu.isloose]
+            leading_mu = mu[mu.pt.argmax()]
+            leading_mu = leading_mu[leading_mu.istight]
 
-            mu_tight = mu
-            if mu[mu.istight].content.size > 0:
-                mu_tight=mu[mu.istight]
+            #mu_loose = mu
+            #if mu[mu.isloose].content.size > 0:
+            mu_loose=mu[mu.isloose]
+
+            #mu_tight = mu
+            #if mu[mu.istight].content.size > 0:
+            mu_tight=mu[mu.istight]
 
             mu_ntot = mu.counts
             mu_nloose = mu_loose.counts
@@ -242,8 +200,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             tau['isloose']=isLooseTau(tau.pt,tau.eta,tau.decayMode,tau.id,self._year)
             tau_loose = tau
 
-            if tau[tau.isloose].content.size>0:
-                tau_loose=tau[tau.isloose]
+            #if tau[tau.isloose].content.size>0:
+            tau_loose=tau[tau.isloose]
                 
             tau_ntot=tau.counts
             tau_nloose=tau_loose.counts
@@ -264,14 +222,16 @@ class AnalysisProcessor(processor.ProcessorABC):
             pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho.loose_id,pho.eleveto,self._year)
             pho['istight']=isTightPhoton(pho.pt,pho.eta,pho.tight_id,pho.eleveto,self._year)
 
-            pho_loose = pho
-            if pho[pho.isloose].content.size>0:
-                pho_loose=pho[pho.isloose]
+            leading_pho = pho[pho.pt.argmax()]
+            leading_pho = leading_pho[leading_pho.istight]
 
-            pho_tight = pho
-            if pho[pho.istight].content.size>0:
-                pho_tight=pho[pho.istight]
-                
+            #pho_loose = pho
+            #if pho[pho.isloose].content.size>0:
+            pho_loose=pho[pho.isloose]
+            #pho_tight = pho
+            #if pho[pho.istight].content.size>0:
+            pho_tight=pho[pho.istight]
+                            
             pho_ntot=pho.counts
             pho_nloose=pho_loose.counts
             pho_ntight=pho_tight.counts
@@ -302,10 +262,15 @@ class AnalysisProcessor(processor.ProcessorABC):
             fj['hSvsQCD'] = (fj.probZbb + fj.probHbb) / (fj.probZbb+fj.probHbb+fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
             fj['VvsQCD'] = (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq) / (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
 
-            fj_good=fj
-            if fj[fj.isgood].content.size > 0: fj_good = fj[fj.isgood]
-            fj_clean=fj
-            if fj[fj.isclean].content.size > 0: fj_clean=fj[fj.isclean]
+            leading_fj = fj[fj.pt.argmax()]
+            leading_fj = leading_fj[leading_fj.isclean]
+
+            #fj_good=fj
+            #if fj[fj.isgood].content.size > 0: 
+            fj_good = fj[fj.isgood]
+            #fj_clean=fj
+            #if fj[fj.isclean].content.size > 0: 
+            fj_clean=fj[fj.isclean]
             
             fj_ntot=fj.counts
             fj_ngood=fj_good.counts
@@ -338,24 +303,36 @@ class AnalysisProcessor(processor.ProcessorABC):
             j['isdcsvT'] = (j.deepcsv>0.7527)&j.isiso
             j['isdflvT'] = (j.deepflv>0.7264)&j.isiso
 
-            j_good = j
-            if j[j.isgood].content.size > 0: j_good = j[j.isgood]
-            j_clean = j
-            if j[j.isclean].content.size > 0: j_clean = j[j.isclean]
-            j_iso = j
-            if j[j.isiso].content.size > 0: j_iso = j[j.isiso]
-            j_dcsvL = j
-            if j[j.isdcsvL].content.size > 0: j_iso = j[j.isdcsvL]
-            j_dflvL = j
-            if j[j.isdflvL].content.size > 0: j_iso = j[j.isdflvL]
-            j_dcsvM = j
-            if j[j.isdcsvM].content.size > 0: j_iso = j[j.isdcsvM]
-            j_dflvM = j
-            if j[j.isdflvM].content.size > 0: j_iso = j[j.isdflvM]
-            j_dcsvT = j
-            if j[j.isdcsvT].content.size > 0: j_iso = j[j.isdcsvT]
-            j_dflvT = j
-            if j[j.isdflvT].content.size > 0: j_iso = j[j.isdflvT]
+            leading_j = j[j.pt.argmax()]
+            leading_j = leading_j[leading_j.isclean]
+
+            #j_good = j
+            #if j[j.isgood].content.size > 0: 
+            j_good = j[j.isgood]
+            #j_clean = j
+            #if j[j.isclean].content.size > 0: 
+            j_clean = j[j.isclean]
+            #j_iso = j
+            #if j[j.isiso].content.size > 0: 
+            j_iso = j[j.isiso]
+            #j_dcsvL = j
+            #if j[j.isdcsvL].content.size > 0: 
+            j_dcsvL = j[j.isdcsvL]
+            #j_dflvL = j
+            #if j[j.isdflvL].content.size > 0: 
+            j_dflvL = j[j.isdflvL]
+            #j_dcsvM = j
+            #if j[j.isdcsvM].content.size > 0: 
+            j_dcsvM = j[j.isdcsvM]
+            #j_dflvM = j
+            #if j[j.isdflvM].content.size > 0: 
+            j_dflvM = j[j.isdflvM]
+            #j_dcsvT = j
+            #if j[j.isdcsvT].content.size > 0: 
+            j_dcsvT = j[j.isdcsvT]
+            #j_dflvT = j
+            #if j[j.isdflvT].content.size > 0:
+            j_dflvT = j[j.isdflvT]
 
             j_ntot=j.counts
             j_ngood=j_good.counts
@@ -369,28 +346,21 @@ class AnalysisProcessor(processor.ProcessorABC):
             j_ndflvT=j_dflvT.counts
 
             ###
-            #Getting leading pT objects
-            ###
-            leading_mu = mu_tight[mu_tight.pt.argmax()]
-            leading_e = e_tight[e_tight.pt.argmax()]
-            leading_pho = pho_tight[pho_tight.pt.argmax()]
-            leading_j = j_clean[j_clean.pt.argmax()]
-            leading_fj = fj_clean[fj_clean.pt.argmax()]
-
-            ###
             #Calculating derivatives
             ###
             ele_pairs = e_loose.distincts()
-            diele = e_loose[e_loose.pt.argmax()]
+            diele = leading_e
+            leading_diele = leading_e
             if ele_pairs.i0.content.size>0:
                 diele = ele_pairs.i0+ele_pairs.i1
-            leading_diele = diele[diele.pt.argmax()]
+                leading_diele = diele[diele.pt.argmax()]
   
             mu_pairs = mu_loose.distincts()
-            dimu = mu_loose[mu_loose.pt.argmax()]
+            dimu = leading_mu
+            leading_dimu = leading_mu
             if mu_pairs.i0.content.size>0:
                 dimu = mu_pairs.i0+mu_pairs.i1
-            leading_dimu = dimu[dimu.pt.argmax()]
+                leading_dimu = dimu[dimu.pt.argmax()]
 
             u={}
             u["iszeroL"] = met
@@ -404,30 +374,17 @@ class AnalysisProcessor(processor.ProcessorABC):
             #Calculating weights
             ###
 
-            weights = {}
-            for k in u.keys():
-                weights[k] = processor.Weights(df.size)
-                
-            weights['iszeroL'].add('trig', get_met_trig_weight(u["iszeroL"].pt,self._year))
-            weights['iszeroL'].add('pass_trig',passMetTrig)
-            weights['isoneM'].add('trig', get_met_trig_weight(u["isoneM"].pt,self._year))
-            weights['isoneM'].add('pass_trig',passMetTrig)
-            weights['istwoM'].add('trig', get_met_zmm_trig_weight(u["istwoM"].pt,self._year))
-            weights['istwoM'].add('pass_trig',passMetTrig)
-            weights['isoneE'].add('trig',get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),self._year))
-            weights['isoneE'].add('passSingleEleTrig',passSingleEleTrig)
+            ###
+            # For MC, retrieve the LHE weights, to take into account NLO destructive interference, and their sum
+            ###
 
-            diele_trig_weight = get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), np.full_like(leading_e.eta.sum(),-99),np.full_like(leading_e.pt.sum(),-99),self._year)
-            if ele_pairs.i0.content.size>0:
-                diele_trig_weight = get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),self._year)
-
-            weights['istwoE'].add('trig', diele_trig_weight)
-            weights['istwoE'].add('passSingleEleTrig',passSingleEleTrig)
-            weights['isoneA'].add('trig', get_pho_trig_weight(leading_pho.pt.sum(),self._year))
-            weights['isoneA'].add('passSinglePhoTrig',passSinglePhoTrig)
-
+            genw = np.ones_like(df['MET_pt'])
+            sumw = 1.
             wnlo = np.ones_like(df['MET_pt'])
             if self._xsec[dataset] != -1:
+                genw = df['genWeight']
+                sumw = genw.sum()
+
                 gen = Initialize({'pt':df['GenPart_pt'],
                                   'eta':df['GenPart_eta'],
                                   'phi':df['GenPart_phi'],
@@ -454,12 +411,74 @@ class AnalysisProcessor(processor.ProcessorABC):
                 elif('DY' in dataset or 'ZJets' in dataset): wnlo = get_nlo_weight('z',genZs[0].pt.sum())
                 elif('GJets' in dataset): wnlo = get_nlo_weight('a',genAs[0].pt.sum())
 
-            for k in u.keys():
-                weights[k].add('nlo',wnlo)
-                weights[k].add('genw',genw)
-                weights[k].add('pileup',pu,puUp,puDown)
-                weights[k].add('passMetFilters',np.prod([met_filters[key] for key in met_filters], axis=0))
+            ###
+            # Calculate PU weight and systematic variations
+            ###
 
+            nvtx = df['PV_npvs']
+            pu,puUp,puDown = get_pu_weight(nvtx,self._year)
+
+            ###
+            #Importing the MET filters per year from metfilters.py and constructing the filter boolean
+            ###
+
+            met_filters = {}
+            for flag in met_filter_flags[self._year]:
+                if flag in df:
+                    met_filters[flag] = df[flag]
+
+            ###
+            #Importing the trigger paths per year from trigger.py and constructing the trigger boolean
+            ###
+
+            pass_trig = {}
+            met_trigger = {}
+            for path in met_trigger_paths[self._year]:
+                if path in df:
+                    met_trigger[path] = df[path]
+            passMetTrig = False
+            for path in met_trigger:
+                passMetTrig |= met_trigger[path]
+            
+            singleele_trigger = {}
+            for path in singleele_trigger_paths[self._year]:
+                if path in df:
+                    singleele_trigger[path] = df[path]
+            passSingleEleTrig = False
+            for path in singleele_trigger:
+                passSingleEleTrig |= singleele_trigger[path] 
+
+            singlepho_trigger = {}
+            for path in singlepho_trigger_paths[self._year]:
+                if path in df:
+                    singlepho_trigger[path] = df[path]
+            passSinglePhoTrig = False
+            for path in singlepho_trigger:
+                passSinglePhoTrig |= singlepho_trigger[path]
+
+            pass_trig['iszeroL'] = passMetTrig
+            pass_trig['isoneM'] = passMetTrig
+            pass_trig['istwoM'] = passMetTrig
+            pass_trig['isoneE'] = passSingleEleTrig
+            pass_trig['istwoE'] = passSingleEleTrig
+            pass_trig['isoneA'] =passSinglePhoTrig
+
+            ###
+            # Trigger efficiency weight
+            ###
+            
+            trig = {}
+            trig['iszeroL'] = get_met_trig_weight(u["iszeroL"].pt,self._year)
+            trig['isoneM'] = get_met_trig_weight(u["isoneM"].pt,self._year)
+            trig['istwoM'] = get_met_zmm_trig_weight(u["istwoM"].pt,self._year)
+            trig['isoneE'] = get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), 
+                                                      np.full_like(leading_e.eta.sum(),-99),
+                                                      np.full_like(leading_e.pt.sum(),-99),self._year)
+            trig['istwoE'] = trig['isoneE']
+            if ele_pairs.i0.content.size>0:
+                trig['istwoE'] =get_ele_trig_weight(ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum(),
+                                                         ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum(),self._year)
+            trig['isoneA'] = get_pho_trig_weight(leading_pho.pt.sum(),self._year)
 
             ###
             #Event selection
@@ -474,16 +493,33 @@ class AnalysisProcessor(processor.ProcessorABC):
             selections.add('istwoE', (e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
             selections.add('isoneA', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1))
 
-            for k in u.keys():
-                selections.add(k+'baggy', (fj_nclean>0)&(fj_clean.pt.max()>160)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250))
-                selections.add(k+'skinny', (j_nclean>0)&(j_clean.pt.max()>100)&(abs(u[k].delta_phi(j_clean)).min()>0.5)&(u[k].pt>250))
-                selections.add(k+'skinny_no_baggy', ~((fj_nclean>0)&(fj_clean.pt.max()>160))&(j_nclean>0)&(j_clean.pt.max()>100)&(abs(u[k].delta_phi(j_clean)).min()>0.5)&(u[k].pt>250))
-                selections.add(k+'inclusive', (~((fj_nclean>0)&(fj_clean.pt.max()>160))&(j_nclean>0)&(j_clean.pt.max()>100)&(abs(u[k].delta_phi(j_clean)).min()>0.5)&(u[k].pt>250)) | ((fj_nclean>0)&(fj_clean.pt.max()>160)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250)))
+            ###
+            #Adding weights and selections
+            ###
 
+            weights = {}
             regions = {}
-            for k in u.keys():
-                for j in ["baggy","skinny","inclusive"]:
-                    regions[k+'_'+j] = {k,k+j}
+            for k in self._selected_regions:
+
+                weights[k] = processor.Weights(df.size)
+                weights[k].add('nlo',wnlo)
+                weights[k].add('genw',genw)
+                weights[k].add('pileup',pu,puUp,puDown)
+                weights[k].add('passMetFilters',np.prod([met_filters[key] for key in met_filters], axis=0))
+                weights[k].add('trig', trig[k])
+                weights[k].add('pass_trig', pass_trig[k])
+
+
+                baggy = (fj_nclean>0)&(fj_clean.pt.max()>160)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250)
+                skinny = (j_nclean>0) & (j_clean.pt.max()>100) & (abs(u[k].delta_phi(j_clean)).min()>0.5) & (u[k].pt>250)
+                skinny_no_baggy = ~((fj_nclean>0)&(fj_clean.pt.max()>160))&skinny
+                selections.add(k+'baggy', baggy)
+                selections.add(k+'skinny', skinny)
+                selections.add(k+'skinny_no_baggy', skinny_no_baggy)
+                selections.add(k+'inclusive', baggy|skinny_no_baggy)
+
+                for s in ["baggy","skinny","inclusive","skinny_no_baggy"]:
+                    regions[k+'_'+s] = {k,k+s}
                     
             variables = {}
             variables['j1pt'] = leading_j.pt.sum()
@@ -505,7 +541,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['ndflvM'] = j_ndflvM
             variables['ndcsvT'] = j_ndcsvT
             variables['ndflvT'] = j_ndflvT
-            variables['nfjets'] = fj_nclean
+            variables['nfjtot'] = fj_ntot
+            variables['nfjgood'] = fj_ngood
+            variables['nfjclean'] = fj_nclean
             variables['fjmass'] = leading_fj.mass.sum()
             variables['TvsQCD'] = leading_fj.TvsQCD.sum()
             variables['hSvsQCD'] = leading_fj.hSvsQCD.sum()
@@ -538,7 +576,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 else:
                     while i < len(self._selected_regions):
                         r = self._selected_regions[i]
-                        for s in ["baggy","skinny","inclusive"]:
+                        for s in ["baggy","skinny","skinny_no_baggy","inclusive"]:
                             weight = weights[r].weight()
                             #print(weight)
                             cut = selections.all(*regions[r+'_'+s])
