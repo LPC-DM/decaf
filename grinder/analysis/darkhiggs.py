@@ -115,20 +115,18 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             #Define first and empty object that will use as protection against arrays with size 0
             #Will use MET to set the correct size for the arrays
+            #Not used at the moment
 
-            empty_jagged = awkward.JaggedArray.fromcounts(np.ones_like(met.pt, dtype=int),np.zeros_like(met.pt))
-            empty_obj = Initialize({'pt':empty_jagged,
-                                    'eta':empty_jagged,
-                                    'phi':empty_jagged,
-                                    'mass':empty_jagged})
+            #empty_jagged = awkward.JaggedArray.fromcounts(np.ones_like(met.pt, dtype=int),np.zeros_like(met.pt))
+            #empty_obj = Initialize({'pt':empty_jagged,
+            #                        'eta':empty_jagged,
+            #                        'phi':empty_jagged,
+            #                        'mass':empty_jagged})
 
             e = Initialize({'pt':df['Electron_pt'],
                             'eta':df['Electron_eta'],
                             'phi':df['Electron_phi'],
                             'mass':df['Electron_mass']})
-
-            #checking content size, if zero, initialize to empty object
-            #if not (e.content.size > 0): e = empty_obj
             
             for key in e_id[self._year]:
                 e[key] = e.pt.zeros_like()
@@ -140,12 +138,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             leading_e = e[e.pt.argmax()]
             leading_e = leading_e[leading_e.istight]
 
-            #e_loose = e
-            #if e[e.isloose].content.size > 0: 
             e_loose = e[e.isloose]
-
-            #e_tight = e
-            #if e[e.istight].content.size > 0: 
             e_tight = e[e.istight]
             
             e_ntot = e.counts
@@ -156,9 +149,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                              'eta':df['Muon_eta'],
                              'phi':df['Muon_phi'],
                              'mass':df['Muon_mass']})
-
-            #checking content size, if zero, initialize to empty object
-            #if not (mu.content.size > 0): mu = empty_obj
             
             for key in mu_id[self._year]:
                 mu[key] = mu.pt.zeros_like()
@@ -171,12 +161,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             leading_mu = mu[mu.pt.argmax()]
             leading_mu = leading_mu[leading_mu.istight]
 
-            #mu_loose = mu
-            #if mu[mu.isloose].content.size > 0:
             mu_loose=mu[mu.isloose]
-
-            #mu_tight = mu
-            #if mu[mu.istight].content.size > 0:
             mu_tight=mu[mu.istight]
 
             mu_ntot = mu.counts
@@ -188,9 +173,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                               'phi':df['Tau_phi'],
                               'mass':df['Tau_mass']})
 
-            #checking content size, if zero, initialize to empty object
-            if not (tau.content.size > 0): tau = empty_obj
-
             for key in tau_id[self._year]:
                 tau[key] = tau.pt.zeros_like()
                 if tau_id[self._year][key] in df:
@@ -198,9 +180,6 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             
             tau['isloose']=isLooseTau(tau.pt,tau.eta,tau.decayMode,tau.id,self._year)
-            tau_loose = tau
-
-            #if tau[tau.isloose].content.size>0:
             tau_loose=tau[tau.isloose]
                 
             tau_ntot=tau.counts
@@ -210,9 +189,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                               'eta':df['Photon_eta'],
                               'phi':df['Photon_phi'],
                               'mass':df['Photon_mass']})
-
-            #checking content size, if zero, initialize to empty object
-            if not (pho.content.size > 0): pho = empty_obj
 
             for key in pho_id[self._year]:
                 pho[key] = pho.pt.zeros_like()
@@ -225,11 +201,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             leading_pho = pho[pho.pt.argmax()]
             leading_pho = leading_pho[leading_pho.istight]
 
-            #pho_loose = pho
-            #if pho[pho.isloose].content.size>0:
             pho_loose=pho[pho.isloose]
-            #pho_tight = pho
-            #if pho[pho.istight].content.size>0:
             pho_tight=pho[pho.istight]
                             
             pho_ntot=pho.counts
@@ -240,9 +212,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                              'eta':df['AK15Puppi_eta'],
                              'phi':df['AK15Puppi_phi'],
                              'mass':df['AK15Puppi_mass']})
-
-            #checking content size, if zero, initialize to empty object
-            if not (fj.content.size > 0): fj = empty_obj
 
             for key in fj_id[self._year]:
                 fj[key] = fj.pt.zeros_like()
@@ -265,11 +234,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             leading_fj = fj[fj.pt.argmax()]
             leading_fj = leading_fj[leading_fj.isclean]
 
-            #fj_good=fj
-            #if fj[fj.isgood].content.size > 0: 
             fj_good = fj[fj.isgood]
-            #fj_clean=fj
-            #if fj[fj.isclean].content.size > 0: 
             fj_clean=fj[fj.isclean]
             
             fj_ntot=fj.counts
@@ -280,9 +245,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                             'eta':df['Jet_eta'],
                             'phi':df['Jet_phi'],
                             'mass':df['Jet_mass']})
-
-            #checking content size, if zero, initialize to empty object
-            if not (j.content.size > 0): j = empty_obj
 
             #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation102X
             j['deepcsv'] = df['Jet_btagDeepB']
@@ -306,32 +268,14 @@ class AnalysisProcessor(processor.ProcessorABC):
             leading_j = j[j.pt.argmax()]
             leading_j = leading_j[leading_j.isclean]
 
-            #j_good = j
-            #if j[j.isgood].content.size > 0: 
             j_good = j[j.isgood]
-            #j_clean = j
-            #if j[j.isclean].content.size > 0: 
             j_clean = j[j.isclean]
-            #j_iso = j
-            #if j[j.isiso].content.size > 0: 
             j_iso = j[j.isiso]
-            #j_dcsvL = j
-            #if j[j.isdcsvL].content.size > 0: 
             j_dcsvL = j[j.isdcsvL]
-            #j_dflvL = j
-            #if j[j.isdflvL].content.size > 0: 
             j_dflvL = j[j.isdflvL]
-            #j_dcsvM = j
-            #if j[j.isdcsvM].content.size > 0: 
             j_dcsvM = j[j.isdcsvM]
-            #j_dflvM = j
-            #if j[j.isdflvM].content.size > 0: 
             j_dflvM = j[j.isdflvM]
-            #j_dcsvT = j
-            #if j[j.isdcsvT].content.size > 0: 
             j_dcsvT = j[j.isdcsvT]
-            #j_dflvT = j
-            #if j[j.isdflvT].content.size > 0:
             j_dflvT = j[j.isdflvT]
 
             j_ntot=j.counts
@@ -512,11 +456,12 @@ class AnalysisProcessor(processor.ProcessorABC):
 
                 baggy = (fj_nclean>0)&(fj_clean.pt.max()>160)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250)
                 skinny = (j_nclean>0) & (j_clean.pt.max()>100) & (abs(u[k].delta_phi(j_clean)).min()>0.5) & (u[k].pt>250)
-                skinny_no_baggy = ~((fj_nclean>0)&(fj_clean.pt.max()>160))&skinny
+                #skinny_no_baggy = ~((fj_nclean>0)&(fj_clean.pt.max()>160))&skinny
+                skinny_no_baggy = ~baggy&skinny
                 selections.add(k+'baggy', baggy)
                 selections.add(k+'skinny', skinny)
                 selections.add(k+'skinny_no_baggy', skinny_no_baggy)
-                selections.add(k+'inclusive', baggy|skinny_no_baggy)
+                selections.add(k+'inclusive', baggy|skinny)
 
                 for s in ["baggy","skinny","inclusive","skinny_no_baggy"]:
                     regions[k+'_'+s] = {k,k+s}
