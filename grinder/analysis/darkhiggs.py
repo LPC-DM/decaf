@@ -63,9 +63,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             'mu1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mu1pt","Leading Muon Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
             'mu1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mu1eta","Leading Muon Eta",48,-2.4,2.4)),
             'mu1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mu1phi","Leading Muon Phi",64,-3.2,3.2)),
-            'TvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("TvsQCD","TvsQCD",15,0,1)),
-            'hSvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("hSvsQCD","hSvsQCD",15,0,1)),
-            'VvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("VvsQCD","VvsQCD",15,0,1)),
+            'TopTagger': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("TopTagger","TopTagger",15,0,1)),
+            'DarkHiggsTagger': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("DarkHiggsTagger","DarkHiggsTagger",15,0,1)),
+            'VvsQCDTagger': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("VvsQCDTagger","VvsQCDTagger",15,0,1)),
             'probTbcq': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probTbcq","probTbcq",15,0,1)),
             'probTbqq': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probTbqq","probTbqq",15,0,1)),
             'probTbc': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probTbc","probTbc",15,0,1)),
@@ -226,10 +226,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                 if deep[self._year][key] in df:
                     fj[key] = df[deep[self._year][key]]
             
-            fj['probQCD'] = fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
-            fj['TvsQCD'] = fj.probTbcq+fj.probTbqq+fj.probTbc+fj.probTbq
-            fj['hSvsQCD'] = (fj.probZbb + fj.probHbb) / (fj.probZbb+fj.probHbb+fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
-            fj['VvsQCD'] = (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq) / (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
+            #fj['probQCD'] = fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
+            fj['TopTagger'] = fj.probTbcq+fj.probTbqq
+            fj['DarkHiggsTagger'] = fj.probZbb + fj.probHbb #/ (fj.probZbb+fj.probHbb+fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
+            fj['VvsQCDTagger'] = (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq) / (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probQCDothers+probQCDcc)
 
             leading_fj = fj[fj.pt.argmax()]
             leading_fj = leading_fj[leading_fj.isclean]
@@ -490,9 +490,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['nfjgood'] = fj_ngood
             variables['nfjclean'] = fj_nclean
             variables['fjmass'] = leading_fj.mass.sum()
-            variables['TvsQCD'] = leading_fj.TvsQCD.sum()
-            variables['hSvsQCD'] = leading_fj.hSvsQCD.sum()
-            variables['VvsQCD'] = leading_fj.VvsQCD.sum()
+            variables['TopTagger'] = leading_fj.TopTagger.sum()
+            variables['DarkHiggsTagger'] = leading_fj.DarkHiggsTagger.sum()
+            variables['VvsQCDTagger'] = leading_fj.VvsQCDTagger.sum()
             variables['probTbcq']      = leading_fj.probTbcq.sum()
             variables['probTbqq']      = leading_fj.probTbqq.sum()
             variables['probTbc']       = leading_fj.probTbc.sum()
