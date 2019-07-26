@@ -7,6 +7,8 @@ e_id['2016'] = {}
 e_id['2016']['loose_id'] = 'Electron_mvaFall17V2Iso_WP90'
 e_id['2016']['tight_id'] = 'Electron_mvaFall17V2Iso_WP80'
 e_id['2016']['iso'] = 'Null'
+e_id['2016']['dxy'] = 'Electron_dxy'
+e_id['2016']['dz'] = 'Electron_dz'
 
 e_id['2017'] = e_id['2016']
 e_id['2017']['loose_id'] = 'Electron_mvaFall17V2Iso_WP90'
@@ -42,6 +44,8 @@ mu_id = {}
 mu_id['2016'] = {}
 mu_id['2016']['iso'] = 'Muon_pfRelIso04_all'
 mu_id['2016']['tight_id'] = 'Muon_tightId'
+mu_id['2016']['dxy'] = 'Muon_dxy'
+mu_id['2016']['dz'] = 'Muon_dz'
 
 mu_id['2017'] = mu_id['2016']
 mu_id['2017']['iso'] = 'Muon_pfRelIso04_all'
@@ -133,10 +137,25 @@ def isTightPhoton(pt,eta,tight_id,eleveto,year):
         mask = (pt>210)&(abs(eta)<2.5)&(tight_id)&(eleveto) # Trigger threshold is at 200
     return mask
 
+fj_id = {}
+fj_id['2016'] = {}
+fj_id['2016']['id'] = 'AK15Puppi_jetId'
+fj_id['2017'] = fj_id['2016']
+fj_id['2018'] = fj_id['2016']
 
 def isGoodFatJet(pt,eta, jet_id):
-    mask = (pt > 200)&(abs(eta)<2.4)&((jet_id&2)!=0)
+    mask = (pt > 160)&(abs(eta)<2.4)&((jet_id&2)!=0)
     return mask
+
+j_id = {}
+j_id['2016'] = {}
+j_id['2016']['id'] = 'Jet_jetId'
+j_id['2016']['nhf'] = 'Jet_neHEF'
+j_id['2016']['nef'] = 'Jet_neEmEF'
+j_id['2016']['chf'] = 'Jet_chHEF'
+j_id['2016']['cef'] = 'Jet_chEmEF'
+j_id['2017'] =	j_id['2016']
+j_id['2018'] =	j_id['2016']
 
 def isGoodJet(pt, eta, jet_id, nhf, nef, chf, cef):
     mask = (pt>25) & (abs(eta)<2.4) & ((jet_id&2)!=0) & (nhf<0.8) & (nef<0.99) & (chf>0.1) & (cef<0.99)
