@@ -56,7 +56,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             'nfjtot': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjtot","AK15 Number of Jets",4,0,3)),
             'nfjgood': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjgood","AK15 Number of Good Jets",4,0,3)),
             'nfjclean': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjclean","AK15 Number of cleaned Jets",4,0,3)),
-            'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fjmass","AK15 Jet Mass",50,20,250)),
+            'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fjmass","AK15 Jet Mass",[0.0, 40.0, 60.0, 75.0, 85.0, 115.0, 135.0, 225.0, 500.0])),
             'e1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1pt","Leading Electron Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
             'e1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1eta","Leading Electron Eta",48,-2.4,2.4)),
             'e1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1phi","Leading Electron Phi",64,-3.2,3.2)),
@@ -436,6 +436,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             selections.add('istwoM', (e_nloose==0) & (mu_ntight==1) & (mu_nloose==2) & (tau_nloose==0)&(pho_nloose==0)&(leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120))
             selections.add('istwoE', (e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
             selections.add('isoneA', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1))
+            selections.add('topveto', (j_ndflvL==0)&(leading_fj.TopTagger.sum()<0.1))
+            selections.add('ismonohs', (leading_fj.DarkHiggsTagger.sum()<0.1))
+            selections.add('ismonoV', ~(leading_fj.DarkHiggsTagger.sum()<0.1)&(leading_fj.VvsQCDTagger.sum()>0.75))
+            selections.add('ismonojet', ~(leading_fj.DarkHiggsTagger.sum()<0.1)&~(leading_fj.VvsQCDTagger.sum()>0.75))
 
             ###
             #Adding weights and selections
@@ -454,17 +458,15 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights[k].add('pass_trig', pass_trig[k])
 
 
-                baggy = (fj_nclean>0)&(fj_clean.pt.max()>160)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250)
-                skinny = (j_nclean>0) & (j_clean.pt.max()>100) & (abs(u[k].delta_phi(j_clean)).min()>0.5) & (u[k].pt>250)
-                #skinny_no_baggy = ~((fj_nclean>0)&(fj_clean.pt.max()>160))&skinny
-                skinny_no_baggy = ~baggy&skinny
-                selections.add(k+'baggy', baggy)
-                selections.add(k+'skinny', skinny)
-                selections.add(k+'skinny_no_baggy', skinny_no_baggy)
-                selections.add(k+'inclusive', baggy|skinny)
+                #baggy = (fj_nclean>0)&(fj_clean.pt.max()>160)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250)
+                #skinny = (j_nclean>0) & (j_clean.pt.max()>100) & (abs(u[k].delta_phi(j_clean)).min()>0.5) & (u[k].pt>250)
+                #skinny_no_baggy = ~baggy&skinny
+                selections.add(k+'baggy', (fj_nclean>0)&(fj_clean.pt.max()>160)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250))
 
-                for s in ["baggy","skinny","inclusive","skinny_no_baggy"]:
-                    regions[k+'_'+s] = {k,k+s}
+                regions[k+'_baggy'] =  {k,k+'baggy'}
+                regions[k+'_topveto'] =  {k,k+'baggy','topveto'}
+                for s in ['ismonohs','ismonoV','ismonojet']:
+                    regions[k+'_'+s] = {k,k+'baggy','topveto',s}
                     
             variables = {}
             variables['j1pt'] = leading_j.pt.sum()
@@ -521,7 +523,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 else:
                     while i < len(self._selected_regions):
                         r = self._selected_regions[i]
-                        for s in ["baggy","skinny","skinny_no_baggy","inclusive"]:
+                        for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto']:
                             weight = weights[r].weight()
                             #print(weight)
                             cut = selections.all(*regions[r+'_'+s])
