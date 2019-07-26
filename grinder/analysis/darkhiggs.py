@@ -437,9 +437,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             selections.add('istwoE', (e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
             selections.add('isoneA', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1))
             selections.add('topveto', (j_ndflvL==0)&(leading_fj.TopTagger.sum()<0.1))
-            selections.add('ismonohs', (leading_fj.DarkHiggsTagger.sum()<0.1))
-            selections.add('ismonoV', ~(leading_fj.DarkHiggsTagger.sum()<0.1)&(leading_fj.VvsQCDTagger.sum()>0.75))
-            selections.add('ismonojet', ~(leading_fj.DarkHiggsTagger.sum()<0.1)&~(leading_fj.VvsQCDTagger.sum()>0.75))
+            selections.add('ismonohs', (leading_fj.DarkHiggsTagger.sum()>0.1))
+            selections.add('ismonoV', ~(leading_fj.DarkHiggsTagger.sum()>0.1)&(leading_fj.VvsQCDTagger.sum()>0.75))
+            selections.add('ismonojet', ~(leading_fj.DarkHiggsTagger.sum()>0.1)&~(leading_fj.VvsQCDTagger.sum()>0.75))
 
             ###
             #Adding weights and selections
