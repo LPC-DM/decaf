@@ -316,11 +316,11 @@ processes =    {
         #'Mjet1DM_LO_MZprime_1000_Mhs_50_Mchi_100_gSM_0p25_gDM_1p0_th_0p01_13TeV_madgraph':('Mjet1DM_LO_MZprime_1000_Mhs_50_Mchi_100_gSM_0p25_gDM_1p0_th_0p01_13TeV_madgraph','MC',1)
 
         # New Signals
-        'MonoHs_Mzprime_500_Mhs_50_Mchi_150':('MonoHs_Mzprime_500_Mhs_50_Mchi_150','MC',1),
-        'MonoHs_Mzprime_500_Mhs_70_Mchi_150':('MonoHs_Mzprime_500_Mhs_70_Mchi_150','MC',1),
-        'MonoHs_Mzprime_500_Mhs_90_Mchi_150':('MonoHs_Mzprime_500_Mhs_90_Mchi_150','MC',1),
-        'MonoJet_Mzprime_500_Mchi_150':('MonoJet_Mzprime_500_Mchi_150','MC',1),
-        'MonoW_Mzprime_500_Mchi_150':('MonoW_Mzprime_500_Mchi_150','MC',1),
-        'MonoZ_Mzprime_500_Mchi_150':('MonoZ_Mzprime_500_Mchi_150','MC',1),
+        'MonoHs_Mzprime_500_Mhs_50_Mchi_150':('MonoHs_Mzprime_500_Mhs_50_Mchi_150','MC',0.2934),
+        'MonoHs_Mzprime_500_Mhs_70_Mchi_150':('MonoHs_Mzprime_500_Mhs_70_Mchi_150','MC',0.2565),
+        'MonoHs_Mzprime_500_Mhs_90_Mchi_150':('MonoHs_Mzprime_500_Mhs_90_Mchi_150','MC',0.2240),
+        'MonoJet_Mzprime_500_Mchi_150':('MonoJet_Mzprime_500_Mchi_150','MC',3.044),
+        'MonoW_Mzprime_500_Mchi_150':('MonoW_Mzprime_500_Mchi_150','MC',0.03469),
+        'MonoZ_Mzprime_500_Mchi_150':('MonoZ_Mzprime_500_Mchi_150','MC',0.01093),
 
 }
