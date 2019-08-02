@@ -4,7 +4,7 @@ import json
 import pyxrootd.client
 import fnmatch
 import numpy as np
-import numexpr
+#import numexpr
 import subprocess
 import concurrent.futures
 import warnings
