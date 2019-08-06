@@ -120,9 +120,35 @@ def get_nlo_weight(type, pt):
     correction=lookup_tools.dense_lookup.dense_lookup(sf_qcd*sf_ewk, kfactor[nlo[type]].edges)
     return correction(pt)
 
-def get_bad_ecal_weight(eta,phi):
-    badecal = "data/badecal/hotjets-runBCDEFGH.root"
-    fbadecal = uproot.open(badecal)
-    badecal_corr = fbadecal["h2jet"].values
-    correction=lookup_tools.dense_lookup.dense_lookup(badecal_corr, fbadecal["h2jet"].edges)
-    return correction(eta,phi)
+### Obsolete
+#def get_bad_ecal_weight(eta,phi):
+#    badecal = "data/badecal/hotjets-runBCDEFGH.root"
+#    fbadecal = uproot.open(badecal)
+#    badecal_corr = fbadecal["h2jet"].values
+#    correction=lookup_tools.dense_lookup.dense_lookup(badecal_corr, fbadecal["h2jet"].edges)
+#    return correction(eta,phi)
+
+def get_ecal_bad_calib(run_number, lumi_number, event_number, year, dataset):
+    bad = {}
+    bad["2016"] = {}
+    bad["2017"] = {}
+    bad["2018"] = {}
+    bad["2016"]["MET"]            = "data/ecalBadCalib/Run2016_MET.root"
+    bad["2016"]["SinglePhoton"]   = "data/ecalBadCalib/Run2016_SinglePhoton.root"
+    bad["2016"]["SingleElectron"] = "data/ecalBadCalib/Run2016_SingleElectron.root"
+    bad["2017"]["MET"]            = "data/ecalBadCalib/Run2017_MET.root"
+    bad["2017"]["SinglePhoton"]   = "data/ecalBadCalib/Run2017_SinglePhoton.root"
+    bad["2017"]["SingleElectron"] = "data/ecalBadCalib/Run2017_SingleElectron.root"
+    bad["2018"]["MET"]            = "data/ecalBadCalib/Run2018_MET.root"
+    bad["2018"]["EGamma"]         = "data/ecalBadCalib/Run2018_EGamma.root"
+    
+    regular_dataset = ""
+    regular_dataset = [name for name in ["MET","SinglePhoton","SingleElectron","EGamma"] if (name in dataset)]
+    fbad = uproot.open(bad[year][regular_dataset[0]])
+    bad_tree = fbad["vetoEvents"]
+    runs_to_veto = bad_tree.array("Run")
+    lumis_to_veto = bad_tree.array("LS")
+    events_to_veto = bad_tree.array("Event")
+
+    # We want events that do NOT have (a vetoed run AND a vetoed LS and a vetoed event number)
+    return np.logical_not(np.isin(run_number, runs_to_veto) * np.isin(lumi_number, lumis_to_veto) * np.isin(event_number, events_to_veto))
