@@ -432,7 +432,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             selections.add('iszeroL', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
             selections.add('isoneM', (e_nloose==0)&(mu_ntight==1)&(tau_nloose==0)&(pho_nloose==0))
-            selections.add('isoneE', (e_ntight==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
+            selections.add('isoneE', (e_ntight==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(met.pt>50))
             selections.add('istwoM', (e_nloose==0) & (mu_ntight==1) & (mu_nloose==2) & (tau_nloose==0)&(pho_nloose==0)&(leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120))
             selections.add('istwoE', (e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
             selections.add('isoneA', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1))
