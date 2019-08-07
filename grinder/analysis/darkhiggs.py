@@ -10,7 +10,7 @@ from coffea import hist, processor
 from utils.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
 from utils.corrections import get_ttbar_weight, get_nlo_weight, get_pu_weight
 from utils.corrections import get_met_trig_weight, get_met_zmm_trig_weight, get_ele_trig_weight, get_pho_trig_weight
-from utils.corrections import get_bad_ecal_weight
+from utils.corrections import get_ecal_bad_calib
 from utils.ids import e_id, isLooseElectron, isTightElectron
 from utils.ids import mu_id, isLooseMuon, isTightMuon
 from utils.ids import tau_id, isLooseTau
@@ -436,7 +436,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             selections.add('istwoM', (e_nloose==0) & (mu_ntight==1) & (mu_nloose==2) & (tau_nloose==0)&(pho_nloose==0)&(leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120))
             selections.add('istwoE', (e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
             selections.add('isoneA', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1))
-            selections.add('topveto', (j_ndflvL==0)&(leading_fj.TopTagger.sum()<0.25))
+            selections.add('topveto', (leading_fj.TopTagger.sum()<0.25))
+            selections.add('noextrab', (j_ndflvL==0))
+            selections.add('extrab', (j_ndflvL>0))
             selections.add('ismonohs', (leading_fj.DarkHiggsTagger.sum()>0.2))
             selections.add('ismonoV', ~(leading_fj.DarkHiggsTagger.sum()>0.2)&(leading_fj.VvsQCDTagger.sum()>0.8))
             selections.add('ismonojet', ~(leading_fj.DarkHiggsTagger.sum()>0.2)&~(leading_fj.VvsQCDTagger.sum()>0.8))
@@ -464,9 +466,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                 selections.add(k+'baggy', (fj_nclean>0)&(fj_clean.pt.max()>160)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250))
 
                 regions[k+'_baggy'] =  {k,k+'baggy'}
-                regions[k+'_topveto'] =  {k,k+'baggy','topveto'}
+                regions[k+'_topveto'] =  {k,k+'baggy','topveto','noextrab'}
                 for s in ['ismonohs','ismonoV','ismonojet']:
-                    regions[k+'_'+s] = {k,k+'baggy','topveto',s}
+                    regions[k+'_'+s] = {k,k+'baggy','topveto','noextrab',s}
+                regions[k+'_ismonohs'+'_extrab'] = {k,k+'baggy','topveto','extrab','ismonohs'}
                     
             variables = {}
             variables['j1pt'] = leading_j.pt.sum()
@@ -523,7 +526,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 else:
                     while i < len(self._selected_regions):
                         r = self._selected_regions[i]
-                        for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto']:
+                        for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto','ismonohs_extrab']:
                             weight = weights[r].weight()
                             #print(weight)
                             cut = selections.all(*regions[r+'_'+s])
