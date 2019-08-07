@@ -17,17 +17,20 @@ parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 parser.add_option('-y', '--year', help='year', dest='year')
 parser.add_option('-p', '--pack', help='pack', dest='pack')
+parser.add_option('-k', '--keep', action="store_true", dest="keep")
 (options, args) = parser.parse_args()
 fnaleos = "root://cmsxrootd.fnal.gov/"
 
 beans={}
-#beans['2016'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/nano_2016",
-#                 "/eos/uscms/store/group/lpcstop/noreplica/NanoTuples/v1a",
-#                 "/eos/uscms/store/user/hqu/NanoTuples/v1d"]
-#beans['2017'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/nano_2017"]
 beans['2016'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/102X/nano_2016"]
 beans['2017'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/102X/nano_2017"]
-beans['2018'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/102X/nano_2018"]
+beans['2018'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/102X/nano_2018",
+                 "/eos/uscms/store/user/jongho/DarkHiggs/nanoAOD/MonoHs_Mzprime_500_Mhs_50_Mchi_150",
+                 "/eos/uscms/store/user/jongho/DarkHiggs/nanoAOD/MonoHs_Mzprime_500_Mhs_70_Mchi_150",
+                 "/eos/uscms/store/user/jongho/DarkHiggs/nanoAOD/MonoHs_Mzprime_500_Mhs_90_Mchi_150",
+                 "/eos/uscms/store/user/jongho/DarkHiggs/nanoAOD/MonoJet_Mzprime_500_Mchi_150",
+                 "/eos/uscms/store/user/jongho/DarkHiggs/nanoAOD/MonoW_Mzprime_500_Mchi_150",
+                 "/eos/uscms/store/user/jongho/DarkHiggs/nanoAOD/MonoZ_Mzprime_500_Mchi_150"]
 
 def split(arr, size):
      arrs = []
@@ -86,32 +89,32 @@ for folder in beans[options.year]:
     for dataset in xsections.keys():
         if options.dataset and options.dataset not in dataset: continue
         print("Looking into",folder+"/"+dataset)
-        os.system("find "+folder+"/"+dataset+" -name \'*.root\' > "+dataset+".txt")
-        flist = open(dataset+".txt")
+        filenames = folder+"/"+dataset+" -name \'nano_*.root\'"
+        os.system("find "+filenames+" > "+dataset+".txt")
+        with open(dataset+".txt") as flist:
+             new_content=flist.read().replace('/eos/uscms',fnaleos)
+        with open(dataset+".txt", 'w') as flist:
+             flist.write(new_content)
+        if options.keep and open(dataset+".txt").read(1): 
+             os.system("mkdir -p beans/"+options.year)
+             os.system("cp "+dataset+".txt beans/"+options.year)
         urllist = []
-        #print('file lenght:',len(flist.readlines()))
         xs = xsections[dataset]
-        #sumw = 0
-        for path in flist:
-            s = path.strip().split('/')
-            eospath = fnaleos
-            for i in range (3,len(s)): eospath=eospath+'/'+s[i]
-            #if xs != -1:
-            #     run_tree = uproot.open(eospath)["Runs"]
-            #     sumw += run_tree.array("genEventSumw")[0]
+        for path in open(dataset+".txt"):
+            eospath = path.strip()
             if (not ('failed' in eospath)): urllist.append(eospath)
         print('list lenght:',len(urllist))
         urllists = split(urllist, int(options.pack))
         print(len(urllists))
         if urllist:
             for i in range(0,len(urllists)) :
-                 datadef[dataset+"____"+str(i)] = {
+                 datadef[dataset+"____"+str(i)+"_"] = {
                       'files': urllists[i],
                       'xs': xs,
-                      #'sumw': sumw,
                       }
         os.system("rm "+dataset+".txt")
 
 os.system("mkdir -p beans")
-with open("beans/"+options.year+".json", "w") as fout:
+folder = "beans/"+options.year+".json"
+with open(folder, "w") as fout:
     json.dump(datadef, fout, indent=4)
