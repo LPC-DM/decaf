@@ -1,0 +1,41 @@
+#!/bin/bash
+
+#SBATCH --job-name=parsl.auto.1564774590.314647
+#SBATCH --output=/home/matteoc/decaf/grinder/runinfo/000/submit_scripts/parsl.auto.1564774590.314647.submit.stdout
+#SBATCH --error=/home/matteoc/decaf/grinder/runinfo/000/submit_scripts/parsl.auto.1564774590.314647.submit.stderr
+#SBATCH --nodes=1
+#SBATCH --partition=general
+#SBATCH --time=120
+#SBATCH --ntasks-per-node=1
+#SBATCH --exclusive
+
+#SBATCH --cpus-per-task=48
+#SBATCH --mem-per-cpu=2048
+
+
+
+export X509_USER_PROXY=${HOME}/x509up_u45169
+export X509_CERT_DIR=${HOME}/certs/
+export XRD_RUNFORKHANDLER=1
+
+
+export JOBNAME="parsl.auto.1564774590.314647"
+
+export CORES=$SLURM_CPUS_ON_NODE
+export NODES=$SLURM_JOB_NUM_NODES
+
+echo "Found cores : $CORES"
+echo "Found nodes : $NODES"
+WORKERCOUNT=1
+
+cat << SLURM_EOF > cmd_$SLURM_JOB_NAME.sh
+process_worker_pool.py  --max_workers=48 -p 0 -c 1.0 -m None --poll 10 --task_url=tcp://popeye-login2:54154 --result_url=tcp://popeye-login2:54274 --logdir=/home/matteoc/decaf/grinder/runinfo/000/coffea_parsl_slurm --block_id=68 --hb_period=30 --hb_threshold=120 
+SLURM_EOF
+chmod a+x cmd_$SLURM_JOB_NAME.sh
+
+TASKBLOCKS=1
+
+srun --ntasks $TASKBLOCKS -l  bash cmd_$SLURM_JOB_NAME.sh
+
+echo "Done"
+
