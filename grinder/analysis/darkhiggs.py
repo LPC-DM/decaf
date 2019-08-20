@@ -449,7 +449,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             weights = {}
             regions = {}
-            for k in self._selected_regions:
+            for k in self._selected_regions[dataset]:
 
                 weights[k] = processor.Weights(df.size)
                 weights[k].add('nlo',wnlo)
@@ -524,8 +524,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 if histname == 'sumw':
                     h.fill(dataset=dataset, sumw=1, weight=sumw)                
                 else:
-                    while i < len(self._selected_regions):
-                        r = self._selected_regions[i]
+                    while i < len(self._selected_regions[dataset]):
+                        r = self._selected_regions[dataset][i]
                         for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto','ismonohs_extrab']:
                             weight = weights[r].weight()
                             #print(weight)
