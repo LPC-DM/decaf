@@ -450,7 +450,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             weights = {}
             regions = {}
             for k in self._selected_regions[dataset]:
-
                 weights[k] = processor.Weights(df.size)
                 weights[k].add('nlo',wnlo)
                 weights[k].add('genw',genw)
