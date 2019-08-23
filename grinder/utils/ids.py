@@ -160,3 +160,7 @@ j_id['2018'] =	j_id['2016']
 def isGoodJet(pt, eta, jet_id, nhf, nef, chf, cef):
     mask = (pt>25) & (abs(eta)<2.4) & ((jet_id&2)!=0) & (nhf<0.8) & (nef<0.99) & (chf>0.1) & (cef<0.99)
     return mask
+
+def isHEMJet(pt, eta, phi, jet_id, nhf, nef, chf, cef):
+    mask = (pt>30) & ((eta>-2.4)&(eta<-1.4)) & ((phi>-1.57)&(phi<-0.87))& ((jet_id&2)!=0) & (nhf<0.8) & (nef<0.99) & (chf>0.1) & (cef<0.99)
+    return mask
