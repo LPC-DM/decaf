@@ -11,8 +11,8 @@ from utils.triggers import met_trigger_paths, singleele_trigger_paths, singlepho
 from utils.corrections import get_ttbar_weight, get_nlo_weight, get_pu_weight
 from utils.corrections import get_met_trig_weight, get_met_zmm_trig_weight, get_ele_trig_weight, get_pho_trig_weight
 from utils.corrections import get_ecal_bad_calib
-from utils.ids import e_id, isLooseElectron, isTightElectron
-from utils.ids import mu_id, isLooseMuon, isTightMuon
+from utils.ids import e_id, isLooseElectron, isTightElectron, isHEMelectron
+from utils.ids import mu_id, isLooseMuon, isTightMuon, isHEMmuon
 from utils.ids import tau_id, isLooseTau
 from utils.ids import pho_id, isLoosePhoton, isTightPhoton
 from utils.ids import j_id, fj_id, isGoodJet, isGoodFatJet, isHEMJet
@@ -110,12 +110,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                               'eta':0,
                               'phi':df['MET_phi'],
                               'mass':0})
-            
+
             calomet = Initialize({'pt':df['CaloMET_pt'],
                                   'eta':0,
                                   'phi':df['CaloMET_phi'],
                                   'mass':0})
-            
+
             ###
             #Initialize physics objects
             ###
@@ -134,29 +134,33 @@ class AnalysisProcessor(processor.ProcessorABC):
                             'eta':df['Electron_eta'],
                             'phi':df['Electron_phi'],
                             'mass':df['Electron_mass']})
-            
+
             for key in e_id[self._year]:
                 e[key] = e.pt.zeros_like()
                 if e_id[self._year][key] in df:
                     e[key] = df[e_id[self._year][key]]
+
             e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,self._year)
-            e['istight'] = isTightElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,self._year)
+            e['istight'] = isTightElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.tight_id,self._year)
+            e['isHEM'] = isHEMelectron(e.pt,e.eta,e.phi,e.dxy,e.dz,e.iso,self._year)
 
             leading_e = e[e.pt.argmax()]
             leading_e = leading_e[leading_e.istight]
 
             e_loose = e[e.isloose]
             e_tight = e[e.istight]
-            
+            e_HEM = e[e.isHEM]
+
             e_ntot = e.counts
             e_nloose = e_loose.counts
             e_ntight = e_tight.counts
+            e_nHEM = e_HEM.counts
 
             mu = Initialize({'pt':df['Muon_pt'],
                              'eta':df['Muon_eta'],
                              'phi':df['Muon_phi'],
                              'mass':df['Muon_mass']})
-            
+
             for key in mu_id[self._year]:
                 mu[key] = mu.pt.zeros_like()
                 if mu_id[self._year][key] in df:
@@ -164,6 +168,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,self._year)
             mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.tight_id,self._year)
+            mu['isHEM'] = isHEMmuon(mu.pt,mu.eta,mu.phi,mu.dxy,mu.dz,mu.iso,self._year)
 
             #print ("muon pt maximum argument:",mu.pt.argmax())
             #print ("subleading mu:",mu.pt.argsort()[:,1:2])
@@ -174,13 +179,14 @@ class AnalysisProcessor(processor.ProcessorABC):
             leading_mu = leading_mu[leading_mu.istight]
             #subleading_mu = mu[mu.pt.argsort()[:,1:2]]
 
-
             mu_loose=mu[mu.isloose]
             mu_tight=mu[mu.istight]
+            mu_HEM = mu[mu.isHEM]
 
             mu_ntot = mu.counts
             mu_nloose = mu_loose.counts
             mu_ntight = mu_tight.counts
+            mu_nHEM = mu_HEM.counts
 
             tau = Initialize({'pt':df['Tau_pt'],
                               'eta':df['Tau_eta'],
@@ -192,10 +198,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                 if tau_id[self._year][key] in df:
                     tau[key] = df[tau_id[self._year][key]]
 
-            
+
             tau['isloose']=isLooseTau(tau.pt,tau.eta,tau.decayMode,tau.id,self._year)
             tau_loose=tau[tau.isloose]
-                
+
             tau_ntot=tau.counts
             tau_nloose=tau_loose.counts
 
@@ -208,7 +214,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 pho[key] = pho.pt.zeros_like()
                 if pho_id[self._year][key] in df:
                     pho[key] = df[pho_id[self._year][key]]
-                    
+
             pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho.loose_id,pho.eleveto,self._year)
             pho['istight']=isTightPhoton(pho.pt,pho.eta,pho.tight_id,pho.eleveto,self._year)
 
@@ -217,7 +223,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             pho_loose=pho[pho.isloose]
             pho_tight=pho[pho.istight]
-                            
+
             pho_ntot=pho.counts
             pho_nloose=pho_loose.counts
             pho_ntight=pho_tight.counts
@@ -240,7 +246,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 fj[key] = fj.pt.zeros_like()
                 if deep[self._year][key] in df:
                     fj[key] = df[deep[self._year][key]]
-            
+
             #fj['probQCD'] = fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
             fj['TopTagger'] = fj.probTbcq+fj.probTbqq
             fj['DarkHiggsTagger'] = fj.probZbb + fj.probHbb #/ (fj.probZbb+fj.probHbb+fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
@@ -251,7 +257,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             fj_good = fj[fj.isgood]
             fj_clean=fj[fj.isclean]
-            
+
             fj_ntot=fj.counts
             fj_ngood=fj_good.counts
             fj_nclean=fj_clean.counts
@@ -319,7 +325,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             if ele_pairs.i0.content.size>0:
                 diele = ele_pairs.i0+ele_pairs.i1
                 leading_diele = diele[diele.pt.argmax()]
-  
+
             mu_pairs = mu_loose.distincts()
             dimu = leading_mu
             leading_dimu = leading_mu
@@ -374,7 +380,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                   'status':df['GenPart_status'], 
                                   'flags':df['GenPart_statusFlags'],
                                   'motherid':df['GenPart_genPartIdxMother']})
-        
+
                 genLastCopy = gen[gen.flags&(1 << 13)==0]
                 genTops = genLastCopy[abs(genLastCopy.pdgid)==6]
                 genWs = genLastCopy[abs(genLastCopy.pdgid)==24]
@@ -420,14 +426,14 @@ class AnalysisProcessor(processor.ProcessorABC):
             passMetTrig = False
             for path in met_trigger:
                 passMetTrig |= met_trigger[path]
-            
+
             singleele_trigger = {}
             for path in singleele_trigger_paths[self._year]:
                 if path in df:
                     singleele_trigger[path] = df[path]
             passSingleEleTrig = False
             for path in singleele_trigger:
-                passSingleEleTrig |= singleele_trigger[path] 
+                passSingleEleTrig |= singleele_trigger[path]
 
             singlepho_trigger = {}
             for path in singlepho_trigger_paths[self._year]:
@@ -447,12 +453,12 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             # Trigger efficiency weight
             ###
-            
+
             trig = {}
             trig['iszeroL'] = get_met_trig_weight(u["iszeroL"].pt,self._year)
             trig['isoneM'] = get_met_trig_weight(u["isoneM"].pt,self._year)
             trig['istwoM'] = get_met_zmm_trig_weight(u["istwoM"].pt,self._year)
-            trig['isoneE'] = get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(), 
+            trig['isoneE'] = get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum(),
                                                       np.full_like(leading_e.eta.sum(),-99),
                                                       np.full_like(leading_e.pt.sum(),-99),self._year)
             trig['istwoE'] = trig['isoneE']
@@ -467,25 +473,20 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             selections = processor.PackedSelection()
 
-            selections.add('iszeroL', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(j_nHEM==0))
-            selections.add('isoneM', (e_nloose==0)&(mu_ntight==1)&(tau_nloose==0)&(pho_nloose==0)&(j_nHEM==0))
-            selections.add('isoneE', (e_ntight==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(met.pt>50)&(j_nHEM==0))
-            selections.add('istwoM', (e_nloose==0) & (mu_nloose==2) & (tau_nloose==0)&(pho_nloose==0)&(j_nHEM==0))
-            selections.add('istwoE', (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(j_nHEM==0))
-            selections.add('isoneA', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1)&(j_nHEM==0))
+            selections.add('iszeroL', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
+            selections.add('isoneM', (e_nloose==0)&(mu_ntight==1)&(tau_nloose==0)&(pho_nloose==0))
+            selections.add('isoneE', (e_ntight==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(met.pt>50))
+            selections.add('istwoM', (e_nloose==0) & (mu_ntight>=1) & (mu_nloose==2) & (tau_nloose==0)&(pho_nloose==0))
+            selections.add('istwoE', (e_ntight>=1) & (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
+            selections.add('isoneA', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1))
             selections.add('topveto', (leading_fj.TopTagger.sum()<0.25))
             selections.add('noextrab', (j_ndflvL==0))
             selections.add('extrab', (j_ndflvL>0))
             selections.add('ismonohs', (leading_fj.DarkHiggsTagger.sum()>0.2))
             selections.add('ismonoV', ~(leading_fj.DarkHiggsTagger.sum()>0.2)&(leading_fj.VvsQCDTagger.sum()>0.8))
             selections.add('ismonojet', ~(leading_fj.DarkHiggsTagger.sum()>0.2)&~(leading_fj.VvsQCDTagger.sum()>0.8))
-
-            #selections.add('iszeroL', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
-            #selections.add('isoneM', (e_nloose==0)&(mu_ntight==1)&(tau_nloose==0)&(pho_nloose==0))
-            #selections.add('isoneE', (e_ntight==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(met.pt>50))
-            #selections.add('istwoM', (e_nloose==0) & (mu_nloose==2) & (tau_nloose==0)&(pho_nloose==0))
-            #selections.add('istwoE', (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
-            #selections.add('isoneA', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1))
+            selections.add('noHEMj', (j_nHEM==0))
+            selections.add('noHEMl', (e_nHEM==0)&(mu_nHEM==0))
 
             #selections.add('istwoM', (e_nloose==0) & (mu_ntight==1) & (mu_nloose==2) & (tau_nloose==0)&(pho_nloose==0)&(leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120))
             #selections.add('istwoE', (e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
@@ -514,6 +515,9 @@ class AnalysisProcessor(processor.ProcessorABC):
                 selections.add(k+'baggy', (fj_nclean>0)&(fj_clean.pt.max()>160)&(u[k].pt>250))
 
                 regions[k+'_baggy'] =  {k,k+'baggy'}
+                regions[k+'_baggy_noHEMj'] = {k, k+'baggy','noHEMj'}
+                regions[k+'_baggy_noHEMl'] = {k, k+'baggy','noHEMl'}
+                regions[k+'_baggy_noHEM'] = {k, k+'baggy','noHEMj', 'noHEMl'}
                 regions[k+'_topveto'] =  {k,k+'baggy','topveto','noextrab'}
                 for s in ['ismonohs','ismonoV','ismonojet']:
                     regions[k+'_'+s] = {k,k+'baggy','topveto','noextrab',s}
@@ -572,11 +576,11 @@ class AnalysisProcessor(processor.ProcessorABC):
                     continue
                 i = 0
                 if histname == 'sumw':
-                    h.fill(dataset=dataset, sumw=1, weight=sumw)                
+                    h.fill(dataset=dataset, sumw=1, weight=sumw)
                 else:
                     while i < len(self._selected_regions):
                         r = self._selected_regions[i]
-                        for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto','ismonohs_extrab']:
+                        for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto','ismonohs_extrab','baggy_noHEMj','baggy_noHEMl','baggy_noHEM']:
                             weight = weights[r].weight()
                             #print(weight)
                             cut = selections.all(*regions[r+'_'+s])
