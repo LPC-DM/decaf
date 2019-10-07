@@ -6,17 +6,17 @@ Just a giant list of processes and properties
 processes =    {
 
         #data
-        'MET':('MET','Data',1), # used
-        'EGamma':('EGamma','Data',1), # used
+        'MET':('MET','Data',1),
+        'EGamma':('EGamma','Data',1),
         #'MuonEG':('MuonEG','Data',1),
         #'SingleMuon':('SingleMuon','Data',1),
         #'DoubleMuon':('DoubleMuon','Data',1),
         #'DoubleEG':('DoubleEG','Data',1),
-        'SingleElectron':('SingleElectron','Data',1), # used
-        'SinglePhoton':('SinglePhoton','Data',1), # used
+        'SingleElectron':('SingleElectron','Data',1),
+        'SinglePhoton':('SinglePhoton','Data',1),
         #'JetHT':('JetHT','Data',1),
 
-        # inclusive NLO V+jets # used
+        # inclusive NLO V+jets 
         'DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8':('ZJets_nlo','MC',6025.2),
         'DYJetsToNuNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8':('ZtoNuNu_nlo','MC',11433.),
         'WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8':('WJets_nlo','MC',61527.),
