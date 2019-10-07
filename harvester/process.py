@@ -6,17 +6,17 @@ Just a giant list of processes and properties
 processes =    {
 
         #data
-        'MET':('MET','Data',1),
-        'EGamma':('EGamma','Data',1),
+        'MET':('MET','Data',1), # used
+        'EGamma':('EGamma','Data',1), # used
         #'MuonEG':('MuonEG','Data',1),
         #'SingleMuon':('SingleMuon','Data',1),
         #'DoubleMuon':('DoubleMuon','Data',1),
         #'DoubleEG':('DoubleEG','Data',1),
-        'SingleElectron':('SingleElectron','Data',1),
-        'SinglePhoton':('SinglePhoton','Data',1),
+        'SingleElectron':('SingleElectron','Data',1), # used
+        'SinglePhoton':('SinglePhoton','Data',1), # used
         #'JetHT':('JetHT','Data',1),
 
-        # inclusive NLO V+jets
+        # inclusive NLO V+jets # used
         'DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8':('ZJets_nlo','MC',6025.2),
         'DYJetsToNuNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8':('ZtoNuNu_nlo','MC',11433.),
         'WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8':('WJets_nlo','MC',61527.),
@@ -215,7 +215,7 @@ processes =    {
         'TTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8':('TTZToQQ','MC',0.5297),
         'TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8':('TTWJetsToLNu','MC',0.2043),
         'TTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8':('TTWJetsToQQ','MC',0.4062),
-        
+
         'TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8':('TTTo2L2Nu_CP5','MC',88.288),
         'TTTo2L2Nu_TuneCP5_PSweights_13TeV-powheg-pythia8':('TTTo2L2Nu_CP5_PSweights','MC',88.288),
         'TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8':('TTToSemiLeptonic_CP5','MC',1),
@@ -316,11 +316,11 @@ processes =    {
         #'Mjet1DM_LO_MZprime_1000_Mhs_50_Mchi_100_gSM_0p25_gDM_1p0_th_0p01_13TeV_madgraph':('Mjet1DM_LO_MZprime_1000_Mhs_50_Mchi_100_gSM_0p25_gDM_1p0_th_0p01_13TeV_madgraph','MC',1)
 
         # New Signals
-        'MonoHs_Mzprime_500_Mhs_50_Mchi_150':('MonoHs_Mzprime_500_Mhs_50_Mchi_150','MC',0.2934),
-        'MonoHs_Mzprime_500_Mhs_70_Mchi_150':('MonoHs_Mzprime_500_Mhs_70_Mchi_150','MC',0.2565),
-        'MonoHs_Mzprime_500_Mhs_90_Mchi_150':('MonoHs_Mzprime_500_Mhs_90_Mchi_150','MC',0.2240),
-        'MonoJet_Mzprime_500_Mchi_150':('MonoJet_Mzprime_500_Mchi_150','MC',3.044),
-        'MonoW_Mzprime_500_Mchi_150':('MonoW_Mzprime_500_Mchi_150','MC',0.03469),
-        'MonoZ_Mzprime_500_Mchi_150':('MonoZ_Mzprime_500_Mchi_150','MC',0.01093),
+        'MonoHs_Mzprime_500_Mhs_50_Mchi_150_2018':('MonoHs_Mzprime_500_Mhs_50_Mchi_150','MC',0.5302),
+        'MonoHs_Mzprime_500_Mhs_70_Mchi_150_2018':('MonoHs_Mzprime_500_Mhs_70_Mchi_150','MC',0.7758),
+        'MonoHs_Mzprime_500_Mhs_90_Mchi_150_2018':('MonoHs_Mzprime_500_Mhs_90_Mchi_150','MC',0.6745),
+        'MonoJet_Mzprime_500_Mchi_150_2018':('MonoJet_Mzprime_500_Mchi_150','MC',2.621),
+        'MonoW_Mzprime_500_Mchi_150_2018':('MonoW_Mzprime_500_Mchi_150','MC',0.05872),
+        'MonoZ_Mzprime_500_Mchi_150_2018':('MonoZ_Mzprime_500_Mchi_150','MC',0.01820),
 
 }
