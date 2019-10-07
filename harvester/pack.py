@@ -25,12 +25,7 @@ beans={}
 beans['2016'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/102X/nano_2016"]
 beans['2017'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/102X/nano_2017"]
 beans['2018'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/102X/nano_2018",
-                 "/eos/uscms/store/user/jongho/DarkHiggs/nanoAOD/MonoHs_Mzprime_500_Mhs_50_Mchi_150",
-                 "/eos/uscms/store/user/jongho/DarkHiggs/nanoAOD/MonoHs_Mzprime_500_Mhs_70_Mchi_150",
-                 "/eos/uscms/store/user/jongho/DarkHiggs/nanoAOD/MonoHs_Mzprime_500_Mhs_90_Mchi_150",
-                 "/eos/uscms/store/user/jongho/DarkHiggs/nanoAOD/MonoJet_Mzprime_500_Mchi_150",
-                 "/eos/uscms/store/user/jongho/DarkHiggs/nanoAOD/MonoW_Mzprime_500_Mchi_150",
-                 "/eos/uscms/store/user/jongho/DarkHiggs/nanoAOD/MonoZ_Mzprime_500_Mchi_150"]
+                 "/eos/uscms/store/user/jongho/DarkHiggs/nanoAOD/nJetMax1"]
 
 def split(arr, size):
      arrs = []
