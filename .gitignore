@@ -9,3 +9,4 @@ saiyan
 *out
 *.nfs0000003717774a2d000002c7
 docker_stderror
+grinder/pods/*
