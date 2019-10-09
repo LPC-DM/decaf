@@ -42,9 +42,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             'mindphi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mindphi","Min dPhi(MET,AK4s)",30,0,3.5)),
             'diledphi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("diledphi","Min dPhi(Dileptons,AK4s)",30,0,3.5)),
             'ledphi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("ledphi","Min dPhi(lepton,AK4s)",30,0,3.5)),
-            'mindR': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mindR","Min dR(MET,AK4s)",30,0,5)),
-            'diledR': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("diledR","Min dR(Dileptons,AK4s)",30,0,5)),
-            'ledR': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("ledR","Min dR(lepton,AK4s)",30,0,5)),
             'j1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("j1pt","AK4 Leading Jet Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
             'j1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("j1eta","AK4 Leading Jet Eta",35,-3.5,3.5)),
             'j1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("j1phi","AK4 Leading Jet Phi",35,-3.5,3.5)),
@@ -142,19 +139,16 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,self._year)
             e['istight'] = isTightElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.tight_id,self._year)
-            e['isHEM'] = isHEMelectron(e.pt,e.eta,e.phi,e.dxy,e.dz,e.iso,self._year)
 
             leading_e = e[e.pt.argmax()]
             leading_e = leading_e[leading_e.istight]
 
             e_loose = e[e.isloose]
             e_tight = e[e.istight]
-            e_HEM = e[e.isHEM]
 
             e_ntot = e.counts
             e_nloose = e_loose.counts
             e_ntight = e_tight.counts
-            e_nHEM = e_HEM.counts
 
             mu = Initialize({'pt':df['Muon_pt'],
                              'eta':df['Muon_eta'],
@@ -168,7 +162,6 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.med_id,self._year)
             mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.tight_id,self._year)
-            mu['isHEM'] = isHEMmuon(mu.pt,mu.eta,mu.phi,mu.dxy,mu.dz,mu.iso,self._year)
 
             #print ("muon pt maximum argument:",mu.pt.argmax())
             #print ("subleading mu:",mu.pt.argsort()[:,1:2])
@@ -181,12 +174,10 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             mu_loose=mu[mu.isloose]
             mu_tight=mu[mu.istight]
-            mu_HEM = mu[mu.isHEM]
 
             mu_ntot = mu.counts
             mu_nloose = mu_loose.counts
             mu_ntight = mu_tight.counts
-            mu_nHEM = mu_HEM.counts
 
             tau = Initialize({'pt':df['Tau_pt'],
                               'eta':df['Tau_eta'],
@@ -279,9 +270,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                     j[key] = df[j_id[self._year][key]]
 
             j['isgood'] = isGoodJet(j.pt, j.eta, j.id, j.nhf, j.nef, j.chf, j.cef)
-            j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi, j.id, j.nhf, j.nef, j.chf, j.cef)
+            j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
             j['isclean'] = ~j.match(e_loose,0.4)&~j.match(mu_loose,0.4)&~j.match(pho_loose,0.4)&j.isgood
-            #j['isclean'] = ~j.match(e_loose,0.4)&~j.match(mu_loose,0.4)&~j.match(pho_loose,0.4)&j.isgood
             #j['isclean'] = ~j.match(e_tight,0.4)&~j.match(mu_tight,0.4)&~j.match(pho_tight,0.4)&j.isgood
             j['isiso'] =  ~(j.match(fj_clean,1.5))&j.isclean
             #j['isHEMpass'] = (j.pt>30) & ~((j.eta>-3.0)&(j.eta<-1.4)) & ~((j.phi>-1.57)&(j.phi<-0.87)) & j.isiso
@@ -488,7 +478,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             selections.add('ismonoV', ~(leading_fj.DarkHiggsTagger.sum()>0.2)&(leading_fj.VvsQCDTagger.sum()>0.8))
             selections.add('ismonojet', ~(leading_fj.DarkHiggsTagger.sum()>0.2)&~(leading_fj.VvsQCDTagger.sum()>0.8))
             selections.add('noHEMj', (j_nHEM==0))
-            selections.add('noHEMl', (e_nHEM==0)&(mu_nHEM==0))
 
             #selections.add('istwoM', (e_nloose==0) & (mu_ntight==1) & (mu_nloose==2) & (tau_nloose==0)&(pho_nloose==0)&(leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120))
             #selections.add('istwoE', (e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
@@ -515,14 +504,11 @@ class AnalysisProcessor(processor.ProcessorABC):
                 selections.add(k+'baggy', (fj_nclean>0)&(fj_clean.pt.max()>160)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250))
                 #selections.add(k+'baggy', (fj_nclean>0)&(fj_clean.pt.max()>160)&(u[k].pt>250))
 
-                regions[k+'_baggy'] =  {k,k+'baggy'}
-                regions[k+'_baggy_noHEMj'] = {k, k+'baggy','noHEMj'}
-                regions[k+'_baggy_noHEMl'] = {k, k+'baggy','noHEMl'}
-                regions[k+'_baggy_noHEM'] = {k, k+'baggy','noHEMj', 'noHEMl'}
-                regions[k+'_topveto'] =  {k,k+'baggy','topveto','noextrab'}
+                regions[k+'_baggy'] =  {k,k+'baggy','noHEMj'}
+                regions[k+'_topveto'] =  {k,k+'baggy','topveto','noextrab','noHEMj'}
                 for s in ['ismonohs','ismonoV','ismonojet']:
-                    regions[k+'_'+s] = {k,k+'baggy','topveto','noextrab',s}
-                regions[k+'_ismonohs'+'_extrab'] = {k,k+'baggy','topveto','extrab','ismonohs'}
+                    regions[k+'_'+s] = {k,k+'baggy','topveto','noextrab','noHEMj',s}
+                regions[k+'_ismonohs'+'_extrab'] = {k,k+'baggy','topveto','extrab','ismonohs','noHEMj'}
 
             variables = {}
             variables['j1pt'] = leading_j.pt.sum()
@@ -581,7 +567,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 else:
                     while i < len(self._selected_regions[dataset]):
                         r = self._selected_regions[dataset][i]
-                        for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto','ismonohs_extrab','baggy_noHEMj','baggy_noHEMl','baggy_noHEM']:
+                        for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto','ismonohs_extrab']:
                             weight = weights[r].weight()
                             #print(weight)
                             cut = selections.all(*regions[r+'_'+s])
@@ -595,12 +581,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                                 h.fill(dataset=dataset, region=r, jet_selection=s, diledphi=abs(lepSys[r].delta_phi(j_clean)).min(), weight=weight*cut)
                             elif histname == 'ledphi':
                                 h.fill(dataset=dataset, region=r, jet_selection=s, ledphi=abs(leadlepton[r].delta_phi(j_clean)).min(), weight=weight*cut)
-                            elif histname == 'mindR':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, mindR=abs(u[r].delta_r(j_clean)).min(), weight=weight*cut)
-                            elif histname == 'diledR':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, diledR=abs(lepSys[r].delta_r(j_clean)).min(), weight=weight*cut)
-                            elif histname == 'ledR':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, ledR=abs(leadlepton[r].delta_r(j_clean)).min(), weight=weight*cut)
                             elif histname == 'recoilVSmindphi':
                                 h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=weight*cut)
                             else:

@@ -27,20 +27,10 @@ def isTightElectron(pt,eta,dxy,dz,iso,tight_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
         mask = ((pt>40)&(abs(eta)<2.5)&(tight_id==4)) # Trigger: HLT_Ele27_WPTight_Gsf_v
-    elif year=='2017':  
+    elif year=='2017':
         mask = ((pt>40)&(abs(eta)<2.5)&(tight_id==4)) # Trigger: HLT_Ele35_WPTight_Gsf_v
     elif year=='2018':
         mask = ((pt>40)&(abs(eta)<2.5)&(tight_id==4)) # Trigger: HLT_Ele32_WPTight_Gsf_v
-    return mask
-
-def isHEMelectron(pt,eta,phi,dxy,dz,iso,year):
-    mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
-    if year=='2016':
-        mask = ((pt>30)& ((eta>-3.0)&(eta<-1.4)) & ((phi>-1.57)&(phi<-0.87)))
-    elif year=='2017':
-        mask = ((pt>30)& ((eta>-3.0)&(eta<-1.4)) & ((phi>-1.57)&(phi<-0.87)))
-    elif year=='2018':
-        mask = ((pt>30)& ((eta>-3.0)&(eta<-1.4)) & ((phi>-1.57)&(phi<-0.87)))
     return mask
 
 mu_id = {}
@@ -74,17 +64,6 @@ def isTightMuon(pt,eta,dxy,dz,iso,tight_id,year):
         mask = (pt>20)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
     elif year=='2018':
         mask = (pt>20)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
-    return mask
-
-def isHEMmuon(pt,eta,phi,dxy,dz,iso,year):
-    #dxy and dz cuts are baked on tight_id; tight isolation is 0.15
-    mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
-    if year=='2016':
-        mask = ((pt>30)& ((eta>-3.0)&(eta<-1.4)) & ((phi>-1.57)&(phi<-0.87)))
-    elif year=='2017':
-        mask = ((pt>30)& ((eta>-3.0)&(eta<-1.4)) & ((phi>-1.57)&(phi<-0.87)))
-    elif year=='2018':
-        mask = ((pt>30)& ((eta>-3.0)&(eta<-1.4)) & ((phi>-1.57)&(phi<-0.87)))
     return mask
 
 tau_id = {}
@@ -163,6 +142,6 @@ def isGoodJet(pt, eta, jet_id, nhf, nef, chf, cef):
     mask = (pt>25) & (abs(eta)<2.4) & ((jet_id&2)==2) & (nhf<0.8) & (nef<0.99) & (chf>0.1) & (cef<0.99)
     return mask
 
-def isHEMJet(pt, eta, phi, jet_id, nhf, nef, chf, cef):
-    mask = (pt>30) & ((eta>-2.4)&(eta<-1.4)) & ((phi>-1.57)&(phi<-0.87))
+def isHEMJet(pt, eta, phi):
+    mask = (pt>30) & ((eta>-3.0)&(eta<-1.3)) & ((phi>-1.57)&(phi<-0.87))
     return mask
