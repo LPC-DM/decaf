@@ -29,22 +29,24 @@ if options.lumi: lumi=1000.*options.lumi
 
 with open("../harvester/beans/"+options.year+".json") as fin:
     samplefiles = json.load(fin)
-    
 xsec = {k: v['xs'] for k,v in samplefiles.items()}
+
 fileslice = slice(None)
 
 for dataset, info in samplefiles.items():
-    selections = []
     filelist = {}
     if options.dataset and options.dataset not in dataset: continue
     files = []
     for file in info['files'][fileslice]:
         files.append(file)
     filelist[dataset] = files
+
+    selections = {}
+    if not dataset in selections: selections[dataset] = []
     for selection,v in samples.items():
         for i in range (0,len(v)):
             if v[i] not in dataset: continue
-            selections.append(selection)
+            selections[dataset].append(selection)
 
     processor_instance=AnalysisProcessor(selected_regions=selections, year=options.year, xsec=xsec, lumi=lumi)
     tstart = time.time()

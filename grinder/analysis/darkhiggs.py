@@ -199,7 +199,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                     tau[key] = df[tau_id[self._year][key]]
 
 
-            tau['isloose']=isLooseTau(tau.pt,tau.eta,tau.decayMode,tau.id,self._year)
+            tau['isclean'] =~tau.match(mu_loose,0.3)&~tau.match(e_loose,0.3)
+            tau['isloose']=isLooseTau(tau.pt,tau.eta,tau.decayMode,tau.id,self._year)&tau.isclean
             tau_loose=tau[tau.isloose]
 
             tau_ntot=tau.counts
@@ -215,8 +216,9 @@ class AnalysisProcessor(processor.ProcessorABC):
                 if pho_id[self._year][key] in df:
                     pho[key] = df[pho_id[self._year][key]]
 
-            pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho.loose_id,pho.eleveto,self._year)
-            pho['istight']=isTightPhoton(pho.pt,pho.eta,pho.tight_id,pho.eleveto,self._year)
+            pho['isclean'] =~pho.match(e_loose,0.4)
+            pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho.loose_id,pho.eleveto,self._year)&pho.isclean
+            pho['istight']=isTightPhoton(pho.pt,pho.eta,pho.tight_id,pho.eleveto,self._year)&pho.isclean
 
             leading_pho = pho[pho.pt.argmax()]
             leading_pho = leading_pho[leading_pho.istight]
@@ -497,8 +499,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             weights = {}
             regions = {}
-            for k in self._selected_regions:
-
+            for k in self._selected_regions[dataset]:
                 weights[k] = processor.Weights(df.size)
                 weights[k].add('nlo',wnlo)
                 weights[k].add('genw',genw)
@@ -578,8 +579,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 if histname == 'sumw':
                     h.fill(dataset=dataset, sumw=1, weight=sumw)
                 else:
-                    while i < len(self._selected_regions):
-                        r = self._selected_regions[i]
+                    while i < len(self._selected_regions[dataset]):
+                        r = self._selected_regions[dataset][i]
                         for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto','ismonohs_extrab','baggy_noHEMj','baggy_noHEMl','baggy_noHEM']:
                             weight = weights[r].weight()
                             #print(weight)
