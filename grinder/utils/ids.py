@@ -48,11 +48,11 @@ def isLooseMuon(pt,eta,dxy,dz,iso,med_id,year):
     #dxy and dz cuts are missing from med_id; very loose isolation is 0.4
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>10)&(abs(eta)<2.4)&(med_id >= 0)&(iso<0.25)
+        mask = (pt>10)&(abs(eta)<2.4)&(med_id>0)&(iso<0.25)
     elif year=='2017':
-        mask = (pt>10)&(abs(eta)<2.4)&(med_id >= 0)&(iso<0.25)
+        mask = (pt>10)&(abs(eta)<2.4)&(med_id>0)&(iso<0.25)
     elif year=='2018':
-        mask = (pt>10)&(abs(eta)<2.4)&(med_id >= 0)&(iso<0.25)
+        mask = (pt>10)&(abs(eta)<2.4)&(med_id>0)&(iso<0.25)
     return mask
 
 def isTightMuon(pt,eta,dxy,dz,iso,tight_id,year):
@@ -68,13 +68,13 @@ def isTightMuon(pt,eta,dxy,dz,iso,tight_id,year):
 
 tau_id = {}
 tau_id['2016'] = {}
-tau_id['2016']['id'] = 'Tau_idMVAoldDM2017v2'
+tau_id['2016']['id'] = 'Tau_idDecayModeNewDMs'
 tau_id['2016']['decayMode'] = 'Tau_idDecayMode'
+#tau_id['2016']['clean']= 'Tau_cleanmask' 
 tau_id['2017'] = tau_id['2016']
 tau_id['2018'] = tau_id['2016']
-
-#Tau_idMVAnewDM2017v2
 #bitmask 1 = VVLoose, 2 = VLoose, 4 = Loose, 8 = Medium, 16 = Tight, 32 = VTight, 64 = VVTight
+
 def isLooseTau(pt,eta,decayMode,_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
@@ -95,7 +95,7 @@ pho_id['2017'] = pho_id['2016']
 pho_id['2018'] = pho_id['2016']
 
 #Photon_cutBasedBitmap  Int_t   cut-based ID bitmap, 2^(0:loose, 1:medium, 2:tight)
-# Photon IDs:  https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedPhotonIdentificationRun2?rev=36
+#Photon IDs:  https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedPhotonIdentificationRun2?rev=36
 def isLoosePhoton(pt,eta,loose_id,eleveto,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
