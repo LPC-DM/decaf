@@ -16,11 +16,11 @@ e_id['2018'] = e_id['2016']
 def isLooseElectron(pt,eta,dxy,dz,iso,loose_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = ((pt>10)&(abs(eta)<2.5)&(loose_id==1))
+        mask = ((pt>20)&(abs(eta)<2.5)&(loose_id>=1))
     elif year=='2017':
-        mask = ((pt>10)&(abs(eta)<2.5)&(loose_id==1))
+        mask = ((pt>20)&(abs(eta)<2.5)&(loose_id>=1))
     elif year=='2018':
-        mask = ((pt>10)&(abs(eta)<2.5)&(loose_id==1))
+        mask = ((pt>20)&(abs(eta)<2.5)&(loose_id>=1))
     return mask
 
 def isTightElectron(pt,eta,dxy,dz,iso,tight_id,year):
@@ -48,11 +48,11 @@ def isLooseMuon(pt,eta,dxy,dz,iso,med_id,year):
     #dxy and dz cuts are missing from med_id; very loose isolation is 0.4
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>20)&(abs(eta)<2.4)&(med_id>0)&(iso<0.25)
+        mask = (pt>10)&(abs(eta)<2.4)&(med_id>0)&(iso<0.25)
     elif year=='2017':
-        mask = (pt>20)&(abs(eta)<2.4)&(med_id>0)&(iso<0.25)
+        mask = (pt>10)&(abs(eta)<2.4)&(med_id>0)&(iso<0.25)
     elif year=='2018':
-        mask = (pt>20)&(abs(eta)<2.4)&(med_id>0)&(iso<0.25)
+        mask = (pt>10)&(abs(eta)<2.4)&(med_id>0)&(iso<0.25)
     return mask
 
 def isTightMuon(pt,eta,dxy,dz,iso,tight_id,year):
@@ -99,11 +99,11 @@ pho_id['2018'] = pho_id['2016']
 def isLoosePhoton(pt,eta,loose_id,eleveto,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&2)>=1)&(eleveto)
+        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&2)==1)&(eleveto)
     elif year=='2017':
-        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&2)>=1)&(eleveto)
+        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&2)==1)&(eleveto)
     elif year=='2018':
-        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&2)>=1)&(eleveto)
+        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&2)==1)&(eleveto)
     return mask
 
 def isTightPhoton(pt,eta,tight_id,eleveto,year):
