@@ -27,7 +27,7 @@ def isTightElectron(pt,eta,dxy,dz,iso,tight_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
         mask = ((pt>40)&(abs(eta)<2.5)&(tight_id==4)) # Trigger: HLT_Ele27_WPTight_Gsf_v
-    elif year=='2017':
+    elif year=='2017':  
         mask = ((pt>40)&(abs(eta)<2.5)&(tight_id==4)) # Trigger: HLT_Ele35_WPTight_Gsf_v
     elif year=='2018':
         mask = ((pt>40)&(abs(eta)<2.5)&(tight_id==4)) # Trigger: HLT_Ele32_WPTight_Gsf_v
@@ -99,11 +99,11 @@ pho_id['2018'] = pho_id['2016']
 def isLoosePhoton(pt,eta,loose_id,eleveto,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&2)==1)&(eleveto)
+        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&1)==1)&(eleveto)
     elif year=='2017':
-        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&2)==1)&(eleveto)
+        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&1)==1)&(eleveto)
     elif year=='2018':
-        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&2)==1)&(eleveto)
+        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&1)==1)&(eleveto)
     return mask
 
 def isTightPhoton(pt,eta,tight_id,eleveto,year):
