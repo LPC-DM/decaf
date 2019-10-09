@@ -68,7 +68,7 @@ def isTightMuon(pt,eta,dxy,dz,iso,tight_id,year):
 
 tau_id = {}
 tau_id['2016'] = {}
-tau_id['2016']['id'] = 'Tau_idDecayModeNewDMs'
+tau_id['2016']['id'] = 'Tau_idMVAoldDM2017v2'
 tau_id['2016']['decayMode'] = 'Tau_idDecayMode'
 #tau_id['2016']['clean']= 'Tau_cleanmask' 
 tau_id['2017'] = tau_id['2016']
