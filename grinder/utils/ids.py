@@ -8,6 +8,7 @@ e_id['2016']['loose_id'] = 'Electron_cutBased'
 e_id['2016']['tight_id'] = 'Electron_cutBased'
 e_id['2016']['dxy'] = 'Electron_dxy'
 e_id['2016']['dz'] = 'Electron_dz'
+e_id['2016']['iso'] = 'Null'
 e_id['2017'] = e_id['2016']
 e_id['2018'] = e_id['2016']
 
