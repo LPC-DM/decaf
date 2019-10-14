@@ -584,7 +584,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                             h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=weight*cut)
                         else:
                             h.fill(dataset=dataset, region=r, jet_selection=s, **flat_variables, weight=flat_weights[histname])
-                        i += 1
+                i += 1
             return hout
 
     def postprocess(self, accumulator):
