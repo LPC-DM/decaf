@@ -90,7 +90,7 @@ def get_ttbar_weight(pt):
 
 def get_nlo_weight(type, pt):
     #print('The pT is:',pt)
-    kfactor = uproot.open("data/nlo/kfactors.root")
+    kfactor = uproot.open("data/nlo/kfactor_24bins.root")
     sf_qcd = 1
     sf_ewk = 1
     #sf_qcd2j = 1
@@ -99,16 +99,19 @@ def get_nlo_weight(type, pt):
     lo['z'] = "ZJets_LO/inv_pt"    
     lo['w'] = "WJets_LO/inv_pt"
     lo['a'] = "GJets_LO/inv_pt_G"
+    lo['d'] = "DYJets_LO/inv_pt"
 
     nlo = {}
     nlo['z'] = "ZJets_012j_NLO/nominal"
     nlo['w'] = "WJets_012j_NLO/nominal"
     nlo['a'] = "GJets_1j_NLO/nominal_G"
+    nlo['d'] = "DYJets_012j_NLO/nominal"
 
     ewk = {}
     ewk['z'] = "EWKcorr/Z"
     ewk['w'] = "EWKcorr/W"
     ewk['a'] = "EWKcorr/photon"
+    ewk['d'] = "EWKcorr/DY"
 
     LO = kfactor[lo[type]].values
     NLO = kfactor[nlo[type]].values
