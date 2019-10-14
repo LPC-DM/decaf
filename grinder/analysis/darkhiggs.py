@@ -11,8 +11,8 @@ from utils.triggers import met_trigger_paths, singleele_trigger_paths, singlepho
 from utils.corrections import get_ttbar_weight, get_nlo_weight, get_pu_weight
 from utils.corrections import get_met_trig_weight, get_met_zmm_trig_weight, get_ele_trig_weight, get_pho_trig_weight
 from utils.corrections import get_ecal_bad_calib
-from utils.ids import e_id, isLooseElectron, isTightElectron, isHEMelectron
-from utils.ids import mu_id, isLooseMuon, isTightMuon, isHEMmuon
+from utils.ids import e_id, isLooseElectron, isTightElectron
+from utils.ids import mu_id, isLooseMuon, isTightMuon
 from utils.ids import tau_id, isLooseTau
 from utils.ids import pho_id, isLoosePhoton, isTightPhoton
 from utils.ids import j_id, fj_id, isGoodJet, isGoodFatJet, isHEMJet
