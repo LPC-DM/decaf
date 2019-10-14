@@ -274,7 +274,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             j['isclean'] = ~j.match(e_loose,0.4)&~j.match(mu_loose,0.4)&~j.match(pho_loose,0.4)&j.isgood
             #j['isclean'] = ~j.match(e_tight,0.4)&~j.match(mu_tight,0.4)&~j.match(pho_tight,0.4)&j.isgood
             j['isiso'] =  ~(j.match(fj_clean,1.5))&j.isclean
-            #j['isHEMpass'] = (j.pt>30) & ~((j.eta>-3.0)&(j.eta<-1.4)) & ~((j.phi>-1.57)&(j.phi<-0.87)) & j.isiso
             j['isdcsvL'] = (j.deepcsv>0.1241)&j.isiso
             j['isdflvL'] = (j.deepflv>0.0494)&j.isiso
             j['isdcsvM'] = (j.deepcsv>0.4184)&j.isiso
@@ -558,33 +557,33 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['probQCDothers'] = leading_fj.probQCDothers.sum()
 
             hout = self.accumulator.identity()
-            for histname, h in hout.items():
-                if not isinstance(h, hist.Hist):
-                    continue
-                i = 0
-                if histname == 'sumw':
-                    h.fill(dataset=dataset, sumw=1, weight=sumw)
-                else:
-                    while i < len(self._selected_regions[dataset]):
-                        r = self._selected_regions[dataset][i]
-                        for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto','ismonohs_extrab']:
-                            weight = weights[r].weight()
-                            #print(weight)
-                            cut = selections.all(*regions[r+'_'+s])
-                            if histname == 'recoil':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, weight=weight*cut)
-                            elif histname == 'CaloMinusPfOverRecoil':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[r].pt, weight=weight*cut)
-                            elif histname == 'mindphi':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=weight*cut)
-                            elif histname == 'diledphi':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, diledphi=abs(lepSys[r].delta_phi(j_clean)).min(), weight=weight*cut)
-                            elif histname == 'ledphi':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, ledphi=abs(leadlepton[r].delta_phi(j_clean)).min(), weight=weight*cut)
-                            elif histname == 'recoilVSmindphi':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=weight*cut)
-                            else:
-                                h.fill(dataset=dataset, region=r, jet_selection=s, **variables, weight=weight*cut)
+            i = 0
+            while i < len(self._selected_regions[dataset]):
+                r = self._selected_regions[dataset][i]
+                weight = weights[r].weight()
+                for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto','ismonohs_extrab']:
+                    cut = selections.all(*regions[r+'_'+s])
+                    flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
+                    flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
+                    for histname, h in hout.items():
+                        if not isinstance(h, hist.Hist):
+                            continue
+                        if histname == 'sumw':
+                            h.fill(dataset=dataset, sumw=1, weight=sumw)
+                        elif histname == 'recoil':
+                            h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, weight=weight*cut)
+                        elif histname == 'CaloMinusPfOverRecoil':
+                            h.fill(dataset=dataset, region=r, jet_selection=s, CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[r].pt, weight=weight*cut)
+                        elif histname == 'mindphi':
+                            h.fill(dataset=dataset, region=r, jet_selection=s, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=weight*cut)
+                        elif histname == 'diledphi':
+                            h.fill(dataset=dataset, region=r, jet_selection=s, diledphi=abs(lepSys[r].delta_phi(j_clean)).min(), weight=weight*cut)
+                        elif histname == 'ledphi':
+                            h.fill(dataset=dataset, region=r, jet_selection=s, ledphi=abs(leadlepton[r].delta_phi(j_clean)).min(), weight=weight*cut)
+                        elif histname == 'recoilVSmindphi':
+                            h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=weight*cut)
+                        else:
+                            h.fill(dataset=dataset, region=r, jet_selection=s, **flat_variables, weight=flat_weights[histname])
                         i += 1
             return hout
 
