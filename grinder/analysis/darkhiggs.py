@@ -378,19 +378,17 @@ class AnalysisProcessor(processor.ProcessorABC):
                 genZs   = genLastCopy[abs(genLastCopy.pdgid)==23]
                 genAs   = genLastCopy[abs(genLastCopy.pdgid)==22]
                 genHs   = genLastCopy[abs(genLastCopy.pdgid)==25]
-                genDs   = genLastCopy[abs(genLastCopy.pdgid)==32]
 
-                isTT = (genTops.counts==2)
-                isW  = (genTops.counts==0)&(genWs.counts==1)&(genZs.counts==0)&(genAs.counts==0)&(genDs.counts==0)&(genHs.counts==0)
-                isZ  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==1)&(genAs.counts==0)&(genDs.counts==0)&(genHs.counts==0)
-                isA  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==1)&(genDs.counts==0)&(genHs.counts==0)
-                isDY = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==0)&(genDs.counts==1)&(genHs.counts==0)
+                #isTT = (genTops.counts==2)
+                #isW  = (genTops.counts==0)&(genWs.counts==1)&(genZs.counts==0)&(genAs.counts==0)&(genDs.counts==0)&(genHs.counts==0)
+                #isZ  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==1)&(genAs.counts==0)&(genDs.counts==0)&(genHs.counts==0)
+                #isA  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==1)&(genDs.counts==0)&(genHs.counts==0)
+                #isDY = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==0)&(genDs.counts==1)&(genHs.counts==0)
 
                 if  ('TTJets'   in dataset): wnlo = np.sqrt(get_ttbar_weight(genTops[0].pt.sum()) * get_ttbar_weight(genTops[1].pt.sum()))
                 elif('WJets'    in dataset): wnlo = get_nlo_weight('w',genWs[0].pt.sum())
-                elif('ZJets'    in dataset): wnlo = get_nlo_weight('z',genZs[0].pt.sum())
-                elif('GJets'    in dataset): wnlo = get_nlo_weight('a',genAs[0].pt.sum())
-                elif('DY'       in dataset): wnlo = get_nlo_weight('d',genDs[0].pt.sum())    
+                elif('DY' in dataset or 'ZJets' in dataset): wnlo = get_nlo_weight('z',genZs[0].pt.sum())
+                elif('GJets' in dataset): wnlo = get_nlo_weight('a',genAs[0].pt.sum())    
                 
 
             ###
