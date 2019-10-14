@@ -139,16 +139,19 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,self._year)
             e['istight'] = isTightElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.tight_id,self._year)
+            e['isHEM'] = isHEMelectron(e.pt,e.eta,e.phi,e.dxy,e.dz,e.iso,self._year)
 
             leading_e = e[e.pt.argmax()]
             leading_e = leading_e[leading_e.istight]
 
             e_loose = e[e.isloose]
             e_tight = e[e.istight]
+            e_HEM = e[e.isHEM]
 
             e_ntot = e.counts
             e_nloose = e_loose.counts
             e_ntight = e_tight.counts
+            e_nHEM = e_HEM.counts
 
             mu = Initialize({'pt':df['Muon_pt'],
                              'eta':df['Muon_eta'],
@@ -162,6 +165,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.med_id,self._year)
             mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.tight_id,self._year)
+            mu['isHEM'] = isHEMmuon(mu.pt,mu.eta,mu.phi,mu.dxy,mu.dz,mu.iso,self._year)
 
             #print ("muon pt maximum argument:",mu.pt.argmax())
             #print ("subleading mu:",mu.pt.argsort()[:,1:2])
@@ -174,10 +178,12 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             mu_loose=mu[mu.isloose]
             mu_tight=mu[mu.istight]
+            mu_HEM = mu[mu.isHEM]
 
             mu_ntot = mu.counts
             mu_nloose = mu_loose.counts
             mu_ntight = mu_tight.counts
+            mu_nHEM = mu_HEM.counts
 
             tau = Initialize({'pt':df['Tau_pt'],
                               'eta':df['Tau_eta'],
@@ -270,8 +276,9 @@ class AnalysisProcessor(processor.ProcessorABC):
                     j[key] = df[j_id[self._year][key]]
 
             j['isgood'] = isGoodJet(j.pt, j.eta, j.id, j.nhf, j.nef, j.chf, j.cef)
-            j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
+            j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi, j.id, j.nhf, j.nef, j.chf, j.cef)
             j['isclean'] = ~j.match(e_loose,0.4)&~j.match(mu_loose,0.4)&~j.match(pho_loose,0.4)&j.isgood
+            #j['isclean'] = ~j.match(e_loose,0.4)&~j.match(mu_loose,0.4)&~j.match(pho_loose,0.4)&j.isgood
             #j['isclean'] = ~j.match(e_tight,0.4)&~j.match(mu_tight,0.4)&~j.match(pho_tight,0.4)&j.isgood
             j['isiso'] =  ~(j.match(fj_clean,1.5))&j.isclean
             #j['isHEMpass'] = (j.pt>30) & ~((j.eta>-3.0)&(j.eta<-1.4)) & ~((j.phi>-1.57)&(j.phi<-0.87)) & j.isiso
@@ -478,6 +485,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             selections.add('ismonoV', ~(leading_fj.DarkHiggsTagger.sum()>0.2)&(leading_fj.VvsQCDTagger.sum()>0.8))
             selections.add('ismonojet', ~(leading_fj.DarkHiggsTagger.sum()>0.2)&~(leading_fj.VvsQCDTagger.sum()>0.8))
             selections.add('noHEMj', (j_nHEM==0))
+            selections.add('noHEMl', (e_nHEM==0)&(mu_nHEM==0))
 
             #selections.add('istwoM', (e_nloose==0) & (mu_ntight==1) & (mu_nloose==2) & (tau_nloose==0)&(pho_nloose==0)&(leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120))
             #selections.add('istwoE', (e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
@@ -502,29 +510,28 @@ class AnalysisProcessor(processor.ProcessorABC):
                 #skinny = (j_nclean>0) & (j_clean.pt.max()>100) & (abs(u[k].delta_phi(j_clean)).min()>0.5) & (u[k].pt>250)
                 #skinny_no_baggy = ~baggy&skinny
                 selections.add(k+'baggy', (fj_nclean>0)&(fj_clean.pt.max()>160)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250))
-                #selections.add(k+'baggy', (fj_nclean>0)&(fj_clean.pt.max()>160)&(u[k].pt>250))
 
                 regions[k+'_baggy'] =  {k,k+'baggy','noHEMj'}
                 regions[k+'_topveto'] =  {k,k+'baggy','topveto','noextrab','noHEMj'}
                 for s in ['ismonohs','ismonoV','ismonojet']:
-                    regions[k+'_'+s] = {k,k+'baggy','topveto','noextrab','noHEMj',s}
+                    regions[k+'_'+s] = {k,k+'baggy','topveto','noextrab',s,'noHEMj'}
                 regions[k+'_ismonohs'+'_extrab'] = {k,k+'baggy','topveto','extrab','ismonohs','noHEMj'}
 
             variables = {}
-            variables['j1pt'] = leading_j.pt.sum()
-            variables['j1eta'] = leading_j.eta.sum()
-            variables['j1phi'] = leading_j.phi.sum()
-            variables['fj1pt'] = leading_fj.pt.sum()
-            variables['fj1eta'] = leading_fj.eta.sum()
-            variables['fj1phi'] = leading_fj.phi.sum()
-            variables['e1pt'] = leading_e.pt.sum()
-            variables['e1phi'] = leading_e.phi.sum()
-            variables['e1eta'] = leading_e.eta.sum()
-            variables['dielemass'] = leading_diele.mass.sum()
-            variables['mu1pt'] = leading_mu.pt.sum()
-            variables['mu1phi'] = leading_mu.phi.sum()
-            variables['mu1eta'] = leading_mu.eta.sum()
-            variables['dimumass'] = leading_dimu.mass.sum()
+            variables['j1pt'] = leading_j.pt
+            variables['j1eta'] = leading_j.eta
+            variables['j1phi'] = leading_j.phi
+            variables['fj1pt'] = leading_fj.pt
+            variables['fj1eta'] = leading_fj.eta
+            variables['fj1phi'] = leading_fj.phi
+            variables['e1pt'] = leading_e.pt
+            variables['e1phi'] = leading_e.phi
+            variables['e1eta'] = leading_e.eta
+            variables['dielemass'] = leading_diele.mass
+            variables['mu1pt'] = leading_mu.pt
+            variables['mu1phi'] = leading_mu.phi
+            variables['mu1eta'] = leading_mu.eta
+            variables['dimumass'] = leading_dimu.mass
             variables['njets'] = j_nclean
             variables['ndcsvL'] = j_ndcsvL
             variables['ndflvL'] = j_ndflvL
@@ -535,56 +542,56 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['nfjtot'] = fj_ntot
             variables['nfjgood'] = fj_ngood
             variables['nfjclean'] = fj_nclean
-            variables['fjmass'] = leading_fj.mass.sum()
-            variables['TopTagger'] = leading_fj.TopTagger.sum()
-            variables['DarkHiggsTagger'] = leading_fj.DarkHiggsTagger.sum()
-            variables['VvsQCDTagger'] = leading_fj.VvsQCDTagger.sum()
-            variables['probTbcq']      = leading_fj.probTbcq.sum()
-            variables['probTbqq']      = leading_fj.probTbqq.sum()
-            variables['probTbc']       = leading_fj.probTbc.sum()
-            variables['probTbq']       = leading_fj.probTbq.sum()
-            variables['probWcq']       = leading_fj.probWcq.sum()
-            variables['probWqq']       = leading_fj.probWqq.sum()
-            variables['probZbb']       = leading_fj.probZbb.sum()
-            variables['probZcc']       = leading_fj.probZcc.sum()
-            variables['probZqq']       = leading_fj.probZqq.sum()
-            variables['probHbb']       = leading_fj.probHbb.sum()
-            variables['probHcc']       = leading_fj.probHcc.sum()
-            variables['probHqqqq']     = leading_fj.probHqqqq.sum()
-            variables['probQCDbb']     = leading_fj.probQCDbb.sum()
-            variables['probQCDcc']     = leading_fj.probQCDcc.sum()
-            variables['probQCDb']      = leading_fj.probQCDb.sum()
-            variables['probQCDc']      = leading_fj.probQCDc.sum()
-            variables['probQCDothers'] = leading_fj.probQCDothers.sum()
+            variables['fjmass'] = leading_fj.mass
+            variables['TopTagger'] = leading_fj.TopTagger
+            variables['DarkHiggsTagger'] = leading_fj.DarkHiggsTagger
+            variables['VvsQCDTagger'] = leading_fj.VvsQCDTagger
+            variables['probTbcq']      = leading_fj.probTbcq
+            variables['probTbqq']      = leading_fj.probTbqq
+            variables['probTbc']       = leading_fj.probTbc
+            variables['probTbq']       = leading_fj.probTbq
+            variables['probWcq']       = leading_fj.probWcq
+            variables['probWqq']       = leading_fj.probWqq
+            variables['probZbb']       = leading_fj.probZbb
+            variables['probZcc']       = leading_fj.probZcc
+            variables['probZqq']       = leading_fj.probZqq
+            variables['probHbb']       = leading_fj.probHbb
+            variables['probHcc']       = leading_fj.probHcc
+            variables['probHqqqq']     = leading_fj.probHqqqq
+            variables['probQCDbb']     = leading_fj.probQCDbb
+            variables['probQCDcc']     = leading_fj.probQCDcc
+            variables['probQCDb']      = leading_fj.probQCDb
+            variables['probQCDc']      = leading_fj.probQCDc
+            variables['probQCDothers'] = leading_fj.probQCDothers
 
             hout = self.accumulator.identity()
-            for histname, h in hout.items():
-                if not isinstance(h, hist.Hist):
-                    continue
-                i = 0
-                if histname == 'sumw':
-                    h.fill(dataset=dataset, sumw=1, weight=sumw)
-                else:
-                    while i < len(self._selected_regions[dataset]):
-                        r = self._selected_regions[dataset][i]
-                        for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto','ismonohs_extrab']:
-                            weight = weights[r].weight()
-                            #print(weight)
-                            cut = selections.all(*regions[r+'_'+s])
-                            if histname == 'recoil':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, weight=weight*cut)
-                            elif histname == 'CaloMinusPfOverRecoil':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[r].pt, weight=weight*cut)
-                            elif histname == 'mindphi':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=weight*cut)
-                            elif histname == 'diledphi':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, diledphi=abs(lepSys[r].delta_phi(j_clean)).min(), weight=weight*cut)
-                            elif histname == 'ledphi':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, ledphi=abs(leadlepton[r].delta_phi(j_clean)).min(), weight=weight*cut)
-                            elif histname == 'recoilVSmindphi':
-                                h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=weight*cut)
-                            else:
-                                h.fill(dataset=dataset, region=r, jet_selection=s, **variables, weight=weight*cut)
+            i = 0
+            while i < len(self._selected_regions[dataset]):
+                r = self._selected_regions[dataset][i]
+                weight = weights[r].weight()
+                for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto','ismonohs_extrab']:
+                    cut = selections.all(*regions[r+'_'+s])
+                    flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
+                    flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
+                    for histname, h in hout.items():
+                        if not isinstance(h, hist.Hist):
+                            continue
+                        if histname == 'sumw':
+                            h.fill(dataset=dataset, sumw=1, weight=sumw)
+                        elif histname == 'recoil':
+                            h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, weight=weight*cut)
+                        elif histname == 'CaloMinusPfOverRecoil':
+                            h.fill(dataset=dataset, region=r, jet_selection=s, CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[r].pt, weight=weight*cut)
+                        elif histname == 'mindphi':
+                            h.fill(dataset=dataset, region=r, jet_selection=s, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=weight*cut)
+                        elif histname == 'diledphi':
+                            h.fill(dataset=dataset, region=r, jet_selection=s, diledphi=abs(lepSys[r].delta_phi(j_clean)).min(), weight=weight*cut)
+                        elif histname == 'ledphi':
+                            h.fill(dataset=dataset, region=r, jet_selection=s, ledphi=abs(leadlepton[r].delta_phi(j_clean)).min(), weight=weight*cut)
+                        elif histname == 'recoilVSmindphi':
+                            h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, mindphi=abs(u[r].delta_phi(j_clean)).min(), weight=weight*cut)
+                        else:
+                            h.fill(dataset=dataset, region=r, jet_selection=s, **flat_variables, weight=flat_weights[histname])
                         i += 1
             return hout
 
