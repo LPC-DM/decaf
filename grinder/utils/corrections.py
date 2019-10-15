@@ -88,32 +88,27 @@ def get_pho_trig_weight(pt, year):
 def get_ttbar_weight(pt):
     return np.exp(0.0615 - 0.0005 * np.clip(pt, 0, 800))
 
-def get_nlo_weight(type,year, pt):
+def get_nlo_weight(type, pt, year):
     #print('The pT is:',pt)
     kfactor = uproot.open("data/nlo/kfactors.root")
-
     sf_qcd = 1
     sf_ewk = 1
-    #sf_adhoc = 1
     #sf_qcd2j = 1
 
     lo = {}
     lo['z'] = "ZJets_LO/inv_pt"    
     lo['w'] = "WJets_LO/inv_pt"
     lo['a'] = "GJets_LO/inv_pt_G"
-    #lo['d'] = "DYJets_LO/inv_pt"
 
     nlo = {}
     nlo['z'] = "ZJets_012j_NLO/nominal"
     nlo['w'] = "WJets_012j_NLO/nominal"
     nlo['a'] = "GJets_1j_NLO/nominal_G"
-    #nlo['d'] = "DYJets_012j_NLO/nominal"
 
     ewk = {}
     ewk['z'] = "EWKcorr/Z"
     ewk['w'] = "EWKcorr/W"
     ewk['a'] = "EWKcorr/photon"
-    #ewk['d'] = "EWKcorr/DY"
 
     LO = kfactor[lo[type]].values
     NLO = kfactor[nlo[type]].values
@@ -121,15 +116,15 @@ def get_nlo_weight(type,year, pt):
 
     sf_qcd = NLO / LO
     sf_ewk = EWK / LO
+    print ('sfQCD',sf_qcd)
+    #if (year != '2016' and type != 'a'):
+    adhoc = uproot.open("data/nlo/2017_gen_v_pt_stat1_qcd_sf.root")
+    nlo_lo = {}
+    nlo_lo['z'] = "dy_monojet"
+    nlo_lo['w'] = "wjet_monojet"
+    sf_qcd_ad = adhoc[nlo_lo[type]].values
 
-    if (year != '2016' and type != 'a'):
-        kfactor = uproot.open("data/nlo/2017_gen_v_pt_stat1_qcd_sf.root")
-        nlo_lo = {}
-        nlo_lo['z'] = "dy_monojet"
-        nlo_lo['w'] = "wjet_monojet"
-        sf_qcd = kfactor[nlo_lo[type]].values
-
-
+    print ('sf_qcd_ad',sf_qcd_ad)
     correction=lookup_tools.dense_lookup.dense_lookup(sf_qcd*sf_ewk, kfactor[nlo[type]].edges)
     return correction(pt)
 
