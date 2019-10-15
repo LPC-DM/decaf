@@ -388,7 +388,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 if  ('TTJets'   in dataset): wnlo = np.sqrt(get_ttbar_weight(genTops[0].pt.sum()) * get_ttbar_weight(genTops[1].pt.sum()))
                 elif('WJets'    in dataset): wnlo = get_nlo_weight('w',genWs[0].pt.sum(),self._year)
                 elif('DY' in dataset or 'ZJets' in dataset): wnlo = get_nlo_weight('z',genZs[0].pt.sum(),self._year)
-                elif('GJets' in dataset): wnlo = get_nlo_weight('a',genAs[0].pt.sum())    
+                elif('GJets' in dataset): wnlo = get_nlo_weight('a',genAs[0].pt.sum(),self._year)    
                 
 
             ###
