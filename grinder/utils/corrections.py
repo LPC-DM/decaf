@@ -130,9 +130,9 @@ def get_nlo_weight(type,year, pt):
         nlo_lo['w'] = "wjet_monojet"
         sf_qcd = adhoc[nlo_lo[type]].values
         
-        correction_ewk=lookup_tools.dense_lookup.dense_lookup(sf_ewk, kfactor[nlo[type]].edges)
+        correction=lookup_tools.dense_lookup.dense_lookup(sf_ewk, kfactor[nlo[type]].edges)
         correction_qcd=lookup_tools.dense_lookup.dense_lookup(sf_qcd, adhoc[nlo_lo[type]].edges)
-        return correction_qcd(pt)
+        return correction(pt)*correction_qcd(pt)
 
     return correction(pt)
 
