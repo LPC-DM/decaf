@@ -122,12 +122,12 @@ def get_nlo_weight(type,year, pt):
     sf_qcd = NLO / LO
     sf_ewk = EWK / LO
 
-    if year != '2016':
+    if (year != '2016' and type != 'a'):
         adhoc = uproot.open("data/nlo/2017_gen_v_pt_stat1_qcd_sf.root")
         nlo_lo = {}
-        nlo['z'] = "dy_monojet"
-        nlo['w'] = "wjet_monojet"
-        sf_qcd = adhoc[nlo[type]].values
+        nlo_lo['z'] = "dy_monojet"
+        nlo_lo['w'] = "wjet_monojet"
+        sf_qcd = adhoc[nlo_lo[type]].values
 
 
     correction=lookup_tools.dense_lookup.dense_lookup(sf_qcd*sf_ewk, kfactor[nlo[type]].edges)
