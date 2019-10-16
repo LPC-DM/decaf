@@ -8,7 +8,7 @@ np.seterr(divide='ignore', invalid='ignore', over='ignore')
 from coffea.arrays import Initialize
 from coffea import hist, processor
 from utils.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
-from utils.corrections import get_ttbar_weight, get_nlo_weight, get_pu_weight
+from utils.corrections import get_ttbar_weight, get_nlo_weight, get_adhoc_weight, get_pu_weight
 from utils.corrections import get_met_trig_weight, get_met_zmm_trig_weight, get_ele_trig_weight, get_pho_trig_weight
 from utils.corrections import get_ecal_bad_calib
 from utils.ids import e_id, isLooseElectron, isTightElectron
@@ -356,9 +356,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             # For MC, retrieve the LHE weights, to take into account NLO destructive interference, and their sum
             ###
 
-            genw = np.ones_like(df['MET_pt'])
-            sumw = 1.
-            wnlo = np.ones_like(df['MET_pt'])
+            genw    = np.ones_like(df['MET_pt'])
+            wnlo    = np.ones_like(df['MET_pt'])
+            adhocw  = np.ones_like(df['MET_pt'])
+            sumw    = 1.
             if self._xsec[dataset] != -1:
                 genw = df['genWeight']
                 sumw = genw.sum()
@@ -379,16 +380,23 @@ class AnalysisProcessor(processor.ProcessorABC):
                 genAs   = genLastCopy[abs(genLastCopy.pdgid)==22]
                 genHs   = genLastCopy[abs(genLastCopy.pdgid)==25]
 
-                #isTT = (genTops.counts==2)
-                #isW  = (genTops.counts==0)&(genWs.counts==1)&(genZs.counts==0)&(genAs.counts==0)&(genDs.counts==0)&(genHs.counts==0)
-                #isZ  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==1)&(genAs.counts==0)&(genDs.counts==0)&(genHs.counts==0)
-                #isA  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==1)&(genDs.counts==0)&(genHs.counts==0)
-                #isDY = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==0)&(genDs.counts==1)&(genHs.counts==0)
+                isTT = (genTops.counts==2)
+                isW  = (genTops.counts==0)&(genWs.counts==1)&(genZs.counts==0)&(genAs.counts==0)&(genHs.counts==0)
+                isZ  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==1)&(genAs.counts==0)&(genHs.counts==0)
+                isA  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==1)&(genHs.counts==0)
+                #isDY = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==0)&(genHs.counts==0)
 
-                if  ('TTJets'   in dataset): wnlo = np.sqrt(get_ttbar_weight(genTops[0].pt.sum()) * get_ttbar_weight(genTops[1].pt.sum()))
-                elif('WJets'    in dataset): wnlo = get_nlo_weight('w',genWs[0].pt.sum(),self._year)
-                elif('DY' in dataset or 'ZJets' in dataset): wnlo = get_nlo_weight('z',genZs[0].pt.sum(),self._year)
-                elif('GJets' in dataset): wnlo = get_nlo_weight('a',genAs[0].pt.sum(),self._year)    
+                if  ('TTJets'   in dataset): 
+                    wnlo = np.sqrt(get_ttbar_weight(genTops[0].pt.sum()) * get_ttbar_weight(genTops[1].pt.sum()))
+                elif('WJets' in dataset): 
+                    wnlo = get_nlo_weight('w',genWs[0].pt.sum(), self._year)
+                    if self._year != '2016': adhocw = get_adhoc_weight('w',genWs[0].pt.sum())
+                elif('DY' in dataset or 'ZJets' in dataset): 
+                    wnlo = get_nlo_weight('z',genZs[0].pt.sum(), self._year)
+                    if self._year != '2016': 
+                        adhocw = get_adhoc_weight('z',genWs[0].pt.sum())
+                elif('GJets' in dataset): 
+                    wnlo = get_nlo_weight('a',genAs[0].pt.sum(), self._year)
                 
 
             ###
@@ -492,6 +500,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             for k in self._selected_regions[dataset]:
                 weights[k] = processor.Weights(df.size)
                 weights[k].add('nlo',wnlo)
+                weights[k].add('adhoc',adhocw)
                 weights[k].add('genw',genw)
                 weights[k].add('pileup',pu,puUp,puDown)
                 weights[k].add('passMetFilters',np.prod([met_filters[key] for key in met_filters], axis=0))

@@ -116,17 +116,25 @@ def get_nlo_weight(type, pt, year):
 
     sf_qcd = NLO / LO
     sf_ewk = EWK / LO
-    print ('sfQCD',sf_qcd)
-    #if (year != '2016' and type != 'a'):
-    adhoc = uproot.open("data/nlo/2017_gen_v_pt_stat1_qcd_sf.root")
+
+    
+    correction=lookup_tools.dense_lookup.dense_lookup(sf_qcd*sf_ewk, kfactor[nlo[type]].edges)
+    if (year != '2016' and type != 'a'): correction=lookup_tools.dense_lookup.dense_lookup(sf_ewk, kfactor[nlo[type]].edges)
+    return correction(pt)
+
+
+def get_adhoc_weight(type, pt):
+    #print('The pT is:',pt)                                                                                                                                                              
+    kfactor = uproot.open("data/nlo/2017_gen_v_pt_stat1_qcd_sf.root")
+    sf_qcd = 1
+
     nlo_lo = {}
     nlo_lo['z'] = "dy_monojet"
     nlo_lo['w'] = "wjet_monojet"
-    sf_qcd_ad = adhoc[nlo_lo[type]].values
+    sf_qcd = kfactor[nlo_lo[type]].values
 
-    print ('sf_qcd_ad',sf_qcd_ad)
-    correction=lookup_tools.dense_lookup.dense_lookup(sf_qcd*sf_ewk, kfactor[nlo[type]].edges)
-    return correction(pt)
+    correction=lookup_tools.dense_lookup.dense_lookup(sf_qcd, kfactor[nlo_lo[type]].edges)
+    return correction(pt)    
 
 ### Obsolete
 #def get_bad_ecal_weight(eta,phi):
