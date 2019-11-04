@@ -20,7 +20,7 @@ from utils.metfilters import met_filter_flags
 from utils.deep import deep
 
 samples = {
-    "iszeroL":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET','Mhs_50','Mhs_70','Mhs_90','MonoJet','MonoW','MonoZ','Monojet'),
+    "iszeroL":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET','Mhs_50','Mhs_70','Mhs_90','MonoJet','MonoW','MonoZ'),
     "isoneM":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET'),
     "isoneE":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','SingleElectron','EGamma'),
     "istwoM":('WJets','DY','TT','ST','WW','WZ','ZZ','HToBB','MET'),
@@ -563,6 +563,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['probQCDothers'] = leading_fj.probQCDothers
 
             hout = self.accumulator.identity()
+            hout['sumw'].fill(dataset=dataset, sumw=1, weight=sumw)
             i = 0
             while i < len(self._selected_regions[dataset]):
                 r = self._selected_regions[dataset][i]
@@ -574,8 +575,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                     for histname, h in hout.items():
                         if not isinstance(h, hist.Hist):
                             continue
-                        if histname == 'sumw':
-                            h.fill(dataset=dataset, sumw=1, weight=sumw)
+                        elif histname == 'sumw':
+                            continue
                         elif histname == 'recoil':
                             h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, weight=weight*cut)
                         elif histname == 'CaloMinusPfOverRecoil':

@@ -88,19 +88,22 @@ def isLooseTau(pt,eta,decayMode,_id,year):
 
 pho_id = {}
 pho_id['2016'] = {}
-pho_id['2016']['loose_id'] = 'Photon_cutBasedBitmap'
-pho_id['2016']['tight_id'] = 'Photon_cutBasedBitmap'
+pho_id['2016']['loose_id'] = 'Photon_cutBased'
+pho_id['2016']['tight_id'] = 'Photon_cutBased'
 pho_id['2016']['eleveto']  = 'Photon_electronVeto'
 pho_id['2016']['phoeta']   = 'Photon_eta'
 pho_id['2017'] = pho_id['2016']
-pho_id['2018'] = pho_id['2016']
+pho_id['2017']['loose_id'] = 'Photon_cutBasedBitmap'
+pho_id['2017']['tight_id'] = 'Photon_cutBasedBitmap'
+pho_id['2018'] = pho_id['2017']
 
+#Photon_cutBased Int_t "cut-based spring16-V2p2 ID (0:fail, 1:loose, 2:medium, 3:tight" for 2016 NanoAOD
 #Photon_cutBasedBitmap  Int_t   cut-based ID bitmap, 2^(0:loose, 1:medium, 2:tight)
 #Photon IDs:  https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedPhotonIdentificationRun2?rev=36
 def isLoosePhoton(pt,eta,loose_id,eleveto,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&1)==1)&(eleveto)
+        mask = (pt>15)&(abs(eta)<2.5)&(loose_id>=2)&(eleveto)
     elif year=='2017':
         mask = (pt>15)&(abs(eta)<2.5)&((loose_id&1)==1)&(eleveto)
     elif year=='2018':
@@ -110,7 +113,7 @@ def isLoosePhoton(pt,eta,loose_id,eleveto,year):
 def isTightPhoton(pt,eta,tight_id,eleveto,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>215)&(abs(eta)<1.4442)&((tight_id&2)==2)&(eleveto) # Trigger threshold is at 175
+        mask = (pt>215)&(abs(eta)<1.4442)&(tight_id==3)&(eleveto) # Trigger threshold is at 175
     elif year=='2017':
         mask = (pt>215)&(abs(eta)<1.4442)&((tight_id&2)==2)&(eleveto) # Trigger threshold is at 200
     elif year=='2018':

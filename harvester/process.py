@@ -317,8 +317,8 @@ processes =    {
 
         # New Signals
         'MonoHs_Mzprime_500_Mhs_50_Mchi_150_2018':('MonoHs_Mzprime_500_Mhs_50_Mchi_150','MC',0.5302),
-        'MonoHs_Mzprime_500_Mhs_70_Mchi_150_2018':('MonoHs_Mzprime_500_Mhs_70_Mchi_150','MC',0.7758),
-        'MonoHs_Mzprime_500_Mhs_90_Mchi_150_2018':('MonoHs_Mzprime_500_Mhs_90_Mchi_150','MC',0.6745),
+        'MonoHs_Mzprime_500_Mhs_70_Mchi_150_2018':('MonoHs_Mzprime_500_Mhs_70_Mchi_150','MC',0.4331),
+        'MonoHs_Mzprime_500_Mhs_90_Mchi_150_2018':('MonoHs_Mzprime_500_Mhs_90_Mchi_150','MC',0.3656),
         'MonoJet_Mzprime_500_Mchi_150_2018':('MonoJet_Mzprime_500_Mchi_150','MC',2.621),
         'MonoW_Mzprime_500_Mchi_150_2018':('MonoW_Mzprime_500_Mchi_150','MC',0.05872),
         'MonoZ_Mzprime_500_Mchi_150_2018':('MonoZ_Mzprime_500_Mchi_150','MC',0.01820),
