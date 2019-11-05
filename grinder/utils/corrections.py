@@ -88,7 +88,7 @@ def get_pho_trig_weight(pt, year):
 def get_ttbar_weight(pt):
     return np.exp(0.0615 - 0.0005 * np.clip(pt, 0, 800))
 
-def get_nlo_weight(type, pt):
+def get_nlo_weight(type, pt, year):
     #print('The pT is:',pt)
     kfactor = uproot.open("data/nlo/kfactors.root")
     sf_qcd = 1
@@ -118,8 +118,22 @@ def get_nlo_weight(type, pt):
     sf_ewk = EWK / LO
 
     correction=lookup_tools.dense_lookup.dense_lookup(sf_qcd*sf_ewk, kfactor[nlo[type]].edges)
+    if (year != '2016' and type != 'a'): correction=lookup_tools.dense_lookup.dense_lookup(sf_ewk, kfactor[nlo[type]].edges)
     return correction(pt)
 
+def get_adhoc_weight(type, pt):
+    #print('The pT is:',pt)                                                                                                                                                              
+    kfactor = uproot.open("data/nlo/kfactors.root")
+    sf_qcd = 1
+
+    nlo_lo = {}
+    nlo_lo['z'] = "dy_monojet"
+    nlo_lo['w'] = "wjet_monojet"
+    sf_qcd = kfactor[nlo_lo[type]].values
+
+    correction=lookup_tools.dense_lookup.dense_lookup(sf_qcd, kfactor[nlo_lo[type]].edges)
+    return correction(pt)
+   
 ### Obsolete
 #def get_bad_ecal_weight(eta,phi):
 #    badecal = "data/badecal/hotjets-runBCDEFGH.root"
