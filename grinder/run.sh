@@ -22,7 +22,7 @@ export PYTHONPATH=${_CONDOR_SCRATCH_DIR}/site-packages:$PYTHONPATH
 export PYTHONPATH=$(find ${_CONDOR_SCRATCH_DIR}/site-packages/ -name *.egg |tr '\n' ':')$PYTHONPATH
 echo "Updated python path: " $PYTHONPATH
 cd grinder
-echo "python run.py --year ${1} --dataset ${2}"
-python run.py --year ${1} --dataset ${2}
-ls pods/${1}/${2}.pkl.gz
-cp pods/${1}/${2}.pkl.gz ${_CONDOR_SCRATCH_DIR}/${1}_${2}.pkl.gz
+echo "python run.py --year ${1} --dataset ${2} --processor ${4}"
+python run.py --year ${1} --dataset ${2} --processor ${4}
+ls pods/${4}/${2}.pkl.gz
+cp pods/${4}/${2}.pkl.gz ${_CONDOR_SCRATCH_DIR}/${4}_${2}.pkl.gz

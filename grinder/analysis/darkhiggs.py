@@ -7,34 +7,103 @@ import awkward
 np.seterr(divide='ignore', invalid='ignore', over='ignore')
 from coffea.arrays import Initialize
 from coffea import hist, processor
-from utils.triggers import met_trigger_paths, singleele_trigger_paths, singlepho_trigger_paths
-from utils.corrections import get_ttbar_weight, get_nlo_weight, get_adhoc_weight, get_pu_weight
-from utils.corrections import get_met_trig_weight, get_met_zmm_trig_weight, get_ele_trig_weight, get_pho_trig_weight
-from utils.corrections import get_ecal_bad_calib
-from utils.ids import e_id, isLooseElectron, isTightElectron
-from utils.ids import mu_id, isLooseMuon, isTightMuon
-from utils.ids import tau_id, isLooseTau
-from utils.ids import pho_id, isLoosePhoton, isTightPhoton
-from utils.ids import j_id, fj_id, isGoodJet, isGoodFatJet, isHEMJet
-from utils.metfilters import met_filter_flags
-from utils.deep import deep
-
-samples = {
-    "iszeroL":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET','Mhs_50','Mhs_70','Mhs_90','MonoJet','MonoW','MonoZ'),
-    "isoneM":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET'),
-    "isoneE":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','SingleElectron','EGamma'),
-    "istwoM":('WJets','DY','TT','ST','WW','WZ','ZZ','HToBB','MET'),
-    "istwoE":('WJets','DY','TT','ST','WW','WZ','ZZ','HToBB','SingleElectron','EGamma'),
-    "isoneA":('GJets','QCD','SinglePhoton','EGamma')
-}
 
 class AnalysisProcessor(processor.ProcessorABC):
-    def __init__(self, selected_regions, year, xsec, lumi):
-        self._selected_regions = selected_regions
+    def __init__(self, year, xsec, lumi, triggers, corrections, ids, metfilters):
         self._year = year
         self._xsec = xsec
         self._lumi = lumi
+        self._triggers = triggers
+        self._corrections = corrections
+        self._ids = ids
+        self._metfilters = metfilters
+
+        self._samples = {
+            "iszeroL":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET','Mhs_50','Mhs_70','Mhs_90','MonoJet','MonoW','MonoZ'),
+            "isoneM":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET'),
+            "isoneE":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','SingleElectron','EGamma'),
+            "istwoM":('WJets','DY','TT','ST','WW','WZ','ZZ','HToBB','MET'),
+            "istwoE":('WJets','DY','TT','ST','WW','WZ','ZZ','HToBB','SingleElectron','EGamma'),
+            "isoneA":('GJets','QCD','SinglePhoton','EGamma')
+        }
+
+        self._e_id = {}
+        self._e_id['2016'] = {}
+        self._e_id['2016']['loose_id'] = 'Electron_cutBased'
+        self._e_id['2016']['tight_id'] = 'Electron_cutBased'
+        self._e_id['2016']['dxy'] = 'Electron_dxy'
+        self._e_id['2016']['dz'] = 'Electron_dz'
+        self._e_id['2016']['iso'] = 'Null'
+        self._e_id['2017'] = self._e_id['2016']
+        self._e_id['2018'] = self._e_id['2016']
+
+        self._mu_id = {}
+        self._mu_id['2016'] = {}
+        self._mu_id['2016']['iso'] = 'Muon_pfRelIso04_all'
+        self._mu_id['2016']['tight_id'] = 'Muon_tightId'
+        self._mu_id['2016']['med_id'] = 'Muon_mediumId'
+        self._mu_id['2016']['dxy'] = 'Muon_dxy'
+        self._mu_id['2016']['dz'] = 'Muon_dz'
+        self._mu_id['2017'] = self._mu_id['2016']
+        self._mu_id['2018'] = self._mu_id['2016']
+
+        self._tau_id = {}
+        self._tau_id['2016'] = {}
+        self._tau_id['2016']['id'] = 'Tau_idMVAoldDM2017v2'
+        self._tau_id['2016']['decayMode'] = 'Tau_idDecayMode'
+        self._tau_id['2017'] = self._tau_id['2016']
+        self._tau_id['2018'] = self._tau_id['2016']
+
+        self._pho_id = {}
+        self._pho_id['2016'] = {}
+        self._pho_id['2016']['loose_id'] = 'Photon_cutBased'
+        self._pho_id['2016']['tight_id'] = 'Photon_cutBased'
+        self._pho_id['2016']['eleveto']  = 'Photon_electronVeto'
+        self._pho_id['2016']['phoeta']   = 'Photon_eta'
+        self._pho_id['2017'] = self._pho_id['2016']
+        self._pho_id['2017']['loose_id'] = 'Photon_cutBasedBitmap'
+        self._pho_id['2017']['tight_id'] = 'Photon_cutBasedBitmap'
+        self._pho_id['2018'] = self._pho_id['2017']
+
+        self._fj_id = {}
+        self._fj_id['2016'] = {}
+        self._fj_id['2016']['id'] = 'AK15Puppi_jetId'
+        self._fj_id['2017'] = self._fj_id['2016']
+        self._fj_id['2018'] = self._fj_id['2016']
+
+
+        self._j_id = {}
+        self._j_id['2016'] = {}
+        self._j_id['2016']['id'] = 'Jet_jetId'
+        self._j_id['2016']['nhf'] = 'Jet_neHEF'
+        self._j_id['2016']['nef'] = 'Jet_neEmEF'
+        self._j_id['2016']['chf'] = 'Jet_chHEF'
+        self._j_id['2016']['cef'] = 'Jet_chEmEF'
+        self._j_id['2017'] =  self._j_id['2016']
+        self._j_id['2018'] =  self._j_id['2016']
         
+        self._deep = {}
+        self._deep['2016'] = {}
+        self._deep['2016']['probTbcq'] ='AK15Puppi_probTbcq'
+        self._deep['2016']['probTbqq'] ='AK15Puppi_probTbqq'
+        self._deep['2016']['probTbc'] ='AK15Puppi_probTbc'
+        self._deep['2016']['probTbq'] ='AK15Puppi_probTbq'
+        self._deep['2016']['probWcq'] ='AK15Puppi_probWcq'
+        self._deep['2016']['probWqq'] ='AK15Puppi_probWqq'
+        self._deep['2016']['probZbb'] ='AK15Puppi_probZbb'
+        self._deep['2016']['probZcc'] ='AK15Puppi_probZcc'
+        self._deep['2016']['probZqq'] ='AK15Puppi_probZqq'
+        self._deep['2016']['probHbb'] ='AK15Puppi_probHbb'
+        self._deep['2016']['probHcc'] ='AK15Puppi_probHcc'
+        self._deep['2016']['probHqqqq'] ='AK15Puppi_probHqqqq'
+        self._deep['2016']['probQCDbb'] ='AK15Puppi_probQCDbb'
+        self._deep['2016']['probQCDcc'] ='AK15Puppi_probQCDcc'
+        self._deep['2016']['probQCDb'] ='AK15Puppi_probQCDb'
+        self._deep['2016']['probQCDc'] ='AK15Puppi_probQCDc'
+        self._deep['2016']['probQCDothers'] ='AK15Puppi_probQCDothers'
+        self._deep['2017'] = self._deep['2016']
+        self._deep['2018'] = self._deep['2016']
+
         self._accumulator = processor.dict_accumulator({
             'sumw': hist.Hist("sumw", hist.Cat("dataset", "Primary dataset"), hist.Bin("sumw", "Weight value", [0.])),
             'CaloMinusPfOverRecoil': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("CaloMinusPfOverRecoil","Calo - Pf / Recoil",35,0,1)),
@@ -99,6 +168,44 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             dataset = df['dataset']
 
+            selected_regions = {}
+            if not dataset in selected_regions: selected_regions[dataset] = []
+            for selection,v in self._samples.items():
+                for i in range (0,len(v)):
+                    if v[i] not in dataset: continue
+                    selected_regions[dataset].append(selection)
+
+            ###
+            #Getting corrections, ids, triggers, ecc, from .coffea files
+            ###
+
+            met_trigger_paths       = self._triggers['met_trigger_paths']      
+            singleele_trigger_paths = self._triggers['singleele_trigger_paths']
+            singlepho_trigger_paths = self._triggers['singlepho_trigger_paths']
+
+            get_ttbar_weight        = self._corrections['get_ttbar_weight']       
+            get_nlo_weight          = self._corrections['get_nlo_weight']         
+            get_adhoc_weight        = self._corrections['get_adhoc_weight']       
+            get_pu_weight           = self._corrections['get_pu_weight']          
+            get_met_trig_weight     = self._corrections['get_met_trig_weight']    
+            get_met_zmm_trig_weight = self._corrections['get_met_zmm_trig_weight']
+            get_ele_trig_weight     = self._corrections['get_ele_trig_weight']    
+            get_pho_trig_weight     = self._corrections['get_pho_trig_weight']    
+            get_ecal_bad_calib      = self._corrections['get_ecal_bad_calib']     
+
+            isLooseElectron = self._ids['isLooseElectron'] 
+            isTightElectron = self._ids['isTightElectron'] 
+            isLooseMuon     = self._ids['isLooseMuon']     
+            isTightMuon     = self._ids['isTightMuon']     
+            isLooseTau      = self._ids['isLooseTau']      
+            isLoosePhoton   = self._ids['isLoosePhoton']   
+            isTightPhoton   = self._ids['isTightPhoton']   
+            isGoodJet       = self._ids['isGoodJet']       
+            isGoodFatJet    = self._ids['isGoodFatJet']    
+            isHEMJet        = self._ids['isHEMJet']        
+
+            met_filter_flags = self._metfilters['met_filter_flags']
+
             ###
             #Initialize global quantities (MET ecc.)
             ###
@@ -132,10 +239,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                             'phi':df['Electron_phi'],
                             'mass':df['Electron_mass']})
 
-            for key in e_id[self._year]:
+            for key in self._e_id[self._year]:
                 e[key] = e.pt.zeros_like()
-                if e_id[self._year][key] in df:
-                    e[key] = df[e_id[self._year][key]]
+                if self._e_id[self._year][key] in df:
+                    e[key] = df[self._e_id[self._year][key]]
 
             e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,self._year)
             e['istight'] = isTightElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.tight_id,self._year)
@@ -155,10 +262,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                              'phi':df['Muon_phi'],
                              'mass':df['Muon_mass']})
 
-            for key in mu_id[self._year]:
+            for key in self._mu_id[self._year]:
                 mu[key] = mu.pt.zeros_like()
-                if mu_id[self._year][key] in df:
-                    mu[key] = df[mu_id[self._year][key]]
+                if self._mu_id[self._year][key] in df:
+                    mu[key] = df[self._mu_id[self._year][key]]
 
             mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.med_id,self._year)
             mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.tight_id,self._year)
@@ -184,10 +291,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                               'phi':df['Tau_phi'],
                               'mass':df['Tau_mass']})
 
-            for key in tau_id[self._year]:
+            for key in self._tau_id[self._year]:
                 tau[key] = tau.pt.zeros_like()
-                if tau_id[self._year][key] in df:
-                    tau[key] = df[tau_id[self._year][key]]
+                if self._tau_id[self._year][key] in df:
+                    tau[key] = df[self._tau_id[self._year][key]]
 
 
             tau['isclean'] =~tau.match(mu_loose,0.3)&~tau.match(e_loose,0.3)
@@ -202,10 +309,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                               'phi':df['Photon_phi'],
                               'mass':df['Photon_mass']})
 
-            for key in pho_id[self._year]:
+            for key in self._pho_id[self._year]:
                 pho[key] = pho.pt.zeros_like()
-                if pho_id[self._year][key] in df:
-                    pho[key] = df[pho_id[self._year][key]]
+                if self._pho_id[self._year][key] in df:
+                    pho[key] = df[self._pho_id[self._year][key]]
 
             pho['isclean'] =~pho.match(e_loose,0.4)
             pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho.loose_id,pho.eleveto,self._year)&pho.isclean
@@ -226,19 +333,19 @@ class AnalysisProcessor(processor.ProcessorABC):
                              'phi':df['AK15Puppi_phi'],
                              'mass':df['AK15Puppi_mass']})
 
-            for key in fj_id[self._year]:
+            for key in self._fj_id[self._year]:
                 fj[key] = fj.pt.zeros_like()
-                if fj_id[self._year][key] in df:
-                    fj[key] = df[fj_id[self._year][key]]
+                if self._fj_id[self._year][key] in df:
+                    fj[key] = df[self._fj_id[self._year][key]]
 
             fj['isgood'] = isGoodFatJet(fj.pt, fj.eta, fj.id)
             fj['isclean'] =~fj.match(pho_loose,1.5)&~fj.match(mu_loose,1.5)&~fj.match(e_loose,1.5)&fj.isgood
             #fj['isclean'] =~fj.match(pho_tight,1.5)&~fj.match(mu_tight,1.5)&~fj.match(e_tight,1.5)&fj.isgood
 
-            for key in deep[self._year]:
+            for key in self._deep[self._year]:
                 fj[key] = fj.pt.zeros_like()
-                if deep[self._year][key] in df:
-                    fj[key] = df[deep[self._year][key]]
+                if self._deep[self._year][key] in df:
+                    fj[key] = df[self._deep[self._year][key]]
 
             #fj['probQCD'] = fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
             fj['TopTagger'] = fj.probTbcq+fj.probTbqq
@@ -264,10 +371,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             j['deepcsv'] = df['Jet_btagDeepB']
             j['deepflv'] = df['Jet_btagDeepFlavB']
 
-            for key in j_id[self._year]:
+            for key in self._j_id[self._year]:
                 j[key] = j.pt.zeros_like()
-                if j_id[self._year][key] in df:
-                    j[key] = df[j_id[self._year][key]]
+                if self._j_id[self._year][key] in df:
+                    j[key] = df[self._j_id[self._year][key]]
 
             j['isgood'] = isGoodJet(j.pt, j.eta, j.id, j.nhf, j.nef, j.chf, j.cef)
             j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
@@ -492,7 +599,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             weights = {}
             regions = {}
-            for k in self._selected_regions[dataset]:
+            for k in selected_regions[dataset]:
                 weights[k] = processor.Weights(df.size)
                 weights[k].add('nlo',wnlo)
                 weights[k].add('adhoc',adhocw)
@@ -565,8 +672,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             hout = self.accumulator.identity()
             hout['sumw'].fill(dataset=dataset, sumw=1, weight=sumw)
             i = 0
-            while i < len(self._selected_regions[dataset]):
-                r = self._selected_regions[dataset][i]
+            while i < len(selected_regions[dataset]):
+                r = selected_regions[dataset][i]
                 weight = weights[r].weight()
                 for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto','ismonohs_extrab']:
                     cut = selections.all(*regions[r+'_'+s])

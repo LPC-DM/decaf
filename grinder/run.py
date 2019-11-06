@@ -5,33 +5,24 @@ import json
 import time
 import cloudpickle
 import gzip
+import os
 from optparse import OptionParser
 
 import uproot
 import numpy as np
 from coffea import hist, processor
-from analysis.darkhiggs import AnalysisProcessor,samples
+from coffea.util import load, save
 
 parser = OptionParser()
-parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
+parser.add_option('-p', '--processor', help='processor', dest='processor') 
 parser.add_option('-y', '--year', help='year', dest='year')
-parser.add_option('-l', '--lumi', help='lumi', dest='lumi', type=float)
+parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 parser.add_option('-w', '--workers', help='Number of workers to use for multi-worker executors (e.g. futures or condor)', dest='workers', type=int, default=8)
 (options, args) = parser.parse_args()
 
-lumis = {}
-#Values from https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable
-lumis['2016']=35.92
-lumis['2017']=41.53
-lumis['2018']=59.97
-lumi = 1000.*float(lumis[options.year])
-if options.lumi: lumi=1000.*options.lumi
-
+fileslice = slice(None)
 with open("../harvester/beans/"+options.year+".json") as fin:
     samplefiles = json.load(fin)
-xsec = {k: v['xs'] for k,v in samplefiles.items()}
-
-fileslice = slice(None)
 
 for dataset, info in samplefiles.items():
     filelist = {}
@@ -41,14 +32,8 @@ for dataset, info in samplefiles.items():
         files.append(file)
     filelist[dataset] = files
 
-    selections = {}
-    if not dataset in selections: selections[dataset] = []
-    for selection,v in samples.items():
-        for i in range (0,len(v)):
-            if v[i] not in dataset: continue
-            selections[dataset].append(selection)
+    processor_instance=load(options.processor+'.coffea')
 
-    processor_instance=AnalysisProcessor(selected_regions=selections, year=options.year, xsec=xsec, lumi=lumi)
     tstart = time.time()
     output = processor.run_uproot_job(filelist,
                                       treename='Events',
@@ -65,7 +50,8 @@ for dataset, info in samplefiles.items():
 
     # Pickle is not very fast or memory efficient, will be replaced by something better soon
     #    with lz4f.open("pods/"+options.year+"/"+dataset+".pkl.gz", mode="xb", compression_level=5) as fout:
-    with gzip.open("pods/"+options.year+"/"+dataset+".pkl.gz", "wb") as fout:
+    os.system("mkdir -p pods/"+options.processor)
+    with gzip.open("pods/"+options.processor+"/"+dataset+".pkl.gz", "wb") as fout:
         cloudpickle.dump(output, fout)
         
     dt = time.time() - tstart
