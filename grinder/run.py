@@ -20,6 +20,9 @@ parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 parser.add_option('-w', '--workers', help='Number of workers to use for multi-worker executors (e.g. futures or condor)', dest='workers', type=int, default=8)
 (options, args) = parser.parse_args()
 
+
+processor_instance=load(options.processor+'.coffea')
+
 fileslice = slice(None)
 with open("../harvester/beans/"+options.year+".json") as fin:
     samplefiles = json.load(fin)
@@ -31,8 +34,6 @@ for dataset, info in samplefiles.items():
     for file in info['files'][fileslice]:
         files.append(file)
     filelist[dataset] = files
-
-    processor_instance=load(options.processor+'.coffea')
 
     tstart = time.time()
     output = processor.run_uproot_job(filelist,
