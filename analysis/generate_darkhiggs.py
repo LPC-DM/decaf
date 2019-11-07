@@ -12,7 +12,8 @@ from coffea.util import load, save
 from optparse import OptionParser
 
 class AnalysisProcessor(processor.ProcessorABC):
-    def __init__(self, year, xsec, lumi, triggers, corrections, ids, metfilters):
+    def __init__(self, year, columns, xsec, lumi, triggers, corrections, ids, metfilters):
+        self._columns = columns        
         self._year = year
         self._xsec = xsec
         self._lumi = lumi
@@ -166,6 +167,10 @@ class AnalysisProcessor(processor.ProcessorABC):
     @property
     def accumulator(self):
         return self._accumulator
+
+    @property
+    def columns(self):
+        return self._columns
 
     def process(self, df):
 
@@ -740,7 +745,86 @@ if __name__ == '__main__':
     ids         = load('ids.coffea')
     metfilters  = load('metfilters.coffea')
 
-    processor_instance=AnalysisProcessor(year=options.year,
+    columns = """                                                                                                                    
+    MET_pt
+    MET_phi
+    CaloMET_pt
+    CaloMET_phi
+    Electron_pt
+    Electron_eta
+    Electron_phi
+    Electron_mass
+    Muon_pt
+    Muon_eta
+    Muon_phi
+    Muon_mass
+    Tau_pt
+    Tau_eta
+    Tau_phi
+    Tau_mass
+    Photon_pt
+    Photon_eta
+    Photon_phi
+    Photon_mass
+    AK15Puppi_pt
+    AK15Puppi_eta
+    AK15Puppi_phi
+    AK15Puppi_mass
+    Jet_pt
+    Jet_eta
+    Jet_phi
+    Jet_mass
+    Jet_btagDeepB
+    Jet_btagDeepFlavB
+    GenPart_pt
+    GenPart_eta
+    GenPart_phi
+    GenPart_mass
+    GenPart_pdgId
+    GenPart_status
+    GenPart_statusFlags
+    GenPart_genPartIdxMother
+    PV_npvs
+    Electron_cutBased
+    Electron_dxy
+    Electron_dz
+    Muon_pfRelIso04_all
+    Muon_tightId
+    Muon_mediumId
+    Muon_dxy
+    Muon_dz
+    Tau_idMVAoldDM2017v2
+    Tau_idDecayMode
+    Photon_cutBased
+    Photon_electronVeto
+    Photon_cutBasedBitmap
+    AK15Puppi_jetId
+    Jet_jetId
+    Jet_neHEF
+    Jet_neEmEF
+    Jet_chHEF
+    Jet_chEmEF
+    AK15Puppi_probTbcq
+    AK15Puppi_probTbqq
+    AK15Puppi_probTbc
+    AK15Puppi_probTbq
+    AK15Puppi_probWcq
+    AK15Puppi_probWqq
+    AK15Puppi_probZbb
+    AK15Puppi_probZcc
+    AK15Puppi_probZqq
+    AK15Puppi_probHbb
+    AK15Puppi_probHcc
+    AK15Puppi_probHqqqq
+    AK15Puppi_probQCDbb
+    AK15Puppi_probQCDcc
+    AK15Puppi_probQCDb
+    AK15Puppi_probQCDc
+    AK15Puppi_probQCDothers
+    """.split()
+
+    processor_instance=AnalysisProcessor(columns=columns,
+                                         year=options.year,
                                          xsec=xsec,
                                          lumi=lumi,
                                          corrections=corrections,
