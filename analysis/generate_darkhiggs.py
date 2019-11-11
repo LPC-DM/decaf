@@ -269,7 +269,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                              'eta':df['Muon_eta'],
                              'phi':df['Muon_phi'],
                              'mass':df['Muon_mass']})
-
+            print('content:',mu.content)
+            print('size:',mu.content.size)
             for key in self._mu_id[self._year]:
                 mu[key] = mu.pt.zeros_like()
                 if self._mu_id[self._year][key] in df:
@@ -284,6 +285,14 @@ class AnalysisProcessor(processor.ProcessorABC):
             #print("subleading mu:", mu[:,:2])
             #print("leading mu with arg:", mu[mu.pt.argmax()])
             leading_mu = mu[mu.pt.argmax()]
+            print('leading mu content:',leading_mu.content)
+            print('leading mu size:',leading_mu.content.size)
+            print('leading mu counts:',leading_mu.counts)
+            print('leading mu offset:',leading_mu.offsets)
+            print('boolean content:',leading_mu.istight.content)
+            print('boolean size:',leading_mu.istight.content.size)
+            print('boolean counts',leading_mu.istight.counts)
+            print('boolean offsets',leading_mu.istight.offsets)
             leading_mu = leading_mu[leading_mu.istight]
             #subleading_mu = mu[mu.pt.argsort()[:,1:2]]
 
