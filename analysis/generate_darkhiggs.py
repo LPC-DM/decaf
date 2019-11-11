@@ -256,7 +256,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             e['istight'] = isTightElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.tight_id,self._year)
 
             leading_e = e[e.pt.argmax()]
-            leading_e = leading_e[leading_e.istight]
+            leading_e = leading_e[leading_e.istight.astype(np.bool)]
 
             e_loose = e[e.isloose]
             e_tight = e[e.istight]
