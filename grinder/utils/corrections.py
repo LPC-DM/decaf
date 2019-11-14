@@ -134,7 +134,19 @@ def get_adhoc_weight(type, pt):
     sf_qcd = kfactor[nlo_lo[type]].values
 
     correction=lookup_tools.dense_lookup.dense_lookup(sf_qcd, kfactor[nlo_lo[type]].edges)
-    return correction(pt)    
+    return correction(pt)
+
+
+gpar = np.array([1.00626, -1.06161, 0.0799900, 1.20454])
+cpar = np.array([1.09302, -0.000150068, 3.44866e-07, -2.68100e-10, 8.67440e-14, -1.00114e-17])
+fpar = np.array([1.27212, -0.000571640, 8.37289e-07, -5.20433e-10, 1.45375e-13, -1.50389e-17])
+
+def get_soft_drop_correction(pt, eta):
+    ptPower = np.power.outer(pt, np.arange(cpar.size))
+    genCorr = gpar[0] + gpar[1]*np.power(pt*gpar[2], -gpar[3])
+    recCorr = np.where(np.abs(eta)<1.3, np.dot(ptPower, cpar), np.dot(ptPower, fpar))
+    correction = genCorr*recCorr
+    return correction        
 
 ### Obsolete
 #def get_bad_ecal_weight(eta,phi):
