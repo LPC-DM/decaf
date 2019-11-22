@@ -116,4 +116,63 @@ Then log into fermicloud118, forwarding the port:
 ssh -L 9094:localhost:9094 fermicloud118
 ```
 
+First, check the name of the active k8s pod, where you will run your Spark applications. 
 
+```
+kubectl get pods | grep vm
+```
+
+and then, copy your certificate over the pod:
+
+```
+kubectl cp /home/USERNAME/x509up_u45169 cmsspark-vm-66-g6vbx:/home/USERNAME
+```
+
+where cmsspark-vm-66-g6vbx is the name of the pod retrieved at the previous step. Following are one-time instructions to install Laurelin, the Java library that allows for remote reading of rootfiles in Spark:
+
+```
+git clone https://github.com/lgray/laurelin.git -b useful_features
+cd laurelin
+rm -rf ~/.ivy2/cache/edu.vanderbilt.accre && rm -rf ~/.ivy2/jars/edu.vanderbilt.accre_laurelin*.jar && mvn install -Dmaven.test.skip=true #this nukes your jar cache and builds laurelin
+kubectl cp ${HOME}/.m2/repository/edu/vanderbilt/accre/laurelin/0.4.2-SNAPSHOT/laurelin-0.4.2-SNAPSHOT.pom cmsspark-vm-66-g6vbx:${HOME}/.m2/repository/edu/vanderbilt/accre/laurelin/0.4.2-SNAPSHOT/laurelin-0.4.2-SNAPSHOT.pom
+kubectl cp ${HOME}/.m2/repository/edu/vanderbilt/accre/laurelin/0.4.2-SNAPSHOT/laurelin-0.4.2-SNAPSHOT.jar cmsspark-vm-66-g6vbx:${HOME}/.m2/repository/edu/vanderbilt/accre/laurelin/0.4.2-SNAPSHOT/laurelin-0.4.2-SNAPSHOT.jar
+```
+
+To access the pod, just do:
+
+```
+/opt/ssh-into-pod.sh
+```
+
+and press 1 when asked to do so. Then:
+
+```
+su matteoc
+cd
+python3 -m venv py36
+source py36/bin/activate
+```
+
+If it is the first time logging into the pod, install Jupyter:
+
+```
+pip install jupyter
+```
+Clone decaf here:
+
+```
+git clone https://github.com/mcremone/decaf.git
+```
+
+To start Jupyter, do:
+
+```
+cd decaf
+sh start_jupyter.sh
+```
+
+The script will print a link inside start_jupyter.log. Copy-paste it on your browser and you can navigate inside decaf with Jupyter. You can access the ```analysis``` folder and start the ```run_spark.ipynb``` jupyter notebook to run your analysis with Spark. At the end of your work, remember to stop Jupyter:
+
+```
+sh stop_jupyter.sh
+```
