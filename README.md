@@ -170,6 +170,12 @@ Clone decaf here:
 git clone https://github.com/mcremone/decaf.git
 ```
 
+Before starting Jupyter, set the environmental proxy variable to your certificate:
+
+```
+export X509_USER_PROXY=/home/matteoc/x509up_u45169
+```
+
 To start Jupyter, do:
 
 ```
