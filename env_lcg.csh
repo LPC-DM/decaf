@@ -1,9 +1,10 @@
-# http://lcginfo.cern.ch/release/94python3/
-unsetenv PYTHON_LIB_SITE_PACKAGES
-set lsalias=`which ls | sed 's|.*to \(.*\)|\1|'`
-unalias ls
-source /cvmfs/sft.cern.ch/lcg/views/LCG_94python3/x86_64-slc6-gcc62-opt/setup.csh
-alias ls $lsalias
+# http://lcginfo.cern.ch/release/95apython3/
+# Try to guess SL6 vs. CC7
+if ( `uname -r | grep el6 | wc -l` > 0 ) then
+  source /cvmfs/sft.cern.ch/lcg/views/LCG_95apython3/x86_64-slc6-gcc8-opt/setup.csh
+else
+  source /cvmfs/sft.cern.ch/lcg/views/LCG_95apython3/x86_64-centos7-gcc8-opt/setup.csh
+endif
 
-#export PATH=${HOME}/.local/bin:$PATH
-#export PYTHONPATH=${HOME}/.local/lib/python3.6/site-packages:$PYTHONPATH
+setenv PYTHONPATH ~/.local/lib/python3.6/site-packages:$PYTHONPATH
+#setenv PATH ${HOME}/.local/bin:$PATH
