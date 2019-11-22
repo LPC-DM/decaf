@@ -128,7 +128,13 @@ and then, copy your certificate over the pod:
 kubectl cp /home/USERNAME/x509up_u45169 cmsspark-vm-66-g6vbx:/home/USERNAME
 ```
 
-where cmsspark-vm-66-g6vbx is the name of the pod retrieved at the previous step. Following are one-time instructions to install Laurelin, the Java library that allows for remote reading of rootfiles in Spark:
+where cmsspark-vm-66-g6vbx is the name of the pod retrieved at the previous step. Remember to port-forward to the pod too:
+
+```
+kubectl port-forward cmsspark-vm-66-g6vbx 9094:9094 &
+```
+
+Following are one-time instructions to install Laurelin, the Java library that allows for remote reading of rootfiles in Spark:
 
 ```
 git clone https://github.com/lgray/laurelin.git -b useful_features
@@ -147,7 +153,7 @@ To access the pod, just do:
 and press 1 when asked to do so. Then:
 
 ```
-su matteoc
+su USERNAME
 cd
 python3 -m venv py36
 source py36/bin/activate
