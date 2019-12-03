@@ -131,9 +131,6 @@ def darkhiggs_model(tmpdir):
     pho_id_eff = rl.NuisanceParameter('CMS_pho_id_eff', 'shape')
     gamma_to_z_ewk = rl.NuisanceParameter('Theory_gamma_z_ewk', 'shape')
 
-    recoilbins = np.linspace(300, 1200, 13)
-    recoil = rl.Observable('recoil', recoilbins)
-
     signalCh = rl.Channel("signalCh")
     model.addChannel(signalCh)
 
@@ -145,6 +142,7 @@ def darkhiggs_model(tmpdir):
 
     # these parameters are large, should probably log-transform them
     zvvBinYields = np.array([rl.IndependentParameter('tmp', b, 0, zvvTemplate[0].max()*2) for b in zvvTemplate[0]])  # name will be changed by ParametericSample
+    recoil = rl.Observable('recoil', zvvHist.axis('recoil').edges(overflow='all'))
     zvvJets = rl.ParametericSample('signalCh_zvvJets', rl.Sample.BACKGROUND, recoil, zvvBinYields)
     signalCh.addSample(zvvJets)
 

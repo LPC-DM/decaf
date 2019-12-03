@@ -1,0 +1,34 @@
+# Datacard for <Channel (signalCh) instance at 0x7f8ff5bf1cc0> generated on 2019-12-03 17:52:25.543205
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 1 # number of samples minus 1
+kmax 0 # number of nuisance parameters
+shapes * signalCh DarkHiggs.root DarkHiggs:signalCh_$PROCESS DarkHiggs:signalCh_$PROCESS_$SYSTEMATIC
+bin signalCh
+observation 541.865
+bin            signalCh  signalCh
+process  someDarkMatter   zvvJets
+process               0         1
+rate             57.226     1.000
+signalCh_zvvJets_bin0 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin1 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin10 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin11 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin12 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin13 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin14 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin15 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin16 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin17 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin18 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin19 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin2 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin20 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin21 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin22 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin3 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin4 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin5 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin6 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin7 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin8 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin9 extArg DarkHiggs.root:DarkHiggs
