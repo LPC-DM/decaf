@@ -500,7 +500,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     if self._year != '2016': adhocw = get_adhoc_weight['w'](genWs[0].pt.sum())
                 elif('DY' in dataset or 'ZJets' in dataset): 
                     wnlo = get_nlo_weight[self._year]['z'](genZs[0].pt.sum())
-                    if self._year != '2016': adhocw = get_adhoc_weight['z'](genWs[0].pt.sum())
+                    if self._year != '2016': adhocw = get_adhoc_weight['z'](genZs[0].pt.sum())
                 elif('GJets' in dataset): wnlo = get_nlo_weight[self._year]['a'](genAs[0].pt.sum())
 
             ###
