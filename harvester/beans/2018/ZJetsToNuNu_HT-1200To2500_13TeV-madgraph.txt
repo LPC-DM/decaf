@@ -1,7 +1,0 @@
-root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph/NanoTuples-2018_RunIIAutumn18MiniAOD-102X_v15-v1/190327_062136/0000/nano_1.root
-root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph/NanoTuples-2018_RunIIAutumn18MiniAOD-102X_v15-v1/190327_062136/0000/nano_2.root
-root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph/NanoTuples-2018_RunIIAutumn18MiniAOD-102X_v15-v1/190327_062136/0000/nano_3.root
-root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph/NanoTuples-2018_RunIIAutumn18MiniAOD-102X_v15-v1/190327_062136/0000/nano_4.root
-root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph/NanoTuples-2018_RunIIAutumn18MiniAOD-102X_v15-v1/190327_062136/0000/nano_5.root
-root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph/NanoTuples-2018_RunIIAutumn18MiniAOD-102X_v15-v1/190327_062136/0000/nano_6.root
-root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/102X/nano_2018/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph/NanoTuples-2018_RunIIAutumn18MiniAOD-102X_v15-v1/190327_062136/0000/nano_7.root

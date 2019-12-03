@@ -1,0 +1,13 @@
+universe = vanilla
+Executable = run.sh
+Should_Transfer_Files = YES
+WhenToTransferOutput = ON_EXIT
+Transfer_Input_Files = run.sh
+Output = pods/$ENV(PROCESSOR)/condor/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
+Error = pods/$ENV(PROCESSOR)/condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
+Log = pods/$ENV(PROCESSOR)/condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
+TransferOutputRemaps = "$ENV(PROCESSOR)_$ENV(SAMPLE).pkl.gz=$ENV(PWD)/pods/$ENV(PROCESSOR)/$ENV(SAMPLE).pkl.gz"
+Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(USER) $ENV(PROCESSOR) 
+request_cpus = 8
+request_memory = 16000
+Queue 1
