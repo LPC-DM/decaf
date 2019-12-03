@@ -45,7 +45,7 @@ Similarly, packing files in batches of different size will affect the performanc
 To create the JSONS:
 
 ```
-cd analysis
+cd analysis/metadata
 python pack.py -y 2018 -p 300 #(or 75)
 ```
 
@@ -60,27 +60,39 @@ The generation of histograms can be launched from the ```analysis``` folder. Cur
 Before running, weights from secondary inputs like corrections, ids ecc. need to be compiled and stored in .coffea files. To accomplish this task, simply run the following command:
 
 ```
-sh compile_weights.sh 
+sh produce_secondary_inputs.sh
 ```
 the script will run the following python modules:
 
 ```
-python metfilters.py
-python corrections.py
-python triggers.py
-python ids.py
+python secondary_inputs/metfilters.py
+python secondary_inputs/corrections.py
+python secondary_inputs/triggers.py
+python secondary_inputs/ids.py
 ```
-that of course can also run separately if only one separate set of weights needs to be compiled. Separate .coffea files will be generated, corresponding to the four python modules listed above.
+these modules can also run separately by passing to the bash script the argument corresponding to the name of the module you want to run. For example, to run ```secondary_inputs/corrections.py```, just do:
+
+```
+sh produce_secondary_inputs.sh corrections
+```
+
+Separate .coffea files will be generated, corresponding to the four python modules listed above, and stored in the ```secondary_inputs``` folder.
 
 ### Generate Coffea Processor
 
 The next step is generating the Coffea processor file corresponding to the analysis you want to run. For example, to generate the Dark Higgs processor, the following command can be used:
 
 ```
-python generate_darkhiggs.py --year 2018
+sh generate_processor.sh darkhiggs 2018
 ```
 
-The module will generate a .coffea files that contains the processor instance to be used in the following steps. The ```--year``` option will allow for the generation of the processor corresponding to a specific year.
+The script will run the following command, using the first argument to select the corresponding python module in the ```processors``` folder and the second argument to set the ```--year``` option:
+
+```
+python processors/darkhiggs.py --year 2018
+```
+
+The module will generate a .coffea file, stored in the ```processors``` folder, that contains the processor instance to be used in the following steps. The ```--year``` option will allow for the generation of the processor corresponding to a specific year.
 
 ### Running with Phyton futures
 
