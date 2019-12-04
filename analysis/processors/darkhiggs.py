@@ -473,16 +473,19 @@ class AnalysisProcessor(processor.ProcessorABC):
                 genw = df['genWeight']
                 sumw = genw.sum()
 
-                gen = Initialize({'pt':df['GenPart_pt'],
-                                  'eta':df['GenPart_eta'],
-                                  'phi':df['GenPart_phi'],
-                                  'mass':df['GenPart_mass'],
-                                  'pdgid':df['GenPart_pdgId'],
-                                  'status':df['GenPart_status'], 
-                                  'flags':df['GenPart_statusFlags'],
-                                  'motherid':df['GenPart_genPartIdxMother']})
+                gen_flags = df['GenPart_statusFlags']
+                LastCopy = (gen_flags&(1 << 13))==0
+                genLastCopy = Initialize({'pt':df['GenPart_pt'][LastCopy],
+                                  'eta':df['GenPart_eta'][LastCopy],
+                                  'phi':df['GenPart_phi'][LastCopy],
+                                  'mass':df['GenPart_mass'][LastCopy],
+                                  'pdgid':df['GenPart_pdgId'][LastCopy],
+                                  #'status':df['GenPart_status'][LastCopy],
+                                  'flags':df['GenPart_statusFlags'][LastCopy],
+                                  #'motherid':df['GenPart_genPartIdxMother'][LastCopy]})
+                                  })
 
-                genLastCopy = gen[gen.flags&(1 << 13)==0]
+                #genLastCopy = gen[gen.flags&(1 << 13)==0]
                 genTops = genLastCopy[abs(genLastCopy.pdgid)==6]
                 genWs = genLastCopy[abs(genLastCopy.pdgid)==24]
                 genZs = genLastCopy[abs(genLastCopy.pdgid)==23]
