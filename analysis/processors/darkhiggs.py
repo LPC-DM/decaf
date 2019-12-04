@@ -335,6 +335,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                              'phi':df['AK15Puppi_phi'],
                              'mass':df['AK15Puppi_mass']})
 
+            fj['msd'] = df['AK15Puppi_msoftdrop']
+
             for key in self._fj_id[self._year]:
                 fj[key] = fj.pt.zeros_like()
                 if self._fj_id[self._year][key] in df:
@@ -342,7 +344,6 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             fj['isgood'] = isGoodFatJet(fj.pt, fj.eta, fj.id)
             fj['isclean'] =~fj.match(pho_loose,1.5)&~fj.match(mu_loose,1.5)&~fj.match(e_loose,1.5)&fj.isgood.astype(np.bool)
-            #fj['isclean'] =~fj.match(pho_tight,1.5)&~fj.match(mu_tight,1.5)&~fj.match(e_tight,1.5)&fj.isgood
 
             for key in self._deep[self._year]:
                 fj[key] = fj.pt.zeros_like()
@@ -594,6 +595,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             selections.add('ismonohs', (leading_fj.DarkHiggsTagger.sum()>0.2))
             selections.add('ismonoV', ~(leading_fj.DarkHiggsTagger.sum()>0.2)&(leading_fj.VvsQCDTagger.sum()>0.8))
             selections.add('ismonojet', ~(leading_fj.DarkHiggsTagger.sum()>0.2)&~(leading_fj.VvsQCDTagger.sum()>0.8))
+            selections.add('mass0', (leading_fj.msd.sum()>40)&(leading_fj.msd.sum()<=60))
+            selections.add('mass1', (leading_fj.msd.sum()>60)&(leading_fj.msd.sum()<=120))
+            selections.add('mass2', (leading_fj.msd.sum()>120)&(leading_fj.msd.sum()<=250))
             selections.add('noHEMj', (j_nHEM==0))
 
             #selections.add('istwoM', (e_nloose==0) & (mu_ntight==1) & (mu_nloose==2) & (tau_nloose==0)&(pho_nloose==0)&(leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120))
@@ -622,11 +626,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                 selections.add(k+'baggy', (fj_nclean>0)&(fj_clean.pt.max()>160)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250))
                 #selections.add(k+'baggy', (fj_nclean>0)&(fj_clean.pt.max()>160)&(u[k].pt>250))
 
-                regions[k+'_baggy'] =  {k,k+'baggy','noHEMj'}
-                regions[k+'_topveto'] =  {k,k+'baggy','topveto','noextrab','noHEMj'}
-                for s in ['ismonohs','ismonoV','ismonojet']:
-                    regions[k+'_'+s] = {k,k+'baggy','topveto','noextrab','noHEMj',s}
-                regions[k+'_ismonohs'+'_extrab'] = {k,k+'baggy','topveto','extrab','ismonohs','noHEMj'}
+                regions[k+'_baggy'] = {k,k+'baggy','noHEMj','noextrab'}
+                regions[k+'_mass0'] = {k,k+'baggy','mass0','noHEMj','noextrab'}
+                regions[k+'_mass1'] = {k,k+'baggy','mass1','noHEMj','noextrab'}
+                regions[k+'_mass2'] = {k,k+'baggy','mass2','noHEMj','noextrab'}
 
             variables = {}
             variables['j1pt'] = leading_j.pt
@@ -681,7 +684,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             while i < len(selected_regions[dataset]):
                 r = selected_regions[dataset][i]
                 weight = weights[r].weight()
-                for s in ['ismonohs','ismonoV','ismonojet','baggy','topveto','ismonohs_extrab']:
+                for s in ['baggy','mass0','mass1','mass2']:
                     cut = selections.all(*regions[r+'_'+s])
                     flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
                     flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
