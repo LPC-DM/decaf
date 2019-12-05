@@ -40,4 +40,4 @@ for dataset, info in datadef.items():
     os.environ['SAMPLE'] = dataset
     os.environ['PROCESSOR']   = options.processor
     os.environ['YEAR']   = options.year
-    os.system("condor_submit run")
+    os.system("condor_submit run.jdl")

@@ -21,7 +21,7 @@ parser.add_option('-w', '--workers', help='Number of workers to use for multi-wo
 (options, args) = parser.parse_args()
 
 
-processor_instance=load(options.processor+'.coffea')
+processor_instance=load('processors/'+options.processor+'.coffea')
 
 fileslice = slice(None)
 with open("metadata/"+options.year+".json") as fin:
