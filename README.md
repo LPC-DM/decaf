@@ -60,7 +60,7 @@ The generation of histograms can be launched from the ```analysis``` folder. Cur
 Before running, weights from secondary inputs like corrections, ids ecc. need to be compiled and stored in .coffea files. To accomplish this task, simply run the following command:
 
 ```
-sh produce_secondary_inputs.sh
+sh generate_secondary_inputs.sh
 ```
 the script will run the following python modules:
 
@@ -73,7 +73,7 @@ python secondary_inputs/ids.py
 these modules can also run separately by passing to the bash script the argument corresponding to the name of the module you want to run. For example, to run ```secondary_inputs/corrections.py```, just do:
 
 ```
-sh produce_secondary_inputs.sh corrections
+sh generate_secondary_inputs.sh corrections
 ```
 
 Separate .coffea files will be generated, corresponding to the four python modules listed above, and stored in the ```secondary_inputs``` folder.
