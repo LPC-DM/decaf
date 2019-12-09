@@ -1,13 +1,39 @@
-[I 17:08:28.931 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
-[I 17:08:46.038 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/decaf
-[I 17:08:46.038 NotebookApp] The Jupyter Notebook is running at:
-[I 17:08:46.038 NotebookApp] http://127.0.0.1:9094/?token=5537b08a9320dd9beb4a3225cf57e8c67d3f68d6673cbba3
-[I 17:08:46.038 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 17:08:46.077 NotebookApp] 
+[I 20:23:08.351 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
+[I 20:23:10.719 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/decaf
+[I 20:23:10.719 NotebookApp] The Jupyter Notebook is running at:
+[I 20:23:10.719 NotebookApp] http://127.0.0.1:9094/?token=3778ea084a6fd57b456ebe15af1bc0d96acfd16a4c5252fc
+[I 20:23:10.720 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 20:23:10.727 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/45169/jupyter/nbserver-26593-open.html
+        file:///run/user/45169/jupyter/nbserver-27494-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=5537b08a9320dd9beb4a3225cf57e8c67d3f68d6673cbba3
-[I 17:09:40.658 NotebookApp] Shutting down on /api/shutdown request.
-[I 17:09:40.659 NotebookApp] Shutting down 0 kernels
+        http://127.0.0.1:9094/?token=3778ea084a6fd57b456ebe15af1bc0d96acfd16a4c5252fc
+[I 20:23:38.427 NotebookApp] 302 GET /?token=3778ea084a6fd57b456ebe15af1bc0d96acfd16a4c5252fc (127.0.0.1) 0.68ms
+[W 20:23:54.787 NotebookApp] Notebook analysis/plot.ipynb is not trusted
+[I 20:23:56.318 NotebookApp] Kernel started: ec79e0a0-d35f-4e00-9aca-bcdef4671dd7
+[I 20:23:59.547 NotebookApp] Adapting to protocol v5.1 for kernel ec79e0a0-d35f-4e00-9aca-bcdef4671dd7
+[I 20:26:03.052 NotebookApp] Saving file at /analysis/plot.ipynb
+[W 20:26:03.054 NotebookApp] Notebook analysis/plot.ipynb is not trusted
+[I 20:27:24.553 NotebookApp] Starting buffering for ec79e0a0-d35f-4e00-9aca-bcdef4671dd7:e729e7c673084e7d8b73cac6d3b5d37f
+[I 20:27:24.984 NotebookApp] Kernel restarted: ec79e0a0-d35f-4e00-9aca-bcdef4671dd7
+[I 20:27:27.609 NotebookApp] Adapting to protocol v5.1 for kernel ec79e0a0-d35f-4e00-9aca-bcdef4671dd7
+[I 20:27:27.610 NotebookApp] Restoring connection for ec79e0a0-d35f-4e00-9aca-bcdef4671dd7:e729e7c673084e7d8b73cac6d3b5d37f
+[I 20:27:27.610 NotebookApp] Replaying 10 buffered messages
+[I 20:27:56.289 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 20:28:00.250 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 20:29:56.312 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 20:31:56.304 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 20:33:56.312 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 20:35:56.313 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 20:37:56.293 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 20:42:22.564 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 20:42:22.870 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 20:42:23.919 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 20:42:24.134 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 20:42:24.347 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 20:42:27.392 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 20:42:30.112 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 20:42:39.039 NotebookApp] Shutting down on /api/shutdown request.
+[I 20:42:39.040 NotebookApp] Shutting down 1 kernel
+[I 20:42:39.443 NotebookApp] Kernel shutdown: ec79e0a0-d35f-4e00-9aca-bcdef4671dd7

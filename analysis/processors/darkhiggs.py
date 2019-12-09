@@ -131,7 +131,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             'nfjtot': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjtot","AK15 Number of Jets",4,0,3)),
             'nfjgood': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjgood","AK15 Number of Good Jets",4,0,3)),
             'nfjclean': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("nfjclean","AK15 Number of cleaned Jets",4,0,3)),
-            'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fjmass","AK15 Jet Mass",[0.0, 40.0, 60.0, 75.0, 85.0, 115.0, 135.0, 225.0, 500.0])),
+            'fjmass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("fjmass","AK15 Jet Mass",30,0,300)),
             'e1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1pt","Leading Electron Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
             'e1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1eta","Leading Electron Eta",48,-2.4,2.4)),
             'e1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("e1phi","Leading Electron Phi",64,-3.2,3.2)),
@@ -191,6 +191,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             singleele_trigger_paths = self._triggers['singleele_trigger_paths']
             singlepho_trigger_paths = self._triggers['singlepho_trigger_paths']
 
+            get_msd_weight          = self._corrections['get_msd_weight']    
             get_ttbar_weight        = self._corrections['get_ttbar_weight']       
             get_nlo_weight          = self._corrections['get_nlo_weight']         
             get_adhoc_weight        = self._corrections['get_adhoc_weight']       
@@ -357,6 +358,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             leading_fj = fj[fj.pt.argmax()]
             leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
+            leading_fj_msd_corr = leading_fj.msd.sum()*get_msd_weight(leading_fj.pt.sum(),leading_fj.eta.sum())
 
             fj_good = fj[fj.isgood.astype(np.bool)]
             fj_clean=fj[fj.isclean.astype(np.bool)]
@@ -595,9 +597,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             selections.add('ismonohs', (leading_fj.DarkHiggsTagger.sum()>0.2))
             selections.add('ismonoV', ~(leading_fj.DarkHiggsTagger.sum()>0.2)&(leading_fj.VvsQCDTagger.sum()>0.8))
             selections.add('ismonojet', ~(leading_fj.DarkHiggsTagger.sum()>0.2)&~(leading_fj.VvsQCDTagger.sum()>0.8))
-            selections.add('mass0', (leading_fj.msd.sum()>40)&(leading_fj.msd.sum()<=60))
-            selections.add('mass1', (leading_fj.msd.sum()>60)&(leading_fj.msd.sum()<=120))
-            selections.add('mass2', (leading_fj.msd.sum()>120)&(leading_fj.msd.sum()<=250))
+            selections.add('mass0', (leading_fj_msd_corr>40)&(leading_fj_msd_corr<=60))
+            selections.add('mass1', (leading_fj_msd_corr>60)&(leading_fj_msd_corr<=120))
+            selections.add('mass2', (leading_fj_msd_corr>120)&(leading_fj_msd_corr<=250))
             selections.add('noHEMj', (j_nHEM==0))
 
             #selections.add('istwoM', (e_nloose==0) & (mu_ntight==1) & (mu_nloose==2) & (tau_nloose==0)&(pho_nloose==0)&(leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120))
@@ -656,7 +658,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['nfjtot'] = fj_ntot
             variables['nfjgood'] = fj_ngood
             variables['nfjclean'] = fj_nclean
-            variables['fjmass'] = leading_fj.mass
             variables['TopTagger'] = leading_fj.TopTagger
             variables['DarkHiggsTagger'] = leading_fj.DarkHiggsTagger
             variables['VvsQCDTagger'] = leading_fj.VvsQCDTagger
@@ -693,6 +694,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                             continue
                         elif histname == 'sumw':
                             continue
+                        elif histname == 'fjmass':
+                            h.fill(dataset=dataset, region=r, jet_selection=s, fjmass=leading_fj_msd_corr, weight=weight*cut)
                         elif histname == 'recoil':
                             h.fill(dataset=dataset, region=r, jet_selection=s, recoil=u[r].pt, weight=weight*cut)
                         elif histname == 'CaloMinusPfOverRecoil':
