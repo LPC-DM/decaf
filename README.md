@@ -167,7 +167,7 @@ and press 1 when asked to do so. Then:
 ```
 su USERNAME
 cd
-python3 -m venv py36
+python3 -m venv py36 --system-site-packages
 source py36/bin/activate
 ```
 
