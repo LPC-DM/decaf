@@ -62,6 +62,7 @@ def scale(folder):
     bkg_map["TT"] = ("TT*",)
     bkg_map["Wjets"] = ("WJets*",)
     bkg_map["ZJets"] = ("ZJetsToNuNu*",)   ## temporarily 
+    bkg_map["Gjets"] = ("GJets*",)
     bkg_hists = {}
 
     signal_cats = ("pdataset",)

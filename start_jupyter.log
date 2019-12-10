@@ -1,39 +1,16 @@
-[I 20:23:08.351 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
-[I 20:23:10.719 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/decaf
-[I 20:23:10.719 NotebookApp] The Jupyter Notebook is running at:
-[I 20:23:10.719 NotebookApp] http://127.0.0.1:9094/?token=3778ea084a6fd57b456ebe15af1bc0d96acfd16a4c5252fc
-[I 20:23:10.720 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 20:23:10.727 NotebookApp] 
+[I 17:05:13.221 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
+[I 17:05:17.187 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/decaf
+[I 17:05:17.187 NotebookApp] The Jupyter Notebook is running at:
+[I 17:05:17.187 NotebookApp] http://127.0.0.1:9094/?token=8488ed2d4a47e45ca43a1b2e683e8729929e4f95ca9c72d5
+[I 17:05:17.187 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 17:05:17.224 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/45169/jupyter/nbserver-27494-open.html
+        file:///run/user/45169/jupyter/nbserver-28661-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=3778ea084a6fd57b456ebe15af1bc0d96acfd16a4c5252fc
-[I 20:23:38.427 NotebookApp] 302 GET /?token=3778ea084a6fd57b456ebe15af1bc0d96acfd16a4c5252fc (127.0.0.1) 0.68ms
-[W 20:23:54.787 NotebookApp] Notebook analysis/plot.ipynb is not trusted
-[I 20:23:56.318 NotebookApp] Kernel started: ec79e0a0-d35f-4e00-9aca-bcdef4671dd7
-[I 20:23:59.547 NotebookApp] Adapting to protocol v5.1 for kernel ec79e0a0-d35f-4e00-9aca-bcdef4671dd7
-[I 20:26:03.052 NotebookApp] Saving file at /analysis/plot.ipynb
-[W 20:26:03.054 NotebookApp] Notebook analysis/plot.ipynb is not trusted
-[I 20:27:24.553 NotebookApp] Starting buffering for ec79e0a0-d35f-4e00-9aca-bcdef4671dd7:e729e7c673084e7d8b73cac6d3b5d37f
-[I 20:27:24.984 NotebookApp] Kernel restarted: ec79e0a0-d35f-4e00-9aca-bcdef4671dd7
-[I 20:27:27.609 NotebookApp] Adapting to protocol v5.1 for kernel ec79e0a0-d35f-4e00-9aca-bcdef4671dd7
-[I 20:27:27.610 NotebookApp] Restoring connection for ec79e0a0-d35f-4e00-9aca-bcdef4671dd7:e729e7c673084e7d8b73cac6d3b5d37f
-[I 20:27:27.610 NotebookApp] Replaying 10 buffered messages
-[I 20:27:56.289 NotebookApp] Saving file at /analysis/plot.ipynb
-[I 20:28:00.250 NotebookApp] Saving file at /analysis/plot.ipynb
-[I 20:29:56.312 NotebookApp] Saving file at /analysis/plot.ipynb
-[I 20:31:56.304 NotebookApp] Saving file at /analysis/plot.ipynb
-[I 20:33:56.312 NotebookApp] Saving file at /analysis/plot.ipynb
-[I 20:35:56.313 NotebookApp] Saving file at /analysis/plot.ipynb
-[I 20:37:56.293 NotebookApp] Saving file at /analysis/plot.ipynb
-[I 20:42:22.564 NotebookApp] Saving file at /analysis/plot.ipynb
-[I 20:42:22.870 NotebookApp] Saving file at /analysis/plot.ipynb
-[I 20:42:23.919 NotebookApp] Saving file at /analysis/plot.ipynb
-[I 20:42:24.134 NotebookApp] Saving file at /analysis/plot.ipynb
-[I 20:42:24.347 NotebookApp] Saving file at /analysis/plot.ipynb
-[I 20:42:27.392 NotebookApp] Saving file at /analysis/plot.ipynb
-[I 20:42:30.112 NotebookApp] Saving file at /analysis/plot.ipynb
-[I 20:42:39.039 NotebookApp] Shutting down on /api/shutdown request.
-[I 20:42:39.040 NotebookApp] Shutting down 1 kernel
-[I 20:42:39.443 NotebookApp] Kernel shutdown: ec79e0a0-d35f-4e00-9aca-bcdef4671dd7
+        http://127.0.0.1:9094/?token=8488ed2d4a47e45ca43a1b2e683e8729929e4f95ca9c72d5
+[I 17:05:32.050 NotebookApp] 302 GET /?token=8488ed2d4a47e45ca43a1b2e683e8729929e4f95ca9c72d5 (127.0.0.1) 0.72ms
+[I 17:05:48.991 NotebookApp] Kernel started: 416c6f10-f9ad-46fc-8ffd-4c06b8269ff7
+[I 17:05:53.245 NotebookApp] Adapting to protocol v5.1 for kernel 416c6f10-f9ad-46fc-8ffd-4c06b8269ff7
+[I 17:10:00.218 NotebookApp] Starting buffering for 416c6f10-f9ad-46fc-8ffd-4c06b8269ff7:963c9b0ed2404b0f87ba20f2f65420cb
+[IPKernelApp] WARNING | Parent appears to have exited, shutting down.

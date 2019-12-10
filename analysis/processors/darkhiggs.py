@@ -140,9 +140,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             'mu1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mu1eta","Leading Muon Eta",48,-2.4,2.4)),
             'mu1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("mu1phi","Leading Muon Phi",64,-3.2,3.2)),
             'dimumass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("dimumass","Dimuon mass",100,0,500)),
-            'TopTagger': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("TopTagger","TopTagger",15,0,1)),
-            'DarkHiggsTagger': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("DarkHiggsTagger","DarkHiggsTagger",15,0,1)),
-            'VvsQCDTagger': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("VvsQCDTagger","VvsQCDTagger",15,0,1)),
+            'ZHbbvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("ZHbbvsQCD","ZHbbvsQCD",15,0,1)),
+            'VvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("VvsQCD","VvsQCD",15,0,1)),
+            'TvsQCD': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("TvsQCD","TvsQCD",15,0,1)),
             'probTbcq': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probTbcq","probTbcq",15,0,1)),
             'probTbqq': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probTbqq","probTbqq",15,0,1)),
             'probTbc': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("region", "Region"), hist.Cat("jet_selection", "JetSelection"), hist.Bin("probTbc","probTbc",15,0,1)),
@@ -351,10 +351,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                 if self._deep[self._year][key] in df:
                     fj[key] = df[self._deep[self._year][key]]
 
-            #fj['probQCD'] = fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
-            fj['TopTagger'] = fj.probTbcq+fj.probTbqq
-            fj['DarkHiggsTagger'] = fj.probZbb + fj.probHbb #/ (fj.probZbb+fj.probHbb+fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probHcc+fj.probHqqqq+fj.probQCD)
-            fj['VvsQCDTagger'] = (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq) / (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probQCDothers+fj.probQCDcc)
+            fj['probQCD'] = fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
+            fj['TvsQCD'] = (fj.probTbcq + fj.probTbqq) / (fj.probTbcq + fj.probTbqq + fj.probQCD)
+            fj['ZHbbvsQCD'] = (fj.probZbb + fj.probHbb) / (fj.probZbb+ fj.probHbb+ fj.probQCD)
+            fj['VvsQCD'] = (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probZbb) / (fj.probWcq+fj.probWqq+fj.probZcc+fj.probZqq+fj.probZbb+fj.probQCD)
 
             leading_fj = fj[fj.pt.argmax()]
             leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
@@ -476,38 +476,34 @@ class AnalysisProcessor(processor.ProcessorABC):
                 genw = df['genWeight']
                 sumw = genw.sum()
 
-                gen_flags = df['GenPart_statusFlags']
-                LastCopy = (gen_flags&(1 << 13))==0
-                genLastCopy = Initialize({'pt':df['GenPart_pt'][LastCopy],
-                                  'eta':df['GenPart_eta'][LastCopy],
-                                  'phi':df['GenPart_phi'][LastCopy],
-                                  'mass':df['GenPart_mass'][LastCopy],
-                                  'pdgid':df['GenPart_pdgId'][LastCopy],
-                                  #'status':df['GenPart_status'][LastCopy],
-                                  'flags':df['GenPart_statusFlags'][LastCopy],
-                                  #'motherid':df['GenPart_genPartIdxMother'][LastCopy]})
-                                  })
+                if 'TTJets' in dataset or 'WJets' in dataset or 'DY' in dataset or 'ZJets' in dataset:
+                    gen_flags = df['GenPart_statusFlags']
+                    LastCopy = (gen_flags&(1 << 13))==0
+                    genLastCopy = Initialize({'pt':df['GenPart_pt'][LastCopy],
+                                              'eta':df['GenPart_eta'][LastCopy],
+                                              'phi':df['GenPart_phi'][LastCopy],
+                                              'mass':df['GenPart_mass'][LastCopy],
+                                              'pdgid':df['GenPart_pdgId'][LastCopy]})
 
-                #genLastCopy = gen[gen.flags&(1 << 13)==0]
-                genTops = genLastCopy[abs(genLastCopy.pdgid)==6]
-                genWs = genLastCopy[abs(genLastCopy.pdgid)==24]
-                genZs = genLastCopy[abs(genLastCopy.pdgid)==23]
-                genAs = genLastCopy[abs(genLastCopy.pdgid)==22]
-                genHs = genLastCopy[abs(genLastCopy.pdgid)==25]
+                    genTops = genLastCopy[abs(genLastCopy.pdgid)==6]
+                    genWs = genLastCopy[abs(genLastCopy.pdgid)==24]
+                    genZs = genLastCopy[abs(genLastCopy.pdgid)==23]
+                    genAs = genLastCopy[abs(genLastCopy.pdgid)==22]
+                    genHs = genLastCopy[abs(genLastCopy.pdgid)==25]
 
-                isTT = (genTops.counts==2)
-                isW  = (genTops.counts==0)&(genWs.counts==1)&(genZs.counts==0)&(genAs.counts==0)&(genHs.counts==0)
-                isZ  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==1)&(genAs.counts==0)&(genHs.counts==0)
-                isA  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==1)&(genHs.counts==0)
-
-                if('TTJets' in dataset): wnlo = np.sqrt(get_ttbar_weight(genTops[0].pt.sum()) * get_ttbar_weight(genTops[1].pt.sum()))
-                elif('WJets' in dataset): 
-                    wnlo = get_nlo_weight[self._year]['w'](genWs[0].pt.sum())
-                    if self._year != '2016': adhocw = get_adhoc_weight['w'](genWs[0].pt.sum())
-                elif('DY' in dataset or 'ZJets' in dataset): 
-                    wnlo = get_nlo_weight[self._year]['z'](genZs[0].pt.sum())
-                    if self._year != '2016': adhocw = get_adhoc_weight['z'](genZs[0].pt.sum())
-                elif('GJets' in dataset): wnlo = get_nlo_weight[self._year]['a'](genAs[0].pt.sum())
+                    isTT = (genTops.counts==2)
+                    isW  = (genTops.counts==0)&(genWs.counts==1)&(genZs.counts==0)&(genAs.counts==0)&(genHs.counts==0)
+                    isZ  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==1)&(genAs.counts==0)&(genHs.counts==0)
+                    isA  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==1)&(genHs.counts==0)
+                    if('TTJets' in dataset): 
+                        wnlo = np.sqrt(get_ttbar_weight(genTops[0].pt.sum()) * get_ttbar_weight(genTops[1].pt.sum()))
+                    elif('WJets' in dataset): 
+                        wnlo = get_nlo_weight[self._year]['w'](genWs[0].pt.sum())
+                        if self._year != '2016': adhocw = get_adhoc_weight['w'](genWs[0].pt.sum())
+                    elif('DY' in dataset or 'ZJets' in dataset): 
+                        wnlo = get_nlo_weight[self._year]['z'](genZs[0].pt.sum())
+                        if self._year != '2016': adhocw = get_adhoc_weight['z'](genZs[0].pt.sum())
+                    elif('GJets' in dataset): wnlo = get_nlo_weight[self._year]['a'](genAs[0].pt.sum())
 
             ###
             # Calculate PU weight and systematic variations
@@ -591,19 +587,17 @@ class AnalysisProcessor(processor.ProcessorABC):
             selections.add('istwoM', (e_nloose==0) & (mu_ntight>=1) & (mu_nloose==2) & (tau_nloose==0)&(pho_nloose==0)&(leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120))
             selections.add('istwoE', (e_ntight>=1) & (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
             selections.add('isoneA', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1))
-            selections.add('topveto', (leading_fj.TopTagger.sum()<0.25))
             selections.add('noextrab', (j_ndflvL==0))
             selections.add('extrab', (j_ndflvL>0))
-            selections.add('ismonohs', (leading_fj.DarkHiggsTagger.sum()>0.2))
-            selections.add('ismonoV', ~(leading_fj.DarkHiggsTagger.sum()>0.2)&(leading_fj.VvsQCDTagger.sum()>0.8))
-            selections.add('ismonojet', ~(leading_fj.DarkHiggsTagger.sum()>0.2)&~(leading_fj.VvsQCDTagger.sum()>0.8))
-            selections.add('mass0', (leading_fj_msd_corr>40)&(leading_fj_msd_corr<=60))
-            selections.add('mass1', (leading_fj_msd_corr>60)&(leading_fj_msd_corr<=120))
-            selections.add('mass2', (leading_fj_msd_corr>120)&(leading_fj_msd_corr<=250))
+            selections.add('ismonohs', (leading_fj.ZHbbvsQCD.sum()>0.2))
+            selections.add('ismonoV', ~(leading_fj.ZHbbvsQCD.sum()>0.2)&(leading_fj.VvsQCD.sum()>0.8))
+            selections.add('ismonojet', ~(leading_fj.ZHbbvsQCD.sum()>0.2)&~(leading_fj.VvsQCD.sum()>0.8))
+            selections.add('mass0', (leading_fj_msd_corr<30))
+            selections.add('mass1', (leading_fj_msd_corr>=30)&(leading_fj_msd_corr<60))
+            selections.add('mass2', (leading_fj_msd_corr>=60)&(leading_fj_msd_corr<150))
+            selections.add('mass3', (leading_fj_msd_corr>=150)&(leading_fj_msd_corr<=300))
+            selections.add('inclusive', (leading_fj_msd_corr<=300))
             selections.add('noHEMj', (j_nHEM==0))
-
-            #selections.add('istwoM', (e_nloose==0) & (mu_ntight==1) & (mu_nloose==2) & (tau_nloose==0)&(pho_nloose==0)&(leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120))
-            #selections.add('istwoE', (e_ntight==1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
 
             ###
             #Adding weights and selections
@@ -622,16 +616,20 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights[k].add('pass_trig', pass_trig[k])
 
 
-                #baggy = (fj_nclean>0)&(fj_clean.pt.max()>160)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250)
-                #skinny = (j_nclean>0) & (j_clean.pt.max()>100) & (abs(u[k].delta_phi(j_clean)).min()>0.5) & (u[k].pt>250)
-                #skinny_no_baggy = ~baggy&skinny
                 selections.add(k+'baggy', (fj_nclean>0)&(fj_clean.pt.max()>160)&(abs(u[k].delta_phi(j_clean)).min()>0.8)&(u[k].pt>250))
-                #selections.add(k+'baggy', (fj_nclean>0)&(fj_clean.pt.max()>160)&(u[k].pt>250))
 
                 regions[k+'_baggy'] = {k,k+'baggy','noHEMj','noextrab'}
                 regions[k+'_mass0'] = {k,k+'baggy','mass0','noHEMj','noextrab'}
                 regions[k+'_mass1'] = {k,k+'baggy','mass1','noHEMj','noextrab'}
                 regions[k+'_mass2'] = {k,k+'baggy','mass2','noHEMj','noextrab'}
+                regions[k+'_mass3'] = {k,k+'baggy','mass3','noHEMj','noextrab'}
+                regions[k+'_inclusive'] = {k,k+'baggy','inclusive','noHEMj','noextrab'}
+                regions[k+'_baggy_extrab'] = {k,k+'baggy','noHEMj','extrab'}
+                regions[k+'_mass0_extrab'] = {k,k+'baggy','mass0','noHEMj','extrab'}
+                regions[k+'_mass1_extrab'] = {k,k+'baggy','mass1','noHEMj','extrab'}
+                regions[k+'_mass2_extrab'] = {k,k+'baggy','mass2','noHEMj','extrab'}
+                regions[k+'_mass3_extrab'] = {k,k+'baggy','mass3','noHEMj','extrab'}
+                regions[k+'_inclusive_extrab'] = {k,k+'baggy','inclusive','noHEMj','extrab'}
 
             variables = {}
             variables['j1pt'] = leading_j.pt
@@ -658,9 +656,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['nfjtot'] = fj_ntot
             variables['nfjgood'] = fj_ngood
             variables['nfjclean'] = fj_nclean
-            variables['TopTagger'] = leading_fj.TopTagger
-            variables['DarkHiggsTagger'] = leading_fj.DarkHiggsTagger
-            variables['VvsQCDTagger'] = leading_fj.VvsQCDTagger
+            variables['TvsQCD'] = leading_fj.TvsQCD
+            variables['ZHbbvsQCD'] = leading_fj.ZHbbvsQCD
+            variables['VvsQCD'] = leading_fj.VvsQCD
             variables['probTbcq']      = leading_fj.probTbcq
             variables['probTbqq']      = leading_fj.probTbqq
             variables['probTbc']       = leading_fj.probTbc
@@ -685,7 +683,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             while i < len(selected_regions[dataset]):
                 r = selected_regions[dataset][i]
                 weight = weights[r].weight()
-                for s in ['baggy','mass0','mass1','mass2']:
+                for s in ['baggy','mass0','mass1','mass2','mass3','inclusive','baggy','mass0_extrab','mass1_extrab','mass2_extrab','mass3_extrab','inclusive_extrab']:
                     cut = selections.all(*regions[r+'_'+s])
                     flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
                     flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
