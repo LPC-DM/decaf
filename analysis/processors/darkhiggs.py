@@ -594,9 +594,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             selections.add('ismonojet', ~(leading_fj.ZHbbvsQCD.sum()>0.2)&~(leading_fj.VvsQCD.sum()>0.8))
             selections.add('mass0', (leading_fj_msd_corr<30))
             selections.add('mass1', (leading_fj_msd_corr>=30)&(leading_fj_msd_corr<60))
-            selections.add('mass2', (leading_fj_msd_corr>=60)&(leading_fj_msd_corr<150))
-            selections.add('mass3', (leading_fj_msd_corr>=150)&(leading_fj_msd_corr<=300))
-            selections.add('inclusive', (leading_fj_msd_corr<=300))
+            selections.add('mass2', (leading_fj_msd_corr>=60)&(leading_fj_msd_corr<80))
+            selections.add('mass3', (leading_fj_msd_corr>=80)&(leading_fj_msd_corr<140))
+            selections.add('mass4', (leading_fj_msd_corr>=140))
             selections.add('noHEMj', (j_nHEM==0))
 
             ###
@@ -623,13 +623,13 @@ class AnalysisProcessor(processor.ProcessorABC):
                 regions[k+'_mass1'] = {k,k+'baggy','mass1','noHEMj','noextrab'}
                 regions[k+'_mass2'] = {k,k+'baggy','mass2','noHEMj','noextrab'}
                 regions[k+'_mass3'] = {k,k+'baggy','mass3','noHEMj','noextrab'}
-                regions[k+'_inclusive'] = {k,k+'baggy','inclusive','noHEMj','noextrab'}
+                regions[k+'_mass4'] = {k,k+'baggy','mass4','noHEMj','noextrab'}
                 regions[k+'_baggy_extrab'] = {k,k+'baggy','noHEMj','extrab'}
                 regions[k+'_mass0_extrab'] = {k,k+'baggy','mass0','noHEMj','extrab'}
                 regions[k+'_mass1_extrab'] = {k,k+'baggy','mass1','noHEMj','extrab'}
                 regions[k+'_mass2_extrab'] = {k,k+'baggy','mass2','noHEMj','extrab'}
                 regions[k+'_mass3_extrab'] = {k,k+'baggy','mass3','noHEMj','extrab'}
-                regions[k+'_inclusive_extrab'] = {k,k+'baggy','inclusive','noHEMj','extrab'}
+                regions[k+'_mass4_extrab'] = {k,k+'baggy','mass4','noHEMj','extrab'}
 
             variables = {}
             variables['j1pt'] = leading_j.pt
@@ -683,7 +683,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             while i < len(selected_regions[dataset]):
                 r = selected_regions[dataset][i]
                 weight = weights[r].weight()
-                for s in ['baggy','mass0','mass1','mass2','mass3','inclusive','baggy_extrab','mass0_extrab','mass1_extrab','mass2_extrab','mass3_extrab','inclusive_extrab']:
+                for s in ['baggy','mass0','mass1','mass2','mass3','mass4','baggy_extrab','mass0_extrab','mass1_extrab','mass2_extrab','mass3_extrab','mass4_extrab']:
                     cut = selections.all(*regions[r+'_'+s])
                     flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
                     flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
