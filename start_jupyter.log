@@ -1,16 +1,27 @@
-[I 17:05:13.221 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
-[I 17:05:17.187 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/decaf
-[I 17:05:17.187 NotebookApp] The Jupyter Notebook is running at:
-[I 17:05:17.187 NotebookApp] http://127.0.0.1:9094/?token=8488ed2d4a47e45ca43a1b2e683e8729929e4f95ca9c72d5
-[I 17:05:17.187 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 17:05:17.224 NotebookApp] 
+[I 15:39:22.353 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
+[I 15:39:25.979 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/decaf
+[I 15:39:25.979 NotebookApp] The Jupyter Notebook is running at:
+[I 15:39:25.979 NotebookApp] http://127.0.0.1:9094/?token=1b081279e00fdce38a5f65f0b2f78032954df6a92eb9ea26
+[I 15:39:25.979 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 15:39:25.988 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/45169/jupyter/nbserver-28661-open.html
+        file:///run/user/45169/jupyter/nbserver-6248-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=8488ed2d4a47e45ca43a1b2e683e8729929e4f95ca9c72d5
-[I 17:05:32.050 NotebookApp] 302 GET /?token=8488ed2d4a47e45ca43a1b2e683e8729929e4f95ca9c72d5 (127.0.0.1) 0.72ms
-[I 17:05:48.991 NotebookApp] Kernel started: 416c6f10-f9ad-46fc-8ffd-4c06b8269ff7
-[I 17:05:53.245 NotebookApp] Adapting to protocol v5.1 for kernel 416c6f10-f9ad-46fc-8ffd-4c06b8269ff7
-[I 17:10:00.218 NotebookApp] Starting buffering for 416c6f10-f9ad-46fc-8ffd-4c06b8269ff7:963c9b0ed2404b0f87ba20f2f65420cb
-[IPKernelApp] WARNING | Parent appears to have exited, shutting down.
+        http://127.0.0.1:9094/?token=1b081279e00fdce38a5f65f0b2f78032954df6a92eb9ea26
+[I 15:39:40.832 NotebookApp] 302 GET /?token=1b081279e00fdce38a5f65f0b2f78032954df6a92eb9ea26 (127.0.0.1) 0.76ms
+[I 15:41:36.343 NotebookApp] Kernel started: 9a4ef223-456f-4947-ae7b-f84a6df2dc47
+[I 15:41:39.400 NotebookApp] Adapting to protocol v5.1 for kernel 9a4ef223-456f-4947-ae7b-f84a6df2dc47
+[I 15:43:37.012 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 15:45:36.960 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 15:47:36.743 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 15:49:36.796 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 15:51:36.606 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 15:53:36.833 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 15:55:36.738 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 15:57:36.849 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 15:59:37.101 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 16:01:36.912 NotebookApp] Saving file at /analysis/plot.ipynb
+[I 16:03:54.881 NotebookApp] Shutting down on /api/shutdown request.
+[I 16:03:54.882 NotebookApp] Shutting down 1 kernel
+[I 16:03:55.785 NotebookApp] Kernel shutdown: 9a4ef223-456f-4947-ae7b-f84a6df2dc47

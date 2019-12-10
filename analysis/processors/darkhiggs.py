@@ -683,7 +683,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             while i < len(selected_regions[dataset]):
                 r = selected_regions[dataset][i]
                 weight = weights[r].weight()
-                for s in ['baggy','mass0','mass1','mass2','mass3','inclusive','baggy','mass0_extrab','mass1_extrab','mass2_extrab','mass3_extrab','inclusive_extrab']:
+                for s in ['baggy','mass0','mass1','mass2','mass3','inclusive','baggy_extrab','mass0_extrab','mass1_extrab','mass2_extrab','mass3_extrab','inclusive_extrab']:
                     cut = selections.all(*regions[r+'_'+s])
                     flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
                     flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
