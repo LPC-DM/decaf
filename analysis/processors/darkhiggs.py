@@ -824,6 +824,7 @@ if __name__ == '__main__':
     AK15Puppi_probQCDb
     AK15Puppi_probQCDc
     AK15Puppi_probQCDothers
+    AK15Puppi_msoftdrop
     """.split()
 
     processor_instance=AnalysisProcessor(columns=columns,
