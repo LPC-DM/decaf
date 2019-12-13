@@ -590,9 +590,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             selections.add('noextrab', (j_ndflvL==0))
             selections.add('extrab', (j_ndflvL>0))
             selections.add('ismonohs', (leading_fj.ZHbbvsQCD.sum()>0.65))
-            selections.add('isnotmonohs', ~(leading_fj.ZHbbvsQCD.sum()>0.65))
-            selections.add('ismonoV', ~(leading_fj.ZHbbvsQCD.sum()>0.2)&(leading_fj.VvsQCD.sum()>0.8))
-            selections.add('ismonojet', ~(leading_fj.ZHbbvsQCD.sum()>0.2)&~(leading_fj.VvsQCD.sum()>0.8))
+            selections.add('ismonojet', ~(leading_fj.ZHbbvsQCD.sum()>0.65))
             selections.add('mass0', (leading_fj_msd_corr<30))
             selections.add('mass1', (leading_fj_msd_corr>=30)&(leading_fj_msd_corr<60))
             selections.add('mass2', (leading_fj_msd_corr>=60)&(leading_fj_msd_corr<80))
@@ -645,18 +643,18 @@ class AnalysisProcessor(processor.ProcessorABC):
                 regions[k+'_mass3_extrab_ismonohs'] = {k,k+'baggy','mass3','noHEMj','extrab','ismonohs'}
                 regions[k+'_mass4_extrab_ismonohs'] = {k,k+'baggy','mass4','noHEMj','extrab','ismonohs'}
 
-                regions[k+'_baggy_isnotmonohs'] = {k,k+'baggy','noHEMj','noextrab','isnotmonohs'}
-                regions[k+'_mass0_isnotmonohs'] = {k,k+'baggy','mass0','noHEMj','noextrab','isnotmonohs'}
-                regions[k+'_mass1_isnotmonohs'] = {k,k+'baggy','mass1','noHEMj','noextrab','isnotmonohs'}
-                regions[k+'_mass2_isnotmonohs'] = {k,k+'baggy','mass2','noHEMj','noextrab','isnotmonohs'}
-                regions[k+'_mass3_isnotmonohs'] = {k,k+'baggy','mass3','noHEMj','noextrab','isnotmonohs'}
-                regions[k+'_mass4_isnotmonohs'] = {k,k+'baggy','mass4','noHEMj','noextrab','isnotmonohs'}
-                regions[k+'_baggy_extrab_isnotmonohs'] = {k,k+'baggy','noHEMj','extrab','isnotmonohs'}
-                regions[k+'_mass0_extrab_isnotmonohs'] = {k,k+'baggy','mass0','noHEMj','extrab','isnotmonohs'}
-                regions[k+'_mass1_extrab_isnotmonohs'] = {k,k+'baggy','mass1','noHEMj','extrab','isnotmonohs'}
-                regions[k+'_mass2_extrab_isnotmonohs'] = {k,k+'baggy','mass2','noHEMj','extrab','isnotmonohs'}
-                regions[k+'_mass3_extrab_isnotmonohs'] = {k,k+'baggy','mass3','noHEMj','extrab','isnotmonohs'}
-                regions[k+'_mass4_extrab_isnotmonohs'] = {k,k+'baggy','mass4','noHEMj','extrab','isnotmonohs'}
+                regions[k+'_baggy_ismonojet'] = {k,k+'baggy','noHEMj','noextrab','ismonojet'}
+                regions[k+'_mass0_ismonojet'] = {k,k+'baggy','mass0','noHEMj','noextrab','ismonojet'}
+                regions[k+'_mass1_ismonojet'] = {k,k+'baggy','mass1','noHEMj','noextrab','ismonojet'}
+                regions[k+'_mass2_ismonojet'] = {k,k+'baggy','mass2','noHEMj','noextrab','ismonojet'}
+                regions[k+'_mass3_ismonojet'] = {k,k+'baggy','mass3','noHEMj','noextrab','ismonojet'}
+                regions[k+'_mass4_ismonojet'] = {k,k+'baggy','mass4','noHEMj','noextrab','ismonojet'}
+                regions[k+'_baggy_extrab_ismonojet'] = {k,k+'baggy','noHEMj','extrab','ismonojet'}
+                regions[k+'_mass0_extrab_ismonojet'] = {k,k+'baggy','mass0','noHEMj','extrab','ismonojet'}
+                regions[k+'_mass1_extrab_ismonojet'] = {k,k+'baggy','mass1','noHEMj','extrab','ismonojet'}
+                regions[k+'_mass2_extrab_ismonojet'] = {k,k+'baggy','mass2','noHEMj','extrab','ismonojet'}
+                regions[k+'_mass3_extrab_ismonojet'] = {k,k+'baggy','mass3','noHEMj','extrab','ismonojet'}
+                regions[k+'_mass4_extrab_ismonojet'] = {k,k+'baggy','mass4','noHEMj','extrab','ismonojet'}
 
             variables = {}
             variables['j1pt'] = leading_j.pt
@@ -714,8 +712,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                           'baggy_extrab','mass0_extrab','mass1_extrab','mass2_extrab','mass3_extrab','mass4_extrab',
                           'baggy_ismonohs','mass0_ismonohs','mass1_ismonohs','mass2_ismonohs','mass3_ismonohs','mass4_ismonohs',
                           'baggy_extrab_ismonohs','mass0_extrab_ismonohs','mass1_extrab_ismonohs','mass2_extrab_ismonohs','mass3_extrab_ismonohs','mass4_extrab_ismonohs',
-                          'baggy_isnotmonohs','mass0_isnotmonohs','mass1_isnotmonohs','mass2_isnotmonohs','mass3_isnotmonohs','mass4_isnotmonohs',
-                          'baggy_extrab_isnotmonohs','mass0_extrab_isnotmonohs','mass1_extrab_isnotmonohs','mass2_extrab_isnotmonohs','mass3_extrab_isnotmonohs','mass4_extrab_isnotmonohs']:
+                          'baggy_ismonojet','mass0_ismonojet','mass1_ismonojet','mass2_ismonojet','mass3_ismonojet','mass4_ismonojet',
+                          'baggy_extrab_ismonojet','mass0_extrab_ismonojet','mass1_extrab_ismonojet','mass2_extrab_ismonojet','mass3_extrab_ismonojet','mass4_extrab_ismonojet']:
                     cut = selections.all(*regions[r+'_'+s])
                     flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
                     flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
@@ -856,6 +854,8 @@ if __name__ == '__main__':
     AK15Puppi_probQCDb
     AK15Puppi_probQCDc
     AK15Puppi_probQCDothers
+    AK15Puppi_msoftdrop
+    genWeight
     """.split()
 
     processor_instance=AnalysisProcessor(columns=columns,
