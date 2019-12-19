@@ -347,9 +347,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             fj['isclean'] =~fj.match(pho_loose,1.5)&~fj.match(mu_loose,1.5)&~fj.match(e_loose,1.5)&fj.isgood.astype(np.bool)
 
             for key in self._deep[self._year]:
-                fj[key] = fj.pt.zeros_like()
                 if self._deep[self._year][key] in df:
                     fj[key] = df[self._deep[self._year][key]]
+                else:
+                    fj[key] = fj.pt.zeros_like()
 
             fj['probQCD'] = fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
             fj['TvsQCD'] = (fj.probTbcq + fj.probTbqq) / (fj.probTbcq + fj.probTbqq + fj.probQCD)
@@ -367,19 +368,21 @@ class AnalysisProcessor(processor.ProcessorABC):
             fj_ngood=fj_good.counts
             fj_nclean=fj_clean.counts
 
-            j = Initialize({'pt':df['Jet_pt'],
-                            'eta':df['Jet_eta'],
-                            'phi':df['Jet_phi'],
-                            'mass':df['Jet_mass']})
+            j_flag = (df['Jet_pt'] > 25.0)
+            j = Initialize({'pt':df['Jet_pt'][j_flag],
+                            'eta':df['Jet_eta'][j_flag],
+                            'phi':df['Jet_phi'][j_flag],
+                            'mass':df['Jet_mass'][j_flag]})
 
             #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation102X
-            j['deepcsv'] = df['Jet_btagDeepB']
-            j['deepflv'] = df['Jet_btagDeepFlavB']
+            j['deepcsv'] = df['Jet_btagDeepB'][j_flag]
+            j['deepflv'] = df['Jet_btagDeepFlavB'][j_flag]
 
             for key in self._j_id[self._year]:
-                j[key] = j.pt.zeros_like()
                 if self._j_id[self._year][key] in df:
-                    j[key] = df[self._j_id[self._year][key]]
+                    j[key] = df[self._j_id[self._year][key]][j_flag]
+                else:
+                    j[key] = j.pt.zeros_like()
 
             j['isgood'] = isGoodJet(j.pt, j.eta, j.id, j.nhf, j.nef, j.chf, j.cef)
             j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
@@ -479,31 +482,35 @@ class AnalysisProcessor(processor.ProcessorABC):
                 if 'TTJets' in dataset or 'WJets' in dataset or 'DY' in dataset or 'ZJets' in dataset:
                     gen_flags = df['GenPart_statusFlags']
                     LastCopy = (gen_flags&(1 << 13))==0
-                    genLastCopy = Initialize({'pt':df['GenPart_pt'][LastCopy],
-                                              'eta':df['GenPart_eta'][LastCopy],
-                                              'phi':df['GenPart_phi'][LastCopy],
-                                              'mass':df['GenPart_mass'][LastCopy],
-                                              'pdgid':df['GenPart_pdgId'][LastCopy]})
+                    del df['GenPart_statusFlags']
+                    #genLastCopy = Initialize({'pt':df['GenPart_pt'][LastCopy],
+                    #                          'eta':df['GenPart_eta'][LastCopy],
+                    #                          'phi':df['GenPart_phi'][LastCopy],
+                    #                          'mass':df['GenPart_mass'][LastCopy],
+                    #                          'pdgid':df['GenPart_pdgId'][LastCopy]})
 
-                    genTops = genLastCopy[abs(genLastCopy.pdgid)==6]
-                    genWs = genLastCopy[abs(genLastCopy.pdgid)==24]
-                    genZs = genLastCopy[abs(genLastCopy.pdgid)==23]
-                    genAs = genLastCopy[abs(genLastCopy.pdgid)==22]
-                    genHs = genLastCopy[abs(genLastCopy.pdgid)==25]
+                    gen_pt = df['GenPart_pt'][LastCopy]
+                    gen_pdgid = df['GenPart_pdgId'][LastCopy]
+
+                    genTops = gen_pt[abs(gen_pdgid)==6]
+                    genWs = gen_pt[abs(gen_pdgid)==24]
+                    genZs = gen_pt[abs(gen_pdgid)==23]
+                    genAs = gen_pt[abs(gen_pdgid)==22]
+                    genHs = gen_pt[abs(gen_pdgid)==25]
 
                     isTT = (genTops.counts==2)
                     isW  = (genTops.counts==0)&(genWs.counts==1)&(genZs.counts==0)&(genAs.counts==0)&(genHs.counts==0)
                     isZ  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==1)&(genAs.counts==0)&(genHs.counts==0)
                     isA  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==1)&(genHs.counts==0)
                     if('TTJets' in dataset): 
-                        wnlo = np.sqrt(get_ttbar_weight(genTops[0].pt.sum()) * get_ttbar_weight(genTops[1].pt.sum()))
+                        wnlo = np.sqrt(get_ttbar_weight(genTops[0].sum()) * get_ttbar_weight(genTops[1].sum()))
                     elif('WJets' in dataset): 
-                        wnlo = get_nlo_weight[self._year]['w'](genWs[0].pt.sum())
-                        if self._year != '2016': adhocw = get_adhoc_weight['w'](genWs[0].pt.sum())
+                        wnlo = get_nlo_weight[self._year]['w'](genWs[0].sum())
+                        if self._year != '2016': adhocw = get_adhoc_weight['w'](genWs[0].sum())
                     elif('DY' in dataset or 'ZJets' in dataset): 
-                        wnlo = get_nlo_weight[self._year]['z'](genZs[0].pt.sum())
-                        if self._year != '2016': adhocw = get_adhoc_weight['z'](genZs[0].pt.sum())
-                    elif('GJets' in dataset): wnlo = get_nlo_weight[self._year]['a'](genAs[0].pt.sum())
+                        wnlo = get_nlo_weight[self._year]['z'](genZs[0].sum())
+                        if self._year != '2016': adhocw = get_adhoc_weight['z'](genZs[0].sum())
+                    elif('GJets' in dataset): wnlo = get_nlo_weight[self._year]['a'](genAs[0].sum())
 
             ###
             # Calculate PU weight and systematic variations
