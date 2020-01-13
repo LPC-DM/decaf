@@ -594,8 +594,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             selections.add('mass0', (leading_fj_msd_corr<30))
             selections.add('mass1', (leading_fj_msd_corr>=30)&(leading_fj_msd_corr<60))
             selections.add('mass2', (leading_fj_msd_corr>=60)&(leading_fj_msd_corr<80))
-            selections.add('mass3', (leading_fj_msd_corr>=80)&(leading_fj_msd_corr<140))
-            selections.add('mass4', (leading_fj_msd_corr>=140))
+            selections.add('mass3', (leading_fj_msd_corr>=80)&(leading_fj_msd_corr<120))
+            selections.add('mass4', (leading_fj_msd_corr>=120))
             selections.add('noHEMj', (j_nHEM==0))
 
             ###
