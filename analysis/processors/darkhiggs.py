@@ -373,19 +373,18 @@ class AnalysisProcessor(processor.ProcessorABC):
             fj_ngood=fj_good.counts
             fj_nclean=fj_clean.counts
 
-            j_flag = (df['Jet_pt'] > 25.0)
-            j = Initialize({'pt':df['Jet_pt'][j_flag],
-                            'eta':df['Jet_eta'][j_flag],
-                            'phi':df['Jet_phi'][j_flag],
-                            'mass':df['Jet_mass'][j_flag]})
+            j = Initialize({'pt':df['Jet_pt'],
+                            'eta':df['Jet_eta'],
+                            'phi':df['Jet_phi'],
+                            'mass':df['Jet_mass']})
 
             #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation102X
-            j['deepcsv'] = df['Jet_btagDeepB'][j_flag]
-            j['deepflv'] = df['Jet_btagDeepFlavB'][j_flag]
+            j['deepcsv'] = df['Jet_btagDeepB']
+            j['deepflv'] = df['Jet_btagDeepFlavB']
 
             for key in self._j_id[self._year]:
                 if self._j_id[self._year][key] in df:
-                    j[key] = df[self._j_id[self._year][key]][j_flag]
+                    j[key] = df[self._j_id[self._year][key]]
                 else:
                     j[key] = j.pt.zeros_like()
 
@@ -609,8 +608,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             selections.add('mass0', (leading_fj_msd_corr<30))
             selections.add('mass1', (leading_fj_msd_corr>=30)&(leading_fj_msd_corr<60))
             selections.add('mass2', (leading_fj_msd_corr>=60)&(leading_fj_msd_corr<80))
-            selections.add('mass3', (leading_fj_msd_corr>=80)&(leading_fj_msd_corr<140))
-            selections.add('mass4', (leading_fj_msd_corr>=140))
+            selections.add('mass3', (leading_fj_msd_corr>=80)&(leading_fj_msd_corr<120))
+            selections.add('mass4', (leading_fj_msd_corr>=120))
             selections.add('noHEMj', (j_nHEM==0))
 
             ###
