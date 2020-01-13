@@ -1,0 +1,82 @@
+# Datacard for <Channel (zllCh) instance at 0x7f5f9e25fc88> generated on 2019-12-19 12:46:37.225549
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 1 # number of samples minus 1
+kmax 2 # number of nuisance parameters
+shapes * zllCh DarkHiggs.root DarkHiggs:zllCh_$PROCESS DarkHiggs:zllCh_$PROCESS_$SYSTEMATIC
+bin zllCh
+observation 637.290
+bin              zllCh     zllCh
+process        zllJets  otherbkg
+process              1         2
+rate             1.000    82.016
+CMS_jec shape        -     1.000
+CMS_ele_id_eff param 0 1
+signalCh_zvvJets_bin0 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin1 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin10 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin11 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin12 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin13 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin14 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin15 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin16 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin17 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin18 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin19 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin2 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin20 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin21 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin22 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin3 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin4 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin5 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin6 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin7 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin8 extArg DarkHiggs.root:DarkHiggs
+signalCh_zvvJets_bin9 extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin0_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin10_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin11_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin12_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin13_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin14_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin15_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin16_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin17_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin18_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin19_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin1_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin20_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin21_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin22_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin2_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin3_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin4_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin5_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin6_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin7_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin8_nominal extArg DarkHiggs.root:DarkHiggs
+zllJetsMC_bin9_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin0_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin10_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin11_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin12_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin13_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin14_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin15_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin16_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin17_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin18_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin19_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin1_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin20_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin21_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin22_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin2_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin3_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin4_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin5_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin6_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin7_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin8_nominal extArg DarkHiggs.root:DarkHiggs
+zvvJetsMC_bin9_nominal extArg DarkHiggs.root:DarkHiggs
