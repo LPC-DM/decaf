@@ -249,9 +249,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                             'mass':df['Electron_mass']})
 
             for key in self._e_id[self._year]:
-                e[key] = e.pt.zeros_like()
                 if self._e_id[self._year][key] in df:
                     e[key] = df[self._e_id[self._year][key]]
+                else:
+                    e[key] = e.pt.zeros_like()
 
             e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.loose_id,self._year)
             e['istight'] = isTightElectron(e.pt,e.eta,e.dxy,e.dz,e.iso,e.tight_id,self._year)
@@ -272,9 +273,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                              'mass':df['Muon_mass']})
 
             for key in self._mu_id[self._year]:
-                mu[key] = mu.pt.zeros_like()
                 if self._mu_id[self._year][key] in df:
                     mu[key] = df[self._mu_id[self._year][key]]
+                else:
+                    mu[key] = mu.pt.zeros_like()
 
             mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.med_id,self._year)
             mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.dxy,mu.dz,mu.iso,mu.tight_id,self._year)
@@ -295,9 +297,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                               'mass':df['Tau_mass']})
 
             for key in self._tau_id[self._year]:
-                tau[key] = tau.pt.zeros_like()
                 if self._tau_id[self._year][key] in df:
                     tau[key] = df[self._tau_id[self._year][key]]
+                else:
+                    tau[key] = tau.pt.zeros_like()
 
 
             tau['isclean'] =~tau.match(mu_loose,0.3)&~tau.match(e_loose,0.3)
@@ -313,9 +316,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                               'mass':df['Photon_mass']})
 
             for key in self._pho_id[self._year]:
-                pho[key] = pho.pt.zeros_like()
                 if self._pho_id[self._year][key] in df:
                     pho[key] = df[self._pho_id[self._year][key]]
+                else:
+                    pho[key] = pho.pt.zeros_like()
 
             pho['isclean'] =~pho.match(e_loose,0.4)
             pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho.loose_id,pho.eleveto,self._year)&pho.isclean.astype(np.bool)
@@ -339,17 +343,19 @@ class AnalysisProcessor(processor.ProcessorABC):
             fj['msd'] = df['AK15Puppi_msoftdrop']
 
             for key in self._fj_id[self._year]:
-                fj[key] = fj.pt.zeros_like()
                 if self._fj_id[self._year][key] in df:
                     fj[key] = df[self._fj_id[self._year][key]]
+                else:
+                    fj[key] = fj.pt.zeros_like()
 
             fj['isgood'] = isGoodFatJet(fj.pt, fj.eta, fj.id)
             fj['isclean'] =~fj.match(pho_loose,1.5)&~fj.match(mu_loose,1.5)&~fj.match(e_loose,1.5)&fj.isgood.astype(np.bool)
 
             for key in self._deep[self._year]:
-                fj[key] = fj.pt.zeros_like()
                 if self._deep[self._year][key] in df:
                     fj[key] = df[self._deep[self._year][key]]
+                else:
+                    fj[key] = fj.pt.zeros_like()
 
             fj['probQCD'] = fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
             fj['TvsQCD'] = (fj.probTbcq + fj.probTbqq) / (fj.probTbcq + fj.probTbqq + fj.probQCD)
@@ -377,9 +383,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             j['deepflv'] = df['Jet_btagDeepFlavB']
 
             for key in self._j_id[self._year]:
-                j[key] = j.pt.zeros_like()
                 if self._j_id[self._year][key] in df:
                     j[key] = df[self._j_id[self._year][key]]
+                else:
+                    j[key] = j.pt.zeros_like()
 
             j['isgood'] = isGoodJet(j.pt, j.eta, j.id, j.nhf, j.nef, j.chf, j.cef)
             j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
@@ -479,31 +486,38 @@ class AnalysisProcessor(processor.ProcessorABC):
                 if 'TTJets' in dataset or 'WJets' in dataset or 'DY' in dataset or 'ZJets' in dataset:
                     gen_flags = df['GenPart_statusFlags']
                     LastCopy = (gen_flags&(1 << 13))==0
-                    genLastCopy = Initialize({'pt':df['GenPart_pt'][LastCopy],
-                                              'eta':df['GenPart_eta'][LastCopy],
-                                              'phi':df['GenPart_phi'][LastCopy],
-                                              'mass':df['GenPart_mass'][LastCopy],
-                                              'pdgid':df['GenPart_pdgId'][LastCopy]})
+                    #genLastCopy = Initialize({'pt':df['GenPart_pt'][LastCopy],
+                    #                          'eta':df['GenPart_eta'][LastCopy],
+                    #                          'phi':df['GenPart_phi'][LastCopy],
+                    #                          'mass':df['GenPart_mass'][LastCopy],
+                    #                          'pdgid':df['GenPart_pdgId'][LastCopy]})
+                    gen_pt = df['GenPart_pt'][LastCopy]
+                    gen_pdgid = df['GenPart_pdgId'][LastCopy]
 
-                    genTops = genLastCopy[abs(genLastCopy.pdgid)==6]
-                    genWs = genLastCopy[abs(genLastCopy.pdgid)==24]
-                    genZs = genLastCopy[abs(genLastCopy.pdgid)==23]
-                    genAs = genLastCopy[abs(genLastCopy.pdgid)==22]
-                    genHs = genLastCopy[abs(genLastCopy.pdgid)==25]
+                    #genTops = genLastCopy[abs(genLastCopy.pdgid)==6]
+                    #genWs = genLastCopy[abs(genLastCopy.pdgid)==24]
+                    #genZs = genLastCopy[abs(genLastCopy.pdgid)==23]
+                    #genAs = genLastCopy[abs(genLastCopy.pdgid)==22]
+                    #genHs = genLastCopy[abs(genLastCopy.pdgid)==25]
+                    genTops = gen_pt[abs(gen_pdgid)==6]
+                    genWs = gen_pt[abs(gen_pdgid)==24]
+                    genZs = gen_pt[abs(gen_pdgid)==23]
+                    genAs = gen_pt[abs(gen_pdgid)==22]
+                    genHs = gen_pt[abs(gen_pdgid)==25]
 
                     isTT = (genTops.counts==2)
                     isW  = (genTops.counts==0)&(genWs.counts==1)&(genZs.counts==0)&(genAs.counts==0)&(genHs.counts==0)
                     isZ  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==1)&(genAs.counts==0)&(genHs.counts==0)
                     isA  = (genTops.counts==0)&(genWs.counts==0)&(genZs.counts==0)&(genAs.counts==1)&(genHs.counts==0)
                     if('TTJets' in dataset): 
-                        wnlo = np.sqrt(get_ttbar_weight(genTops[0].pt.sum()) * get_ttbar_weight(genTops[1].pt.sum()))
+                        wnlo = np.sqrt(get_ttbar_weight(genTops[0].sum()) * get_ttbar_weight(genTops[1].sum()))
                     elif('WJets' in dataset): 
-                        wnlo = get_nlo_weight[self._year]['w'](genWs[0].pt.sum())
-                        if self._year != '2016': adhocw = get_adhoc_weight['w'](genWs[0].pt.sum())
+                        wnlo = get_nlo_weight[self._year]['w'](genWs[0].sum())
+                        if self._year != '2016': adhocw = get_adhoc_weight['w'](genWs[0].sum())
                     elif('DY' in dataset or 'ZJets' in dataset): 
-                        wnlo = get_nlo_weight[self._year]['z'](genZs[0].pt.sum())
-                        if self._year != '2016': adhocw = get_adhoc_weight['z'](genZs[0].pt.sum())
-                    elif('GJets' in dataset): wnlo = get_nlo_weight[self._year]['a'](genAs[0].pt.sum())
+                        wnlo = get_nlo_weight[self._year]['z'](genZs[0].sum())
+                        if self._year != '2016': adhocw = get_adhoc_weight['z'](genZs[0].sum())
+                    elif('GJets' in dataset): wnlo = get_nlo_weight[self._year]['a'](genAs[0].sum())
 
             ###
             # Calculate PU weight and systematic variations
