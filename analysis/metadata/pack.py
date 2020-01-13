@@ -24,8 +24,8 @@ fnaleos = "root://cmsxrootd.fnal.gov/"
 beans={}
 beans['2016'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/102X/nano_2016"]
 beans['2017'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/102X/nano_2017"]
-beans['2018'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/102X/nano_2018",
-                 "/eos/uscms/store/user/jongho/DarkHiggs/nanoAOD/nJetMax1"]
+beans['2018'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018"]
+                 
 
 def split(arr, size):
      arrs = []
