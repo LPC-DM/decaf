@@ -1,4 +1,4 @@
-# Datacard for <Channel (zllCh) instance at 0x7f5f9e25fc88> generated on 2019-12-19 12:46:37.225549
+# Datacard for <Channel (zllCh) instance at 0x7fefd474eda0> generated on 2020-01-23 15:23:01.881100
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 1 # number of samples minus 1
 kmax 2 # number of nuisance parameters

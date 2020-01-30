@@ -19,6 +19,7 @@ def expo_sample(norm, scale, obs):
     return (np.diff(cdf), obs.binning, obs.name)
 
 def template(hist, name):
+    print(hist.values(overflow='all')[()])
     return (hist.values(overflow='all')[()], hist.axis(name).edges(overflow='all'), name)
 
 def darkhiggs_model(tmpdir):
@@ -40,7 +41,8 @@ def darkhiggs_model(tmpdir):
     model.addChannel(signalCh)
 
     #    zvvTemplate = expo_sample(1000, 400, recoil)
-    zvvHist = signal_hists['recoil'].integrate('jet_selection','baggy').integrate('region','iszeroL').integrate('process', 'Mhs_90')
+    zvvHist = bkg_hists['recoil'].integrate('jet_selection','baggy').integrate('region','iszeroL').integrate('process', 'ZJets')
+    print(zvvHist)
     zvvTemplate = template(zvvHist, 'recoil')
     zvvJetsMC = rl.TemplateSample('zvvJetsMC', rl.Sample.BACKGROUND, zvvTemplate)
     zvvJetsMC.setParamEffect(jec, np.random.normal(loc=1, scale=0.01, size=len(zvvHist.axis('recoil').edges(overflow='all'))-1))

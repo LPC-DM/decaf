@@ -1,3 +1,4 @@
+import cloudpickle
 import pickle
 import gzip
 import os
@@ -9,15 +10,16 @@ from coffea.util import load, save
 
 def scale_file(file):
 
-    #hists={}
     pd = []
-
     hists = load(file)
+
     for d in hists['sumw'].identifiers('dataset'):
         dataset = d.name
-        #if 'MET' in dataset or 'SingleElectron' in dataset or 'SinglePhoton' in dataset or 'EGamma' in dataset: continue
-        if dataset.split("____")[0] not in pd: pd.append(dataset.split("____")[0])
-
+        print(dataset)
+        if 'condor' in file:
+            if dataset.split("___")[0] not in pd: pd.append(dataset.split("____")[0])
+        elif 'spark' in file:
+            if dataset.split("____")[0] not in pd: pd.append(dataset.split("____")[0])
     return scale(pd, hists)
 
 def scale_directory(directory):
@@ -31,43 +33,44 @@ def scale_directory(directory):
                 hin = pickle.load(fin)
                 for k in hin.keys():
                     if k in hists: hists[k]+=hin[k]
-                    else: hists[k]=hin[k]
+                else: hists[k]=hin[k]
     
     return scale(pd, hists)
 
 def scale(pd, hists):
 
     ##
-    # Defining primary datasets (pdataset) to aggregate all the histograms that belong to a single sample
+    # Aggregate all the histograms that belong to a single sample
     ##
 
-    pdataset = hist.Cat("pdataset", "pdataset", sorting='placement')
-    pdataset_cats = ("dataset",)
-    pdataset_map = OrderedDict()
+    dataset = hist.Cat("dataset", "dataset", sorting='placement')
+    dataset_cats = ("dataset",)
+    dataset_map = OrderedDict()
     for pdi in pd:
-        pdataset_map[pdi] = (pdi+"*",)
+        #print(pdi)
+        dataset_map[pdi] = (pdi+"*",)
     for key in hists.keys():
-        hists[key] = hists[key].group(pdataset_cats, pdataset, pdataset_map)
+        hists[key] = hists[key].group(dataset_cats, dataset, dataset_map)
 
     ###
     # Rescaling MC histograms using the xsec weight
     ###
 
     scale={}
-    for pdi in hists['sumw'].identifiers('pdataset'):
-        scale[pdi]=hists['sumw'].integrate('pdataset', pdi).values(overflow='all')[()][1]
+    for pdi in hists['sumw'].identifiers('dataset'):
+        scale[pdi]=hists['sumw'].integrate('dataset', pdi).values(overflow='all')[()][1]
     for key in hists.keys():
         if key=='sumw': continue
-        for pdi in hists[key].identifiers('pdataset'):
+        for pdi in hists[key].identifiers('dataset'):
             if 'MET' in pdi.name or 'SingleElectron' in pdi.name or 'SinglePhoton' in pdi.name or 'EGamma' in pdi.name: continue
-            hists[key].scale({pdi:1/scale[pdi]},axis='pdataset')
+            hists[key].scale({pdi:1/scale[pdi]},axis='dataset')
 
     ###
     # Defining 'process', to aggregate different samples into a single process
     ##
 
     process = hist.Cat("process", "Process", sorting='placement')
-    bkg_cats = ("pdataset",)
+    bkg_cats = ("dataset",)
     bkg_map = OrderedDict()
     bkg_map["Hbb"] = ("*HToBB*")
     bkg_map["DY"] = ("DYJets*",)
@@ -79,7 +82,7 @@ def scale(pd, hists):
     bkg_map["Gjets"] = ("GJets*",)
     bkg_hists = {}
 
-    signal_cats = ("pdataset",)
+    signal_cats = ("dataset",)
     signal_map = OrderedDict() ### for signal samples
     signal_map["Mhs_50"] = ("*Mhs_50*",)  ## signals
     signal_map["Mhs_70"] = ("*Mhs_70*",)
@@ -89,7 +92,7 @@ def scale(pd, hists):
     signal_map["MonoZ"] = ("MonoZ*",)    ## signals
     signal_hists = {}
 
-    data_cats = ("pdataset",)
+    data_cats = ("dataset",)
     data_map = OrderedDict()
     data_map["MET"] = ("MET*", )
     data_map["SingleElectron"] = ("EGamma*", )
@@ -119,10 +122,10 @@ if __name__ == '__main__':
         name = options.directory
     if options.file: 
         signal_hists, bkg_hists, data_hists = scale_file(options.file)
-        name = options.file.split(".")[0].split("_")[1]        
+        name = options.file.split(".")[0]
 
     hists={}
     hists['signal']=signal_hists
     hists['bkg']=bkg_hists
     hists['data']=data_hists
-    save(hists,'hists_'+name+'.coffea')
+    save(hists,'scaled_'+name+'.coffea')
