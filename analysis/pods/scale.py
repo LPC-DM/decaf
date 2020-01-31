@@ -74,7 +74,7 @@ def scale(pd, hists):
     bkg_map = OrderedDict()
     bkg_map["Hbb"] = ("*HToBB*")
     bkg_map["DY"] = ("DYJets*",)
-    bkg_map["Diboson"] = ("*_TuneCP5_13TeV-pythia8",)
+    bkg_map["Diboson"] = ("*_TuneCP5_13TeV-pythia8*",)
     bkg_map["ST"] = ("ST*",)
     bkg_map["TT"] = ("TT*",)
     bkg_map["Wjets"] = ("WJets*",)

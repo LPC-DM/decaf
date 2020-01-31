@@ -15,17 +15,17 @@ def split(arr, size):
      arrs.append(arr)
      return arrs
 
-def merge(directory):
+def merge(folder,_dataset):
 
      filelist={}
      pd = []
-     for filename in os.listdir(directory):
+     for filename in os.listdir(folder):
           if '.pkl.gz' in filename:
                if filename.split("____")[0] not in pd: pd.append(filename.split("____")[0])
     
      for pdi in pd:
           files = []
-          for filename in os.listdir(directory):
+          for filename in os.listdir(folder):
                if pdi not in filename: continue
                if '.pkl.gz' not in filename: continue
                files.append(filename)
@@ -37,12 +37,13 @@ def merge(directory):
 
      coffealist=[]
      for pdi in filelist.keys():
+          if _dataset not in 'None' and _dataset not in pdi: continue
           print(pdi) 
           #print(filelist[pdi])
           hists={}
           for filename in filelist[pdi]:
-               fin = gzip.open(directory+'/'+filename)        
-               print('Opening:',directory+'/'+filename)
+               fin = gzip.open(folder+'/'+filename)        
+               print('Opening:',folder+'/'+filename)
                hin = cloudpickle.load(fin)
                #print('before',hin['recoil'].integrate('dataset',filename.split(".")[0]).integrate('region','isoneE').integrate('jet_selection','baggy').values())
                for k in hin.keys():
@@ -58,11 +59,15 @@ def merge(directory):
           for key in hists.keys():
                hists[key] = hists[key].group(dataset_cats, dataset, dataset_map)
           #print('after',hists['recoil'].integrate('dataset',pdi).integrate('region','isoneE').integrate('jet_selection','baggy').values())
-          save(hists,directory+'/'+pdi+'.coffea')
+          save(hists,folder+'/'+pdi+'.coffea')
           del hists
-          coffealist.append(directory+'/'+pdi+'.coffea')
-          
+          #coffealist.append(folder+'/'+pdi+'.coffea')
+
+     for coffeafile in os.listdir(folder):
+          if '.coffea' not in coffeafile: continue
+          coffealist.append(folder+'/'+coffeafile)
      print('coffealist',coffealist)
+
      htot={}
      for coffeafile in coffealist:
           print('Opening',coffeafile)
@@ -75,12 +80,15 @@ def merge(directory):
                else: htot[k]+=hists[k]
           #print('after',htot['recoil'].integrate('dataset',coffeafile.split("/")[1].split(".")[0]).integrate('region','isoneE').integrate('jet_selection','baggy').values())
           del hists
-     save(htot,'condor_hists'+directory+'.coffea')
+     if _dataset in 'None': _dataset=''
+     save(htot,'condor_hists_'+folder+'.coffea')
 
 if __name__ == '__main__':
     from optparse import OptionParser
     parser = OptionParser()
-    parser.add_option('-d', '--directory', help='directory', dest='directory')
+    parser.add_option('-f', '--folder', help='folder', dest='folder')
+    parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
     (options, args) = parser.parse_args()
 
-    merge(options.directory)
+    if options.dataset: merge(options.folder,options.dataset)
+    else: merge(options.folder,'None')
