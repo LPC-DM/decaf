@@ -70,45 +70,39 @@ def scale(pd, hists):
     ##
 
     process = hist.Cat("process", "Process", sorting='placement')
-    bkg_cats = ("dataset",)
-    bkg_map = OrderedDict()
-    bkg_map["Hbb"] = ("*HToBB*")
-    bkg_map["DY"] = ("DYJets*",)
-    bkg_map["Diboson"] = ("*_TuneCP5_13TeV-pythia8*",)
-    bkg_map["ST"] = ("ST*",)
-    bkg_map["TT"] = ("TT*",)
-    bkg_map["Wjets"] = ("WJets*",)
-    bkg_map["ZJets"] = ("ZJetsToNuNu*",)   ## temporarily 
-    bkg_map["Gjets"] = ("GJets*",)
-    bkg_hists = {}
-
-    signal_cats = ("dataset",)
-    signal_map = OrderedDict() ### for signal samples
-    signal_map["Mhs_50"] = ("*Mhs_50*",)  ## signals
-    signal_map["Mhs_70"] = ("*Mhs_70*",)
-    signal_map["Mhs_90"] = ("*Mhs_90*",)
-    signal_map["MonoJet"] = ("MonoJet*",)  ## signals
-    signal_map["MonoW"] = ("MonoW*",)    ## signals
-    signal_map["MonoZ"] = ("MonoZ*",)    ## signals
-    signal_hists = {}
-
-    data_cats = ("dataset",)
-    data_map = OrderedDict()
-    data_map["MET"] = ("MET*", )
-    data_map["SingleElectron"] = ("EGamma*", )
-    data_map["SinglePhoton"] = ("EGamma*", )
-    data_hists = {}
-
+    cats = ("dataset",)
+    map = OrderedDict()
+    map["Hbb"] = ("*HToBB*")
+    map["DY"] = ("DYJets*",)
+    map["Diboson"] = ("*_TuneCP5_13TeV-pythia8*",)
+    map["ST"] = ("ST*",)
+    map["TT"] = ("TT*",)
+    map["Wjets"] = ("WJets*",)
+    map["ZJets"] = ("ZJetsToNuNu*",)   ## temporarily 
+    map["Gjets"] = ("GJets*",)
+    map["Mhs_50"] = ("*Mhs_50*",)  ## signals
+    map["Mhs_70"] = ("*Mhs_70*",)
+    map["Mhs_90"] = ("*Mhs_90*",)
+    map["MonoJet"] = ("MonoJet*",)  ## signals
+    map["MonoW"] = ("MonoW*",)    ## signals
+    map["MonoZ"] = ("MonoZ*",)    ## signals
+    map["MET"] = ("MET*", )
+    map["SingleElectron"] = ("EGamma*", )
+    map["SinglePhoton"] = ("EGamma*", )
+    
     ###
     # Storing signal and background histograms
     ###
 
     for key in hists.keys():
+        '''
         signal_hists[key] = hists[key].group(signal_cats, process, signal_map)
         bkg_hists[key] = hists[key].group(bkg_cats, process, bkg_map)
         data_hists[key] = hists[key].group(data_cats, process, data_map)
+        '''
+        hists[key] = hists[key].group(cats, process, map)
 
-    return signal_hists, bkg_hists, data_hists
+    return hists
 
 if __name__ == '__main__':
     from optparse import OptionParser
@@ -118,14 +112,10 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
 
     if options.directory: 
-        signal_hists, bkg_hists, data_hists = scale_directory(options.directory)
+        hists = scale_directory(options.directory)
         name = options.directory
     if options.file: 
-        signal_hists, bkg_hists, data_hists = scale_file(options.file)
+        hists = scale_file(options.file)
         name = options.file.split(".")[0]
 
-    hists={}
-    hists['signal']=signal_hists
-    hists['bkg']=bkg_hists
-    hists['data']=data_hists
     save(hists,'scaled_'+name+'.coffea')
