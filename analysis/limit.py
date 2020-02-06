@@ -111,6 +111,7 @@ def darkhiggs_model(tmpdir,mass,category):
     sr_zvvTemplate = template(sr_zvvHist, 'recoil')
     sr_zvvMC =  rl.TemplateSample('sr_zvvMC', rl.Sample.BACKGROUND, sr_zvvTemplate)
     sr_zvvMC.setParamEffect(jec, np.random.normal(loc=1, scale=0.01, size=len(sr_zvvHist.axis('recoil').edges(overflow='all'))-1))
+    
 
     # these parameters are large, should probably log-transform them
     sr_zvvBinYields = np.array([rl.IndependentParameter('tmp', b, 0, sr_zvvTemplate[0].max()*2) for b in sr_zvvTemplate[0]])  # name will be changed by ParametericSample
