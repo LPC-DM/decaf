@@ -17,9 +17,10 @@ def scale_file(file):
         dataset = d.name
         print(dataset)
         if 'condor' in file:
-            if dataset.split("___")[0] not in pd: pd.append(dataset.split("____")[0])
+            if dataset.split("___")[0] not in pd: pd.append(dataset.split("___")[0])
         elif 'spark' in file:
             if dataset.split("____")[0] not in pd: pd.append(dataset.split("____")[0])
+    print('PD:',pd)
     return scale(pd, hists)
 
 def scale_directory(directory):
