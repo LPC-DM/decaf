@@ -1,4 +1,4 @@
-# Datacard for <Channel (zecr) instance at 0x7fc7e52ac0b8> generated on 2020-02-03 14:22:54.984102
+# Datacard for <Channel (zecr) instance at 0x7f2cc8ed8518> generated on 2020-02-13 15:02:57.440299
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 4 # number of samples minus 1
 kmax 1 # number of nuisance parameters
@@ -8,8 +8,8 @@ observation 3233.287
 bin       zecr     zecr       zecr     zecr   zecr
 process     dy  ttbarMC  singletop  diboson  higgs
 process      1        2          3        4      5
-rate     1.000  201.271     12.265   99.220  0.173
-CMS_jec param 0 1
+rate     1.000   69.730     12.231   99.220  0.173
+jec param 0 1
 sr_zvvMC_bin0_nominal extArg darkhiggs_mass0monojet.root:darkhiggs_mass0monojet
 sr_zvvMC_bin10_nominal extArg darkhiggs_mass0monojet.root:darkhiggs_mass0monojet
 sr_zvvMC_bin11_nominal extArg darkhiggs_mass0monojet.root:darkhiggs_mass0monojet

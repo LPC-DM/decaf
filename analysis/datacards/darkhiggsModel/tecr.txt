@@ -1,4 +1,4 @@
-# Datacard for <Channel (tecr) instance at 0x7fc7e6a3a9e8> generated on 2020-02-03 14:22:54.969543
+# Datacard for <Channel (tecr) instance at 0x7f2cca6666d8> generated on 2020-02-13 15:02:57.425086
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 5 # number of samples minus 1
 kmax 1 # number of nuisance parameters
@@ -8,8 +8,8 @@ observation 13748.949
 bin       tecr   tecr       tecr     tecr     tecr   tecr
 process  ttbar  wjets  singletop       dy  diboson  higgs
 process      1      2          3        4        5      6
-rate     1.000  1.000    623.848  211.444  171.427  0.964
-CMS_jec param 0 1
+rate     1.000  1.000    526.072  211.444  171.427  0.964
+jec param 0 1
 sr_ttbarMC_bin0_nominal extArg darkhiggs_mass0monojet.root:darkhiggs_mass0monojet
 sr_ttbarMC_bin10_nominal extArg darkhiggs_mass0monojet.root:darkhiggs_mass0monojet
 sr_ttbarMC_bin11_nominal extArg darkhiggs_mass0monojet.root:darkhiggs_mass0monojet

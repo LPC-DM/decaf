@@ -79,13 +79,64 @@ def darkhiggs_model(tmpdir,mass,category):
     print(recoil.keys())
 
     ###
-    # Setting up systematics
+    ###
+    # Setting up rate systematics
+    ###
     ###
 
-    # lumi = rl.NuisanceParameter('CMS_lumi', 'lnN')
-    jec = rl.NuisanceParameter('CMS_jec', 'shape')
-    ele_id_eff = rl.NuisanceParameter('CMS_ele_id_eff', 'shape')
-    pho_id_eff = rl.NuisanceParameter('CMS_pho_id_eff', 'shape')
+    ###
+    # Luminosity
+    ###
+
+    lumi = rl.NuisanceParameter('lumi', 'lnN')
+
+    ###
+    # Cross section of MC-driven processes
+    ###
+
+    QCDe_Norm = rl.NuisanceParameter('QCDe_Norm', 'lnN')
+    QCDmu_Norm = rl.NuisanceParameter('QCDmu_Norm', 'lnN')
+    QCDsig_Norm = rl.NuisanceParameter('QCDsig_Norm', 'lnN')
+    stop_Norm = rl.NuisanceParameter('stop_Norm', 'lnN')
+    VV_Norm = rl.NuisanceParameter('VV_Norm', 'lnN')
+    Hbb_Norm = rl.NuisanceParameter('Hbb_Norm', 'lnN')
+    dy_Norm = rl.NuisanceParameter('dy_Norm', 'lnN') #only in signal region
+
+    ###
+    # Lepton/photon ID uncertainties 
+    ###
+
+    id_e = rl.NuisanceParameter('id_e', 'lnN')
+    id_mu = rl.NuisanceParameter('id_mu', 'lnN')
+    id_pho = rl.NuisanceParameter('id_pho', 'lnN')
+
+    ###
+    # Trigger efficiency
+    ###
+
+    trig_e = rl.NuisanceParameter('trig_e', 'lnN')
+    trig_met = rl.NuisanceParameter('trig_met', 'lnN')
+
+    ###
+    # DeepAk15 signal scale factor and mistag rate for MC-driven processes
+    ###
+
+    sf_deepAK15 = rl.NuisanceParameter('sf_deepAK15', 'lnN')
+    mistag_deepAK15 = rl.NuisanceParameter('mistag_deepAK15', 'lnN')
+
+    ###
+    ###
+    # Shape systematics
+    ###
+    ###
+
+    ###
+    # JEC/JER
+    ###
+    
+    jec = rl.NuisanceParameter('jec', 'shape')
+    jer = rl.NuisanceParameter('jer', 'shape')
+    btag = rl.NuisanceParameter('btag', 'shape') #AK4 btag
     gamma_to_z_ewk = rl.NuisanceParameter('Theory_gamma_z_ewk', 'shape')
 
     ###
@@ -156,6 +207,10 @@ def darkhiggs_model(tmpdir,mass,category):
     sr_singletopHist = recoil['sr'].integrate('process', 'ST')
     sr_singletopTemplate = template(sr_singletopHist, 'recoil')
     sr_singletop = rl.TemplateSample('sr_singletop', rl.Sample.BACKGROUND, sr_singletopTemplate)
+    sr_singletop.setParamEffect(lumi, 1.027)
+    sr_singletop.setParamEffect(stop_Norm, 1.2)
+    sr_singletop.setParamEffect(trig_met, 1.01)
+    
     sr.addSample(sr_singletop)
 
     sr_dyHist = recoil['sr'].integrate('process', 'DY')
