@@ -69,9 +69,6 @@ for year in ['2016','2017','2018']:
     pho_trig_corr = fpho_trig["hden_photonpt_clone_passed"].values
     get_pho_trig_weight[year] = lookup_tools.dense_lookup.dense_lookup(pho_trig_corr, fpho_trig["hden_photonpt_clone_passed"].edges)
 
-def get_ttbar_weight(pt):
-    return np.exp(0.0615 - 0.0005 * np.clip(pt, 0, 800))
-
 get_nlo_weight = {}
 
 kfactor = uproot.open("secondary_inputs/nlo/kfactors.root")
@@ -114,6 +111,20 @@ kfactor = uproot.open("secondary_inputs/nlo/2017_gen_v_pt_stat1_qcd_sf.root")
 get_adhoc_weight['z']=lookup_tools.dense_lookup.dense_lookup(kfactor["dy_monojet"].values, kfactor["dy_monojet"].edges)
 get_adhoc_weight['w']=lookup_tools.dense_lookup.dense_lookup(kfactor["wjet_monojet"].values, kfactor["wjet_monojet"].edges)
 
+def get_ttbar_weight(pt):
+    return np.exp(0.0615 - 0.0005 * np.clip(pt, 0, 800))
+
+def get_msd_weight(pt, eta):
+    gpar = np.array([1.00626, -1.06161, 0.0799900, 1.20454])
+    cpar = np.array([1.09302, -0.000150068, 3.44866e-07, -2.68100e-10, 8.67440e-14, -1.00114e-17])
+    fpar = np.array([1.27212, -0.000571640, 8.37289e-07, -5.20433e-10, 1.45375e-13, -1.50389e-17])
+    genw = gpar[0] + gpar[1]*np.power(pt*gpar[2], -gpar[3])
+    ptpow = np.power.outer(pt, np.arange(cpar.size))
+    cenweight = np.dot(ptpow, cpar)
+    forweight = np.dot(ptpow, fpar)
+    weight = np.where(np.abs(eta)<1.3, cenweight, forweight)
+    return genw*weight
+
 
 def get_ecal_bad_calib(run_number, lumi_number, event_number, year, dataset):
     bad = {}
@@ -141,6 +152,7 @@ def get_ecal_bad_calib(run_number, lumi_number, event_number, year, dataset):
     return np.logical_not(np.isin(run_number, runs_to_veto) * np.isin(lumi_number, lumis_to_veto) * np.isin(event_number, events_to_veto))
 
 corrections = {}
+corrections['get_msd_weight']          = get_msd_weight
 corrections['get_ttbar_weight']        = get_ttbar_weight
 corrections['get_nlo_weight']          = get_nlo_weight
 corrections['get_adhoc_weight']        = get_adhoc_weight
