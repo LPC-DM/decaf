@@ -25,5 +25,6 @@ echo "Updated python path: " $PYTHONPATH
 cd analysis
 echo "python run.py --year ${1} --dataset ${2} --processor ${4}"
 python run.py --year ${1} --dataset ${2} --processor ${4}
+echo "Run.py Exit Code: $?"
 ls pods/${4}/${2}.pkl.gz
 cp pods/${4}/${2}.pkl.gz ${_CONDOR_SCRATCH_DIR}/${4}_${2}.pkl.gz
