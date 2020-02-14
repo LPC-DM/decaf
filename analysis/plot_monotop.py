@@ -23,6 +23,7 @@ for filename in os.listdir(dirname):
         with gzip.open(dirname+'/'+filename) as fin:
             hin = pickle.load(fin)
             for k in hin.keys():
+                #if 'e1drj' in k or 'sumw' in k or 'recoil' in k:
                 if k in hists: hists[k]+=hin[k]
                 else: hists[k]=hin[k]
 
@@ -33,17 +34,17 @@ pdataset_map = OrderedDict()
 for pdi in pd:
     pdataset_map[pdi] = (pdi+"*",)
 
-# for key in hists.keys():
-#      hists[key] = hists[key].group(pdataset, pdataset_cats, pdataset_map)
+for key in hists.keys():
+    hists[key] = hists[key].group(pdataset_cats, pdataset, pdataset_map)
 
-# scale={}
-# for pdi in hists['sumw'].identifiers('dataset'):
-#     scale[pdi]=hists['sumw'].project('dataset').values(overflow='all')[(pdi,)][0]
+scale={}
+for pdi in hists['sumw'].identifiers('pdataset'):
+    scale[pdi]=hists['sumw'].project('pdataset',overflow='all').values()[(str(pdi),)]
 
-# for key in hists.keys():
-#     if key=='sumw': continue
-#     for pdi in hists[key].identifiers('dataset'):
-#         hists[key].scale({pdi:1/scale[pdi]},axis='dataset')
+for key in hists.keys():
+    if key=='sumw': continue
+    for pdi in hists[key].identifiers('pdataset'):
+        hists[key].scale({pdi:1/scale[pdi]},axis='pdataset')
 
 data_hists={}
 
@@ -58,7 +59,7 @@ for filename in os.listdir(dirname):
                 else: data_hists[k]=hin[k]
 
 process = hist.Cat("process", "Process", sorting='placement')
-process_cats = ("dataset",)
+process_cats = ("pdataset",)
 process_map = OrderedDict()
 
 process_map["WW"] = ("WW*",)
@@ -74,22 +75,21 @@ process_map["Zjets"] = ("DYJets*",)
 #process_map["Znunu"] = ("ZJets*",)
 
 data_r_map = OrderedDict()
-data_r_map['isoneE'] = 'SingleElectron'
+data_r_map['isoneE'] = 'EGamma'
 data_r_map['isoneM'] = 'MET'
-#data_r_map['istwoE'] = 'SingleElectron'
-#data_r_map['istwoM'] = 'MET'
+data_r_map['istwoE'] = 'EGamma'
+data_r_map['istwoM'] = 'MET'
 #data_r_map['isoneA'] = 'SinglePhoton'
-data_r_map['iszeroL'] = 'MET'
+data_r_map['hadronic'] = 'MET'
 
 data_map = OrderedDict()
 data_map["MET"] = ("MET*", )
-data_map["SingleElectron"] = ("SingleElectron*", )
+data_map["EGamma"] = ("EGamma*", )
 #data_map["SinglePhoton"] = ("EGamma*", )
 data_cats = ("dataset",)
 print("Plotting Histograms")
 for key in hists.keys():
     hists[key] = hists[key].group(process_cats, process, process_map)
-    print(key)
     data_hists[key] = data_hists[key].group(data_cats, process, data_map)
 
 hists['recoil'].axis('recoil').label = 'Hadronic Recoil (GeV)'
@@ -100,31 +100,34 @@ hists['fjmass'].axis('fjmass').label = 'AK15 Leading Jet Mass (GeV)'
 #print(hists['recoil'].project('process','Hbb').values())
 
 #data_map['isoneE'] = 'SingleElectron'
-data_map['isoneE'] = 'MET'
+data_map['isoneE'] = 'EGamma'
 data_map['isoneM'] = 'MET'
-#data_map['istwoE'] = 'SingleElectron'
-#data_map['istwoM'] = 'MET'
+data_map['istwoE'] = 'EGamma'
+data_map['istwoM'] = 'MET'
 #data_map['isoneA'] = 'SinglePhoton'
-data_map['iszeroL'] = 'MET'
+#data_map['iszeroL'] = 'MET'
+data_map['hadronic'] = 'MET'
 
+print(hists['recoil'].identifiers('category'))
 for r in hists['recoil'].identifiers('category'):
     exp = 0
     print('------------------')
     print('------------------')
     print('Category:',r)
     print('------------------')
-    for p in hists['recoil'].project('category',r).identifiers('process'):
-        #pdb.set_trace()
-        for s in hists['recoil'].project('category',r).project('process',p).identifiers('control_region'):
+    for p in hists['recoil'].integrate('category',r).identifiers('process'):
+        for s in hists['recoil'].integrate('category',r).integrate('process',p).identifiers('control_region'):
             #pdb.set_trace()
-            yld = np.sum(hists['recoil'].project('control_region',s).project('category',r).project('process', p).values(overflow='all')[()])
+            yld = np.sum(hists['recoil'].values(overflow='all')[(str(p),str(r),str(s))])
             exp += yld
             print('Category',r,'Process:',p,'Control Region:',s, '%.1f' % yld)
     print('------------------')
     print('Total expected:', '%.1f' % exp)
-    if r in data_hists['recoil'].identifiers('category'):
+    print(data_hists['recoil'].integrate('category',r).identifiers('control_region'))
+    for s in data_hists['recoil'].integrate('process',data_map[str(r)]).integrate('category',r).identifiers('control_region'):
+        print('Category',r,'Dataset:',data_map[str(r)],'Control Region:',s)
         #pdb.set_trace()
-        print('Total observed:', '%.1f' % np.sum(data_hists['recoil'].project('control_region').project('category',r).project('process',data_map[r.name]).values(overflow='all')[()]))   
+        print('Total observed(',data_map[str(r)],str(r),str(s),'):', '%.1f' % np.sum(data_hists['recoil'].values(overflow='all')[(data_map[str(r)],str(r),str(s))]))
     else:
         print("Category",r,"not found in data_hists category")
     print('------------------')
@@ -137,30 +140,38 @@ plt.rcParams.update({'font.size': 14, 'axes.titlesize': 18, 'axes.labelsize': 18
 fill_opts = {'edgecolor': (0,0,0,0.3), 'alpha': 0.8}
 error_opts = {'label':'Stat. Unc.', 'hatch':'///', 'facecolor':'none', 'edgecolor':(0,0,0,.5), 'linewidth': 0}
 nostack_fill_opts = {'alpha': 0.2, 'label': '_nolabel_'}
-data_err_opts = {'linestyle':'none', 'marker': '.', 'markersize': 10., 'color':'k', 'elinewidth': 1, 'emarker': '_'}
+#data_err_opts = {'linestyle':'none', 'marker': '.', 'markersize': 10., 'color':'k', 'elinewidth': 1, 'emarker': '_'}
+data_err_opts = {'linestyle':'none', 'marker': '.', 'markersize': 10., 'color':'k', 'elinewidth': 1}
 colors = ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c',"#ff8000","#7f00ff","#000000"]
-cat_names = {'isoneM':'Single Muon', 'isoneE':'Single Electron', 'iszeroL':'All Hadronic'}
+cat_names = {'isoneM':'Single Muon', 'isoneE':'Single Electron', 'istwoM':'Double Muon', 'istwoE':'Double Electron', 'hadronic':'All Hadronic'}
 
 if not os.path.exists('stack'): os.makedirs('stack')
 for key in hists.keys():
     if key=='sumw': continue
 
     for cat in hists[key].identifiers('category'):
-        for s in hists[key].project('category',cat).identifiers('control_region'):
-            #print("hist:",key,"cat:",cat,"CR:",s)
-            if cat not in hists[key].identifiers('category'): continue
-            fig, ax = plt.subplots(1, 1, figsize=(10,10))
+        for s in hists[key].integrate('category',cat).identifiers('control_region'):
+            #pdb.set_trace()
+            print("hist:",key,"cat:",cat,"CR:",s)
+            if str(s)=="QCD": continue
+            fig, (ax, rax) = plt.subplots(2, 1, figsize=(11,13), gridspec_kw={"height_ratios": (3, 1)}, sharex=True)
+            fig.subplots_adjust(hspace=.07)
             ax.set_prop_cycle(cycler(color=colors))
-            #plot.plot1d(data_hists[key].project('control_region',s).project('category','isoneM'), overlay="process", ax=ax, clear=False, error_opts=data_err_opts)
-            # print("Category:",hists[key].identifiers('category'))
-            # print("Control Region:",hists[key].identifiers('control_region'))
-            # print("Control Region PC",hists[key].project('category',cat).identifiers('control_region'))
-            plot.plot1d(hists[key].project('category',cat).project('control_region',s), overlay="process", ax=ax, clear=False, stack=True, line_opts=None, fill_opts=fill_opts, error_opts=error_opts)
+            if hists[key].integrate('category',cat).integrate('control_region',s).dim() != 2: continue
+            plot.plot1d(hists[key].integrate('category',cat).integrate('control_region',s), overlay="process", ax=ax, clear=False, stack=True, fill_opts=fill_opts, error_opts=error_opts)
+            if str(s) != "signal":
+                plot.plot1d(data_hists[key].integrate('category',cat).integrate('control_region',s), overlay="process", ax=ax, clear=False, error_opts=data_err_opts)
+                plot.plotratio(data_hists[key].integrate('category',cat).integrate('control_region',s).integrate('process'), hists[key].integrate('category',cat).integrate('control_region',s).sum('process'), ax=rax, overflow='over', error_opts=data_err_opts, denom_fill_opts={}, guide_opts={}, unc='num')
+            rax.set_ylabel('Ratio (data/MC)')
+            rax.set_ylim(0.5,1.5)
+            ax._get_lines.prop_cycler = ax._get_patches_for_fill.prop_cycler
+            args = {'linestyle':'--', 'linewidth': 5}
+            height = 2*max(max(hists[key].integrate('category',cat).integrate('control_region',s).integrate('process').values()[()]),max(data_hists[key].integrate('category',cat).integrate('control_region',s).integrate('process').values()[()]))
             ax.autoscale(axis='x', tight=True)
             ax.set_yscale('log')
-            ax.set_ylim(.1, None)
+            ax.set_ylim(bottom=0.1, top=height)
             leg = ax.legend()
-            coffee = plt.text(0., 1., u"☕ "+cat_names[str(cat)], fontsize=20, horizontalalignment='left', verticalalignment='bottom', transform=ax.transAxes)
+            coffee = plt.text(0., 1., u"☕ "+cat_names[str(cat)]+" "+str(s), fontsize=20, horizontalalignment='left', verticalalignment='bottom', transform=ax.transAxes)
             lumi = plt.text(1., 1., r"59.97 fb$^{-1}$ (13 TeV)", fontsize=20, horizontalalignment='right', verticalalignment='bottom', transform=ax.transAxes)
             plot_path = os.path.abspath('stack') 
             plot_name = key+'_'+str(cat)+'_'+str(s)+'_stack.png'
@@ -171,17 +182,17 @@ for key in hists.keys():
     if key=='sumw': continue
     
     for cat in hists[key].identifiers('category'):
-        for s in hists[key].project('category',cat).identifiers('control_region'):
-            #print("cat:",cat,"CR:",s)
+        for s in hists[key].integrate('category',cat).identifiers('control_region'):
+            if str(s)=="QCD": continue
+            #pdb.set_trace()
             args = {'linestyle':'--','linewidth':2}
             fig, ax = plt.subplots(1, 1, figsize=(10,10))
             ax.set_prop_cycle(cycler(color=colors))
-            plot.plot1d(hists[key].project('category',cat).project('control_region',s), ax=ax, overlay="process", clear=False, stack=False, line_opts={}, density=1)
+            if hists[key].integrate('category',cat).integrate('control_region',s).dim() != 2: continue
+            plot.plot1d(hists[key].integrate('category',cat).integrate('control_region',s), ax=ax, overlay="process", clear=False, stack=False, line_opts={}, density=1)
             ax.autoscale(axis='x', tight=True)
-            #ax.set_yscale('log')
-            #ax.set_ylim(.01, None)
             leg = ax.legend()
-            coffee = plt.text(0., 1., u"☕ "+cat_names[str(cat)], fontsize=28, horizontalalignment='left', verticalalignment='bottom', transform=ax.transAxes)
+            coffee = plt.text(0., 1., u"☕ "+cat_names[str(cat)]+" "+str(s), fontsize=28, horizontalalignment='left', verticalalignment='bottom', transform=ax.transAxes)
             lumi = plt.text(1., 1., r"1 fb$^{-1}$ (13 TeV)", fontsize=16, horizontalalignment='right', verticalalignment='bottom', transform=ax.transAxes)
             plot_path = os.path.abspath('unstack')
             plot_name = key+'_'+str(cat)+'_'+str(s)+'.png'

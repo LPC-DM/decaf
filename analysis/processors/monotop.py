@@ -23,12 +23,14 @@ class AnalysisProcessor(processor.ProcessorABC):
         self._metfilters = metfilters
 
         self._samples = {
-            "iszeroL":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','MET'),
+            "hadronic":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','MET'),
             "isoneM":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','MET'),
-            "isoneE":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','MET')
-            # "iszeroL":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET','Mhs_50','Mhs_70','Mhs_90','MonoJet','MonoW','MonoZ'),
-            # "isoneM":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET'),
-            # "isoneE":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','SingleElectron','EGamma'),
+            "istwoM":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','MET'),
+            "isoneE":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','SingleElectron','EGamma'),
+            "istwoE":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','SingleElectron','EGamma')
+            # "hadronic":('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET','Mhs_50','Mhs_70','Mhs_90','MonoJet','MonoW','MonoZ'),
+            # "leptonicM":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET'),
+            # "leptonicE":('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','SingleElectron','EGamma'),
             # "istwoM":('WJets','DY','TT','ST','WW','WZ','ZZ','HToBB','MET'),
             # "istwoE":('WJets','DY','TT','ST','WW','WZ','ZZ','HToBB','SingleElectron','EGamma'),
             # "isoneA":('GJets','QCD','SinglePhoton','EGamma')
@@ -139,12 +141,12 @@ class AnalysisProcessor(processor.ProcessorABC):
             'e1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("category", "Category"), hist.Cat("control_region", "Control Region"), hist.Bin("e1eta","Leading Electron Eta",48,-2.4,2.4)),
             'e1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("category", "Category"), hist.Cat("control_region", "Control Region"), hist.Bin("e1phi","Leading Electron Phi",64,-3.2,3.2)),
             'e1drj': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("category", "Category"), hist.Cat("control_region", "Control Region"), hist.Bin("e1drj","ΔR between Leading Electron and Leading Jet ",25,0,5)),
-            'dielemass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("category", "Category"), hist.Cat("control_region", "Control Region"), hist.Bin("dielemass","Dielectron mass",100,0,500)),
+            'dielemass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("category", "Category"), hist.Cat("control_region", "Control Region"), hist.Bin("dielemass","Dielectron mass",60,60,120)),
             'mu1pt': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("category", "Category"), hist.Cat("control_region", "Control Region"), hist.Bin("mu1pt","Leading Muon Pt",[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])),
             'mu1eta': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("category", "Category"), hist.Cat("control_region", "Control Region"), hist.Bin("mu1eta","Leading Muon Eta",48,-2.4,2.4)),
             'mu1phi': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("category", "Category"), hist.Cat("control_region", "Control Region"), hist.Bin("mu1phi","Leading Muon Phi",64,-3.2,3.2)),
             'mu1drj': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("category", "Category"), hist.Cat("control_region", "Control Region"), hist.Bin("mu1drj","ΔR between Leading Muon and Leading Jet ",25,0,5)),
-            'dimumass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("category", "Category"), hist.Cat("control_region", "Control Region"), hist.Bin("dimumass","Dimuon mass",100,0,500)),
+            'dimumass': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("category", "Category"), hist.Cat("control_region", "Control Region"), hist.Bin("dimumass","Dimuon mass",60,60,120)),
             'TopTagger': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("category", "Category"), hist.Cat("control_region", "Control Region"), hist.Bin("TopTagger","TopTagger",15,0,1)),
             'DarkHiggsTagger': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("category", "Category"), hist.Cat("control_region", "Control Region"), hist.Bin("DarkHiggsTagger","DarkHiggsTagger",15,0,1)),
             'VvsQCDTagger': hist.Hist("Events", hist.Cat("dataset", "Primary dataset"), hist.Cat("category", "Category"), hist.Cat("control_region", "Control Region"), hist.Bin("VvsQCDTagger","VvsQCDTagger",15,0,1)),
@@ -442,12 +444,14 @@ class AnalysisProcessor(processor.ProcessorABC):
                 leading_dimu = dimu[dimu.pt.argmax()]
 
             observable = {}
-            observable["iszeroL"] = met
-            observable["isoneM"] = met
-            observable["isoneE"] = met
+            observable["hadronic"] = met
+            observable["isoneM"] = met+leading_mu.sum()
+            observable["isoneE"] = met+leading_e.sum()
+            observable["istwoM"] = met+leading_dimu.sum()
+            observable["istwoE"] = met+leading_diele.sum()
 
             # u={}
-            # u["iszeroL"] = met
+            # u["hadronic"] = met
             # u["isoneM"] = met+leading_mu.sum()
             # u["isoneE"] = met+leading_e.sum()
             # u["istwoM"] = met+leading_dimu.sum()
@@ -455,19 +459,19 @@ class AnalysisProcessor(processor.ProcessorABC):
             # u["isoneA"] = met+leading_pho.sum()
 
             lepSys={}
-            lepSys["iszeroL"] = met
+            lepSys["hadronic"] = met
             lepSys["isoneM"] = leading_mu.sum()
             lepSys["isoneE"] = leading_e.sum()
-            # lepSys["istwoM"] = leading_dimu.sum()
-            # lepSys["istwoE"] = leading_diele.sum()
+            lepSys["istwoM"] = leading_dimu.sum()
+            lepSys["istwoE"] = leading_diele.sum()
             # lepSys["isoneA"] = leading_pho.sum()
 
             leadlepton={}
-            leadlepton["iszeroL"] = met
+            leadlepton["hadronic"] = met
             leadlepton["isoneM"] = leading_mu.sum()
             leadlepton["isoneE"] = leading_e.sum()
-            # leadlepton["istwoM"] = leading_mu.sum()
-            # leadlepton["istwoE"] = leading_e.sum()
+            leadlepton["istwoM"] = leading_mu.sum()
+            leadlepton["istwoE"] = leading_e.sum()
             # leadlepton["isoneA"] = leading_pho.sum()
 
             ###
@@ -566,11 +570,11 @@ class AnalysisProcessor(processor.ProcessorABC):
             for path in singlepho_trigger:
                 passSinglePhoTrig |= singlepho_trigger[path]
 
-            pass_trig['iszeroL'] = passMetTrig
+            pass_trig['hadronic'] = passMetTrig
             pass_trig['isoneM'] = passMetTrig
-            # pass_trig['istwoM'] = passMetTrig
+            pass_trig['istwoM'] = passMetTrig
             pass_trig['isoneE'] = passSingleEleTrig
-            # pass_trig['istwoE'] = passSingleEleTrig
+            pass_trig['istwoE'] = passSingleEleTrig
             # pass_trig['isoneA'] =passSinglePhoTrig
 
             ###
@@ -578,11 +582,11 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
 
             trig = {}
-            trig['iszeroL'] = get_met_trig_weight[self._year](observable["iszeroL"].pt)
+            trig['hadronic'] = get_met_trig_weight[self._year](observable["hadronic"].pt)
             trig['isoneM'] = get_met_trig_weight[self._year](observable["isoneM"].pt)
-            #trig['istwoM'] = get_met_zmm_trig_weight[self._year](u["istwoM"].pt)
+            trig['istwoM'] = get_met_zmm_trig_weight[self._year](observable["istwoM"].pt)
             trig['isoneE'] = get_ele_trig_weight[self._year](leading_e.eta.sum(), leading_e.pt.sum())
-            #trig['istwoE'] = trig['isoneE']
+            trig['istwoE'] = trig['isoneE']
             # if ele_pairs.i0.content.size>0:
             #     eff1 = get_ele_trig_weight[self._year](ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum())
             #     eff2 = get_ele_trig_weight[self._year](ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum())
@@ -595,9 +599,11 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             selections = processor.PackedSelection()
 
-            selections.add('iszeroL', (passMetTrig) & (fj_nclean>0))
+            selections.add('hadronic', (passMetTrig) & (fj_nclean>0))
             selections.add('isoneM', (j_nclean>0))
+            selections.add('istwoM', (j_nclean>0))
             selections.add('isoneE', (passSingleEleTrig) & (j_nclean>0))
+            selections.add('istwoE', (passSingleEleTrig) & (j_nclean>0))
 
             # selections.add('istwoM', (e_nloose==0) & (mu_ntight>=1) & (mu_nloose==2) & (tau_nloose==0)&(pho_nloose==0)&(leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120))
             # selections.add('istwoE', (e_ntight>=1) & (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)&(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
@@ -632,28 +638,38 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights[k].add('trig', trig[k])
                 weights[k].add('pass_trig', pass_trig[k])
 
-                if (k=="iszeroL"):
-                    selections.add(k+'signal', (j_ndflvM==1) & (met.pt.sum()>250))
-                    selections.add(k+'ttbar',  (j_ndflvM==2) & (met.pt.sum()>250))
-                    selections.add(k+'QCD',    (j_ndflvM==0) & (met.pt.sum()<250) & (j_nantidcsvL>0))
-                if (k=="isoneE"):
-                    selections.add(k+'signal', (e_ntight==1) & (j_ndflvM==1) & (met.pt.sum()>250))
-                    selections.add(k+'ttbar',  (e_ntight==1) & (j_ndflvM==2) & (met.pt.sum()>250))
-                    selections.add(k+'wjets',  (e_ntight==1) & (j_ndflvM==0) & (met.pt.sum()>250) & (j_nantidcsvL>0))
-                    selections.add(k+'zjets',  (e_nloose>=2) & (met.pt.sum()>250) & (leading_diele.mass.sum()>60) & (leading_diele.mass.sum()<120))
-                    selections.add(k+'QCD',    (e_ntight==0) & (met.pt.sum()<250) & (e_nloose>=1))
+                if (k=="hadronic"):
+                    selections.add(k+'signal',   (observable[k].pt.sum()>250) & (leading_fj.pt.sum()>250) &(fj_nclean==1) & (j_ndflvM==0) & (mu_nloose==0) & (e_nloose==0) & (pho_nloose==0) & (tau_nloose==0))
+                    selections.add(k+'ttbar',    (observable[k].pt.sum()>250) & (leading_fj.pt.sum()>250) & (fj_nclean==1) & (j_ndflvM==1) & (mu_nloose==0) & (e_nloose==0) & (pho_nloose==0) & (tau_nloose==0))
+                    selections.add(k+'ttbar_mu', (observable[k].pt.sum()>250) & (leading_fj.pt.sum()>250) & (fj_nclean==1) & (j_ndflvM==1) & (mu_ntight==1) & (mu_nloose==1) & (e_nloose==0) & (pho_nloose==0) & (tau_nloose==0))
+                    selections.add(k+'ttbar_e',  (observable[k].pt.sum()>250) & (leading_fj.pt.sum()>250) & (fj_nclean==1) & (j_ndflvM==1) & (mu_nloose==0) & (e_ntight==1) & (e_nloose==0) & (pho_nloose==0) & (tau_nloose==0))
+                    selections.add(k+'wjets_mu', (observable[k].pt.sum()>250) & (fj_nclean==1) & (j_ndflvM==0) & (mu_ntight==1) & (mu_nloose==1) & (e_nloose==0) & (pho_nloose==0) & (tau_nloose==0))
+                    selections.add(k+'wjets_e',  (observable[k].pt.sum()>250) & (fj_nclean==1) & (j_ndflvM==0) & (e_ntight==1) & (e_nloose==1) & (mu_nloose==0) & (pho_nloose==0) & (tau_nloose==0))
                 if (k=="isoneM"):
-                    selections.add(k+'signal', (mu_ntight==1) & (j_ndflvM==1) & (met.pt.sum()>250))
-                    selections.add(k+'ttbar',  (mu_ntight==1) & (j_ndflvM==2) & (met.pt.sum()>250))
-                    selections.add(k+'wjets',  (mu_ntight==1) & (j_ndflvM==0) & (met.pt.sum()>250) & (j_nantidcsvL>0))
-                    selections.add(k+'zjets',  (mu_nloose>=2) & (met.pt.sum()>250) & (leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120))
-                    selections.add(k+'QCD',    (mu_ntight==0) & (met.pt.sum()<250) & (mu_nloose>=1))
+                    selections.add(k+'signal', (met.pt.sum()>150) & (j_ndflvM==1) & (mu_ntight==1) & (mu_nloose==1) & (e_nloose==0) & (pho_nloose==0))
+                    selections.add(k+'ttbar',  (met.pt.sum()>150) & (j_ndflvM>=2) & (mu_ntight==1) & (mu_nloose==1) & (e_nloose==0) & (pho_nloose==0))
+                    selections.add(k+'wjets',  (met.pt.sum()>150) & (j_ndflvM==0) & (mu_ntight==1) & (mu_nloose==1) & (e_nloose==0) & (pho_nloose==0))
+                if (k=="istwoM"):
+                    selections.add(k+'zjets', (observable[k].pt.sum()>250) & (leading_fj.pt.sum()>250) & (fj_nclean==1) & (mu_ntight==1) & (mu_nloose==2) & (e_nloose==0) & (leading_dimu.mass.sum()>60) & (leading_dimu.mass.sum()<120) & (pho_nloose==0) & (tau_nloose==0))
+                if (k=="isoneE"):
+                    selections.add(k+'signal', (met.pt.sum()>150) & (j_ndflvM==1) & (e_ntight==1) & (e_nloose==1) & (mu_nloose==0) & (pho_nloose==0))
+                    selections.add(k+'ttbar',  (met.pt.sum()>150) & (j_ndflvM>=2) & (e_ntight==1) & (e_nloose==1) & (mu_nloose==0) & (pho_nloose==0))
+                    selections.add(k+'wjets',  (met.pt.sum()>150) & (j_ndflvM==0) & (e_ntight==1) & (e_nloose==1) & (mu_nloose==0) & (pho_nloose==0))
+                if (k=="istwoE"):
+                    selections.add(k+'zjets',  (observable[k].pt.sum()>250) & (leading_fj.pt.sum()>250) & (fj_nclean==1) & (mu_nloose==0) & (e_ntight==1) & (e_nloose==2) & (leading_diele.mass.sum()>60) & (leading_diele.mass.sum()<120) & (pho_nloose==0) & (tau_nloose==0))
 
-                regions[k+'_signal'] = {k,k+'signal'}
-                regions[k+'_ttbar'] = {k,k+'ttbar'}
-                if (k!="iszeroL"): regions[k+'_wjets'] = {k,k+'wjets'}
-                if (k!="iszeroL"): regions[k+'_zjets'] = {k,k+'zjets'}
-                regions[k+'_QCD'] = {k,k+'QCD'}
+                if (k=="hadronic"):
+                    regions[k+'_signal'] = {k,k+'signal'}
+                    regions[k+'_ttbar'] = {k,k+'ttbar'}
+                    regions[k+'_ttbar_mu'] = {k,k+'ttbar_mu'}
+                    regions[k+'_ttbar_e'] = {k,k+'ttbar_e'}
+                    regions[k+'_wjets_mu'] = {k,k+'wjets_mu'}
+                    regions[k+'_wjets_e'] = {k,k+'wjets_e'}
+                if (k=="isoneM" or k=="isoneE"):
+                    regions[k+'_signal'] = {k,k+'signal'}
+                    regions[k+'_ttbar'] = {k,k+'ttbar'}
+                    regions[k+'_wjets'] = {k,k+'wjets'}
+                if (k=="istwoM" or k=="istwoE"): regions[k+'_zjets'] = {k,k+'zjets'}
 
             variables = {}
             variables['j1pt'] = leading_j.pt
@@ -709,8 +725,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             while i < len(selected_regions[dataset]):
                 r = selected_regions[dataset][i]
                 weight = weights[r].weight()
-                for s in ["signal","ttbar","wjets","zjets","QCD"]:
-                    if r == 'iszeroL' and (s == 'wjets' or s == 'zjets'): continue
+                for s in ["signal","ttbar","ttbar_mu","ttbar_e","wjets","wjets_e","wjets_mu","zjets"]:
+                    if (r+'_'+s not in regions): continue
                     cut = selections.all(*regions[r+'_'+s])
                     flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
                     flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
@@ -732,11 +748,11 @@ class AnalysisProcessor(processor.ProcessorABC):
                         elif histname == 'recoilVSmindphi':
                             h.fill(dataset=dataset, category=r, control_region=s, recoil=observable[r].pt, mindphi=abs(observable[r].delta_phi(j_clean)).min(), weight=weight*cut)
                         elif histname == 'mu1drj':
-                            if r == 'isoneM':
-                                h.fill(dataset=dataset, category=r, control_region=s, mu1drj=observable[r].delta_r(leading_j).min(), weight=weight*cut)
+                            if r == 'isoneM' or r == 'istwoM':
+                                h.fill(dataset=dataset, category=r, control_region=s, mu1drj=leadlepton[r].delta_r(j_clean).min(), weight=weight*cut)
                         elif histname == 'e1drj':
-                            if r == 'isoneE':
-                                h.fill(dataset=dataset, category=r, control_region=s, e1drj=observable[r].delta_r(leading_j).min(), weight=weight*cut)
+                            if r == 'isoneE' or r == 'istwoE' :
+                                h.fill(dataset=dataset, category=r, control_region=s, e1drj=leadlepton[r].delta_r(j_clean).min(), weight=weight*cut)
                         else:
                             flat_variable = {histname: flat_variables[histname]}
                             h.fill(dataset=dataset, category=r, control_region=s, **flat_variable, weight=flat_weights[histname])
