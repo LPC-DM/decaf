@@ -8,3 +8,4 @@ endif
 
 setenv PYTHONPATH ~/.local/lib/python3.6/site-packages:$PYTHONPATH
 #setenv PATH ${HOME}/.local/bin:$PATH
+setenv PYTHONWARNINGS "ignore"
