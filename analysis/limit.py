@@ -24,7 +24,7 @@ def template(hist, name):
 
 def darkhiggs_model(tmpdir,mass,category):
 
-    model = rl.Model('darkhiggs_'+mass+category)
+    model = rl.Model('darkhiggs_'+mass+'_'+category)
 
     binning_map = {
         'mass0': {
@@ -49,33 +49,33 @@ def darkhiggs_model(tmpdir,mass,category):
         }
     }
 
-    region_map = {
-        'iszeroL':'sr',
-        'isoneE':'wecr',
-        'isoneM':'wmcr',
-        'isoneEb':'tecr',
-        'isoneMb':'tmcr',
-        'istwoE':'zecr',
-        'istwoM':'zmcr',
-        'isoneA':'gcr'
+    wjets_eff = {
+        'mass0': 0.092,
+        'mass1': 0.054,
+        'mass2': 0.044,
+        'mass3': 0.045,
+        'mass4': 0.042
+    }
+
+    zjets_eff = {
+        'mass0': 0.092,
+        'mass1': 0.054,
+        'mass2': 0.050,
+        'mass3': 0.054,
+        'mass4': 0.054,
     }
 
     ###
     #Extract histograms from input file
     ###
 
-    hists = load('pods/scaled_condor_hists_darkhiggs2018.coffea')
+    hists = load('hists/darkhiggs2018.scaled')
     recoil = {}
-    for js in hists['recoil'].identifiers('jet_selection'):
-        if category not in str(js) or mass not in str(js): continue
-        print(js,category,mass)
-        for region in hists['recoil'].identifiers('region'):
-            str_b=''
-            if 'extrab' in str(js): str_b='b'
-            if str(region)+str_b not in region_map: continue
-            print(region_map[str(region)+str_b])
-            recoil[region_map[str(region)+str_b]]=hists['recoil'].integrate('jet_selection',js).integrate('region',region).rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning_map[mass][category]))
-            print(recoil[region_map[str(region)+str_b]].axis('recoil').edges())
+    for r in hists['recoil'].identifiers('region'):
+        print(r)
+        if category not in str(r) or mass not in str(r): continue
+        print(r,category,mass)
+        recoil[str(r).split("_")[0]]=hists['recoil'].integrate('region',r).rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning_map[mass][category]))
     print(recoil.keys())
 
     ###
@@ -89,6 +89,12 @@ def darkhiggs_model(tmpdir,mass,category):
     ###
 
     lumi = rl.NuisanceParameter('lumi', 'lnN')
+
+    ###
+    # MET bin migration
+    ###
+
+    met = rl.NuisanceParameter('met', 'lnN')
 
     ###
     # Cross section of MC-driven processes
@@ -125,6 +131,30 @@ def darkhiggs_model(tmpdir,mass,category):
     mistag_deepAK15 = rl.NuisanceParameter('mistag_deepAK15', 'lnN')
 
     ###
+    # Tau veto
+    ###
+
+    veto_tau = rl.NuisanceParameter('veto_tau', 'lnN')
+
+
+    ###
+    # Setting tagger efficiency and scale factor for in-situ calculation
+    ###
+
+    wjets_sf = rl.IndependentParameter('wjets_sf', 1., 0, 10)
+    wjets_weight = (1-(wjets_sf*wjets_eff[mass]))/(1-wjets_eff[mass])
+    if 'monohs' in category: wjets_weight = wjets_sf
+
+    zjets_sf = rl.IndependentParameter('zjets_sf', 1., 0, 10)
+    zjets_weight = (1-(zjets_sf*zjets_eff[mass]))/(1-zjets_eff[mass])
+    if 'monohs' in category: zjets_weight = zjets_sf
+
+    ttbar_eff = 1.
+    ttbar_sf = rl.IndependentParameter('ttbar_sf', 1., 0, 10)
+    ttbar_weight = (1-(ttbar_sf*ttbar_eff))/(1-ttbar_eff)
+    if 'monohs' in category: ttbar_weight = ttbar_sf
+
+    ###
     ###
     # Shape systematics
     ###
@@ -145,7 +175,7 @@ def darkhiggs_model(tmpdir,mass,category):
     ###
     ###
 
-    sr = rl.Channel("sr")
+    sr = rl.Channel(category+'-sr')
     model.addChannel(sr)
 
     ###
@@ -161,28 +191,26 @@ def darkhiggs_model(tmpdir,mass,category):
     sr_zvvHist = recoil['sr'].integrate('process', 'ZJets')
     sr_zvvTemplate = template(sr_zvvHist, 'recoil')
     sr_zvvMC =  rl.TemplateSample('sr_zvvMC', rl.Sample.BACKGROUND, sr_zvvTemplate)
-    sr_zvvMC.setParamEffect(jec, np.random.normal(loc=1, scale=0.01, size=len(sr_zvvHist.axis('recoil').edges(overflow='all'))-1))
+    #sr_zvvMC.setParamEffect(jec, np.random.normal(loc=1, scale=0.01, size=len(sr_zvvHist.axis('recoil').edges(overflow='all'))-1))
     
-
-    # these parameters are large, should probably log-transform them
-    sr_zvvBinYields = np.array([rl.IndependentParameter('tmp', b, 0, sr_zvvTemplate[0].max()*2) for b in sr_zvvTemplate[0]])  # name will be changed by ParametericSample
+    sr_zvvBinYields = np.array([rl.IndependentParameter(category+'-sr_zvv_bin_%d' % i, b, 0, sr_zvvTemplate[0].max()*2) for i,b in enumerate(sr_zvvTemplate[0])]) * zjets_weight
     sr_zvvObservable = rl.Observable('recoil', sr_zvvHist.axis('recoil').edges(overflow='all'))
-    sr_zvv = rl.ParametericSample('sr_zvv', rl.Sample.BACKGROUND, sr_zvvObservable, sr_zvvBinYields)
+    sr_zvv = rl.ParametericSample(category+'-sr_zvv', rl.Sample.BACKGROUND, sr_zvvObservable, sr_zvvBinYields)
+
     sr.addSample(sr_zvv)
 
     ###    
-    # W(->lnu)+jets data-driven model                                                                                                                                                                  
+    # W(->lnu)+jets data-driven model                
     ### 
 
     sr_wjetsHist = recoil['sr'].integrate('process', 'Wjets')
     sr_wjetsTemplate = template(sr_wjetsHist, 'recoil')
     sr_wjetsMC =  rl.TemplateSample('sr_wjetsMC', rl.Sample.BACKGROUND, sr_wjetsTemplate)
-    sr_wjetsMC.setParamEffect(jec, np.random.normal(loc=1, scale=0.01, size=len(sr_wjetsHist.axis('recoil').edges(overflow='all'))-1))
+    #sr_wjetsMC.setParamEffect(jec, np.random.normal(loc=1, scale=0.01, size=len(sr_wjetsHist.axis('recoil').edges(overflow='all'))-1))
 
-    # these parameters are large, should probably log-transform them
-    sr_wjetsBinYields = np.array([rl.IndependentParameter('tmp', b, 0, sr_wjetsTemplate[0].max()*2) for b in sr_wjetsTemplate[0]])  # name will be changed by ParametericSample
+    sr_wjetsBinYields = np.array([rl.IndependentParameter(category+'-sr_wjets_bin_%d' % i,b,0,sr_wjetsTemplate[0].max()*2) for i,b in enumerate(sr_wjetsTemplate[0])]) * wjets_weight
     sr_wjetsObservable = rl.Observable('recoil', sr_wjetsHist.axis('recoil').edges(overflow='all'))
-    sr_wjets = rl.ParametericSample('sr_wjets', rl.Sample.BACKGROUND, sr_wjetsObservable, sr_wjetsBinYields)
+    sr_wjets = rl.ParametericSample(category+'-sr_wjets', rl.Sample.BACKGROUND, sr_wjetsObservable, sr_wjetsBinYields)
     sr.addSample(sr_wjets)
 
     ###    
@@ -195,9 +223,9 @@ def darkhiggs_model(tmpdir,mass,category):
     sr_ttbarMC.setParamEffect(jec, np.random.normal(loc=1, scale=0.01, size=len(sr_ttbarHist.axis('recoil').edges(overflow='all'))-1))
 
     # these parameters are large, should probably log-transform them
-    sr_ttbarBinYields = np.array([rl.IndependentParameter('tmp', b, 0, sr_ttbarTemplate[0].max()*2) for b in sr_ttbarTemplate[0]])  # name will be changed by ParametericSample
+    sr_ttbarBinYields = np.array([rl.IndependentParameter(category+'-sr_ttbar_bin_%d' % i,b,0,sr_ttbarTemplate[0].max()*2) for i,b in enumerate(sr_ttbarTemplate[0])]) * ttbar_weight
     sr_ttbarObservable = rl.Observable('recoil', sr_ttbarHist.axis('recoil').edges(overflow='all'))
-    sr_ttbar = rl.ParametericSample('sr_ttbar', rl.Sample.BACKGROUND, sr_ttbarObservable, sr_ttbarBinYields)
+    sr_ttbar = rl.ParametericSample(category+'-sr_ttbar', rl.Sample.BACKGROUND, sr_ttbarObservable, sr_ttbarBinYields)
     sr.addSample(sr_ttbar)
 
     ###
@@ -206,33 +234,55 @@ def darkhiggs_model(tmpdir,mass,category):
 
     sr_singletopHist = recoil['sr'].integrate('process', 'ST')
     sr_singletopTemplate = template(sr_singletopHist, 'recoil')
-    sr_singletop = rl.TemplateSample('sr_singletop', rl.Sample.BACKGROUND, sr_singletopTemplate)
+    sr_singletop = rl.TemplateSample(category+'-sr_singletop', rl.Sample.BACKGROUND, sr_singletopTemplate)
     sr_singletop.setParamEffect(lumi, 1.027)
     sr_singletop.setParamEffect(stop_Norm, 1.2)
     sr_singletop.setParamEffect(trig_met, 1.01)
+    sr_singletop.setParamEffect(veto_tau, 1.03)
+    sr_singletop.setParamEffect(met, 1.05)
+    #sr_singletop.setParamEffect(mistag_deepAK15, )
     
     sr.addSample(sr_singletop)
 
     sr_dyHist = recoil['sr'].integrate('process', 'DY')
     sr_dyTemplate = template(sr_dyHist, 'recoil')
-    sr_dy = rl.TemplateSample('sr_dy', rl.Sample.BACKGROUND, sr_dyTemplate)
+    sr_dy = rl.TemplateSample(category+'-sr_dy', rl.Sample.BACKGROUND, sr_dyTemplate)
+    sr_dy.setParamEffect(lumi, 1.027)
+    sr_dy.setParamEffect(dy_Norm, 1.2)
+    sr_dy.setParamEffect(trig_met, 1.01)
+    sr_dy.setParamEffect(veto_tau, 1.03)
+    sr_dy.setParamEffect(met, 1.05)
     sr.addSample(sr_dy)
 
     sr_dibosonHist = recoil['sr'].integrate('process', 'Diboson')
     sr_dibosonTemplate = template(sr_dibosonHist, 'recoil')
-    sr_diboson = rl.TemplateSample('sr_diboson', rl.Sample.BACKGROUND, sr_dibosonTemplate)
+    sr_diboson = rl.TemplateSample(category+'-sr_diboson', rl.Sample.BACKGROUND, sr_dibosonTemplate)
+    sr_diboson.setParamEffect(lumi, 1.027)
+    sr_diboson.setParamEffect(VV_Norm, 1.2)
+    sr_diboson.setParamEffect(trig_met, 1.01)
+    sr_diboson.setParamEffect(veto_tau, 1.03)
+    sr_diboson.setParamEffect(met, 1.05)
     sr.addSample(sr_diboson)
 
     sr_higgsHist = recoil['sr'].integrate('process', 'Hbb')
     sr_higgsTemplate = template(sr_higgsHist, 'recoil')
-    sr_higgs = rl.TemplateSample('sr_higgs', rl.Sample.BACKGROUND, sr_higgsTemplate)
+    sr_higgs = rl.TemplateSample(category+'-sr_higgs', rl.Sample.BACKGROUND, sr_higgsTemplate)
+    sr_higgs.setParamEffect(lumi, 1.027)
+    sr_higgs.setParamEffect(Hbb_Norm, 1.2)
+    sr_higgs.setParamEffect(trig_met, 1.01)
+    sr_higgs.setParamEffect(veto_tau, 1.03)
+    sr_higgs.setParamEffect(met, 1.05)
     sr.addSample(sr_higgs)
 
     for signal in recoil['sr'].identifiers('process'):
         if 'Mono' not in str(signal): continue
         sr_dmHist = recoil['sr'].integrate('process', signal)
         sr_dmTemplate = template(sr_dmHist, 'recoil')
-        sr_dm = rl.TemplateSample('sr_'+str(signal), rl.Sample.SIGNAL, sr_dmTemplate)
+        sr_dm = rl.TemplateSample(category+'-sr_'+str(signal), rl.Sample.SIGNAL, sr_dmTemplate)
+        sr_dm.setParamEffect(lumi, 1.027)
+        sr_dm.setParamEffect(trig_met, 1.01)
+        sr_dm.setParamEffect(veto_tau, 1.03)
+        sr_dm.setParamEffect(met, 1.05)
         sr.addSample(sr_dm)
 
     ###
@@ -279,7 +329,7 @@ def darkhiggs_model(tmpdir,mass,category):
 
     for p in ['t','w']:
         for l in ['e','m']:
-            cr[p+l]=rl.Channel(p+l+'cr')
+            cr[p+l]=rl.Channel(category+'-'+p+l+'cr')
             model.addChannel(cr[p+l])
             print(p+l)
             print(recoil[p+l+'cr'].identifiers('process'))
@@ -294,7 +344,7 @@ def darkhiggs_model(tmpdir,mass,category):
             #ttbarMC[p+l].setParamEffect(ele_id_eff, np.random.normal(loc=1, scale=0.02, size=recoil.nbins), np.random.normal(loc=1, scale=0.02, size=recoil.nbins))
 
             ttbarTransferFactor[p+l] = ttbarMC[p+l].getExpectation() / sr_ttbarMC.getExpectation()
-            ttbar[p+l] = rl.TransferFactorSample(p+l+'cr_ttbar', rl.Sample.BACKGROUND, ttbarTransferFactor[p+l], sr_ttbar)
+            ttbar[p+l] = rl.TransferFactorSample(category+'-'+p+l+'cr_ttbar', rl.Sample.BACKGROUND, ttbarTransferFactor[p+l], sr_ttbar)
             cr[p+l].addSample(ttbar[p+l])
 
             wjetsHist[p+l] = recoil[p+l+'cr'].integrate('process', 'Wjets')
@@ -304,27 +354,27 @@ def darkhiggs_model(tmpdir,mass,category):
             #wjetsMC[p+l].setParamEffect(ele_id_eff, np.random.normal(loc=1, scale=0.02, size=recoil.nbins), np.random.normal(loc=1, scale=0.02, size=recoil.nbins))
 
             wjetsTransferFactor[p+l] = wjetsMC[p+l].getExpectation() / sr_wjetsMC.getExpectation()
-            wjets[p+l] = rl.TransferFactorSample(p+l+'cr_wjets', rl.Sample.BACKGROUND, wjetsTransferFactor[p+l], sr_wjets)
+            wjets[p+l] = rl.TransferFactorSample(category+'-'+p+l+'cr_wjets', rl.Sample.BACKGROUND, wjetsTransferFactor[p+l], sr_wjets)
             cr[p+l].addSample(wjets[p+l])
 
             singletopHist[p+l] = recoil[p+l+'cr'].integrate('process', 'ST')
             singletopTemplate[p+l] = template(singletopHist[p+l], 'recoil')
-            singletop[p+l] = rl.TemplateSample(p+l+'cr_singletop', rl.Sample.BACKGROUND, singletopTemplate[p+l])
+            singletop[p+l] = rl.TemplateSample(category+'-'+p+l+'cr_singletop', rl.Sample.BACKGROUND, singletopTemplate[p+l])
             cr[p+l].addSample(singletop[p+l])
             
             dyHist[p+l] = recoil[p+l+'cr'].integrate('process', 'DY')
             dyTemplate[p+l] = template(dyHist[p+l], 'recoil')
-            dy[p+l] = rl.TemplateSample(p+l+'cr_dy', rl.Sample.BACKGROUND, dyTemplate[p+l])
+            dy[p+l] = rl.TemplateSample(category+'-'+p+l+'cr_dy', rl.Sample.BACKGROUND, dyTemplate[p+l])
             cr[p+l].addSample(dy[p+l])
 
             dibosonHist[p+l] = recoil[p+l+'cr'].integrate('process', 'Diboson')
             dibosonTemplate[p+l] = template(dibosonHist[p+l], 'recoil')
-            diboson[p+l] = rl.TemplateSample(p+l+'cr_diboson', rl.Sample.BACKGROUND, dibosonTemplate[p+l])
+            diboson[p+l] = rl.TemplateSample(category+'-'+p+l+'cr_diboson', rl.Sample.BACKGROUND, dibosonTemplate[p+l])
             cr[p+l].addSample(diboson[p+l])
 
             higgsHist[p+l] = recoil[p+l+'cr'].integrate('process', 'Hbb')
             higgsTemplate[p+l] = template(higgsHist[p+l], 'recoil')
-            higgs[p+l] = rl.TemplateSample(p+l+'cr_higgs', rl.Sample.BACKGROUND, higgsTemplate[p+l])
+            higgs[p+l] = rl.TemplateSample(category+'-'+p+l+'cr_higgs', rl.Sample.BACKGROUND, higgsTemplate[p+l])
             cr[p+l].addSample(higgs[p+l])
     ###
     # End of Single Lepton CR
@@ -338,7 +388,7 @@ def darkhiggs_model(tmpdir,mass,category):
 
     for ll in ['ze','zm']:
 
-        cr[ll] = rl.Channel(ll+'cr')
+        cr[ll] = rl.Channel(category+'-'+ll+'cr')
         model.addChannel(cr[ll])
         print(ll)
         print(recoil[ll+'cr'].identifiers('process'))
@@ -352,27 +402,27 @@ def darkhiggs_model(tmpdir,mass,category):
         #zllJetsMC.setParamEffect(ele_id_eff, np.random.normal(loc=1, scale=0.02, size=recoil.nbins), np.random.normal(loc=1, scale=0.02, size=recoil.nbins))
 
         dyTransferFactor[ll] = dyMC[ll].getExpectation() / sr_zvvMC.getExpectation()
-        dy[ll] = rl.TransferFactorSample(ll+'cr_dy', rl.Sample.BACKGROUND, dyTransferFactor[ll], sr_zvv)
+        dy[ll] = rl.TransferFactorSample(category+'-'+ll+'cr_dy', rl.Sample.BACKGROUND, dyTransferFactor[ll], sr_zvv)
         cr[ll].addSample(dy[ll])
 
         ttbarHist[ll] = recoil[ll+'cr'].integrate('process', 'TT')
         ttbarTemplate[ll] = template(ttbarHist[ll], 'recoil')
-        ttbar[ll] =  rl.TemplateSample(ll+'cr_ttbarMC', rl.Sample.BACKGROUND, ttbarTemplate[ll])
+        ttbar[ll] =  rl.TemplateSample(category+'-'+ll+'cr_ttbarMC', rl.Sample.BACKGROUND, ttbarTemplate[ll])
         cr[ll].addSample(ttbar[ll])
 
         singletopHist[ll] = recoil[ll+'cr'].integrate('process', 'ST')
         singletopTemplate[ll] = template(singletopHist[ll], 'recoil')
-        singletop[ll] = rl.TemplateSample(ll+'cr_singletop', rl.Sample.BACKGROUND, singletopTemplate[ll])
+        singletop[ll] = rl.TemplateSample(category+'-'+ll+'cr_singletop', rl.Sample.BACKGROUND, singletopTemplate[ll])
         cr[ll].addSample(singletop[ll])
         
         dibosonHist[ll] = recoil[ll+'cr'].integrate('process', 'Diboson')
         dibosonTemplate[ll] = template(dibosonHist[ll], 'recoil')
-        diboson[ll] = rl.TemplateSample(ll+'cr_diboson', rl.Sample.BACKGROUND, dibosonTemplate[ll])
+        diboson[ll] = rl.TemplateSample(category+'-'+ll+'cr_diboson', rl.Sample.BACKGROUND, dibosonTemplate[ll])
         cr[ll].addSample(diboson[ll])
 
         higgsHist[ll] = recoil[ll+'cr'].integrate('process', 'Hbb')
         higgsTemplate[ll] = template(higgsHist[ll], 'recoil')
-        higgs[ll] = rl.TemplateSample(ll+'cr_higgs', rl.Sample.BACKGROUND, higgsTemplate[ll])
+        higgs[ll] = rl.TemplateSample(category+'-'+ll+'cr_higgs', rl.Sample.BACKGROUND, higgsTemplate[ll])
         cr[ll].addSample(higgs[ll])
 
     ###
@@ -385,7 +435,7 @@ def darkhiggs_model(tmpdir,mass,category):
     ###
     ###
 
-    gcr = rl.Channel('gcr')
+    gcr = rl.Channel(category+'-gcr')
     model.addChannel(gcr)
 
     gcr.setObservation(template(recoil['gcr'].integrate('process', 'SinglePhoton'), 'recoil'))
@@ -397,14 +447,14 @@ def darkhiggs_model(tmpdir,mass,category):
     #gcr_gjetsMC.setParamEffect(pho_id_eff, np.random.normal(loc=1, scale=0.02, size=recoil.nbins))
 
     gcr_gjetsTransferFactor = gcr_gjetsMC.getExpectation() / sr_zvvMC.getExpectation()
-    gcr_gjets = rl.TransferFactorSample('gcr_gjets', rl.Sample.BACKGROUND, gcr_gjetsTransferFactor, sr_zvv)
+    gcr_gjets = rl.TransferFactorSample(category+'-gcr_gjets', rl.Sample.BACKGROUND, gcr_gjetsTransferFactor, sr_zvv)
     #gammaJets.setParamEffect(gamma_to_z_ewk, np.linspace(1.01, 1.05, recoil.nbins))
     gcr.addSample(gcr_gjets)
 
     with open(os.path.join(str(tmpdir), 'darkhiggsModel.pkl'), "wb") as fout:
         pickle.dump(model, fout)
 
-    model.renderCombine(os.path.join(str(tmpdir), 'darkhiggsModel'))
+    model.renderCombine(os.path.join(str(tmpdir), 'darkhiggsModel/'+mass))
 
 
 if __name__ == '__main__':
