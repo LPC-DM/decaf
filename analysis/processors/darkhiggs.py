@@ -771,7 +771,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['ZHbbvsQCD'] = leading_fj.ZHbbvsQCD
             flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
             flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
-            hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
+            if not isData: hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
             for histname, h in hout.items():
                 if not isinstance(h, hist.Hist):
                     continue
