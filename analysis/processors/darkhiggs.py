@@ -150,60 +150,25 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         self._met_triggers = {
             '2016': [
-                'PFMET170_NoiseCleaned',
-                'PFMET170_HBHECleaned',
-                'PFMET170_JetIdCleaned',
-                'PFMET170_NotCleaned',
-                #'PFMET170_HBHE_BeamHaloCleaned',
-                #'PFMETNoMu120_NoiseCleaned_PFMHTNoMu120_IDTight',
-                #'PFMETNoMu110_NoiseCleaned_PFMHTNoMu110_IDTight',
-                #'PFMETNoMu90_NoiseCleaned_PFMHTNoMu90_IDTight',
-                'PFMETNoMu90_PFMHTNoMu90_IDTight',
-                'PFMETNoMu100_PFMHTNoMu100_IDTight',
-                'PFMETNoMu110_PFMHTNoMu110_IDTight',
                 'PFMETNoMu120_PFMHTNoMu120_IDTight'
             ],
             '2017': [
                 'PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60',
                 'PFMETNoMu120_PFMHTNoMu120_IDTight',
-                'PFMETNoMu130_PFMHTNoMu130_IDTight',
-                'PFMETNoMu140_PFMHTNoMu140_IDTight'
             ],
             '2018': [
                 'PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60',
                 'PFMETNoMu120_PFMHTNoMu120_IDTight',
-                'PFMETNoMu140_PFMHTNoMu140_IDTight'
             ]
         }
 
         self._singlephoton_triggers = {
             '2016': [
                 'Photon175',
-                'Photon200',
-                'Photon165_HE10',
-                'Photon36_R9Id90_HE10_IsoM',
-                'Photon50_R9Id90_HE10_IsoM',
-                'Photon75_R9Id90_HE10_IsoM',
-                'Photon90_R9Id90_HE10_IsoM',
-                'Photon120_R9Id90_HE10_IsoM',
-                'Photon165_R9Id90_HE10_IsoM',
-                'Photon300_NoHE',
-                'ECALHT800',
-                'CaloJet500_NoJetID'
+                'Photon165_HE10'
             ],
             '2017': [
-                'Photon175',
-                'Photon200',
-                'Photon165_HE10',
-                'Photon36_R9Id90_HE10_IsoM',
-                'Photon50_R9Id90_HE10_IsoM',
-                'Photon75_R9Id90_HE10_IsoM',
-                'Photon90_R9Id90_HE10_IsoM',
-                'Photon120_R9Id90_HE10_IsoM',
-                'Photon165_R9Id90_HE10_IsoM',
-                'Photon300_NoHE',
-                'ECALHT800',
-                'CaloJet500_NoJetID'
+                'Photon200'
             ],
             '2018': [
                 'Photon200'
@@ -212,24 +177,19 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         self._singleelectron_triggers = {
             '2016': [
-                'Ele27_WP85_Gsf',
-                'Ele27_WPLoose_Gsf',
-                'Ele105_CaloIdVT_GsfTrkIdT',
                 'Ele27_WPTight_Gsf',
-                'Ele30_WPTight_Gsf',
-                'Ele27_eta2p1_WPTight_Gsf',
-                'Ele32_eta2p1_WPTight_Gsf',
-                'Ele35_WPLoose_Gsf',
-                'ECALHT800'
+                'Ele115_CaloIdVT_GsfTrkIdT',
+                'Photon175'
             ],
             '2017': [
                 'Ele35_WPTight_Gsf',
-                'Ele38_WPTight_Gsf',
-                'Ele40_WPTight_Gsf'
+                'Ele115_CaloIdVT_GsfTrkIdT',
+                'Photon200'
             ],
             '2018': [
-                'Ele35_WPTight_Gsf',
-                'Ele115_CaloIdVT_GsfTrkIdT'
+                'Ele32_WPTight_Gsf',
+                'Ele115_CaloIdVT_GsfTrkIdT',
+                'Photon200'
             ]
         }
 
