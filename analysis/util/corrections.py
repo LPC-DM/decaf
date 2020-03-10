@@ -105,16 +105,9 @@ for year in ['2016','2017','2018']:
 get_mu_tight_id_sf = {}
 get_mu_loose_id_sf = {}
 
-mu_id2016 = uproot.open("data/ScaleFactor/2016LegacyReReco_Muon_RunBCDEF_SF_ID.root")
-sf_mu_tight_id2016 = mu_id2016["NUM_TightID_DEN_genTracks_eta_pt"].values
-sf_mu_loose_id2016 = mu_id2016["NUM_LooseID_DEN_genTracks_eta_pt"].values
-mu_id2016GH = uproot.open("data/ScaleFactor/2016LegacyReReco_Muon_RunGH_SF_ID.root")
-sf_mu_tight_id2016GH = mu_id2016GH["NUM_TightID_DEN_genTracks_eta_pt"].values
-sf_mu_loose_id2016GH = mu_id2016GH["NUM_LooseID_DEN_genTracks_eta_pt"].values
-lumi_bcdef = 16.49
-lumi_gh = 19.42
-get_mu_tight_id_sf['2016'] = lookup_tools.dense_lookup.dense_lookup(((lumi_bcdef*sf_mu_tight_id2016)+(lumi_gh*sf_mu_tight_id2016GH))/(lumi_bcdef+lumi_gh),mu_id2016["NUM_TightID_DEN_genTracks_eta_pt"].edges)
-get_mu_loose_id_sf['2016'] = lookup_tools.dense_lookup.dense_lookup(((lumi_bcdef*sf_mu_loose_id2016)+(lumi_gh*sf_mu_loose_id2016GH))/(lumi_bcdef+lumi_gh),mu_id2016GH["NUM_TightID_DEN_genTracks_eta_pt"].edges)
+mu_id2016 = uproot.open("data/ScaleFactor/2016LegacyReReco_Muon_SF_ID.root")
+get_mu_tight_id_sf['2016'] = lookup_tools.dense_lookup.dense_lookup(mu_id2016["NUM_TightID_DEN_genTracks_eta_pt"].values, mu_id2016["NUM_TightID_DEN_genTracks_eta_pt"].edges)
+get_mu_loose_id_sf['2016'] = lookup_tools.dense_lookup.dense_lookup(mu_id2016["NUM_LooseID_DEN_genTracks_eta_pt"].values, mu_id2016["NUM_LooseID_DEN_genTracks_eta_pt"].edges)
 mu_id2017 = uproot.open("data/ScaleFactor/2017_Muon_RunBCDEF_SF_ID.root")
 get_mu_tight_id_sf['2017'] = lookup_tools.dense_lookup.dense_lookup(mu_id2017["NUM_TightID_DEN_genTracks_pt_abseta"].values, mu_id2017["NUM_TightID_DEN_genTracks_pt_abseta"].edges)
 get_mu_loose_id_sf['2017'] = lookup_tools.dense_lookup.dense_lookup(mu_id2017["NUM_LooseID_DEN_genTracks_pt_abseta"].values, mu_id2017["NUM_LooseID_DEN_genTracks_pt_abseta"].edges)
