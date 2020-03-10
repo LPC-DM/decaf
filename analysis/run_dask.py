@@ -14,12 +14,20 @@ from coffea import hist, processor
 from coffea.util import load, save
 
 parser = OptionParser()
-parser.add_option('-p', '--processor', help='processor', dest='processor')
+parser.add_option('-a', '--analysis', help='analysis', dest='analysis')
 parser.add_option('-y', '--year', help='year', dest='year')
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 (options, args) = parser.parse_args()
 
-processor_instance=load('processors/'+options.processor+'.coffea')
+year=''
+if options.year: year=options.year
+
+processor_file = ''
+for filename in os.listdir('data'):
+    if '.processor' not in filename: continue
+    if options.analysis+year in filename: processor_file = filename
+
+processor_instance=load('data/'+processor_file)
 
 fileslice = slice(None)
 with open("metadata/"+options.year+".json") as fin:
@@ -46,7 +54,7 @@ output = processor.run_uproot_job(filelist,
 
 # Pickle is not very fast or memory efficient, will be replaced by something better soon
 #    with lz4f.open("pods/"+options.year+"/"+dataset+".pkl.gz", mode="xb", compression_level=5) as fout:
-os.system("mkdir -p pods/"+options.processor)
-save(output,'pods/pods_darkhiggs2018.coffea')
-
+os.system("mkdir -p hists/"+options.analysis+year)
+save(output,'hists/'+options.analysis+year+'/'+dataset+'.dask')
 dt = time.time() - tstart
+print(dt)
