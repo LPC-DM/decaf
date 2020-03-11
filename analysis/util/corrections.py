@@ -333,6 +333,7 @@ get_btag_weight = {
 
 Jetext = extractor()
 for filename in os.listdir('data/jec'):
+    if '~' in filename: continue
     print('* * data/jec/'+filename)
     Jetext.add_weight_sets(['* * data/jec/'+filename])
 Jetext.finalize()
