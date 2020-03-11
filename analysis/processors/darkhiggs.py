@@ -10,6 +10,7 @@ np.seterr(divide='ignore', invalid='ignore', over='ignore')
 from coffea.arrays import Initialize
 from coffea import hist, processor
 from coffea.util import load, save
+from coffea.jetmet_tools import FactorizedJetCorrector, JetCorrectionUncertainty, JetTransformer, JetResolution, JetResolutionScaleFactor
 from optparse import OptionParser
 from uproot_methods import TVector2Array, TLorentzVectorArray
 
@@ -47,8 +48,7 @@ class AnalysisProcessor(processor.ProcessorABC):
              ]
     }
 
-    
-
+            
     def __init__(self, year, xsec, corrections, ids, common):
 
         self._columns = """                                                                                                                    
@@ -193,6 +193,53 @@ class AnalysisProcessor(processor.ProcessorABC):
             ]
         }
 
+        self._jec = {
+        
+            '2016': [
+            ],
+            
+            '2017':[
+            ],
+
+            '2018':[
+            ]
+        }
+
+        self._jec_unc = {
+    
+            '2016':[
+            ],
+
+            '2017':[
+            ],
+
+            '2018':[
+            ]
+        }
+
+        self._jer = {
+        
+            '2016': [
+            ],
+        
+            '2017':[
+            ],
+
+            '2018':[
+            ]
+        }
+
+        self._jer_sf = {
+    
+            '2016':[
+            ],
+
+            '2017':[
+            ],
+
+            '2018':[
+            ]
+        }
 
         self._corrections = corrections
         self._ids = ids
@@ -259,6 +306,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         get_ttbar_weight        = self._corrections['get_ttbar_weight']       
         get_nlo_weight          = self._corrections['get_nlo_weight']         
         get_nnlo_weight         = self._corrections['get_nnlo_weight']
+        get_nnlo_nlo_weight     = self._corrections['get_nnlo_nlo_weight']
         get_adhoc_weight        = self._corrections['get_adhoc_weight']       
         get_pu_weight           = self._corrections['get_pu_weight']          
         get_met_trig_weight     = self._corrections['get_met_trig_weight']    
@@ -277,6 +325,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         get_mu_loose_iso_sf     = self._corrections['get_mu_loose_iso_sf']
         get_ecal_bad_calib      = self._corrections['get_ecal_bad_calib']     
         get_deepflav_weight     = self._corrections['get_btag_weight']['deepflav'][self._year]
+        Jetevaluator            = self._corrections['Jetevaluator']
         
         isLooseElectron = self._ids['isLooseElectron'] 
         isTightElectron = self._ids['isTightElectron'] 
@@ -290,6 +339,16 @@ class AnalysisProcessor(processor.ProcessorABC):
         isHEMJet        = self._ids['isHEMJet']        
         
         match = self._common['match']
+
+        ###
+        # Derive jet corrector for JEC/JER
+        ###
+
+        JECcorrector = FactorizedJetCorrector(**{name: Jetevaluator[name] for name in self._jec[self._year]})
+        JECuncertainties = JetCorrectionUncertainty(**{name:Jetevaluator[name] for name in self._jecunc[self._year]})
+        JER = JetResolution(**{name:Jetevaluator[name] for name in self._jer[self._year]})
+        JERsf = JetResolutionScaleFactor(**{name:Jetevaluator[name] for name in self._jersf[self._year]})
+        Jet_transformer = JetTransformer(jec=JECcorrector,junc=JECuncertainties, jer = JER, jersf = JERsf)
 
         ###
         #Initialize global quantities (MET ecc.)
@@ -481,25 +540,29 @@ class AnalysisProcessor(processor.ProcessorABC):
             genZs = gen[gen.isZ]
             genAs = gen[gen.isA]
             
-            wnlo = np.ones(events.size)
-            adhocw = np.ones(events.size)
-            if('TTJets' in dataset): 
-                wnlo = np.sqrt(get_ttbar_weight(genTops[:,0].pt.sum()) * get_ttbar_weight(genTops[:,1].pt.sum()))
-            elif('WJets' in dataset): 
-                wnlo = get_nlo_weight[self._year]['w'](genWs.pt.max())
-                if self._year != '2016': adhocw = get_adhoc_weight['w'](genWs.pt.max())
-            elif('DY' in dataset or 'ZJets' in dataset): 
-                wnlo = get_nlo_weight[self._year]['z'](genZs.pt.max())
-                if self._year != '2016': adhocw = get_adhoc_weight['z'](genZs.pt.max())
-            elif('GJets' in dataset): wnlo = get_nlo_weight[self._year]['a'](genAs.pt.max())
-            
+            nlo  = np.ones(events.size)
             nnlo = np.ones(events.size)
-            if('WJets' in dataset):
-                nnlo = get_nnlo_weight[self._year]['w'](genWs.pt.max())
-            elif('DY' in dataset or 'ZJets' in dataset):
-                nnlo = get_nnlo_weight[self._year]['z'](genZs.pt.max())
+            nnlo_nlo = np.ones(events.size)
+            adhoc = np.ones(events.size)
+            if('TTJets' in dataset): 
+                nlo = np.sqrt(get_ttbar_weight(genTops[:,0].pt.sum()) * get_ttbar_weight(genTops[:,1].pt.sum()))
             elif('GJets' in dataset): 
-                nnlo = get_nnlo_weight[self._year]['a'](genAs.pt.max())
+                nlo = get_nlo_weight[self._year]['a'](genAs.pt.max())
+            elif('WJets' in dataset): 
+                #nlo = get_nlo_weight[self._year]['w'](genWs.pt.max())
+                #if self._year != '2016': adhoc = get_adhoc_weight['w'](genWs.pt.max())
+                #nnlo = get_nnlo_weight['w'](genWs.pt.max())
+                nnlo_nlo = get_nnlo_nlo_weight['w'](genWs.pt.max())
+            elif('DY' in dataset): 
+                #nlo = get_nlo_weight[self._year]['z'](genZs.pt.max())
+                #if self._year != '2016': adhoc = get_adhoc_weight['z'](genZs.pt.max())
+                #nnlo = get_nnlo_weight['dy'](genZs.pt.max())
+                nnlo_nlo = get_nnlo_nlo_weight['dy'](genZs.pt.max())
+            elif('ZJets' in dataset): 
+                #nlo = get_nlo_weight[self._year]['z'](genZs.pt.max())
+                #if self._year != '2016': adhoc = get_adhoc_weight['z'](genZs.pt.max())
+                #nnlo = get_nnlo_weight['z'](genZs.pt.max())
+                nnlo_nlo = get_nnlo_nlo_weight['z'](genAs.pt.max())
 
             ###
             # Calculate PU weight and systematic variations
@@ -523,7 +586,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             trig['zmcr'] = get_met_zmm_trig_weight[self._year](umm.mag)
             trig['wecr'] = get_ele_trig_weight[self._year](leading_e.eta.sum(), leading_e.pt.sum())
             trig['tecr'] = trig['wecr']
-            #if ele_pairs.i0.content.size>0:
             trig['zecr'] = 1 - (1-eff1)*(1-eff2)
             trig['gcr'] = get_pho_trig_weight[self._year](leading_pho.pt.sum())
 
@@ -597,9 +659,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             for r in selected_regions:
                 weights[r] = processor.Weights(len(events))
                 weights[r].add('genw',events.genWeight)
-                #weights[r].add('nlo',wnlo)
-                #weights[r].add('adhoc',adhocw)
-                weights[r].add('nnlo',nnlo)
+                weights[r].add('nlo',nlo)
+                #weights[r].add('adhoc',adhoc)
+                #weights[r].add('nnlo',nnlo)
+                weights[r].add('nnlo_nlo',nnlo_nlo)
                 weights[r].add('pileup',pu,puUp,puDown)
                 weights[r].add('trig', trig[r])
                 weights[r].add('ids', ids[r])
