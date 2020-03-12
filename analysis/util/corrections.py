@@ -326,24 +326,16 @@ get_btag_weight = {
     }
 }
 
-#jec_list=[]
-#for filename in os.listdir('data/jec'):
-#    jec_list.append('* * data/jec/'+filename)
-#print(jec_list)
-
 Jetext = extractor()
-for filename in os.listdir('data/jec'):
-    if '~' in filename: continue
-    print('* * data/jec/'+filename)
-    Jetext.add_weight_sets(['* * data/jec/'+filename])
-
-print("All JEC files loaded")
-for filename in os.listdir('data/jer'):
-    if '~' in filename: continue
-    print('* * data/jer/'+filename)
-    Jetext.add_weight_sets(['* * data/jer/'+filename])
-print("All JER files loaded")
-
+for directory in ['jec', 'jersf', 'jr', 'junc']:
+    directory='data/'+directory
+    print('Loading files in:',directory)
+    for filename in os.listdir(directory):
+        if '~' in filename: continue
+        filename=directory+'/'+filename
+        print('Loading file:',filename)
+        Jetext.add_weight_sets(['* * '+filename])
+    print('All files in',directory,'loaded')
 Jetext.finalize()
 Jetevaluator = Jetext.make_evaluator()
 
