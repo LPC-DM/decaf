@@ -196,48 +196,72 @@ class AnalysisProcessor(processor.ProcessorABC):
         self._jec = {
         
             '2016': [
+                'Summer16_07Aug2017_V11_MC_L1FastJet_AK4PFPuppi',
+                'Summer16_07Aug2017_V11_MC_L2L3Residual_AK4PFPuppi',
+                'Summer16_07Aug2017_V11_MC_L2Relative_AK4PFPuppi',
+                'Summer16_07Aug2017_V11_MC_L2Residual_AK4PFPuppi',
+                'Summer16_07Aug2017_V11_MC_L3Absolute_AK4PFPuppi'
             ],
             
             '2017':[
+                'Fall17_17Nov2017_V32_MC_L1FastJet_AK4PFPuppi',
+                'Fall17_17Nov2017_V32_MC_L2L3Residual_AK4PFPuppi',
+                'Fall17_17Nov2017_V32_MC_L2Relative_AK4PFPuppi',
+                'Fall17_17Nov2017_V32_MC_L2Residual_AK4PFPuppi',
+                'Fall17_17Nov2017_V32_MC_L3Absolute_AK4PFPuppi'
             ],
 
             '2018':[
+                'Autumn18_V19_MC_L1FastJet_AK4PFPuppi',
+                'Autumn18_V19_MC_L2L3Residual_AK4PFPuppi',
+                'Autumn18_V19_MC_L2Relative_AK4PFPuppi', #currently broken
+                'Autumn18_V19_MC_L2Residual_AK4PFPuppi',  
+                'Autumn18_V19_MC_L3Absolute_AK4PFPuppi'  
             ]
         }
 
         self._jec_unc = {
     
             '2016':[
+                'Summer16_07Aug2017_V11_MC_Uncertainty_AK4PFPuppi'
             ],
 
             '2017':[
+                'Fall17_17Nov2017_V32_MC_Uncertainty_AK4PFPuppi'
             ],
 
             '2018':[
+                'Autumn18_V19_MC_Uncertainty_AK4PFPuppi'
             ]
         }
 
         self._jer = {
         
             '2016': [
+                'Summer16_25nsV1b_MC_PtResolution_AK4PFPuppi'
             ],
         
             '2017':[
+                'Fall17_V3b_MC_PtResolution_AK4PFPuppi'
             ],
 
             '2018':[
+                'Autumn18_V7b_MC_PtResolution_AK4PFPuppi'
             ]
         }
 
         self._jer_sf = {
     
             '2016':[
+                'Summer16_25nsV1b_MC_SF_AK4PFPuppi'
             ],
 
             '2017':[
+                'Fall17_V3b_MC_SF_AK4PFPuppi'
             ],
 
             '2018':[
+                'Autumn18_V7b_MC_SF_AK4PFPuppi'
             ]
         }
 

@@ -336,6 +336,14 @@ for filename in os.listdir('data/jec'):
     if '~' in filename: continue
     print('* * data/jec/'+filename)
     Jetext.add_weight_sets(['* * data/jec/'+filename])
+
+print("All JEC files loaded")
+for filename in os.listdir('data/jer'):
+    if '~' in filename: continue
+    print('* * data/jer/'+filename)
+    Jetext.add_weight_sets(['* * data/jer/'+filename])
+print("All JER files loaded")
+
 Jetext.finalize()
 Jetevaluator = Jetext.make_evaluator()
 
