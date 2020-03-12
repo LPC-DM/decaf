@@ -326,6 +326,19 @@ get_btag_weight = {
     }
 }
 
+'''
+directory='data/broken_JPT_name_t_is_not_defined_junc'
+for filename in os.listdir(directory):
+    Jetext = extractor()
+    if '~' in filename: continue
+    filename=directory+'/'+filename
+    print('Loading file:',filename)
+    Jetext.add_weight_sets(['* * '+filename])
+    Jetext.finalize()                                                                                                                                                                                     
+    Jetevaluator = Jetext.make_evaluator()    
+print('All files in',directory,'loaded')
+'''
+
 Jetext = extractor()
 for directory in ['jec', 'jersf', 'jr', 'junc']:
     directory='data/'+directory
