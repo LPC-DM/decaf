@@ -220,7 +220,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ]
         }
 
-        self._jec_unc = {
+        self._junc = {
     
             '2016':[
                 'Summer16_07Aug2017_V11_MC_Uncertainty_AK4PFPuppi'
@@ -235,7 +235,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ]
         }
 
-        self._jer = {
+        self._jr = {
         
             '2016': [
                 'Summer16_25nsV1b_MC_PtResolution_AK4PFPuppi'
@@ -250,7 +250,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ]
         }
 
-        self._jer_sf = {
+        self._jersf = {
     
             '2016':[
                 'Summer16_25nsV1b_MC_SF_AK4PFPuppi'
@@ -349,7 +349,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         get_mu_loose_iso_sf     = self._corrections['get_mu_loose_iso_sf']
         get_ecal_bad_calib      = self._corrections['get_ecal_bad_calib']     
         get_deepflav_weight     = self._corrections['get_btag_weight']['deepflav'][self._year]
-        Jetevaluator            = self._corrections['Jetevaluator']
+        #Jetevaluator            = self._corrections['Jetevaluator']
         
         isLooseElectron = self._ids['isLooseElectron'] 
         isTightElectron = self._ids['isTightElectron'] 
@@ -367,13 +367,13 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
         # Derive jet corrector for JEC/JER
         ###
-
+        '''
         JECcorrector = FactorizedJetCorrector(**{name: Jetevaluator[name] for name in self._jec[self._year]})
         JECuncertainties = JetCorrectionUncertainty(**{name:Jetevaluator[name] for name in self._jecunc[self._year]})
         JER = JetResolution(**{name:Jetevaluator[name] for name in self._jer[self._year]})
         JERsf = JetResolutionScaleFactor(**{name:Jetevaluator[name] for name in self._jersf[self._year]})
         Jet_transformer = JetTransformer(jec=JECcorrector,junc=JECuncertainties, jer = JER, jersf = JERsf)
-
+        '''
         ###
         #Initialize global quantities (MET ecc.)
         ###
@@ -682,16 +682,29 @@ class AnalysisProcessor(processor.ProcessorABC):
             
             for r in selected_regions:
                 weights[r] = processor.Weights(len(events))
+                '''
+                print('Weights for region',r)
+                print('genw',events.genWeight)
+                print('nlo',nlo)
+                print('nnlo_nlo',nnlo_nlo)
+                print('pileup',pu,puUp,puDown)
+                print('trig', trig[r])
+                print('ids', ids[r])
+                print('reco', reco[r])
+                print('isolation', isolation[r])
+                '''
+                print('btag',btag[r])
+                
                 weights[r].add('genw',events.genWeight)
-                weights[r].add('nlo',nlo)
+                #weights[r].add('nlo',nlo)
                 #weights[r].add('adhoc',adhoc)
                 #weights[r].add('nnlo',nnlo)
-                weights[r].add('nnlo_nlo',nnlo_nlo)
-                weights[r].add('pileup',pu,puUp,puDown)
-                weights[r].add('trig', trig[r])
-                weights[r].add('ids', ids[r])
-                weights[r].add('reco', reco[r])
-                weights[r].add('isolation', isolation[r])
+                #weights[r].add('nnlo_nlo',nnlo_nlo)
+                #weights[r].add('pileup',pu,puUp,puDown)
+                #weights[r].add('trig', trig[r])
+                #weights[r].add('ids', ids[r])
+                #weights[r].add('reco', reco[r])
+                #weights[r].add('isolation', isolation[r])
                 weights[r].add('btag',btag[r], btagUp[r], btagDown[r])
 
         leading_fj = fj[fj.pt.argmax()]
@@ -859,8 +872,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 fill(dataset, r, wother, cut)
             elif isData:
                 fill(dataset, r, np.ones(events.size), cut)
-            else:
-                fill(dataset, r, get_weight(r), cut)
+            #else:
+            fill(dataset, r, get_weight(r), cut)
         return hout
 
     def postprocess(self, accumulator):

@@ -273,7 +273,8 @@ class BTagCorrector:
         
         #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagSFMethods#1b_Event_reweighting_using_scale
         def zerotag(eff, sf):
-            return ((1 - sf*eff) / (1 - eff)).prod()
+            eff_data = np.minimum(1, sf*eff)
+            return ((1 - eff_data) / (1 - eff)).prod()
 
         eff = self.eff(flavor, pt, abseta)
         sf_nom = self.sf.eval('central', flavor, abseta, pt)
@@ -284,9 +285,9 @@ class BTagCorrector:
         up = zerotag(eff, sf_up)
         down = zerotag(eff, sf_down)
         if '-1' in tag: 
-            nom = 1 - zerotag(eff, sf_nom)
-            up = 1 - zerotag(eff, sf_up)
-            down = 1 - zerotag(eff, sf_down)
+            nom = np.maximum(1 - zerotag(eff, sf_nom), 0)
+            up = np.maximum(1 - zerotag(eff, sf_up), 0)
+            down = np.maximum(1 - zerotag(eff, sf_down), 0)
         return nom, up, down
 
 get_btag_weight = {
@@ -325,20 +326,7 @@ get_btag_weight = {
         }
     }
 }
-
 '''
-directory='data/broken_JPT_name_t_is_not_defined_junc'
-for filename in os.listdir(directory):
-    Jetext = extractor()
-    if '~' in filename: continue
-    filename=directory+'/'+filename
-    print('Loading file:',filename)
-    Jetext.add_weight_sets(['* * '+filename])
-    Jetext.finalize()                                                                                                                                                                                     
-    Jetevaluator = Jetext.make_evaluator()    
-print('All files in',directory,'loaded')
-'''
-
 Jetext = extractor()
 for directory in ['jec', 'jersf', 'jr', 'junc']:
     directory='data/'+directory
@@ -351,7 +339,7 @@ for directory in ['jec', 'jersf', 'jr', 'junc']:
     print('All files in',directory,'loaded')
 Jetext.finalize()
 Jetevaluator = Jetext.make_evaluator()
-
+'''
 corrections = {}
 corrections['get_msd_weight']          = get_msd_weight
 corrections['get_ttbar_weight']        = get_ttbar_weight
@@ -376,7 +364,7 @@ corrections['get_mu_tight_iso_sf']     = get_mu_tight_iso_sf
 corrections['get_mu_loose_iso_sf']     = get_mu_loose_iso_sf
 corrections['get_ecal_bad_calib']      = get_ecal_bad_calib
 corrections['get_btag_weight']         = get_btag_weight
-corrections['Jetevaluator']            = Jetevaluator
+#corrections['Jetevaluator']            = Jetevaluator
 
 save(corrections, 'data/corrections.coffea')
 
