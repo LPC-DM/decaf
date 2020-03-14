@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 import uproot, uproot_methods
 import numpy as np
+import os
 from coffea.arrays import Initialize
 from coffea import hist, lookup_tools
-from coffea.lookup_tools.dense_lookup import dense_lookup
+from coffea.lookup_tools import extractor, dense_lookup
 from coffea.util import save, load
 from coffea.btag_tools import BTagScaleFactor
+
 
 get_pu_weight = {}
 get_pu_weight['2017'] = {}
@@ -139,7 +141,6 @@ get_mu_tight_iso_sf['2018'] = lookup_tools.dense_lookup.dense_lookup(mu_iso2018[
 get_mu_loose_iso_sf['2018'] = lookup_tools.dense_lookup.dense_lookup(mu_iso2018["NUM_LooseRelIso_DEN_LooseID_pt_abseta"].values,mu_iso2018["NUM_LooseRelIso_DEN_LooseID_pt_abseta"].edges)
 
 get_nlo_weight = {}
-
 kfactor = uproot.open("data/nlo/kfactors.root")
 for year in ['2016','2017','2018']:
 
@@ -181,14 +182,19 @@ get_adhoc_weight['z']=lookup_tools.dense_lookup.dense_lookup(kfactor["dy_monojet
 get_adhoc_weight['w']=lookup_tools.dense_lookup.dense_lookup(kfactor["wjet_monojet"].values, kfactor["wjet_monojet"].edges)
 
 get_nnlo_weight = {}
-for year in ['2016','2017','2018']:
-    get_nnlo_weight[year] = {}
-    kfactor_eej = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_eej_madgraph_"+year+".root")
-    kfactor_evj = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_evj_madgraph_"+year+".root")
-    kfactor_vvj = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_vvj_madgraph_"+year+".root")
-    get_nnlo_weight[year]['z']=lookup_tools.dense_lookup.dense_lookup(kfactor_eej['eej_NNLO_NLO_nnn_nnn_n'].values, kfactor_eej['eej_NNLO_NLO_nnn_nnn_n'].edges)
-    get_nnlo_weight[year]['w']=lookup_tools.dense_lookup.dense_lookup(kfactor_evj['evj_NNLO_NLO_nnn_nnn_n'].values, kfactor_evj['evj_NNLO_NLO_nnn_nnn_n'].edges)
-    get_nnlo_weight[year]['a']=lookup_tools.dense_lookup.dense_lookup(kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n'].values, kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n'].edges)
+kfactor = uproot.open("data/nnlo/lindert_qcd_nnlo_sf.root")
+get_nnlo_weight['dy'] = lookup_tools.dense_lookup.dense_lookup(kfactor["eej"].values, kfactor["eej"].edges)
+get_nnlo_weight['w'] = lookup_tools.dense_lookup.dense_lookup(kfactor["evj"].values, kfactor["evj"].edges)
+get_nnlo_weight['z'] = lookup_tools.dense_lookup.dense_lookup(kfactor["vvj"].values, kfactor["vvj"].edges)
+
+
+get_nnlo_nlo_weight = {}
+kfactor_eej = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_eej_madgraph_"+year+".root")
+kfactor_evj = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_evj_madgraph_"+year+".root")
+kfactor_vvj = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_vvj_madgraph_"+year+".root")
+get_nnlo_nlo_weight['dy']=lookup_tools.dense_lookup.dense_lookup(kfactor_eej['eej_NNLO_NLO_nnn_nnn_n'].values, kfactor_eej['eej_NNLO_NLO_nnn_nnn_n'].edges)
+get_nnlo_nlo_weight['w']=lookup_tools.dense_lookup.dense_lookup(kfactor_evj['evj_NNLO_NLO_nnn_nnn_n'].values, kfactor_evj['evj_NNLO_NLO_nnn_nnn_n'].edges)
+get_nnlo_nlo_weight['z']=lookup_tools.dense_lookup.dense_lookup(kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n'].values, kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n'].edges)
 
 def get_ttbar_weight(pt):
     return np.exp(0.0615 - 0.0005 * np.clip(pt, 0, 800))
@@ -249,7 +255,6 @@ class BTagCorrector:
                 }
         }
         filename = 'data/'+files[tagger][year]
-        print(filename)
         self.sf = BTagScaleFactor(filename, workingpoint)
         files = {
             '2016': 'btag2018.merged',
@@ -261,14 +266,15 @@ class BTagCorrector:
         bpass = btag[tagger].integrate('dataset').integrate('wp',workingpoint).integrate('btag', 'pass').values()[()]
         ball = btag[tagger].integrate('dataset').integrate('wp',workingpoint).integrate('btag').values()[()]
         nom = bpass / np.maximum(ball, 1.)
-        self.eff = dense_lookup(nom, [ax.edges() for ax in btag[tagger].axes()[3:]])
+        self.eff = lookup_tools.dense_lookup.dense_lookup(nom, [ax.edges() for ax in btag[tagger].axes()[3:]])
 
     def btag_weight(self, pt, eta, flavor, tag):
         abseta = abs(eta)
         
         #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagSFMethods#1b_Event_reweighting_using_scale
         def zerotag(eff, sf):
-            return ((1 - sf*eff) / (1 - eff)).prod()
+            eff_data = np.minimum(1, sf*eff)
+            return ((1 - eff_data) / (1 - eff)).prod()
 
         eff = self.eff(flavor, pt, abseta)
         sf_nom = self.sf.eval('central', flavor, abseta, pt)
@@ -279,9 +285,9 @@ class BTagCorrector:
         up = zerotag(eff, sf_up)
         down = zerotag(eff, sf_down)
         if '-1' in tag: 
-            nom = 1 - zerotag(eff, sf_nom)
-            up = 1 - zerotag(eff, sf_up)
-            down = 1 - zerotag(eff, sf_down)
+            nom = np.maximum(1 - zerotag(eff, sf_nom), 0)
+            up = np.maximum(1 - zerotag(eff, sf_up), 0)
+            down = np.maximum(1 - zerotag(eff, sf_down), 0)
         return nom, up, down
 
 get_btag_weight = {
@@ -320,12 +326,26 @@ get_btag_weight = {
         }
     }
 }
-
+'''
+Jetext = extractor()
+for directory in ['jec', 'jersf', 'jr', 'junc']:
+    directory='data/'+directory
+    print('Loading files in:',directory)
+    for filename in os.listdir(directory):
+        if '~' in filename: continue
+        filename=directory+'/'+filename
+        print('Loading file:',filename)
+        Jetext.add_weight_sets(['* * '+filename])
+    print('All files in',directory,'loaded')
+Jetext.finalize()
+Jetevaluator = Jetext.make_evaluator()
+'''
 corrections = {}
 corrections['get_msd_weight']          = get_msd_weight
 corrections['get_ttbar_weight']        = get_ttbar_weight
 corrections['get_nlo_weight']          = get_nlo_weight
 corrections['get_nnlo_weight']         = get_nnlo_weight
+corrections['get_nnlo_nlo_weight']     = get_nnlo_nlo_weight
 corrections['get_adhoc_weight']        = get_adhoc_weight
 corrections['get_pu_weight']           = get_pu_weight
 corrections['get_met_trig_weight']     = get_met_trig_weight
@@ -344,6 +364,7 @@ corrections['get_mu_tight_iso_sf']     = get_mu_tight_iso_sf
 corrections['get_mu_loose_iso_sf']     = get_mu_loose_iso_sf
 corrections['get_ecal_bad_calib']      = get_ecal_bad_calib
 corrections['get_btag_weight']         = get_btag_weight
+#corrections['Jetevaluator']            = Jetevaluator
 
 save(corrections, 'data/corrections.coffea')
 
