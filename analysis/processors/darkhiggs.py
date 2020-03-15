@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 import lz4.frame as lz4f
 import cloudpickle
@@ -320,7 +319,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection = processor.PackedSelection()
         weights = {}
         hout = self.accumulator.identity()
-            
 
         ###
         #Getting corrections, ids from .coffea files
@@ -516,10 +514,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
         #Calculating weights
         ###
-
         if not isData:
             gen = events.GenPart
-
             ###
             # Fat-jet top matching at decay level
             ###
@@ -692,9 +688,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 print('ids', ids[r])
                 print('reco', reco[r])
                 print('isolation', isolation[r])
-                '''
                 print('btag',btag[r])
-                
+                '''                
                 weights[r].add('genw',events.genWeight)
                 #weights[r].add('nlo',nlo)
                 #weights[r].add('adhoc',adhoc)
@@ -831,7 +826,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['ZHbbvsQCD'] = leading_fj.ZHbbvsQCD
             flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
             flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
-            if not isData: hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
             for histname, h in hout.items():
                 if not isinstance(h, hist.Hist):
                     continue
@@ -853,27 +847,36 @@ class AnalysisProcessor(processor.ProcessorABC):
             region=region.split('_')[0]
             if systematic is not None: return weights[region].weight(modifier=systematic)
             return weights[region].weight()
-        
-        for r in regions:
-            cut = selection.all(*regions[r])
-            if 'TT' in dataset or 'ST' in dataset:
+
+        if 'TT' in dataset or 'ST' in dataset:
+            hout['sumw'].fill(dataset='merged--'+dataset, sumw=1, weight=events.genWeight.sum())
+            hout['sumw'].fill(dataset='unmerged--'+dataset, sumw=1, weight=events.genWeight.sum())
+            for r in regions:
+                cut = selection.all(*regions[r])
                 wmerged = leading_fj.isTbqq.sum()
-                wmerged = get_weight(r)*wmerged
-                fill('merged--'+dataset, r, wmerged, cut)
                 wunmerged = (~(leading_fj.isTbqq.sum().astype(np.bool))).astype(np.int)
-                wunmerged = get_weight(r)*wunmerged
-                fill('unmerged--'+dataset, r, wunmerged, cut)
-            elif 'WZ' in dataset or 'ZZ' in dataset:
+                fill('merged--'+dataset, r, get_weight(r)*wmerged, cut)
+                fill('unmerged--'+dataset, r, get_weight(r)*wunmerged, cut)        
+        elif 'WZ' in dataset or 'ZZ' in dataset:
+            hout['sumw'].fill(dataset='bb--'+dataset, sumw=1, weight=events.genWeight.sum())
+            hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
+            for r in regions:
+                cut = selection.all(*regions[r])
                 wbb = leading_fj.isZbb.sum()
-                wbb = get_weight(r)*wbb
-                fill('bb--'+dataset, r, wbb, cut)
                 wother = (~(leading_fj.isZbb.sum().astype(np.bool))).astype(np.int)
-                wother = get_weight(r)*wother
-                fill(dataset, r, wother, cut)
-            elif isData:
+                fill('bb--'+dataset, r, get_weight(r)*wbb, cut)
+                fill(dataset, r, get_weight(r)*wother, cut)
+        elif isData:
+            hout['sumw'].fill(dataset=dataset, sumw=1, weight=np.ones(events.size))
+            for r in regions:
+                cut = selection.all(*regions[r])
                 fill(dataset, r, np.ones(events.size), cut)
-            #else:
-            fill(dataset, r, get_weight(r), cut)
+        else:
+            hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
+            for r in regions:
+                cut = selection.all(*regions[r])
+                fill(dataset, r, get_weight(r), cut)
+
         return hout
 
     def postprocess(self, accumulator):
