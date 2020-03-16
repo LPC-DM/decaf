@@ -326,20 +326,22 @@ get_btag_weight = {
         }
     }
 }
-'''
+
 Jetext = extractor()
 for directory in ['jec', 'jersf', 'jr', 'junc']:
     directory='data/'+directory
     print('Loading files in:',directory)
     for filename in os.listdir(directory):
         if '~' in filename: continue
+        if 'AK4PFPuppi' not in filename: continue
+        if 'DATA' in filename: continue
         filename=directory+'/'+filename
         print('Loading file:',filename)
         Jetext.add_weight_sets(['* * '+filename])
     print('All files in',directory,'loaded')
 Jetext.finalize()
 Jetevaluator = Jetext.make_evaluator()
-'''
+
 corrections = {}
 corrections['get_msd_weight']          = get_msd_weight
 corrections['get_ttbar_weight']        = get_ttbar_weight
@@ -364,7 +366,7 @@ corrections['get_mu_tight_iso_sf']     = get_mu_tight_iso_sf
 corrections['get_mu_loose_iso_sf']     = get_mu_loose_iso_sf
 corrections['get_ecal_bad_calib']      = get_ecal_bad_calib
 corrections['get_btag_weight']         = get_btag_weight
-#corrections['Jetevaluator']            = Jetevaluator
+corrections['Jetevaluator']            = Jetevaluator
 
 save(corrections, 'data/corrections.coffea')
 

@@ -347,7 +347,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         get_mu_loose_iso_sf     = self._corrections['get_mu_loose_iso_sf']
         get_ecal_bad_calib      = self._corrections['get_ecal_bad_calib']     
         get_deepflav_weight     = self._corrections['get_btag_weight']['deepflav'][self._year]
-        #Jetevaluator            = self._corrections['Jetevaluator']
+        Jetevaluator            = self._corrections['Jetevaluator']
         
         isLooseElectron = self._ids['isLooseElectron'] 
         isTightElectron = self._ids['isTightElectron'] 
@@ -365,13 +365,13 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
         # Derive jet corrector for JEC/JER
         ###
-        '''
+        
         JECcorrector = FactorizedJetCorrector(**{name: Jetevaluator[name] for name in self._jec[self._year]})
-        JECuncertainties = JetCorrectionUncertainty(**{name:Jetevaluator[name] for name in self._jecunc[self._year]})
-        JER = JetResolution(**{name:Jetevaluator[name] for name in self._jer[self._year]})
+        JECuncertainties = JetCorrectionUncertainty(**{name:Jetevaluator[name] for name in self._junc[self._year]})
+        JER = JetResolution(**{name:Jetevaluator[name] for name in self._jr[self._year]})
         JERsf = JetResolutionScaleFactor(**{name:Jetevaluator[name] for name in self._jersf[self._year]})
         Jet_transformer = JetTransformer(jec=JECcorrector,junc=JECuncertainties, jer = JER, jersf = JERsf)
-        '''
+        
         ###
         #Initialize global quantities (MET ecc.)
         ###
@@ -450,18 +450,18 @@ class AnalysisProcessor(processor.ProcessorABC):
         j = events.Jet
         j['isgood'] = isGoodJet(j.pt, j.eta, j.jetId, j.neHEF, j.neEmEF, j.chHEF, j.chEmEF)
         j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
-        j['isclean'] = ~match(j,e_loose,0.4)&~match(j,mu_loose,0.4)&~match(j,pho_loose,0.4)&j.isgood.astype(np.bool)
-        j['isiso'] = ~match(j,fj_clean,1.5)&j.isclean.astype(np.bool)
-        j['isdcsvL'] = (j.btagDeepB>0.1241)&j.isiso.astype(np.bool)
-        j['isdflvL'] = (j.btagDeepFlavB>0.0494)&j.isiso.astype(np.bool)
+        j['isclean'] = ~match(j,e_loose,0.4)&~match(j,mu_loose,0.4)&~match(j,pho_loose,0.4)
+        j['isiso'] = ~match(j,fj_clean,1.5)
+        j['isdcsvL'] = (j.btagDeepB>0.1241)
+        j['isdflvL'] = (j.btagDeepFlavB>0.0494)
         j['T'] = TVector2Array.from_polar(j.pt, j.phi)
         leading_j = j[j.pt.argmax()]
         leading_j = leading_j[leading_j.isclean.astype(np.bool)]
         j_good = j[j.isgood.astype(np.bool)]
-        j_clean = j[j.isclean.astype(np.bool)]
-        j_iso = j[j.isiso.astype(np.bool)]
-        j_dcsvL = j[j.isdcsvL]
-        j_dflvL = j[j.isdflvL]
+        j_clean = j_good[j_good.isclean.astype(np.bool)]
+        j_iso = j_clean[j_clean.isiso.astype(np.bool)]
+        j_dcsvL = j_iso[j_iso.isdcsvL.astype(np.bool)]
+        j_dflvL = j_iso[j_iso.isdflvL.astype(np.bool)]
         j_HEM = j[j.isHEM.astype(np.bool)]
         j_ntot=j.counts
         j_ngood=j_good.counts
@@ -470,6 +470,17 @@ class AnalysisProcessor(processor.ProcessorABC):
         j_ndcsvL=j_dcsvL.counts
         j_ndflvL=j_dflvL.counts
         j_nHEM = j_HEM.counts
+        print('j_ntot',j_ntot)  
+        print('j_ngood',j_ngood)
+        print('j_nclean',j_nclean)
+        print('j_niso',j_niso)
+        print('j_niso>0',(j_niso>0).sum())
+        print('j_ndcsvL',j_ndcsvL)
+        print('j_ndflvL',j_ndflvL)
+        print('j_ndflvL>0',(j_ndflvL>0).sum())
+        print('j_ndflvL==0',(j_ndflvL==0).sum())
+        print('nevents',len(events))
+        print('j_nHEM',j_nHEM)
 
         ###
         #Calculating derivatives
@@ -524,20 +535,33 @@ class AnalysisProcessor(processor.ProcessorABC):
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                 (abs(gen.distinctParent.pdgId) == 24)
             ]
+            print('qFromW parent',qFromW.distinctParent.pdgId)
+            print('qFromW granparent',qFromW.distinctParent.distinctParent.pdgId)
             def topmatch(topid, dR=1.5):
+                print('Top ID is',topid)
                 qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
+                print('qFromWFromTop',qFromWFromTop)
+                print('qFromWFromTop parent',qFromWFromTop.distinctParent.counts) 
+                print('qFromWFromTop granparent',qFromWFromTop.distinctParent.distinctParent.counts)
                 bFromTop = gen[
                     (abs(gen.pdgId) == 5) &
                     gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                     (gen.distinctParent.pdgId == topid)
                 ]
+                print('bFromTop',bFromTop.counts)
                 jetgenWq = fj.cross(qFromWFromTop, nested=True)
                 jetgenb = fj.cross(bFromTop, nested=True)
-                return (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all() & (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()
+                Wmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
+                bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
+                print('number of fatjets',fj.counts)
+                print('Wmatch',Wmatch)
+                print('bmatch',bmatch)
+                print('topmatch',Wmatch & bmatch)
+                return Wmatch & bmatch
             fj['isTbqq'] = topmatch(6)|topmatch(-6)
             #print('number of fatjets',fj.counts)
             #print(fj.isTbqq)
-            #print('number of matched fatjets',fj[fj.isTbqq].counts)
+            #print('wnumber of matched fatjets',fj[fj.isTbqq].counts)
 
             ###
             # Fat-jet Z->bb matching at decay level
@@ -737,7 +761,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('isoneM', 
                       (e_nloose==0)&(mu_ntight==1)&(tau_nloose==0)&(pho_nloose==0)
                       &(abs(um.delta_phi(j_clean.T)).min()>0.8)
-                    &(um.mag>250)
+                      &(um.mag>250)
                   )
         selection.add('isoneE', 
                       (e_ntight==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
@@ -777,8 +801,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         regions = {}
         regions['sr']={'iszeroL','fatjet','noextrab','noHEMj','met_filters','met_triggers'}
         regions['wmcr']={'isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers'}
-        regions['wecr']={'isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers'}
         regions['tmcr']={'isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'}
+        regions['wecr']={'isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers'}
         regions['tecr']={'isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers'}
         regions['zmcr']={'istwoM','fatjet','noextrab','noHEMj','met_filters','met_triggers'}
         regions['zecr']={'istwoE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers'}
@@ -871,11 +895,11 @@ class AnalysisProcessor(processor.ProcessorABC):
             for r in regions:
                 cut = selection.all(*regions[r])
                 fill(dataset, r, np.ones(events.size), cut)
-        else:
-            hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
-            for r in regions:
-                cut = selection.all(*regions[r])
-                fill(dataset, r, get_weight(r), cut)
+        #else:
+        hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
+        for r in regions:
+            cut = selection.all(*regions[r])
+            fill(dataset, r, get_weight(r), cut)
 
         return hout
 
