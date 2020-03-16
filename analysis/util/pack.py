@@ -85,8 +85,8 @@ for folder in beans[options.year]:
         if options.dataset and options.dataset not in dataset: continue
         print("Looking into",folder+"/"+dataset)
         filenames = folder+"/"+dataset+" -name \'nano_*.root\'"
-        os.system("find "+filenames+" > "+dataset+".txt")
-        with open(dataset+".txt") as flist:
+        os.system("find "+filenames+" > metadata/"+dataset+".txt")
+        with open("metadata/"+dataset+".txt") as flist:
              new_content=flist.read().replace('/eos/uscms',fnaleos)
         with open("metadata/"+dataset+".txt", 'w') as flist:
              flist.write(new_content)
