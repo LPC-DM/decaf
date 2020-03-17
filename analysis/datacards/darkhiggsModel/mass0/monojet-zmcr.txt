@@ -1,0 +1,56 @@
+# Datacard for <Channel (monojet-zmcr) instance at 0x7f04fa33b278> generated on 2020-02-18 15:08:33.026498
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 4 # number of samples minus 1
+kmax 2 # number of nuisance parameters
+shapes * monojet-zmcr darkhiggs_mass0_monojet.root darkhiggs_mass0_monojet:monojet-zmcr_$PROCESS darkhiggs_mass0_monojet:monojet-zmcr_$PROCESS_$SYSTEMATIC
+bin monojet-zmcr
+observation 4429.742
+bin      monojet-zmcr  monojet-zmcr  monojet-zmcr  monojet-zmcr  monojet-zmcr
+process            dy       ttbarMC     singletop       diboson         higgs
+process             1             2             3             4             5
+rate            1.000        69.400        16.382       135.933         0.185
+jec param 0 1
+vjets_eff param 0 1
+monojet-sr_zvv_bin_0 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+monojet-sr_zvv_bin_1 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+monojet-sr_zvv_bin_10 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+monojet-sr_zvv_bin_11 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+monojet-sr_zvv_bin_12 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+monojet-sr_zvv_bin_13 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+monojet-sr_zvv_bin_2 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+monojet-sr_zvv_bin_3 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+monojet-sr_zvv_bin_4 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+monojet-sr_zvv_bin_5 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+monojet-sr_zvv_bin_6 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+monojet-sr_zvv_bin_7 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+monojet-sr_zvv_bin_8 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+monojet-sr_zvv_bin_9 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+sr_zvvMC_bin0_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+sr_zvvMC_bin10_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+sr_zvvMC_bin11_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+sr_zvvMC_bin12_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+sr_zvvMC_bin13_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+sr_zvvMC_bin1_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+sr_zvvMC_bin2_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+sr_zvvMC_bin3_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+sr_zvvMC_bin4_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+sr_zvvMC_bin5_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+sr_zvvMC_bin6_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+sr_zvvMC_bin7_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+sr_zvvMC_bin8_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+sr_zvvMC_bin9_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+vjets_sf extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+zmcr_dy_bin0_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+zmcr_dy_bin10_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+zmcr_dy_bin11_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+zmcr_dy_bin12_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+zmcr_dy_bin13_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+zmcr_dy_bin1_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+zmcr_dy_bin2_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+zmcr_dy_bin3_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+zmcr_dy_bin4_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+zmcr_dy_bin5_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+zmcr_dy_bin6_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+zmcr_dy_bin7_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+zmcr_dy_bin8_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+zmcr_dy_bin9_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
