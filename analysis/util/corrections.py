@@ -272,23 +272,28 @@ class BTagCorrector:
         abseta = abs(eta)
         
         #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagSFMethods#1b_Event_reweighting_using_scale
-        def zerotag(eff, sf):
-            eff_data = np.minimum(1, sf*eff)
-            return ((1 - eff_data) / (1 - eff)).prod()
+        def zerotag(eff):
+            return (1 - eff).prod()
 
         eff = self.eff(flavor, pt, abseta)
         sf_nom = self.sf.eval('central', flavor, abseta, pt)
         sf_up = self.sf.eval('up', flavor, abseta, pt)
         sf_down = self.sf.eval('down', flavor, abseta, pt)
 
-        nom = zerotag(eff, sf_nom)
-        up = zerotag(eff, sf_up)
-        down = zerotag(eff, sf_down)
+        eff_data_nom  = np.minimum(1., sf_nom*eff)
+        eff_data_up   = np.minimum(1., sf_up*eff)
+        eff_data_down = np.minimum(1., sf_down*eff)
+
+        nom = zerotag(eff_data_nom)/zerotag(eff)
+        up = zerotag(eff_data_up)/zerotag(eff)
+        down = zerotag(eff_data_down)/zerotag(eff)
+
         if '-1' in tag: 
-            nom = np.maximum(1 - zerotag(eff, sf_nom), 0)
-            up = np.maximum(1 - zerotag(eff, sf_up), 0)
-            down = np.maximum(1 - zerotag(eff, sf_down), 0)
-        return nom, up, down
+            nom = (1 - zerotag(eff_data_nom)) / (1 - zerotag(eff))
+            up = (1 - zerotag(eff_data_up)) / (1 - zerotag(eff))
+            down = (1 - zerotag(eff_data_down)) / (1 - zerotag(eff))
+
+        return np.nan_to_num(nom), np.nan_to_num(up), np.nan_to_num(down)
 
 get_btag_weight = {
     'deepflav': {
