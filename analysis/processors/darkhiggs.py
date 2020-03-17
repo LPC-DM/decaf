@@ -685,7 +685,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights[r].add('ids', ids[r])
                 weights[r].add('reco', reco[r])
                 weights[r].add('isolation', isolation[r])
-                #print('btag',r, btag[r].sum())
                 weights[r].add('btag',btag[r], btagUp[r], btagDown[r])
 
         leading_fj = fj[fj.pt.argmax()]
