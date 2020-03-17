@@ -272,23 +272,28 @@ class BTagCorrector:
         abseta = abs(eta)
         
         #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagSFMethods#1b_Event_reweighting_using_scale
-        def zerotag(eff, sf):
-            eff_data = np.minimum(1, sf*eff)
-            return ((1 - eff_data) / (1 - eff)).prod()
+        def zerotag(eff):
+            return (1 - eff).prod()
 
         eff = self.eff(flavor, pt, abseta)
         sf_nom = self.sf.eval('central', flavor, abseta, pt)
         sf_up = self.sf.eval('up', flavor, abseta, pt)
         sf_down = self.sf.eval('down', flavor, abseta, pt)
 
-        nom = zerotag(eff, sf_nom)
-        up = zerotag(eff, sf_up)
-        down = zerotag(eff, sf_down)
+        eff_data_nom  = np.minimum(1., sf_nom*eff)
+        eff_data_up   = np.minimum(1., sf_up*eff)
+        eff_data_down = np.minimum(1., sf_down*eff)
+
+        nom = zerotag(eff_data_nom)/zerotag(eff)
+        up = zerotag(eff_data_up)/zerotag(eff)
+        down = zerotag(eff_data_down)/zerotag(eff)
+
         if '-1' in tag: 
-            nom = np.maximum(1 - zerotag(eff, sf_nom), 0)
-            up = np.maximum(1 - zerotag(eff, sf_up), 0)
-            down = np.maximum(1 - zerotag(eff, sf_down), 0)
-        return nom, up, down
+            nom = (1 - zerotag(eff_data_nom)) / (1 - zerotag(eff))
+            up = (1 - zerotag(eff_data_up)) / (1 - zerotag(eff))
+            down = (1 - zerotag(eff_data_down)) / (1 - zerotag(eff))
+
+        return np.nan_to_num(nom), np.nan_to_num(up), np.nan_to_num(down)
 
 get_btag_weight = {
     'deepflav': {
@@ -326,20 +331,22 @@ get_btag_weight = {
         }
     }
 }
-'''
+
 Jetext = extractor()
 for directory in ['jec', 'jersf', 'jr', 'junc']:
     directory='data/'+directory
     print('Loading files in:',directory)
     for filename in os.listdir(directory):
         if '~' in filename: continue
+        if 'AK4PFPuppi' not in filename: continue
+        if 'DATA' in filename: continue
         filename=directory+'/'+filename
         print('Loading file:',filename)
         Jetext.add_weight_sets(['* * '+filename])
     print('All files in',directory,'loaded')
 Jetext.finalize()
 Jetevaluator = Jetext.make_evaluator()
-'''
+
 corrections = {}
 corrections['get_msd_weight']          = get_msd_weight
 corrections['get_ttbar_weight']        = get_ttbar_weight
@@ -364,7 +371,7 @@ corrections['get_mu_tight_iso_sf']     = get_mu_tight_iso_sf
 corrections['get_mu_loose_iso_sf']     = get_mu_loose_iso_sf
 corrections['get_ecal_bad_calib']      = get_ecal_bad_calib
 corrections['get_btag_weight']         = get_btag_weight
-#corrections['Jetevaluator']            = Jetevaluator
+corrections['Jetevaluator']            = Jetevaluator
 
 save(corrections, 'data/corrections.coffea')
 

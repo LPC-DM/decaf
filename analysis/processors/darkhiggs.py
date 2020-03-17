@@ -153,11 +153,11 @@ class AnalysisProcessor(processor.ProcessorABC):
             ],
             '2017': [
                 'PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60',
-                'PFMETNoMu120_PFMHTNoMu120_IDTight',
+                'PFMETNoMu120_PFMHTNoMu120_IDTight'
             ],
             '2018': [
                 'PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60',
-                'PFMETNoMu120_PFMHTNoMu120_IDTight',
+                'PFMETNoMu120_PFMHTNoMu120_IDTight'
             ]
         }
 
@@ -347,7 +347,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         get_mu_loose_iso_sf     = self._corrections['get_mu_loose_iso_sf']
         get_ecal_bad_calib      = self._corrections['get_ecal_bad_calib']     
         get_deepflav_weight     = self._corrections['get_btag_weight']['deepflav'][self._year]
-        #Jetevaluator            = self._corrections['Jetevaluator']
+        Jetevaluator            = self._corrections['Jetevaluator']
         
         isLooseElectron = self._ids['isLooseElectron'] 
         isTightElectron = self._ids['isTightElectron'] 
@@ -365,13 +365,13 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
         # Derive jet corrector for JEC/JER
         ###
-        '''
+        
         JECcorrector = FactorizedJetCorrector(**{name: Jetevaluator[name] for name in self._jec[self._year]})
-        JECuncertainties = JetCorrectionUncertainty(**{name:Jetevaluator[name] for name in self._jecunc[self._year]})
-        JER = JetResolution(**{name:Jetevaluator[name] for name in self._jer[self._year]})
+        JECuncertainties = JetCorrectionUncertainty(**{name:Jetevaluator[name] for name in self._junc[self._year]})
+        JER = JetResolution(**{name:Jetevaluator[name] for name in self._jr[self._year]})
         JERsf = JetResolutionScaleFactor(**{name:Jetevaluator[name] for name in self._jersf[self._year]})
         Jet_transformer = JetTransformer(jec=JECcorrector,junc=JECuncertainties, jer = JER, jersf = JERsf)
-        '''
+        
         ###
         #Initialize global quantities (MET ecc.)
         ###
@@ -388,30 +388,31 @@ class AnalysisProcessor(processor.ProcessorABC):
         e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.cutBased,self._year)
         e['istight'] = isTightElectron(e.pt,e.eta,e.cutBased,self._year)
         e['T'] = TVector2Array.from_polar(e.pt, e.phi)
-        leading_e = e[e.pt.argmax()]
-        leading_e = leading_e[leading_e.istight.astype(np.bool)]
         e_loose = e[e.isloose.astype(np.bool)]
         e_tight = e[e.istight.astype(np.bool)]
         e_ntot = e.counts
         e_nloose = e_loose.counts
         e_ntight = e_tight.counts
+        leading_e = e[e.pt.argmax()]
+        leading_e = leading_e[leading_e.istight.astype(np.bool)]
 
         mu = events.Muon
         mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.looseId,self._year)
         mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.tightId,self._year)
         mu['T'] = TVector2Array.from_polar(mu.pt, mu.phi)
-        leading_mu = mu[mu.pt.argmax()]
-        leading_mu = leading_mu[leading_mu.istight.astype(np.bool)]
         mu_loose=mu[mu.isloose.astype(np.bool)]
         mu_tight=mu[mu.istight.astype(np.bool)]
         mu_ntot = mu.counts
         mu_nloose = mu_loose.counts
         mu_ntight = mu_tight.counts
+        leading_mu = mu[mu.pt.argmax()]
+        leading_mu = leading_mu[leading_mu.istight.astype(np.bool)]
 
         tau = events.Tau
         tau['isclean']=~match(tau,mu_loose,0.5)&~match(tau,e_loose,0.5)
-        tau['isloose']=isLooseTau(tau.pt,tau.eta,tau.idDecayMode,tau.idMVAoldDM2017v2,self._year)&tau.isclean.astype(np.bool)
-        tau_loose=tau[tau.isloose.astype(np.bool)]
+        tau['isloose']=isLooseTau(tau.pt,tau.eta,tau.idDecayMode,tau.idMVAoldDM2017v2,self._year)
+        tau_clean=tau[tau.isclean.astype(np.bool)]
+        tau_loose=tau_clean[tau_clean.isloose.astype(np.bool)]
         tau_ntot=tau.counts
         tau_nloose=tau_loose.counts
 
@@ -419,16 +420,18 @@ class AnalysisProcessor(processor.ProcessorABC):
         pho['isclean']=~match(pho,mu_loose,0.5)&~match(pho,e_loose,0.5)
         _id = 'cutBasedBitmap'
         if self._year=='2016': _id = 'cutBased'
-        pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho[_id],self._year)&pho.isclean.astype(np.bool)
-        pho['istight']=isTightPhoton(pho.pt,pho.eta,pho[_id],self._year)&pho.isclean.astype(np.bool)
+        pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho[_id],self._year)
+        pho['istight']=isTightPhoton(pho.pt,pho.eta,pho[_id],self._year)
         pho['T'] = TVector2Array.from_polar(pho.pt, pho.phi)
-        leading_pho = pho[pho.pt.argmax()]
-        leading_pho = leading_pho[leading_pho.istight.astype(np.bool)]
-        pho_loose=pho[pho.isloose.astype(np.bool)]
-        pho_tight=pho[pho.istight.astype(np.bool)]
+        pho_clean=pho[pho.isclean.astype(np.bool)]
+        pho_loose=pho_clean[pho_clean.isloose.astype(np.bool)]
+        pho_tight=pho_clean[pho_clean.istight.astype(np.bool)]
         pho_ntot=pho.counts
         pho_nloose=pho_loose.counts
         pho_ntight=pho_tight.counts
+        leading_pho = pho[pho.pt.argmax()]
+        leading_pho = leading_pho[leading_pho.isclean.astype(np.bool)]
+        leading_pho = leading_pho[leading_pho.istight.astype(np.bool)]
 
         sj = events.AK15PuppiSubJet
 
@@ -436,11 +439,11 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj['hassj1'] = (fj.subJetIdx1>-1)
         fj['hassj2'] = (fj.subJetIdx2>-1)
         fj['isgood'] = isGoodFatJet(fj.pt, fj.eta, fj.jetId)
-        fj['isclean'] =~match(fj,pho_loose,1.5)&~match(fj,mu_loose,1.5)&~match(fj,e_loose,1.5)&fj.isgood.astype(np.bool)
+        fj['isclean'] =~match(fj,pho_loose,1.5)&~match(fj,mu_loose,1.5)&~match(fj,e_loose,1.5)
         fj['msd_corr'] = fj.msoftdrop*awkward.JaggedArray.fromoffsets(fj.array.offsets, get_msd_weight(fj.pt.flatten(),fj.eta.flatten()))
         fj['ZHbbvsQCD'] = (fj.probZbb + fj.probHbb) / (fj.probZbb+ fj.probHbb+ fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers)
         fj_good = fj[fj.isgood.astype(np.bool)]
-        fj_clean=fj[fj.isclean.astype(np.bool)]
+        fj_clean=fj_good[fj_good.isclean.astype(np.bool)]
         fj_ntot=fj.counts
         fj_ngood=fj_good.counts
         fj_nclean=fj_clean.counts
@@ -450,18 +453,16 @@ class AnalysisProcessor(processor.ProcessorABC):
         j = events.Jet
         j['isgood'] = isGoodJet(j.pt, j.eta, j.jetId, j.neHEF, j.neEmEF, j.chHEF, j.chEmEF)
         j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
-        j['isclean'] = ~match(j,e_loose,0.4)&~match(j,mu_loose,0.4)&~match(j,pho_loose,0.4)&j.isgood.astype(np.bool)
-        j['isiso'] = ~match(j,fj_clean,1.5)&j.isclean.astype(np.bool)
-        j['isdcsvL'] = (j.btagDeepB>0.1241)&j.isiso.astype(np.bool)
-        j['isdflvL'] = (j.btagDeepFlavB>0.0494)&j.isiso.astype(np.bool)
+        j['isclean'] = ~match(j,e_loose,0.4)&~match(j,mu_loose,0.4)&~match(j,pho_loose,0.4)
+        j['isiso'] = ~match(j,fj_clean,1.5)
+        j['isdcsvL'] = (j.btagDeepB>0.1241)
+        j['isdflvL'] = (j.btagDeepFlavB>0.0494)
         j['T'] = TVector2Array.from_polar(j.pt, j.phi)
-        leading_j = j[j.pt.argmax()]
-        leading_j = leading_j[leading_j.isclean.astype(np.bool)]
         j_good = j[j.isgood.astype(np.bool)]
-        j_clean = j[j.isclean.astype(np.bool)]
-        j_iso = j[j.isiso.astype(np.bool)]
-        j_dcsvL = j[j.isdcsvL]
-        j_dflvL = j[j.isdflvL]
+        j_clean = j_good[j_good.isclean.astype(np.bool)]
+        j_iso = j_clean[j_clean.isiso.astype(np.bool)]
+        j_dcsvL = j_iso[j_iso.isdcsvL.astype(np.bool)]
+        j_dflvL = j_iso[j_iso.isdflvL.astype(np.bool)]
         j_HEM = j[j.isHEM.astype(np.bool)]
         j_ntot=j.counts
         j_ngood=j_good.counts
@@ -470,23 +471,20 @@ class AnalysisProcessor(processor.ProcessorABC):
         j_ndcsvL=j_dcsvL.counts
         j_ndflvL=j_dflvL.counts
         j_nHEM = j_HEM.counts
+        leading_j = j[j.pt.argmax()]
+        leading_j = leading_j[leading_j.isgood.astype(np.bool)]
+        leading_j = leading_j[leading_j.isclean.astype(np.bool)]
 
         ###
         #Calculating derivatives
         ###
 
         ele_pairs = e_loose.distincts()
-        #diele = leading_e
-        #leading_diele = leading_e
-        #if ele_pairs.i0.content.size>0:
         diele = ele_pairs.i0+ele_pairs.i1
         diele['T'] = TVector2Array.from_polar(diele.pt, diele.phi)
         leading_diele = diele[diele.pt.argmax()]
 
         mu_pairs = mu_loose.distincts()
-        #dimu = leading_mu
-        #leading_dimu = leading_mu
-        #if mu_pairs.i0.content.size>0:
         dimu = mu_pairs.i0+mu_pairs.i1
         dimu['T'] = TVector2Array.from_polar(dimu.pt, dimu.phi)
         leading_dimu = dimu[dimu.pt.argmax()]
@@ -533,11 +531,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ]
                 jetgenWq = fj.cross(qFromWFromTop, nested=True)
                 jetgenb = fj.cross(bFromTop, nested=True)
-                return (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all() & (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()
+                Wmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
+                bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
+                return Wmatch & bmatch
             fj['isTbqq'] = topmatch(6)|topmatch(-6)
-            #print('number of fatjets',fj.counts)
-            #print(fj.isTbqq)
-            #print('number of matched fatjets',fj[fj.isTbqq].counts)
 
             ###
             # Fat-jet Z->bb matching at decay level
@@ -678,31 +675,20 @@ class AnalysisProcessor(processor.ProcessorABC):
             
             for r in selected_regions:
                 weights[r] = processor.Weights(len(events))
-                '''
-                print('Weights for region',r)
-                print('genw',events.genWeight)
-                print('nlo',nlo)
-                print('nnlo_nlo',nnlo_nlo)
-                print('pileup',pu,puUp,puDown)
-                print('trig', trig[r])
-                print('ids', ids[r])
-                print('reco', reco[r])
-                print('isolation', isolation[r])
-                print('btag',btag[r])
-                '''                
                 weights[r].add('genw',events.genWeight)
-                #weights[r].add('nlo',nlo)
+                weights[r].add('nlo',nlo)
                 #weights[r].add('adhoc',adhoc)
                 #weights[r].add('nnlo',nnlo)
-                #weights[r].add('nnlo_nlo',nnlo_nlo)
-                #weights[r].add('pileup',pu,puUp,puDown)
-                #weights[r].add('trig', trig[r])
-                #weights[r].add('ids', ids[r])
-                #weights[r].add('reco', reco[r])
-                #weights[r].add('isolation', isolation[r])
+                weights[r].add('nnlo_nlo',nnlo_nlo)
+                weights[r].add('pileup',pu,puUp,puDown)
+                weights[r].add('trig', trig[r])
+                weights[r].add('ids', ids[r])
+                weights[r].add('reco', reco[r])
+                weights[r].add('isolation', isolation[r])
                 weights[r].add('btag',btag[r], btagUp[r], btagDown[r])
 
         leading_fj = fj[fj.pt.argmax()]
+        leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
         leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
         
         ###
@@ -737,7 +723,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('isoneM', 
                       (e_nloose==0)&(mu_ntight==1)&(tau_nloose==0)&(pho_nloose==0)
                       &(abs(um.delta_phi(j_clean.T)).min()>0.8)
-                    &(um.mag>250)
+                      &(um.mag>250)
                   )
         selection.add('isoneE', 
                       (e_ntight==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
@@ -777,8 +763,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         regions = {}
         regions['sr']={'iszeroL','fatjet','noextrab','noHEMj','met_filters','met_triggers'}
         regions['wmcr']={'isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers'}
-        regions['wecr']={'isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers'}
         regions['tmcr']={'isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'}
+        regions['wecr']={'isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers'}
         regions['tecr']={'isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers'}
         regions['zmcr']={'istwoM','fatjet','noextrab','noHEMj','met_filters','met_triggers'}
         regions['zecr']={'istwoE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers'}
@@ -867,7 +853,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 fill('bb--'+dataset, r, get_weight(r)*wbb, cut)
                 fill(dataset, r, get_weight(r)*wother, cut)
         elif isData:
-            hout['sumw'].fill(dataset=dataset, sumw=1, weight=np.ones(events.size))
+            hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
             for r in regions:
                 cut = selection.all(*regions[r])
                 fill(dataset, r, np.ones(events.size), cut)
