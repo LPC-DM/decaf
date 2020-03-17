@@ -153,11 +153,11 @@ class AnalysisProcessor(processor.ProcessorABC):
             ],
             '2017': [
                 'PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60',
-                'PFMETNoMu120_PFMHTNoMu120_IDTight',
+                'PFMETNoMu120_PFMHTNoMu120_IDTight'
             ],
             '2018': [
                 'PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60',
-                'PFMETNoMu120_PFMHTNoMu120_IDTight',
+                'PFMETNoMu120_PFMHTNoMu120_IDTight'
             ]
         }
 
@@ -388,30 +388,31 @@ class AnalysisProcessor(processor.ProcessorABC):
         e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.cutBased,self._year)
         e['istight'] = isTightElectron(e.pt,e.eta,e.cutBased,self._year)
         e['T'] = TVector2Array.from_polar(e.pt, e.phi)
-        leading_e = e[e.pt.argmax()]
-        leading_e = leading_e[leading_e.istight.astype(np.bool)]
         e_loose = e[e.isloose.astype(np.bool)]
         e_tight = e[e.istight.astype(np.bool)]
         e_ntot = e.counts
         e_nloose = e_loose.counts
         e_ntight = e_tight.counts
+        leading_e = e[e.pt.argmax()]
+        leading_e = leading_e[leading_e.istight.astype(np.bool)]
 
         mu = events.Muon
         mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.looseId,self._year)
         mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.tightId,self._year)
         mu['T'] = TVector2Array.from_polar(mu.pt, mu.phi)
-        leading_mu = mu[mu.pt.argmax()]
-        leading_mu = leading_mu[leading_mu.istight.astype(np.bool)]
         mu_loose=mu[mu.isloose.astype(np.bool)]
         mu_tight=mu[mu.istight.astype(np.bool)]
         mu_ntot = mu.counts
         mu_nloose = mu_loose.counts
         mu_ntight = mu_tight.counts
+        leading_mu = mu[mu.pt.argmax()]
+        leading_mu = leading_mu[leading_mu.istight.astype(np.bool)]
 
         tau = events.Tau
         tau['isclean']=~match(tau,mu_loose,0.5)&~match(tau,e_loose,0.5)
-        tau['isloose']=isLooseTau(tau.pt,tau.eta,tau.idDecayMode,tau.idMVAoldDM2017v2,self._year)&tau.isclean.astype(np.bool)
-        tau_loose=tau[tau.isloose.astype(np.bool)]
+        tau['isloose']=isLooseTau(tau.pt,tau.eta,tau.idDecayMode,tau.idMVAoldDM2017v2,self._year)
+        tau_clean=tau[tau.isclean.astype(np.bool)]
+        tau_loose=tau_clean[tau_clean.isloose.astype(np.bool)]
         tau_ntot=tau.counts
         tau_nloose=tau_loose.counts
 
@@ -419,16 +420,18 @@ class AnalysisProcessor(processor.ProcessorABC):
         pho['isclean']=~match(pho,mu_loose,0.5)&~match(pho,e_loose,0.5)
         _id = 'cutBasedBitmap'
         if self._year=='2016': _id = 'cutBased'
-        pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho[_id],self._year)&pho.isclean.astype(np.bool)
-        pho['istight']=isTightPhoton(pho.pt,pho.eta,pho[_id],self._year)&pho.isclean.astype(np.bool)
+        pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho[_id],self._year)
+        pho['istight']=isTightPhoton(pho.pt,pho.eta,pho[_id],self._year)
         pho['T'] = TVector2Array.from_polar(pho.pt, pho.phi)
-        leading_pho = pho[pho.pt.argmax()]
-        leading_pho = leading_pho[leading_pho.istight.astype(np.bool)]
-        pho_loose=pho[pho.isloose.astype(np.bool)]
-        pho_tight=pho[pho.istight.astype(np.bool)]
+        pho_clean=pho[pho.isclean.astype(np.bool)]
+        pho_loose=pho_clean[pho_clean.isloose.astype(np.bool)]
+        pho_tight=pho_clean[pho_clean.istight.astype(np.bool)]
         pho_ntot=pho.counts
         pho_nloose=pho_loose.counts
         pho_ntight=pho_tight.counts
+        leading_pho = pho[pho.pt.argmax()]
+        leading_pho = leading_pho[leading_pho.isclean.astype(np.bool)]
+        leading_pho = leading_pho[leading_pho.istight.astype(np.bool)]
 
         sj = events.AK15PuppiSubJet
 
@@ -436,11 +439,11 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj['hassj1'] = (fj.subJetIdx1>-1)
         fj['hassj2'] = (fj.subJetIdx2>-1)
         fj['isgood'] = isGoodFatJet(fj.pt, fj.eta, fj.jetId)
-        fj['isclean'] =~match(fj,pho_loose,1.5)&~match(fj,mu_loose,1.5)&~match(fj,e_loose,1.5)&fj.isgood.astype(np.bool)
+        fj['isclean'] =~match(fj,pho_loose,1.5)&~match(fj,mu_loose,1.5)&~match(fj,e_loose,1.5)
         fj['msd_corr'] = fj.msoftdrop*awkward.JaggedArray.fromoffsets(fj.array.offsets, get_msd_weight(fj.pt.flatten(),fj.eta.flatten()))
         fj['ZHbbvsQCD'] = (fj.probZbb + fj.probHbb) / (fj.probZbb+ fj.probHbb+ fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers)
         fj_good = fj[fj.isgood.astype(np.bool)]
-        fj_clean=fj[fj.isclean.astype(np.bool)]
+        fj_clean=fj_good[fj_good.isclean.astype(np.bool)]
         fj_ntot=fj.counts
         fj_ngood=fj_good.counts
         fj_nclean=fj_clean.counts
@@ -455,8 +458,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         j['isdcsvL'] = (j.btagDeepB>0.1241)
         j['isdflvL'] = (j.btagDeepFlavB>0.0494)
         j['T'] = TVector2Array.from_polar(j.pt, j.phi)
-        leading_j = j[j.pt.argmax()]
-        leading_j = leading_j[leading_j.isclean.astype(np.bool)]
         j_good = j[j.isgood.astype(np.bool)]
         j_clean = j_good[j_good.isclean.astype(np.bool)]
         j_iso = j_clean[j_clean.isiso.astype(np.bool)]
@@ -470,34 +471,20 @@ class AnalysisProcessor(processor.ProcessorABC):
         j_ndcsvL=j_dcsvL.counts
         j_ndflvL=j_dflvL.counts
         j_nHEM = j_HEM.counts
-        print('j_ntot',j_ntot)  
-        print('j_ngood',j_ngood)
-        print('j_nclean',j_nclean)
-        print('j_niso',j_niso)
-        print('j_niso>0',(j_niso>0).sum())
-        print('j_ndcsvL',j_ndcsvL)
-        print('j_ndflvL',j_ndflvL)
-        print('j_ndflvL>0',(j_ndflvL>0).sum())
-        print('j_ndflvL==0',(j_ndflvL==0).sum())
-        print('nevents',len(events))
-        print('j_nHEM',j_nHEM)
+        leading_j = j[j.pt.argmax()]
+        leading_j = leading_j[leading_j.isgood.astype(np.bool)]
+        leading_j = leading_j[leading_j.isclean.astype(np.bool)]
 
         ###
         #Calculating derivatives
         ###
 
         ele_pairs = e_loose.distincts()
-        #diele = leading_e
-        #leading_diele = leading_e
-        #if ele_pairs.i0.content.size>0:
         diele = ele_pairs.i0+ele_pairs.i1
         diele['T'] = TVector2Array.from_polar(diele.pt, diele.phi)
         leading_diele = diele[diele.pt.argmax()]
 
         mu_pairs = mu_loose.distincts()
-        #dimu = leading_mu
-        #leading_dimu = leading_mu
-        #if mu_pairs.i0.content.size>0:
         dimu = mu_pairs.i0+mu_pairs.i1
         dimu['T'] = TVector2Array.from_polar(dimu.pt, dimu.phi)
         leading_dimu = dimu[dimu.pt.argmax()]
@@ -535,33 +522,19 @@ class AnalysisProcessor(processor.ProcessorABC):
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                 (abs(gen.distinctParent.pdgId) == 24)
             ]
-            print('qFromW parent',qFromW.distinctParent.pdgId)
-            print('qFromW granparent',qFromW.distinctParent.distinctParent.pdgId)
             def topmatch(topid, dR=1.5):
-                print('Top ID is',topid)
                 qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
-                print('qFromWFromTop',qFromWFromTop)
-                print('qFromWFromTop parent',qFromWFromTop.distinctParent.counts) 
-                print('qFromWFromTop granparent',qFromWFromTop.distinctParent.distinctParent.counts)
                 bFromTop = gen[
                     (abs(gen.pdgId) == 5) &
                     gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                     (gen.distinctParent.pdgId == topid)
                 ]
-                print('bFromTop',bFromTop.counts)
                 jetgenWq = fj.cross(qFromWFromTop, nested=True)
                 jetgenb = fj.cross(bFromTop, nested=True)
                 Wmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
                 bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
-                print('number of fatjets',fj.counts)
-                print('Wmatch',Wmatch)
-                print('bmatch',bmatch)
-                print('topmatch',Wmatch & bmatch)
                 return Wmatch & bmatch
             fj['isTbqq'] = topmatch(6)|topmatch(-6)
-            #print('number of fatjets',fj.counts)
-            #print(fj.isTbqq)
-            #print('wnumber of matched fatjets',fj[fj.isTbqq].counts)
 
             ###
             # Fat-jet Z->bb matching at decay level
@@ -702,31 +675,21 @@ class AnalysisProcessor(processor.ProcessorABC):
             
             for r in selected_regions:
                 weights[r] = processor.Weights(len(events))
-                '''
-                print('Weights for region',r)
-                print('genw',events.genWeight)
-                print('nlo',nlo)
-                print('nnlo_nlo',nnlo_nlo)
-                print('pileup',pu,puUp,puDown)
-                print('trig', trig[r])
-                print('ids', ids[r])
-                print('reco', reco[r])
-                print('isolation', isolation[r])
-                print('btag',btag[r])
-                '''                
                 weights[r].add('genw',events.genWeight)
-                #weights[r].add('nlo',nlo)
+                weights[r].add('nlo',nlo)
                 #weights[r].add('adhoc',adhoc)
                 #weights[r].add('nnlo',nnlo)
-                #weights[r].add('nnlo_nlo',nnlo_nlo)
-                #weights[r].add('pileup',pu,puUp,puDown)
-                #weights[r].add('trig', trig[r])
-                #weights[r].add('ids', ids[r])
-                #weights[r].add('reco', reco[r])
-                #weights[r].add('isolation', isolation[r])
+                weights[r].add('nnlo_nlo',nnlo_nlo)
+                weights[r].add('pileup',pu,puUp,puDown)
+                weights[r].add('trig', trig[r])
+                weights[r].add('ids', ids[r])
+                weights[r].add('reco', reco[r])
+                weights[r].add('isolation', isolation[r])
+                #print('btag',r, btag[r].sum())
                 weights[r].add('btag',btag[r], btagUp[r], btagDown[r])
 
         leading_fj = fj[fj.pt.argmax()]
+        leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
         leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
         
         ###
@@ -891,15 +854,15 @@ class AnalysisProcessor(processor.ProcessorABC):
                 fill('bb--'+dataset, r, get_weight(r)*wbb, cut)
                 fill(dataset, r, get_weight(r)*wother, cut)
         elif isData:
-            hout['sumw'].fill(dataset=dataset, sumw=1, weight=np.ones(events.size))
+            hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
             for r in regions:
                 cut = selection.all(*regions[r])
                 fill(dataset, r, np.ones(events.size), cut)
-        #else:
-        hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
-        for r in regions:
-            cut = selection.all(*regions[r])
-            fill(dataset, r, get_weight(r), cut)
+        else:
+            hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
+            for r in regions:
+                cut = selection.all(*regions[r])
+                fill(dataset, r, get_weight(r), cut)
 
         return hout
 

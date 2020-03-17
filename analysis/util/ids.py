@@ -67,9 +67,9 @@ def isLoosePhoton(pt,eta,loose_id,year):
     if year=='2016':
         mask = (pt>15)&(abs(eta)<2.5)&(loose_id>=1)
     elif year=='2017':
-        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&0)==0)
+        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&1)==1)
     elif year=='2018':
-        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&0)==0)
+        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&1)==1)
     return mask
 
 def isTightPhoton(pt,eta,tight_id,year):
