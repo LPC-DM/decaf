@@ -10,6 +10,7 @@ from coffea.arrays import Initialize
 from coffea import hist, processor
 from coffea.util import load, save
 from coffea.jetmet_tools import FactorizedJetCorrector, JetCorrectionUncertainty, JetTransformer, JetResolution, JetResolutionScaleFactor
+from coffea.analysis_objects import JaggedCandidateArray
 from optparse import OptionParser
 from uproot_methods import TVector2Array, TLorentzVectorArray
 
@@ -377,7 +378,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
 
         met = events.MET
-        met['T'] = TVector2Array.from_polar(met.pt, met.phi)
+        met['T']  = TVector2Array.from_polar(met.pt, met.phi)
+        met['p4'] = TLorentzVectorArray.from_ptetaphim(met.pt, 0., met.phi, 0.)
         calomet = events.CaloMET
 
         ###
@@ -388,6 +390,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.cutBased,self._year)
         e['istight'] = isTightElectron(e.pt,e.eta,e.cutBased,self._year)
         e['T'] = TVector2Array.from_polar(e.pt, e.phi)
+        #e['p4'] = TLorentzVectorArray.from_ptetaphim(e.pt, e.eta, e.phi, e.mass)
         e_loose = e[e.isloose.astype(np.bool)]
         e_tight = e[e.istight.astype(np.bool)]
         e_ntot = e.counts
@@ -400,6 +403,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.looseId,self._year)
         mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.tightId,self._year)
         mu['T'] = TVector2Array.from_polar(mu.pt, mu.phi)
+        #mu['p4'] = TLorentzVectorArray.from_ptetaphim(mu.pt, mu.eta, mu.phi, mu.mass)
         mu_loose=mu[mu.isloose.astype(np.bool)]
         mu_tight=mu[mu.istight.astype(np.bool)]
         mu_ntot = mu.counts
@@ -423,6 +427,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho[_id],self._year)
         pho['istight']=isTightPhoton(pho.pt,pho.eta,pho[_id],self._year)
         pho['T'] = TVector2Array.from_polar(pho.pt, pho.phi)
+        #pho['p4'] = TLorentzVectorArray.from_ptetaphim(pho.pt, pho.eta, pho.phi, pho.mass)
         pho_clean=pho[pho.isclean.astype(np.bool)]
         pho_loose=pho_clean[pho_clean.isloose.astype(np.bool)]
         pho_tight=pho_clean[pho_clean.istight.astype(np.bool)]
@@ -434,6 +439,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_pho = leading_pho[leading_pho.istight.astype(np.bool)]
 
         sj = events.AK15PuppiSubJet
+        sj['p4'] = TLorentzVectorArray.from_ptetaphim(sj.pt, sj.eta, sj.phi, sj.mass)
 
         fj = events.AK15Puppi
         fj['hassj1'] = (fj.subJetIdx1>-1)
@@ -458,6 +464,20 @@ class AnalysisProcessor(processor.ProcessorABC):
         j['isdcsvL'] = (j.btagDeepB>0.1241)
         j['isdflvL'] = (j.btagDeepFlavB>0.0494)
         j['T'] = TVector2Array.from_polar(j.pt, j.phi)
+        j['p4'] = TLorentzVectorArray.from_ptetaphim(j.pt, j.eta, j.phi, j.mass)
+        j['ptRaw'] =j.pt * (1-j.rawFactor)
+        j['massRaw'] = j.mass * (1-j.rawFactor)
+        j['rho'] = j.pt.ones_like()*events.fixedGridRhoFastjetAll.array
+        j['JCA'] = JaggedCandidateArray.candidatesfromcounts(
+            j.counts,
+            pt=j.pt,
+            eta=j.eta,
+            phi=j.phi,
+            mass=j.mass,
+            #ptRaw=j.ptRaw,
+            #massRaw=j.massRaw,
+        )
+        j.JCA['rho'] = j.JCA.pt.ones_like()*events.fixedGridRhoFastjetAll.array
         j_good = j[j.isgood.astype(np.bool)]
         j_clean = j_good[j_good.isclean.astype(np.bool)]
         j_iso = j_clean[j_clean.isiso.astype(np.bool)]
@@ -513,6 +533,12 @@ class AnalysisProcessor(processor.ProcessorABC):
         #Calculating weights
         ###
         if not isData:
+
+            #genj = events.GenJet
+            j['ptGenJet'] = j.matched_gen.pt
+            j.JCA['ptGenJet'] = j.ptGenJet
+            Jet_transformer.transform(j.JCA)
+
             gen = events.GenPart
             ###
             # Fat-jet top matching at decay level
@@ -545,7 +571,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 (abs(gen.distinctParent.pdgId) == 23)
             ]
             jetgenb = fj.cross(bFromZ, nested=True)
-            fj['isZbb']  = (jetgenb.i0.delta_r(jetgenb.i1) < 1.5).all()
+            bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < 1.5).all()&(bFromZ.counts>0)
+            fj['isZbb']  = bbmatch
 
             gen['isTop'] = (abs(gen.pdgId)==6)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isW'] = (abs(gen.pdgId)==24)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
