@@ -388,7 +388,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         e = events.Electron
         e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.cutBased,self._year)
-        e['istight'] = isTightElectron(e.pt,e.eta,e.cutBased,self._year)
+        e['istight'] = isTightElectron(e.pt,e.eta,e.dxy,e.dz,e.cutBased,self._year)
         e['T'] = TVector2Array.from_polar(e.pt, e.phi)
         #e['p4'] = TLorentzVectorArray.from_ptetaphim(e.pt, e.eta, e.phi, e.mass)
         e_loose = e[e.isloose.astype(np.bool)]
@@ -583,7 +583,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             genWs = gen[gen.isW]
             genZs = gen[gen.isZ]
             genAs = gen[gen.isA]
-            
+
             nlo  = np.ones(events.size)
             nnlo = np.ones(events.size)
             nnlo_nlo = np.ones(events.size)
@@ -606,7 +606,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 #nlo = get_nlo_weight[self._year]['z'](genZs.pt.max())
                 #if self._year != '2016': adhoc = get_adhoc_weight['z'](genZs.pt.max())
                 #nnlo = get_nnlo_weight['z'](genZs.pt.max())
-                nnlo_nlo = get_nnlo_nlo_weight['z'](genAs.pt.max())
+                nnlo_nlo = get_nnlo_nlo_weight['z'](genZs.pt.max())
 
             ###
             # Calculate PU weight and systematic variations
