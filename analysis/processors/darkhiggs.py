@@ -182,7 +182,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'Photon175'
             ],
             '2017': [
-                'Ele35_WPTight_Gsf',
+                #'Ele35_WPTight_Gsf',
+                'Ele32_WPTight_Gsf',
                 'Ele115_CaloIdVT_GsfTrkIdT',
                 'Photon200'
             ],
