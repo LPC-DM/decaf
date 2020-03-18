@@ -386,7 +386,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         e = events.Electron
         e['isloose'] = isLooseElectron(e.pt,e.eta,e.dxy,e.dz,e.cutBased,self._year)
-        e['istight'] = isTightElectron(e.pt,e.eta,e.cutBased,self._year)
+        e['istight'] = isTightElectron(e.pt,e.eta,e.dxy,e.dz,e.cutBased,self._year)
         e['T'] = TVector2Array.from_polar(e.pt, e.phi)
         e_loose = e[e.isloose.astype(np.bool)]
         e_tight = e[e.istight.astype(np.bool)]
