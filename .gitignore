@@ -12,3 +12,4 @@ analysis/pods/*/*.coffea
 analysis/pods/*.coffea
 analysis/pods/*/condor
 analysis/core.*
+analysis/myPlotting.ipynb
