@@ -556,7 +556,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             genWs = gen[gen.isW]
             genZs = gen[gen.isZ]
             genAs = gen[gen.isA]
-            
+
             nlo  = np.ones(events.size)
             nnlo = np.ones(events.size)
             nnlo_nlo = np.ones(events.size)
@@ -579,7 +579,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 #nlo = get_nlo_weight[self._year]['z'](genZs.pt.max())
                 #if self._year != '2016': adhoc = get_adhoc_weight['z'](genZs.pt.max())
                 #nnlo = get_nnlo_weight['z'](genZs.pt.max())
-                nnlo_nlo = get_nnlo_nlo_weight['z'](genAs.pt.max())
+                nnlo_nlo = get_nnlo_nlo_weight['z'](genZs.pt.max())
 
             ###
             # Calculate PU weight and systematic variations
