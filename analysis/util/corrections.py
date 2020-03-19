@@ -91,6 +91,8 @@ for year in ['2016','2017','2018']:
     get_ele_loose_id_sf[year]  = lookup_tools.dense_lookup.dense_lookup(fele_loose["EGamma_SF2D"].values, fele_loose["EGamma_SF2D"].edges)
     get_ele_loose_id_eff[year] = lookup_tools.dense_lookup.dense_lookup(fele_loose["EGamma_EffMC2D"].values, fele_loose["EGamma_EffMC2D"].edges)
     fele_tight  = ele_tight[year]
+    print(fele_tight["EGamma_SF2D"].edges)
+    print(fele_tight["EGamma_SF2D"].values)
     get_ele_tight_id_sf[year]  = lookup_tools.dense_lookup.dense_lookup(fele_tight["EGamma_SF2D"].values, fele_tight["EGamma_SF2D"].edges)
     get_ele_tight_id_eff[year] = lookup_tools.dense_lookup.dense_lookup(fele_tight["EGamma_EffMC2D"].values, fele_tight["EGamma_EffMC2D"].edges)
 
@@ -125,6 +127,8 @@ ele_reco['2017']=uproot.open("data/ScaleFactor/2017_ElectronReco.root")
 ele_reco['2018']=uproot.open("data/ScaleFactor/2018_ElectronReco.root")
 for year in ['2016','2017','2018']:
     fele_reco = ele_reco[year]
+    #print(fele_reco["EGamma_SF2D"].edges)
+    #print(fele_reco["EGamma_SF2D"].values)
     get_ele_reco_sf[year]=lookup_tools.dense_lookup.dense_lookup(fele_reco["EGamma_SF2D"].values, fele_reco["EGamma_SF2D"].edges)
 
 get_mu_tight_iso_sf = {}

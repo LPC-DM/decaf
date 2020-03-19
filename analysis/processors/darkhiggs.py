@@ -10,7 +10,7 @@ from coffea.arrays import Initialize
 from coffea import hist, processor
 from coffea.util import load, save
 from coffea.jetmet_tools import FactorizedJetCorrector, JetCorrectionUncertainty, JetTransformer, JetResolution, JetResolutionScaleFactor
-from coffea.analysis_objects import JaggedCandidateArray
+from coffea.analysis_objects import JaggedCandidateArray, JaggedTLorentzVectorArray
 from optparse import OptionParser
 from uproot_methods import TVector2Array, TLorentzVectorArray
 
@@ -326,28 +326,28 @@ class AnalysisProcessor(processor.ProcessorABC):
         #Getting corrections, ids from .coffea files
         ###
 
-        get_msd_weight          = self._corrections['get_msd_weight']    
-        get_ttbar_weight        = self._corrections['get_ttbar_weight']       
-        get_nlo_weight          = self._corrections['get_nlo_weight']         
+        get_msd_weight          = self._corrections['get_msd_weight']
+        get_ttbar_weight        = self._corrections['get_ttbar_weight']
+        get_nlo_weight          = self._corrections['get_nlo_weight'][self._year]         
         get_nnlo_weight         = self._corrections['get_nnlo_weight']
         get_nnlo_nlo_weight     = self._corrections['get_nnlo_nlo_weight']
-        get_adhoc_weight        = self._corrections['get_adhoc_weight']       
-        get_pu_weight           = self._corrections['get_pu_weight']          
-        get_met_trig_weight     = self._corrections['get_met_trig_weight']    
-        get_met_zmm_trig_weight = self._corrections['get_met_zmm_trig_weight']
-        get_ele_trig_weight     = self._corrections['get_ele_trig_weight']    
-        get_pho_trig_weight     = self._corrections['get_pho_trig_weight']    
-        get_ele_loose_id_sf     = self._corrections['get_ele_loose_id_sf']
-        get_ele_tight_id_sf     = self._corrections['get_ele_tight_id_sf']
-        get_ele_loose_id_eff    = self._corrections['get_ele_loose_id_eff']
-        get_ele_tight_id_eff    = self._corrections['get_ele_tight_id_eff']
-        get_pho_tight_id_sf     = self._corrections['get_pho_tight_id_sf']
-        get_mu_tight_id_sf      = self._corrections['get_mu_tight_id_sf']
-        get_mu_loose_id_sf      = self._corrections['get_mu_loose_id_sf']
-        get_ele_reco_sf         = self._corrections['get_ele_reco_sf']
-        get_mu_tight_iso_sf     = self._corrections['get_mu_tight_iso_sf']
-        get_mu_loose_iso_sf     = self._corrections['get_mu_loose_iso_sf']
-        get_ecal_bad_calib      = self._corrections['get_ecal_bad_calib']     
+        get_adhoc_weight        = self._corrections['get_adhoc_weight']
+        get_pu_weight           = self._corrections['get_pu_weight'][self._year]          
+        get_met_trig_weight     = self._corrections['get_met_trig_weight'][self._year]    
+        get_met_zmm_trig_weight = self._corrections['get_met_zmm_trig_weight'][self._year]
+        get_ele_trig_weight     = self._corrections['get_ele_trig_weight'][self._year]    
+        get_pho_trig_weight     = self._corrections['get_pho_trig_weight'][self._year]    
+        get_ele_loose_id_sf     = self._corrections['get_ele_loose_id_sf'][self._year]
+        get_ele_tight_id_sf     = self._corrections['get_ele_tight_id_sf'][self._year]
+        get_ele_loose_id_eff    = self._corrections['get_ele_loose_id_eff'][self._year]
+        get_ele_tight_id_eff    = self._corrections['get_ele_tight_id_eff'][self._year]
+        get_pho_tight_id_sf     = self._corrections['get_pho_tight_id_sf'][self._year]
+        get_mu_tight_id_sf      = self._corrections['get_mu_tight_id_sf'][self._year]
+        get_mu_loose_id_sf      = self._corrections['get_mu_loose_id_sf'][self._year]
+        get_ele_reco_sf         = self._corrections['get_ele_reco_sf'][self._year]
+        get_mu_tight_iso_sf     = self._corrections['get_mu_tight_iso_sf'][self._year]
+        get_mu_loose_iso_sf     = self._corrections['get_mu_loose_iso_sf'][self._year]
+        get_ecal_bad_calib      = self._corrections['get_ecal_bad_calib']
         get_deepflav_weight     = self._corrections['get_btag_weight']['deepflav'][self._year]
         Jetevaluator            = self._corrections['Jetevaluator']
         
@@ -469,16 +469,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         j['ptRaw'] =j.pt * (1-j.rawFactor)
         j['massRaw'] = j.mass * (1-j.rawFactor)
         j['rho'] = j.pt.ones_like()*events.fixedGridRhoFastjetAll.array
-        j['JCA'] = JaggedCandidateArray.candidatesfromcounts(
-            j.counts,
-            pt=j.pt,
-            eta=j.eta,
-            phi=j.phi,
-            mass=j.mass,
-            #ptRaw=j.ptRaw,
-            #massRaw=j.massRaw,
-        )
-        j.JCA['rho'] = j.JCA.pt.ones_like()*events.fixedGridRhoFastjetAll.array
         j_good = j[j.isgood.astype(np.bool)]
         j_clean = j_good[j_good.isclean.astype(np.bool)]
         j_iso = j_clean[j_clean.isiso.astype(np.bool)]
@@ -495,6 +485,28 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_j = j[j.pt.argmax()]
         leading_j = leading_j[leading_j.isgood.astype(np.bool)]
         leading_j = leading_j[leading_j.isclean.astype(np.bool)]
+        #j_JCA = JaggedCandidateArray.candidatesfromoffsets(
+        #j_JCA = JaggedCandidateArray.candidatesfromcounts(
+            #j.array.offsets,
+            #j.counts,
+            #pt=j.pt.flatten(),
+            #eta=j.eta.flatten(),
+            #phi=j.phi.flatten(),
+            #mass=j.mass.flatten(),
+            #ptRaw=j.ptRaw.flatten(),
+            #massRaw=j.massRaw.flatten(),
+            #rho=j.rho.flatten()
+        #)
+        '''
+        print('counts',type(j.counts))
+        print('pt',type(j.pt.flatten()))
+        print('eta',type(j.eta.flatten()))
+        print('phi',type(j.phi.flatten()))
+        print('mass',type(j.mass.flatten()))
+        print('ptraw',type(j.ptRaw.flatten()))
+        print('massraw',type(j.massRaw.flatten()))
+        print('rho',type(j.rho.flatten()))
+        '''
 
         ###
         #Calculating derivatives
@@ -503,11 +515,13 @@ class AnalysisProcessor(processor.ProcessorABC):
         ele_pairs = e_loose.distincts()
         diele = ele_pairs.i0+ele_pairs.i1
         diele['T'] = TVector2Array.from_polar(diele.pt, diele.phi)
+        leading_ele_pair = ele_pairs[diele.pt.argmax()]
         leading_diele = diele[diele.pt.argmax()]
 
         mu_pairs = mu_loose.distincts()
         dimu = mu_pairs.i0+mu_pairs.i1
         dimu['T'] = TVector2Array.from_polar(dimu.pt, dimu.phi)
+        leading_mu_pair = mu_pairs[dimu.pt.argmax()]
         leading_dimu = dimu[dimu.pt.argmax()]
 
         ###
@@ -537,8 +551,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             #genj = events.GenJet
             j['ptGenJet'] = j.matched_gen.pt
-            j.JCA['ptGenJet'] = j.ptGenJet
-            Jet_transformer.transform(j.JCA)
+            #Jet_transformer.transform(j)
 
             gen = events.GenPart
             ###
@@ -613,93 +626,119 @@ class AnalysisProcessor(processor.ProcessorABC):
             # Calculate PU weight and systematic variations
             ###
 
-            pu = get_pu_weight[self._year]['cen'](events.PV.npvs)
-            puUp = get_pu_weight[self._year]['up'](events.PV.npvs)
-            puDown = get_pu_weight[self._year]['down'](events.PV.npvs)
+            pu = get_pu_weight['cen'](events.PV.npvs)
+            puUp = get_pu_weight['up'](events.PV.npvs)
+            puDown = get_pu_weight['down'](events.PV.npvs)
 
             ###
             # Trigger efficiency weight
             ###
-
-            eff1 = get_ele_trig_weight[self._year](ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum())
-            eff2 = get_ele_trig_weight[self._year](ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum())
+            
+            ele1_trig_weight = get_ele_trig_weight(leading_ele_pair.i0.eta.sum(),leading_ele_pair.i0.pt.sum())
+            ele2_trig_weight = get_ele_trig_weight(leading_ele_pair.i1.eta.sum(),leading_ele_pair.i1.pt.sum())
 
             trig = {}
-            trig['sr'] = get_met_trig_weight[self._year](met.pt)
-            trig['wmcr'] = get_met_trig_weight[self._year](um.mag)
+            trig['sr'] = get_met_trig_weight(met.pt)
+            trig['wmcr'] = get_met_trig_weight(um.mag)
             trig['tmcr'] = trig['wmcr'] 
-            trig['zmcr'] = get_met_zmm_trig_weight[self._year](umm.mag)
-            trig['wecr'] = get_ele_trig_weight[self._year](leading_e.eta.sum(), leading_e.pt.sum())
+            trig['zmcr'] = get_met_zmm_trig_weight(umm.mag)
+            trig['wecr'] = get_ele_trig_weight(leading_e.eta.sum(), leading_e.pt.sum())
             trig['tecr'] = trig['wecr']
-            trig['zecr'] = 1 - (1-eff1)*(1-eff2)
-            trig['gcr'] = get_pho_trig_weight[self._year](leading_pho.pt.sum())
+            trig['zecr'] = 1 - (1-ele1_trig_weight)*(1-ele2_trig_weight)
+            trig['gcr'] = get_pho_trig_weight(leading_pho.pt.sum())
 
-            mu1eta=abs(mu_pairs[dimu.pt.argmax()].i0.eta.sum())
-            if self._year=='2016':mu1eta=mu_pairs[dimu.pt.argmax()].i0.eta.sum()
-            mu2eta=abs(mu_pairs[dimu.pt.argmax()].i1.eta.sum())
-            if self._year=='2016':mu1eta=mu_pairs[dimu.pt.argmax()].i1.eta.sum()
-            mu1lsf=get_mu_loose_id_sf[self._year](mu1eta,mu_pairs[dimu.pt.argmax()].i0.pt.sum())
-            mu2lsf=get_mu_loose_id_sf[self._year](mu2eta,mu_pairs[dimu.pt.argmax()].i1.pt.sum())
-            mu1tsf=get_mu_tight_id_sf[self._year](mu1eta,mu_pairs[dimu.pt.argmax()].i0.pt.sum())
-            mu2tsf=get_mu_tight_id_sf[self._year](mu2eta,mu_pairs[dimu.pt.argmax()].i1.pt.sum())
+            ###
+            # For muon ID weights, SFs are given as a function of abs(eta), but in 2016
+            ##
+
             mueta = abs(leading_mu.eta.sum())
-            if self._year=='2016':mueta=leading_mu.eta.sum()
+            mu1eta=abs(leading_mu_pair.i0.eta.sum())
+            mu2eta=abs(leading_mu_pair.i1.eta.sum())
+            if self._year=='2016':
+                mueta=leading_mu.eta.sum()
+                mu1eta=leading_mu_pair.i0.eta.sum()
+                mu2eta=leading_mu_pair.i1.eta.sum()
 
-            e1lsf=get_ele_loose_id_sf[self._year](ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum())
-            e1leff= get_ele_loose_id_eff[self._year](ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum())
-            e2lsf=get_ele_loose_id_sf[self._year](ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum())
-            e2leff= get_ele_loose_id_eff[self._year](ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum())
-            e1tsf=get_ele_tight_id_sf[self._year](ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum())
-            e1teff= get_ele_tight_id_eff[self._year](ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum())
-            e2tsf=get_ele_tight_id_sf[self._year](ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum())
-            e2teff= get_ele_tight_id_eff[self._year](ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum())
+            ### 
+            # Calculating electron and muon ID SF and efficiencies (when provided)
+            ###
+
+            mu1Tsf = get_mu_tight_id_sf(mu1eta,leading_mu_pair.i0.pt.sum())
+            mu2Tsf = get_mu_tight_id_sf(mu2eta,leading_mu_pair.i1.pt.sum())
+            mu1Lsf = get_mu_loose_id_sf(mu1eta,leading_mu_pair.i0.pt.sum())
+            mu2Lsf = get_mu_loose_id_sf(mu2eta,leading_mu_pair.i1.pt.sum())
+    
+            e1Tsf  = get_ele_tight_id_sf(leading_ele_pair.i0.eta.sum(),leading_ele_pair.i0.pt.sum())
+            e2Tsf  = get_ele_tight_id_sf(leading_ele_pair.i1.eta.sum(),leading_ele_pair.i1.pt.sum())
+            e1Lsf  = get_ele_loose_id_sf(leading_ele_pair.i0.eta.sum(),leading_ele_pair.i0.pt.sum())
+            e2Lsf  = get_ele_loose_id_sf(leading_ele_pair.i1.eta.sum(),leading_ele_pair.i1.pt.sum())
+
+            e1Teff= get_ele_tight_id_eff(leading_ele_pair.i0.eta.sum(),leading_ele_pair.i0.pt.sum())
+            e2Teff= get_ele_tight_id_eff(leading_ele_pair.i1.eta.sum(),leading_ele_pair.i1.pt.sum())
+            e1Leff= get_ele_loose_id_eff(leading_ele_pair.i0.eta.sum(),leading_ele_pair.i0.pt.sum())
+            e2Leff= get_ele_loose_id_eff(leading_ele_pair.i1.eta.sum(),leading_ele_pair.i1.pt.sum())
 
             ids={}
             ids['sr'] = np.ones(events.size)
-            ids['wmcr'] = get_mu_tight_id_sf[self._year](mueta,leading_mu.pt.sum())
-            ids['tmcr'] = get_mu_tight_id_sf[self._year](mueta,leading_mu.pt.sum())
-            ids['zmcr'] = ((mu1tsf*mu2lsf)+(mu1lsf*mu2tsf))/2.
-            ids['wecr'] = get_ele_tight_id_sf[self._year](leading_e.eta.sum(),leading_e.pt.sum())
-            ids['tecr'] = get_ele_tight_id_sf[self._year](leading_e.eta.sum(),leading_e.pt.sum())
-            ids['zecr'] = ((e1lsf*e1leff*e2tsf*e2teff)+(e2lsf*e2leff*e1tsf*e1teff))/((e1leff*e2teff)+(e1teff*e2leff))
-            ids['gcr']  = get_pho_tight_id_sf[self._year](leading_pho.eta.sum(),leading_pho.pt.sum())
+            ids['wmcr'] = get_mu_tight_id_sf(mueta,leading_mu.pt.sum())
+            ids['tmcr'] = ids['wmcr']
+            ids['zmcr'] = ( (mu1Tsf * mu2Lsf) + (mu1Lsf * mu2Tsf) ) / 2.
+            ids['wecr'] = get_ele_tight_id_sf(leading_e.eta.sum(),leading_e.pt.sum())
+            ids['tecr'] = ids['wecr']
+            ids['zecr'] = ( ( e1Tsf*e1Teff * e2Lsf*e2Leff ) + ( e1Lsf*e1Leff * e2Tsf*e2Teff ) ) / ( (e1Teff*e2Leff) + (e1Leff*e2Teff) )
+            ids['gcr']  = get_pho_tight_id_sf(leading_pho.eta.sum(),leading_pho.pt.sum())
+
+            ###
+            # Reconstruction weights for electrons
+            ###
             
+            e1sf_reco = get_ele_reco_sf(leading_ele_pair.i0.eta.sum(),leading_ele_pair.i0.pt.sum())
+            e2sf_reco = get_ele_reco_sf(leading_ele_pair.i1.eta.sum(),leading_ele_pair.i1.pt.sum())
+
             reco = {}
             reco['sr'] = np.ones(events.size)
             reco['wmcr'] = np.ones(events.size)
             reco['tmcr'] = np.ones(events.size)
             reco['zmcr'] = np.ones(events.size)
-            reco['wecr'] = get_ele_reco_sf[self._year](leading_e.eta.sum(),leading_e.pt.sum())
-            reco['tecr'] = get_ele_reco_sf[self._year](leading_e.eta.sum(),leading_e.pt.sum())
-            reco['zecr'] = get_ele_reco_sf[self._year](ele_pairs[diele.pt.argmax()].i0.eta.sum(),ele_pairs[diele.pt.argmax()].i0.pt.sum())*get_ele_reco_sf[self._year](ele_pairs[diele.pt.argmax()].i1.eta.sum(),ele_pairs[diele.pt.argmax()].i1.pt.sum())
+            reco['wecr'] = get_ele_reco_sf(leading_e.eta.sum(),leading_e.pt.sum())
+            reco['tecr'] = reco['wecr']
+            reco['zecr'] = e1sf_reco * e2sf_reco
             reco['gcr'] = np.ones(events.size)
 
-            mu1lisosf = get_mu_loose_iso_sf[self._year](mu1eta,leading_mu.pt.sum())
-            mu1tisosf = get_mu_tight_iso_sf[self._year](mu1eta,leading_mu.pt.sum())
-            mu2lisosf = get_mu_loose_iso_sf[self._year](mu2eta,leading_mu.pt.sum())
-            mu2tisosf = get_mu_tight_iso_sf[self._year](mu2eta,leading_mu.pt.sum())
+            ###
+            # Isolation weights for muons
+            ###
+
+            mu1Tsf_iso = get_mu_tight_iso_sf(mu1eta,leading_mu_pair.i0.pt.sum())
+            mu2Tsf_iso = get_mu_tight_iso_sf(mu2eta,leading_mu_pair.i1.pt.sum())
+            mu1Lsf_iso = get_mu_loose_iso_sf(mu1eta,leading_mu_pair.i0.pt.sum())
+            mu2Lsf_iso = get_mu_loose_iso_sf(mu2eta,leading_mu_pair.i1.pt.sum())
 
             isolation = {}
-            isolation['sr'] = np.ones(events.size)
-            isolation['wmcr'] = get_mu_tight_iso_sf[self._year](mueta,leading_mu.pt.sum())
-            isolation['tmcr'] = get_mu_tight_iso_sf[self._year](mueta,leading_mu.pt.sum())
-            isolation['zmcr'] = ((mu1tisosf*mu2lisosf)+(mu1lisosf*mu2tisosf))/2.
+            isolation['sr']   = np.ones(events.size)
+            isolation['wmcr'] = get_mu_tight_iso_sf(mueta,leading_mu.pt.sum())
+            isolation['tmcr'] = isolation['wmcr']
+            isolation['zmcr'] = ( (mu1Tsf_iso*mu2Lsf_iso) + (mu1Lsf_iso*mu2Tsf_iso) ) / 2.
             isolation['wecr'] = np.ones(events.size)
             isolation['tecr'] = np.ones(events.size)
             isolation['zecr'] = np.ones(events.size)
-            isolation['gcr'] = np.ones(events.size)
+            isolation['gcr']  = np.ones(events.size)
+
+            ###
+            # AK4 b-tagging weights
+            ###
 
             btag = {}
             btagUp = {}
             btagDown = {}
-            btag['sr'], btagUp['sr'], btagDown['sr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
+            btag['sr'],   btagUp['sr'],   btagDown['sr']   = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['wmcr'], btagUp['wmcr'], btagDown['wmcr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['tmcr'], btagUp['tmcr'], btagDown['tmcr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'-1')
             btag['wecr'], btagUp['wecr'], btagDown['wecr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['tecr'], btagUp['tecr'], btagDown['tecr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'-1')
             btag['zmcr'], btagUp['zmcr'], btagDown['zmcr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['zecr'], btagUp['zecr'], btagDown['zecr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
-            btag['gcr'], btagUp['gcr'], btagDown['gcr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
+            btag['gcr'],  btagUp['gcr'],  btagDown['gcr']  = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             
             for r in selected_regions:
                 weights[r] = processor.Weights(len(events))
