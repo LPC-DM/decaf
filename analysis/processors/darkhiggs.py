@@ -610,17 +610,17 @@ class AnalysisProcessor(processor.ProcessorABC):
                 #nlo = get_nlo_weight['w'](genWs.pt.max())
                 #if self._year != '2016': adhoc = get_adhoc_weight['w'](genWs.pt.max())
                 #nnlo = get_nnlo_weight['w'](genWs.pt.max())
-                nnlo_nlo = get_nnlo_nlo_weight['w'](genWs.pt.max())
+                nnlo_nlo = get_nnlo_nlo_weight['w'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
             elif('DY' in dataset): 
-                nlo = get_nlo_weight['z'](genZs.pt.max())
-                if self._year != '2016': adhoc = get_adhoc_weight['z'](genZs.pt.max())
+                #nlo = get_nlo_weight['z'](genZs.pt.max())
+                #if self._year != '2016': adhoc = get_adhoc_weight['z'](genZs.pt.max())
                 #nnlo = get_nnlo_weight['dy'](genZs.pt.max())
-                #nnlo_nlo = get_nnlo_nlo_weight['dy'](genZs.pt.max())
+                nnlo_nlo = get_nnlo_nlo_weight['dy'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
             elif('ZJets' in dataset): 
                 #nlo = get_nlo_weight['z'](genZs.pt.max())
                 #if self._year != '2016': adhoc = get_adhoc_weight['z'](genZs.pt.max())
                 #nnlo = get_nnlo_weight['z'](genZs.pt.max())
-                nnlo_nlo = get_nnlo_nlo_weight['z'](genZs.pt.max())
+                nnlo_nlo = get_nnlo_nlo_weight['z'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
 
             ###
             # Calculate PU weight and systematic variations
@@ -745,8 +745,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights[r] = processor.Weights(len(events))
                 weights[r].add('genw',events.genWeight)
                 weights[r].add('nlo',nlo)
-                weights[r].add('adhoc',adhoc)
-                weights[r].add('nnlo',nnlo)
+                #weights[r].add('adhoc',adhoc)
+                #weights[r].add('nnlo',nnlo)
                 weights[r].add('nnlo_nlo',nnlo_nlo)
                 weights[r].add('pileup',pu,puUp,puDown)
                 weights[r].add('trig', trig[r])
