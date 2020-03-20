@@ -604,20 +604,20 @@ class AnalysisProcessor(processor.ProcessorABC):
             adhoc = np.ones(events.size)
             if('TTJets' in dataset): 
                 nlo = np.sqrt(get_ttbar_weight(genTops[:,0].pt.sum()) * get_ttbar_weight(genTops[:,1].pt.sum()))
-            elif('GJets' in dataset): 
-                nlo = get_nlo_weight[self._year]['a'](genAs.pt.max())
+            #elif('GJets' in dataset): 
+            #    nlo = get_nlo_weight['a'](genAs.pt.max())
             elif('WJets' in dataset): 
-                #nlo = get_nlo_weight[self._year]['w'](genWs.pt.max())
+                #nlo = get_nlo_weight['w'](genWs.pt.max())
                 #if self._year != '2016': adhoc = get_adhoc_weight['w'](genWs.pt.max())
                 #nnlo = get_nnlo_weight['w'](genWs.pt.max())
                 nnlo_nlo = get_nnlo_nlo_weight['w'](genWs.pt.max())
             elif('DY' in dataset): 
-                #nlo = get_nlo_weight[self._year]['z'](genZs.pt.max())
-                #if self._year != '2016': adhoc = get_adhoc_weight['z'](genZs.pt.max())
+                nlo = get_nlo_weight['z'](genZs.pt.max())
+                if self._year != '2016': adhoc = get_adhoc_weight['z'](genZs.pt.max())
                 #nnlo = get_nnlo_weight['dy'](genZs.pt.max())
-                nnlo_nlo = get_nnlo_nlo_weight['dy'](genZs.pt.max())
+                #nnlo_nlo = get_nnlo_nlo_weight['dy'](genZs.pt.max())
             elif('ZJets' in dataset): 
-                #nlo = get_nlo_weight[self._year]['z'](genZs.pt.max())
+                #nlo = get_nlo_weight['z'](genZs.pt.max())
                 #if self._year != '2016': adhoc = get_adhoc_weight['z'](genZs.pt.max())
                 #nnlo = get_nnlo_weight['z'](genZs.pt.max())
                 nnlo_nlo = get_nnlo_nlo_weight['z'](genZs.pt.max())
@@ -741,11 +741,12 @@ class AnalysisProcessor(processor.ProcessorABC):
             btag['gcr'],  btagUp['gcr'],  btagDown['gcr']  = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             
             for r in selected_regions:
+                print('weights in region',r)
                 weights[r] = processor.Weights(len(events))
                 weights[r].add('genw',events.genWeight)
                 weights[r].add('nlo',nlo)
-                #weights[r].add('adhoc',adhoc)
-                #weights[r].add('nnlo',nnlo)
+                weights[r].add('adhoc',adhoc)
+                weights[r].add('nnlo',nnlo)
                 weights[r].add('nnlo_nlo',nnlo_nlo)
                 weights[r].add('pileup',pu,puUp,puDown)
                 weights[r].add('trig', trig[r])
@@ -753,7 +754,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights[r].add('reco', reco[r])
                 weights[r].add('isolation', isolation[r])
                 weights[r].add('btag',btag[r], btagUp[r], btagDown[r])
-
+                
         leading_fj = fj[fj.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
         leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
