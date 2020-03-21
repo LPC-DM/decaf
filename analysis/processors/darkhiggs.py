@@ -825,8 +825,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('mass2', (leading_fj.msd_corr.sum()>=60)&(leading_fj.msd_corr.sum()<80))
         selection.add('mass3', (leading_fj.msd_corr.sum()>=80)&(leading_fj.msd_corr.sum()<120))
         selection.add('mass4', (leading_fj.msd_corr.sum()>=120))
-        selection.add('noHEMj', (j_nHEM==0))
         selection.add('fatjet', (fj_nclean>0)&(fj_clean.pt.max()>160))
+        if self._year=='2018': selection.add('noHEMj', (j_nHEM==0))
 
         regions = {}
         regions['sr']={'iszeroL','fatjet','noextrab','noHEMj','met_filters','met_triggers'}
