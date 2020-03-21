@@ -783,6 +783,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             triggers = triggers | events.HLT[path]
         selection.add('singlephoton_triggers', triggers)
 
+        noHEMj = np.ones(events.size, dtype=np.bool)
+        if self._year=='2018': noHEMj = (j_nHEM==0)
+
         selection.add('iszeroL',
                       (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
                       &(abs(met.T.delta_phi(j_clean.T)).min()>0.8)
@@ -826,7 +829,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('mass3', (leading_fj.msd_corr.sum()>=80)&(leading_fj.msd_corr.sum()<120))
         selection.add('mass4', (leading_fj.msd_corr.sum()>=120))
         selection.add('fatjet', (fj_nclean>0)&(fj_clean.pt.max()>160))
-        if self._year=='2018': selection.add('noHEMj', (j_nHEM==0))
+        selection.add('noHEMj', noHEMj)
 
         regions = {}
         regions['sr']={'iszeroL','fatjet','noextrab','noHEMj','met_filters','met_triggers'}
