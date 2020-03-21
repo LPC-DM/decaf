@@ -551,7 +551,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             #genj = events.GenJet
             j['ptGenJet'] = j.matched_gen.pt
-            #Jet_transformer.transform(j)
+            Jet_transformer.transform(j)
 
             gen = events.GenPart
             ###
