@@ -22,7 +22,7 @@ def isTightElectron(pt,eta,dxy,dz,tight_id,year):
     elif year=='2017':
         mask = ((pt>34)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(tight_id==4)) | ((pt>34)&(abs(eta)>1.4442)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(tight_id==4)) # Trigger: HLT_Ele35_WPTight_Gsf_v
     elif year=='2018':
-        mask = ((pt>34)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(tight_id==4))# | ((pt>34)&(abs(eta)>1.4442)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(tight_id==4)) # Trigger: HLT_Ele32_WPTight_Gsf_v
+        mask = ((pt>34)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(tight_id==4)) | ((pt>34)&(abs(eta)>1.4442)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(tight_id==4)) # Trigger: HLT_Ele32_WPTight_Gsf_v
     return mask
 
 

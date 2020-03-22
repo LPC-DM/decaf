@@ -720,6 +720,18 @@ class AnalysisProcessor(processor.ProcessorABC):
             bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < 1.5).all()&(bFromH.counts>0)
             fj['isHbb']  = bbmatch
 
+            ###
+            # Fat-jet dark H->bb matching at decay level
+            ###
+            bFromHs = gen[
+                (abs(gen.pdgId) == 5) &
+                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
+                (abs(gen.distinctParent.pdgId) == 54)
+            ]
+            jetgenb = fj.cross(bFromHs, nested=True)
+            bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < 1.5).all()&(bFromHs.counts>0)
+            fj['isHsbb']  = bbmatch
+
             gen['isb'] = (abs(gen.pdgId)==5)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isc'] = (abs(gen.pdgId)==4)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isTop'] = (abs(gen.pdgId)==6)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
@@ -875,7 +887,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             btag['gcr'],  btagUp['gcr'],  btagDown['gcr']  = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             
             for r in selected_regions:
-                print('weights in region',r)
                 weights[r] = processor.Weights(len(events))
                 weights[r].add('genw',events.genWeight)
                 weights[r].add('nlo',nlo)
@@ -1056,24 +1067,33 @@ class AnalysisProcessor(processor.ProcessorABC):
                 for systematic in systematics:
                     fill('merged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wmerged, cut)
                     fill('unmerged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wunmerged, cut)        
-        elif 'WZ' in dataset or 'ZZ' in dataset:
+        elif 'WW' in dataset or 'WZ' in dataset or 'ZZ' in dataset:
             hout['sumw'].fill(dataset='bb--'+dataset, sumw=1, weight=events.genWeight.sum())
-            hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
+            hout['sumw'].fill(dataset='other--'+dataset, sumw=1, weight=events.genWeight.sum())
             for r in regions:
                 cut = selection.all(*regions[r])
                 wbb = leading_fj.isZbb.sum()
                 wother = (~(leading_fj.isZbb.sum().astype(np.bool))).astype(np.int)
                 for systematic in systematics:
                     fill('bb--'+dataset, r, systematic,get_weight(r,systematic=systematic)*wbb, cut)
-                    fill(dataset, r, systematic,get_weight(r,systematic=systematic)*wother, cut)
+                    fill('other--'+dataset, r, systematic,get_weight(r,systematic=systematic)*wother, cut)
         elif 'HToBB' in dataset:
-            print('is HToBB')
             hout['sumw'].fill(dataset='merged--'+dataset, sumw=1, weight=events.genWeight.sum())
             hout['sumw'].fill(dataset='unmerged--'+dataset, sumw=1, weight=events.genWeight.sum())
             for r in regions:
                 cut = selection.all(*regions[r])
                 wbb = leading_fj.isHbb.sum()
                 wother = (~(leading_fj.isHbb.sum().astype(np.bool))).astype(np.int)
+                for systematic in systematics:
+                    fill('merged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wbb, cut)
+                    fill('unmerged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wother, cut)
+        elif 'Mhs_'in dataset:
+            hout['sumw'].fill(dataset='merged--'+dataset, sumw=1, weight=events.genWeight.sum())
+            hout['sumw'].fill(dataset='unmerged--'+dataset, sumw=1, weight=events.genWeight.sum())
+            for r in regions:
+                cut = selection.all(*regions[r])
+                wbb = leading_fj.isHsbb.sum()
+                wother = (~(leading_fj.isHsbb.sum().astype(np.bool))).astype(np.int)
                 for systematic in systematics:
                     fill('merged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wbb, cut)
                     fill('unmerged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wother, cut)

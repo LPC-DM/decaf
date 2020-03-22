@@ -33,7 +33,7 @@ def scale(hists):
     print('List of primary datasets:',pd)
 
     ##
-    # Aggregate all the histograms that belong to a single sample
+    # Aggregate all the histograms that belong to a single dataset
     ##
 
     dataset = hist.Cat("dataset", "dataset", sorting='placement')
@@ -65,16 +65,22 @@ def scale(hists):
     process = hist.Cat("process", "Process", sorting='placement')
     cats = ("dataset",)
     map = OrderedDict()
-    map["Hbb"] = ("*HToBB*")
-    map["DY"] = ("DYJets*",)
-    map["Diboson"] = ("*_TuneCP5_13TeV-pythia8*",)
-    map["STmerged"] = ("merged--ST*",)
-    map["STunmerged"] = ("unmerged--ST*",)
-    map["TTmerged"] = ("merged--TT*",)
-    map["TTunmerged"] = ("unmerged--TT*",)
-    map["Wjets"] = ("WJets*",)
-    map["ZJets"] = ("ZJetsToNuNu*",)   ## temporarily 
-    map["Gjets"] = ("GJets*",)
+    map["Hbb_merged"] = ("merged--*HToBB*")
+    map["Hbb_unmerged"] = ("unmerged--*HToBB*")
+    map["DYJetsHF"] = ("HF--DYJets*",)
+    map["DYJetsLF"] = ("LF--DYJets*",)
+    map["VV"] = ("other--*_TuneCP5_13TeV-pythia8*",)
+    map["VVbb"] = ("bb--*_TuneCP5_13TeV-pythia8*",)
+    map["ST_merged"] = ("merged--ST*",)
+    map["ST_unmerged"] = ("unmerged--ST*",)
+    map["TT_merged"] = ("merged--TT*",)
+    map["TT_unmerged"] = ("unmerged--TT*",)
+    map["WJetsHF"] = ("HF--WJets*",)
+    map["WJetsLF"] = ("LF--WJets*",)
+    map["ZJetsHF"] = ("HF--ZJetsToNuNu*",)
+    map["ZJetsLF"] = ("LF--ZJetsToNuNu*",)
+    map["GJetsHF"] = ("HF--GJets*",)
+    map["GJetsLF"] = ("LF--GJets*",)
     map["Mhs_50"] = ("*Mhs_50*",)  ## signals
     map["Mhs_70"] = ("*Mhs_70*",)
     map["Mhs_90"] = ("*Mhs_90*",)
