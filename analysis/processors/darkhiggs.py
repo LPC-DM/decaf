@@ -1097,7 +1097,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 for systematic in systematics:
                     fill('merged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wbb, cut)
                     fill('unmerged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wother, cut)
-        elif 'WJets' in dataset or 'Zjets' in dataset or 'DY' in dataset or 'GJets' in dataset:
+        elif 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset or 'GJets' in dataset:
             hout['sumw'].fill(dataset='HF--'+dataset, sumw=1, weight=events.genWeight.sum())
             hout['sumw'].fill(dataset='LF--'+dataset, sumw=1, weight=events.genWeight.sum())
             for r in regions:
