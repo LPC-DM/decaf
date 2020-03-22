@@ -10,7 +10,6 @@ from coffea.arrays import Initialize
 from coffea import hist, processor
 from coffea.util import load, save
 from coffea.jetmet_tools import FactorizedJetCorrector, JetCorrectionUncertainty, JetTransformer, JetResolution, JetResolutionScaleFactor
-from coffea.analysis_objects import JaggedCandidateArray, JaggedTLorentzVectorArray
 from optparse import OptionParser
 from uproot_methods import TVector2Array, TLorentzVectorArray
 
@@ -485,28 +484,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_j = j[j.pt.argmax()]
         leading_j = leading_j[leading_j.isgood.astype(np.bool)]
         leading_j = leading_j[leading_j.isclean.astype(np.bool)]
-        #j_JCA = JaggedCandidateArray.candidatesfromoffsets(
-        #j_JCA = JaggedCandidateArray.candidatesfromcounts(
-            #j.array.offsets,
-            #j.counts,
-            #pt=j.pt.flatten(),
-            #eta=j.eta.flatten(),
-            #phi=j.phi.flatten(),
-            #mass=j.mass.flatten(),
-            #ptRaw=j.ptRaw.flatten(),
-            #massRaw=j.massRaw.flatten(),
-            #rho=j.rho.flatten()
-        #)
-        '''
-        print('counts',type(j.counts))
-        print('pt',type(j.pt.flatten()))
-        print('eta',type(j.eta.flatten()))
-        print('phi',type(j.phi.flatten()))
-        print('mass',type(j.mass.flatten()))
-        print('ptraw',type(j.ptRaw.flatten()))
-        print('massraw',type(j.massRaw.flatten()))
-        print('rho',type(j.rho.flatten()))
-        '''
 
         ###
         #Calculating derivatives
@@ -548,10 +525,13 @@ class AnalysisProcessor(processor.ProcessorABC):
         #Calculating weights
         ###
         if not isData:
+            
+            ###
+            # JEC/JER
+            ###
 
-            #genj = events.GenJet
-            j['ptGenJet'] = j.matched_gen.pt
-            Jet_transformer.transform(j)
+            #j['ptGenJet'] = j.matched_gen.pt
+            #Jet_transformer.transform(j)
 
             gen = events.GenPart
             ###
@@ -588,6 +568,20 @@ class AnalysisProcessor(processor.ProcessorABC):
             bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < 1.5).all()&(bFromZ.counts>0)
             fj['isZbb']  = bbmatch
 
+            ###
+            # Fat-jet H->bb matching at decay level
+            ###
+            bFromH = gen[
+                (abs(gen.pdgId) == 5) &
+                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
+                (abs(gen.distinctParent.pdgId) == 25)
+            ]
+            jetgenb = fj.cross(bFromH, nested=True)
+            bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < 1.5).all()&(bFromH.counts>0)
+            fj['isHbb']  = bbmatch
+
+            gen['isb'] = (abs(gen.pdgId)==5)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
+            gen['isc'] = (abs(gen.pdgId)==4)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isTop'] = (abs(gen.pdgId)==6)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isW'] = (abs(gen.pdgId)==24)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isZ'] = (abs(gen.pdgId)==23)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
@@ -923,16 +917,37 @@ class AnalysisProcessor(processor.ProcessorABC):
                 wother = (~(leading_fj.isZbb.sum().astype(np.bool))).astype(np.int)
                 fill('bb--'+dataset, r, get_weight(r)*wbb, cut)
                 fill(dataset, r, get_weight(r)*wother, cut)
+        elif 'HToBB' in dataset:
+            print('is HToBB')
+            hout['sumw'].fill(dataset='merged--'+dataset, sumw=1, weight=events.genWeight.sum())
+            hout['sumw'].fill(dataset='unmerged--'+dataset, sumw=1, weight=events.genWeight.sum())
+            for r in regions:
+                cut = selection.all(*regions[r])
+                wbb = leading_fj.isHbb.sum()
+                wother = (~(leading_fj.isHbb.sum().astype(np.bool))).astype(np.int)
+                fill('merged--'+dataset, r, get_weight(r)*wbb, cut)
+                fill('unmerged--'+dataset, r, get_weight(r)*wother, cut)
+        elif 'WJets' in dataset or 'Zjets' in dataset or 'DY' in dataset or 'GJets' in dataset:
+            hout['sumw'].fill(dataset='HF--'+dataset, sumw=1, weight=events.genWeight.sum())
+            hout['sumw'].fill(dataset='LF--'+dataset, sumw=1, weight=events.genWeight.sum())
+            for r in regions:
+                cut = selection.all(*regions[r])
+                whf = ((gen[gen.isb].counts>0)|(gen[gen.isc].counts>0)).astype(np.int)
+                print(whf)
+                wlf = (~((gen[gen.isb].counts>0)|(gen[gen.isc].counts>0))).astype(np.int)
+                print(wlf)
+                fill('HF--'+dataset, r, get_weight(r)*whf, cut)
+                fill('LF--'+dataset, r, get_weight(r)*wlf, cut)
         elif isData:
             hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
             for r in regions:
                 cut = selection.all(*regions[r])
                 fill(dataset, r, np.ones(events.size), cut)
-        else:
-            hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
-            for r in regions:
-                cut = selection.all(*regions[r])
-                fill(dataset, r, get_weight(r), cut)
+        #        else:
+        hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
+        for r in regions:
+            cut = selection.all(*regions[r])
+            fill(dataset, r, get_weight(r), cut)
 
         return hout
 
