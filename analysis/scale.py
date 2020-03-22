@@ -81,9 +81,12 @@ def scale(hists):
     map["ZJetsLF"] = ("LF--ZJetsToNuNu*",)
     map["GJetsHF"] = ("HF--GJets*",)
     map["GJetsLF"] = ("LF--GJets*",)
-    map["Mhs_50"] = ("*Mhs_50*",)  ## signals
-    map["Mhs_70"] = ("*Mhs_70*",)
-    map["Mhs_90"] = ("*Mhs_90*",)
+    map["Mhs_50_merged"] = ("merged--*Mhs_50*",)  ## signals
+    map["Mhs_50_unmerged"] = ("unmerged--*Mhs_50*",)  ## signals   
+    map["Mhs_70_merged"] = ("merged--*Mhs_70*",)
+    map["Mhs_70_unmerged"] = ("unmerged--*Mhs_70*",)
+    map["Mhs_90_merged"] = ("merged--*Mhs_90*",)
+    map["Mhs_90_unmerged"] = ("unmerged--*Mhs_90*",)
     map["MonoJet"] = ("MonoJet*",)  ## signals
     map["MonoW"] = ("MonoW*",)    ## signals
     map["MonoZ"] = ("MonoZ*",)    ## signals
