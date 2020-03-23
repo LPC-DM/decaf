@@ -43,6 +43,7 @@ def scale(hists):
         dataset_map[pdi] = (pdi+"*",)
     for key in hists.keys():
         hists[key] = hists[key].group(dataset_cats, dataset, dataset_map)
+    print('Datasets aggregated')
 
     ###
     # Rescaling MC histograms using the xsec weight
@@ -51,13 +52,14 @@ def scale(hists):
     scale={}
     for d in hists['sumw'].identifiers('dataset'):
         scale[d]=hists['sumw'].integrate('dataset', d).values(overflow='all')[()][1]
+    print('Sumw extracted')
 
     for key in hists.keys():
         if key=='sumw': continue
         for d in hists[key].identifiers('dataset'):
             if 'MET' in d.name or 'SingleElectron' in d.name or 'SinglePhoton' in d.name or 'EGamma' in d.name: continue
             hists[key].scale({d:1/scale[d]},axis='dataset')
-
+    print('Histograms scaled')
     ###
     # Defining 'process', to aggregate different samples into a single process
     ##
@@ -93,6 +95,7 @@ def scale(hists):
     map["MET"] = ("MET*", )
     map["SingleElectron"] = ("EGamma*", )
     map["SinglePhoton"] = ("EGamma*", )
+    print('Processes defined')
     
     ###
     # Storing signal and background histograms
@@ -100,6 +103,7 @@ def scale(hists):
 
     for key in hists.keys():
         hists[key] = hists[key].group(cats, process, map)
+    print('Histograms grouped')
 
     return hists
 
