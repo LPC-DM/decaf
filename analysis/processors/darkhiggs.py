@@ -882,9 +882,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             btag['tmcr'], btagUp['tmcr'], btagDown['tmcr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'-1')
             btag['wecr'], btagUp['wecr'], btagDown['wecr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['tecr'], btagUp['tecr'], btagDown['tecr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'-1')
-            btag['zmcr'], btagUp['zmcr'], btagDown['zmcr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
-            btag['zecr'], btagUp['zecr'], btagDown['zecr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
-            btag['gcr'],  btagUp['gcr'],  btagDown['gcr']  = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
+            btag['zmcr'], btagUp['zmcr'], btagDown['zmcr'] = np.ones(events.size), np.ones(events.size), np.ones(events.size)#get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
+            btag['zecr'], btagUp['zecr'], btagDown['zecr'] = np.ones(events.size), np.ones(events.size), np.ones(events.size)#get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
+            btag['gcr'],  btagUp['gcr'],  btagDown['gcr']  = np.ones(events.size), np.ones(events.size), np.ones(events.size)#get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             
             for r in selected_regions:
                 weights[r] = processor.Weights(len(events))
@@ -982,9 +982,9 @@ class AnalysisProcessor(processor.ProcessorABC):
         regions['tmcr']={'isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'}
         regions['wecr']={'isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers'}
         regions['tecr']={'isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers'}
-        regions['zmcr']={'istwoM','fatjet','noextrab','noHEMj','met_filters','met_triggers'}
-        regions['zecr']={'istwoE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers'}
-        regions['gcr']={'isoneA','fatjet','noextrab','noHEMj','met_filters','singlephoton_triggers'}
+        regions['zmcr']={'istwoM','fatjet','noHEMj','met_filters','met_triggers'}
+        regions['zecr']={'istwoE','fatjet','noHEMj','met_filters','singleelectron_triggers'}
+        regions['gcr']={'isoneA','fatjet','noHEMj','met_filters','singlephoton_triggers'}
 
         temp={}
         for r in selected_regions: 
@@ -1097,7 +1097,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 for systematic in systematics:
                     fill('merged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wbb, cut)
                     fill('unmerged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wother, cut)
-        elif 'WJets' in dataset or 'Zjets' in dataset or 'DY' in dataset or 'GJets' in dataset:
+        elif 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset or 'GJets' in dataset:
             hout['sumw'].fill(dataset='HF--'+dataset, sumw=1, weight=events.genWeight.sum())
             hout['sumw'].fill(dataset='LF--'+dataset, sumw=1, weight=events.genWeight.sum())
             for r in regions:

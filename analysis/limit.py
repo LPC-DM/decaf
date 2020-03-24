@@ -48,6 +48,24 @@ def darkhiggs_model(tmpdir,mass,category):
             'monojet' : [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 740.0, 900.0, 1250.0]
         }
     }
+    
+    process_map = OrderedDict()
+    #process_map["Hbb_merged"] = ("Hbb_merged*",)
+    #process_map["Hbb_unmerged"] = ("Hbb_unmerged*",)
+    process_map["Hbb"] = ("Hbb*",)    
+    process_map["DY"] = ("DY*",)
+    #process_map["VVbb"] = ("VVbb*",)
+    #process_map["VV"] = ("VV",)
+    process_map["VV"] = ("VV*",) 
+    #process_map["ST_merged"] = ("ST_merged*",)
+    #process_map["ST_unmerged"] = ("ST_unmerged*",)
+    process_map["ST"] = ("ST*",) 
+    #process_map["TT_merged"] = ("TT_merged*",)
+    #process_map["TT_unmerged"] = ("TT_unmerged*",)
+    process_map["TT"] = ("TT*",)  
+    process_map["WJets"] = ("WJets*",)
+    process_map["ZJets"] = ("ZJets*",)
+    process_map["GJets"] = ("GJets*",)
 
     wjets_eff = {
         'mass0': 0.092,
