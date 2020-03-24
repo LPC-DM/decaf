@@ -67,22 +67,6 @@ def darkhiggs_model(tmpdir,mass,category):
     process_map["ZJets"] = ("ZJets*",)
     process_map["GJets"] = ("GJets*",)
 
-    wjets_eff = {
-        'mass0': 0.092,
-        'mass1': 0.054,
-        'mass2': 0.044,
-        'mass3': 0.045,
-        'mass4': 0.042
-    }
-
-    zjets_eff = {
-        'mass0': 0.092,
-        'mass1': 0.054,
-        'mass2': 0.050,
-        'mass3': 0.054,
-        'mass4': 0.054,
-    }
-
     ###
     #Extract histograms from input file
     ###
@@ -145,8 +129,8 @@ def darkhiggs_model(tmpdir,mass,category):
     # DeepAk15 signal scale factor and mistag rate for MC-driven processes
     ###
 
-    sf_deepAK15 = rl.NuisanceParameter('sf_deepAK15', 'lnN')
-    mistag_deepAK15 = rl.NuisanceParameter('mistag_deepAK15', 'lnN')
+    #sf_deepAK15 = rl.NuisanceParameter('sf_deepAK15', 'lnN')
+    #mistag_deepAK15 = rl.NuisanceParameter('mistag_deepAK15', 'lnN')
 
     ###
     # Tau veto
@@ -159,18 +143,52 @@ def darkhiggs_model(tmpdir,mass,category):
     # Setting tagger efficiency and scale factor for in-situ calculation
     ###
 
-    wjets_sf = rl.IndependentParameter('wjets_sf', 1., 0, 10)
-    wjets_weight = (1-(wjets_sf*wjets_eff[mass]))/(1-wjets_eff[mass])
-    if 'monohs' in category: wjets_weight = wjets_sf
+    whf_eff = 0.1
+    wlf_eff = 0.04
+    whf_fraction = 0.17
 
-    zjets_sf = rl.IndependentParameter('zjets_sf', 1., 0, 10)
-    zjets_weight = (1-(zjets_sf*zjets_eff[mass]))/(1-zjets_eff[mass])
-    if 'monohs' in category: zjets_weight = zjets_sf
+    whf_sf = rl.IndependentParameter('whf_sf', 1., 0, 1/whf_eff)
+    wlf_sf = rl.IndependentParameter('wlf_sf', 1., 0, 1/wlf_eff)
+    whf_k = rl.IndependentParameter('whf_k', 1., 0, 1/whf_k)
 
-    ttbar_eff = 1.
-    ttbar_sf = rl.IndependentParameter('ttbar_sf', 1., 0, 10)
-    ttbar_weight = (1-(ttbar_sf*ttbar_eff))/(1-ttbar_eff)
-    if 'monohs' in category: ttbar_weight = ttbar_sf
+    wj_sfxeff = wlf_sf*wlf_eff*(1-whf_k*whf_fraction) + whf_sf*whf_eff*whf_k*whf_fraction
+    wj_eff = wlf_eff*(1-whf_fraction) + whf_eff*whf_fraction
+
+    wjets_weight = (1 - wj_sfxeff)/(1 - wj_eff)
+    if 'monohs' in category: wjets_weight = wj_sfxeff/wj_eff
+
+    zhf_eff = 0.3
+    zlf_eff = 0.05
+    zhf_fracion = 0.09
+
+    zhf_sf = rl.IndependentParameter('zhf_sf', 1., 0, 1/whf_eff)
+    zlf_sf = rl.IndependentParameter('zlf_sf', 1., 0, 1/wlf_eff)
+    zhf_k = rl.IndependentParameter('zhf_k', 1., 0, 1/whf_k)
+
+    zj_sfxeff = zlf_sf*zlf_eff*(1-zhf_k*zhf_fraction) + zhf_sf*zhf_eff*zhf_k*zhf_fraction
+    zj_eff = zlf_eff*(1-zhf_fraction) + zhf_eff*zhf_fraction
+
+    zjets_weight = (1 - zj_sfxeff)/(1 - zj_eff)
+    if 'monohs' in category: wjets_weight = zj_sfxeff/zj_eff
+
+    tt_m_eff = 1.
+    tt_u_eff = 1.
+    tt_m_fraction = {
+        'mass0': 1.,
+        'mass1': 1.,
+        'mass2': 1.,
+        'mass3': 1.,
+        'mass4': 1.
+    }
+
+    tt_m_sf  = rl.IndependentParameter('tt_m_sf', 1., 0, 1/tt_m_eff)
+    tt_u_sf = rl.IndependentParameter('ttbar_sf', 1., 0, 1/tt_u_eff)
+
+    tt_sfxeff = tt_m_sf*tt_m_eff*tt_m_fraction[mass] + tt_u_sf*tt_u_eff*(1 - tt_m_fraction[mass])
+    tt_eff = tt_m_eff*tt_m_fraction[mass] + tt_u_eff*(1 - tt_m_fraction[mass])
+
+    tt_weight = (1 - tt_sfxeff)/(1 - tt_eff)
+    if 'monohs' in category: tt_weight = tt_sfxeff / tt_eff
 
     ###
     ###
@@ -182,8 +200,8 @@ def darkhiggs_model(tmpdir,mass,category):
     # JEC/JER
     ###
     
-    jec = rl.NuisanceParameter('jec', 'shape')
-    jer = rl.NuisanceParameter('jer', 'shape')
+    #jec = rl.NuisanceParameter('jec', 'shape')
+    #jer = rl.NuisanceParameter('jer', 'shape')
     btag = rl.NuisanceParameter('btag', 'shape') #AK4 btag
     gamma_to_z_ewk = rl.NuisanceParameter('Theory_gamma_z_ewk', 'shape')
 
