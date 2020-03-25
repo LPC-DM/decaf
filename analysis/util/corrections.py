@@ -91,8 +91,6 @@ for year in ['2016','2017','2018']:
     get_ele_loose_id_sf[year]  = lookup_tools.dense_lookup.dense_lookup(fele_loose["EGamma_SF2D"].values, fele_loose["EGamma_SF2D"].edges)
     get_ele_loose_id_eff[year] = lookup_tools.dense_lookup.dense_lookup(fele_loose["EGamma_EffMC2D"].values, fele_loose["EGamma_EffMC2D"].edges)
     fele_tight  = ele_tight[year]
-    print(fele_tight["EGamma_SF2D"].edges)
-    print(fele_tight["EGamma_SF2D"].values)
     get_ele_tight_id_sf[year]  = lookup_tools.dense_lookup.dense_lookup(fele_tight["EGamma_SF2D"].values, fele_tight["EGamma_SF2D"].edges)
     get_ele_tight_id_eff[year] = lookup_tools.dense_lookup.dense_lookup(fele_tight["EGamma_EffMC2D"].values, fele_tight["EGamma_EffMC2D"].edges)
 
@@ -127,8 +125,6 @@ ele_reco['2017']=uproot.open("data/ScaleFactor/2017_ElectronReco.root")
 ele_reco['2018']=uproot.open("data/ScaleFactor/2018_ElectronReco.root")
 for year in ['2016','2017','2018']:
     fele_reco = ele_reco[year]
-    #print(fele_reco["EGamma_SF2D"].edges)
-    #print(fele_reco["EGamma_SF2D"].values)
     get_ele_reco_sf[year]=lookup_tools.dense_lookup.dense_lookup(fele_reco["EGamma_SF2D"].values, fele_reco["EGamma_SF2D"].edges)
 
 get_mu_tight_iso_sf = {}
@@ -248,21 +244,21 @@ class BTagCorrector:
         self._wp = common['btagWPs'][tagger][year][workingpoint]
         files = {
             'deepflav': {
-                '2016': 'DeepJet_102XSF_V1.csv',
-                '2017': 'DeepJet_102XSF_V1.csv',
-                '2018': 'DeepJet_102XSF_V1.csv',
+                '2016': 'DeepJet_2016LegacySF_V1.csv',
+                '2017': 'DeepFlavour_94XSF_V4_B_F.csv',
+                '2018': 'DeepJet_102XSF_V1.csv'
                 },
             'deepcsv': {
-                '2016': 'DeepCSV_102XSF_V1.csv',
-                '2017': 'DeepCSV_102XSF_V1.csv',
-                '2018': 'DeepCSV_102XSF_V1.csv',
+                '2016': 'DeepCSV_2016LegacySF_V1.csv',
+                '2017': 'DeepCSV_94XSF_V5_B_F.csv',
+                '2018': 'DeepCSV_102XSF_V1.csv'      
                 }
         }
         filename = 'data/'+files[tagger][year]
         self.sf = BTagScaleFactor(filename, workingpoint)
         files = {
-            '2016': 'btag2018.merged',
-            '2017': 'btag2018.merged',
+            '2016': 'btag2017.merged',
+            '2017': 'btag2017.merged',
             '2018': 'btag2018.merged',
         }
         filename = 'hists/'+files[year]

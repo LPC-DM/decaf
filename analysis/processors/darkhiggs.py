@@ -502,6 +502,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         isHEMJet        = self._ids['isHEMJet']        
         
         match = self._common['match']
+        deepflavWPs = self._common['btagWPs']['deepflav'][self._year]
+        deepcsvWPs = self._common['btagWPs']['deepcsv'][self._year]
 
         ###
         # Derive jet corrector for JEC/JER
@@ -601,8 +603,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
         j['isclean'] = ~match(j,e_loose,0.4)&~match(j,mu_loose,0.4)&~match(j,pho_loose,0.4)
         j['isiso'] = ~match(j,fj_clean,1.5)
-        j['isdcsvL'] = (j.btagDeepB>0.1241)
-        j['isdflvL'] = (j.btagDeepFlavB>0.0494)
+        j['isdcsvL'] = (j.btagDeepB>deepcsvWPs['loose'])
+        j['isdflvL'] = (j.btagDeepFlavB>deepflavWPs['loose'])
         j['T'] = TVector2Array.from_polar(j.pt, j.phi)
         j['p4'] = TLorentzVectorArray.from_ptetaphim(j.pt, j.eta, j.phi, j.mass)
         j['ptRaw'] =j.pt * (1-j.rawFactor)
@@ -915,16 +917,19 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         triggers = np.zeros(events.size, dtype=np.bool)
         for path in self._met_triggers[self._year]:
+            if path not in events.HLT.columns: continue
             triggers = triggers | events.HLT[path]
         selection.add('met_triggers', triggers)
 
         triggers = np.zeros(events.size, dtype=np.bool)
         for path in self._singleelectron_triggers[self._year]:
+            if path not in events.HLT.columns: continue
             triggers = triggers | events.HLT[path]
         selection.add('singleelectron_triggers', triggers)
 
         triggers = np.zeros(events.size, dtype=np.bool)
         for path in self._singlephoton_triggers[self._year]:
+            if path not in events.HLT.columns: continue
             triggers = triggers | events.HLT[path]
         selection.add('singlephoton_triggers', triggers)
 
