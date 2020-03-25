@@ -20,6 +20,7 @@ parser.add_option('-e', '--exclude', help='exclude', dest='exclude')
 parser.add_option('-p', '--analysis', help='analysis', dest='analysis')
 parser.add_option('-y', '--year', help='year', dest='year')
 parser.add_option('-t', '--tar', action="store_true", dest="tar")
+parser.add_option('-k', '--kist', action="store_true", dest="kisti")
 (options, args) = parser.parse_args()
 
 year=''
@@ -27,6 +28,9 @@ if options.year: year=options.year
 
 os.system("mkdir -p hists/"+options.analysis+year+"/condor/out hists/"+options.analysis+year+"/condor/err hists/"+options.analysis+year+"/condor/log")
 os.system("rm -rf hists/"+options.analysis+year+"/condor/out/* hists/"+options.analysis+year+"/condor/err/* hists/"+options.analysis+year+"/condor/log/*")
+
+jdl = 'run.jdl'
+if options.kisti: jdl = 'run_kisti.jdl'
 
 if options.tar:
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz ../../decaf')
@@ -43,4 +47,4 @@ for dataset, info in datadef.items():
     os.environ['SAMPLE'] = dataset
     os.environ['ANALYSIS']   = options.analysis
     os.environ['YEAR']   = options.year
-    os.system("condor_submit run.jdl")
+    os.system('condor_submit '+jdl)
