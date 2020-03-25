@@ -9,14 +9,14 @@ def match(a, b, val):
 
 deepflavWPs = {
     '2016': {
-        'loose' : 0.0494,
-        'medium': 0.2770,
-        'tight' : 0.7264
+        'loose' : 0.0614,
+        'medium': 0.3093,
+        'tight' : 0.7221
     },
     '2017': {
-        'loose' : 0.0494,
-        'medium': 0.2770,
-        'tight' : 0.7264
+        'loose' : 0.0521,
+        'medium': 0.3033,
+        'tight' : 0.7489
     },
     '2018': {
         'loose' : 0.0494,
@@ -26,14 +26,14 @@ deepflavWPs = {
 }
 deepcsvWPs = {
     '2016': {
-        'loose' : 0.1241,
-        'medium': 0.4184,
-        'tight' : 0.7527
+        'loose' : 0.2217,
+        'medium': 0.6321,
+        'tight' : 0.8953
     },
     '2017': {
-        'loose' : 0.1241,
-        'medium': 0.4184,
-        'tight' : 0.7527
+        'loose' : 0.1522,
+        'medium': 0.4941,
+        'tight' : 0.8001
     },
     '2018': {
         'loose' : 0.1241,
