@@ -20,7 +20,7 @@ parser.add_option('-e', '--exclude', help='exclude', dest='exclude')
 parser.add_option('-p', '--analysis', help='analysis', dest='analysis')
 parser.add_option('-y', '--year', help='year', dest='year')
 parser.add_option('-t', '--tar', action="store_true", dest="tar")
-parser.add_option('-k', '--kist', action="store_true", dest="kisti")
+parser.add_option('-k', '--kisti', action="store_true", dest="kisti")
 (options, args) = parser.parse_args()
 
 year=''
@@ -31,12 +31,17 @@ os.system("rm -rf hists/"+options.analysis+year+"/condor/out/* hists/"+options.a
 
 jdl = 'run.jdl'
 if options.kisti: jdl = 'run_kisti.jdl'
+print('Using',jdl)
 
 if options.tar:
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz ../../decaf')
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../pylocal.tgz -C ~/.local/lib/python3.6/ site-packages')
-    os.system('xrdcp -f ../../decaf.tgz root://cmseos.fnal.gov//store/user/'+os.environ['USER']+'/decaf.tgz')
-    os.system('xrdcp -f ../../pylocal.tgz root://cmseos.fnal.gov//store/user/'+os.environ['USER']+'/pylocal.tgz')
+    if options.kisti: 
+        os.system('xrdcp -f ../../decaf.tgz root://cms-xrdr.private.lo:2094//xrd/store/user/'+os.environ['USER']+'/decaf.tgz')
+        os.system('xrdcp -f ../../pylocal.tgz root://cms-xrdr.private.lo:2094//xrd/store/user/'+os.environ['USER']+'/pylocal.tgz')
+    else:
+        os.system('xrdcp -f ../../decaf.tgz root://cmseos.fnal.gov//store/user/'+os.environ['USER']+'/decaf.tgz')
+        os.system('xrdcp -f ../../pylocal.tgz root://cmseos.fnal.gov//store/user/'+os.environ['USER']+'/pylocal.tgz')
 
 with open("metadata/"+year+".json") as fin:
     datadef = json.load(fin)
