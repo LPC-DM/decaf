@@ -915,16 +915,19 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         triggers = np.zeros(events.size, dtype=np.bool)
         for path in self._met_triggers[self._year]:
+            if path not in events.HLT.columns: continue
             triggers = triggers | events.HLT[path]
         selection.add('met_triggers', triggers)
 
         triggers = np.zeros(events.size, dtype=np.bool)
         for path in self._singleelectron_triggers[self._year]:
+            if path not in events.HLT.columns: continue
             triggers = triggers | events.HLT[path]
         selection.add('singleelectron_triggers', triggers)
 
         triggers = np.zeros(events.size, dtype=np.bool)
         for path in self._singlephoton_triggers[self._year]:
+            if path not in events.HLT.columns: continue
             triggers = triggers | events.HLT[path]
         selection.add('singlephoton_triggers', triggers)
 
