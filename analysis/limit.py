@@ -21,7 +21,7 @@ def expo_sample(norm, scale, obs):
 def template(hist, name):
     return (hist.values(overflow='all')[()], hist.axis(name).edges(overflow='all'), name)
 
-def darkhiggs_model(tmpdir,mass,category):
+def darkhiggs_model(tmpdir,mass,category,year):
 
     model = rl.Model('darkhiggs_'+mass+'_'+category)
 
@@ -52,7 +52,7 @@ def darkhiggs_model(tmpdir,mass,category):
     #Extract histograms from input file
     ###
 
-    hists = load('hists/darkhiggs2018.scaled')
+    hists = load('hists/darkhiggs'+year+'.scaled')
     
     ###
     # Regrouping histograms
@@ -92,8 +92,9 @@ def darkhiggs_model(tmpdir,mass,category):
     for r in hists['recoil'].identifiers('region'):
         if category not in str(r) or mass not in str(r): continue
         print(r,category,mass)
+        print('Before rebin',hists['recoil'].integrate('region',r).values(overflow='all'))
         recoil[str(r).split("_")[0]]=hists['recoil'].integrate('region',r).rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning_map[mass][category]))
-    print(recoil.keys())
+        print('After rebin',recoil[str(r).split("_")[0]].values(overflow='all'))
 
     ###
     ###
@@ -165,60 +166,120 @@ def darkhiggs_model(tmpdir,mass,category):
 
     veto_tau = rl.NuisanceParameter('veto_tau', 'lnN')
 
+    ###
+    # Defining W/Z/gamma+jets heavy flavor fractions and their corrective k-factors
+    ###
+
+    whf_fraction = 0.18
+    zhf_fraction = 0.09
+    ghf_fraction = 0.12
+
+    whf_k = rl.IndependentParameter('whf_k', 1., 0, 1/whf_fraction)
+    zhf_k = rl.IndependentParameter('zhf_k', 1., 0, 1/zhf_fraction)
+    ghf_k = rl.IndependentParameter('ghf_k', 1., 0, 1/ghf_fraction)
+
+    ###
+    # Taking into account the varying HF fraction to adjust the overall efficiency of ak4 btagging of iso jets
+    ###
+
+    whf_deepak4_0tag_eff = 0.86
+    wlf_deepak4_0tag_eff = 0.90
+
+    wj_deepak4_0tag_eff = wlf_deepak4_0tag_eff + (whf_deepak4_0tag_eff - wlf_deepak4_0tag_eff)*whf_fraction
+    wj_deepak4_0tag_sfxeff = wlf_deepak4_0tag_eff + (whf_deepak4_0tag_eff - wlf_deepak4_0tag_eff)*whf_k*whf_fraction
+
+    wjets_deepak4_0tag_weight = wj_deepak4_0tag_sfxeff / wj_deepak4_0tag_eff
+
+
+    whf_deepak4_1tag_eff = 0.14
+    wlf_deepak4_1tag_eff = 0.10
+
+    wj_deepak4_1tag_eff = wlf_deepak4_1tag_eff + (whf_deepak4_1tag_eff - wlf_deepak4_1tag_eff)*whf_fraction
+    wj_deepak4_1tag_sfxeff = wlf_deepak4_1tag_eff + (whf_deepak4_1tag_eff - wlf_deepak4_1tag_eff)*whf_k*whf_fraction
+
+    wjets_deepak4_1tag_weight = wj_deepak4_1tag_sfxeff / wj_deepak4_1tag_eff
+    
+
+    zhf_deepak4_0tag_eff = 0.80
+    zlf_deepak4_0tag_eff = 0.90
+
+    zj_deepak4_0tag_eff = zlf_deepak4_0tag_eff + (zhf_deepak4_0tag_eff - zlf_deepak4_0tag_eff)*zhf_fraction
+    zj_deepak4_0tag_sfxeff = zlf_deepak4_0tag_eff + (zhf_deepak4_0tag_eff - zlf_deepak4_0tag_eff)*zhf_k*zhf_fraction
+
+    zjets_deepak4_0tag_weight = zj_deepak4_0tag_sfxeff / zj_deepak4_0tag_eff
+
 
     ###
     # Setting tagger efficiency and scale factor for in-situ calculation
     ###
 
-    whf_eff = 0.1
-    wlf_eff = 0.04
-    whf_fraction = 0.17
+    whf_deepak15_eff = 0.1
+    wlf_deepak15_eff = 0.04
 
-    whf_sf = rl.IndependentParameter('whf_sf', 1., 0, 1/whf_eff)
-    wlf_sf = rl.IndependentParameter('wlf_sf', 1., 0, 1/wlf_eff)
-    whf_k = rl.IndependentParameter('whf_k', 1., 0, 1/whf_fraction)
+    whf_deepak15_sf = rl.IndependentParameter('whf_deepak15_sf', 1., 0, 1/whf_deepak15_eff)
+    wlf_deepak15_sf = rl.IndependentParameter('wlf_deepak15_sf', 1., 0, 1/wlf_deepak15_eff)
 
-    wj_sfxeff = wlf_sf*wlf_eff*(1-whf_k*whf_fraction) + whf_sf*whf_eff*whf_k*whf_fraction
-    wj_eff = wlf_eff*(1-whf_fraction) + whf_eff*whf_fraction
+    wj_deepak15_sfxeff = wlf_deepak15_sf*wlf_deepak15_eff*(1-whf_k*whf_fraction) + whf_deepak15_sf*whf_deepak15_eff*whf_k*whf_fraction
+    wj_deepak15_eff = wlf_deepak15_eff*(1-whf_fraction) + whf_deepak15_eff*whf_fraction
 
-    wjets_weight = (1 - wj_sfxeff)/(1 - wj_eff)
-    if 'monohs' in category: wjets_weight = wj_sfxeff/wj_eff
-    #wjets_weight = 1.
+    wjets_deepak15_weight = (1 - wj_deepak15_sfxeff)/(1 - wj_deepak15_eff)
+    if 'monohs' in category: wjets_deepak15_weight = wj_deepak15_sfxeff/wj_deepak15_eff
 
-    zhf_eff = 0.3
-    zlf_eff = 0.05
-    zhf_fraction = 0.09
+    zhf_deepak15_eff = 0.04
+    zlf_deepak15_eff = 0.05
 
-    zhf_sf = rl.IndependentParameter('zhf_sf', 1., 0, 1/zhf_eff)
-    zlf_sf = rl.IndependentParameter('zlf_sf', 1., 0, 1/zlf_eff)
-    zhf_k = rl.IndependentParameter('zhf_k', 1., 0, 1/zhf_fraction)
+    zhf_deepak15_sf = rl.IndependentParameter('zhf_deepak15_sf', 1., 0, 1/zhf_deepak15_eff)
+    zlf_deepak15_sf = rl.IndependentParameter('zlf_deepak15_sf', 1., 0, 1/zlf_deepak15_eff)
 
-    zj_sfxeff = zlf_sf*zlf_eff*(1-zhf_k*zhf_fraction) + zhf_sf*zhf_eff*zhf_k*zhf_fraction
-    zj_eff = zlf_eff*(1-zhf_fraction) + zhf_eff*zhf_fraction
+    zj_deepak15_sfxeff = zlf_deepak15_sf*zlf_deepak15_eff*(1-zhf_k*zhf_fraction) + zhf_deepak15_sf*zhf_deepak15_eff*zhf_k*zhf_fraction
+    zj_deepak15_eff = zlf_deepak15_eff*(1-zhf_fraction) + zhf_deepak15_eff*zhf_fraction
 
-    zjets_weight = (1 - zj_sfxeff)/(1 - zj_eff)
-    if 'monohs' in category: wjets_weight = zj_sfxeff/zj_eff
-    #zjets_weight = 1.
+    zjets_deepak15_weight = (1 - zj_deepak15_sfxeff)/(1 - zj_deepak15_eff)
+    if 'monohs' in category: zjets_deepak15_weight = zj_deepak15_sfxeff/zj_deepak15_eff
 
-    tt_m_eff = 1.
-    tt_u_eff = 1.
+    ghf_deepak15_eff = 0.03
+    glf_deepak15_eff = 0.005
+
+    ghf_deepak15_sf = rl.IndependentParameter('ghf_deepak15_sf', 1., 0, 1/ghf_deepak15_eff)
+    glf_deepak15_sf = rl.IndependentParameter('glf_deepak15_sf', 1., 0, 1/glf_deepak15_eff)
+
+    gj_deepak15_sfxeff = glf_deepak15_sf*glf_deepak15_eff*(1-ghf_k*ghf_fraction) + ghf_deepak15_sf*ghf_deepak15_eff*ghf_k*ghf_fraction
+    gj_deepak15_eff = glf_deepak15_eff*(1-ghf_fraction) + ghf_deepak15_eff*ghf_fraction
+
+    gjets_deepak15_weight = (1 - gj_deepak15_sfxeff)/(1 - gj_deepak15_eff)
+    if 'monohs' in category: gjets_deepak15_weight = gj_deepak15_sfxeff/gj_deepak15_eff
+
+    tt_m_eff = 0.6
+    tt_u_eff = 0.3
     tt_m_fraction = {
-        'mass0': 1.,
-        'mass1': 1.,
-        'mass2': 1.,
-        'mass3': 1.,
-        'mass4': 1.
+        '0tag': {
+            'mass0': 0.04,
+            'mass1': 0.06,
+            'mass2': 0.11,
+            'mass3': 0.19,
+            'mass4': 0.6
+        },
+        '1tag': {
+            'mass0': 0.014,
+            'mass1': 0.04,
+            'mass2': 0.1,
+            'mass3': 0.13,
+            'mass4': 0.54
+        }
     }
 
-    tt_m_sf  = rl.IndependentParameter('tt_m_sf', 1., 0, 1/tt_m_eff)
-    tt_u_sf = rl.IndependentParameter('ttbar_sf', 1., 0, 1/tt_u_eff)
+    tt_m_sf = rl.IndependentParameter('tt_m_sf', 1., 0, 1/tt_m_eff)
+    tt_u_sf = rl.IndependentParameter('tt_u_sf', 1., 0, 1/tt_u_eff)
 
-    tt_sfxeff = tt_m_sf*tt_m_eff*tt_m_fraction[mass] + tt_u_sf*tt_u_eff*(1 - tt_m_fraction[mass])
-    tt_eff = tt_m_eff*tt_m_fraction[mass] + tt_u_eff*(1 - tt_m_fraction[mass])
+    tt_0tag_sfxeff = tt_m_sf*tt_m_eff*tt_m_fraction['0tag'][mass] + tt_u_sf*tt_u_eff*(1 - tt_m_fraction['0tag'][mass])
+    tt_0tag_eff = tt_m_eff*tt_m_fraction['0tag'][mass] + tt_u_eff*(1 - tt_m_fraction['0tag'][mass])
+    tt_1tag_sfxeff = tt_m_sf*tt_m_eff*tt_m_fraction['1tag'][mass] + tt_u_sf*tt_u_eff*(1 - tt_m_fraction['1tag'][mass])
+    tt_1tag_eff = tt_m_eff*tt_m_fraction['1tag'][mass] + tt_u_eff*(1 - tt_m_fraction['1tag'][mass])
 
-    tt_weight = (1 - tt_sfxeff)/(1 - tt_eff)
-    if 'monohs' in category: tt_weight = tt_sfxeff / tt_eff
-    #tt_weight = 1.
+    tt_0tag_weight = (1 - tt_0tag_sfxeff)/(1 - tt_0tag_eff)
+    if 'monohs' in category: tt_0tag_weight = tt_0tag_sfxeff / tt_0tag_eff
+    tt_1tag_weight = (1 - tt_1tag_sfxeff)/(1 - tt_1tag_eff)
+    if 'monohs' in category: tt_1tag_weight = tt_1tag_sfxeff / tt_1tag_eff
 
     ###
     ###
@@ -260,7 +321,8 @@ def darkhiggs_model(tmpdir,mass,category):
     sr_zvvMC =  rl.TemplateSample(ch_name+'_zvvMC', rl.Sample.BACKGROUND, sr_zvvTemplate)
     #sr_zvvMC.setParamEffect(jec, np.random.normal(loc=1, scale=0.01, size=len(sr_zvvHist.axis('recoil').edges(overflow='all'))-1))
     
-    sr_zvvBinYields = np.array([rl.IndependentParameter(ch_name+'_zvv_bin_%d' % i, b, 0, sr_zvvTemplate[0].max()*2) for i,b in enumerate(sr_zvvTemplate[0])]) * zjets_weight
+    sr_zvvBinYields = np.array([rl.IndependentParameter(ch_name+'_zvv_bin_%d' % i, b, 0, sr_zvvTemplate[0].max()*2) for i,b in enumerate(sr_zvvTemplate[0])]) 
+    sr_zvvBinYields = sr_zvvBinYields * zjets_deepak15_weight * zjets_deepak4_0tag_weight
     sr_zvvObservable = rl.Observable('recoil', sr_zvvHist.axis('recoil').edges(overflow='all'))
     sr_zvv = rl.ParametericSample(ch_name+'_zvv', rl.Sample.BACKGROUND, sr_zvvObservable, sr_zvvBinYields)
 
@@ -275,7 +337,8 @@ def darkhiggs_model(tmpdir,mass,category):
     sr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, sr_wjetsTemplate)
     #sr_wjetsMC.setParamEffect(jec, np.random.normal(loc=1, scale=0.01, size=len(sr_wjetsHist.axis('recoil').edges(overflow='all'))-1))
 
-    sr_wjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_wjets_bin_%d' % i,b,0,sr_wjetsTemplate[0].max()*2) for i,b in enumerate(sr_wjetsTemplate[0])]) * wjets_weight
+    sr_wjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_wjets_bin_%d' % i,b,0,sr_wjetsTemplate[0].max()*2) for i,b in enumerate(sr_wjetsTemplate[0])]) 
+    sr_wjetsBinYields = sr_wjetsBinYields * wjets_deepak15_weight * wjets_deepak4_0tag_weight
     sr_wjetsObservable = rl.Observable('recoil', sr_wjetsHist.axis('recoil').edges(overflow='all'))
     sr_wjets = rl.ParametericSample(ch_name+'_wjets', rl.Sample.BACKGROUND, sr_wjetsObservable, sr_wjetsBinYields)
     sr.addSample(sr_wjets)
@@ -290,7 +353,7 @@ def darkhiggs_model(tmpdir,mass,category):
     #sr_ttbarMC.setParamEffect(jec, np.random.normal(loc=1, scale=0.01, size=len(sr_ttbarHist.axis('recoil').edges(overflow='all'))-1))
 
     # these parameters are large, should probably log-transform them
-    sr_ttbarBinYields = np.array([rl.IndependentParameter(ch_name+'_ttbar_bin_%d' % i,b,0,sr_ttbarTemplate[0].max()*2) for i,b in enumerate(sr_ttbarTemplate[0])]) * tt_weight
+    sr_ttbarBinYields = np.array([rl.IndependentParameter(ch_name+'_ttbar_bin_%d' % i,b,0,sr_ttbarTemplate[0].max()*2) for i,b in enumerate(sr_ttbarTemplate[0])]) * tt_0tag_weight
     sr_ttbarObservable = rl.Observable('recoil', sr_ttbarHist.axis('recoil').edges(overflow='all'))
     sr_ttbar = rl.ParametericSample(ch_name+'_ttbar', rl.Sample.BACKGROUND, sr_ttbarObservable, sr_ttbarBinYields)
     sr.addSample(sr_ttbar)
@@ -397,8 +460,6 @@ def darkhiggs_model(tmpdir,mass,category):
             ch_name = p+l+'cr-'+mass+'-'+category
             cr[p+l]=rl.Channel(ch_name)
             model.addChannel(cr[p+l])
-            print(p+l)
-            print(recoil[p+l+'cr'].identifiers('process'))
             if 'e' in l: cr[p+l].setObservation(template(recoil[p+l+'cr'].integrate('process', 'SingleElectron').integrate('systematic','nominal'), 'recoil'))
             else: cr[p+l].setObservation(template(recoil[p+l+'cr'].integrate('process', 'MET').integrate('systematic','nominal'), 'recoil'))   
 
@@ -457,8 +518,6 @@ def darkhiggs_model(tmpdir,mass,category):
         ch_name = ll+'cr-'+mass+'-'+category
         cr[ll] = rl.Channel(ch_name)
         model.addChannel(cr[ll])
-        print(ll)
-        print(recoil[ll+'cr'].identifiers('process'))
         if 'e' in ll: cr[ll].setObservation(template(recoil[ll+'cr'].integrate('process', 'SingleElectron').integrate('systematic','nominal'), 'recoil'))
         else: cr[ll].setObservation(template(recoil[ll+'cr'].integrate('process', 'MET').integrate('systematic','nominal'), 'recoil'))   
         
@@ -519,10 +578,10 @@ def darkhiggs_model(tmpdir,mass,category):
     #gammaJets.setParamEffect(gamma_to_z_ewk, np.linspace(1.01, 1.05, recoil.nbins))
     gcr.addSample(gcr_gjets)
 
-    with open(os.path.join(str(tmpdir), 'darkhiggsModel.pkl'), "wb") as fout:
+    with open(os.path.join(str(tmpdir), 'darkhiggsModel'+year+'.pkl'), "wb") as fout:
         pickle.dump(model, fout)
 
-    model.renderCombine(os.path.join(str(tmpdir), 'darkhiggsModel/'+mass))
+    model.renderCombine(os.path.join(str(tmpdir), 'darkhiggsModel'+year+'/'+mass))
 
 
 if __name__ == '__main__':
@@ -530,4 +589,5 @@ if __name__ == '__main__':
         os.mkdir('datacards')
     mass='mass0'
     category='monojet'
-    darkhiggs_model('datacards',mass,category)
+    year='2018'
+    darkhiggs_model('datacards',mass,category,year)
