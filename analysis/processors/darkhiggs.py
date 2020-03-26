@@ -596,8 +596,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj_ngood=fj_good.counts
         fj_nclean=fj_clean.counts
 
-        #print(sj[fj[fj.hassj1].subJetIdx1],sj[fj[fj.hassj2].subJetIdx2])
-        
         j = events.Jet
         j['isgood'] = isGoodJet(j.pt, j.eta, j.jetId, j.neHEF, j.neEmEF, j.chHEF, j.chEmEF)
         j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
@@ -684,7 +682,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                 (abs(gen.distinctParent.pdgId) == 24)
             ]
-            def topmatch(topid, dR=1.5):
+            def topmatch(topid, dR=1.5,type='bqq'):
                 qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
                 bFromTop = gen[
                     (abs(gen.pdgId) == 5) &
@@ -695,8 +693,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                 jetgenb = fj.cross(bFromTop, nested=True)
                 Wmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
                 bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
-                return Wmatch & bmatch
+                if type == 'qq':
+                    return Wmatch & ~bmatch
+                elif type == 'bqq':
+                    return Wmatch & bmatch
             fj['isTbqq'] = topmatch(6)|topmatch(-6)
+            fj['isTqq']  = topmatch(6,type='qq')|topmatch(-6,type='qq')
 
             ###
             # Fat-jet Z->bb matching at decay level
@@ -709,6 +711,30 @@ class AnalysisProcessor(processor.ProcessorABC):
             jetgenb = fj.cross(bFromZ, nested=True)
             bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < 1.5).all()&(bFromZ.counts>0)
             fj['isZbb']  = bbmatch
+
+            ###
+            # Fat-jet Z->qq matching at decay level
+            ###
+            qFromZ = gen[
+                (abs(gen.pdgId) < 5) &
+                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
+                (abs(gen.distinctParent.pdgId) == 23)
+            ]
+            jetgenq = fj.cross(qFromZ, nested=True)
+            qqmatch = (jetgenq.i0.delta_r(jetgenq.i1) < 1.5).all()&(qFromZ.counts>0)
+            fj['isZqq']  = qqmatch
+
+            ###
+            # Fat-jet W->qq matching at decay level
+            ###
+            qFromW = gen[
+                (abs(gen.pdgId) < 5) &
+                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
+                (abs(gen.distinctParent.pdgId) == 24)
+            ]
+            jetgenq = fj.cross(qFromW, nested=True)
+            qqmatch = (jetgenq.i0.delta_r(jetgenq.i1) < 1.5).all()&(qFromW.counts>0)
+            fj['isWqq']  = qqmatch
 
             ###
             # Fat-jet H->bb matching at decay level
@@ -1063,45 +1089,57 @@ class AnalysisProcessor(processor.ProcessorABC):
         ]
 
         if 'TT' in dataset or 'ST' in dataset:
-            hout['sumw'].fill(dataset='merged--'+dataset, sumw=1, weight=events.genWeight.sum())
-            hout['sumw'].fill(dataset='unmerged--'+dataset, sumw=1, weight=events.genWeight.sum())
+            hout['sumw'].fill(dataset='bqq--'+dataset, sumw=1, weight=events.genWeight.sum())
+            hout['sumw'].fill(dataset='qq--'+dataset, sumw=1, weight=events.genWeight.sum())
+            hout['sumw'].fill(dataset='other--'+dataset, sumw=1, weight=events.genWeight.sum())
             for r in regions:
                 cut = selection.all(*regions[r])
-                wmerged = leading_fj.isTbqq.sum()
-                wunmerged = (~(leading_fj.isTbqq.sum().astype(np.bool))).astype(np.int)
+                wbqq = leading_fj.isTbqq.sum()
+                wqq = (~(wbqq.astype(np.bool))).astype(np.int) & leading_fj.isTqq.sum()
+                wother = (~(wbqq.astype(np.bool))).astype(np.int) & (~(wqq.astype(np.bool))).astype(np.int)
                 for systematic in systematics:
-                    fill('merged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wmerged, cut)
-                    fill('unmerged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wunmerged, cut)        
+                    fill('bqq--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wbqq, cut)
+                    fill('qq--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wqq, cut)        
+                    fill('other--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wother, cut)
         elif 'WW' in dataset or 'WZ' in dataset or 'ZZ' in dataset:
             hout['sumw'].fill(dataset='bb--'+dataset, sumw=1, weight=events.genWeight.sum())
+            hout['sumw'].fill(dataset='qq--'+dataset, sumw=1, weight=events.genWeight.sum())
             hout['sumw'].fill(dataset='other--'+dataset, sumw=1, weight=events.genWeight.sum())
             for r in regions:
                 cut = selection.all(*regions[r])
                 wbb = leading_fj.isZbb.sum()
-                wother = (~(leading_fj.isZbb.sum().astype(np.bool))).astype(np.int)
+                wqq = (~(wbb.astype(np.bool))).astype(np.int) & (leading_fj.isWqq.sum() | leading_fj.isZqq.sum())
+                wother = (~(wbb.astype(np.bool))).astype(np.int) & (~(wqq.astype(np.bool))).astype(np.int)
                 for systematic in systematics:
                     fill('bb--'+dataset, r, systematic,get_weight(r,systematic=systematic)*wbb, cut)
+                    fill('qq--'+dataset, r, systematic,get_weight(r,systematic=systematic)*wqq, cut)
                     fill('other--'+dataset, r, systematic,get_weight(r,systematic=systematic)*wother, cut)
         elif 'HToBB' in dataset:
-            hout['sumw'].fill(dataset='merged--'+dataset, sumw=1, weight=events.genWeight.sum())
-            hout['sumw'].fill(dataset='unmerged--'+dataset, sumw=1, weight=events.genWeight.sum())
+            hout['sumw'].fill(dataset='bb--'+dataset, sumw=1, weight=events.genWeight.sum())
+            hout['sumw'].fill(dataset='other--'+dataset, sumw=1, weight=events.genWeight.sum())
             for r in regions:
                 cut = selection.all(*regions[r])
                 wbb = leading_fj.isHbb.sum()
-                wother = (~(leading_fj.isHbb.sum().astype(np.bool))).astype(np.int)
+                wother = (~(wbb.astype(np.bool))).astype(np.int)
                 for systematic in systematics:
-                    fill('merged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wbb, cut)
-                    fill('unmerged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wother, cut)
+                    fill('bb--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wbb, cut)
+                    fill('other--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wother, cut)
         elif 'Mhs_'in dataset:
-            hout['sumw'].fill(dataset='merged--'+dataset, sumw=1, weight=events.genWeight.sum())
-            hout['sumw'].fill(dataset='unmerged--'+dataset, sumw=1, weight=events.genWeight.sum())
+            hout['sumw'].fill(dataset='bb--'+dataset, sumw=1, weight=events.genWeight.sum())
+            hout['sumw'].fill(dataset='other--'+dataset, sumw=1, weight=events.genWeight.sum())
             for r in regions:
                 cut = selection.all(*regions[r])
                 wbb = leading_fj.isHsbb.sum()
-                wother = (~(leading_fj.isHsbb.sum().astype(np.bool))).astype(np.int)
+                wother = (~(wbb.astype(np.bool))).astype(np.int)
+                print('wbb',wbb)
+                print('wother',wother)
+                print('wbb',wbb.sum())
+                print('wother',wother.sum())
+                print('events',np.ones(events.size).sum())
+
                 for systematic in systematics:
-                    fill('merged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wbb, cut)
-                    fill('unmerged--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wother, cut)
+                    fill('bb--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wbb, cut)
+                    fill('other--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wother, cut)
         elif 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset or 'GJets' in dataset:
             hout['sumw'].fill(dataset='HF--'+dataset, sumw=1, weight=events.genWeight.sum())
             hout['sumw'].fill(dataset='LF--'+dataset, sumw=1, weight=events.genWeight.sum())
@@ -1117,12 +1155,12 @@ class AnalysisProcessor(processor.ProcessorABC):
             for r in regions:
                 cut = selection.all(*regions[r])
                 fill(dataset, r, None, np.ones(events.size), cut)
-        else:
-            hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
-            for r in regions:
-                cut = selection.all(*regions[r])
-                for systematic in systematics:
-                    fill(dataset, r, systematic, get_weight(r,systematic=systematic), cut)
+        #else:
+        hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
+        for r in regions:
+            cut = selection.all(*regions[r])
+            for systematic in systematics:
+                fill(dataset, r, systematic, get_weight(r,systematic=systematic), cut)
 
         return hout
 
