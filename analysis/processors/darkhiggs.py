@@ -142,8 +142,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             'tmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET'),
             'wecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','SingleElectron','EGamma'),
             'tecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','SingleElectron','EGamma'),
-            'zmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','HToBB','MET'),
-            'zecr':('WJets','DY','TT','ST','WW','WZ','ZZ','HToBB','SingleElectron','EGamma'),
+            'zmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET'),
+            'zecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','SingleElectron','EGamma'),
             'gcr':('GJets','QCD','SinglePhoton','EGamma')
         }
 
@@ -288,6 +288,13 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
                 hist.Bin('recoil','Hadronic Recoil',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
+            ),
+            'met': hist.Hist(
+            'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Cat('systematic', 'Systematic'),
+                hist.Bin('recoil','MET',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'mindphi': hist.Hist(
                 'Events', 
@@ -856,10 +863,12 @@ class AnalysisProcessor(processor.ProcessorABC):
             ids['sr'] = np.ones(events.size)
             ids['wmcr'] = get_mu_tight_id_sf(mueta,leading_mu.pt.sum())
             ids['tmcr'] = ids['wmcr']
-            ids['zmcr'] = ( (mu1Tsf * mu2Lsf) + (mu1Lsf * mu2Tsf) ) / 2.
+            #ids['zmcr'] = ( (mu1Tsf * mu2Lsf) + (mu1Lsf * mu2Tsf) ) / 2.
+            ids['zmcr'] = mu1Lsf*mu2Lsf
             ids['wecr'] = get_ele_tight_id_sf(leading_e.eta.sum(),leading_e.pt.sum())
             ids['tecr'] = ids['wecr']
-            ids['zecr'] = ( ( e1Tsf*e1Teff * e2Lsf*e2Leff ) + ( e1Lsf*e1Leff * e2Tsf*e2Teff ) ) / ( (e1Teff*e2Leff) + (e1Leff*e2Teff) )
+            #ids['zecr'] = ( ( e1Tsf*e1Teff * e2Lsf*e2Leff ) + ( e1Lsf*e1Leff * e2Tsf*e2Teff ) ) / ( (e1Teff*e2Leff) + (e1Leff*e2Teff) )
+            ids['zecr'] = e1Lsf*e2Lsf
             ids['gcr']  = get_pho_tight_id_sf(leading_pho.eta.sum(),leading_pho.pt.sum())
 
             ###
@@ -892,7 +901,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             isolation['sr']   = np.ones(events.size)
             isolation['wmcr'] = get_mu_tight_iso_sf(mueta,leading_mu.pt.sum())
             isolation['tmcr'] = isolation['wmcr']
-            isolation['zmcr'] = ( (mu1Tsf_iso*mu2Lsf_iso) + (mu1Lsf_iso*mu2Tsf_iso) ) / 2.
+            #isolation['zmcr'] = ( (mu1Tsf_iso*mu2Lsf_iso) + (mu1Lsf_iso*mu2Tsf_iso) ) / 2.
+            isolation['zmcr'] = mu1Lsf_iso*mu2Lsf_iso
             isolation['wecr'] = np.ones(events.size)
             isolation['tecr'] = np.ones(events.size)
             isolation['zecr'] = np.ones(events.size)
@@ -979,13 +989,15 @@ class AnalysisProcessor(processor.ProcessorABC):
                       &(ue.mag>250)
                   )
         selection.add('istwoM', 
-                      (e_nloose==0)&(mu_ntight>=1)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)
+                      #(e_nloose==0)&(mu_ntight>=1)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)
+                      (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)
                       &(leading_dimu.mass.sum()>60)&(leading_dimu.mass.sum()<120)
                       &(abs(umm.delta_phi(j_clean.T)).min()>0.8)
                       &(umm.mag>250)
                   )
         selection.add('istwoE', 
-                      (e_ntight>=1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
+                      #(e_ntight>=1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
+                      (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
                       &(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120)
                       &(abs(uee.delta_phi(j_clean.T)).min()>0.8)
                       &(uee.mag>250)
@@ -1037,6 +1049,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         def fill(dataset, region, systematic, weight, cut):
             sname = 'nominal' if systematic is None else systematic
             variables = {}
+            variables['met'] = met.pt
             variables['j1pt'] = leading_j.pt
             variables['j1eta'] = leading_j.eta
             variables['j1phi'] = leading_j.phi
