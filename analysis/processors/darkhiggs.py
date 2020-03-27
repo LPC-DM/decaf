@@ -350,28 +350,28 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Bin('njets','AK4 Number of Jets',6,0,5)
+                hist.Bin('njets','AK4 Number of Jets',6,-0.5,5.5)
             ),
             'ndcsvL': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Bin('ndcsvL','AK4 Number of deepCSV Loose Jets',6,0,5)
+                hist.Bin('ndcsvL','AK4 Number of deepCSV Loose Jets',6,-0.5,5.5)
             ),
             'ndflvL': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Bin('ndflvL','AK4 Number of deepFlavor Loose Jets',6,0,5)
+                hist.Bin('ndflvL','AK4 Number of deepFlavor Loose Jets',6,-0.5,5.5)
             ),
             'nfjclean': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Bin('nfjclean','AK15 Number of cleaned Jets',4,0,3)
+                hist.Bin('nfjclean','AK15 Number of cleaned Jets',4,-0.5,3.5)
             ),
             'fjmass': hist.Hist(
                 'Events', 
