@@ -1,5 +1,5 @@
 universe = vanilla
-Executable = run_kisti.sh, 
+Executable = run_kisti.sh 
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = run_kisti.sh, /tmp/x509up_u556950957
