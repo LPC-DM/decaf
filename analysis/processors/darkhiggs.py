@@ -294,7 +294,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Cat('systematic', 'Systematic'),
-                hist.Bin('recoil','MET',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
+                hist.Bin('met','MET',30,0,600)
             ),
             'mindphi': hist.Hist(
                 'Events', 
@@ -408,6 +408,13 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('systematic', 'Systematic'), 
                 hist.Bin('dielemass','Dielectron mass',100,0,500)
             ),
+            'dielept': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Cat('systematic', 'Systematic'),
+                hist.Bin('dielemass','Dielectron Pt',150,0,800)
+            ),
             'mu1pt': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
@@ -435,6 +442,13 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
                 hist.Bin('dimumass','Dimuon mass',100,0,500)
+            ),
+            'dimupt': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Cat('systematic', 'Systematic'),
+                hist.Bin('dielemass','Dimuon Pt',150,0,800)
             ),
             'ZHbbvsQCD': hist.Hist(
                 'Events', 
@@ -992,6 +1006,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                       #(e_nloose==0)&(mu_ntight>=1)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)
                       (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)
                       &(leading_dimu.mass.sum()>60)&(leading_dimu.mass.sum()<120)
+                      &(leading_dimu.pt.sum()>200)
                       &(abs(umm.delta_phi(j_clean.T)).min()>0.8)
                       &(umm.mag>250)
                   )
@@ -999,6 +1014,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                       #(e_ntight>=1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
                       (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
                       &(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120)
+                      &(leading_diele.pt.sum()>200)
                       &(abs(uee.delta_phi(j_clean.T)).min()>0.8)
                       &(uee.mag>250)
                   )
@@ -1060,10 +1076,12 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['e1phi'] = leading_e.phi
             variables['e1eta'] = leading_e.eta
             variables['dielemass'] = leading_diele.mass
+            variables['dielept'] = leading_diele.pt
             variables['mu1pt'] = leading_mu.pt
             variables['mu1phi'] = leading_mu.phi
             variables['mu1eta'] = leading_mu.eta
             variables['dimumass'] = leading_dimu.mass
+            variables['dimupt'] = leading_dimu.pt
             variables['njets'] = j_nclean
             variables['ndcsvL'] = j_ndcsvL
             variables['ndflvL'] = j_ndflvL
@@ -1168,12 +1186,12 @@ class AnalysisProcessor(processor.ProcessorABC):
             for r in regions:
                 cut = selection.all(*regions[r])
                 fill(dataset, r, None, np.ones(events.size), cut)
-        #else:
-        hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
-        for r in regions:
-            cut = selection.all(*regions[r])
-            for systematic in systematics:
-                fill(dataset, r, systematic, get_weight(r,systematic=systematic), cut)
+        else:
+            hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
+            for r in regions:
+                cut = selection.all(*regions[r])
+                for systematic in systematics:
+                    fill(dataset, r, systematic, get_weight(r,systematic=systematic), cut)
 
         return hout
 

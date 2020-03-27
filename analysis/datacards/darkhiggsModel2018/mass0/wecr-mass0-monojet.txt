@@ -1,4 +1,4 @@
-# Datacard for <Channel (wecr-mass0-monojet) instance at 0x7f1d5ff8c358> generated on 2020-03-25 17:10:21.293395
+# Datacard for <Channel (wecr-mass0-monojet) instance at 0x7efc46ee65f8> generated on 2020-03-26 17:28:03.298077
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 5 # number of samples minus 1
 kmax 0 # number of nuisance parameters
@@ -9,6 +9,9 @@ bin      wecr-mass0-monojet  wecr-mass0-monojet  wecr-mass0-monojet  wecr-mass0-
 process               ttbar               wjets           singletop                  dy             diboson               higgs
 process                   1                   2                   3                   4                   5                   6
 rate                  1.000               1.000            1223.632            3438.917            1927.998               8.267
+bqq_sf extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+other_sf extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+qq_sf extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
 sr-mass0-monojet_ttbarMC_bin0_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
 sr-mass0-monojet_ttbarMC_bin10_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
 sr-mass0-monojet_ttbarMC_bin11_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
@@ -65,8 +68,6 @@ sr-mass0-monojet_wjets_bin_6 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0
 sr-mass0-monojet_wjets_bin_7 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
 sr-mass0-monojet_wjets_bin_8 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
 sr-mass0-monojet_wjets_bin_9 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-tt_m_sf extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-tt_u_sf extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
 wecr-mass0-monojet_ttbarMC_bin0_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
 wecr-mass0-monojet_ttbarMC_bin10_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
 wecr-mass0-monojet_ttbarMC_bin11_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
