@@ -413,7 +413,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Cat('systematic', 'Systematic'),
-                hist.Bin('dielemass','Dielectron Pt',150,0,800)
+                hist.Bin('dielept','Dielectron Pt',150,0,800)
             ),
             'mu1pt': hist.Hist(
                 'Events', 
@@ -448,7 +448,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Cat('systematic', 'Systematic'),
-                hist.Bin('dielemass','Dimuon Pt',150,0,800)
+                hist.Bin('dimupt','Dimuon Pt',150,0,800)
             ),
             'ZHbbvsQCD': hist.Hist(
                 'Events', 
