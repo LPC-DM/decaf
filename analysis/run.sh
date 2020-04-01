@@ -27,3 +27,4 @@ echo "python run.py --year ${1} --dataset ${2} --analysis ${4}"
 python run.py --year ${1} --dataset ${2} --analysis ${4}
 ls hists/${4}${1}/${2}.futures
 cp hists/${4}${1}/${2}.futures ${_CONDOR_SCRATCH_DIR}/${4}${1}_${2}.futures
+
