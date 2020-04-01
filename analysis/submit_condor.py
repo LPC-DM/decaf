@@ -17,7 +17,7 @@ from coffea import hist
 parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset', default='')
 parser.add_option('-e', '--exclude', help='exclude', dest='exclude', default='')
-parser.add_option('-p', '--analysis', help='analysis', dest='analysis', default='')
+parser.add_option('-a', '--analysis', help='analysis', dest='analysis', default='')
 parser.add_option('-y', '--year', help='year', dest='year', default='')
 parser.add_option('-t', '--tar', action='store_true', dest='tar')
 parser.add_option('-k', '--kisti', action='store_true', dest='kisti')
