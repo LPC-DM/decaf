@@ -18,7 +18,7 @@ class AnalysisProcessor(processor.ProcessorABC):
     lumis = { #Values from https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable                                                      
         '2016': 35.92,
         '2017': 41.53,
-        '2018': 59.97
+        '2018': 59.74
     }
 
     met_filter_flags = {
@@ -27,7 +27,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                  'globalSuperTightHalo2016Filter',
                  'HBHENoiseFilter',
                  'HBHENoiseIsoFilter',
-                 'EcalDeadCellTriggerPrimitiveFilter'
+                 'EcalDeadCellTriggerPrimitiveFilter',
+                 'BadPFMuonFilter'
              ],
 
         '2017': ['goodVertices',
@@ -35,7 +36,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                  'HBHENoiseFilter',
                  'HBHENoiseIsoFilter',
                  'EcalDeadCellTriggerPrimitiveFilter',
-                 'BadPFMuonFilter',
+                 'BadPFMuonFilter'
              ],
 
         '2018': ['goodVertices',
@@ -43,7 +44,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                  'HBHENoiseFilter',
                  'HBHENoiseIsoFilter',
                  'EcalDeadCellTriggerPrimitiveFilter',
-                 'BadPFMuonFilter',
+                 'BadPFMuonFilter'
              ]
     }
 
@@ -137,13 +138,13 @@ class AnalysisProcessor(processor.ProcessorABC):
         self._xsec = xsec
 
         self._samples = {
-            'sr':('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET','Mhs_50','Mhs_70','Mhs_90','MonoJet','MonoW','MonoZ'),
-            'wmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET'),
-            'tmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET'),
-            'wecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','SingleElectron','EGamma'),
-            'tecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','SingleElectron','EGamma'),
-            'zmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','MET'),
-            'zecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','SingleElectron','EGamma'),
+            'sr':('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET','Mhs_50','Mhs_70','Mhs_90','MonoJet','MonoW','MonoZ'),
+            'wmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET'),
+            'tmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET'),
+            'wecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','SingleElectron','EGamma'),
+            'tecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','SingleElectron','EGamma'),
+            'zmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET'),
+            'zecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','SingleElectron','EGamma'),
             'gcr':('GJets','QCD','SinglePhoton','EGamma')
         }
 
@@ -280,13 +281,15 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('CaloMinusPfOverRecoil','Calo - Pf / Recoil',35,0,1)
             ),
             'recoil': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
-                hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('systematic', 'Systematic'),
+                hist.Cat('gentype', 'Gen Type'), 
                 hist.Bin('recoil','Hadronic Recoil',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'met': hist.Hist(
@@ -294,6 +297,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Cat('systematic', 'Systematic'),
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('met','MET',30,0,600)
             ),
             'mindphi': hist.Hist(
@@ -301,6 +305,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('mindphi','Min dPhi(MET,AK4s)',30,0,3.5)
             ),
             'j1pt': hist.Hist(
@@ -308,6 +313,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('j1pt','AK4 Leading Jet Pt',[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'j1eta': hist.Hist(
@@ -315,6 +321,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('j1eta','AK4 Leading Jet Eta',35,-3.5,3.5)
             ),
             'j1phi': hist.Hist(
@@ -322,6 +329,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('j1phi','AK4 Leading Jet Phi',35,-3.5,3.5)
             ),
             'fj1pt': hist.Hist(
@@ -329,6 +337,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('fj1pt','AK15 Leading Jet Pt',[200.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'fj1eta': hist.Hist(
@@ -336,6 +345,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('fj1eta','AK15 Leading Jet Eta',35,-3.5,3.5)
             ),
             'fj1phi': hist.Hist(
@@ -343,6 +353,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('fj1phi','AK15 Leading Jet Phi',35,-3.5,3.5)
             ),
             'njets': hist.Hist(
@@ -350,6 +361,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('njets','AK4 Number of Jets',6,-0.5,5.5)
             ),
             'ndcsvL': hist.Hist(
@@ -357,6 +369,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('ndcsvL','AK4 Number of deepCSV Loose Jets',6,-0.5,5.5)
             ),
             'ndflvL': hist.Hist(
@@ -364,6 +377,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('ndflvL','AK4 Number of deepFlavor Loose Jets',6,-0.5,5.5)
             ),
             'nfjclean': hist.Hist(
@@ -371,6 +385,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('nfjclean','AK15 Number of cleaned Jets',4,-0.5,3.5)
             ),
             'fjmass': hist.Hist(
@@ -378,6 +393,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('fjmass','AK15 Jet Mass',30,0,300)
             ),
             'e1pt': hist.Hist(
@@ -385,6 +401,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('e1pt','Leading Electron Pt',[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'e1eta': hist.Hist(
@@ -392,6 +409,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('e1eta','Leading Electron Eta',48,-2.4,2.4)
             ),
             'e1phi': hist.Hist(
@@ -399,6 +417,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('e1phi','Leading Electron Phi',64,-3.2,3.2)
             ),
             'dielemass': hist.Hist(
@@ -406,6 +425,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('dielemass','Dielectron mass',100,0,500)
             ),
             'dielept': hist.Hist(
@@ -413,6 +433,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Cat('systematic', 'Systematic'),
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('dielept','Dielectron Pt',150,0,800)
             ),
             'mu1pt': hist.Hist(
@@ -420,6 +441,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('mu1pt','Leading Muon Pt',[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'mu1eta': hist.Hist(
@@ -427,6 +449,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('mu1eta','Leading Muon Eta',48,-2.4,2.4)
             ),
             'mu1phi': hist.Hist(
@@ -434,6 +457,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('mu1phi','Leading Muon Phi',64,-3.2,3.2)
             ),
             'dimumass': hist.Hist(
@@ -441,6 +465,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('dimumass','Dimuon mass',100,0,500)
             ),
             'dimupt': hist.Hist(
@@ -448,6 +473,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Cat('systematic', 'Systematic'),
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('dimupt','Dimuon Pt',150,0,800)
             ),
             'ZHbbvsQCD': hist.Hist(
@@ -455,6 +481,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
+                hist.Cat('gentype', 'Gen Type'),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1)
             ),
         })
@@ -695,15 +722,17 @@ class AnalysisProcessor(processor.ProcessorABC):
             #Jet_transformer.transform(j)
 
             gen = events.GenPart
+
             ###
             # Fat-jet top matching at decay level
             ###
+
             qFromW = gen[
-                (abs(gen.pdgId) <= 5) &
+                (abs(gen.pdgId) < 5) &
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                 (abs(gen.distinctParent.pdgId) == 24)
             ]
-            def topmatch(topid, dR=1.5,type='bqq'):
+            def tbqqmatch(topid, dR=1.5):
                 qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
                 bFromTop = gen[
                     (abs(gen.pdgId) == 5) &
@@ -714,12 +743,36 @@ class AnalysisProcessor(processor.ProcessorABC):
                 jetgenb = fj.cross(bFromTop, nested=True)
                 Wmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
                 bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
-                if type == 'qq':
-                    return Wmatch & ~bmatch
-                elif type == 'bqq':
-                    return Wmatch & bmatch
-            fj['isTbqq'] = topmatch(6)|topmatch(-6)
-            fj['isTqq']  = topmatch(6,type='qq')|topmatch(-6,type='qq')
+                return Wmatch & bmatch
+            fj['isTbqq'] = tbqqmatch(6)|tbqqmatch(-6)
+
+            def tqqmatch(topid, dR=1.5):
+                qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
+                jetgenWq = fj.cross(qFromWFromTop, nested=True)
+                Wmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
+                return Wmatch
+            fj['isTqq'] = tqqmatch(6)|tqqmatch(-6)
+
+            def tbqmatch(topid, dR=1.5):
+                qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
+                bFromTop = gen[
+                    (abs(gen.pdgId) == 5) &
+                    gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
+                    (gen.distinctParent.pdgId == topid)
+                ]
+                jetgenWq = fj.cross(qFromWFromTop, nested=True)
+                jetgenb = fj.cross(bFromTop, nested=True)
+                Wmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).any()&(qFromWFromTop.counts>0)
+                bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
+                return Wmatch & bmatch
+            fj['isTbq'] = tbqmatch(6)|tbqmatch(-6)
+
+            ###
+            # Fat-jet W->qq matching at decay level
+            ###
+            jetgenq = fj.cross(qFromW, nested=True)
+            qqmatch = (jetgenq.i0.delta_r(jetgenq.i1) < 1.5).all()&(qFromW.counts>0)
+            fj['isWqq']  = qqmatch
 
             ###
             # Fat-jet Z->bb matching at decay level
@@ -746,18 +799,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             fj['isZqq']  = qqmatch
 
             ###
-            # Fat-jet W->qq matching at decay level
-            ###
-            qFromW = gen[
-                (abs(gen.pdgId) < 5) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 24)
-            ]
-            jetgenq = fj.cross(qFromW, nested=True)
-            qqmatch = (jetgenq.i0.delta_r(jetgenq.i1) < 1.5).all()&(qFromW.counts>0)
-            fj['isWqq']  = qqmatch
-
-            ###
             # Fat-jet H->bb matching at decay level
             ###
             bFromH = gen[
@@ -782,6 +823,13 @@ class AnalysisProcessor(processor.ProcessorABC):
             fj['isHsbb']  = bbmatch
 
             gen['isb'] = (abs(gen.pdgId)==5)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
+            jetgenb = fj.cross(gen[gen.isb], nested=True)
+            bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==1)&(gen[gen.isb].counts>0)
+            fj['isb']  = bmatch
+
+            bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==2)&(gen[gen.isb].counts>0)
+            fj['isbb']  = bmatch
+
             gen['isc'] = (abs(gen.pdgId)==4)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isTop'] = (abs(gen.pdgId)==6)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isW'] = (abs(gen.pdgId)==24)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
@@ -1062,32 +1110,33 @@ class AnalysisProcessor(processor.ProcessorABC):
                 temp[r+'_'+category].update(regions[r])
         regions.update(temp)
 
-        def fill(dataset, region, systematic, weight, cut):
+        def fill(dataset, region, systematic, gentype, weight, cut):
             sname = 'nominal' if systematic is None else systematic
             variables = {}
-            variables['met'] = met.pt
-            variables['j1pt'] = leading_j.pt
-            variables['j1eta'] = leading_j.eta
-            variables['j1phi'] = leading_j.phi
-            variables['fj1pt'] = leading_fj.pt
-            variables['fj1eta'] = leading_fj.eta
-            variables['fj1phi'] = leading_fj.phi
-            variables['e1pt'] = leading_e.pt
-            variables['e1phi'] = leading_e.phi
-            variables['e1eta'] = leading_e.eta
+            variables['met']       = met.pt
+            variables['j1pt']      = leading_j.pt
+            variables['j1eta']     = leading_j.eta
+            variables['j1phi']     = leading_j.phi
+            variables['fjmass']    = leading_fj.msd_corr
+            variables['fj1pt']     = leading_fj.pt
+            variables['fj1eta']    = leading_fj.eta
+            variables['fj1phi']    = leading_fj.phi
+            variables['e1pt']      = leading_e.pt
+            variables['e1phi']     = leading_e.phi
+            variables['e1eta']     = leading_e.eta
             variables['dielemass'] = leading_diele.mass
-            variables['dielept'] = leading_diele.pt
-            variables['mu1pt'] = leading_mu.pt
-            variables['mu1phi'] = leading_mu.phi
-            variables['mu1eta'] = leading_mu.eta
-            variables['dimumass'] = leading_dimu.mass
-            variables['dimupt'] = leading_dimu.pt
-            variables['njets'] = j_nclean
-            variables['ndcsvL'] = j_ndcsvL
-            variables['ndflvL'] = j_ndflvL
-            variables['nfjtot'] = fj_ntot
-            variables['nfjgood'] = fj_ngood
-            variables['nfjclean'] = fj_nclean
+            variables['dielept']   = leading_diele.pt
+            variables['mu1pt']     = leading_mu.pt
+            variables['mu1phi']    = leading_mu.phi
+            variables['mu1eta']    = leading_mu.eta
+            variables['dimumass']  = leading_dimu.mass
+            variables['dimupt']    = leading_dimu.pt
+            variables['njets']     = j_nclean
+            variables['ndcsvL']    = j_ndcsvL
+            variables['ndflvL']    = j_ndflvL
+            variables['nfjtot']    = fj_ntot
+            variables['nfjgood']   = fj_ngood
+            variables['nfjclean']  = fj_nclean
             variables['ZHbbvsQCD'] = leading_fj.ZHbbvsQCD
             flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
             flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
@@ -1096,17 +1145,15 @@ class AnalysisProcessor(processor.ProcessorABC):
                     continue
                 elif histname == 'sumw':
                     continue
-                elif histname == 'fjmass':
-                    h.fill(dataset=dataset, region=region, systematic=sname, fjmass=leading_fj.msd_corr.sum(), weight=weight*cut)
                 elif histname == 'recoil':
-                    h.fill(dataset=dataset, region=region, systematic=sname, recoil=u[region.split('_')[0]].mag, weight=weight*cut)
+                    h.fill(dataset=dataset, region=region, systematic=sname, gentype=gentype, recoil=u[region.split('_')[0]].mag, weight=weight*cut)
                 elif histname == 'CaloMinusPfOverRecoil':
-                    h.fill(dataset=dataset, region=region, systematic=sname, CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[region.split('_')[0]].mag, weight=weight*cut)
+                    h.fill(dataset=dataset, region=region, systematic=sname, gentype=gentype, CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[region.split('_')[0]].mag, weight=weight*cut)
                 elif histname == 'mindphi':
-                    h.fill(dataset=dataset, region=region, systematic=sname, mindphi=abs(u[region.split('_')[0]].delta_phi(j_clean.T)).min(), weight=weight*cut)
+                    h.fill(dataset=dataset, region=region, systematic=sname, gentype=gentype, mindphi=abs(u[region.split('_')[0]].delta_phi(j_clean.T)).min(), weight=weight*cut)
                 else:
                     flat_variable = {histname: flat_variables[histname]}
-                    h.fill(dataset=dataset, region=region, systematic=sname, **flat_variable, weight=flat_weights[histname])
+                    h.fill(dataset=dataset, region=region, systematic=sname, gentype=gentype, **flat_variable, weight=flat_weights[histname])
 
         def get_weight(region,systematic=None):
             region=region.split('_')[0]
@@ -1119,79 +1166,112 @@ class AnalysisProcessor(processor.ProcessorABC):
             'btagDown',
         ]
 
-        if 'TT' in dataset or 'ST' in dataset:
-            hout['sumw'].fill(dataset='bqq--'+dataset, sumw=1, weight=events.genWeight.sum())
-            hout['sumw'].fill(dataset='qq--'+dataset, sumw=1, weight=events.genWeight.sum())
-            hout['sumw'].fill(dataset='other--'+dataset, sumw=1, weight=events.genWeight.sum())
-            for r in regions:
-                cut = selection.all(*regions[r])
-                wbqq = leading_fj.isTbqq.sum()
-                wqq = (~(wbqq.astype(np.bool))).astype(np.int) & leading_fj.isTqq.sum()
-                wother = (~(wbqq.astype(np.bool))).astype(np.int) & (~(wqq.astype(np.bool))).astype(np.int)
-                for systematic in systematics:
-                    fill('bqq--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wbqq, cut)
-                    fill('qq--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wqq, cut)        
-                    fill('other--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wother, cut)
-        elif 'WW' in dataset or 'WZ' in dataset or 'ZZ' in dataset:
-            hout['sumw'].fill(dataset='bb--'+dataset, sumw=1, weight=events.genWeight.sum())
-            hout['sumw'].fill(dataset='qq--'+dataset, sumw=1, weight=events.genWeight.sum())
-            hout['sumw'].fill(dataset='other--'+dataset, sumw=1, weight=events.genWeight.sum())
-            for r in regions:
-                cut = selection.all(*regions[r])
-                wbb = leading_fj.isZbb.sum()
-                wqq = (~(wbb.astype(np.bool))).astype(np.int) & (leading_fj.isWqq.sum() | leading_fj.isZqq.sum())
-                wother = (~(wbb.astype(np.bool))).astype(np.int) & (~(wqq.astype(np.bool))).astype(np.int)
-                for systematic in systematics:
-                    fill('bb--'+dataset, r, systematic,get_weight(r,systematic=systematic)*wbb, cut)
-                    fill('qq--'+dataset, r, systematic,get_weight(r,systematic=systematic)*wqq, cut)
-                    fill('other--'+dataset, r, systematic,get_weight(r,systematic=systematic)*wother, cut)
-        elif 'HToBB' in dataset:
-            hout['sumw'].fill(dataset='bb--'+dataset, sumw=1, weight=events.genWeight.sum())
-            hout['sumw'].fill(dataset='other--'+dataset, sumw=1, weight=events.genWeight.sum())
-            for r in regions:
-                cut = selection.all(*regions[r])
-                wbb = leading_fj.isHbb.sum()
-                wother = (~(wbb.astype(np.bool))).astype(np.int)
-                for systematic in systematics:
-                    fill('bb--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wbb, cut)
-                    fill('other--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wother, cut)
-        elif 'Mhs_'in dataset:
-            hout['sumw'].fill(dataset='bb--'+dataset, sumw=1, weight=events.genWeight.sum())
-            hout['sumw'].fill(dataset='other--'+dataset, sumw=1, weight=events.genWeight.sum())
-            for r in regions:
-                cut = selection.all(*regions[r])
-                wbb = leading_fj.isHsbb.sum()
-                wother = (~(wbb.astype(np.bool))).astype(np.int)
-                print('wbb',wbb)
-                print('wother',wother)
-                print('wbb',wbb.sum())
-                print('wother',wother.sum())
-                print('events',np.ones(events.size).sum())
-
-                for systematic in systematics:
-                    fill('bb--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wbb, cut)
-                    fill('other--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wother, cut)
-        elif 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset or 'GJets' in dataset:
-            hout['sumw'].fill(dataset='HF--'+dataset, sumw=1, weight=events.genWeight.sum())
-            hout['sumw'].fill(dataset='LF--'+dataset, sumw=1, weight=events.genWeight.sum())
-            for r in regions:
-                cut = selection.all(*regions[r])
-                whf = ((gen[gen.isb].counts>0)|(gen[gen.isc].counts>0)).astype(np.int)
-                wlf = (~((gen[gen.isb].counts>0)|(gen[gen.isc].counts>0))).astype(np.int)
-                for systematic in systematics:
-                    fill('HF--'+dataset, r, systematic, get_weight(r,systematic=systematic)*whf, cut)
-                    fill('LF--'+dataset, r, systematic, get_weight(r,systematic=systematic)*wlf, cut)
-        elif isData:
+        if isData:
             hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
             for r in regions:
                 cut = selection.all(*regions[r])
-                fill(dataset, r, None, np.ones(events.size), cut)
+                fill(dataset, r, None, 'data', np.ones(events.size), cut)
         else:
-            hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
-            for r in regions:
-                cut = selection.all(*regions[r])
-                for systematic in systematics:
-                    fill(dataset, r, systematic, get_weight(r,systematic=systematic), cut)
+            wgentype = { 
+                'hsbb' : (
+                    leading_fj.isHsbb
+                ).sum(),
+                'hbb' : (
+                    leading_fj.isHbb
+                ).sum(),
+                'zbb' : (
+                    ~leading_fj.isHbb &
+                    leading_fj.isZbb
+                ).sum(),
+                'tbqq' : (
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    leading_fj.isTbqq 
+                ).sum(),
+                'tqq' : (
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    ~leading_fj.isTbqq &
+                    leading_fj.isTqq
+                ).sum(),
+                'vqq' : (
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    ~leading_fj.isTbqq &
+                    ~leading_fj.isTqq &
+                    (leading_fj.isWqq | leading_fj.isZqq)
+                ).sum(),
+                'bb' : (
+                    ~leading_fj.isHsbb &
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    ~leading_fj.isTbqq &
+                    ~leading_fj.isTqq &
+                    ~(leading_fj.isWqq |leading_fj.isZqq) &
+                    leading_fj.isbb
+                ).sum(),
+                'tbq' : (
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    ~leading_fj.isTbqq &
+                    ~leading_fj.isTqq &
+                    ~(leading_fj.isWqq |leading_fj.isZqq) &
+                    ~leading_fj.isbb &
+                    leading_fj.isTbq 
+                ).sum(),
+                'b' : (
+                    ~leading_fj.isHsbb &
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    ~leading_fj.isTbqq &
+                    ~leading_fj.isTqq &
+                    ~(leading_fj.isWqq |leading_fj.isZqq) &
+                    ~leading_fj.isbb &
+                    ~leading_fj.isTbq &
+                    leading_fj.isb
+                ).sum(),
+                'other' : (
+                    ~leading_fj.isHsbb &
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    ~leading_fj.isTbqq &
+                    ~leading_fj.isTqq &
+                    ~(leading_fj.isWqq |leading_fj.isZqq) &
+                    ~leading_fj.isbb &
+                    ~leading_fj.isTbq &
+                    ~leading_fj.isb
+                ).sum(),
+            }
+            wgentype['garbage'] = (
+                (~(wgentype['tbqq'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['tbq'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['tqq'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['hbb'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['hsbb'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['zbb'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['vqq'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['bb'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['b'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['other'].astype(np.bool))).astype(np.int)
+            )
+            if 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset or 'GJets' in dataset or 'QCD' in dataset:
+                whf = ((gen[gen.isb].counts>0)|(gen[gen.isc].counts>0)).astype(np.int)
+                wlf = (~(whf.astype(np.bool))).astype(np.int)
+                hout['sumw'].fill(dataset='HF--'+dataset, sumw=1, weight=events.genWeight.sum())
+                hout['sumw'].fill(dataset='LF--'+dataset, sumw=1, weight=events.genWeight.sum())
+                for r in regions:
+                    cut = selection.all(*regions[r])
+                    for systematic in systematics:
+                        for gentype in wgentype.keys():
+                            fill('HF--'+dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*whf*wgentype[gentype], cut)
+                            fill('LF--'+dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*wlf*wgentype[gentype], cut)
+            else:
+                hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
+                for r in regions:
+                    cut = selection.all(*regions[r])
+                    for systematic in systematics:
+                        for gentype in wgentype.keys():
+                            fill(dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*wgentype[gentype], cut)
 
         return hout
 

@@ -90,7 +90,8 @@ def darkhiggs_model(tmpdir,mass,category,year):
 
     recoil = {}
     for r in hists['recoil'].identifiers('region'):
-        if category not in str(r) or mass not in str(r): continue
+        #if category not in str(r) or mass not in str(r): continue
+        if mass not in str(r): continue
         #print(r,category,mass)
         #print('Before rebin',hists['recoil'].integrate('region',r).values(overflow='all'))
         recoil[str(r).split("_")[0]]=hists['recoil'].integrate('region',r).rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning_map[mass][category]))
