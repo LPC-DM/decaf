@@ -24,7 +24,6 @@ parser.add_option('-k', '--kisti', action='store_true', dest='kisti')
 (options, args) = parser.parse_args()
 
 os.system('mkdir -p hists/'+options.analysis+options.year+'/condor/out hists/'+options.analysis+options.year+'/condor/err hists/'+options.analysis+options.year+'/condor/log')
-print('rm -rf hists/'+options.analysis+options.year+'/condor/out/'+options.dataset+'*')
 os.system('rm -rf hists/'+options.analysis+options.year+'/condor/err/'+options.dataset+'*')
 os.system('rm -rf hists/'+options.analysis+options.year+'/condor/log/'+options.dataset+'*')
 
