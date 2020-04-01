@@ -11,5 +11,5 @@ Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(USER) $ENV(ANALYSIS)
 JobBatchName = $ENV(SAMPLE)
 accounting_group=group_cms
 request_cpus = 8
-request_memory = 8000
+request_memory = 4800
 Queue 1
