@@ -7,6 +7,18 @@ from collections import defaultdict, OrderedDict
 from coffea import hist, processor 
 from coffea.util import load, save
 
+'''
+def patch_future(cls):
+     def __iter__(self):
+          if not self.done(): 
+               yield self
+          return self.result()
+     cls.__iter__ = __iter__
+
+from concurrent.futures import Future
+patch_future(Future)
+'''
+
 def split(arr, size):
      arrs = []
      while len(arr) > size:
@@ -20,9 +32,8 @@ def merging(mergingfile,filelist):
      print('Generating merged file:',mergingfile+'.merged') 
      hists={}
      for filename in filelist:
-          fin = folder+'/'+filename
-          print('Opening:',fin)
-          hin = load(fin)
+          print('Opening:',filename)
+          hin = load(filename)
           for k in hin.keys():
                if k not in hists: hists[k]=hin[k]
                else: hists[k]+=hin[k]
@@ -38,7 +49,7 @@ def merging(mergingfile,filelist):
                dataset_map[new_dname] = (d.name.split("____")[0]+"*",)
      for key in hists.keys():
           hists[key] = hists[key].group(dataset_cats, dataset, dataset_map)
-     return hists
+     return mergingfile, hists
 
 def merge(folder,_dataset=None):
 
@@ -48,40 +59,37 @@ def merge(folder,_dataset=None):
                if filename.split("____")[0] not in pd: pd.append(filename.split("____")[0])
      print('List of primary datasets:',pd)
 
-     with concurrent.futures.ProcessPoolExecutor(max_workers=16) as executor:
-          futures = set()
-          for pdi in pd:
-               if _dataset is not None and _dataset not in pdi: continue
-               files = []
-               for filename in os.listdir(folder):
-                    if '.futures' not in filename: continue
-                    if pdi not in filename: continue
-                    files.append(filename)
-               split_files=split(files, int(len(files)/8) )
-               for i in range(0,len(split_files)) :
-                    mergingfile=pdi+'____'+str(i)+'_'
-                    filelist=split_files[i]
-                    futures.update(executor.submit(merging,mergingfile,filelist))
-                    if(len(futures)==0): continue
-                    try:
-                         total = len(futures)
-                         processed = 0
-                         while len(futures) > 0:
-                              finished = set(job for job in futures if job.done())
-                              for job in finished:
-                                   hists = job.result()
-                                   save(hists,folder+'/'+mergingfile+'.merged')
-                                   del hists
-                                   print("Processing: done with % 4d / % 4d files" % (processed, total))
-                                   processed += 1
-                              futures -= finished
-                         del finished
-                    except KeyboardInterrupt:
-                         print("Ok quitter")
-                         for job in futures: job.cancel()
-                    except:
-                         for job in futures: job.cancel()
-                         raise
+     for pdi in pd:
+          if _dataset is not None and _dataset not in pdi: continue
+          files = []
+          for filename in os.listdir(folder):
+               if '.futures' not in filename: continue
+               if pdi not in filename: continue
+               files.append(folder+'/'+filename)
+          split_files=split(files, int(len(files)/8) )
+          with concurrent.futures.ProcessPoolExecutor(max_workers=len(split_files)) as executor:
+               futures = set()
+               futures.update(executor.submit(merging,pdi+'____'+str(i)+'_',split_files[i]) for i in range(0,len(split_files)) )
+               if(len(futures)==0): continue
+               try:
+                    total = len(futures)
+                    processed = 0
+                    while len(futures) > 0:
+                         finished = set(job for job in futures if job.done())
+                         for job in finished:
+                              mergingfile, hists = job.result()
+                              save(hists,folder+'/'+mergingfile+'.merged')
+                              del hists
+                              print("Processing: done with % 4d / % 4d files" % (processed, total))
+                              processed += 1
+                         futures -= finished
+                    del finished
+               except KeyboardInterrupt:
+                    print("Ok quitter")
+                    for job in futures: job.cancel()
+               except:
+                    for job in futures: job.cancel()
+                    raise
 
      mergedlist=[]
      for mergedfile in os.listdir(folder):
