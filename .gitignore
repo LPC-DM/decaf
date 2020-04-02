@@ -7,8 +7,6 @@ __pycache__
 *out
 *.nfs0000003717774a2d000002c7
 docker_stderror
-analysis/pods/*/*.pkl.gz
-analysis/pods/*/*.coffea
-analysis/pods/*.coffea
-analysis/pods/*/condor
-analysis/core.*
+*.futures
+*.merged
+*.scaled
