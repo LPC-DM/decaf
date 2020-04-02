@@ -6,7 +6,7 @@ import os
 from collections import defaultdict, OrderedDict
 from coffea import hist, processor 
 from coffea.util import load, save
-
+from pyinstrument import Profiler
 '''
 def patch_future(cls):
      def __iter__(self):
@@ -34,9 +34,15 @@ def merging(mergingfile,filelist):
      for filename in filelist:
           print('Opening:',filename)
           hin = load(filename)
+          print(filename,'loaded')
+          profiler = Profiler()
+          profiler.start()
           for k in hin.keys():
                if k not in hists: hists[k]=hin[k]
                else: hists[k]+=hin[k]
+          profiler.stop()
+          print(profiler.output_text(unicode=True, color=True))
+          print('Histograms extracted from',filename)
           #fin.close()
           del hin
      dataset = hist.Cat("dataset", "dataset", sorting='placement')
@@ -66,7 +72,8 @@ def merge(folder,_dataset=None):
                if '.futures' not in filename: continue
                if pdi not in filename: continue
                files.append(folder+'/'+filename)
-          split_files=split(files, int(len(files)/8) )
+          print('Number of futures files for',pdi,len(files))
+          split_files=split(files, 100 )
           with concurrent.futures.ProcessPoolExecutor(max_workers=len(split_files)) as executor:
                futures = set()
                futures.update(executor.submit(merging,pdi+'____'+str(i)+'_',split_files[i]) for i in range(0,len(split_files)) )
