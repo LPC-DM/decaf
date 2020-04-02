@@ -29,7 +29,6 @@ os.system('rm -rf hists/'+options.analysis+options.year+'/condor/log/'+options.d
 
 jdl = 'run.jdl'
 if options.kisti: jdl = 'run_kisti.jdl'
-        
 print('Using',jdl)
 
 if options.tar:
