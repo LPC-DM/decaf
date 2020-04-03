@@ -34,16 +34,9 @@ def merging(mergingfile,filelist):
      for filename in filelist:
           print('Opening:',filename)
           hin = load(filename)
-          print(filename,'loaded')
-          profiler = Profiler()
-          profiler.start()
           for k in hin.keys():
                if k not in hists: hists[k]=hin[k]
                else: hists[k]+=hin[k]
-          profiler.stop()
-          print(profiler.output_text(unicode=True, color=True))
-          print('Histograms extracted from',filename)
-          #fin.close()
           del hin
      dataset = hist.Cat("dataset", "dataset", sorting='placement')
      dataset_cats = ("dataset",)
@@ -73,8 +66,9 @@ def merge(folder,_dataset=None):
                if pdi not in filename: continue
                files.append(folder+'/'+filename)
           print('Number of futures files for',pdi,len(files))
-          split_files=split(files, 100 )
-          with concurrent.futures.ProcessPoolExecutor(max_workers=len(split_files)) as executor:
+          split_files=split(files, 2)
+          print('Number of merged files for',pdi,len(split_files))
+          with concurrent.futures.ProcessPoolExecutor(max_workers=16) as executor:
                futures = set()
                futures.update(executor.submit(merging,pdi+'____'+str(i)+'_',split_files[i]) for i in range(0,len(split_files)) )
                if(len(futures)==0): continue
@@ -98,6 +92,8 @@ def merge(folder,_dataset=None):
                     for job in futures: job.cancel()
                     raise
 
+def postprocess(folder):
+
      mergedlist=[]
      for mergedfile in os.listdir(folder):
           if '.merged' not in mergedfile: continue
@@ -119,8 +115,12 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-f', '--folder', help='folder', dest='folder')
     parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
+    parser.add_option('-p', '--postprocess', action='store_true', dest='postprocess')
     (options, args) = parser.parse_args()
-
+    
     dataset=None
     if options.dataset: dataset=options.dataset
-    merge(options.folder,dataset)
+    if options.postprocess:
+         postprocess(options.folder)
+    else:
+         merge(options.folder,dataset)
