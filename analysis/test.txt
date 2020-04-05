@@ -1,13 +1,13 @@
 universe = vanilla
-Executable = run_kisti.sh 
+Executable = run.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
-Transfer_Input_Files = run_kisti.sh, /tmp/x509up_u556950957
+Transfer_Input_Files = run.sh, /tmp/x509up_u556950957
 Output = hists/$ENV(ANALYSIS)$ENV(YEAR)/condor/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
 Error = hists/$ENV(ANALYSIS)$ENV(YEAR)/condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
 Log = hists/$ENV(ANALYSIS)$ENV(YEAR)/condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(ANALYSIS)$ENV(YEAR)_$ENV(SAMPLE).futures=$ENV(PWD)/hists/$ENV(ANALYSIS)$ENV(YEAR)/$ENV(SAMPLE).futures"
-Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(USER) $ENV(ANALYSIS)
+Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(ANALYSIS) $ENV(CLUSTER) $ENV(USER)
 JobBatchName = $ENV(SAMPLE)
 accounting_group=group_cms
 request_cpus = 8

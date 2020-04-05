@@ -40,61 +40,46 @@ def futuresum(tmp_arr):
           print(tmp_arr)
      return tmp_arr
 
-def merge(folder,variable=None):
+
+def reduce(folder,_dataset=None,variable=None):
 
      lists = {}
      for filename in os.listdir(folder):
-          if '.reduced' not in filename: continue
-          if filename.split('--')[0] not in lists: lists[filename.split('--')[0]] = []
-          lists[filename.split('--')[0]].append(folder+'/'+filename)
-
-     for var in lists.keys():
+          if '.futures' not in filename: continue
+          if filename.split("____")[0] not in lists: lists[filename.split("____")[0]] = []
+          lists[filename.split("____")[0]].append(folder+'/'+filename)
+          
+     for pdi in lists.keys():
+          if _dataset is not None and _dataset not in pdi: continue
           tmp={}
-          if variable is not None and var not in variable: continue
-          print(lists[var])
-          for filename in lists[var]:
+          for filename in lists[pdi]:
                print('Opening:',filename)
                hin = load(filename)
-               if var not in tmp: tmp[var]=[hin[var]]
-               else: tmp[var].append(hin[var])
+               for k in hin.keys():
+                    if variable is not None and k not in variable: continue
+                    print('Considering variable',k)
+                    if k not in tmp: tmp[k]=[hin[k]]
+                    else: tmp[k].append(hin[k])
                del hin
-          print(tmp)
           for k in tmp:
                tmp_arr=futuresum(np.array(tmp[k]))
                hists = {}
                hists[k]=tmp_arr[0]
+               dataset = hist.Cat("dataset", "dataset", sorting='placement')
+               dataset_cats = ("dataset",)
+               dataset_map = OrderedDict()
+               for d in hists[k].identifiers('dataset'):
+                    if d.name.split("____")[0] not in dataset_map: dataset_map[d.name.split("____")[0]] = (d.name.split("____")[0]+"*",)
+               hists[k] = hists[k].group(dataset_cats, dataset, dataset_map)
                print(hists)
-               save(hists, folder+'/'+k+'.merged')
-
-
-def postprocess(folder):
-     
-     variables = []
-     for filename in os.listdir(folder):
-          if '.merged' not in filename: continue
-          if '--' not in filename: continue
-          if filename.split('--')[0] not in variables: variables.append(filename.split('--')[0])
-
-     hists = {}
-     for variable in variables:
-          filename = folder+'/'+variable+'.merged'
-          print('Opening:',filename)
-          hin = load(filename)
-          hists.update(hin)
-     print(hists)
-     save(hists,folder+'.merged')
-     
-     
+               save(hists, folder+'/'+k+'--'+pdi+'.reduced')
 
 if __name__ == '__main__':
     from optparse import OptionParser
     parser = OptionParser()
     parser.add_option('-f', '--folder', help='folder', dest='folder')
+    parser.add_option('-d', '--dataset', help='dataset', dest='dataset', default=None)
     parser.add_option('-v', '--variable', help='variable', dest='variable', default=None)
-    parser.add_option('-p', '--postprocess', action='store_true', dest='postprocess')
     (options, args) = parser.parse_args()
     
-    if options.postprocess:
-         postprocess(options.folder)
-    else:
-         merge(options.folder,options.variable)
+    reduce(options.folder,options.dataset,options.variable)
