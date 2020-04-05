@@ -29,6 +29,7 @@ os.system('rm -rf hists/'+options.analysis+options.year+'/condor/log/'+options.d
 
 jdl = 'run.jdl'
 if options.kisti: jdl = 'run_kisti.jdl'
+os.system('cp jdls/'+jdl+' .')
 print('Using',jdl)
 
 if options.tar:
@@ -51,3 +52,4 @@ for dataset, info in datadef.items():
     os.environ['ANALYSIS']   = options.analysis
     os.environ['YEAR']   = options.year
     os.system('condor_submit '+jdl)
+os.system('rm '+jdl)

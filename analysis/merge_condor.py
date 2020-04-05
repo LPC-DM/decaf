@@ -29,11 +29,13 @@ os.system('rm -rf '+options.folder+'/merge_condor/err/'+options.dataset+'*')
 os.system('rm -rf '+options.folder+'/merge_condor/log/'+options.dataset+'*')
 os.system('rm -rf '+options.folder+'/merge_condor/out/'+options.dataset+'*')
 
-jdl = 'merge.jdl'
-if options.kisti:  jdl = 'merge_kisti.jdl'
+jdl = 'merge'
+if options.kisti:  jdl = 'merge_kisti'
 if options.reduce: 
-    jdl = 'reduce.jdl'
-    if options.kisti: jdl = 'reduce_kisti.jdl'
+    jdl = 'reduce'
+    if options.kisti: jdl = 'reduce_kisti'
+jdl=jdl+'.jdl'
+os.system('cp jdls/'+jdl+' .')
 print('Using',jdl)
 
 if options.tar:
@@ -91,7 +93,6 @@ else:
     for pdi in pd:
         if options.dataset and options.dataset not in pdi: continue
         if options.exclude and options.exclude in pdi: continue
-        #print(pdi)
         for variable in variables:
             if options.variable and options.variable not in variable: continue
             #print(variable)
@@ -99,6 +100,4 @@ else:
             os.environ['SAMPLE'] = pdi
             os.environ['VARIABLE'] = variable
             os.system('condor_submit '+jdl)
-            #print('condor_submit '+jdl)
-
-
+os.system('rm '+jdl)
