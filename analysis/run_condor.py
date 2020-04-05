@@ -63,7 +63,7 @@ Output = hists/$ENV(ANALYSIS)$ENV(YEAR)/condor/out/$ENV(SAMPLE)_$(Cluster)_$(Pro
 Error = hists/$ENV(ANALYSIS)$ENV(YEAR)/condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
 Log = hists/$ENV(ANALYSIS)$ENV(YEAR)/condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(ANALYSIS)$ENV(YEAR)_$ENV(SAMPLE).futures=$ENV(PWD)/hists/$ENV(ANALYSIS)$ENV(YEAR)/$ENV(SAMPLE).futures"
-Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(USER) $ENV(ANALYSIS)
+Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(ANALYSIS) $ENV(CLUSTER) $ENV(USER) 
 request_cpus = 8
 request_memory = 5700
 Queue 1"""
