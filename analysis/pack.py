@@ -11,7 +11,7 @@ import warnings
 import os
 import difflib
 from optparse import OptionParser
-from process import *
+from util.process import *
 
 parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
