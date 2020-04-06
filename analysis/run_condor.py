@@ -40,9 +40,9 @@ Executable = run.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = run.sh, /tmp/x509up_u556950957
-Output = hists/$ENV(ANALYSIS)$ENV(YEAR)/condor/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
-Error = hists/$ENV(ANALYSIS)$ENV(YEAR)/condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
-Log = hists/$ENV(ANALYSIS)$ENV(YEAR)/condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
+Output = hists/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
+Error = hists/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
+Log = hists/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(ANALYSIS)$ENV(YEAR)_$ENV(SAMPLE).futures=$ENV(PWD)/hists/$ENV(ANALYSIS)$ENV(YEAR)/$ENV(SAMPLE).futures"
 Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(ANALYSIS) $ENV(CLUSTER) $ENV(USER)
 JobBatchName = $ENV(SAMPLE)
@@ -59,9 +59,9 @@ Executable = run.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = run.sh
-Output = hists/$ENV(ANALYSIS)$ENV(YEAR)/condor/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
-Error = hists/$ENV(ANALYSIS)$ENV(YEAR)/condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
-Log = hists/$ENV(ANALYSIS)$ENV(YEAR)/condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
+Output = hists/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
+Error = hists/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
+Log = hists/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(ANALYSIS)$ENV(YEAR)_$ENV(SAMPLE).futures=$ENV(PWD)/hists/$ENV(ANALYSIS)$ENV(YEAR)/$ENV(SAMPLE).futures"
 Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(ANALYSIS) $ENV(CLUSTER) $ENV(USER) 
 request_cpus = 8
