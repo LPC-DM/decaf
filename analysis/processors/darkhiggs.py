@@ -728,12 +728,19 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
 
             qFromW = gen[
-                (abs(gen.pdgId) < 5) &
+                (abs(gen.pdgId) < 4) &
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                 (abs(gen.distinctParent.pdgId) == 24)
             ]
+            cFromW = gen[
+                (abs(gen.pdgId) == 4) &
+                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
+                (abs(gen.distinctParent.pdgId) == 24)
+            ]
+
             def tbqqmatch(topid, dR=1.5):
                 qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
+                cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
                 bFromTop = gen[
                     (abs(gen.pdgId) == 5) &
                     gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
@@ -743,15 +750,43 @@ class AnalysisProcessor(processor.ProcessorABC):
                 jetgenb = fj.cross(bFromTop, nested=True)
                 Wmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
                 bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
-                return Wmatch & bmatch
+                return Wmatch & bmatch & (cFromWFromTop.counts==0)
             fj['isTbqq'] = tbqqmatch(6)|tbqqmatch(-6)
+
+            def tbcqmatch(topid, dR=1.5):
+                qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
+                cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
+                bFromTop = gen[
+                    (abs(gen.pdgId) == 5) &
+                    gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
+                    (gen.distinctParent.pdgId == topid)
+                ]
+                jetgenWq = fj.cross(qFromWFromTop, nested=True)
+                jetgenWc = fj.cross(cFromWFromTop, nested=True)
+                jetgenb = fj.cross(bFromTop, nested=True)
+                qWmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
+                cWmatch = (jetgenWc.i0.delta_r(jetgenWc.i1) < dR).all()&(cFromWFromTop.counts>0)
+                bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
+                return cWmatch & qWmatch & bmatch
+            fj['isTbcq'] = tbcqmatch(6)|tbcqmatch(-6)
 
             def tqqmatch(topid, dR=1.5):
                 qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
+                cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
                 jetgenWq = fj.cross(qFromWFromTop, nested=True)
                 Wmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
-                return Wmatch
+                return Wmatch & (cFromWFromTop.counts==0)
             fj['isTqq'] = tqqmatch(6)|tqqmatch(-6)
+
+            def tcqmatch(topid, dR=1.5):
+                qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
+                cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
+                jetgenWq = fj.cross(qFromWFromTop, nested=True)
+                jetgenWc = fj.cross(cFromWFromTop, nested=True)
+                qWmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
+                cWmatch = (jetgenWc.i0.delta_r(jetgenWc.i1) < dR).all()&(cFromWFromTop.counts>0)
+                return cWmatch & qWmatch
+            fj['isTcq'] = tcqmatch(6)|tcqmatch(-6)
 
             def tbqmatch(topid, dR=1.5):
                 qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
@@ -767,12 +802,35 @@ class AnalysisProcessor(processor.ProcessorABC):
                 return Wmatch & bmatch
             fj['isTbq'] = tbqmatch(6)|tbqmatch(-6)
 
+            def tbcmatch(topid, dR=1.5):
+                cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
+                bFromTop = gen[
+                    (abs(gen.pdgId) == 5) &
+                    gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
+                    (gen.distinctParent.pdgId == topid)
+                ]
+                jetgenWc = fj.cross(cFromWFromTop, nested=True)
+                jetgenb = fj.cross(bFromTop, nested=True)
+                Wmatch = (jetgenWc.i0.delta_r(jetgenWc.i1) < dR).any()&(cFromWFromTop.counts>0)
+                bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
+                return Wmatch & bmatch
+            fj['isTbc'] = tbcmatch(6)|tbcmatch(-6)
+
             ###
             # Fat-jet W->qq matching at decay level
             ###
             jetgenq = fj.cross(qFromW, nested=True)
             qqmatch = (jetgenq.i0.delta_r(jetgenq.i1) < 1.5).all()&(qFromW.counts>0)
             fj['isWqq']  = qqmatch
+
+            ###
+            # Fat-jet W->cq matching at decay level
+            ###
+            jetgenq = fj.cross(qFromW, nested=True)
+            jetgenc = fj.cross(cFromW, nested=True)
+            qmatch = (jetgenq.i0.delta_r(jetgenq.i1) < 1.5).all()&(qFromW.counts>0)
+            cmatch = (jetgenc.i0.delta_r(jetgenc.i1) < 1.5).all()&(cFromW.counts>0)
+            fj['isWcq']  = qmatch & cmatch
 
             ###
             # Fat-jet Z->bb matching at decay level
@@ -787,10 +845,22 @@ class AnalysisProcessor(processor.ProcessorABC):
             fj['isZbb']  = bbmatch
 
             ###
+            # Fat-jet Z->cc matching at decay level
+            ###
+            cFromZ = gen[
+                (abs(gen.pdgId) == 4) &
+                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
+                (abs(gen.distinctParent.pdgId) == 23)
+            ]
+            jetgenc = fj.cross(cFromZ, nested=True)
+            ccmatch = (jetgenc.i0.delta_r(jetgenb.i1) < 1.5).all()&(cFromZ.counts>0)
+            fj['isZbb']  = ccmatch
+
+            ###
             # Fat-jet Z->qq matching at decay level
             ###
             qFromZ = gen[
-                (abs(gen.pdgId) < 5) &
+                (abs(gen.pdgId) < 4) &
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                 (abs(gen.distinctParent.pdgId) == 23)
             ]
@@ -831,6 +901,13 @@ class AnalysisProcessor(processor.ProcessorABC):
             fj['isbb']  = bmatch
 
             gen['isc'] = (abs(gen.pdgId)==4)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
+            jetgenc = fj.cross(gen[gen.isc], nested=True)
+            cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==1)&(gen[gen.isc].counts>0)
+            fj['isc']  = cmatch
+
+            cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==2)&(gen[gen.isc].counts>0)
+            fj['iscc']  = cmatch
+
             gen['isTop'] = (abs(gen.pdgId)==6)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isW'] = (abs(gen.pdgId)==24)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isZ'] = (abs(gen.pdgId)==23)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
@@ -1183,75 +1260,204 @@ class AnalysisProcessor(processor.ProcessorABC):
                     ~leading_fj.isHbb &
                     leading_fj.isZbb
                 ).sum(),
+                'tbcq' : (
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    leading_fj.isTbcq 
+                ).sum(),
                 'tbqq' : (
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
+                    ~leading_fj.isTbcq &
                     leading_fj.isTbqq 
+                ).sum(),
+                'zcc' : (
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    ~leading_fj.isTbcq &
+                    ~leading_fj.isTbqq &
+                    leading_fj.isZcc
+                ).sum(),
+                'tcq' : (
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    ~leading_fj.isTbcq &
+                    ~leading_fj.isTbqq &
+                    ~leading_fj.isZcc &
+                    leading_fj.isTcq
+                ).sum(),
+                'wcq' : (
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    ~leading_fj.isTbcq &
+                    ~leading_fj.isTbqq &
+                    ~leading_fj.isZcc &
+                    ~leading_fj.isTcq &
+                    leading_fj.isWcq
                 ).sum(),
                 'tqq' : (
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
+                    ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
+                    ~leading_fj.isZcc &
+                    ~leading_fj.isTcq &
+                    ~leading_fj.isWcq &
                     leading_fj.isTqq
                 ).sum(),
                 'vqq' : (
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
+                    ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
+                    ~leading_fj.isZcc &
+                    ~leading_fj.isTcq &
+                    ~leading_fj.isWcq &
                     ~leading_fj.isTqq &
                     (leading_fj.isWqq | leading_fj.isZqq)
                 ).sum(),
                 'bb' : (
-                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
+                    ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
+                    ~leading_fj.isZcc &
+                    ~leading_fj.isTcq &
+                    ~leading_fj.isWcq &
                     ~leading_fj.isTqq &
-                    ~(leading_fj.isWqq |leading_fj.isZqq) &
+                    ~(leading_fj.isWqq | leading_fj.isZqq) &
                     leading_fj.isbb
+                ).sum(),
+                'tbc' : (
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    ~leading_fj.isTbcq &
+                    ~leading_fj.isTbqq &
+                    ~leading_fj.isZcc &
+                    ~leading_fj.isTcq &
+                    ~leading_fj.isWcq &
+                    ~leading_fj.isTqq &
+                    ~(leading_fj.isWqq | leading_fj.isZqq) &
+                    ~leading_fj.isbb &
+                    leading_fj.isTbc
+                ).sum(),
+                'bc' : (
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    ~leading_fj.isTbcq &
+                    ~leading_fj.isTbqq &
+                    ~leading_fj.isZcc &
+                    ~leading_fj.isTcq &
+                    ~leading_fj.isWcq &
+                    ~leading_fj.isTqq &
+                    ~(leading_fj.isWqq | leading_fj.isZqq) &
+                    ~leading_fj.isbb &
+                    ~leading_fj.isTbc &
+                    (leading_fj.isb & leading_fj.isc)
                 ).sum(),
                 'tbq' : (
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
+                    ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
+                    ~leading_fj.isZcc &
+                    ~leading_fj.isTcq &
+                    ~leading_fj.isWcq &
                     ~leading_fj.isTqq &
-                    ~(leading_fj.isWqq |leading_fj.isZqq) &
+                    ~(leading_fj.isWqq | leading_fj.isZqq) &
                     ~leading_fj.isbb &
+                    ~leading_fj.isTbc &
+                    ~(leading_fj.isb & leading_fj.isc) &
                     leading_fj.isTbq 
                 ).sum(),
                 'b' : (
-                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
+                    ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
+                    ~leading_fj.isZcc &
+                    ~leading_fj.isTcq &
+                    ~leading_fj.isWcq &
                     ~leading_fj.isTqq &
-                    ~(leading_fj.isWqq |leading_fj.isZqq) &
+                    ~(leading_fj.isWqq | leading_fj.isZqq) &
                     ~leading_fj.isbb &
+                    ~leading_fj.isTbc &
+                    ~(leading_fj.isb & leading_fj.isc) &
                     ~leading_fj.isTbq &
                     leading_fj.isb
                 ).sum(),
-                'other' : (
-                    ~leading_fj.isHsbb &
+                'cc' : (
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
+                    ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
+                    ~leading_fj.isZcc &
+                    ~leading_fj.isTcq &
+                    ~leading_fj.isWcq &
                     ~leading_fj.isTqq &
-                    ~(leading_fj.isWqq |leading_fj.isZqq) &
+                    ~(leading_fj.isWqq | leading_fj.isZqq) &
                     ~leading_fj.isbb &
+                    ~leading_fj.isTbc &
+                    ~(leading_fj.isb & leading_fj.isc) &
                     ~leading_fj.isTbq &
-                    ~leading_fj.isb
+                    ~leading_fj.isb &
+                    leading_fj.iscc
+                ).sum(),
+                'c' : (
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    ~leading_fj.isTbcq &
+                    ~leading_fj.isTbqq &
+                    ~leading_fj.isZcc &
+                    ~leading_fj.isTcq &
+                    ~leading_fj.isWcq &
+                    ~leading_fj.isTqq &
+                    ~(leading_fj.isWqq | leading_fj.isZqq) &
+                    ~leading_fj.isbb &
+                    ~leading_fj.isTbc &
+                    ~(leading_fj.isb & leading_fj.isc) &
+                    ~leading_fj.isTbq &
+                    ~leading_fj.isb &
+                    ~leading_fj.iscc &
+                    leading_fj.isc
+                ).sum(),
+                'other' : (
+                    ~leading_fj.isHbb &
+                    ~leading_fj.isZbb &
+                    ~leading_fj.isTbcq &
+                    ~leading_fj.isTbqq &
+                    ~leading_fj.isZcc &
+                    ~leading_fj.isTcq &
+                    ~leading_fj.isWcq &
+                    ~leading_fj.isTqq &
+                    ~(leading_fj.isWqq | leading_fj.isZqq) &
+                    ~leading_fj.isbb &
+                    ~leading_fj.isTbc &
+                    ~(leading_fj.isb & leading_fj.isc) &
+                    ~leading_fj.isTbq &
+                    ~leading_fj.isb &
+                    ~leading_fj.iscc &
+                    ~leading_fj.isc
                 ).sum(),
             }
             wgentype['garbage'] = (
-                (~(wgentype['tbqq'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['tbq'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['tqq'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['hbb'].astype(np.bool))).astype(np.int) &
                 (~(wgentype['hsbb'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['hbb'].astype(np.bool))).astype(np.int) &
                 (~(wgentype['zbb'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['tbcq'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['tbqq'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['zcc'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['tcq'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['wcq'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['tqq'].astype(np.bool))).astype(np.int) &
                 (~(wgentype['vqq'].astype(np.bool))).astype(np.int) &
                 (~(wgentype['bb'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['tbc'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['bc'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['tbq'].astype(np.bool))).astype(np.int) &
                 (~(wgentype['b'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['cc'].astype(np.bool))).astype(np.int) &
+                (~(wgentype['c'].astype(np.bool))).astype(np.int) &
                 (~(wgentype['other'].astype(np.bool))).astype(np.int)
             )
             if 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset or 'GJets' in dataset or 'QCD' in dataset:
@@ -1270,7 +1476,9 @@ class AnalysisProcessor(processor.ProcessorABC):
                 for r in regions:
                     cut = selection.all(*regions[r])
                     for systematic in systematics:
+                        print(events.size)
                         for gentype in wgentype.keys():
+                            print(gentype,wgentype[gentype].sum())
                             fill(dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*wgentype[gentype], cut)
 
         return hout
