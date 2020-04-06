@@ -16,7 +16,7 @@ from coffea import hist
 
 parser = OptionParser()
 parser.add_option('-f', '--folder', help='folder', dest='folder')
-parser.add_option('-v', '--variable', help='variable', dest='variable')
+parser.add_option('-v', '--variable', help='variable', dest='variable', default='')
 parser.add_option('-c', '--cluster', help='cluster', dest='cluster', default='lpc')
 parser.add_option('-t', '--tar', action='store_true', dest='tar')
 (options, args) = parser.parse_args()

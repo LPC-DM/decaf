@@ -16,26 +16,29 @@ def futuresum(tmp_arr):
      while np.size(tmp_arr)>1:
           chunk_sum=[]
           chunk_tmp_arr = np.array_split(tmp_arr, int(np.size(tmp_arr)/2))
-          with concurrent.futures.ProcessPoolExecutor(max_workers=16) as executor:
-               futures = set()
-               futures.update(executor.submit(add,chunk_tmp_arr[i]) for i in range(0,len(chunk_tmp_arr)))
-               if(len(futures)==0): continue
-               try:
-                    total = len(futures)
-                    processed = 0
-                    while len(futures) > 0:
-                         finished = set(job for job in futures if job.done())
-                         for job in finished:
-                              chunk_i = job.result()
-                              chunk_sum.append(chunk_i)
-                         futures -= finished
-                    del finished
-               except KeyboardInterrupt:
-                    print("Ok quitter")
-                    for job in futures: job.cancel()
-               except:
-                    for job in futures: job.cancel()
-                    raise
+          if len(chunk_tmp_arr)>1:
+               with concurrent.futures.ProcessPoolExecutor(max_workers=16) as executor:
+                    futures = set()
+                    futures.update(executor.submit(add,chunk_tmp_arr[i]) for i in range(0,len(chunk_tmp_arr)))
+                    if(len(futures)==0): continue
+                    try:
+                         total = len(futures)
+                         processed = 0
+                         while len(futures) > 0:
+                              finished = set(job for job in futures if job.done())
+                              for job in finished:
+                                   chunk_i = job.result()
+                                   chunk_sum.append(chunk_i)
+                              futures -= finished
+                         del finished
+                    except KeyboardInterrupt:
+                         print("Ok quitter")
+                         for job in futures: job.cancel()
+                    except:
+                         for job in futures: job.cancel()
+                         raise
+          else:
+               chunk_sum.append(add(chunk_tmp_arr[0]))
           tmp_arr=np.array(chunk_sum)
           print(tmp_arr)
      return tmp_arr

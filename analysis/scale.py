@@ -36,17 +36,11 @@ def scale_file(file):
 
 def scale_directory(directory):
 
-    variables = []
+    hists = {}
     for filename in os.listdir(directory):
         if '.merged' not in filename: continue
-        if '--' not in filename: continue
-        if filename.split('--')[0] not in variables: variables.append(filename.split('--')[0])
-        
-    hists = {}
-    for variable in variables:
-        filename = directory+'/'+variable+'.merged'
-        print('Opening:',filename)
-        hin = load(filename)
+        print('Opening:', filename)
+        hin = load(directory+'/'+filename)
         hists.update(hin)
 
     return scale(hists)
