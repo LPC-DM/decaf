@@ -740,19 +740,16 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             def tbqqmatch(topid, dR=1.5):
                 qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
-                cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
                 bFromTop = gen[
                     (abs(gen.pdgId) == 5) &
                     gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                     (gen.distinctParent.pdgId == topid)
                 ]
                 jetgenWq = fj.cross(qFromWFromTop, nested=True)
-                jetgenWc = fj.cross(cFromWFromTop, nested=True)
                 jetgenb = fj.cross(bFromTop, nested=True)
-                qWmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
-                cWmatch = (jetgenWc.i0.delta_r(jetgenWc.i1) < dR).all()&(cFromWFromTop.counts>0)
+                qWmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>1)
                 bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
-                return ~cWmatch & qWmatch & bmatch
+                return qWmatch & bmatch
             fj['isTbqq'] = tbqqmatch(6)|tbqqmatch(-6)
 
             def tbcqmatch(topid, dR=1.5):
@@ -774,12 +771,9 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             def tqqmatch(topid, dR=1.5):
                 qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
-                cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
                 jetgenWq = fj.cross(qFromWFromTop, nested=True)
-                jetgenWc = fj.cross(cFromWFromTop, nested=True)
-                qWmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
-                cWmatch = (jetgenWc.i0.delta_r(jetgenWc.i1) < dR).all()&(cFromWFromTop.counts>0)
-                return ~cWmatch & qWmatch
+                qWmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>1)
+                return qWmatch
             fj['isTqq'] = tqqmatch(6)|tqqmatch(-6)
 
             def tcqmatch(topid, dR=1.5):
@@ -801,9 +795,9 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ]
                 jetgenWq = fj.cross(qFromWFromTop, nested=True)
                 jetgenb = fj.cross(bFromTop, nested=True)
-                Wmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).any()&(qFromWFromTop.counts>0)
+                qWmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).any()&(qFromWFromTop.counts>0)
                 bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
-                return Wmatch & bmatch
+                return qWmatch & bmatch
             fj['isTbq'] = tbqmatch(6)|tbqmatch(-6)
 
             def tbcmatch(topid, dR=1.5):
@@ -815,26 +809,33 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ]
                 jetgenWc = fj.cross(cFromWFromTop, nested=True)
                 jetgenb = fj.cross(bFromTop, nested=True)
-                Wmatch = (jetgenWc.i0.delta_r(jetgenWc.i1) < dR).any()&(cFromWFromTop.counts>0)
+                cWmatch = (jetgenWc.i0.delta_r(jetgenWc.i1) < dR).all()&(cFromWFromTop.counts>0)
                 bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
-                return Wmatch & bmatch
+                return cWmatch & bmatch
             fj['isTbc'] = tbcmatch(6)|tbcmatch(-6)
 
             ###
             # Fat-jet W->qq matching at decay level
             ###
-            jetgenq = fj.cross(qFromW, nested=True)
-            qqmatch = (jetgenq.i0.delta_r(jetgenq.i1) < 1.5).all()&(qFromW.counts>0)
-            fj['isWqq']  = qqmatch
+            def wqqmatch(wid, dR=1.5):
+                qFromSameW = qFromW[qFromW.distinctParent.pdgId == wid]
+                jetgenq = fj.cross(qFromSameW, nested=True)
+                qqmatch = (jetgenq.i0.delta_r(jetgenq.i1) < dR).all()&(qFromSameW.counts>1)
+                return qqmatch
+            fj['isWqq']  = wqqmatch(24)|wqqmatch(-24)
 
             ###
             # Fat-jet W->cq matching at decay level
             ###
-            jetgenq = fj.cross(qFromW, nested=True)
-            jetgenc = fj.cross(cFromW, nested=True)
-            qmatch = (jetgenq.i0.delta_r(jetgenq.i1) < 1.5).all()&(qFromW.counts>0)
-            cmatch = (jetgenc.i0.delta_r(jetgenc.i1) < 1.5).all()&(cFromW.counts>0)
-            fj['isWcq']  = qmatch & cmatch
+            def wcqmatch(wid, dR=1.5):
+                qFromSameW = qFromW[qFromW.distinctParent.pdgId == wid]
+                cFromSameW = cFromW[cFromW.distinctParent.pdgId == wid]
+                jetgenq = fj.cross(qFromSameW, nested=True)
+                jetgenc = fj.cross(cFromSameW, nested=True)
+                qmatch = (jetgenq.i0.delta_r(jetgenq.i1) < dR).all()&(qFromSameW.counts>0)
+                cmatch = (jetgenc.i0.delta_r(jetgenc.i1) < dR).all()&(cFromSameW.counts>0)
+                return qmatch & cmatch
+            fj['isWcq']  = wcqmatch(24)|wcqmatch(-24)
 
             ###
             # Fat-jet Z->bb matching at decay level
@@ -844,9 +845,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                 (abs(gen.distinctParent.pdgId) == 23)
             ]
-            jetgenb = fj.cross(bFromZ, nested=True)
-            bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < 1.5).all()&(bFromZ.counts>0)
-            fj['isZbb']  = bbmatch
+            def zbbmatch(zid, dR=1.5):
+                bFromSameZ = bFromZ[bFromZ.distinctParent.pdgId == zid]
+                jetgenb = fj.cross(bFromSameZ, nested=True)
+                bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromSameZ.counts>0)
+                return bbmatch
+            fj['isZbb']  = zbbmatch(23)|zbbmatch(-23)
 
             ###
             # Fat-jet Z->cc matching at decay level
@@ -856,9 +860,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                 (abs(gen.distinctParent.pdgId) == 23)
             ]
-            jetgenc = fj.cross(cFromZ, nested=True)
-            ccmatch = (jetgenc.i0.delta_r(jetgenb.i1) < 1.5).all()&(cFromZ.counts>0)
-            fj['isZcc']  = ccmatch
+            def zccmatch(zid, dR=1.5):
+                cFromSameZ = cFromZ[cFromZ.distinctParent.pdgId == zid]
+                jetgenc = fj.cross(cFromSameZ, nested=True)
+                ccmatch = (jetgenc.i0.delta_r(jetgenc.i1) < dR).all()&(cFromSameZ.counts>0)
+                return ccmatch
+            fj['isZcc']  = zccmatch(23)|zccmatch(-23)
 
             ###
             # Fat-jet Z->qq matching at decay level
@@ -868,9 +875,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                 (abs(gen.distinctParent.pdgId) == 23)
             ]
-            jetgenq = fj.cross(qFromZ, nested=True)
-            qqmatch = (jetgenq.i0.delta_r(jetgenq.i1) < 1.5).all()&(qFromZ.counts>0)
-            fj['isZqq']  = qqmatch
+            def zqqmatch(zid, dR=1.5):
+                qFromSameZ = qFromZ[qFromZ.distinctParent.pdgId == zid]
+                jetgenq = fj.cross(qFromSameZ, nested=True)
+                qqmatch = (jetgenq.i0.delta_r(jetgenq.i1) < dR).all()&(qFromSameZ.counts>0)
+                return qqmatch
+            fj['isZqq']  = zqqmatch(23)|zqqmatch(-23)
 
             ###
             # Fat-jet H->bb matching at decay level
@@ -880,9 +890,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                 (abs(gen.distinctParent.pdgId) == 25)
             ]
-            jetgenb = fj.cross(bFromH, nested=True)
-            bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < 1.5).all()&(bFromH.counts>0)
-            fj['isHbb']  = bbmatch
+            def hbbmatch(hid, dR=1.5):
+                bFromSameH = bFromH[bFromH.distinctParent.pdgId == hid]
+                jetgenb = fj.cross(bFromSameH, nested=True)
+                bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromSameH.counts>0)
+                return bbmatch
+            fj['isHbb']  = hbbmatch(25)|hbbmatch(-25)
 
             ###
             # Fat-jet dark H->bb matching at decay level
@@ -892,9 +905,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                 (abs(gen.distinctParent.pdgId) == 54)
             ]
-            jetgenb = fj.cross(bFromHs, nested=True)
-            bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < 1.5).all()&(bFromHs.counts>0)
-            fj['isHsbb']  = bbmatch
+            def hsbbmatch(hid, dR=1.5):
+                bFromSameHs = bFromHs[bFromHs.distinctParent.pdgId == hid]
+                jetgenb = fj.cross(bFromSameHs, nested=True)
+                bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromSameHs.counts>0)
+                return bbmatch
+            fj['isHsbb']  = hsbbmatch(54)|hsbbmatch(-54)
 
             gen['isb'] = (abs(gen.pdgId)==5)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             jetgenb = fj.cross(gen[gen.isb], nested=True)
