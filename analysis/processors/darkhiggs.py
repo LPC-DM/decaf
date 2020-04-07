@@ -747,10 +747,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                     (gen.distinctParent.pdgId == topid)
                 ]
                 jetgenWq = fj.cross(qFromWFromTop, nested=True)
+                jetgenWc = fj.cross(cFromWFromTop, nested=True)
                 jetgenb = fj.cross(bFromTop, nested=True)
-                Wmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
+                qWmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
+                cWmatch = (jetgenWc.i0.delta_r(jetgenWc.i1) < dR).all()&(cFromWFromTop.counts>0)
                 bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
-                return Wmatch & bmatch & (cFromWFromTop.counts==0)
+                return ~cWmatch & qWmatch & bmatch
             fj['isTbqq'] = tbqqmatch(6)|tbqqmatch(-6)
 
             def tbcqmatch(topid, dR=1.5):
@@ -774,8 +776,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                 qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
                 cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
                 jetgenWq = fj.cross(qFromWFromTop, nested=True)
-                Wmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
-                return Wmatch & (cFromWFromTop.counts==0)
+                jetgenWc = fj.cross(cFromWFromTop, nested=True)
+                qWmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
+                cWmatch = (jetgenWc.i0.delta_r(jetgenWc.i1) < dR).all()&(cFromWFromTop.counts>0)
+                return ~cWmatch & qWmatch
             fj['isTqq'] = tqqmatch(6)|tqqmatch(-6)
 
             def tcqmatch(topid, dR=1.5):
@@ -854,7 +858,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ]
             jetgenc = fj.cross(cFromZ, nested=True)
             ccmatch = (jetgenc.i0.delta_r(jetgenb.i1) < 1.5).all()&(cFromZ.counts>0)
-            fj['isZbb']  = ccmatch
+            fj['isZcc']  = ccmatch
 
             ###
             # Fat-jet Z->qq matching at decay level
