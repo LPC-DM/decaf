@@ -747,8 +747,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ]
                 jetgenWq = fj.cross(qFromWFromTop, nested=True)
                 jetgenb = fj.cross(bFromTop, nested=True)
-                qWmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>1)
-                bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
+                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==2) & (qFromWFromTop.counts>0)
+                bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1) & (bFromTop.counts>0)
                 return qWmatch & bmatch
             fj['isTbqq'] = tbqqmatch(6)|tbqqmatch(-6)
 
@@ -763,16 +763,16 @@ class AnalysisProcessor(processor.ProcessorABC):
                 jetgenWq = fj.cross(qFromWFromTop, nested=True)
                 jetgenWc = fj.cross(cFromWFromTop, nested=True)
                 jetgenb = fj.cross(bFromTop, nested=True)
-                qWmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
-                cWmatch = (jetgenWc.i0.delta_r(jetgenWc.i1) < dR).all()&(cFromWFromTop.counts>0)
-                bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
+                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==1) & (qFromWFromTop.counts>0)
+                cWmatch = ((jetgenWc.i0.delta_r(jetgenWc.i1) < dR).sum()==1) & (cFromWFromTop.counts>0)
+                bmatch =  ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1)   & (bFromTop.counts>0)
                 return cWmatch & qWmatch & bmatch
             fj['isTbcq'] = tbcqmatch(6)|tbcqmatch(-6)
 
             def tqqmatch(topid, dR=1.5):
                 qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
                 jetgenWq = fj.cross(qFromWFromTop, nested=True)
-                qWmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>1)
+                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==2) & (qFromWFromTop.counts>0)
                 return qWmatch
             fj['isTqq'] = tqqmatch(6)|tqqmatch(-6)
 
@@ -781,8 +781,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
                 jetgenWq = fj.cross(qFromWFromTop, nested=True)
                 jetgenWc = fj.cross(cFromWFromTop, nested=True)
-                qWmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).all()&(qFromWFromTop.counts>0)
-                cWmatch = (jetgenWc.i0.delta_r(jetgenWc.i1) < dR).all()&(cFromWFromTop.counts>0)
+                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==1) & (qFromWFromTop.counts>0)
+                cWmatch = ((jetgenWc.i0.delta_r(jetgenWc.i1) < dR).sum()==1) & (cFromWFromTop.counts>0)
                 return cWmatch & qWmatch
             fj['isTcq'] = tcqmatch(6)|tcqmatch(-6)
 
@@ -795,8 +795,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ]
                 jetgenWq = fj.cross(qFromWFromTop, nested=True)
                 jetgenb = fj.cross(bFromTop, nested=True)
-                qWmatch = (jetgenWq.i0.delta_r(jetgenWq.i1) < dR).any()&(qFromWFromTop.counts>0)
-                bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
+                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==1) & (qFromWFromTop.counts>0)
+                bmatch =  ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1)   & (bFromTop.counts>0)
                 return qWmatch & bmatch
             fj['isTbq'] = tbqmatch(6)|tbqmatch(-6)
 
@@ -809,8 +809,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ]
                 jetgenWc = fj.cross(cFromWFromTop, nested=True)
                 jetgenb = fj.cross(bFromTop, nested=True)
-                cWmatch = (jetgenWc.i0.delta_r(jetgenWc.i1) < dR).all()&(cFromWFromTop.counts>0)
-                bmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromTop.counts>0)
+                cWmatch = ((jetgenWc.i0.delta_r(jetgenWc.i1) < dR).sum()==1) & (cFromWFromTop.counts>0)
+                bmatch =  ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1)   & (bFromTop.counts>0)
                 return cWmatch & bmatch
             fj['isTbc'] = tbcmatch(6)|tbcmatch(-6)
 
@@ -820,7 +820,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             def wqqmatch(wid, dR=1.5):
                 qFromSameW = qFromW[qFromW.distinctParent.pdgId == wid]
                 jetgenq = fj.cross(qFromSameW, nested=True)
-                qqmatch = (jetgenq.i0.delta_r(jetgenq.i1) < dR).all()&(qFromSameW.counts>1)
+                qqmatch = ((jetgenq.i0.delta_r(jetgenq.i1) < dR).sum()==2) & (qFromSameW.counts>0)
                 return qqmatch
             fj['isWqq']  = wqqmatch(24)|wqqmatch(-24)
 
@@ -832,8 +832,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 cFromSameW = cFromW[cFromW.distinctParent.pdgId == wid]
                 jetgenq = fj.cross(qFromSameW, nested=True)
                 jetgenc = fj.cross(cFromSameW, nested=True)
-                qmatch = (jetgenq.i0.delta_r(jetgenq.i1) < dR).all()&(qFromSameW.counts>0)
-                cmatch = (jetgenc.i0.delta_r(jetgenc.i1) < dR).all()&(cFromSameW.counts>0)
+                qmatch = ((jetgenq.i0.delta_r(jetgenq.i1) < dR).sum()==1) & (qFromSameW.counts>0)
+                cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < dR).sum()==1) & (cFromSameW.counts>0)
                 return qmatch & cmatch
             fj['isWcq']  = wcqmatch(24)|wcqmatch(-24)
 
@@ -848,7 +848,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             def zbbmatch(zid, dR=1.5):
                 bFromSameZ = bFromZ[bFromZ.distinctParent.pdgId == zid]
                 jetgenb = fj.cross(bFromSameZ, nested=True)
-                bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromSameZ.counts>0)
+                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameZ.counts>0)
                 return bbmatch
             fj['isZbb']  = zbbmatch(23)|zbbmatch(-23)
 
@@ -863,7 +863,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             def zccmatch(zid, dR=1.5):
                 cFromSameZ = cFromZ[cFromZ.distinctParent.pdgId == zid]
                 jetgenc = fj.cross(cFromSameZ, nested=True)
-                ccmatch = (jetgenc.i0.delta_r(jetgenc.i1) < dR).all()&(cFromSameZ.counts>0)
+                ccmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < dR).sum()==2) & (cFromSameZ.counts>0)
                 return ccmatch
             fj['isZcc']  = zccmatch(23)|zccmatch(-23)
 
@@ -878,7 +878,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             def zqqmatch(zid, dR=1.5):
                 qFromSameZ = qFromZ[qFromZ.distinctParent.pdgId == zid]
                 jetgenq = fj.cross(qFromSameZ, nested=True)
-                qqmatch = (jetgenq.i0.delta_r(jetgenq.i1) < dR).all()&(qFromSameZ.counts>0)
+                qqmatch = ((jetgenq.i0.delta_r(jetgenq.i1) < dR).sum()==2) & (qFromSameZ.counts>0)
                 return qqmatch
             fj['isZqq']  = zqqmatch(23)|zqqmatch(-23)
 
@@ -893,7 +893,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             def hbbmatch(hid, dR=1.5):
                 bFromSameH = bFromH[bFromH.distinctParent.pdgId == hid]
                 jetgenb = fj.cross(bFromSameH, nested=True)
-                bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromSameH.counts>0)
+                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameH.counts>0)
                 return bbmatch
             fj['isHbb']  = hbbmatch(25)|hbbmatch(-25)
 
@@ -908,7 +908,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             def hsbbmatch(hid, dR=1.5):
                 bFromSameHs = bFromHs[bFromHs.distinctParent.pdgId == hid]
                 jetgenb = fj.cross(bFromSameHs, nested=True)
-                bbmatch = (jetgenb.i0.delta_r(jetgenb.i1) < dR).all()&(bFromSameHs.counts>0)
+                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameHs.counts>0)
                 return bbmatch
             fj['isHsbb']  = hsbbmatch(54)|hsbbmatch(-54)
 
@@ -1274,24 +1274,29 @@ class AnalysisProcessor(processor.ProcessorABC):
                     leading_fj.isHsbb
                 ).sum(),
                 'hbb' : (
+                    ~leading_fj.isHsbb &
                     leading_fj.isHbb
                 ).sum(),
                 'zbb' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     leading_fj.isZbb
                 ).sum(),
                 'tbcq' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     leading_fj.isTbcq 
                 ).sum(),
                 'tbqq' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     ~leading_fj.isTbcq &
                     leading_fj.isTbqq 
                 ).sum(),
                 'zcc' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     ~leading_fj.isTbcq &
@@ -1299,6 +1304,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     leading_fj.isZcc
                 ).sum(),
                 'tcq' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     ~leading_fj.isTbcq &
@@ -1307,6 +1313,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     leading_fj.isTcq
                 ).sum(),
                 'wcq' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     ~leading_fj.isTbcq &
@@ -1316,6 +1323,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     leading_fj.isWcq
                 ).sum(),
                 'tqq' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     ~leading_fj.isTbcq &
@@ -1326,6 +1334,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     leading_fj.isTqq
                 ).sum(),
                 'vqq' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     ~leading_fj.isTbcq &
@@ -1337,6 +1346,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     (leading_fj.isWqq | leading_fj.isZqq)
                 ).sum(),
                 'bb' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     ~leading_fj.isTbcq &
@@ -1349,6 +1359,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     leading_fj.isbb
                 ).sum(),
                 'tbc' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     ~leading_fj.isTbcq &
@@ -1362,6 +1373,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     leading_fj.isTbc
                 ).sum(),
                 'bc' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     ~leading_fj.isTbcq &
@@ -1376,6 +1388,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     (leading_fj.isb & leading_fj.isc)
                 ).sum(),
                 'tbq' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     ~leading_fj.isTbcq &
@@ -1391,6 +1404,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     leading_fj.isTbq 
                 ).sum(),
                 'b' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     ~leading_fj.isTbcq &
@@ -1407,6 +1421,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     leading_fj.isb
                 ).sum(),
                 'cc' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     ~leading_fj.isTbcq &
@@ -1424,6 +1439,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     leading_fj.iscc
                 ).sum(),
                 'c' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     ~leading_fj.isTbcq &
@@ -1442,6 +1458,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     leading_fj.isc
                 ).sum(),
                 'other' : (
+                    ~leading_fj.isHsbb &
                     ~leading_fj.isHbb &
                     ~leading_fj.isZbb &
                     ~leading_fj.isTbcq &
@@ -1496,9 +1513,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 for r in regions:
                     cut = selection.all(*regions[r])
                     for systematic in systematics:
-                        print(events.size)
                         for gentype in wgentype.keys():
-                            print(gentype,wgentype[gentype].sum())
                             fill(dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*wgentype[gentype], cut)
 
         return hout

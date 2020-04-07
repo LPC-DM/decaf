@@ -48,7 +48,7 @@ Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(ANALYSIS) $ENV(CLUSTER) $ENV(USER)
 JobBatchName = $ENV(SAMPLE)
 accounting_group=group_cms
 request_cpus = 8
-request_memory = 4800
+request_memory = 6000
 Queue 1"""
 
 if options.cluster == 'lpc':
