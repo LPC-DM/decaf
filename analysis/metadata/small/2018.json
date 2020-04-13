@@ -1,0 +1,20 @@
+{
+    "MET____0_": {
+        "files": [
+            "root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018/MET/NanoTuples-2018_Run2018A-17Sep2018-v1/191206_204012/0000/nano_1.root"
+        ],
+        "xs": -1
+    },
+    "ZJetsToNuNu_HT-100To200_13TeV-madgraph____0_": {
+        "files": [
+            "root://cmsxrootd.fnal.gov//store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018/ZJetsToNuNu_HT-100To200_13TeV-madgraph/NanoTuples-2018_RunIIAutumn18MiniAOD-102X_v15-v1/191206_211756/0000/nano_1.root"
+		],
+		"xs": 280.5
+	},
+    "Vector_MonoTop_NLO_Mphi-200_Mchi-50_13TeV_TuneCP5_mcatnlo_pythia8____0_": {
+        "files": [
+            "root://cmsxrootd.fnal.gov//store/user/jhong/Monotop_NanoAOD/2018/Vector_MonoTop_NLO_Mphi-200_Mchi-50_13TeV_TuneCP5_mcatnlo_pythia8/Monotop2018_RunIIAutumn18MiniAOD-102X_v15-v1/200323_024935/0000/nano_1.root"
+		],
+		"xs": 58.17
+	}
+}

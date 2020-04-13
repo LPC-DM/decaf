@@ -67,14 +67,16 @@ def scale(hists):
     process = hist.Cat("process", "Process", sorting='placement')
     cats = ("dataset",)
     map = OrderedDict()
-    map["Hbb_merged"] = ("merged--*HToBB*")
-    map["Hbb_unmerged"] = ("unmerged--*HToBB*")
+    map["Hbb_merged"] = ("bb--*HToBB*",)
+    map["Hbb_unmerged"] = ("other--*HToBB*",)
     map["DYJetsHF"] = ("HF--DYJets*",)
     map["DYJetsLF"] = ("LF--DYJets*",)
-    map["VV"] = ("other--*_TuneCP5_13TeV-pythia8*",)
+    map["VVqq"] = ("qq--*_TuneCP5_13TeV-pythia8*",)
     map["VVbb"] = ("bb--*_TuneCP5_13TeV-pythia8*",)
-    map["ST_merged"] = ("merged--ST*",)
-    map["ST_unmerged"] = ("unmerged--ST*",)
+    map["VVother"] = ("other--*_TuneCP5_13TeV-pythia8*",)
+    map["STbqq"] = ("bqq--ST*",)
+    map["STqq"] = ("qq--ST*",)
+    map["STother"] = ("other--ST*",)
     map["TTbqq"] = ("bqq--TT*",)
     map["TTqq"] = ("qq--TT*",)
     map["TTother"] = ("other--TT*",)
@@ -84,18 +86,11 @@ def scale(hists):
     map["ZJetsLF"] = ("LF--ZJetsToNuNu*",)
     map["GJetsHF"] = ("HF--GJets*",)
     map["GJetsLF"] = ("LF--GJets*",)
-    map["Mhs_50_merged"] = ("merged--*Mhs_50*",)  ## signals
-    map["Mhs_50_unmerged"] = ("unmerged--*Mhs_50*",)  ## signals   
-    map["Mhs_70_merged"] = ("merged--*Mhs_70*",)
-    map["Mhs_70_unmerged"] = ("unmerged--*Mhs_70*",)
-    map["Mhs_90_merged"] = ("merged--*Mhs_90*",)
-    map["Mhs_90_unmerged"] = ("unmerged--*Mhs_90*",)
-    map["MonoJet"] = ("MonoJet*",)  ## signals
-    map["MonoW"] = ("MonoW*",)    ## signals
-    map["MonoZ"] = ("MonoZ*",)    ## signals
+    map["QCD"] = ("QCD*",)
     map["MET"] = ("MET*", )
     map["SingleElectron"] = ("EGamma*", )
     map["SinglePhoton"] = ("EGamma*", )
+    map["Monotop"] = ("Vector_Monotop*", )
     print('Processes defined')
     
     ###
