@@ -47,43 +47,191 @@ def darkhiggs_model(tmpdir,mass,category,year):
             'monojet' : [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 740.0, 900.0, 1250.0]
         }
     }
+
+    whf_fraction=0.18
+    zhf_fraction=0.10
+    ghf_fraction=0.12
+
+    whf_k = rl.IndependentParameter('whf_k', 1., 0, 1/whf_fraction)
+    zhf_k = rl.IndependentParameter('zhf_k', 1., 0, 1/zhf_fraction)
+    ghf_k = rl.IndependentParameter('ghf_k', 1., 0, 1/ghf_fraction)
+
+    deepak15_pass_eff = {
+        'xbb'    : 0.88, 
+        'vqq'    : 0.06, 
+        'wcq'    : 0.21, 
+        'b'      : 0.59, 
+        'bb'     : 0.78, 
+        'bc'     : 0.73, 
+        'c'      : 0.16, 
+        'cc'     : 0.25, 
+        'garbage': 0.0, 
+        'other'  : 0.06, 
+        'tbcq'   : 0.68, 
+        'tbqq'   : 0.55, 
+        'zcc'    : 0.40
+    }
+    deepak15_pass_sf = {
+        'xbb'    : rl.IndependentParameter('xbb_sf', 1., 0, 1/deepak15_pass_eff['xbb']), 
+        'vqq'    : rl.IndependentParameter('vqq_sf', 1., 0, 1/deepak15_pass_eff['vqq']),
+        'wcq'    : rl.IndependentParameter('wcq_sf', 1., 0, 1/deepak15_pass_eff['wcq']),
+        'b'      : rl.IndependentParameter('b_sf', 1., 0, 1/deepak15_pass_eff['b']),
+        'bb'     : rl.IndependentParameter('bb_sf', 1., 0, 1/deepak15_pass_eff['bb']), 
+        'bc'     : rl.IndependentParameter('bc_sf', 1., 0, 1/deepak15_pass_eff['bc']),
+        'c'      : rl.IndependentParameter('c_sf', 1., 0, 1/deepak15_pass_eff['c']),
+        'cc'     : rl.IndependentParameter('cc_sf', 1., 0, 1/deepak15_pass_eff['cc']),
+        'garbage': rl.IndependentParameter('garbage_sf', 1., 0, 1/deepak15_pass_eff['garbage']),
+        'other'  : rl.IndependentParameter('other_sf', 1., 0, 1/deepak15_pass_eff['other']),
+        'tbcq'   : rl.IndependentParameter('tbcq_sf', 1., 0, 1/deepak15_pass_eff['tbcq']),
+        'tbqq'   : rl.IndependentParameter('tbqq_sf', 1., 0, 1/deepak15_pass_eff['tbqq']),
+        'zcc'    : rl.IndependentParameter('zcc_sf', 1., 0, 1/deepak15_pass_eff['zcc'])
+    }
     
+    deepak4_0tag_component_eff = {
+        'Hbb': {
+            'xbb': 0.8697046312331598, 
+            'vqq': 0.23124434902057903, 
+            'wcq': 0.22047080192919324, 
+            'b': 0.6820164771169962, 
+            'bb': 0.46661580939496744, 
+            'bc': 0.38229026101737873, 
+            'c': 0.38635373928707456, 
+            'cc': 0.46294460945495375, 
+            'garbage': 0.67443302378121, 
+            'other': 0.4463215680021725, 
+            'tbcq': 0.29126844822716513, 
+            'tbqq': 0.30888680936982366, 
+            'zcc': 0.0
+        }, 
+        'DY+HF': {
+            'xbb': 0.0, 
+            'vqq': 0.0, 
+            'wcq': 0.0, 
+            'b': 0.7979449881691513, 
+            'bb': 0.8961869119285696, 
+            'bc': 0.4910183479912289, 
+            'c': 0.8616372499954866, 
+            'cc': 0.8949353436835303, 
+            'garbage': 0.7666641925645035, 
+            'other': 0.6522792754261665, 
+            'tbcq': 0.0, 
+            'tbqq': 0.0, 
+            'zcc': 0.0
+        }, 
+        'DY+LF': {
+            'xbb': 0.0, 
+            'vqq': 0.0, 
+            'wcq': 0.0, 
+            'b': 0.0, 
+            'bb': 0.0, 
+            'bc': 0.0, 
+            'c': 0.0, 
+            'cc': 0.0, 
+            'garbage': 0.887874059807142, 
+            'other': 0.89619464074004, 
+            'tbcq': 0.0, 
+            'tbqq': 0.0, 
+            'zcc': 0.0
+        }, 
+        'VV': {
+            'xbb': 0.9419428942394055, 
+            'vqq': 0.9280086922176735, 
+            'wcq': 0.9336817821532177, 
+            'b': 0.595296958248878, 
+            'bb': 0.0, 
+            'bc': 1.0, 
+            'c': 0.8906290333285863, 
+            'cc': 1.0, 
+            'garbage': 0.8695515160067608, 
+            'other': 0.845611807805552, 
+            'tbcq': 0.0, 
+            'tbqq': 0.0, 
+            'zcc': 0.9531669398387308
+        }, 
+        'ST': {
+            'xbb': 0.0, 
+            'vqq': 0.5717995037496204, 
+            'wcq': 0.5691996356188856, 
+            'b': 0.6224105767039395, 
+            'bb': 0.8363685746865235, 
+            'bc': 0.710128136756667, 
+            'c': 0.4489667441833009, 
+            'cc': 0.44850369816000596, 
+            'garbage': 0.6088520617501884, 
+            'other': 0.4324488197731728, 
+            'tbcq': 0.8051769837186212, 
+            'tbqq': 0.8161799711888433, 
+            'zcc': 0.0
+        }, 
+        'TT': {
+            'xbb': 0.0, 
+            'vqq': 0.4459557368488155, 
+            'wcq': 0.450844924955211, 
+            'b': 0.4917130631084224, 
+            'bb': 0.8314067750944469, 
+            'bc': 0.5031580464547177, 
+            'c': 0.3037376518772207, 
+            'cc': 0.3042761840537053, 
+            'garbage': 0.41293445024465525, 
+            'other': 0.28015111794952063, 
+            'tbcq': 0.5920703770856897, 
+            'tbqq': 0.5885231523899408, 
+            'zcc': 0.0
+        }, 
+        'W+HF': {
+            'xbb': 0.0, 
+            'vqq': 0.0, 
+            'wcq': 0.0, 
+            'b': 0.6830977711065136, 
+            'bb': 0.9015729268035118, 
+            'bc': 0.7316564932962332, 
+            'c': 0.9062705207112773, 
+            'cc': 0.9011852284020715, 
+            'garbage': 0.831577774188298, 
+            'other': 0.821589706002926, 
+            'tbcq': 0.0, 
+            'tbqq': 0.0, 
+            'zcc': 0.0
+        }, 
+        'W+LF': {
+            'xbb': 0.0, 
+            'vqq': 0.0, 
+            'wcq': 0.0, 
+            'b': 0.0, 
+            'bb': 0.0, 
+            'bc': 0.0, 
+            'c': 0.0, 
+            'cc': 0.0, 
+            'garbage': 0.8799004964320957, 
+            'other': 0.906565500257813, 
+            'tbcq': 0.0, 
+            'tbqq': 0.0,
+            'zcc': 0.0
+        }
+    }
+
+    deepak4_0tag_process_eff = {
+        'Hbb': 0.740183629513201, 
+        'DY+HF': 0.7834895739514862, 
+        'DY+LF': 0.8920487242439581, 
+        'VV': 0.8899188652047255, 
+        'ST': 0.6497776622766339, 
+        'TT': 0.5140433389517574, 
+        'W+HF': 0.8587729399436966, 
+        'W+LF': 0.9030101162281751, 
+        'WJets':0.8951594995622084,
+        'DYJets':0.8820319256963761
+    }
+
+    with open('data/fractions.json') as fin:
+        fractions = json.load(fin)
+
     ###
     #Extract histograms from input file
     ###
 
-    hists = load('hists/darkhiggs'+year+'.scaled')
+    hists = load('hists/darkhiggs'+year+'.limit')
     
-    ###
-    # Regrouping histograms
-    ###
-    
-    process = hist.Cat("process", "Process", sorting='placement')
-    cats = ("process",)
-    process_map = OrderedDict()
-    #process_map["Hbb_merged"] = ("Hbb_merged*",)
-    #process_map["Hbb_unmerged"] = ("Hbb_unmerged*",)
-    process_map["Hbb"] = ("Hbb*",)    
-    process_map["DY"] = ("DY*",)
-    #process_map["VVbb"] = ("VVbb*",)
-    #process_map["VV"] = ("VV",)
-    process_map["VV"] = ("VV*",) 
-    #process_map["ST_merged"] = ("ST_merged*",)
-    #process_map["ST_unmerged"] = ("ST_unmerged*",)
-    process_map["ST"] = ("ST*",) 
-    #process_map["TT_merged"] = ("TT_merged*",)
-    #process_map["TT_unmerged"] = ("TT_unmerged*",)
-    process_map["TT"] = ("TT*",)  
-    process_map["WJets"] = ("WJets*",)
-    process_map["ZJets"] = ("ZJets*",)
-    process_map["GJets"] = ("GJets*",)
-    process_map["MET"]   = ("MET*",)
-    process_map["SingleElectron"]   = ("SingleElectron*",)
-    process_map["SinglePhoton"]   = ("SinglePhoton*",)
-    
-    for key in hists.keys():
-        hists[key] = hists[key].group(cats, process, process_map)
-
     ###
     # Preparing histograms for fit
     ##
@@ -167,155 +315,6 @@ def darkhiggs_model(tmpdir,mass,category,year):
 
     veto_tau = rl.NuisanceParameter('veto_tau', 'lnN')
 
-    ###
-    # AK b-tagging of iso jet 0-tag efficiencies
-    ###
-
-    0tag_eff = {
-        'whf': 0.86,
-        'wlf': 0.90,
-        'zhf': 0.80,
-        'zlf': 0.90,
-        'ttbqq': 1.,
-        'ttqq': 1.,
-        'ttother': 1.,
-        'stbqq': 1.,
-        'stqq':1.,
-        'stother': 1.,
-        'vvbb': 1,
-        'vvqq': 1,
-        'vvother': 1,
-        'hbb': 1,
-        'hother': 1
-    }
-
-    ###
-    # Defining W/Z/gamma+jets heavy flavor fractions and their corrective k-factors
-    ###
-
-    whf_fraction = 0.18
-    zhf_fraction = 0.09
-    ghf_fraction = 0.12
-
-    whf_k = rl.IndependentParameter('whf_k', 1., 0, 1/whf_fraction)
-    zhf_k = rl.IndependentParameter('zhf_k', 1., 0, 1/zhf_fraction)
-    ghf_k = rl.IndependentParameter('ghf_k', 1., 0, 1/ghf_fraction)
-
-    ###
-    # Taking into account the varying HF fraction to adjust the overall efficiency of ak4 btagging of iso jets
-    ###
-
-    whf_0tag_eff = 0.86
-    wlf_0tag_eff = 0.90
-
-    wj_0tag_eff = wlf_0tag_eff*(1 - whf_fraction) + whf_0tag_eff*whf_fraction
-    wj_0tag_sfxeff = wlf_0tag_eff*(1 - whf_k*whf_fraction) + whf_0tag_eff*whf_k*whf_fraction
-
-    wjets_0tag_weight = wj_0tag_sfxeff / wj_0tag_eff
-    wjets_1tag_weight = (1 - wj_0tag_sfxeff) / (1 - wj_0tag_eff)
-
-    zhf_0tag_eff = 0.80
-    zlf_0tag_eff = 0.90
-
-    zj_0tag_eff = zlf_0tag_eff*(1 - zhf_fraction) + zhf_0tag_eff*zhf_fraction
-    zj_0tag_sfxeff = zlf_0tag_eff*(1 - zhf_k*zhf_fraction) + zhf_0tag_eff*zhf_k*zhf_fraction
-
-    zjets_0tag_weight = zj_0tag_sfxeff / zj_0tag_eff
-
-
-    ###
-    # Setting tagger efficiency and scale factor for in-situ calculation
-    ###
-
-    whf_deepak15_eff = 0.1
-    wlf_deepak15_eff = 0.04
-
-    whf_deepak15_sf = rl.IndependentParameter('whf_deepak15_sf', 1., 0, 1/whf_deepak15_eff)
-    wlf_deepak15_sf = rl.IndependentParameter('wlf_deepak15_sf', 1., 0, 1/wlf_deepak15_eff)
-
-    wj_deepak15_sfxeff = wlf_deepak15_sf*wlf_deepak15_eff*(1-whf_k*whf_fraction) + whf_deepak15_sf*whf_deepak15_eff*whf_k*whf_fraction
-    wj_deepak15_eff = wlf_deepak15_eff*(1-whf_fraction) + whf_deepak15_eff*whf_fraction
-
-    wjets_deepak15_weight = (1 - wj_deepak15_sfxeff)/(1 - wj_deepak15_eff)
-    if 'monohs' in category: wjets_deepak15_weight = wj_deepak15_sfxeff/wj_deepak15_eff
-
-    zhf_deepak15_eff = 0.04
-    zlf_deepak15_eff = 0.05
-
-    zhf_deepak15_sf = rl.IndependentParameter('zhf_deepak15_sf', 1., 0, 1/zhf_deepak15_eff)
-    zlf_deepak15_sf = rl.IndependentParameter('zlf_deepak15_sf', 1., 0, 1/zlf_deepak15_eff)
-
-    zj_deepak15_sfxeff = zlf_deepak15_sf*zlf_deepak15_eff*(1-zhf_k*zhf_fraction) + zhf_deepak15_sf*zhf_deepak15_eff*zhf_k*zhf_fraction
-    zj_deepak15_eff = zlf_deepak15_eff*(1-zhf_fraction) + zhf_deepak15_eff*zhf_fraction
-
-    zjets_deepak15_weight = (1 - zj_deepak15_sfxeff)/(1 - zj_deepak15_eff)
-    if 'monohs' in category: zjets_deepak15_weight = zj_deepak15_sfxeff/zj_deepak15_eff
-
-    ghf_deepak15_eff = 0.03
-    glf_deepak15_eff = 0.005
-
-    ghf_deepak15_sf = rl.IndependentParameter('ghf_deepak15_sf', 1., 0, 1/ghf_deepak15_eff)
-    glf_deepak15_sf = rl.IndependentParameter('glf_deepak15_sf', 1., 0, 1/glf_deepak15_eff)
-
-    gj_deepak15_sfxeff = glf_deepak15_sf*glf_deepak15_eff*(1-ghf_k*ghf_fraction) + ghf_deepak15_sf*ghf_deepak15_eff*ghf_k*ghf_fraction
-    gj_deepak15_eff = glf_deepak15_eff*(1-ghf_fraction) + ghf_deepak15_eff*ghf_fraction
-
-    gjets_deepak15_weight = (1 - gj_deepak15_sfxeff)/(1 - gj_deepak15_eff)
-    if 'monohs' in category: gjets_deepak15_weight = gj_deepak15_sfxeff/gj_deepak15_eff
-
-    bqq_eff = 0.6
-    qq_eff = 0.3
-    bb_eff = 0.9
-    other_eff = 0.3
-
-    bqq_sf = rl.IndependentParameter('bqq_sf', 1., 0, 1/bqq_eff)
-    qq_sf = rl.IndependentParameter('qq_sf', 1., 0, 1/qq_eff)
-    bb_sf = rl.IndependentParameter('qq_sf', 1., 0, 1/bb_eff)
-    other_sf = rl.IndependentParameter('other_sf', 1., 0, 1/other_eff)
-
-    tt_bqq_fraction = {
-        '0tag': {
-            'mass0': 0.04,
-            'mass1': 0.06,
-            'mass2': 0.11,
-            'mass3': 0.19,
-            'mass4': 0.6
-        },
-        '1tag': {
-            'mass0': 0.014,
-            'mass1': 0.04,
-            'mass2': 0.1,
-            'mass3': 0.13,
-            'mass4': 0.54
-        }
-    }
-
-    tt_qq_fraction = {
-        '0tag': {
-            'mass0': 0.04,
-            'mass1': 0.06,
-            'mass2': 0.11,
-            'mass3': 0.19,
-            'mass4': 0.6
-        },
-        '1tag': {
-            'mass0': 0.014,
-            'mass1': 0.04,
-            'mass2': 0.1,
-            'mass3': 0.13,
-            'mass4': 0.54
-        }
-    }
-
-    tt_0tag_sfxeff = bqq_sf*bqq_eff*tt_bqq_fraction['0tag'][mass] + qq_sf*qq_eff*tt_qq_fraction['0tag'][mass] + other_sf*other_eff*(1 - tt_bqq_fraction['0tag'][mass] - tt_qq_fraction['0tag'][mass])
-    tt_0tag_eff = bqq_eff*tt_bqq_fraction['0tag'][mass] + qq_eff*tt_qq_fraction['0tag'][mass] + other_eff*(1 - tt_bqq_fraction['0tag'][mass] - tt_qq_fraction['0tag'][mass])
-    tt_1tag_sfxeff = bqq_sf*bqq_eff*tt_bqq_fraction['1tag'][mass] + qq_sf*qq_eff*tt_qq_fraction['1tag'][mass] + other_sf*other_eff*(1 - tt_bqq_fraction['1tag'][mass] - tt_qq_fraction['1tag'][mass])
-    tt_1tag_eff =  bqq_eff*tt_bqq_fraction['1tag'][mass] + qq_eff*tt_qq_fraction['1tag'][mass] + other_eff*(1 - tt_bqq_fraction['1tag'][mass] - tt_qq_fraction['1tag'][mass])
-
-    tt_0tag_weight = (1 - tt_0tag_sfxeff)/(1 - tt_0tag_eff)
-    if 'monohs' in category: tt_0tag_weight = tt_0tag_sfxeff / tt_0tag_eff
-    tt_1tag_weight = (1 - tt_1tag_sfxeff)/(1 - tt_1tag_eff)
-    if 'monohs' in category: tt_1tag_weight = tt_1tag_sfxeff / tt_1tag_eff
 
     ###
     ###
