@@ -25,29 +25,6 @@ def darkhiggs_model(tmpdir,mass,category,year):
 
     model = rl.Model('darkhiggs_'+mass+'_'+category)
 
-    binning_map = {
-        'mass0': {
-            'monohs' : [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 550.0, 640.0, 740.0, 1250.0],
-            'monojet' : [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 1250.0]
-        },
-        'mass1': {
-            'monohs' : [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 1250.0],
-            'monojet' : [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 1250.0]
-        },
-        'mass2': {
-            'monohs' : [250.0, 280.0, 310.0, 340.0, 430.0, 1250.0],
-            'monojet' : [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 1250.0]
-        },
-        'mass3': {
-            'monohs' : [250.0, 280.0, 310.0, 340.0, 400.0, 430.0, 470.0, 1250.0],
-            'monojet' : [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 640.0, 1250.0]
-        },
-        'mass4': {
-            'monohs' : [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 1250.0],
-            'monojet' : [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 740.0, 900.0, 1250.0]
-        }
-    }
-
     whf_fraction=0.18
     zhf_fraction=0.10
     ghf_fraction=0.12
@@ -208,6 +185,21 @@ def darkhiggs_model(tmpdir,mass,category,year):
             'tbqq': 0.0,
             'zcc': 0.0
         }
+        'QCD': {
+            'xbb': 0.0, 
+            'vqq': 0.0, 
+            'wcq': 0.0, 
+            'b': 0.8052218395379344, 
+            'bb': 0.9676263397285139, 
+            'bc': 1.0, 
+            'c': 0.8882376783888627, 
+            'cc': 0.7150587923851417, 
+            'garbage': 0.8563298154080022, 
+            'other': 0.838726390208842, 
+            'tbcq': 0.0, 
+            'tbqq': 0.0, 
+            'zcc': 0.0
+        }
     }
 
     deepak4_0tag_process_eff = {
@@ -219,6 +211,7 @@ def darkhiggs_model(tmpdir,mass,category,year):
         'TT': 0.5140433389517574, 
         'W+HF': 0.8587729399436966, 
         'W+LF': 0.9030101162281751, 
+        'QCD': 0.8425783767140694,
         'WJets':0.8951594995622084,
         'DYJets':0.8820319256963761
     }
@@ -231,19 +224,37 @@ def darkhiggs_model(tmpdir,mass,category,year):
     ###
 
     hists = load('hists/darkhiggs'+year+'.limit')
-    
+
+    data_hists   = hists['data']
+    bkg_hists    = hists['bkg']
+    signal_hists = hists['sig']
+
+    binning = {
+        'mass0': data_hists['recoil'].integrate('gentype','data').integrate('systematic','nominal').integrate('region','sr_mass0').integrate('process','MET').axis('recoil').edges(),
+        'mass1': data_hists['recoil'].integrate('gentype','data').integrate('systematic','nominal').integrate('region','sr_mass1').integrate('process','MET').axis('recoil').edges(),
+        'mass2': data_hists['recoil'].integrate('gentype','data').integrate('systematic','nominal').integrate('region','sr_mass2').integrate('process','MET').axis('recoil').edges(),
+        'mass3': data_hists['recoil'].integrate('gentype','data').integrate('systematic','nominal').integrate('region','sr_mass3').integrate('process','MET').axis('recoil').edges(),
+        'mass4': data_hists['recoil'].integrate('gentype','data').integrate('systematic','nominal').integrate('region','sr_mass4').integrate('process','MET').axis('recoil').edges()
+    }    
+
     ###
     # Preparing histograms for fit
     ##
 
-    recoil = {}
-    for r in hists['recoil'].identifiers('region'):
-        #if category not in str(r) or mass not in str(r): continue
+    data = {}
+    for r in data_hists['recoil'].identifiers('region'):
+        if category not in str(r): continue
         if mass not in str(r): continue
-        #print(r,category,mass)
-        #print('Before rebin',hists['recoil'].integrate('region',r).values(overflow='all'))
-        recoil[str(r).split("_")[0]]=hists['recoil'].integrate('region',r).rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning_map[mass][category]))
-        #print('After rebin',recoil[str(r).split("_")[0]].values(overflow='all'))
+        print(r,category,mass)
+        data[str(r).split("_")[0]]=data_hists['recoil'].integrate('region',r).rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[mass]))
+
+    background = {}
+    for r in data.keys():
+        background[r]=bkg_hists['recoil'].integrate('region',r).rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[mass]))
+
+    signal = {}
+    for r in data.keys():
+        signal[r]=signal_hists['recoil'].integrate('region',r).rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[mass]))
 
     ###
     ###
@@ -303,13 +314,6 @@ def darkhiggs_model(tmpdir,mass,category,year):
     trig_met = rl.NuisanceParameter('trig_met', 'lnN')
 
     ###
-    # DeepAk15 signal scale factor and mistag rate for MC-driven processes
-    ###
-
-    #sf_deepAK15 = rl.NuisanceParameter('sf_deepAK15', 'lnN')
-    #mistag_deepAK15 = rl.NuisanceParameter('mistag_deepAK15', 'lnN')
-
-    ###
     # Tau veto
     ###
 
@@ -326,8 +330,7 @@ def darkhiggs_model(tmpdir,mass,category,year):
     # JEC/JER
     ###
     
-    #jec = rl.NuisanceParameter('jec', 'shape')
-    #jer = rl.NuisanceParameter('jer', 'shape')
+    jec = rl.NuisanceParameter('jec', 'lnN')
     btag = rl.NuisanceParameter('btag', 'shape') #AK4 btag
     gamma_to_z_ewk = rl.NuisanceParameter('Theory_gamma_z_ewk', 'shape')
 
@@ -345,13 +348,13 @@ def darkhiggs_model(tmpdir,mass,category,year):
     # Add data distribution to the channel
     ###
 
-    sr.setObservation(template(recoil['sr'].integrate('process', 'MET').integrate('systematic','nominal'), 'recoil'))
+    sr.setObservation(template(data['sr'].integrate('process', 'MET').integrate('systematic','nominal'), 'recoil'))
 
     ###
     # Z(->nunu)+jets data-driven model
     ###
 
-    sr_zvvHist = recoil['sr'].integrate('process', 'ZJets').integrate('systematic','nominal')
+    sr_zvvHist = background['sr'].integrate('process', 'ZJets').integrate('systematic','nominal')
     sr_zvvTemplate = template(sr_zvvHist, 'recoil')
     sr_zvvMC =  rl.TemplateSample(ch_name+'_zvvMC', rl.Sample.BACKGROUND, sr_zvvTemplate)
     #sr_zvvMC.setParamEffect(jec, np.random.normal(loc=1, scale=0.01, size=len(sr_zvvHist.axis('recoil').edges(overflow='all'))-1))
