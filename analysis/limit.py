@@ -12,7 +12,6 @@ import json
 from coffea import hist, processor 
 from coffea.util import load, save
 
-ROOT.v5.TFormula.SetMaxima(300)
 rl.util.install_roofit_helpers()
 rl.ParametericSample.PreferRooParametricHist = False
 
@@ -67,7 +66,7 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
         'zcc'    : rl.IndependentParameter('zcc_sf', 1., 0, 1/deepak15_pass_eff['zcc'])
     }
     
-    deepak4_0tag_component_eff = {
+    deepak4_0tag_gentype_eff = {
         'Hbb': {
             'xbb': 0.8697046312331598, 
             'vqq': 0.23124434902057903, 
@@ -254,26 +253,43 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
 
     with open('data/signal_fractions.json') as fin:
         signal_fractions = json.load(fin)
+
+    gentypes = {
+        'Hbb': ['xbb','vqq','wcq','b','bb','bc','garbage','other','tbcq','tbqq'],
+        'Z+HF': ['b','bb','c','cc','garbage','other'],
+        'Z+LF': ['garbage','other'],
+        'G+HF': ['b','bb','c','cc','garbage','other'],
+        'G+LF': ['garbage','other'],
+        'VV': ['xbb','vqq','wcq','b','c','garbage','other','zcc'],
+        'ST': ['vqq','wcq','b','bb','bc','c','garbage','other','tbcq','tbqq'],
+        'TT': ['vqq','wcq','b','bb','bc','c','garbage','other','tbcq','tbqq'],
+        'W+HF': ['b','bb','c','cc','garbage','other'],
+        'W+LF': ['garbage','other'],
+        'QCD': ['b','bb','c','cc','garbage','other'],
+        'Mhs': ['xbb','b','bb','other'],
+        'MonoJet': ['c','cc','other'],
+        'MonoW': ['vqq','wcq','c','other'],
+        'MonoZ': ['vqq','c','cc','other','zcc']
+    }
         
     signal_weight={}
     for process in signal_fractions.keys():
-        for component in signal_fractions[process].keys():
-            print('Extracting',component,'fraction for',process)
-            
+        for gentype in signal_fractions[process].keys():
+            if gentype not in gentypes[process.split('_')[0]]: continue
+            print('Extracting',gentype,'fraction for',process)
             try:
                 weight
             except:
-                weight = deepak15_pass_sf[component]*deepak15_pass_eff[component]*np.array(signal_fractions[process][component][mass])
+                weight = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(signal_fractions[process][gentype][mass])
             else:
-                weight += deepak15_pass_sf[component]*deepak15_pass_eff[component]*np.array(signal_fractions[process][component][mass])
-
+                weight += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(signal_fractions[process][gentype][mass])
             if 'monojet' in category:
                 try:
                     weight
                 except:
-                    weight = (1 - deepak15_pass_sf[component]*deepak15_pass_eff[component])*np.array(signal_fractions[process][component][mass])
+                    weight = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(signal_fractions[process][gentype][mass])
                 else:
-                    weight += (1 - deepak15_pass_sf[component]*deepak15_pass_eff[component])*np.array(signal_fractions[process][component][mass])
+                    weight += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(signal_fractions[process][gentype][mass])
 
         signal_weight[process]=weight
                 
@@ -285,52 +301,47 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     deepak15_weight['1tag']={}
     deepak15_weight['notag']={}
     for process in ['Hbb','VV','ST','QCD','TT','Z+HF','Z+LF','W+HF','W+LF','G+HF','G+LF']:
-        for component in fractions[process].keys():
-            print('Extracting',component,'fraction for',process )
-
+        for gentype in fractions[process].keys():
+            if gentype not in gentypes[process]: continue
+            print('Extracting',gentype,'fraction for',process )
             try:
                 weight_0tag
             except:
-                weight_0tag = deepak15_pass_sf[component]*deepak15_pass_eff[component]*deepak4_0tag_component_eff[process][component]*np.array(fractions[process][component][mass])
+                weight_0tag = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
             else:
-                weight_0tag += deepak15_pass_sf[component]*deepak15_pass_eff[component]*deepak4_0tag_component_eff[process][component]*np.array(fractions[process][component][mass])
-
+                weight_0tag += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
             try:
                 weight_1tag
             except:
-                weight_1tag = deepak15_pass_sf[component]*deepak15_pass_eff[component]*(1 - deepak4_0tag_component_eff[process][component])*np.array(fractions[process][component][mass])
+                weight_1tag = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
             else:
-                weight_1tag += deepak15_pass_sf[component]*deepak15_pass_eff[component]*(1 - deepak4_0tag_component_eff[process][component])*np.array(fractions[process][component][mass])
-
+                weight_1tag += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
             try:
                 weight_notag
             except:
-                weight_notag = deepak15_pass_sf[component]*deepak15_pass_eff[component]*np.array(fractions[process][component][mass])
+                weight_notag = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(fractions[process][gentype][mass])
             else:
-                weight_notag += deepak15_pass_sf[component]*deepak15_pass_eff[component]*np.array(fractions[process][component][mass])
+                weight_notag += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(fractions[process][gentype][mass])
                 
             if 'monojet' in category: 
-                
                 try:
                     weight_0tag
                 except:
-                    weight_0tag = (1 - deepak15_pass_sf[component]*deepak15_pass_eff[component])*deepak4_0tag_component_eff[process][component]*np.array(fractions[process][component][mass])
+                    weight_0tag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
                 else:
-                    weight_0tag += (1 - deepak15_pass_sf[component]*deepak15_pass_eff[component])*deepak4_0tag_component_eff[process][component]*np.array(fractions[process][component][mass])
-
+                    weight_0tag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
                 try:
                     weight_1tag
                 except:
-                    weight_1tag = (1 - deepak15_pass_sf[component]*deepak15_pass_eff[component])*(1 - deepak4_0tag_component_eff[process][component])*np.array(fractions[process][component][mass])
+                    weight_1tag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
                 else:
-                    weight_1tag += (1 - deepak15_pass_sf[component]*deepak15_pass_eff[component])*(1 - deepak4_0tag_component_eff[process][component])*np.array(fractions[process][component][mass])
-
+                    weight_1tag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
                 try:
                     weight_notag
                 except:
-                    weight_notag = (1 - deepak15_pass_sf[component]*deepak15_pass_eff[component])*np.array(fractions[process][component][mass])
+                    weight_notag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(fractions[process][gentype][mass])
                 else:
-                    weight_notag += (1 - deepak15_pass_sf[component]*deepak15_pass_eff[component])*np.array(fractions[process][component][mass])
+                    weight_notag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(fractions[process][gentype][mass])
 
         deepak15_weight['0tag'][process]=weight_0tag/deepak4_0tag_process_eff[process]
         deepak15_weight['1tag'][process]=weight_1tag/(1 - deepak4_0tag_process_eff[process])
@@ -576,116 +587,101 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
 
     sr_stHist = background['sr'].integrate('process', 'ST').integrate('systematic','nominal')
     sr_stTemplate = template(sr_stHist, 'recoil')
-    sr_stMC =  rl.TemplateSample(ch_name+'_stMC', rl.Sample.BACKGROUND, sr_stTemplate)
-    sr_stMC.setParamEffect(lumi, 1.027)
-    sr_stMC.setParamEffect(trig_met, 1.01)
-    sr_stMC.setParamEffect(veto_tau, 1.03)
-    sr_stMC.setParamEffect(st_norm, 1.2)
-    sr_stMC.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'ST').integrate('systematic','btagUp')
-    btagDown=background['sr'].integrate('process', 'ST').integrate('systematic','btagDown')
-    sr_stMC.setParamEffect(btag, btagUp, btagDown)
-
     sr_stBinYields = np.array([rl.IndependentParameter(ch_name+'_st_bin_%d' % i,b,0,sr_stTemplate[0].max()*2) for i,b in enumerate(sr_stTemplate[0])])
     sr_stBinYields = sr_stBinYields * deepak15_weight['0tag']['ST']
     sr_stObservable = rl.Observable('recoil', sr_stHist.axis('recoil').edges())
     sr_st = rl.ParametericSample(ch_name+'_st', rl.Sample.BACKGROUND, sr_stObservable, sr_stBinYields)
-
+    sr_st.setParamEffect(lumi, 1.027)
+    sr_st.setParamEffect(trig_met, 1.01)
+    sr_st.setParamEffect(veto_tau, 1.03)
+    sr_st.setParamEffect(st_norm, 1.2)
+    sr_st.setParamEffect(jec, 1.05)
+    btagUp=background['sr'].integrate('process', 'ST').integrate('systematic','btagUp')
+    btagDown=background['sr'].integrate('process', 'ST').integrate('systematic','btagDown')
+    sr_st.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_st)
 
     sr_dyjetsHist = background['sr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
     sr_dyjetsTemplate = template(sr_dyjetsHist, 'recoil')
-    sr_dyjetsMC =  rl.TemplateSample(ch_name+'_dyjetsMC', rl.Sample.BACKGROUND, sr_dyjetsTemplate)
-    sr_dyjetsMC.setParamEffect(lumi, 1.027)
-    sr_dyjetsMC.setParamEffect(trig_met, 1.01)
-    sr_dyjetsMC.setParamEffect(veto_tau, 1.03)
-    sr_dyjetsMC.setParamEffect(dyjets_norm, 1.4)
-    sr_dyjetsMC.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'DY+jets').integrate('systematic','btagUp')
-    btagDown=background['sr'].integrate('process', 'DY+jets').integrate('systematic','btagDown')
-    sr_dyjetsMC.setParamEffect(btag, btagUp, btagDown)
-
     sr_dyjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_dyjets_bin_%d' % i,b,0,sr_dyjetsTemplate[0].max()*2) for i,b in enumerate(sr_dyjetsTemplate[0])])
     sr_dyjetsBinYields = sr_dyjetsBinYields * hf_fraction_weight['0tag']['Z+jets']
     sr_dyjetsObservable = rl.Observable('recoil', sr_dyjetsHist.axis('recoil').edges())
     sr_dyjets = rl.ParametericSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, sr_dyjetsObservable, sr_dyjetsBinYields)
-
+    sr_dyjets.setParamEffect(lumi, 1.027)
+    sr_dyjets.setParamEffect(trig_met, 1.01)
+    sr_dyjets.setParamEffect(veto_tau, 1.03)
+    sr_dyjets.setParamEffect(dyjets_norm, 1.4)
+    sr_dyjets.setParamEffect(jec, 1.05)
+    btagUp=background['sr'].integrate('process', 'DY+jets').integrate('systematic','btagUp')
+    btagDown=background['sr'].integrate('process', 'DY+jets').integrate('systematic','btagDown')
+    sr_dyjets.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_dyjets)
 
     sr_vvHist = background['sr'].integrate('process', 'VV').integrate('systematic','nominal')
     sr_vvTemplate = template(sr_vvHist, 'recoil')
-    sr_vvMC =  rl.TemplateSample(ch_name+'_vvMC', rl.Sample.BACKGROUND, sr_vvTemplate)
-    sr_vvMC.setParamEffect(lumi, 1.027)
-    sr_vvMC.setParamEffect(trig_met, 1.01)
-    sr_vvMC.setParamEffect(veto_tau, 1.03)
-    sr_vvMC.setParamEffect(vv_norm, 1.2)
-    sr_vvMC.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'VV').integrate('systematic','btagUp')
-    btagDown=background['sr'].integrate('process', 'VV').integrate('systematic','btagDown')
-    sr_vvMC.setParamEffect(btag, btagUp, btagDown)
-
     sr_vvBinYields = np.array([rl.IndependentParameter(ch_name+'_vv_bin_%d' % i,b,0,sr_vvTemplate[0].max()*2) for i,b in enumerate(sr_vvTemplate[0])])
     sr_vvBinYields = sr_vvBinYields * deepak15_weight['0tag']['VV']
     sr_vvObservable = rl.Observable('recoil', sr_vvHist.axis('recoil').edges())
     sr_vv = rl.ParametericSample(ch_name+'_vv', rl.Sample.BACKGROUND, sr_vvObservable, sr_vvBinYields)
-
+    sr_vv.setParamEffect(lumi, 1.027)
+    sr_vv.setParamEffect(trig_met, 1.01)
+    sr_vv.setParamEffect(veto_tau, 1.03)
+    sr_vv.setParamEffect(vv_norm, 1.2)
+    sr_vv.setParamEffect(jec, 1.05)
+    btagUp=background['sr'].integrate('process', 'VV').integrate('systematic','btagUp')
+    btagDown=background['sr'].integrate('process', 'VV').integrate('systematic','btagDown')
+    sr_vv.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_vv)
 
     sr_hbbHist = background['sr'].integrate('process', 'Hbb').integrate('systematic','nominal')
     sr_hbbTemplate = template(sr_hbbHist, 'recoil')
-    sr_hbbMC =  rl.TemplateSample(ch_name+'_hbbMC', rl.Sample.BACKGROUND, sr_hbbTemplate)
-    sr_hbbMC.setParamEffect(lumi, 1.027)
-    sr_hbbMC.setParamEffect(trig_met, 1.01)
-    sr_hbbMC.setParamEffect(veto_tau, 1.03)
-    sr_hbbMC.setParamEffect(hbb_norm, 1.2)
-    sr_hbbMC.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'Hbb').integrate('systematic','btagUp')
-    btagDown=background['sr'].integrate('process', 'Hbb').integrate('systematic','btagDown')
-    sr_hbbMC.setParamEffect(btag, btagUp, btagDown)
-
     sr_hbbBinYields = np.array([rl.IndependentParameter(ch_name+'_hbb_bin_%d' % i,b,0,sr_hbbTemplate[0].max()*2) for i,b in enumerate(sr_hbbTemplate[0])])
     sr_hbbBinYields = sr_hbbBinYields * deepak15_weight['0tag']['Hbb']
     sr_hbbObservable = rl.Observable('recoil', sr_hbbHist.axis('recoil').edges())
     sr_hbb = rl.ParametericSample(ch_name+'_hbb', rl.Sample.BACKGROUND, sr_hbbObservable, sr_hbbBinYields)
-
+    sr_hbb.setParamEffect(lumi, 1.027)
+    sr_hbb.setParamEffect(trig_met, 1.01)
+    sr_hbb.setParamEffect(veto_tau, 1.03)
+    sr_hbb.setParamEffect(hbb_norm, 1.2)
+    sr_hbb.setParamEffect(jec, 1.05)
+    btagUp=background['sr'].integrate('process', 'Hbb').integrate('systematic','btagUp')
+    btagDown=background['sr'].integrate('process', 'Hbb').integrate('systematic','btagDown')
+    sr_hbb.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_hbb)
 
     sr_qcdHist = background['sr'].integrate('process', 'QCD').integrate('systematic','nominal')
     sr_qcdTemplate = template(sr_qcdHist, 'recoil')
-    sr_qcdMC =  rl.TemplateSample(ch_name+'_qcdMC', rl.Sample.BACKGROUND, sr_qcdTemplate)
-    sr_qcdMC.setParamEffect(lumi, 1.027)
-    sr_qcdMC.setParamEffect(trig_met, 1.01)
-    sr_qcdMC.setParamEffect(veto_tau, 1.03)
-    sr_qcdMC.setParamEffect(qcdsig_norm, 2.0)
-    sr_qcdMC.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'QCD').integrate('systematic','btagUp')
-    btagDown=background['sr'].integrate('process', 'QCD').integrate('systematic','btagDown')
-    sr_qcdMC.setParamEffect(btag, btagUp, btagDown)
-
     sr_qcdBinYields = np.array([rl.IndependentParameter(ch_name+'_qcd_bin_%d' % i,b,0,sr_qcdTemplate[0].max()*2) for i,b in enumerate(sr_qcdTemplate[0])])
     sr_qcdBinYields = sr_qcdBinYields * deepak15_weight['0tag']['QCD']
     sr_qcdObservable = rl.Observable('recoil', sr_qcdHist.axis('recoil').edges())
     sr_qcd = rl.ParametericSample(ch_name+'_qcd', rl.Sample.BACKGROUND, sr_qcdObservable, sr_qcdBinYields)
-
+    sr_qcd.setParamEffect(lumi, 1.027)
+    sr_qcd.setParamEffect(trig_met, 1.01)
+    sr_qcd.setParamEffect(veto_tau, 1.03)
+    sr_qcd.setParamEffect(qcdsig_norm, 2.0)
+    sr_qcd.setParamEffect(jec, 1.05)
+    btagUp=background['sr'].integrate('process', 'QCD').integrate('systematic','btagUp')
+    btagDown=background['sr'].integrate('process', 'QCD').integrate('systematic','btagDown')
+    sr_qcd.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_qcd)
 
     for s in signal['sr'].identifiers('process'):
         print(s)
         sr_signalHist = signal['sr'].integrate('process', s).integrate('systematic','nominal')
         sr_signalTemplate = template(sr_signalHist, 'recoil')
-        sr_signalMC =  rl.TemplateSample(ch_name+'_signalMC', rl.Sample.BACKGROUND, sr_signalTemplate)
-        sr_signalMC.setParamEffect(lumi, 1.027)
-        sr_signalMC.setParamEffect(trig_met, 1.01)
-        sr_signalMC.setParamEffect(veto_tau, 1.03)
-        sr_signalMC.setParamEffect(jec, 1.05)
-        btagUp=signal['sr'].integrate('process', s).integrate('systematic','btagUp')
-        btagDown=signal['sr'].integrate('process', s).integrate('systematic','btagDown')
-        sr_signalMC.setParamEffect(btag, btagUp, btagDown)
-
         sr_signalBinYields = np.array([rl.IndependentParameter(ch_name+'_signal_bin_%d' % i,b,0,sr_signalTemplate[0].max()*2) for i,b in enumerate(sr_signalTemplate[0])])
         sr_signalBinYields = sr_signalBinYields * signal_weight[str(s)]
         sr_signalObservable = rl.Observable('recoil', sr_signalHist.axis('recoil').edges())
         sr_signal = rl.ParametericSample(ch_name+'_signal', rl.Sample.BACKGROUND, sr_signalObservable, sr_signalBinYields)
+        sr_signal.setParamEffect(lumi, 1.027)
+        sr_signal.setParamEffect(trig_met, 1.01)
+        sr_signal.setParamEffect(veto_tau, 1.03)
+        sr_signal.setParamEffect(jec, 1.05)
+        btagUp=signal['sr'].integrate('process', s).integrate('systematic','btagUp')
+        btagDown=signal['sr'].integrate('process', s).integrate('systematic','btagDown')
+        sr_signal.setParamEffect(btag, btagUp, btagDown)
+        sr.addSample(sr_signal)
+
 
     ###
     # End of SR
