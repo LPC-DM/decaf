@@ -12,6 +12,7 @@ import json
 from coffea import hist, processor 
 from coffea.util import load, save
 
+ROOT.v5.TFormula.SetMaxima(300)
 rl.util.install_roofit_helpers()
 rl.ParametericSample.PreferRooParametricHist = False
 
@@ -689,6 +690,8 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     ###
     # End of SR
     ###
+
+    '''
 
     ###
     ###
@@ -1661,7 +1664,7 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     gcr_qcd = rl.ParametericSample(ch_name+'_qcd', rl.Sample.BACKGROUND, gcr_qcdObservable, gcr_qcdBinYields)
 
     gcr.addSample(gcr_qcd)
-
+    '''
     with open(os.path.join(str(tmpdir), 'darkhiggsModel'+year+'.pkl'), "wb") as fout:
         pickle.dump(model, fout)
 
