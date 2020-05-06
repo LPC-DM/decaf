@@ -22,7 +22,7 @@ parser.add_option('-k', '--keep', action="store_true", dest="keep")
 fnaleos = "root://cmsxrootd.fnal.gov/"
 
 beans={}
-beans['2016'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/102X/nano_2016"]
+beans['2016'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2016"]
 beans['2017'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017","/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/Sandeep"]
 beans['2018'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018"]
                  
