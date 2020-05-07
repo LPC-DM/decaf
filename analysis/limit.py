@@ -1,5 +1,7 @@
 from __future__ import print_function, division
+from optparse import OptionParser
 from collections import defaultdict, OrderedDict
+import concurrent.futures
 import sys
 import os
 import rhalphalib as rl
@@ -22,6 +24,9 @@ def expo_sample(norm, scale, obs):
 def template(hist, name):
     #return (hist.values(overflow='all')[()], hist.axis(name).edges(overflow='all'), name)
     return (hist.values()[()], hist.axis(name).edges(), name)
+
+def render(some_model, tmpdir, year, mass):
+    return some_model.renderCombine(os.path.join(str(tmpdir), 'darkhiggs'+year+'/'+mass))
 
 def darkhiggs_model(tmpdir,mass,category,year,grouping):
     
@@ -524,8 +529,8 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     sr_zjetsMC.setParamEffect(veto_tau, 1.03)
     sr_zjetsMC.setParamEffect(zjets_norm, 1.4)
     sr_zjetsMC.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'Z+jets').integrate('systematic','btagUp')
-    btagDown=background['sr'].integrate('process', 'Z+jets').integrate('systematic','btagDown')
+    btagUp=background['sr'].integrate('process', 'Z+jets').integrate('systematic','btagUp').values()[()]
+    btagDown=background['sr'].integrate('process', 'Z+jets').integrate('systematic','btagDown').values()[()]
     sr_zjetsMC.setParamEffect(btag, btagUp, btagDown)
     
     sr_zjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_zjets_bin_%d' % i, b, 0, sr_zjetsTemplate[0].max()*2) for i,b in enumerate(sr_zjetsTemplate[0])]) 
@@ -547,8 +552,8 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     sr_wjetsMC.setParamEffect(veto_tau, 1.03)
     sr_wjetsMC.setParamEffect(wjets_norm, 1.4)
     sr_wjetsMC.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'W+jets').integrate('systematic','btagUp')
-    btagDown=background['sr'].integrate('process', 'W+jets').integrate('systematic','btagDown')
+    btagUp=background['sr'].integrate('process', 'W+jets').integrate('systematic','btagUp').values()[()]
+    btagDown=background['sr'].integrate('process', 'W+jets').integrate('systematic','btagDown').values()[()]
     sr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
 
     sr_wjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_wjets_bin_%d' % i,b,0,sr_wjetsTemplate[0].max()*2) for i,b in enumerate(sr_wjetsTemplate[0])]) 
@@ -570,8 +575,8 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     sr_ttMC.setParamEffect(veto_tau, 1.03)
     sr_ttMC.setParamEffect(tt_norm, 1.4)
     sr_ttMC.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'TT').integrate('systematic','btagUp')
-    btagDown=background['sr'].integrate('process', 'TT').integrate('systematic','btagDown')
+    btagUp=background['sr'].integrate('process', 'TT').integrate('systematic','btagUp').values()[()]
+    btagDown=background['sr'].integrate('process', 'TT').integrate('systematic','btagDown').values()[()]
     sr_ttMC.setParamEffect(btag, btagUp, btagDown)
 
     sr_ttBinYields = np.array([rl.IndependentParameter(ch_name+'_tt_bin_%d' % i,b,0,sr_ttTemplate[0].max()*2) for i,b in enumerate(sr_ttTemplate[0])])
@@ -596,8 +601,8 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     sr_st.setParamEffect(veto_tau, 1.03)
     sr_st.setParamEffect(st_norm, 1.2)
     sr_st.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'ST').integrate('systematic','btagUp')
-    btagDown=background['sr'].integrate('process', 'ST').integrate('systematic','btagDown')
+    btagUp=background['sr'].integrate('process', 'ST').integrate('systematic','btagUp').values()[()]
+    btagDown=background['sr'].integrate('process', 'ST').integrate('systematic','btagDown').values()[()]
     sr_st.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_st)
 
@@ -612,8 +617,8 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     sr_dyjets.setParamEffect(veto_tau, 1.03)
     sr_dyjets.setParamEffect(dyjets_norm, 1.4)
     sr_dyjets.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'DY+jets').integrate('systematic','btagUp')
-    btagDown=background['sr'].integrate('process', 'DY+jets').integrate('systematic','btagDown')
+    btagUp=background['sr'].integrate('process', 'DY+jets').integrate('systematic','btagUp').values()[()]
+    btagDown=background['sr'].integrate('process', 'DY+jets').integrate('systematic','btagDown').values()[()]
     sr_dyjets.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_dyjets)
 
@@ -628,8 +633,8 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     sr_vv.setParamEffect(veto_tau, 1.03)
     sr_vv.setParamEffect(vv_norm, 1.2)
     sr_vv.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'VV').integrate('systematic','btagUp')
-    btagDown=background['sr'].integrate('process', 'VV').integrate('systematic','btagDown')
+    btagUp=background['sr'].integrate('process', 'VV').integrate('systematic','btagUp').values()[()]
+    btagDown=background['sr'].integrate('process', 'VV').integrate('systematic','btagDown').values()[()]
     sr_vv.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_vv)
 
@@ -644,8 +649,8 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     sr_hbb.setParamEffect(veto_tau, 1.03)
     sr_hbb.setParamEffect(hbb_norm, 1.2)
     sr_hbb.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'Hbb').integrate('systematic','btagUp')
-    btagDown=background['sr'].integrate('process', 'Hbb').integrate('systematic','btagDown')
+    btagUp=background['sr'].integrate('process', 'Hbb').integrate('systematic','btagUp').values()[()]
+    btagDown=background['sr'].integrate('process', 'Hbb').integrate('systematic','btagDown').values()[()]
     sr_hbb.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_hbb)
 
@@ -660,8 +665,8 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     sr_qcd.setParamEffect(veto_tau, 1.03)
     sr_qcd.setParamEffect(qcdsig_norm, 2.0)
     sr_qcd.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'QCD').integrate('systematic','btagUp')
-    btagDown=background['sr'].integrate('process', 'QCD').integrate('systematic','btagDown')
+    btagUp=background['sr'].integrate('process', 'QCD').integrate('systematic','btagUp').values()[()]
+    btagDown=background['sr'].integrate('process', 'QCD').integrate('systematic','btagDown').values()[()]
     sr_qcd.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_qcd)
 
@@ -669,16 +674,16 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
         print(s)
         sr_signalHist = signal['sr'].integrate('process', s).integrate('systematic','nominal')
         sr_signalTemplate = template(sr_signalHist, 'recoil')
-        sr_signalBinYields = np.array([rl.IndependentParameter(ch_name+'_signal_bin_%d' % i,b,0,sr_signalTemplate[0].max()*2) for i,b in enumerate(sr_signalTemplate[0])])
+        sr_signalBinYields = np.array([rl.IndependentParameter(ch_name+'_'+str(s)+'_bin_%d' % i,b,0,sr_signalTemplate[0].max()*2) for i,b in enumerate(sr_signalTemplate[0])])
         sr_signalBinYields = sr_signalBinYields * signal_weight[str(s)]
         sr_signalObservable = rl.Observable('recoil', sr_signalHist.axis('recoil').edges())
-        sr_signal = rl.ParametericSample(ch_name+'_signal', rl.Sample.BACKGROUND, sr_signalObservable, sr_signalBinYields)
+        sr_signal = rl.ParametericSample(ch_name+'_'+str(s), rl.Sample.BACKGROUND, sr_signalObservable, sr_signalBinYields)
         sr_signal.setParamEffect(lumi, 1.027)
         sr_signal.setParamEffect(trig_met, 1.01)
         sr_signal.setParamEffect(veto_tau, 1.03)
         sr_signal.setParamEffect(jec, 1.05)
-        btagUp=signal['sr'].integrate('process', s).integrate('systematic','btagUp')
-        btagDown=signal['sr'].integrate('process', s).integrate('systematic','btagDown')
+        btagUp=signal['sr'].integrate('process', s).integrate('systematic','btagUp').values()[()]
+        btagDown=signal['sr'].integrate('process', s).integrate('systematic','btagDown').values()[()]
         sr_signal.setParamEffect(btag, btagUp, btagDown)
         sr.addSample(sr_signal)
 
@@ -687,7 +692,7 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     # End of SR
     ###
 
-    '''
+    
 
     ###
     ###
@@ -719,13 +724,11 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     wmcr_wjetsMC.setParamEffect(jec, 1.05)
     wmcr_wjetsMC.setParamEffect(id_mu, 1.02)
     wmcr_wjetsMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['wmcr'].integrate('process', 'W+jets').integrate('systematic','btagUp')
-    btagDown=background['wmcr'].integrate('process', 'W+jets').integrate('systematic','btagDown')
+    btagUp=background['wmcr'].integrate('process', 'W+jets').integrate('systematic','btagUp').values()[()]
+    btagDown=background['wmcr'].integrate('process', 'W+jets').integrate('systematic','btagDown').values()[()]
     wmcr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() * hf_fraction_weight['0tag']['W+jets']
     wmcr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
-
     wmcr.addSample(wmcr_wjets)
 
     ###    
@@ -742,13 +745,11 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     wmcr_ttMC.setParamEffect(jec, 1.05)
     wmcr_ttMC.setParamEffect(id_mu, 1.02)
     wmcr_ttMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['wmcr'].integrate('process', 'TT').integrate('systematic','btagUp')
-    btagDown=background['wmcr'].integrate('process', 'TT').integrate('systematic','btagDown')
+    btagUp=background['wmcr'].integrate('process', 'TT').integrate('systematic','btagUp').values()[()]
+    btagDown=background['wmcr'].integrate('process', 'TT').integrate('systematic','btagDown').values()[()]
     wmcr_ttMC.setParamEffect(btag, btagUp, btagDown)
-
     wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() * deepak15_weight['0tag']['TT']
     wmcr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt)
-
     wmcr.addSample(wmcr_tt)
 
     ###
@@ -757,107 +758,92 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
 
     wmcr_stHist = background['wmcr'].integrate('process', 'ST').integrate('systematic','nominal')
     wmcr_stTemplate = template(wmcr_stHist, 'recoil')
-    wmcr_stMC =  rl.TemplateSample(ch_name+'_stMC', rl.Sample.BACKGROUND, wmcr_stTemplate)
-    wmcr_stMC.setParamEffect(lumi, 1.027)
-    wmcr_stMC.setParamEffect(trig_met, 1.01)
-    wmcr_stMC.setParamEffect(veto_tau, 1.03)
-    wmcr_stMC.setParamEffect(st_norm, 1.2)
-    wmcr_stMC.setParamEffect(jec, 1.05)
-    wmcr_stMC.setParamEffect(id_mu, 1.02)
-    wmcr_stMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['wmcr'].integrate('process', 'ST').integrate('systematic','btagUp')
-    btagDown=background['wmcr'].integrate('process', 'ST').integrate('systematic','btagDown')
-    wmcr_stMC.setParamEffect(btag, btagUp, btagDown)
-
     wmcr_stBinYields = np.array([rl.IndependentParameter(ch_name+'_st_bin_%d' % i,b,0,wmcr_stTemplate[0].max()*2) for i,b in enumerate(wmcr_stTemplate[0])])
     wmcr_stBinYields = wmcr_stBinYields * deepak15_weight['0tag']['ST']
     wmcr_stObservable = rl.Observable('recoil', wmcr_stHist.axis('recoil').edges())
     wmcr_st = rl.ParametericSample(ch_name+'_st', rl.Sample.BACKGROUND, wmcr_stObservable, wmcr_stBinYields)
-
+    wmcr_st.setParamEffect(lumi, 1.027)
+    wmcr_st.setParamEffect(trig_met, 1.01)
+    wmcr_st.setParamEffect(veto_tau, 1.03)
+    wmcr_st.setParamEffect(st_norm, 1.2)
+    wmcr_st.setParamEffect(jec, 1.05)
+    wmcr_st.setParamEffect(id_mu, 1.02)
+    wmcr_st.setParamEffect(iso_mu, 1.02)
+    btagUp=background['wmcr'].integrate('process', 'ST').integrate('systematic','btagUp').values()[()]
+    btagDown=background['wmcr'].integrate('process', 'ST').integrate('systematic','btagDown').values()[()]
+    wmcr_st.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_st)
 
     wmcr_dyjetsHist = background['wmcr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
     wmcr_dyjetsTemplate = template(wmcr_dyjetsHist, 'recoil')
-    wmcr_dyjetsMC =  rl.TemplateSample(ch_name+'_dyjetsMC', rl.Sample.BACKGROUND, wmcr_dyjetsTemplate)
-    wmcr_dyjetsMC.setParamEffect(lumi, 1.027)
-    wmcr_dyjetsMC.setParamEffect(trig_met, 1.01)
-    wmcr_dyjetsMC.setParamEffect(veto_tau, 1.03)
-    wmcr_dyjetsMC.setParamEffect(dyjets_norm, 1.4)
-    wmcr_dyjetsMC.setParamEffect(jec, 1.05)
-    wmcr_dyjetsMC.setParamEffect(id_mu, 1.02)
-    wmcr_dyjetsMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['wmcr'].integrate('process', 'DY+jets').integrate('systematic','btagUp')
-    btagDown=background['wmcr'].integrate('process', 'DY+jets').integrate('systematic','btagDown')
-    wmcr_dyjetsMC.setParamEffect(btag, btagUp, btagDown)
-
     wmcr_dyjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_dyjets_bin_%d' % i,b,0,wmcr_dyjetsTemplate[0].max()*2) for i,b in enumerate(wmcr_dyjetsTemplate[0])])
     wmcr_dyjetsBinYields = wmcr_dyjetsBinYields * hf_fraction_weight['0tag']['Z+jets']
     wmcr_dyjetsObservable = rl.Observable('recoil', wmcr_dyjetsHist.axis('recoil').edges())
     wmcr_dyjets = rl.ParametericSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, wmcr_dyjetsObservable, wmcr_dyjetsBinYields)
-
+    wmcr_dyjets.setParamEffect(lumi, 1.027)
+    wmcr_dyjets.setParamEffect(trig_met, 1.01)
+    wmcr_dyjets.setParamEffect(veto_tau, 1.03)
+    wmcr_dyjets.setParamEffect(dyjets_norm, 1.4)
+    wmcr_dyjets.setParamEffect(jec, 1.05)
+    wmcr_dyjets.setParamEffect(id_mu, 1.02)
+    wmcr_dyjets.setParamEffect(iso_mu, 1.02)
+    btagUp=background['wmcr'].integrate('process', 'DY+jets').integrate('systematic','btagUp').values()[()]
+    btagDown=background['wmcr'].integrate('process', 'DY+jets').integrate('systematic','btagDown').values()[()]
+    wmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_dyjets)
 
     wmcr_vvHist = background['wmcr'].integrate('process', 'VV').integrate('systematic','nominal')
     wmcr_vvTemplate = template(wmcr_vvHist, 'recoil')
-    wmcr_vvMC =  rl.TemplateSample(ch_name+'_vvMC', rl.Sample.BACKGROUND, wmcr_vvTemplate)
-    wmcr_vvMC.setParamEffect(lumi, 1.027)
-    wmcr_vvMC.setParamEffect(trig_met, 1.01)
-    wmcr_vvMC.setParamEffect(veto_tau, 1.03)
-    wmcr_vvMC.setParamEffect(vv_norm, 1.2)
-    wmcr_vvMC.setParamEffect(jec, 1.05)
-    wmcr_vvMC.setParamEffect(id_mu, 1.02)
-    wmcr_vvMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['wmcr'].integrate('process', 'VV').integrate('systematic','btagUp')
-    btagDown=background['wmcr'].integrate('process', 'VV').integrate('systematic','btagDown')
-    wmcr_vvMC.setParamEffect(btag, btagUp, btagDown)
-
     wmcr_vvBinYields = np.array([rl.IndependentParameter(ch_name+'_vv_bin_%d' % i,b,0,wmcr_vvTemplate[0].max()*2) for i,b in enumerate(wmcr_vvTemplate[0])])
     wmcr_vvBinYields = wmcr_vvBinYields * deepak15_weight['0tag']['VV']
     wmcr_vvObservable = rl.Observable('recoil', wmcr_vvHist.axis('recoil').edges())
     wmcr_vv = rl.ParametericSample(ch_name+'_vv', rl.Sample.BACKGROUND, wmcr_vvObservable, wmcr_vvBinYields)
-
+    wmcr_vv.setParamEffect(lumi, 1.027)
+    wmcr_vv.setParamEffect(trig_met, 1.01)
+    wmcr_vv.setParamEffect(veto_tau, 1.03)
+    wmcr_vv.setParamEffect(vv_norm, 1.2)
+    wmcr_vv.setParamEffect(jec, 1.05)
+    wmcr_vv.setParamEffect(id_mu, 1.02)
+    wmcr_vv.setParamEffect(iso_mu, 1.02)
+    btagUp=background['wmcr'].integrate('process', 'VV').integrate('systematic','btagUp').values()[()]
+    btagDown=background['wmcr'].integrate('process', 'VV').integrate('systematic','btagDown').values()[()]
+    wmcr_vv.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_vv)
 
     wmcr_hbbHist = background['wmcr'].integrate('process', 'Hbb').integrate('systematic','nominal')
     wmcr_hbbTemplate = template(wmcr_hbbHist, 'recoil')
-    wmcr_hbbMC =  rl.TemplateSample(ch_name+'_hbbMC', rl.Sample.BACKGROUND, wmcr_hbbTemplate)
-    wmcr_hbbMC.setParamEffect(lumi, 1.027)
-    wmcr_hbbMC.setParamEffect(trig_met, 1.01)
-    wmcr_hbbMC.setParamEffect(veto_tau, 1.03)
-    wmcr_hbbMC.setParamEffect(hbb_norm, 1.2)
-    wmcr_hbbMC.setParamEffect(jec, 1.05)
-    wmcr_hbbMC.setParamEffect(id_mu, 1.02)
-    wmcr_hbbMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['wmcr'].integrate('process', 'Hbb').integrate('systematic','btagUp')
-    btagDown=background['wmcr'].integrate('process', 'Hbb').integrate('systematic','btagDown')
-    wmcr_hbbMC.setParamEffect(btag, btagUp, btagDown)
-
     wmcr_hbbBinYields = np.array([rl.IndependentParameter(ch_name+'_hbb_bin_%d' % i,b,0,wmcr_hbbTemplate[0].max()*2) for i,b in enumerate(wmcr_hbbTemplate[0])])
     wmcr_hbbBinYields = wmcr_hbbBinYields * deepak15_weight['0tag']['Hbb']
     wmcr_hbbObservable = rl.Observable('recoil', wmcr_hbbHist.axis('recoil').edges())
     wmcr_hbb = rl.ParametericSample(ch_name+'_hbb', rl.Sample.BACKGROUND, wmcr_hbbObservable, wmcr_hbbBinYields)
-
+    wmcr_hbb.setParamEffect(lumi, 1.027)
+    wmcr_hbb.setParamEffect(trig_met, 1.01)
+    wmcr_hbb.setParamEffect(veto_tau, 1.03)
+    wmcr_hbb.setParamEffect(hbb_norm, 1.2)
+    wmcr_hbb.setParamEffect(jec, 1.05)
+    wmcr_hbb.setParamEffect(id_mu, 1.02)
+    wmcr_hbb.setParamEffect(iso_mu, 1.02)
+    btagUp=background['wmcr'].integrate('process', 'Hbb').integrate('systematic','btagUp').values()[()]
+    btagDown=background['wmcr'].integrate('process', 'Hbb').integrate('systematic','btagDown').values()[()]
+    wmcr_hbb.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_hbb)
 
     wmcr_qcdHist = background['wmcr'].integrate('process', 'QCD').integrate('systematic','nominal')
     wmcr_qcdTemplate = template(wmcr_qcdHist, 'recoil')
-    wmcr_qcdMC =  rl.TemplateSample(ch_name+'_qcdMC', rl.Sample.BACKGROUND, wmcr_qcdTemplate)
-    wmcr_qcdMC.setParamEffect(lumi, 1.027)
-    wmcr_qcdMC.setParamEffect(trig_met, 1.01)
-    wmcr_qcdMC.setParamEffect(veto_tau, 1.03)
-    wmcr_qcdMC.setParamEffect(qcdmu_norm, 2.0)
-    wmcr_qcdMC.setParamEffect(jec, 1.05)
-    wmcr_qcdMC.setParamEffect(id_mu, 1.02)
-    wmcr_qcdMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['wmcr'].integrate('process', 'QCD').integrate('systematic','btagUp')
-    btagDown=background['wmcr'].integrate('process', 'QCD').integrate('systematic','btagDown')
-    wmcr_qcdMC.setParamEffect(btag, btagUp, btagDown)
-
     wmcr_qcdBinYields = np.array([rl.IndependentParameter(ch_name+'_qcd_bin_%d' % i,b,0,wmcr_qcdTemplate[0].max()*2) for i,b in enumerate(wmcr_qcdTemplate[0])])
     wmcr_qcdBinYields = wmcr_qcdBinYields * deepak15_weight['0tag']['QCD']
     wmcr_qcdObservable = rl.Observable('recoil', wmcr_qcdHist.axis('recoil').edges())
     wmcr_qcd = rl.ParametericSample(ch_name+'_qcd', rl.Sample.BACKGROUND, wmcr_qcdObservable, wmcr_qcdBinYields)
-
+    wmcr_qcd.setParamEffect(lumi, 1.027)
+    wmcr_qcd.setParamEffect(trig_met, 1.01)
+    wmcr_qcd.setParamEffect(veto_tau, 1.03)
+    wmcr_qcd.setParamEffect(qcdmu_norm, 2.0)
+    wmcr_qcd.setParamEffect(jec, 1.05)
+    wmcr_qcd.setParamEffect(id_mu, 1.02)
+    wmcr_qcd.setParamEffect(iso_mu, 1.02)
+    btagUp=background['wmcr'].integrate('process', 'QCD').integrate('systematic','btagUp').values()[()]
+    btagDown=background['wmcr'].integrate('process', 'QCD').integrate('systematic','btagDown').values()[()]
+    wmcr_qcd.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_qcd)
 
     ###
@@ -894,13 +880,11 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     tmcr_wjetsMC.setParamEffect(jec, 1.05)
     tmcr_wjetsMC.setParamEffect(id_mu, 1.02)
     tmcr_wjetsMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['tmcr'].integrate('process', 'W+jets').integrate('systematic','btagUp')
-    btagDown=background['tmcr'].integrate('process', 'W+jets').integrate('systematic','btagDown')
+    btagUp=background['tmcr'].integrate('process', 'W+jets').integrate('systematic','btagUp').values()[()]
+    btagDown=background['tmcr'].integrate('process', 'W+jets').integrate('systematic','btagDown').values()[()]
     tmcr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-
     tmcr_wjetsTransferFactor = tmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() * hf_fraction_weight['1tag']['W+jets']
     tmcr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, tmcr_wjetsTransferFactor, sr_wjets)
-
     tmcr.addSample(tmcr_wjets)
 
     ###    
@@ -917,13 +901,11 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     tmcr_ttMC.setParamEffect(jec, 1.05)
     tmcr_ttMC.setParamEffect(id_mu, 1.02)
     tmcr_ttMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['tmcr'].integrate('process', 'TT').integrate('systematic','btagUp')
-    btagDown=background['tmcr'].integrate('process', 'TT').integrate('systematic','btagDown')
+    btagUp=background['tmcr'].integrate('process', 'TT').integrate('systematic','btagUp').values()[()]
+    btagDown=background['tmcr'].integrate('process', 'TT').integrate('systematic','btagDown').values()[()]
     tmcr_ttMC.setParamEffect(btag, btagUp, btagDown)
-
     tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() * deepak15_weight['1tag']['TT']
     tmcr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt)
-
     tmcr.addSample(tmcr_tt)
 
     ###
@@ -932,107 +914,92 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
 
     tmcr_stHist = background['tmcr'].integrate('process', 'ST').integrate('systematic','nominal')
     tmcr_stTemplate = template(tmcr_stHist, 'recoil')
-    tmcr_stMC =  rl.TemplateSample(ch_name+'_stMC', rl.Sample.BACKGROUND, tmcr_stTemplate)
-    tmcr_stMC.setParamEffect(lumi, 1.027)
-    tmcr_stMC.setParamEffect(trig_met, 1.01)
-    tmcr_stMC.setParamEffect(veto_tau, 1.03)
-    tmcr_stMC.setParamEffect(st_norm, 1.2)
-    tmcr_stMC.setParamEffect(jec, 1.05)
-    tmcr_stMC.setParamEffect(id_mu, 1.02)
-    tmcr_stMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['tmcr'].integrate('process', 'ST').integrate('systematic','btagUp')
-    btagDown=background['tmcr'].integrate('process', 'ST').integrate('systematic','btagDown')
-    tmcr_stMC.setParamEffect(btag, btagUp, btagDown)
-
     tmcr_stBinYields = np.array([rl.IndependentParameter(ch_name+'_st_bin_%d' % i,b,0,tmcr_stTemplate[0].max()*2) for i,b in enumerate(tmcr_stTemplate[0])])
     tmcr_stBinYields = tmcr_stBinYields * deepak15_weight['1tag']['ST']
     tmcr_stObservable = rl.Observable('recoil', tmcr_stHist.axis('recoil').edges())
     tmcr_st = rl.ParametericSample(ch_name+'_st', rl.Sample.BACKGROUND, tmcr_stObservable, tmcr_stBinYields)
-
+    tmcr_st.setParamEffect(lumi, 1.027)
+    tmcr_st.setParamEffect(trig_met, 1.01)
+    tmcr_st.setParamEffect(veto_tau, 1.03)
+    tmcr_st.setParamEffect(st_norm, 1.2)
+    tmcr_st.setParamEffect(jec, 1.05)
+    tmcr_st.setParamEffect(id_mu, 1.02)
+    tmcr_st.setParamEffect(iso_mu, 1.02)
+    btagUp=background['tmcr'].integrate('process', 'ST').integrate('systematic','btagUp').values()[()]
+    btagDown=background['tmcr'].integrate('process', 'ST').integrate('systematic','btagDown').values()[()]
+    tmcr_st.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_st)
 
     tmcr_dyjetsHist = background['tmcr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
     tmcr_dyjetsTemplate = template(tmcr_dyjetsHist, 'recoil')
-    tmcr_dyjetsMC =  rl.TemplateSample(ch_name+'_dyjetsMC', rl.Sample.BACKGROUND, tmcr_dyjetsTemplate)
-    tmcr_dyjetsMC.setParamEffect(lumi, 1.027)
-    tmcr_dyjetsMC.setParamEffect(trig_met, 1.01)
-    tmcr_dyjetsMC.setParamEffect(veto_tau, 1.03)
-    tmcr_dyjetsMC.setParamEffect(dyjets_norm, 1.4)
-    tmcr_dyjetsMC.setParamEffect(jec, 1.05)
-    tmcr_dyjetsMC.setParamEffect(id_mu, 1.02)
-    tmcr_dyjetsMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['tmcr'].integrate('process', 'DY+jets').integrate('systematic','btagUp')
-    btagDown=background['tmcr'].integrate('process', 'DY+jets').integrate('systematic','btagDown')
-    tmcr_dyjetsMC.setParamEffect(btag, btagUp, btagDown)
-
     tmcr_dyjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_dyjets_bin_%d' % i,b,0,tmcr_dyjetsTemplate[0].max()*2) for i,b in enumerate(tmcr_dyjetsTemplate[0])])
     tmcr_dyjetsBinYields = tmcr_dyjetsBinYields * hf_fraction_weight['1tag']['Z+jets']
     tmcr_dyjetsObservable = rl.Observable('recoil', tmcr_dyjetsHist.axis('recoil').edges())
     tmcr_dyjets = rl.ParametericSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, tmcr_dyjetsObservable, tmcr_dyjetsBinYields)
-
+    tmcr_dyjets.setParamEffect(lumi, 1.027)
+    tmcr_dyjets.setParamEffect(trig_met, 1.01)
+    tmcr_dyjets.setParamEffect(veto_tau, 1.03)
+    tmcr_dyjets.setParamEffect(dyjets_norm, 1.4)
+    tmcr_dyjets.setParamEffect(jec, 1.05)
+    tmcr_dyjets.setParamEffect(id_mu, 1.02)
+    tmcr_dyjets.setParamEffect(iso_mu, 1.02)
+    btagUp=background['tmcr'].integrate('process', 'DY+jets').integrate('systematic','btagUp').values()[()]
+    btagDown=background['tmcr'].integrate('process', 'DY+jets').integrate('systematic','btagDown').values()[()]
+    tmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_dyjets)
 
     tmcr_vvHist = background['tmcr'].integrate('process', 'VV').integrate('systematic','nominal')
     tmcr_vvTemplate = template(tmcr_vvHist, 'recoil')
-    tmcr_vvMC =  rl.TemplateSample(ch_name+'_vvMC', rl.Sample.BACKGROUND, tmcr_vvTemplate)
-    tmcr_vvMC.setParamEffect(lumi, 1.027)
-    tmcr_vvMC.setParamEffect(trig_met, 1.01)
-    tmcr_vvMC.setParamEffect(veto_tau, 1.03)
-    tmcr_vvMC.setParamEffect(vv_norm, 1.2)
-    tmcr_vvMC.setParamEffect(jec, 1.05)
-    tmcr_vvMC.setParamEffect(id_mu, 1.02)
-    tmcr_vvMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['tmcr'].integrate('process', 'VV').integrate('systematic','btagUp')
-    btagDown=background['tmcr'].integrate('process', 'VV').integrate('systematic','btagDown')
-    tmcr_vvMC.setParamEffect(btag, btagUp, btagDown)
-
     tmcr_vvBinYields = np.array([rl.IndependentParameter(ch_name+'_vv_bin_%d' % i,b,0,tmcr_vvTemplate[0].max()*2) for i,b in enumerate(tmcr_vvTemplate[0])])
     tmcr_vvBinYields = tmcr_vvBinYields * deepak15_weight['1tag']['VV']
     tmcr_vvObservable = rl.Observable('recoil', tmcr_vvHist.axis('recoil').edges())
     tmcr_vv = rl.ParametericSample(ch_name+'_vv', rl.Sample.BACKGROUND, tmcr_vvObservable, tmcr_vvBinYields)
-
+    tmcr_vv.setParamEffect(lumi, 1.027)
+    tmcr_vv.setParamEffect(trig_met, 1.01)
+    tmcr_vv.setParamEffect(veto_tau, 1.03)
+    tmcr_vv.setParamEffect(vv_norm, 1.2)
+    tmcr_vv.setParamEffect(jec, 1.05)
+    tmcr_vv.setParamEffect(id_mu, 1.02)
+    tmcr_vv.setParamEffect(iso_mu, 1.02)
+    btagUp=background['tmcr'].integrate('process', 'VV').integrate('systematic','btagUp').values()[()]
+    btagDown=background['tmcr'].integrate('process', 'VV').integrate('systematic','btagDown').values()[()]
+    tmcr_vv.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_vv)
 
     tmcr_hbbHist = background['tmcr'].integrate('process', 'Hbb').integrate('systematic','nominal')
     tmcr_hbbTemplate = template(tmcr_hbbHist, 'recoil')
-    tmcr_hbbMC =  rl.TemplateSample(ch_name+'_hbbMC', rl.Sample.BACKGROUND, tmcr_hbbTemplate)
-    tmcr_hbbMC.setParamEffect(lumi, 1.027)
-    tmcr_hbbMC.setParamEffect(trig_met, 1.01)
-    tmcr_hbbMC.setParamEffect(veto_tau, 1.03)
-    tmcr_hbbMC.setParamEffect(hbb_norm, 1.2)
-    tmcr_hbbMC.setParamEffect(jec, 1.05)
-    tmcr_hbbMC.setParamEffect(id_mu, 1.02)
-    tmcr_hbbMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['tmcr'].integrate('process', 'Hbb').integrate('systematic','btagUp')
-    btagDown=background['tmcr'].integrate('process', 'Hbb').integrate('systematic','btagDown')
-    tmcr_hbbMC.setParamEffect(btag, btagUp, btagDown)
-
     tmcr_hbbBinYields = np.array([rl.IndependentParameter(ch_name+'_hbb_bin_%d' % i,b,0,tmcr_hbbTemplate[0].max()*2) for i,b in enumerate(tmcr_hbbTemplate[0])])
     tmcr_hbbBinYields = tmcr_hbbBinYields * deepak15_weight['1tag']['Hbb']
     tmcr_hbbObservable = rl.Observable('recoil', tmcr_hbbHist.axis('recoil').edges())
     tmcr_hbb = rl.ParametericSample(ch_name+'_hbb', rl.Sample.BACKGROUND, tmcr_hbbObservable, tmcr_hbbBinYields)
-
+    tmcr_hbb.setParamEffect(lumi, 1.027)
+    tmcr_hbb.setParamEffect(trig_met, 1.01)
+    tmcr_hbb.setParamEffect(veto_tau, 1.03)
+    tmcr_hbb.setParamEffect(hbb_norm, 1.2)
+    tmcr_hbb.setParamEffect(jec, 1.05)
+    tmcr_hbb.setParamEffect(id_mu, 1.02)
+    tmcr_hbb.setParamEffect(iso_mu, 1.02)
+    btagUp=background['tmcr'].integrate('process', 'Hbb').integrate('systematic','btagUp').values()[()]
+    btagDown=background['tmcr'].integrate('process', 'Hbb').integrate('systematic','btagDown').values()[()]
+    tmcr_hbb.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_hbb)
 
     tmcr_qcdHist = background['tmcr'].integrate('process', 'QCD').integrate('systematic','nominal')
     tmcr_qcdTemplate = template(tmcr_qcdHist, 'recoil')
-    tmcr_qcdMC =  rl.TemplateSample(ch_name+'_qcdMC', rl.Sample.BACKGROUND, tmcr_qcdTemplate)
-    tmcr_qcdMC.setParamEffect(lumi, 1.027)
-    tmcr_qcdMC.setParamEffect(trig_met, 1.01)
-    tmcr_qcdMC.setParamEffect(veto_tau, 1.03)
-    tmcr_qcdMC.setParamEffect(qcdmu_norm, 2.0)
-    tmcr_qcdMC.setParamEffect(jec, 1.05)
-    tmcr_qcdMC.setParamEffect(id_mu, 1.02)
-    tmcr_qcdMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['tmcr'].integrate('process', 'QCD').integrate('systematic','btagUp')
-    btagDown=background['tmcr'].integrate('process', 'QCD').integrate('systematic','btagDown')
-    tmcr_qcdMC.setParamEffect(btag, btagUp, btagDown)
-
     tmcr_qcdBinYields = np.array([rl.IndependentParameter(ch_name+'_qcd_bin_%d' % i,b,0,tmcr_qcdTemplate[0].max()*2) for i,b in enumerate(tmcr_qcdTemplate[0])])
     tmcr_qcdBinYields = tmcr_qcdBinYields * deepak15_weight['1tag']['QCD']
     tmcr_qcdObservable = rl.Observable('recoil', tmcr_qcdHist.axis('recoil').edges())
     tmcr_qcd = rl.ParametericSample(ch_name+'_qcd', rl.Sample.BACKGROUND, tmcr_qcdObservable, tmcr_qcdBinYields)
-
+    tmcr_qcd.setParamEffect(lumi, 1.027)
+    tmcr_qcd.setParamEffect(trig_met, 1.01)
+    tmcr_qcd.setParamEffect(veto_tau, 1.03)
+    tmcr_qcd.setParamEffect(qcdmu_norm, 2.0)
+    tmcr_qcd.setParamEffect(jec, 1.05)
+    tmcr_qcd.setParamEffect(id_mu, 1.02)
+    tmcr_qcd.setParamEffect(iso_mu, 1.02)
+    btagUp=background['tmcr'].integrate('process', 'QCD').integrate('systematic','btagUp').values()[()]
+    btagDown=background['tmcr'].integrate('process', 'QCD').integrate('systematic','btagDown').values()[()]
+    tmcr_qcd.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_qcd)
 
     ###
@@ -1069,13 +1036,11 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     wecr_wjetsMC.setParamEffect(jec, 1.05)
     wecr_wjetsMC.setParamEffect(id_e, 1.02)
     wecr_wjetsMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['wecr'].integrate('process', 'W+jets').integrate('systematic','btagUp')
-    btagDown=background['wecr'].integrate('process', 'W+jets').integrate('systematic','btagDown')
+    btagUp=background['wecr'].integrate('process', 'W+jets').integrate('systematic','btagUp').values()[()]
+    btagDown=background['wecr'].integrate('process', 'W+jets').integrate('systematic','btagDown').values()[()]
     wecr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() * hf_fraction_weight['0tag']['W+jets']
     wecr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets)
-
     wecr.addSample(wecr_wjets)
 
     ###    
@@ -1092,13 +1057,11 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     wecr_ttMC.setParamEffect(jec, 1.05)
     wecr_ttMC.setParamEffect(id_e, 1.02)
     wecr_ttMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['wecr'].integrate('process', 'TT').integrate('systematic','btagUp')
-    btagDown=background['wecr'].integrate('process', 'TT').integrate('systematic','btagDown')
+    btagUp=background['wecr'].integrate('process', 'TT').integrate('systematic','btagUp').values()[()]
+    btagDown=background['wecr'].integrate('process', 'TT').integrate('systematic','btagDown').values()[()]
     wecr_ttMC.setParamEffect(btag, btagUp, btagDown)
-
     wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation() * deepak15_weight['0tag']['TT']
     wecr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt)
-
     wecr.addSample(wecr_tt)
 
     ###
@@ -1107,107 +1070,92 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
 
     wecr_stHist = background['wecr'].integrate('process', 'ST').integrate('systematic','nominal')
     wecr_stTemplate = template(wecr_stHist, 'recoil')
-    wecr_stMC =  rl.TemplateSample(ch_name+'_stMC', rl.Sample.BACKGROUND, wecr_stTemplate)
-    wecr_stMC.setParamEffect(lumi, 1.027)
-    wecr_stMC.setParamEffect(trig_e, 1.01)
-    wecr_stMC.setParamEffect(veto_tau, 1.03)
-    wecr_stMC.setParamEffect(st_norm, 1.2)
-    wecr_stMC.setParamEffect(jec, 1.05)
-    wecr_stMC.setParamEffect(id_e, 1.02)
-    wecr_stMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['wecr'].integrate('process', 'ST').integrate('systematic','btagUp')
-    btagDown=background['wecr'].integrate('process', 'ST').integrate('systematic','btagDown')
-    wecr_stMC.setParamEffect(btag, btagUp, btagDown)
-
     wecr_stBinYields = np.array([rl.IndependentParameter(ch_name+'_st_bin_%d' % i,b,0,wecr_stTemplate[0].max()*2) for i,b in enumerate(wecr_stTemplate[0])])
     wecr_stBinYields = wecr_stBinYields * deepak15_weight['0tag']['ST']
     wecr_stObservable = rl.Observable('recoil', wecr_stHist.axis('recoil').edges())
     wecr_st = rl.ParametericSample(ch_name+'_st', rl.Sample.BACKGROUND, wecr_stObservable, wecr_stBinYields)
-
+    wecr_st.setParamEffect(lumi, 1.027)
+    wecr_st.setParamEffect(trig_e, 1.01)
+    wecr_st.setParamEffect(veto_tau, 1.03)
+    wecr_st.setParamEffect(st_norm, 1.2)
+    wecr_st.setParamEffect(jec, 1.05)
+    wecr_st.setParamEffect(id_e, 1.02)
+    wecr_st.setParamEffect(reco_e, 1.02)
+    btagUp=background['wecr'].integrate('process', 'ST').integrate('systematic','btagUp').values()[()]
+    btagDown=background['wecr'].integrate('process', 'ST').integrate('systematic','btagDown').values()[()]
+    wecr_st.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_st)
 
     wecr_dyjetsHist = background['wecr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
     wecr_dyjetsTemplate = template(wecr_dyjetsHist, 'recoil')
-    wecr_dyjetsMC =  rl.TemplateSample(ch_name+'_dyjetsMC', rl.Sample.BACKGROUND, wecr_dyjetsTemplate)
-    wecr_dyjetsMC.setParamEffect(lumi, 1.027)
-    wecr_dyjetsMC.setParamEffect(trig_e, 1.01)
-    wecr_dyjetsMC.setParamEffect(veto_tau, 1.03)
-    wecr_dyjetsMC.setParamEffect(dyjets_norm, 1.4)
-    wecr_dyjetsMC.setParamEffect(jec, 1.05)
-    wecr_dyjetsMC.setParamEffect(id_e, 1.02)
-    wecr_dyjetsMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['wecr'].integrate('process', 'DY+jets').integrate('systematic','btagUp')
-    btagDown=background['wecr'].integrate('process', 'DY+jets').integrate('systematic','btagDown')
-    wecr_dyjetsMC.setParamEffect(btag, btagUp, btagDown)
-
     wecr_dyjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_dyjets_bin_%d' % i,b,0,wecr_dyjetsTemplate[0].max()*2) for i,b in enumerate(wecr_dyjetsTemplate[0])])
     wecr_dyjetsBinYields = wecr_dyjetsBinYields * hf_fraction_weight['0tag']['Z+jets']
     wecr_dyjetsObservable = rl.Observable('recoil', wecr_dyjetsHist.axis('recoil').edges())
     wecr_dyjets = rl.ParametericSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, wecr_dyjetsObservable, wecr_dyjetsBinYields)
-
+    wecr_dyjets.setParamEffect(lumi, 1.027)
+    wecr_dyjets.setParamEffect(trig_e, 1.01)
+    wecr_dyjets.setParamEffect(veto_tau, 1.03)
+    wecr_dyjets.setParamEffect(dyjets_norm, 1.4)
+    wecr_dyjets.setParamEffect(jec, 1.05)
+    wecr_dyjets.setParamEffect(id_e, 1.02)
+    wecr_dyjets.setParamEffect(reco_e, 1.02)
+    btagUp=background['wecr'].integrate('process', 'DY+jets').integrate('systematic','btagUp').values()[()]
+    btagDown=background['wecr'].integrate('process', 'DY+jets').integrate('systematic','btagDown').values()[()]
+    wecr_dyjets.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_dyjets)
 
     wecr_vvHist = background['wecr'].integrate('process', 'VV').integrate('systematic','nominal')
     wecr_vvTemplate = template(wecr_vvHist, 'recoil')
-    wecr_vvMC =  rl.TemplateSample(ch_name+'_vvMC', rl.Sample.BACKGROUND, wecr_vvTemplate)
-    wecr_vvMC.setParamEffect(lumi, 1.027)
-    wecr_vvMC.setParamEffect(trig_e, 1.01)
-    wecr_vvMC.setParamEffect(veto_tau, 1.03)
-    wecr_vvMC.setParamEffect(vv_norm, 1.2)
-    wecr_vvMC.setParamEffect(jec, 1.05)
-    wecr_vvMC.setParamEffect(id_e, 1.02)
-    wecr_vvMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['wecr'].integrate('process', 'VV').integrate('systematic','btagUp')
-    btagDown=background['wecr'].integrate('process', 'VV').integrate('systematic','btagDown')
-    wecr_vvMC.setParamEffect(btag, btagUp, btagDown)
-
     wecr_vvBinYields = np.array([rl.IndependentParameter(ch_name+'_vv_bin_%d' % i,b,0,wecr_vvTemplate[0].max()*2) for i,b in enumerate(wecr_vvTemplate[0])])
     wecr_vvBinYields = wecr_vvBinYields * deepak15_weight['0tag']['VV']
     wecr_vvObservable = rl.Observable('recoil', wecr_vvHist.axis('recoil').edges())
     wecr_vv = rl.ParametericSample(ch_name+'_vv', rl.Sample.BACKGROUND, wecr_vvObservable, wecr_vvBinYields)
-
+    wecr_vv.setParamEffect(lumi, 1.027)
+    wecr_vv.setParamEffect(trig_e, 1.01)
+    wecr_vv.setParamEffect(veto_tau, 1.03)
+    wecr_vv.setParamEffect(vv_norm, 1.2)
+    wecr_vv.setParamEffect(jec, 1.05)
+    wecr_vv.setParamEffect(id_e, 1.02)
+    wecr_vv.setParamEffect(reco_e, 1.02)
+    btagUp=background['wecr'].integrate('process', 'VV').integrate('systematic','btagUp').values()[()]
+    btagDown=background['wecr'].integrate('process', 'VV').integrate('systematic','btagDown').values()[()]
+    wecr_vv.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_vv)
 
     wecr_hbbHist = background['wecr'].integrate('process', 'Hbb').integrate('systematic','nominal')
     wecr_hbbTemplate = template(wecr_hbbHist, 'recoil')
-    wecr_hbbMC =  rl.TemplateSample(ch_name+'_hbbMC', rl.Sample.BACKGROUND, wecr_hbbTemplate)
-    wecr_hbbMC.setParamEffect(lumi, 1.027)
-    wecr_hbbMC.setParamEffect(trig_e, 1.01)
-    wecr_hbbMC.setParamEffect(veto_tau, 1.03)
-    wecr_hbbMC.setParamEffect(hbb_norm, 1.2)
-    wecr_hbbMC.setParamEffect(jec, 1.05)
-    wecr_hbbMC.setParamEffect(id_e, 1.02)
-    wecr_hbbMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['wecr'].integrate('process', 'Hbb').integrate('systematic','btagUp')
-    btagDown=background['wecr'].integrate('process', 'Hbb').integrate('systematic','btagDown')
-    wecr_hbbMC.setParamEffect(btag, btagUp, btagDown)
-
     wecr_hbbBinYields = np.array([rl.IndependentParameter(ch_name+'_hbb_bin_%d' % i,b,0,wecr_hbbTemplate[0].max()*2) for i,b in enumerate(wecr_hbbTemplate[0])])
     wecr_hbbBinYields = wecr_hbbBinYields * deepak15_weight['0tag']['Hbb']
     wecr_hbbObservable = rl.Observable('recoil', wecr_hbbHist.axis('recoil').edges())
     wecr_hbb = rl.ParametericSample(ch_name+'_hbb', rl.Sample.BACKGROUND, wecr_hbbObservable, wecr_hbbBinYields)
-
+    wecr_hbb.setParamEffect(lumi, 1.027)
+    wecr_hbb.setParamEffect(trig_e, 1.01)
+    wecr_hbb.setParamEffect(veto_tau, 1.03)
+    wecr_hbb.setParamEffect(hbb_norm, 1.2)
+    wecr_hbb.setParamEffect(jec, 1.05)
+    wecr_hbb.setParamEffect(id_e, 1.02)
+    wecr_hbb.setParamEffect(reco_e, 1.02)
+    btagUp=background['wecr'].integrate('process', 'Hbb').integrate('systematic','btagUp').values()[()]
+    btagDown=background['wecr'].integrate('process', 'Hbb').integrate('systematic','btagDown').values()[()]
+    wecr_hbb.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_hbb)
 
     wecr_qcdHist = background['wecr'].integrate('process', 'QCD').integrate('systematic','nominal')
     wecr_qcdTemplate = template(wecr_qcdHist, 'recoil')
-    wecr_qcdMC =  rl.TemplateSample(ch_name+'_qcdMC', rl.Sample.BACKGROUND, wecr_qcdTemplate)
-    wecr_qcdMC.setParamEffect(lumi, 1.027)
-    wecr_qcdMC.setParamEffect(trig_e, 1.01)
-    wecr_qcdMC.setParamEffect(veto_tau, 1.03)
-    wecr_qcdMC.setParamEffect(qcdmu_norm, 2.0)
-    wecr_qcdMC.setParamEffect(jec, 1.05)
-    wecr_qcdMC.setParamEffect(id_e, 1.02)
-    wecr_qcdMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['wecr'].integrate('process', 'QCD').integrate('systematic','btagUp')
-    btagDown=background['wecr'].integrate('process', 'QCD').integrate('systematic','btagDown')
-    wecr_qcdMC.setParamEffect(btag, btagUp, btagDown)
-
     wecr_qcdBinYields = np.array([rl.IndependentParameter(ch_name+'_qcd_bin_%d' % i,b,0,wecr_qcdTemplate[0].max()*2) for i,b in enumerate(wecr_qcdTemplate[0])])
     wecr_qcdBinYields = wecr_qcdBinYields * deepak15_weight['0tag']['QCD']
     wecr_qcdObservable = rl.Observable('recoil', wecr_qcdHist.axis('recoil').edges())
     wecr_qcd = rl.ParametericSample(ch_name+'_qcd', rl.Sample.BACKGROUND, wecr_qcdObservable, wecr_qcdBinYields)
-
+    wecr_qcd.setParamEffect(lumi, 1.027)
+    wecr_qcd.setParamEffect(trig_e, 1.01)
+    wecr_qcd.setParamEffect(veto_tau, 1.03)
+    wecr_qcd.setParamEffect(qcdmu_norm, 2.0)
+    wecr_qcd.setParamEffect(jec, 1.05)
+    wecr_qcd.setParamEffect(id_e, 1.02)
+    wecr_qcd.setParamEffect(reco_e, 1.02)
+    btagUp=background['wecr'].integrate('process', 'QCD').integrate('systematic','btagUp').values()[()]
+    btagDown=background['wecr'].integrate('process', 'QCD').integrate('systematic','btagDown').values()[()]
+    wecr_qcd.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_qcd)
 
     ###
@@ -1244,13 +1192,11 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     tecr_wjetsMC.setParamEffect(jec, 1.05)
     tecr_wjetsMC.setParamEffect(id_e, 1.02)
     tecr_wjetsMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['tecr'].integrate('process', 'W+jets').integrate('systematic','btagUp')
-    btagDown=background['tecr'].integrate('process', 'W+jets').integrate('systematic','btagDown')
+    btagUp=background['tecr'].integrate('process', 'W+jets').integrate('systematic','btagUp').values()[()]
+    btagDown=background['tecr'].integrate('process', 'W+jets').integrate('systematic','btagDown').values()[()]
     tecr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-
     tecr_wjetsTransferFactor = tecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() * hf_fraction_weight['1tag']['W+jets']
     tecr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, tecr_wjetsTransferFactor, sr_wjets)
-
     tecr.addSample(tecr_wjets)
 
     ###    
@@ -1267,13 +1213,11 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     tecr_ttMC.setParamEffect(jec, 1.05)
     tecr_ttMC.setParamEffect(id_e, 1.02)
     tecr_ttMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['tecr'].integrate('process', 'TT').integrate('systematic','btagUp')
-    btagDown=background['tecr'].integrate('process', 'TT').integrate('systematic','btagDown')
+    btagUp=background['tecr'].integrate('process', 'TT').integrate('systematic','btagUp').values()[()]
+    btagDown=background['tecr'].integrate('process', 'TT').integrate('systematic','btagDown').values()[()]
     tecr_ttMC.setParamEffect(btag, btagUp, btagDown)
-
     tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation() * deepak15_weight['1tag']['TT']
     tecr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt)
-
     tecr.addSample(tecr_tt)
 
     ###
@@ -1282,107 +1226,92 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
 
     tecr_stHist = background['tecr'].integrate('process', 'ST').integrate('systematic','nominal')
     tecr_stTemplate = template(tecr_stHist, 'recoil')
-    tecr_stMC =  rl.TemplateSample(ch_name+'_stMC', rl.Sample.BACKGROUND, tecr_stTemplate)
-    tecr_stMC.setParamEffect(lumi, 1.027)
-    tecr_stMC.setParamEffect(trig_e, 1.01)
-    tecr_stMC.setParamEffect(veto_tau, 1.03)
-    tecr_stMC.setParamEffect(st_norm, 1.2)
-    tecr_stMC.setParamEffect(jec, 1.05)
-    tecr_stMC.setParamEffect(id_e, 1.02)
-    tecr_stMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['tecr'].integrate('process', 'ST').integrate('systematic','btagUp')
-    btagDown=background['tecr'].integrate('process', 'ST').integrate('systematic','btagDown')
-    tecr_stMC.setParamEffect(btag, btagUp, btagDown)
-
     tecr_stBinYields = np.array([rl.IndependentParameter(ch_name+'_st_bin_%d' % i,b,0,tecr_stTemplate[0].max()*2) for i,b in enumerate(tecr_stTemplate[0])])
     tecr_stBinYields = tecr_stBinYields * deepak15_weight['1tag']['ST']
     tecr_stObservable = rl.Observable('recoil', tecr_stHist.axis('recoil').edges())
     tecr_st = rl.ParametericSample(ch_name+'_st', rl.Sample.BACKGROUND, tecr_stObservable, tecr_stBinYields)
-
+    tecr_st.setParamEffect(lumi, 1.027)
+    tecr_st.setParamEffect(trig_e, 1.01)
+    tecr_st.setParamEffect(veto_tau, 1.03)
+    tecr_st.setParamEffect(st_norm, 1.2)
+    tecr_st.setParamEffect(jec, 1.05)
+    tecr_st.setParamEffect(id_e, 1.02)
+    tecr_st.setParamEffect(reco_e, 1.02)
+    btagUp=background['tecr'].integrate('process', 'ST').integrate('systematic','btagUp').values()[()]
+    btagDown=background['tecr'].integrate('process', 'ST').integrate('systematic','btagDown').values()[()]
+    tecr_st.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_st)
 
     tecr_dyjetsHist = background['tecr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
     tecr_dyjetsTemplate = template(tecr_dyjetsHist, 'recoil')
-    tecr_dyjetsMC =  rl.TemplateSample(ch_name+'_dyjetsMC', rl.Sample.BACKGROUND, tecr_dyjetsTemplate)
-    tecr_dyjetsMC.setParamEffect(lumi, 1.027)
-    tecr_dyjetsMC.setParamEffect(trig_e, 1.01)
-    tecr_dyjetsMC.setParamEffect(veto_tau, 1.03)
-    tecr_dyjetsMC.setParamEffect(dyjets_norm, 1.4)
-    tecr_dyjetsMC.setParamEffect(jec, 1.05)
-    tecr_dyjetsMC.setParamEffect(id_e, 1.02)
-    tecr_dyjetsMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['tecr'].integrate('process', 'DY+jets').integrate('systematic','btagUp')
-    btagDown=background['tecr'].integrate('process', 'DY+jets').integrate('systematic','btagDown')
-    tecr_dyjetsMC.setParamEffect(btag, btagUp, btagDown)
-
     tecr_dyjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_dyjets_bin_%d' % i,b,0,tecr_dyjetsTemplate[0].max()*2) for i,b in enumerate(tecr_dyjetsTemplate[0])])
     tecr_dyjetsBinYields = tecr_dyjetsBinYields * hf_fraction_weight['1tag']['Z+jets']
     tecr_dyjetsObservable = rl.Observable('recoil', tecr_dyjetsHist.axis('recoil').edges())
     tecr_dyjets = rl.ParametericSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, tecr_dyjetsObservable, tecr_dyjetsBinYields)
-
+    tecr_dyjets.setParamEffect(lumi, 1.027)
+    tecr_dyjets.setParamEffect(trig_e, 1.01)
+    tecr_dyjets.setParamEffect(veto_tau, 1.03)
+    tecr_dyjets.setParamEffect(dyjets_norm, 1.4)
+    tecr_dyjets.setParamEffect(jec, 1.05)
+    tecr_dyjets.setParamEffect(id_e, 1.02)
+    tecr_dyjets.setParamEffect(reco_e, 1.02)
+    btagUp=background['tecr'].integrate('process', 'DY+jets').integrate('systematic','btagUp').values()[()]
+    btagDown=background['tecr'].integrate('process', 'DY+jets').integrate('systematic','btagDown').values()[()]
+    tecr_dyjets.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_dyjets)
 
     tecr_vvHist = background['tecr'].integrate('process', 'VV').integrate('systematic','nominal')
     tecr_vvTemplate = template(tecr_vvHist, 'recoil')
-    tecr_vvMC =  rl.TemplateSample(ch_name+'_vvMC', rl.Sample.BACKGROUND, tecr_vvTemplate)
-    tecr_vvMC.setParamEffect(lumi, 1.027)
-    tecr_vvMC.setParamEffect(trig_e, 1.01)
-    tecr_vvMC.setParamEffect(veto_tau, 1.03)
-    tecr_vvMC.setParamEffect(vv_norm, 1.2)
-    tecr_vvMC.setParamEffect(jec, 1.05)
-    tecr_vvMC.setParamEffect(id_e, 1.02)
-    tecr_vvMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['tecr'].integrate('process', 'VV').integrate('systematic','btagUp')
-    btagDown=background['tecr'].integrate('process', 'VV').integrate('systematic','btagDown')
-    tecr_vvMC.setParamEffect(btag, btagUp, btagDown)
-
     tecr_vvBinYields = np.array([rl.IndependentParameter(ch_name+'_vv_bin_%d' % i,b,0,tecr_vvTemplate[0].max()*2) for i,b in enumerate(tecr_vvTemplate[0])])
     tecr_vvBinYields = tecr_vvBinYields * deepak15_weight['1tag']['VV']
     tecr_vvObservable = rl.Observable('recoil', tecr_vvHist.axis('recoil').edges())
     tecr_vv = rl.ParametericSample(ch_name+'_vv', rl.Sample.BACKGROUND, tecr_vvObservable, tecr_vvBinYields)
-
+    tecr_vv.setParamEffect(lumi, 1.027)
+    tecr_vv.setParamEffect(trig_e, 1.01)
+    tecr_vv.setParamEffect(veto_tau, 1.03)
+    tecr_vv.setParamEffect(vv_norm, 1.2)
+    tecr_vv.setParamEffect(jec, 1.05)
+    tecr_vv.setParamEffect(id_e, 1.02)
+    tecr_vv.setParamEffect(reco_e, 1.02)
+    btagUp=background['tecr'].integrate('process', 'VV').integrate('systematic','btagUp').values()[()]
+    btagDown=background['tecr'].integrate('process', 'VV').integrate('systematic','btagDown').values()[()]
+    tecr_vv.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_vv)
 
     tecr_hbbHist = background['tecr'].integrate('process', 'Hbb').integrate('systematic','nominal')
     tecr_hbbTemplate = template(tecr_hbbHist, 'recoil')
-    tecr_hbbMC =  rl.TemplateSample(ch_name+'_hbbMC', rl.Sample.BACKGROUND, tecr_hbbTemplate)
-    tecr_hbbMC.setParamEffect(lumi, 1.027)
-    tecr_hbbMC.setParamEffect(trig_e, 1.01)
-    tecr_hbbMC.setParamEffect(veto_tau, 1.03)
-    tecr_hbbMC.setParamEffect(hbb_norm, 1.2)
-    tecr_hbbMC.setParamEffect(jec, 1.05)
-    tecr_hbbMC.setParamEffect(id_e, 1.02)
-    tecr_hbbMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['tecr'].integrate('process', 'Hbb').integrate('systematic','btagUp')
-    btagDown=background['tecr'].integrate('process', 'Hbb').integrate('systematic','btagDown')
-    tecr_hbbMC.setParamEffect(btag, btagUp, btagDown)
-
     tecr_hbbBinYields = np.array([rl.IndependentParameter(ch_name+'_hbb_bin_%d' % i,b,0,tecr_hbbTemplate[0].max()*2) for i,b in enumerate(tecr_hbbTemplate[0])])
     tecr_hbbBinYields = tecr_hbbBinYields * deepak15_weight['1tag']['Hbb']
     tecr_hbbObservable = rl.Observable('recoil', tecr_hbbHist.axis('recoil').edges())
     tecr_hbb = rl.ParametericSample(ch_name+'_hbb', rl.Sample.BACKGROUND, tecr_hbbObservable, tecr_hbbBinYields)
-
+    tecr_hbb.setParamEffect(lumi, 1.027)
+    tecr_hbb.setParamEffect(trig_e, 1.01)
+    tecr_hbb.setParamEffect(veto_tau, 1.03)
+    tecr_hbb.setParamEffect(hbb_norm, 1.2)
+    tecr_hbb.setParamEffect(jec, 1.05)
+    tecr_hbb.setParamEffect(id_e, 1.02)
+    tecr_hbb.setParamEffect(reco_e, 1.02)
+    btagUp=background['tecr'].integrate('process', 'Hbb').integrate('systematic','btagUp').values()[()]
+    btagDown=background['tecr'].integrate('process', 'Hbb').integrate('systematic','btagDown').values()[()]
+    tecr_hbb.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_hbb)
 
     tecr_qcdHist = background['tecr'].integrate('process', 'QCD').integrate('systematic','nominal')
     tecr_qcdTemplate = template(tecr_qcdHist, 'recoil')
-    tecr_qcdMC =  rl.TemplateSample(ch_name+'_qcdMC', rl.Sample.BACKGROUND, tecr_qcdTemplate)
-    tecr_qcdMC.setParamEffect(lumi, 1.027)
-    tecr_qcdMC.setParamEffect(trig_e, 1.01)
-    tecr_qcdMC.setParamEffect(veto_tau, 1.03)
-    tecr_qcdMC.setParamEffect(qcdmu_norm, 2.0)
-    tecr_qcdMC.setParamEffect(jec, 1.05)
-    tecr_qcdMC.setParamEffect(id_e, 1.02)
-    tecr_qcdMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['tecr'].integrate('process', 'QCD').integrate('systematic','btagUp')
-    btagDown=background['tecr'].integrate('process', 'QCD').integrate('systematic','btagDown')
-    tecr_qcdMC.setParamEffect(btag, btagUp, btagDown)
-
     tecr_qcdBinYields = np.array([rl.IndependentParameter(ch_name+'_qcd_bin_%d' % i,b,0,tecr_qcdTemplate[0].max()*2) for i,b in enumerate(tecr_qcdTemplate[0])])
     tecr_qcdBinYields = tecr_qcdBinYields * deepak15_weight['1tag']['QCD']
     tecr_qcdObservable = rl.Observable('recoil', tecr_qcdHist.axis('recoil').edges())
     tecr_qcd = rl.ParametericSample(ch_name+'_qcd', rl.Sample.BACKGROUND, tecr_qcdObservable, tecr_qcdBinYields)
-
+    tecr_qcd.setParamEffect(lumi, 1.027)
+    tecr_qcd.setParamEffect(trig_e, 1.01)
+    tecr_qcd.setParamEffect(veto_tau, 1.03)
+    tecr_qcd.setParamEffect(qcdmu_norm, 2.0)
+    tecr_qcd.setParamEffect(jec, 1.05)
+    tecr_qcd.setParamEffect(id_e, 1.02)
+    tecr_qcd.setParamEffect(reco_e, 1.02)
+    btagUp=background['tecr'].integrate('process', 'QCD').integrate('systematic','btagUp').values()[()]
+    btagDown=background['tecr'].integrate('process', 'QCD').integrate('systematic','btagDown').values()[()]
+    tecr_qcd.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_qcd)
 
     ###
@@ -1415,10 +1344,8 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     zmcr_dyjetsMC.setParamEffect(jec, 1.05)
     zmcr_dyjetsMC.setParamEffect(id_mu, 1.02)
     zmcr_dyjetsMC.setParamEffect(iso_mu, 1.02)
-
     zmcr_dyjetsTransferFactor = zmcr_dyjetsMC.getExpectation() / sr_zjetsMC.getExpectation() * hf_fraction_weight['notag']['Z+jets']
     zmcr_dyjets = rl.TransferFactorSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, zmcr_dyjetsTransferFactor, sr_zjets)
-
     zmcr.addSample(zmcr_dyjets)
 
     ###
@@ -1435,66 +1362,55 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     zmcr_ttMC.setParamEffect(jec, 1.05)
     zmcr_ttMC.setParamEffect(id_mu, 1.02)
     zmcr_ttMC.setParamEffect(iso_mu, 1.02)
-
     zmcr_ttBinYields = np.array([rl.IndependentParameter(ch_name+'_tt_bin_%d' % i,b,0,zmcr_ttTemplate[0].max()*2) for i,b in enumerate(zmcr_ttTemplate[0])])
     zmcr_ttBinYields = zmcr_ttBinYields * deepak15_weight['notag']['TT']
     zmcr_ttObservable = rl.Observable('recoil', zmcr_ttHist.axis('recoil').edges())
     zmcr_tt = rl.ParametericSample(ch_name+'_tt', rl.Sample.BACKGROUND, zmcr_ttObservable, zmcr_ttBinYields)
-
     zmcr.addSample(zmcr_tt)
 
     zmcr_stHist = background['zmcr'].integrate('process', 'ST').integrate('systematic','nominal')
     zmcr_stTemplate = template(zmcr_stHist, 'recoil')
-    zmcr_stMC =  rl.TemplateSample(ch_name+'_stMC', rl.Sample.BACKGROUND, zmcr_stTemplate)
-    zmcr_stMC.setParamEffect(lumi, 1.027)
-    zmcr_stMC.setParamEffect(trig_met, 1.01)
-    zmcr_stMC.setParamEffect(veto_tau, 1.03)
-    zmcr_stMC.setParamEffect(st_norm, 1.2)
-    zmcr_stMC.setParamEffect(jec, 1.05)
-    zmcr_stMC.setParamEffect(id_mu, 1.02)
-    zmcr_stMC.setParamEffect(iso_mu, 1.02)
-
     zmcr_stBinYields = np.array([rl.IndependentParameter(ch_name+'_st_bin_%d' % i,b,0,zmcr_stTemplate[0].max()*2) for i,b in enumerate(zmcr_stTemplate[0])])
     zmcr_stBinYields = zmcr_stBinYields * deepak15_weight['notag']['ST']
     zmcr_stObservable = rl.Observable('recoil', zmcr_stHist.axis('recoil').edges())
     zmcr_st = rl.ParametericSample(ch_name+'_st', rl.Sample.BACKGROUND, zmcr_stObservable, zmcr_stBinYields)
-
+    zmcr_st.setParamEffect(lumi, 1.027)
+    zmcr_st.setParamEffect(trig_met, 1.01)
+    zmcr_st.setParamEffect(veto_tau, 1.03)
+    zmcr_st.setParamEffect(st_norm, 1.2)
+    zmcr_st.setParamEffect(jec, 1.05)
+    zmcr_st.setParamEffect(id_mu, 1.02)
+    zmcr_st.setParamEffect(iso_mu, 1.02)
     zmcr.addSample(zmcr_st)
 
     zmcr_vvHist = background['zmcr'].integrate('process', 'VV').integrate('systematic','nominal')
     zmcr_vvTemplate = template(zmcr_vvHist, 'recoil')
-    zmcr_vvMC =  rl.TemplateSample(ch_name+'_vvMC', rl.Sample.BACKGROUND, zmcr_vvTemplate)
-    zmcr_vvMC.setParamEffect(lumi, 1.027)
-    zmcr_vvMC.setParamEffect(trig_met, 1.01)
-    zmcr_vvMC.setParamEffect(veto_tau, 1.03)
-    zmcr_vvMC.setParamEffect(vv_norm, 1.2)
-    zmcr_vvMC.setParamEffect(jec, 1.05)
-    zmcr_vvMC.setParamEffect(id_mu, 1.02)
-    zmcr_vvMC.setParamEffect(iso_mu, 1.02)
-
     zmcr_vvBinYields = np.array([rl.IndependentParameter(ch_name+'_vv_bin_%d' % i,b,0,zmcr_vvTemplate[0].max()*2) for i,b in enumerate(zmcr_vvTemplate[0])])
     zmcr_vvBinYields = zmcr_vvBinYields * deepak15_weight['notag']['VV']
     zmcr_vvObservable = rl.Observable('recoil', zmcr_vvHist.axis('recoil').edges())
     zmcr_vv = rl.ParametericSample(ch_name+'_vv', rl.Sample.BACKGROUND, zmcr_vvObservable, zmcr_vvBinYields)
-
+    zmcr_vv.setParamEffect(lumi, 1.027)
+    zmcr_vv.setParamEffect(trig_met, 1.01)
+    zmcr_vv.setParamEffect(veto_tau, 1.03)
+    zmcr_vv.setParamEffect(vv_norm, 1.2)
+    zmcr_vv.setParamEffect(jec, 1.05)
+    zmcr_vv.setParamEffect(id_mu, 1.02)
+    zmcr_vv.setParamEffect(iso_mu, 1.02)
     zmcr.addSample(zmcr_vv)
 
     zmcr_hbbHist = background['zmcr'].integrate('process', 'Hbb').integrate('systematic','nominal')
     zmcr_hbbTemplate = template(zmcr_hbbHist, 'recoil')
-    zmcr_hbbMC =  rl.TemplateSample(ch_name+'_hbbMC', rl.Sample.BACKGROUND, zmcr_hbbTemplate)
-    zmcr_hbbMC.setParamEffect(lumi, 1.027)
-    zmcr_hbbMC.setParamEffect(trig_met, 1.01)
-    zmcr_hbbMC.setParamEffect(veto_tau, 1.03)
-    zmcr_hbbMC.setParamEffect(hbb_norm, 1.2)
-    zmcr_hbbMC.setParamEffect(jec, 1.05)
-    zmcr_hbbMC.setParamEffect(id_mu, 1.02)
-    zmcr_hbbMC.setParamEffect(iso_mu, 1.02)
-
     zmcr_hbbBinYields = np.array([rl.IndependentParameter(ch_name+'_hbb_bin_%d' % i,b,0,zmcr_hbbTemplate[0].max()*2) for i,b in enumerate(zmcr_hbbTemplate[0])])
     zmcr_hbbBinYields = zmcr_hbbBinYields * deepak15_weight['notag']['Hbb']
     zmcr_hbbObservable = rl.Observable('recoil', zmcr_hbbHist.axis('recoil').edges())
     zmcr_hbb = rl.ParametericSample(ch_name+'_hbb', rl.Sample.BACKGROUND, zmcr_hbbObservable, zmcr_hbbBinYields)
-
+    zmcr_hbb.setParamEffect(lumi, 1.027)
+    zmcr_hbb.setParamEffect(trig_met, 1.01)
+    zmcr_hbb.setParamEffect(veto_tau, 1.03)
+    zmcr_hbb.setParamEffect(hbb_norm, 1.2)
+    zmcr_hbb.setParamEffect(jec, 1.05)
+    zmcr_hbb.setParamEffect(id_mu, 1.02)
+    zmcr_hbb.setParamEffect(iso_mu, 1.02)
     zmcr.addSample(zmcr_hbb)
 
     ###
@@ -1527,10 +1443,8 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     zecr_dyjetsMC.setParamEffect(jec, 1.05)
     zecr_dyjetsMC.setParamEffect(id_e, 1.02)
     zecr_dyjetsMC.setParamEffect(reco_e, 1.02)
-
     zecr_dyjetsTransferFactor = zecr_dyjetsMC.getExpectation() / sr_zjetsMC.getExpectation() * hf_fraction_weight['notag']['Z+jets']
     zecr_dyjets = rl.TransferFactorSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, zecr_dyjetsTransferFactor, sr_zjets)
-
     zecr.addSample(zecr_dyjets)
 
     ###
@@ -1539,74 +1453,62 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
 
     zecr_ttHist = background['zecr'].integrate('process', 'TT').integrate('systematic','nominal')
     zecr_ttTemplate = template(zecr_ttHist, 'recoil')
-    zecr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, zecr_ttTemplate)
-    zecr_ttMC.setParamEffect(lumi, 1.027)
-    zecr_ttMC.setParamEffect(trig_e, 1.01)
-    zecr_ttMC.setParamEffect(veto_tau, 1.03)
-    zecr_ttMC.setParamEffect(tt_norm, 1.4)
-    zecr_ttMC.setParamEffect(jec, 1.05)
-    zecr_ttMC.setParamEffect(id_e, 1.02)
-    zecr_ttMC.setParamEffect(reco_e, 1.02)
-
     zecr_ttBinYields = np.array([rl.IndependentParameter(ch_name+'_tt_bin_%d' % i,b,0,zecr_ttTemplate[0].max()*2) for i,b in enumerate(zecr_ttTemplate[0])])
     zecr_ttBinYields = zecr_ttBinYields * deepak15_weight['notag']['TT']
     zecr_ttObservable = rl.Observable('recoil', zecr_ttHist.axis('recoil').edges())
     zecr_tt = rl.ParametericSample(ch_name+'_tt', rl.Sample.BACKGROUND, zecr_ttObservable, zecr_ttBinYields)
-
+    zecr_tt.setParamEffect(lumi, 1.027)
+    zecr_tt.setParamEffect(trig_e, 1.01)
+    zecr_tt.setParamEffect(veto_tau, 1.03)
+    zecr_tt.setParamEffect(tt_norm, 1.4)
+    zecr_tt.setParamEffect(jec, 1.05)
+    zecr_tt.setParamEffect(id_e, 1.02)
+    zecr_tt.setParamEffect(reco_e, 1.02)
     zecr.addSample(zecr_tt)
 
     zecr_stHist = background['zecr'].integrate('process', 'ST').integrate('systematic','nominal')
     zecr_stTemplate = template(zecr_stHist, 'recoil')
-    zecr_stMC =  rl.TemplateSample(ch_name+'_stMC', rl.Sample.BACKGROUND, zecr_stTemplate)
-    zecr_stMC.setParamEffect(lumi, 1.027)
-    zecr_stMC.setParamEffect(trig_e, 1.01)
-    zecr_stMC.setParamEffect(veto_tau, 1.03)
-    zecr_stMC.setParamEffect(st_norm, 1.2)
-    zecr_stMC.setParamEffect(jec, 1.05)
-    zecr_stMC.setParamEffect(id_e, 1.02)
-    zecr_stMC.setParamEffect(reco_e, 1.02)
-
     zecr_stBinYields = np.array([rl.IndependentParameter(ch_name+'_st_bin_%d' % i,b,0,zecr_stTemplate[0].max()*2) for i,b in enumerate(zecr_stTemplate[0])])
     zecr_stBinYields = zecr_stBinYields * deepak15_weight['notag']['ST']
     zecr_stObservable = rl.Observable('recoil', zecr_stHist.axis('recoil').edges())
     zecr_st = rl.ParametericSample(ch_name+'_st', rl.Sample.BACKGROUND, zecr_stObservable, zecr_stBinYields)
-
+    zecr_st.setParamEffect(lumi, 1.027)
+    zecr_st.setParamEffect(trig_e, 1.01)
+    zecr_st.setParamEffect(veto_tau, 1.03)
+    zecr_st.setParamEffect(st_norm, 1.2)
+    zecr_st.setParamEffect(jec, 1.05)
+    zecr_st.setParamEffect(id_e, 1.02)
+    zecr_st.setParamEffect(reco_e, 1.02)
     zecr.addSample(zecr_st)
 
     zecr_vvHist = background['zecr'].integrate('process', 'VV').integrate('systematic','nominal')
     zecr_vvTemplate = template(zecr_vvHist, 'recoil')
-    zecr_vvMC =  rl.TemplateSample(ch_name+'_vvMC', rl.Sample.BACKGROUND, zecr_vvTemplate)
-    zecr_vvMC.setParamEffect(lumi, 1.027)
-    zecr_vvMC.setParamEffect(trig_e, 1.01)
-    zecr_vvMC.setParamEffect(veto_tau, 1.03)
-    zecr_vvMC.setParamEffect(vv_norm, 1.2)
-    zecr_vvMC.setParamEffect(jec, 1.05)
-    zecr_vvMC.setParamEffect(id_e, 1.02)
-    zecr_vvMC.setParamEffect(reco_e, 1.02)
-
     zecr_vvBinYields = np.array([rl.IndependentParameter(ch_name+'_vv_bin_%d' % i,b,0,zecr_vvTemplate[0].max()*2) for i,b in enumerate(zecr_vvTemplate[0])])
     zecr_vvBinYields = zecr_vvBinYields * deepak15_weight['notag']['VV']
     zecr_vvObservable = rl.Observable('recoil', zecr_vvHist.axis('recoil').edges())
     zecr_vv = rl.ParametericSample(ch_name+'_vv', rl.Sample.BACKGROUND, zecr_vvObservable, zecr_vvBinYields)
-
+    zecr_vv.setParamEffect(lumi, 1.027)
+    zecr_vv.setParamEffect(trig_e, 1.01)
+    zecr_vv.setParamEffect(veto_tau, 1.03)
+    zecr_vv.setParamEffect(vv_norm, 1.2)
+    zecr_vv.setParamEffect(jec, 1.05)
+    zecr_vv.setParamEffect(id_e, 1.02)
+    zecr_vv.setParamEffect(reco_e, 1.02)
     zecr.addSample(zecr_vv)
 
     zecr_hbbHist = background['zecr'].integrate('process', 'Hbb').integrate('systematic','nominal')
     zecr_hbbTemplate = template(zecr_hbbHist, 'recoil')
-    zecr_hbbMC =  rl.TemplateSample(ch_name+'_hbbMC', rl.Sample.BACKGROUND, zecr_hbbTemplate)
-    zecr_hbbMC.setParamEffect(lumi, 1.027)
-    zecr_hbbMC.setParamEffect(trig_e, 1.01)
-    zecr_hbbMC.setParamEffect(veto_tau, 1.03)
-    zecr_hbbMC.setParamEffect(hbb_norm, 1.2)
-    zecr_hbbMC.setParamEffect(jec, 1.05)
-    zecr_hbbMC.setParamEffect(id_e, 1.02)
-    zecr_hbbMC.setParamEffect(reco_e, 1.02)
-
     zecr_hbbBinYields = np.array([rl.IndependentParameter(ch_name+'_hbb_bin_%d' % i,b,0,zecr_hbbTemplate[0].max()*2) for i,b in enumerate(zecr_hbbTemplate[0])])
     zecr_hbbBinYields = zecr_hbbBinYields * deepak15_weight['notag']['Hbb']
     zecr_hbbObservable = rl.Observable('recoil', zecr_hbbHist.axis('recoil').edges())
     zecr_hbb = rl.ParametericSample(ch_name+'_hbb', rl.Sample.BACKGROUND, zecr_hbbObservable, zecr_hbbBinYields)
-
+    zecr_hbb.setParamEffect(lumi, 1.027)
+    zecr_hbb.setParamEffect(trig_e, 1.01)
+    zecr_hbb.setParamEffect(veto_tau, 1.03)
+    zecr_hbb.setParamEffect(hbb_norm, 1.2)
+    zecr_hbb.setParamEffect(jec, 1.05)
+    zecr_hbb.setParamEffect(id_e, 1.02)
+    zecr_hbb.setParamEffect(reco_e, 1.02)
     zecr.addSample(zecr_hbb)
 
     ###
@@ -1638,41 +1540,66 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     gcr_gjetsMC.setParamEffect(gjets_norm, 1.4)
     gcr_gjetsMC.setParamEffect(jec, 1.05)
     gcr_gjetsMC.setParamEffect(id_pho, 1.02)
-
     gcr_gjetsTransferFactor = gcr_gjetsMC.getExpectation() / sr_zjetsMC.getExpectation() * hf_fraction_weight['notag']['G+jets']
     gcr_gjets = rl.TransferFactorSample(ch_name+'_gjets', rl.Sample.BACKGROUND, gcr_gjetsTransferFactor, sr_zjets)
-
     gcr.addSample(gcr_gjets)
 
     gcr_qcdHist = background['gcr'].integrate('process', 'QCD').integrate('systematic','nominal')
     gcr_qcdTemplate = template(gcr_qcdHist, 'recoil')
-    gcr_qcdMC =  rl.TemplateSample(ch_name+'_qcdMC', rl.Sample.BACKGROUND, gcr_qcdTemplate)
-    gcr_qcdMC.setParamEffect(lumi, 1.027)
-    gcr_qcdMC.setParamEffect(trig_pho, 1.01)
-    gcr_qcdMC.setParamEffect(veto_tau, 1.03)
-    gcr_qcdMC.setParamEffect(qcdpho_norm, 2.0)
-    gcr_qcdMC.setParamEffect(jec, 1.05)
-    gcr_gjetsMC.setParamEffect(id_pho, 1.02)
-
     gcr_qcdBinYields = np.array([rl.IndependentParameter(ch_name+'_qcd_bin_%d' % i,b,0,gcr_qcdTemplate[0].max()*2) for i,b in enumerate(gcr_qcdTemplate[0])])
     gcr_qcdBinYields = gcr_qcdBinYields * deepak15_weight['notag']['QCD']
     gcr_qcdObservable = rl.Observable('recoil', gcr_qcdHist.axis('recoil').edges())
     gcr_qcd = rl.ParametericSample(ch_name+'_qcd', rl.Sample.BACKGROUND, gcr_qcdObservable, gcr_qcdBinYields)
-
+    gcr_qcd.setParamEffect(lumi, 1.027)
+    gcr_qcd.setParamEffect(trig_pho, 1.01)
+    gcr_qcd.setParamEffect(veto_tau, 1.03)
+    gcr_qcd.setParamEffect(qcdpho_norm, 2.0)
+    gcr_qcd.setParamEffect(jec, 1.05)
+    gcr_qcd.setParamEffect(id_pho, 1.02)
     gcr.addSample(gcr_qcd)
-    '''
-    with open(os.path.join(str(tmpdir), 'darkhiggsModel'+year+'.pkl'), "wb") as fout:
+    
+    with open(os.path.join(str(tmpdir), 'darkhiggs'+year+'.pkl'), "wb") as fout:
         pickle.dump(model, fout)
 
+    model_arr = []
+    for ch in model:
+        print('generating model for channel',ch.name)
+        small_model = rl.Model('darkhiggs_'+str(ch.name))
+        small_model.addChannel(model[str(ch.name)])
+        model_arr.append(small_model)
+    print(model_arr)
     print('Rendering')
-    model.renderCombine(os.path.join(str(tmpdir), 'darkhiggsModel'+year+'/'+mass))
+    #    for mdl in model_arr:
+    #        render(mdl)
 
+    with concurrent.futures.ProcessPoolExecutor(max_workers=16) as executor:
+        futures = set()
+        futures.update(executor.submit(render,model_arr[i], tmpdir, year, mass) for i in range(0,len(model_arr)))
+        #if(len(futures)==0): continue
+        try:
+            total = len(futures)
+            processed = 0
+            while len(futures) > 0:
+                finished = set(job for job in futures if job.done())
+                for job in finished:
+                    job.result()
+                futures -= finished
+            del finished
+        except KeyboardInterrupt:
+            print("Ok quitter")
+            for job in futures: job.cancel()
+        except:
+            for job in futures: job.cancel()
+            raise
 
 if __name__ == '__main__':
     if not os.path.exists('datacards'):
         os.mkdir('datacards')
-    mass='mass0'
-    category='monojet'
-    year='2018'
+    parser = OptionParser()
+    parser.add_option('-m', '--mass', help='mass', dest='mass', default='mass0')
+    parser.add_option('-g', '--category', help='category', dest='category', default='monojet')
+    parser.add_option('-a', '--analysis', help='analysis', dest='analysis', default='darkhiggs')
+    parser.add_option('-y', '--year', help='year', dest='year', default='2018')
+    (options, args) = parser.parse_args()
     grouping=False
-    darkhiggs_model('datacards',mass,category,year,grouping)
+    if options.analysis=='darkhiggs': darkhiggs_model('datacards',options.mass,options.category,options.year,grouping)

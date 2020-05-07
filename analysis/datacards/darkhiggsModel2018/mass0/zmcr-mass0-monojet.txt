@@ -1,56 +1,183 @@
-# Datacard for <Channel (zmcr-mass0-monojet) instance at 0x7efc42ebb320> generated on 2020-03-26 17:28:03.309719
+# Datacard for <Channel (zmcr-mass0-monojet) instance at 0x7fcab4fbb7f0> generated on 2020-05-06 18:55:01.510959
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 4 # number of samples minus 1
-kmax 0 # number of nuisance parameters
-shapes * zmcr-mass0-monojet darkhiggs_mass0_monojet.root darkhiggs_mass0_monojet:zmcr-mass0-monojet_$PROCESS darkhiggs_mass0_monojet:zmcr-mass0-monojet_$PROCESS_$SYSTEMATIC
+kmax 12 # number of nuisance parameters
+shapes * zmcr-mass0-monojet darkhiggs_zmcr-mass0-monojet.root darkhiggs_zmcr-mass0-monojet:zmcr-mass0-monojet_$PROCESS darkhiggs_zmcr-mass0-monojet:zmcr-mass0-monojet_$PROCESS_$SYSTEMATIC
 bin zmcr-mass0-monojet
-observation 36770.000
+observation 40351.000
 bin      zmcr-mass0-monojet  zmcr-mass0-monojet  zmcr-mass0-monojet  zmcr-mass0-monojet  zmcr-mass0-monojet
-process                  dy               ttbar           singletop             diboson               higgs
+process              dyjets                  tt                  st                  vv                 hbb
 process                   1                   2                   3                   4                   5
-rate                  1.000             141.307              36.336             800.905              20.099
-sr-mass0-monojet_zvvMC_bin0_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvvMC_bin10_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvvMC_bin11_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvvMC_bin12_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvvMC_bin13_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvvMC_bin1_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvvMC_bin2_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvvMC_bin3_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvvMC_bin4_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvvMC_bin5_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvvMC_bin6_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvvMC_bin7_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvvMC_bin8_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvvMC_bin9_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvv_bin_0 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvv_bin_1 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvv_bin_10 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvv_bin_11 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvv_bin_12 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvv_bin_13 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvv_bin_2 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvv_bin_3 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvv_bin_4 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvv_bin_5 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvv_bin_6 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvv_bin_7 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvv_bin_8 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-sr-mass0-monojet_zvv_bin_9 extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zhf_deepak15_sf extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zhf_k extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zlf_deepak15_sf extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zmcr-mass0-monojet_dyMC_bin0_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zmcr-mass0-monojet_dyMC_bin10_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zmcr-mass0-monojet_dyMC_bin11_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zmcr-mass0-monojet_dyMC_bin12_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zmcr-mass0-monojet_dyMC_bin13_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zmcr-mass0-monojet_dyMC_bin1_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zmcr-mass0-monojet_dyMC_bin2_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zmcr-mass0-monojet_dyMC_bin3_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zmcr-mass0-monojet_dyMC_bin4_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zmcr-mass0-monojet_dyMC_bin5_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zmcr-mass0-monojet_dyMC_bin6_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zmcr-mass0-monojet_dyMC_bin7_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zmcr-mass0-monojet_dyMC_bin8_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
-zmcr-mass0-monojet_dyMC_bin9_nominal extArg darkhiggs_mass0_monojet.root:darkhiggs_mass0_monojet
+rate                  1.000               1.000               1.000               1.000               1.000
+btag param 0 1
+dyjets_norm param 0 1
+hbb_norm param 0 1
+id_mu param 0 1
+iso_mu param 0 1
+jec param 0 1
+lumi param 0 1
+st_norm param 0 1
+trig_met param 0 1
+veto_tau param 0 1
+vv_norm param 0 1
+zjets_norm param 0 1
+b_sf extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+bb_sf extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+bc_sf extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+c_sf extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+cc_sf extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+other_sf extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin0_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin10_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin11_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin12_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin13_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin14_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin15_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin16_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin17_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin18_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin19_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin1_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin20_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin2_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin3_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin4_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin5_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin6_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin7_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin8_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjetsMC_bin9_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_0 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_1 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_10 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_11 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_12 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_13 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_14 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_15 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_16 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_17 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_18 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_19 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_2 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_20 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_3 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_4 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_5 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_6 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_7 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_8 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+sr-mass0-monojet_zjets_bin_9 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+tbcq_sf extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+tbqq_sf extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+vqq_sf extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+wcq_sf extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+xbb_sf extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zcc_sf extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zhf_k extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin0_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin10_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin11_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin12_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin13_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin14_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin15_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin16_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin17_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin18_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin19_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin1_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin20_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin2_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin3_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin4_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin5_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin6_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin7_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin8_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_dyjetsMC_bin9_nominal extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_0 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_1 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_10 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_11 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_12 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_13 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_14 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_15 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_16 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_17 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_18 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_19 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_2 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_20 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_3 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_4 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_5 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_6 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_7 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_8 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_hbb_bin_9 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_0 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_1 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_10 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_11 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_12 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_13 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_14 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_15 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_16 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_17 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_18 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_19 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_2 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_20 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_3 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_4 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_5 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_6 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_7 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_8 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_st_bin_9 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_0 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_1 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_10 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_11 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_12 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_13 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_14 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_15 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_16 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_17 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_18 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_19 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_2 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_20 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_3 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_4 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_5 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_6 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_7 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_8 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_tt_bin_9 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_0 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_1 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_10 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_11 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_12 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_13 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_14 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_15 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_16 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_17 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_18 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_19 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_2 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_20 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_3 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_4 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_5 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_6 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_7 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_8 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
+zmcr-mass0-monojet_vv_bin_9 extArg darkhiggs_zmcr-mass0-monojet.root:darkhiggs_zmcr-mass0-monojet
