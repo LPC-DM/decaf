@@ -31,36 +31,33 @@ if options.cluster == 'kisti':
     os.system('xrdcp -f ../../decaf.tgz root://cms-xrdr.private.lo:2094//xrd/store/user/'+os.environ['USER']+'/decaf.tgz')
     os.system('xrdcp -f ../../pylocal.tgz root://cms-xrdr.private.lo:2094//xrd/store/user/'+os.environ['USER']+'/pylocal.tgz')
     jdl = """universe = vanilla
-Executable = run.sh
+Executable = limit.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
-Transfer_Input_Files = run.sh, /tmp/x509up_u556950957
-Output = hists/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
-Error = hists/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
-Log = hists/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
-TransferOutputRemaps = "$ENV(ANALYSIS)$ENV(YEAR)_$ENV(SAMPLE).futures=$ENV(PWD)/hists/$ENV(ANALYSIS)$ENV(YEAR)/$ENV(SAMPLE).futures"
+Transfer_Input_Files = limit.sh, /tmp/x509up_u556950957
+Output = datacards/$ENV(ANALYSIS)$ENV(YEAR)/condor/out/$ENV(MASS)$ENV(CATEGORY)_$(Cluster)_$(Process).stdout
+Error = datacards/$ENV(ANALYSIS)$ENV(YEAR)/condor/err/$ENV(MASS)$ENV(CATEGORY)_$(Cluster)_$(Process).stderr
+Log = datacards/$ENV(ANALYSIS)$ENV(YEAR)/condor/log/$ENV(MASS)$ENV(CATEGORY)_$(Cluster)_$(Process).log
+TransferOutputRemaps = "$ENV(ANALYSIS)$ENV(YEAR)_$ENV(MASS).tgz=$ENV(PWD)/datacards/$ENV(ANALYSIS)$ENV(YEAR)/$ENV(MASS).tgz"
 Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(ANALYSIS) $ENV(CLUSTER) $ENV(USER)
-JobBatchName = $ENV(SAMPLE)
 accounting_group=group_cms
 request_cpus = 8
-request_memory = 6000
 Queue 1"""
 
 if options.cluster == 'lpc':
     os.system('xrdcp -f ../../decaf.tgz root://cmseos.fnal.gov//store/user/'+os.environ['USER']+'/decaf.tgz')
     os.system('xrdcp -f ../../pylocal.tgz root://cmseos.fnal.gov//store/user/'+os.environ['USER']+'/pylocal.tgz')
     jdl = """universe = vanilla
-Executable = run.sh
+Executable = limit.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
-Transfer_Input_Files = run.sh
-Output = hists/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
-Error = hists/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
-Log = hists/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
-TransferOutputRemaps = "$ENV(ANALYSIS)$ENV(YEAR)_$ENV(SAMPLE).futures=$ENV(PWD)/hists/$ENV(ANALYSIS)$ENV(YEAR)/$ENV(SAMPLE).futures"
+Transfer_Input_Files = limit.sh
+Output = datacards/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
+Error = datacards/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
+Log = datacards/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
+TransferOutputRemaps = "$ENV(ANALYSIS)$ENV(YEAR)_$ENV(MASS).tgz=$ENV(PWD)/datacards/$ENV(ANALYSIS)$ENV(YEAR)/$ENV(MASS).tgz"
 Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(ANALYSIS) $ENV(CLUSTER) $ENV(USER) 
 request_cpus = 8
-request_memory = 5700
 Queue 1"""
 
 jdl_file = open("limit.submit", "w") 
@@ -72,20 +69,19 @@ with open('metadata/'+options.year+'.json') as fin:
 
 for mass in ['mass0','mass1','mass2','mass3','mass4']:
     for category in ['monojet','monohs']:
-        for year in ['2016','2017','2018']:
-            if options.mass and options.mass not in mass: continue
-            if options.category and options.category in category: continue
-            if options.year and options.year not in year: continue
-            os.system('mkdir -p datacards/'+options.analysis+options.year+'/'+options.mass+'/condor/out')
-            os.system('mkdir -p datacards/'+options.analysis+options.year+'/'+options.mass+'/condor/err')
-            os.system('mkdir -p datacards/'+options.analysis+options.year+'/'+options.mass+'/condor/log')
-            os.system('rm -rf datacards/'+options.analysis+options.year+'/'+options.mass+'/condor/err/'+options.category+'*')
-            os.system('rm -rf datacards/'+options.analysis+options.year+'/'+options.mass+'/condor/log/'+options.category+'*')
-            os.system('rm -rf datacards/'+options.analysis+options.year+'/'+options.mass+'/condor/out/'+options.category+'*')
-            os.environ['ANALYSIS']   = options.analysis
-            os.environ['YEAR']   = options.year
-            os.environ['MASS']   = options.mass
-            os.environ['CATEGORY']   = options.category
-            os.environ['CLUSTER'] = options.cluster
-            os.system('condor_submit limit.submit')
+        if options.mass and options.mass not in mass: continue
+        if options.category and options.category in category: continue
+        if options.year and options.year not in year: continue
+        os.system('mkdir -p datacards/'+options.analysis+options.year+'/condor/out')
+        os.system('mkdir -p datacards/'+options.analysis+options.year+'/condor/err')
+        os.system('mkdir -p datacards/'+options.analysis+options.year+'/condor/log')
+        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/err/'options.mass+options.category+'*')
+        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/log/'options.mass+options.category+'*')
+        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/out/'options.mass+options.category+'*')
+        os.environ['ANALYSIS']   = options.analysis
+        os.environ['YEAR']   = options.year
+        os.environ['MASS']   = options.mass
+        os.environ['CATEGORY']   = options.category
+        os.environ['CLUSTER'] = options.cluster
+        os.system('condor_submit limit.submit')
 os.system('rm limit.submit')

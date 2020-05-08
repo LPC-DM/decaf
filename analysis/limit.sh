@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-export USER=${5}
-echo "User is: ${5}"
+export USER=${6}
+echo "User is: ${6}"
 echo "Starting job on " `date` #Date/time of start of job
 echo "Running on: `uname -a`" #Condor job is running on this node
 echo "System software: `cat /etc/redhat-release`" #Operating System on that node
 echo $(hostname)
 
-if [ "${4}" == "kisti" ]; then
+if [ "${5}" == "kisti" ]; then
     env
     /usr/bin/voms-proxy-info -exists
     if [ $? -eq 0 ]; then
@@ -43,8 +43,8 @@ export PYTHONPATH=$(find ${_CONDOR_SCRATCH_DIR}/site-packages/ -name *.egg |tr '
 export PYTHONWARNINGS="ignore"
 echo "Updated python path: " $PYTHONPATH
 cd analysis
-echo "python limit.py --year ${1} --dataset ${2} --analysis ${3}"
-python run.py --year ${1} --dataset ${2} --analysis ${3}
-ls hists/${3}${1}/${2}.futures
-cp hists/${3}${1}/${2}.futures ${_CONDOR_SCRATCH_DIR}/${3}${1}_${2}.futures
+echo "python limit.py --mass ${1} --category ${2} --year ${3} --analysis ${4}"
+python limit.py --mass ${1} --category ${2} --year ${3} --analysis ${4}
+ls datacards/${4}${3}/${1}/*
+tar -czvf ${_CONDOR_SCRATCH_DIR}/${4}${3}_${1}.tgz datacards/${4}${3}/${1}/* 
 
