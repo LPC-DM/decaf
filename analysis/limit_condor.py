@@ -24,7 +24,7 @@ parser.add_option('-t', '--tar', action='store_true', dest='tar')
 (options, args) = parser.parse_args()
 
 if options.tar:
-    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*____*\' --exclude=\'analysis/hists/*/*condor/*/*\' ../../decaf')
+    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*\' --exclude=\'analysis/hists/*/*condor/*/*\' ../../decaf')
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../pylocal.tgz -C ~/.local/lib/python3.6/ site-packages')
 
 if options.cluster == 'kisti':
@@ -38,10 +38,11 @@ Transfer_Input_Files = limit.sh, /tmp/x509up_u556950957
 Output = datacards/$ENV(ANALYSIS)$ENV(YEAR)/condor/out/$ENV(MASS)$ENV(CATEGORY)_$(Cluster)_$(Process).stdout
 Error = datacards/$ENV(ANALYSIS)$ENV(YEAR)/condor/err/$ENV(MASS)$ENV(CATEGORY)_$(Cluster)_$(Process).stderr
 Log = datacards/$ENV(ANALYSIS)$ENV(YEAR)/condor/log/$ENV(MASS)$ENV(CATEGORY)_$(Cluster)_$(Process).log
-TransferOutputRemaps = "$ENV(ANALYSIS)$ENV(YEAR)_$ENV(MASS).tgz=$ENV(PWD)/datacards/$ENV(ANALYSIS)$ENV(YEAR)/$ENV(MASS).tgz"
-Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(ANALYSIS) $ENV(CLUSTER) $ENV(USER)
+TransferOutputRemaps = "$ENV(ANALYSIS)$ENV(YEAR)_$ENV(MASS)_$ENV(CATEGORY).tgz=$ENV(PWD)/datacards/$ENV(ANALYSIS)$ENV(YEAR)/$ENV(MASS)/$ENV(CATEGORY).tgz"
+Arguments = $ENV(MASS) $ENV(CATEGORY) $ENV(YEAR) $ENV(ANALYSIS) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
-request_cpus = 8
+request_memory = 8000
+request_cpus = 16
 Queue 1"""
 
 if options.cluster == 'lpc':
@@ -52,12 +53,13 @@ Executable = limit.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = limit.sh
-Output = datacards/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
-Error = datacards/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
-Log = datacards/$ENV(ANALYSIS)$ENV(YEAR)/run_condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
-TransferOutputRemaps = "$ENV(ANALYSIS)$ENV(YEAR)_$ENV(MASS).tgz=$ENV(PWD)/datacards/$ENV(ANALYSIS)$ENV(YEAR)/$ENV(MASS).tgz"
-Arguments = $ENV(YEAR) $ENV(SAMPLE) $ENV(ANALYSIS) $ENV(CLUSTER) $ENV(USER) 
-request_cpus = 8
+Output = datacards/$ENV(ANALYSIS)$ENV(YEAR)/condor/out/$ENV(MASS)$ENV(CATEGORY)_$(Cluster)_$(Process).stdout
+Error = datacards/$ENV(ANALYSIS)$ENV(YEAR)/condor/err/$ENV(MASS)$ENV(CATEGORY)_$(Cluster)_$(Process).stderr
+Log = datacards/$ENV(ANALYSIS)$ENV(YEAR)/condor/log/$ENV(MASS)$ENV(CATEGORY)_$(Cluster)_$(Process).log
+TransferOutputRemaps = "$ENV(ANALYSIS)$ENV(YEAR)_$ENV(MASS)_$ENV(CATEGORY).tgz=$ENV(PWD)/datacards/$ENV(ANALYSIS)$ENV(YEAR)/$ENV(MASS)/$ENV(CATEGORY).tgz"
+Arguments = $ENV(MASS) $ENV(CATEGORY) $ENV(YEAR) $ENV(ANALYSIS) $ENV(CLUSTER) $ENV(USER)
+request_memory = 8000
+request_cpus = 16
 Queue 1"""
 
 jdl_file = open("limit.submit", "w") 
@@ -71,13 +73,12 @@ for mass in ['mass0','mass1','mass2','mass3','mass4']:
     for category in ['monojet','monohs']:
         if options.mass and options.mass not in mass: continue
         if options.category and options.category in category: continue
-        if options.year and options.year not in year: continue
         os.system('mkdir -p datacards/'+options.analysis+options.year+'/condor/out')
         os.system('mkdir -p datacards/'+options.analysis+options.year+'/condor/err')
         os.system('mkdir -p datacards/'+options.analysis+options.year+'/condor/log')
-        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/err/'options.mass+options.category+'*')
-        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/log/'options.mass+options.category+'*')
-        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/out/'options.mass+options.category+'*')
+        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/err/'+options.mass+options.category+'*')
+        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/log/'+options.mass+options.category+'*')
+        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/out/'+options.mass+options.category+'*')
         os.environ['ANALYSIS']   = options.analysis
         os.environ['YEAR']   = options.year
         os.environ['MASS']   = options.mass
