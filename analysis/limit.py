@@ -677,7 +677,7 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
         sr_signalBinYields = np.array([rl.IndependentParameter(ch_name+'_'+str(s)+'_bin_%d' % i,b,0,sr_signalTemplate[0].max()*2) for i,b in enumerate(sr_signalTemplate[0])])
         sr_signalBinYields = sr_signalBinYields * signal_weight[str(s)]
         sr_signalObservable = rl.Observable('recoil', sr_signalHist.axis('recoil').edges())
-        sr_signal = rl.ParametericSample(ch_name+'_'+str(s), rl.Sample.BACKGROUND, sr_signalObservable, sr_signalBinYields)
+        sr_signal = rl.ParametericSample(ch_name+'_'+str(s), rl.Sample.SIGNAL, sr_signalObservable, sr_signalBinYields)
         sr_signal.setParamEffect(lumi, 1.027)
         sr_signal.setParamEffect(trig_met, 1.01)
         sr_signal.setParamEffect(veto_tau, 1.03)
