@@ -1,4 +1,4 @@
-# Datacard for <Channel (sr-mass3-monojet) instance at 0x7f95c2c7b828> generated on 2020-05-08 18:59:28.221259
+# Datacard for <Channel (sr-mass3-monojet) instance at 0x2b9b767053c8> generated on 2020-05-11 06:53:04.744954
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 13 # number of samples minus 1
 kmax 10 # number of nuisance parameters

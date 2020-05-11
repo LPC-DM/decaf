@@ -1,19 +1,20 @@
-# Datacard for <Channel (gcr-mass1-monohs) instance at 0x7fbb2f4e9780> generated on 2020-05-08 17:00:27.715034
+# Datacard for <Channel (gcr-mass1-monohs) instance at 0x2ae84cc1e2b0> generated on 2020-05-11 06:33:06.500374
 imax 1 # number of categories ('bins' but here we are using shape templates)
-jmax 0 # number of samples minus 1
-kmax 9 # number of nuisance parameters
+jmax 1 # number of samples minus 1
+kmax 10 # number of nuisance parameters
 shapes * gcr-mass1-monohs darkhiggs_gcr-mass1-monohs.root darkhiggs_gcr-mass1-monohs:gcr-mass1-monohs_$PROCESS darkhiggs_gcr-mass1-monohs:gcr-mass1-monohs_$PROCESS_$SYSTEMATIC
 bin gcr-mass1-monohs
 observation 458.000
-bin      gcr-mass1-monohs
-process             gjets
-process                 1
-rate                1.000
+bin      gcr-mass1-monohs  gcr-mass1-monohs
+process             gjets               qcd
+process                 1                 2
+rate                1.000             1.000
 btag param 0 1
 gjets_norm param 0 1
 id_pho param 0 1
 jec param 0 1
 lumi param 0 1
+qcdpho_norm param 0 1
 trig_met param 0 1
 trig_pho param 0 1
 veto_tau param 0 1
@@ -44,6 +45,27 @@ gcr-mass1-monohs_gjetsMC_bin6_nominal extArg darkhiggs_gcr-mass1-monohs.root:dar
 gcr-mass1-monohs_gjetsMC_bin7_nominal extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
 gcr-mass1-monohs_gjetsMC_bin8_nominal extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
 gcr-mass1-monohs_gjetsMC_bin9_nominal extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_0 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_1 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_10 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_11 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_12 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_13 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_14 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_15 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_16 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_17 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_18 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_19 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_2 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_20 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_3 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_4 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_5 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_6 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_7 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_8 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
+gcr-mass1-monohs_qcd_bin_9 extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
 ghf_k extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
 other_sf extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs
 sr-mass1-monohs_zjetsMC_bin0_nominal extArg darkhiggs_gcr-mass1-monohs.root:darkhiggs_gcr-mass1-monohs

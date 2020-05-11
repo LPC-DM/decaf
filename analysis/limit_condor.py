@@ -73,16 +73,17 @@ for mass in ['mass0','mass1','mass2','mass3','mass4']:
     for category in ['monojet','monohs']:
         if options.mass and options.mass not in mass: continue
         if options.category and options.category in category: continue
+        os.system('mkdir -p datacards/'+options.analysis+options.year+'/'+mass)
         os.system('mkdir -p datacards/'+options.analysis+options.year+'/condor/out')
         os.system('mkdir -p datacards/'+options.analysis+options.year+'/condor/err')
         os.system('mkdir -p datacards/'+options.analysis+options.year+'/condor/log')
-        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/err/'+options.mass+options.category+'*')
-        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/log/'+options.mass+options.category+'*')
-        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/out/'+options.mass+options.category+'*')
+        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/err/'+mass+category+'*')
+        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/log/'+mass+category+'*')
+        os.system('rm -rf datacards/'+options.analysis+options.year+'/condor/out/'+mass+category+'*')
         os.environ['ANALYSIS']   = options.analysis
         os.environ['YEAR']   = options.year
-        os.environ['MASS']   = options.mass
-        os.environ['CATEGORY']   = options.category
+        os.environ['MASS']   = mass
+        os.environ['CATEGORY']   = category
         os.environ['CLUSTER'] = options.cluster
         os.system('condor_submit limit.submit')
 os.system('rm limit.submit')

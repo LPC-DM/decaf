@@ -1,5 +1,4 @@
 from __future__ import print_function, division
-from pyinstrument import Profiler
 from optparse import OptionParser
 from collections import defaultdict, OrderedDict
 import concurrent.futures
@@ -27,12 +26,7 @@ def template(hist, name):
     return (hist.values()[()], hist.axis(name).edges(), name)
 
 def render(some_model, tmpdir, year, mass):
-    profiler = Profiler()
-    profiler.start()
-    a=some_model.renderCombine(os.path.join(str(tmpdir), 'darkhiggs'+year+'/'+mass))
-    profiler.stop()
-    print(profiler.output_text(unicode=True, color=True, show_all=True))
-    return a
+    return some_model.renderCombine(os.path.join(str(tmpdir), 'darkhiggs'+year+'/'+mass))
 
 def darkhiggs_model(tmpdir,mass,category,year,grouping):
     
@@ -1562,14 +1556,14 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
     gcr_qcd.setParamEffect(qcdpho_norm, 2.0)
     gcr_qcd.setParamEffect(jec, 1.05)
     gcr_qcd.setParamEffect(id_pho, 1.02)
-    #gcr.addSample(gcr_qcd)
+    gcr.addSample(gcr_qcd)
     
-    with open(os.path.join(str(tmpdir), 'darkhiggs'+year+'.pkl'), "wb") as fout:
-        pickle.dump(model, fout)
+    #with open(os.path.join(str(tmpdir), 'darkhiggs'+year+'.pkl'), "wb") as fout:
+    #    pickle.dump(model, fout)
 
     model_arr = []
     for ch in model:
-        if 'gcr' not in ch.name: continue
+        #if 'gcr' not in ch.name: continue
         print('generating model for channel',ch.name)
         small_model = rl.Model('darkhiggs_'+str(ch.name))
         small_model.addChannel(model[str(ch.name)])
@@ -1581,11 +1575,7 @@ def darkhiggs_model(tmpdir,mass,category,year,grouping):
 
     with concurrent.futures.ProcessPoolExecutor(max_workers=len(model_arr)) as executor:
         futures = set()
-        profiler = Profiler()
-        profiler.start()
         futures.update(executor.submit(render,model_arr[i], tmpdir, year, mass) for i in range(0,len(model_arr)))
-        
-        #if(len(futures)==0): continue
         try:
             total = len(futures)
             processed = 0
