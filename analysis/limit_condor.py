@@ -74,6 +74,7 @@ for mass in ['mass0','mass1','mass2','mass3','mass4']:
         if options.mass and options.mass not in mass: continue
         if options.category and options.category in category: continue
         os.system('mkdir -p datacards/'+options.analysis+options.year+'/'+mass)
+        os.system('rm datacards/'+options.analysis+options.year+'/'+mass+'/'+category+'.tgz')
         os.system('mkdir -p datacards/'+options.analysis+options.year+'/condor/out')
         os.system('mkdir -p datacards/'+options.analysis+options.year+'/condor/err')
         os.system('mkdir -p datacards/'+options.analysis+options.year+'/condor/log')
