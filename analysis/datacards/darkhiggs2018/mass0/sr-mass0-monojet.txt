@@ -1,4 +1,4 @@
-# Datacard for <Channel (sr-mass0-monojet) instance at 0x2b15927a9588> generated on 2020-05-11 06:55:16.608925
+# Datacard for <Channel (sr-mass0-monojet) instance at 0x2ac4229e2550> generated on 2020-05-12 07:14:09.434317
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 13 # number of samples minus 1
 kmax 10 # number of nuisance parameters
@@ -6,8 +6,8 @@ shapes * sr-mass0-monojet darkhiggs_sr-mass0-monojet.root darkhiggs_sr-mass0-mon
 bin sr-mass0-monojet
 observation 266207.000
 bin      sr-mass0-monojet  sr-mass0-monojet  sr-mass0-monojet  sr-mass0-monojet  sr-mass0-monojet  sr-mass0-monojet  sr-mass0-monojet  sr-mass0-monojet  sr-mass0-monojet  sr-mass0-monojet  sr-mass0-monojet  sr-mass0-monojet  sr-mass0-monojet  sr-mass0-monojet
-process             zjets             wjets                tt                st            dyjets                vv               hbb               qcd            Mhs_50            Mhs_70            Mhs_90           MonoJet             MonoW             MonoZ
-process                 1                 2                 3                 4                 5                 6                 7                 8                 9                10                11                12                13                14
+process            Mhs_50            Mhs_70            Mhs_90           MonoJet             MonoW             MonoZ             zjets             wjets                tt                st            dyjets                vv               hbb               qcd
+process                -5                -4                -3                -2                -1                 0                 1                 2                 3                 4                 5                 6                 7                 8
 rate                1.000             1.000             1.000             1.000             1.000             1.000             1.000             1.000             1.000             1.000             1.000             1.000             1.000             1.000
 btag param 0 1
 dyjets_norm param 0 1

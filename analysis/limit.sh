@@ -43,8 +43,9 @@ export PYTHONPATH=$(find ${_CONDOR_SCRATCH_DIR}/site-packages/ -name *.egg |tr '
 export PYTHONWARNINGS="ignore"
 echo "Updated python path: " $PYTHONPATH
 cd analysis
+rm -rf datacards/${4}${3}/${1}/*${2}*
 echo "python limit.py --mass ${1} --category ${2} --year ${3} --analysis ${4}"
 python limit.py --mass ${1} --category ${2} --year ${3} --analysis ${4}
-ls datacards/${4}${3}/${1}/*
+ls datacards/${4}${3}/${1}/*${2}*
 tar -czvf ${_CONDOR_SCRATCH_DIR}/${4}${3}_${1}_${2}.tgz datacards/${4}${3}/${1}/*${2}*
 

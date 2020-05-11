@@ -14,7 +14,7 @@ if options.analysis == 'darkhiggs':
             for category in ['monojet','monohs']:
                 if options.year and options.year not in year: continue
                 if options.mass and options.mass not in mass: continue
-                if options.category and options.category in category: continue
+                if options.category and options.category not in category: continue
                 os.system('rm datacards/'+options.analysis+year+'/'+mass+'/*'+category+'*.root')
                 os.system('rm datacards/'+options.analysis+year+'/'+mass+'/*'+category+'*.txt')
                 os.system('tar -zxvf datacards/'+options.analysis+year+'/'+mass+'/'+category+'.tgz')

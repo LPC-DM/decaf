@@ -1,4 +1,4 @@
-# Datacard for <Channel (zecr-mass1-monojet) instance at 0x2ae16a2a7080> generated on 2020-05-11 06:47:38.967037
+# Datacard for <Channel (zecr-mass1-monojet) instance at 0x2b1f24c0a048> generated on 2020-05-12 07:07:25.849854
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 4 # number of samples minus 1
 kmax 14 # number of nuisance parameters

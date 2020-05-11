@@ -1,4 +1,4 @@
-# Datacard for <Channel (wmcr-mass2-monojet) instance at 0x2aacfaa5a6d8> generated on 2020-05-11 06:53:05.129909
+# Datacard for <Channel (wmcr-mass2-monojet) instance at 0x2abcfb7086a0> generated on 2020-05-12 07:10:04.301499
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
 kmax 14 # number of nuisance parameters

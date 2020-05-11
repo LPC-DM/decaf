@@ -1,4 +1,4 @@
-# Datacard for <Channel (gcr-mass0-monojet) instance at 0x2b1592cbf5c0> generated on 2020-05-11 06:44:44.636511
+# Datacard for <Channel (gcr-mass0-monojet) instance at 0x2ac4229f85f8> generated on 2020-05-12 07:04:01.974025
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 1 # number of samples minus 1
 kmax 10 # number of nuisance parameters

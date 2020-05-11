@@ -1,4 +1,4 @@
-# Datacard for <Channel (sr-mass3-monohs) instance at 0x2b43773e8438> generated on 2020-05-11 06:36:52.554395
+# Datacard for <Channel (sr-mass3-monohs) instance at 0x2ad21745d438> generated on 2020-05-12 06:59:11.755818
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 13 # number of samples minus 1
 kmax 10 # number of nuisance parameters
@@ -6,8 +6,8 @@ shapes * sr-mass3-monohs darkhiggs_sr-mass3-monohs.root darkhiggs_sr-mass3-monoh
 bin sr-mass3-monohs
 observation 3782.000
 bin      sr-mass3-monohs  sr-mass3-monohs  sr-mass3-monohs  sr-mass3-monohs  sr-mass3-monohs  sr-mass3-monohs  sr-mass3-monohs  sr-mass3-monohs  sr-mass3-monohs  sr-mass3-monohs  sr-mass3-monohs  sr-mass3-monohs  sr-mass3-monohs  sr-mass3-monohs
-process            zjets            wjets               tt               st           dyjets               vv              hbb              qcd           Mhs_50           Mhs_70           Mhs_90          MonoJet            MonoW            MonoZ
-process                1                2                3                4                5                6                7                8                9               10               11               12               13               14
+process           Mhs_50           Mhs_70           Mhs_90          MonoJet            MonoW            MonoZ            zjets            wjets               tt               st           dyjets               vv              hbb              qcd
+process               -5               -4               -3               -2               -1                0                1                2                3                4                5                6                7                8
 rate               1.000            1.000            1.000            1.000            1.000            1.000            1.000            1.000            1.000            1.000            1.000            1.000            1.000            1.000
 btag param 0 1
 dyjets_norm param 0 1
