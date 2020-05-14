@@ -1566,5 +1566,7 @@ if __name__ == '__main__':
         if options.mass and options.mass not in mass: continue
         for category in ['monojet','monohs']:
             if options.category and options.category in category: continue
-            save(model(mass,category,options.year,grouping), 'data/darkhiggs'+options.year+'-'+mass+'-'+category+'.model')
+            with open('data/darkhiggs'+options.year+'-'+mass+'-'+category+'.model', "wb") as fout:
+                pickle.dump(model(mass,category,options.year,grouping), fout, protocol=2)
+            #save(model(mass,category,options.year,grouping), 'data/darkhiggs'+options.year+'-'+mass+'-'+category+'.model')
 

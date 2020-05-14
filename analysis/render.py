@@ -5,7 +5,8 @@ import concurrent.futures
 import sys
 import os
 import rhalphalib as rl
-import lz4.frame
+import gzip
+import pickle
 import cloudpickle
 import ROOT
 import gzip
@@ -19,8 +20,8 @@ def futurerender(some_model, directory):
 
 def render(modelname):
     
-    with lz4.frame.open('data/'+modelname+'.model') as fin:
-        model = cloudpickle.load(fin)
+    with open('data/'+modelname+'.model') as fin:
+        model = pickle.load(fin)
 
     model_arr = []
     for ch in model:
