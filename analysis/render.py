@@ -16,12 +16,6 @@ rl.ParametericSample.PreferRooParametricHist = False
 
 def futurerender(some_model, directory):
     print('Job started for',some_model)
-    if isinstance(some_model.name, str):
-        print("ordinary string")
-    elif isinstance(some_model.name, unicode):
-        print("unicode string")
-    else:
-        print("not a string")
     return some_model.renderCombine('datacards/'+directory)
 
 def render(modelname):
@@ -31,16 +25,14 @@ def render(modelname):
 
     model_arr = []
     for ch in model:
-        if 'gcr' not in ch.name: continue
+        #if 'gcr' not in ch.name: continue
         print('generating model for channel',ch.name)
         small_model = rl.Model('darkhiggs_'+ch.name.encode("ascii"))
         small_model.addChannel(model[ch.name])
         model_arr.append(small_model)
     print(model_arr)
     print('Rendering')
-    futurerender(model_arr[0],modelname)
 
-    '''
     with concurrent.futures.ProcessPoolExecutor(max_workers=len(model_arr)) as executor:
         futures = set()
         futures.update(executor.submit(futurerender,model_arr[i], modelname) for i in range(0,len(model_arr)))
@@ -59,7 +51,7 @@ def render(modelname):
         except:
             for job in futures: job.cancel()
             raise
-    '''
+    
 if __name__ == '__main__':
     if not os.path.exists('datacards'):
         os.mkdir('datacards')

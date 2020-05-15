@@ -1,0 +1,8 @@
+datacards/darkhiggs2018-mass0-monohs/zmcr-2018-mass0-monohs.txt
+datacards/darkhiggs2018-mass0-monohs/zecr-2018-mass0-monohs.txt
+datacards/darkhiggs2018-mass0-monohs/gcr-2018-mass0-monohs.txt
+datacards/darkhiggs2018-mass0-monohs/tmcr-2018-mass0-monohs.txt
+datacards/darkhiggs2018-mass0-monohs/tecr-2018-mass0-monohs.txt
+datacards/darkhiggs2018-mass0-monohs/wecr-2018-mass0-monohs.txt
+datacards/darkhiggs2018-mass0-monohs/sr-2018-mass0-monohs.txt
+datacards/darkhiggs2018-mass0-monohs/wmcr-2018-mass0-monohs.txt
