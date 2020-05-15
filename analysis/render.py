@@ -25,9 +25,10 @@ def render(modelname):
 
     model_arr = []
     for ch in model:
+        #if 'gcr' not in ch.name: continue
         print('generating model for channel',ch.name)
-        small_model = rl.Model('darkhiggs_'+str(ch.name))
-        small_model.addChannel(model[str(ch.name)])
+        small_model = rl.Model('darkhiggs_'+ch.name.encode("ascii"))
+        small_model.addChannel(model[ch.name])
         model_arr.append(small_model)
     print(model_arr)
     print('Rendering')
@@ -50,7 +51,7 @@ def render(modelname):
         except:
             for job in futures: job.cancel()
             raise
-
+    
 if __name__ == '__main__':
     if not os.path.exists('datacards'):
         os.mkdir('datacards')
