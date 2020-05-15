@@ -340,8 +340,8 @@ def model(mass,category,year,grouping):
                 else:
                     weight_notag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(fractions[process][gentype][mass])
 
-        deepak15_weight['0tag'][process]=weight_0tag/deepak4_0tag_process_eff[process]
-        deepak15_weight['1tag'][process]=weight_1tag/(1 - deepak4_0tag_process_eff[process])
+        deepak15_weight['0tag'][process]=np.nan_to_num(weight_0tag/deepak4_0tag_process_eff[process])
+        deepak15_weight['1tag'][process]=np.nan_to_num(weight_1tag/(1 - deepak4_0tag_process_eff[process]))
         deepak15_weight['notag'][process]=weight_notag
 
     hf_fraction_weight={}
@@ -349,24 +349,24 @@ def model(mass,category,year,grouping):
     hf_fraction_weight['1tag']={}
     hf_fraction_weight['notag']={}
 
-    hf_fraction_weight['0tag']['W+jets'] = deepak15_weight['0tag']['W+HF']*(deepak4_0tag_process_eff['W+HF']/deepak4_0tag_process_eff['W+jets'])*whf_k*whf_fraction 
-    hf_fraction_weight['0tag']['W+jets'] += deepak15_weight['0tag']['W+LF']*(deepak4_0tag_process_eff['W+LF']/deepak4_0tag_process_eff['W+jets'])*(1 - whf_k*whf_fraction)
-    hf_fraction_weight['1tag']['W+jets'] = deepak15_weight['1tag']['W+HF']*((1-deepak4_0tag_process_eff['W+HF'])/(1-deepak4_0tag_process_eff['W+jets']))*whf_k*whf_fraction 
-    hf_fraction_weight['1tag']['W+jets'] += deepak15_weight['1tag']['W+LF']*((1-deepak4_0tag_process_eff['W+HF'])/(1-deepak4_0tag_process_eff['W+jets']))*(1 - whf_k*whf_fraction)
+    hf_fraction_weight['0tag']['W+jets'] = np.nan_to_num(deepak15_weight['0tag']['W+HF']*(deepak4_0tag_process_eff['W+HF']/deepak4_0tag_process_eff['W+jets'])*whf_k*whf_fraction)
+    hf_fraction_weight['0tag']['W+jets'] += np.nan_to_num(deepak15_weight['0tag']['W+LF']*(deepak4_0tag_process_eff['W+LF']/deepak4_0tag_process_eff['W+jets'])*(1 - whf_k*whf_fraction))
+    hf_fraction_weight['1tag']['W+jets'] = np.nan_to_num(deepak15_weight['1tag']['W+HF']*((1-deepak4_0tag_process_eff['W+HF'])/(1-deepak4_0tag_process_eff['W+jets']))*whf_k*whf_fraction) 
+    hf_fraction_weight['1tag']['W+jets'] += np.nan_to_num(deepak15_weight['1tag']['W+LF']*((1-deepak4_0tag_process_eff['W+HF'])/(1-deepak4_0tag_process_eff['W+jets']))*(1 - whf_k*whf_fraction))
     hf_fraction_weight['notag']['W+jets'] = deepak15_weight['notag']['W+HF']*whf_k*whf_fraction
     hf_fraction_weight['notag']['W+jets'] += deepak15_weight['notag']['W+LF']*(1 - whf_k*whf_fraction)
 
-    hf_fraction_weight['0tag']['Z+jets'] = deepak15_weight['0tag']['Z+HF']*(deepak4_0tag_process_eff['Z+HF']/deepak4_0tag_process_eff['Z+jets'])*zhf_k*zhf_fraction 
-    hf_fraction_weight['0tag']['Z+jets'] += deepak15_weight['0tag']['Z+LF']*(deepak4_0tag_process_eff['Z+LF']/deepak4_0tag_process_eff['Z+jets'])*(1 - zhf_k*zhf_fraction)
-    hf_fraction_weight['1tag']['Z+jets'] = deepak15_weight['1tag']['Z+HF']*((1-deepak4_0tag_process_eff['Z+HF'])/(1-deepak4_0tag_process_eff['Z+jets']))*zhf_k*zhf_fraction 
-    hf_fraction_weight['1tag']['Z+jets'] += deepak15_weight['1tag']['Z+LF']*((1-deepak4_0tag_process_eff['Z+HF'])/(1-deepak4_0tag_process_eff['Z+jets']))*(1 - zhf_k*zhf_fraction)
+    hf_fraction_weight['0tag']['Z+jets'] = np.nan_to_num(deepak15_weight['0tag']['Z+HF']*(deepak4_0tag_process_eff['Z+HF']/deepak4_0tag_process_eff['Z+jets'])*zhf_k*zhf_fraction)
+    hf_fraction_weight['0tag']['Z+jets'] += np.nan_to_num(deepak15_weight['0tag']['Z+LF']*(deepak4_0tag_process_eff['Z+LF']/deepak4_0tag_process_eff['Z+jets'])*(1 - zhf_k*zhf_fraction))
+    hf_fraction_weight['1tag']['Z+jets'] = np.nan_to_num(deepak15_weight['1tag']['Z+HF']*((1-deepak4_0tag_process_eff['Z+HF'])/(1-deepak4_0tag_process_eff['Z+jets']))*zhf_k*zhf_fraction) 
+    hf_fraction_weight['1tag']['Z+jets'] += np.nan_to_num(deepak15_weight['1tag']['Z+LF']*((1-deepak4_0tag_process_eff['Z+HF'])/(1-deepak4_0tag_process_eff['Z+jets']))*(1 - zhf_k*zhf_fraction))
     hf_fraction_weight['notag']['Z+jets'] = deepak15_weight['notag']['Z+HF']*zhf_k*zhf_fraction
     hf_fraction_weight['notag']['Z+jets'] += deepak15_weight['notag']['Z+LF']*(1 - zhf_k*zhf_fraction)
 
-    hf_fraction_weight['0tag']['G+jets'] = deepak15_weight['0tag']['G+HF']*(deepak4_0tag_process_eff['G+HF']/deepak4_0tag_process_eff['G+jets'])*ghf_k*ghf_fraction 
-    hf_fraction_weight['0tag']['G+jets'] += deepak15_weight['0tag']['G+LF']*(deepak4_0tag_process_eff['G+LF']/deepak4_0tag_process_eff['G+jets'])*(1 - ghf_k*ghf_fraction)
-    hf_fraction_weight['1tag']['G+jets'] = deepak15_weight['1tag']['G+HF']*((1-deepak4_0tag_process_eff['G+HF'])/(1-deepak4_0tag_process_eff['G+jets']))*ghf_k*ghf_fraction 
-    hf_fraction_weight['1tag']['G+jets'] += deepak15_weight['1tag']['G+LF']*((1-deepak4_0tag_process_eff['G+HF'])/(1-deepak4_0tag_process_eff['G+jets']))*(1 - ghf_k*ghf_fraction)
+    hf_fraction_weight['0tag']['G+jets'] = np.nan_to_num(deepak15_weight['0tag']['G+HF']*(deepak4_0tag_process_eff['G+HF']/deepak4_0tag_process_eff['G+jets'])*ghf_k*ghf_fraction) 
+    hf_fraction_weight['0tag']['G+jets'] += np.nan_to_num(deepak15_weight['0tag']['G+LF']*(deepak4_0tag_process_eff['G+LF']/deepak4_0tag_process_eff['G+jets'])*(1 - ghf_k*ghf_fraction))
+    hf_fraction_weight['1tag']['G+jets'] = np.nan_to_num(deepak15_weight['1tag']['G+HF']*((1-deepak4_0tag_process_eff['G+HF'])/(1-deepak4_0tag_process_eff['G+jets']))*ghf_k*ghf_fraction) 
+    hf_fraction_weight['1tag']['G+jets'] += np.nan_to_num(deepak15_weight['1tag']['G+LF']*((1-deepak4_0tag_process_eff['G+HF'])/(1-deepak4_0tag_process_eff['G+jets']))*(1 - ghf_k*ghf_fraction))
     hf_fraction_weight['notag']['G+jets'] = deepak15_weight['notag']['G+HF']*ghf_k*ghf_fraction
     hf_fraction_weight['notag']['G+jets'] += deepak15_weight['notag']['G+LF']*(1 - ghf_k*ghf_fraction)
     
