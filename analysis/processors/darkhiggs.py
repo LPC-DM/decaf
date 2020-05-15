@@ -148,6 +148,23 @@ class AnalysisProcessor(processor.ProcessorABC):
             'gcr':('GJets','QCD','SinglePhoton','EGamma')
         }
 
+        self._gentypes = {
+            'HToBB': ['xbb','vqq','wcq','b','bb','bc','other','tbcq','tbqq'],
+            'HTobb': ['xbb','vqq','wcq','b','bb','bc','other','tbcq','tbqq'],
+            'V+HF': ['b','bb','c','cc','other'],
+            'V+LF': ['other'],
+            'WW': ['xbb','vqq','wcq','b','c','other','zcc'],
+            'WZ': ['xbb','vqq','wcq','b','c','other','zcc'],
+            'ZZ': ['xbb','vqq','wcq','b','c','other','zcc'],
+            'ST': ['vqq','wcq','b','bb','bc','c','other','tbcq','tbqq'],
+            'TT': ['vqq','wcq','b','bb','bc','c','other','tbcq','tbqq'],
+            'QCD': ['b','bb','c','cc','other'],
+            'Mhs': ['xbb','b','bb','other'],
+            'MonoJet': ['c','cc','other'],
+            'MonoW': ['vqq','wcq','c','other'],
+            'MonoZ': ['vqq','c','cc','other','zcc']
+        }
+
         self._met_triggers = {
             '2016': [
                 'PFMETNoMu120_PFMHTNoMu120_IDTight'
@@ -1270,234 +1287,110 @@ class AnalysisProcessor(processor.ProcessorABC):
                 fill(dataset, r, None, 'data', np.ones(events.size), cut)
         else:
             wgentype = { 
-                'hsbb' : (
-                    leading_fj.isHsbb
-                ).sum(),
-                'hbb' : (
-                    ~leading_fj.isHsbb &
-                    leading_fj.isHbb
-                ).sum(),
-                'zbb' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    leading_fj.isZbb
+                'xbb' : (
+                    (leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)
                 ).sum(),
                 'tbcq' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
+                    ~(leading_fj.isHsbb |leading_fj.isHbb | leading_fj.isZbb)&
                     leading_fj.isTbcq 
                 ).sum(),
                 'tbqq' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
+                    ~(leading_fj.isHsbb |leading_fj.isHbb | leading_fj.isZbb)&
                     ~leading_fj.isTbcq &
                     leading_fj.isTbqq 
                 ).sum(),
                 'zcc' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
+                    ~(leading_fj.isHsbb |leading_fj.isHbb | leading_fj.isZbb)&
                     ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
                     leading_fj.isZcc
                 ).sum(),
-                'tcq' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
-                    ~leading_fj.isTbcq &
-                    ~leading_fj.isTbqq &
-                    ~leading_fj.isZcc &
-                    leading_fj.isTcq
-                ).sum(),
                 'wcq' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
+                    ~(leading_fj.isHsbb |leading_fj.isHbb | leading_fj.isZbb)&
                     ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
                     ~leading_fj.isZcc &
-                    ~leading_fj.isTcq &
-                    leading_fj.isWcq
-                ).sum(),
-                'tqq' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
-                    ~leading_fj.isTbcq &
-                    ~leading_fj.isTbqq &
-                    ~leading_fj.isZcc &
-                    ~leading_fj.isTcq &
-                    ~leading_fj.isWcq &
-                    leading_fj.isTqq
+                    (leading_fj.isTcq | leading_fj.isWcq)
                 ).sum(),
                 'vqq' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
+                    ~(leading_fj.isHsbb |leading_fj.isHbb | leading_fj.isZbb)&
                     ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
                     ~leading_fj.isZcc &
-                    ~leading_fj.isTcq &
-                    ~leading_fj.isWcq &
-                    ~leading_fj.isTqq &
-                    (leading_fj.isWqq | leading_fj.isZqq)
+                    ~(leading_fj.isTcq | leading_fj.isWcq) &
+                    (leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq)
                 ).sum(),
                 'bb' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
+                    ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
                     ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
                     ~leading_fj.isZcc &
-                    ~leading_fj.isTcq &
-                    ~leading_fj.isWcq &
-                    ~leading_fj.isTqq &
-                    ~(leading_fj.isWqq | leading_fj.isZqq) &
+                    ~(leading_fj.isTcq | leading_fj.isWcq) &
+                    ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
                     leading_fj.isbb
                 ).sum(),
-                'tbc' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
-                    ~leading_fj.isTbcq &
-                    ~leading_fj.isTbqq &
-                    ~leading_fj.isZcc &
-                    ~leading_fj.isTcq &
-                    ~leading_fj.isWcq &
-                    ~leading_fj.isTqq &
-                    ~(leading_fj.isWqq | leading_fj.isZqq) &
-                    ~leading_fj.isbb &
-                    leading_fj.isTbc
-                ).sum(),
                 'bc' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
+                    ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
                     ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
                     ~leading_fj.isZcc &
-                    ~leading_fj.isTcq &
-                    ~leading_fj.isWcq &
-                    ~leading_fj.isTqq &
-                    ~(leading_fj.isWqq | leading_fj.isZqq) &
+                    ~(leading_fj.isTcq | leading_fj.isWcq) &
+                    ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
                     ~leading_fj.isbb &
-                    ~leading_fj.isTbc &
-                    (leading_fj.isb & leading_fj.isc)
-                ).sum(),
-                'tbq' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
-                    ~leading_fj.isTbcq &
-                    ~leading_fj.isTbqq &
-                    ~leading_fj.isZcc &
-                    ~leading_fj.isTcq &
-                    ~leading_fj.isWcq &
-                    ~leading_fj.isTqq &
-                    ~(leading_fj.isWqq | leading_fj.isZqq) &
-                    ~leading_fj.isbb &
-                    ~leading_fj.isTbc &
-                    ~(leading_fj.isb & leading_fj.isc) &
-                    leading_fj.isTbq 
+                    (leading_fj.isTbc | (leading_fj.isb & leading_fj.isc))
+
                 ).sum(),
                 'b' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
+                    ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
                     ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
                     ~leading_fj.isZcc &
-                    ~leading_fj.isTcq &
-                    ~leading_fj.isWcq &
-                    ~leading_fj.isTqq &
-                    ~(leading_fj.isWqq | leading_fj.isZqq) &
+                    ~(leading_fj.isTcq | leading_fj.isWcq) &
+                    ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
                     ~leading_fj.isbb &
-                    ~leading_fj.isTbc &
-                    ~(leading_fj.isb & leading_fj.isc) &
-                    ~leading_fj.isTbq &
-                    leading_fj.isb
+                    ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
+                    (leading_fj.isTbq | leading_fj.isb)
                 ).sum(),
                 'cc' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
+                    ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
                     ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
                     ~leading_fj.isZcc &
-                    ~leading_fj.isTcq &
-                    ~leading_fj.isWcq &
-                    ~leading_fj.isTqq &
-                    ~(leading_fj.isWqq | leading_fj.isZqq) &
+                    ~(leading_fj.isTcq | leading_fj.isWcq) &
+                    ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
                     ~leading_fj.isbb &
-                    ~leading_fj.isTbc &
-                    ~(leading_fj.isb & leading_fj.isc) &
-                    ~leading_fj.isTbq &
-                    ~leading_fj.isb &
+                    ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
+                    ~(leading_fj.isTbq | leading_fj.isb) &
                     leading_fj.iscc
                 ).sum(),
                 'c' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
+                    ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
                     ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
                     ~leading_fj.isZcc &
-                    ~leading_fj.isTcq &
-                    ~leading_fj.isWcq &
-                    ~leading_fj.isTqq &
-                    ~(leading_fj.isWqq | leading_fj.isZqq) &
+                    ~(leading_fj.isTcq | leading_fj.isWcq) &
+                    ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
                     ~leading_fj.isbb &
-                    ~leading_fj.isTbc &
-                    ~(leading_fj.isb & leading_fj.isc) &
-                    ~leading_fj.isTbq &
-                    ~leading_fj.isb &
+                    ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
+                    ~(leading_fj.isTbq | leading_fj.isb) &
                     ~leading_fj.iscc &
                     leading_fj.isc
                 ).sum(),
                 'other' : (
-                    ~leading_fj.isHsbb &
-                    ~leading_fj.isHbb &
-                    ~leading_fj.isZbb &
+                    ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
                     ~leading_fj.isTbcq &
                     ~leading_fj.isTbqq &
                     ~leading_fj.isZcc &
-                    ~leading_fj.isTcq &
-                    ~leading_fj.isWcq &
-                    ~leading_fj.isTqq &
-                    ~(leading_fj.isWqq | leading_fj.isZqq) &
+                    ~(leading_fj.isTcq | leading_fj.isWcq) &
+                    ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
                     ~leading_fj.isbb &
-                    ~leading_fj.isTbc &
-                    ~(leading_fj.isb & leading_fj.isc) &
-                    ~leading_fj.isTbq &
-                    ~leading_fj.isb &
+                    ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
+                    ~(leading_fj.isTbq | leading_fj.isb) &
                     ~leading_fj.iscc &
                     ~leading_fj.isc
                 ).sum(),
             }
-            wgentype['garbage'] = (
-                (~(wgentype['hsbb'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['hbb'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['zbb'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['tbcq'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['tbqq'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['zcc'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['tcq'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['wcq'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['tqq'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['vqq'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['bb'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['tbc'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['bc'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['tbq'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['b'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['cc'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['c'].astype(np.bool))).astype(np.int) &
-                (~(wgentype['other'].astype(np.bool))).astype(np.int)
-            )
-            if 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset or 'GJets' in dataset or 'QCD' in dataset:
+            if 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset or 'GJets' in dataset:
                 whf = ((gen[gen.isb].counts>0)|(gen[gen.isc].counts>0)).astype(np.int)
                 wlf = (~(whf.astype(np.bool))).astype(np.int)
                 hout['sumw'].fill(dataset='HF--'+dataset, sumw=1, weight=events.genWeight.sum())
@@ -1505,17 +1398,29 @@ class AnalysisProcessor(processor.ProcessorABC):
                 for r in regions:
                     cut = selection.all(*regions[r])
                     for systematic in systematics:
-                        for gentype in wgentype.keys():
+                        wgarbage=np.ones(events.size, dtype=np.bool)
+                        for gentype in self._gentypes['V+HF']:
+                            wgarbage=wgarbage&(~(wgentype[gentype].astype(np.bool))).astype(np.int)
                             fill('HF--'+dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*whf*wgentype[gentype], cut)
+                        fill('HF--'+dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*whf*wgarbage, cut)
+                        wgarbage=np.ones(events.size, dtype=np.bool)
+                        for gentype in self._gentypes['V+LF']:
+                            wgarbage=wgarbage&(~(wgentype[gentype].astype(np.bool))).astype(np.int)
                             fill('LF--'+dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*wlf*wgentype[gentype], cut)
+                        fill('LF--'+dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*wlf*wgarbage, cut)
             else:
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
                 for r in regions:
                     cut = selection.all(*regions[r])
                     for systematic in systematics:
-                        for gentype in wgentype.keys():
-                            fill(dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*wgentype[gentype], cut)
-
+                        wgarbage=np.ones(events.size, dtype=np.bool)
+                        for sample in self._gentypes.keys():
+                            if sample not in dataset: continue
+                            for gentype in self._gentypes[sample]:
+                                wgarbage=wgarbage&(~(wgentype[gentype].astype(np.bool))).astype(np.int)
+                                fill(dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*wgentype[gentype], cut)
+                            fill(dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*wgarbage, cut)
+                                    
         return hout
 
     def postprocess(self, accumulator):
