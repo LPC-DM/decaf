@@ -14,4 +14,5 @@ for card in open('cards.txt'):
     command=command+binname+'='+filename+' '
 command=command+' > datacards/'+options.analysis+'.txt'  
 os.system(command)
+os.system('rm cards.txt')
 #print(command)
