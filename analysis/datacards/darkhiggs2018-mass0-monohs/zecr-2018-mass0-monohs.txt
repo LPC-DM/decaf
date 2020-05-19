@@ -1,4 +1,4 @@
-# Datacard for <Channel (zecr-2018-mass0-monohs) instance at 0x2ab66618aa50> generated on 2020-05-17 02:40:40.251550
+# Datacard for <Channel (zecr-2018-mass0-monohs) instance at 0x2b9ab022da90> generated on 2020-05-17 05:54:16.957733
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 4 # number of samples minus 1
 kmax 14 # number of nuisance parameters

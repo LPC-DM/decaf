@@ -1,0 +1,183 @@
+# Datacard for <Channel (zmcr-2018-mass4-monohs) instance at 0x2b38bed85a10> generated on 2020-05-17 05:54:08.222951
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 4 # number of samples minus 1
+kmax 12 # number of nuisance parameters
+shapes * zmcr-2018-mass4-monohs darkhiggs_zmcr-2018-mass4-monohs.root darkhiggs_zmcr-2018-mass4-monohs:zmcr-2018-mass4-monohs_$PROCESS darkhiggs_zmcr-2018-mass4-monohs:zmcr-2018-mass4-monohs_$PROCESS_$SYSTEMATIC
+bin zmcr-2018-mass4-monohs
+observation 119.000
+bin      zmcr-2018-mass4-monohs  zmcr-2018-mass4-monohs  zmcr-2018-mass4-monohs  zmcr-2018-mass4-monohs  zmcr-2018-mass4-monohs
+process                  dyjets                      tt                      st                      vv                     hbb
+process                       1                       2                       3                       4                       5
+rate                      1.000                   1.000                   1.000                   1.000                   1.000
+btag_2018 param 0 1
+dyjets_norm param 0 1
+hbb_norm param 0 1
+id_mu_2018 param 0 1
+iso_mu_2018 param 0 1
+jec_2018 param 0 1
+lumi_2018 param 0 1
+st_norm param 0 1
+trig_met_2018 param 0 1
+veto_tau_2018 param 0 1
+vv_norm param 0 1
+zjets_norm param 0 1
+b_sf_2018 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+bb_sf_2018 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+bc_sf_2018 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+c_sf_2018 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+cc_sf_2018 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+other_sf_2018 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin0_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin10_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin11_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin12_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin13_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin14_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin15_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin16_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin17_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin18_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin19_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin1_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin20_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin2_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin3_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin4_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin5_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin6_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin7_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin8_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjetsMC_bin9_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_0 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_1 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_10 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_11 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_12 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_13 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_14 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_15 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_16 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_17 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_18 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_19 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_2 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_20 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_3 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_4 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_5 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_6 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_7 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_8 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+sr-2018-mass4-monohs_zjets_bin_9 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+tbcq_sf_2018 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+tbqq_sf_2018 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+vqq_sf_2018 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+wcq_sf_2018 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+xbb_sf_2018 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zcc_sf_2018 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zhf_k extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin0_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin10_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin11_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin12_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin13_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin14_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin15_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin16_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin17_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin18_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin19_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin1_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin20_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin2_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin3_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin4_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin5_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin6_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin7_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin8_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_dyjetsMC_bin9_nominal extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_0 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_1 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_10 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_11 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_12 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_13 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_14 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_15 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_16 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_17 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_18 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_19 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_2 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_20 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_3 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_4 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_5 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_6 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_7 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_8 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_hbb_bin_9 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_0 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_1 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_10 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_11 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_12 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_13 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_14 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_15 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_16 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_17 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_18 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_19 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_2 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_20 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_3 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_4 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_5 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_6 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_7 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_8 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_st_bin_9 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_0 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_1 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_10 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_11 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_12 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_13 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_14 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_15 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_16 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_17 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_18 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_19 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_2 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_20 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_3 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_4 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_5 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_6 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_7 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_8 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_tt_bin_9 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_0 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_1 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_10 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_11 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_12 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_13 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_14 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_15 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_16 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_17 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_18 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_19 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_2 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_20 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_3 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_4 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_5 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_6 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_7 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_8 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
+zmcr-2018-mass4-monohs_vv_bin_9 extArg darkhiggs_zmcr-2018-mass4-monohs.root:darkhiggs_zmcr-2018-mass4-monohs
