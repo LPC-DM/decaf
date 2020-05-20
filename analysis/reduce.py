@@ -59,7 +59,7 @@ def reduce(folder,_dataset=None,variable=None):
                print('Opening:',filename)
                hin = load(filename)
                for k in hin.keys():
-                    if variable is not None and k not in variable: continue
+                    if variable is not None and k!=variable: continue
                     print('Considering variable',k)
                     if k not in tmp: tmp[k]=[hin[k]]
                     else: tmp[k].append(hin[k])
