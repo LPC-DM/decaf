@@ -23,7 +23,7 @@ def model(category,year,mass,grouping):
         #print(dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()])
         output=dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()]
         binning=dictionary[region].integrate('process', process).integrate('systematic',systematic).axis('recoil').edges()
-        return (output, np.arange(output.size+1), 'recoil')
+        return (output, binning, 'recoil')
 
     model_id='-'.join([year, category])
     if mass is not None: model_id='-'.join([year, category, mass])
