@@ -16,12 +16,18 @@ from coffea.util import load, save
 rl.util.install_roofit_helpers()
 rl.ParametericSample.PreferRooParametricHist = False
 
-def model(mass,category,year,grouping):
+def model(category,year,grouping):
     
-    def template(hist, name):
-        return (hist.values()[()], hist.axis(name).edges(), name)
+    def template(dictionary, process, systematic, region):
+        output=np.array([])
+        for key in dictionary.keys():
+            if region not in key: continue
+            print('considering',key)
+            print(dictionary[key].integrate('process', process).integrate('systematic',systematic).values()[()])
+            output=np.concatenate((output,dictionary[key].integrate('process', process).integrate('systematic',systematic).values()[()]))
+        return (output, np.arange(output.size+1), 'recoil')
 
-    model_id='-'.join([year, mass, category])
+    model_id='-'.join([year, category])
     model = rl.Model('darkhiggs'+model_id)
 
     whf_fraction=0.18
@@ -271,24 +277,26 @@ def model(mass,category,year,grouping):
         
     signal_weight={}
     for process in signal_fractions.keys():
-        for gentype in signal_fractions[process].keys():
-            if gentype not in gentypes[process.split('_')[0]]: continue
-            print('Extracting',gentype,'fraction for',process)
-            try:
-                weight
-            except:
-                weight = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(signal_fractions[process][gentype][mass])
-            else:
-                weight += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(signal_fractions[process][gentype][mass])
-            if 'monojet' in category:
+        signal_weight[process]=np.array([])
+        for mass in ['mass0','mass1','mass2','mass3','mass4']:
+            for gentype in signal_fractions[process].keys():
+                if gentype not in gentypes[process.split('_')[0]]: continue
+                print('Extracting',gentype,'fraction for',process)
                 try:
                     weight
                 except:
-                    weight = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(signal_fractions[process][gentype][mass])
+                    weight = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(signal_fractions[process][gentype][mass])
                 else:
-                    weight += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(signal_fractions[process][gentype][mass])
+                    weight += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(signal_fractions[process][gentype][mass])
+                if 'monojet' in category:
+                    try:
+                        weight
+                    except:
+                        weight = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(signal_fractions[process][gentype][mass])
+                    else:
+                        weight += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(signal_fractions[process][gentype][mass])
 
-        signal_weight[process]=weight
+            signal_weight[process] = np.concatenate((signal_weight[process], weight))
                 
     with open('data/fractions.json') as fin:
         fractions = json.load(fin)
@@ -298,51 +306,55 @@ def model(mass,category,year,grouping):
     deepak15_weight['1tag']={}
     deepak15_weight['notag']={}
     for process in ['Hbb','VV','ST','QCD','TT','Z+HF','Z+LF','W+HF','W+LF','G+HF','G+LF']:
-        for gentype in fractions[process].keys():
-            if gentype not in gentypes[process]: continue
-            print('Extracting',gentype,'fraction for',process )
-            try:
-                weight_0tag
-            except:
-                weight_0tag = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
-            else:
-                weight_0tag += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
-            try:
-                weight_1tag
-            except:
-                weight_1tag = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
-            else:
-                weight_1tag += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
-            try:
-                weight_notag
-            except:
-                weight_notag = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(fractions[process][gentype][mass])
-            else:
-                weight_notag += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(fractions[process][gentype][mass])
-                
-            if 'monojet' in category: 
+        deepak15_weight['0tag'][process]=np.array([])
+        deepak15_weight['1tag'][process]=np.array([])
+        deepak15_weight['notag'][process]=np.array([])
+        for mass in ['mass0','mass1','mass2','mass3','mass4']:
+            for gentype in fractions[process].keys():
+                if gentype not in gentypes[process]: continue
+                print('Extracting',gentype,'fraction for',process )
                 try:
                     weight_0tag
                 except:
-                    weight_0tag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
+                    weight_0tag = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
                 else:
-                    weight_0tag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
+                    weight_0tag += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
                 try:
                     weight_1tag
                 except:
-                    weight_1tag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
+                    weight_1tag = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
                 else:
-                    weight_1tag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
+                    weight_1tag += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
                 try:
                     weight_notag
                 except:
-                    weight_notag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(fractions[process][gentype][mass])
+                    weight_notag = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(fractions[process][gentype][mass])
                 else:
-                    weight_notag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(fractions[process][gentype][mass])
+                    weight_notag += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(fractions[process][gentype][mass])
+                
+                if 'monojet' in category: 
+                    try:
+                        weight_0tag
+                    except:
+                        weight_0tag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
+                    else:
+                        weight_0tag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
+                    try:
+                        weight_1tag
+                    except:
+                        weight_1tag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
+                    else:
+                        weight_1tag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
+                    try:
+                        weight_notag
+                    except:
+                        weight_notag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(fractions[process][gentype][mass])
+                    else:
+                        weight_notag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(fractions[process][gentype][mass])
 
-        deepak15_weight['0tag'][process]=np.nan_to_num(weight_0tag/deepak4_0tag_process_eff[process])
-        deepak15_weight['1tag'][process]=np.nan_to_num(weight_1tag/(1 - deepak4_0tag_process_eff[process]))
-        deepak15_weight['notag'][process]=weight_notag
+            deepak15_weight['0tag'][process]=np.concatenate((deepak15_weight['0tag'][process],np.nan_to_num(weight_0tag/deepak4_0tag_process_eff[process])))
+            deepak15_weight['1tag'][process]=np.concatenate((deepak15_weight['1tag'][process],np.nan_to_num(weight_1tag/(1 - deepak4_0tag_process_eff[process]))))
+            deepak15_weight['notag'][process]=np.concatenate((deepak15_weight['notag'][process],weight_notag))
 
     hf_fraction_weight={}
     hf_fraction_weight['0tag']={}
@@ -440,17 +452,24 @@ def model(mass,category,year,grouping):
     data = {}
     for r in data_hists['recoil'].identifiers('region'):
         if category not in str(r): continue
-        if mass not in str(r): continue
-        print(r,category,mass)
-        data[str(r).split("_")[0]]=data_hists['recoil'].integrate('region',r).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[mass]))
+        for mass in ['mass0','mass1','mass2','mass3','mass4']:
+            if mass not in str(r): continue
+            print('data',r,category,mass)
+            data[str(r).split("_")[0]+'_'+mass]=data_hists['recoil'].integrate('region',r).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[mass]))
 
     background = {}
     for r in data.keys():
-        background[r]=bkg_hists['recoil'].integrate('region',r).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[mass]))
+        for mass in ['mass0','mass1','mass2','mass3','mass4']:
+            if mass not in str(r): continue
+            print('bkg',r,category,mass)
+            background[r]=bkg_hists['recoil'].integrate('region',str(r).split("_")[0]).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[mass]))
 
     signal = {}
     for r in data.keys():
-        signal[r]=signal_hists['recoil'].integrate('region',r).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[mass]))
+        for mass in ['mass0','mass1','mass2','mass3','mass4']:
+            if mass not in str(r): continue
+            print('sig',r,category,mass)
+            signal[r]=signal_hists['recoil'].integrate('region',str(r).split("_")[0]).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[mass]))
 
     ###
     ###
@@ -507,27 +526,27 @@ def model(mass,category,year,grouping):
     # Add data distribution to the channel
     ###
 
-    sr.setObservation(template(data['sr'].integrate('process', 'MET').integrate('systematic','nominal'), 'recoil'))
+    #sr.setObservation(template(data['sr'].integrate('process', 'MET').integrate('systematic','nominal'), 'recoil'))
+    sr.setObservation(template(data,'MET','nominal','sr'))
 
     ###
     # Z(->nunu)+jets data-driven model
     ###
 
-    sr_zjetsHist = background['sr'].integrate('process', 'Z+jets').integrate('systematic','nominal')
-    sr_zjetsTemplate = template(sr_zjetsHist, 'recoil')
+    #sr_zjetsHist = background['sr'].integrate('process', 'Z+jets').integrate('systematic','nominal')
+    sr_zjetsTemplate = template(background,'Z+jets','nominal','sr')
     sr_zjetsMC =  rl.TemplateSample(ch_name+'_zjetsMC', rl.Sample.BACKGROUND, sr_zjetsTemplate)
     sr_zjetsMC.setParamEffect(lumi, 1.027)
     sr_zjetsMC.setParamEffect(trig_met, 1.01)
     sr_zjetsMC.setParamEffect(veto_tau, 1.03)
     sr_zjetsMC.setParamEffect(zjets_norm, 1.4)
     sr_zjetsMC.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'Z+jets').integrate('systematic','btagUp').values()[()]
-    btagDown=background['sr'].integrate('process', 'Z+jets').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'Z+jets','btagUp','sr')[0]
+    btagDown=template(background,'Z+jets','btagDown','sr')[0]
     sr_zjetsMC.setParamEffect(btag, btagUp, btagDown)
-    
     sr_zjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_zjets_bin_%d' % i, b, 0, sr_zjetsTemplate[0].max()*2) for i,b in enumerate(sr_zjetsTemplate[0])]) 
     sr_zjetsBinYields = sr_zjetsBinYields * hf_fraction_weight['0tag']['Z+jets']
-    sr_zjetsObservable = rl.Observable('recoil', sr_zjetsHist.axis('recoil').edges())
+    sr_zjetsObservable = rl.Observable('recoil', sr_zjetsTemplate[1])
     sr_zjets = rl.ParametericSample(ch_name+'_zjets', rl.Sample.BACKGROUND, sr_zjetsObservable, sr_zjetsBinYields)
 
     sr.addSample(sr_zjets)
@@ -536,21 +555,20 @@ def model(mass,category,year,grouping):
     # W(->lnu)+jets data-driven model                
     ### 
 
-    sr_wjetsHist = background['sr'].integrate('process', 'W+jets').integrate('systematic','nominal')
-    sr_wjetsTemplate = template(sr_wjetsHist, 'recoil')
+    #sr_wjetsHist = background['sr'].integrate('process', 'W+jets').integrate('systematic','nominal')
+    sr_wjetsTemplate = template(background,'W+jets','nominal','sr')
     sr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, sr_wjetsTemplate)
     sr_wjetsMC.setParamEffect(lumi, 1.027)
     sr_wjetsMC.setParamEffect(trig_met, 1.01)
     sr_wjetsMC.setParamEffect(veto_tau, 1.03)
     sr_wjetsMC.setParamEffect(wjets_norm, 1.4)
     sr_wjetsMC.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'W+jets').integrate('systematic','btagUp').values()[()]
-    btagDown=background['sr'].integrate('process', 'W+jets').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'W+jets','btagUp','sr')[0]
+    btagDown=template(background,'W+jets','btagDown','sr')[0]
     sr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-
     sr_wjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_wjets_bin_%d' % i,b,0,sr_wjetsTemplate[0].max()*2) for i,b in enumerate(sr_wjetsTemplate[0])]) 
     sr_wjetsBinYields = sr_wjetsBinYields * hf_fraction_weight['0tag']['W+jets']
-    sr_wjetsObservable = rl.Observable('recoil', sr_wjetsHist.axis('recoil').edges())
+    sr_wjetsObservable = rl.Observable('recoil', sr_wjetsTemplate[1])
     sr_wjets = rl.ParametericSample(ch_name+'_wjets', rl.Sample.BACKGROUND, sr_wjetsObservable, sr_wjetsBinYields)
 
     sr.addSample(sr_wjets)
@@ -559,21 +577,20 @@ def model(mass,category,year,grouping):
     # top-antitop data-driven model                                                                                                                                                                  
     ### 
 
-    sr_ttHist = background['sr'].integrate('process', 'TT').integrate('systematic','nominal')
-    sr_ttTemplate = template(sr_ttHist, 'recoil')
+    #sr_ttHist = background['sr'].integrate('process', 'TT').integrate('systematic','nominal')
+    sr_ttTemplate = template(background,'TT','nominal','sr')
     sr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, sr_ttTemplate)
     sr_ttMC.setParamEffect(lumi, 1.027)
     sr_ttMC.setParamEffect(trig_met, 1.01)
     sr_ttMC.setParamEffect(veto_tau, 1.03)
     sr_ttMC.setParamEffect(tt_norm, 1.4)
     sr_ttMC.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'TT').integrate('systematic','btagUp').values()[()]
-    btagDown=background['sr'].integrate('process', 'TT').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'TT','btagUp','sr')[0]
+    btagDown=template(background,'TT','btagDown','sr')[0]
     sr_ttMC.setParamEffect(btag, btagUp, btagDown)
-
     sr_ttBinYields = np.array([rl.IndependentParameter(ch_name+'_tt_bin_%d' % i,b,0,sr_ttTemplate[0].max()*2) for i,b in enumerate(sr_ttTemplate[0])])
     sr_ttBinYields = sr_ttBinYields * deepak15_weight['0tag']['TT']
-    sr_ttObservable = rl.Observable('recoil', sr_ttHist.axis('recoil').edges())
+    sr_ttObservable = rl.Observable('recoil', sr_ttTemplate[1])
     sr_tt = rl.ParametericSample(ch_name+'_tt', rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields)
 
     sr.addSample(sr_tt)
@@ -582,100 +599,100 @@ def model(mass,category,year,grouping):
     # Other MC-driven processes
     ###
 
-    sr_stHist = background['sr'].integrate('process', 'ST').integrate('systematic','nominal')
-    sr_stTemplate = template(sr_stHist, 'recoil')
+    #sr_stHist = background['sr'].integrate('process', 'ST').integrate('systematic','nominal')
+    sr_stTemplate = template(background,'ST','nominal','sr')
     sr_stBinYields = np.array([rl.IndependentParameter(ch_name+'_st_bin_%d' % i,b,0,sr_stTemplate[0].max()*2) for i,b in enumerate(sr_stTemplate[0])])
     sr_stBinYields = sr_stBinYields * deepak15_weight['0tag']['ST']
-    sr_stObservable = rl.Observable('recoil', sr_stHist.axis('recoil').edges())
+    sr_stObservable = rl.Observable('recoil', sr_stTemplate[1])
     sr_st = rl.ParametericSample(ch_name+'_st', rl.Sample.BACKGROUND, sr_stObservable, sr_stBinYields)
     sr_st.setParamEffect(lumi, 1.027)
     sr_st.setParamEffect(trig_met, 1.01)
     sr_st.setParamEffect(veto_tau, 1.03)
     sr_st.setParamEffect(st_norm, 1.2)
     sr_st.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'ST').integrate('systematic','btagUp').values()[()]
-    btagDown=background['sr'].integrate('process', 'ST').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'ST','btagUp','sr')[0]
+    btagDown=template(background,'ST','btagDown','sr')[0]
     sr_st.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_st)
 
-    sr_dyjetsHist = background['sr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
-    sr_dyjetsTemplate = template(sr_dyjetsHist, 'recoil')
+    #sr_dyjetsHist = background['sr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
+    sr_dyjetsTemplate = template(background,'DY+jets','nominal','sr')
     sr_dyjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_dyjets_bin_%d' % i,b,0,sr_dyjetsTemplate[0].max()*2) for i,b in enumerate(sr_dyjetsTemplate[0])])
     sr_dyjetsBinYields = sr_dyjetsBinYields * hf_fraction_weight['0tag']['Z+jets']
-    sr_dyjetsObservable = rl.Observable('recoil', sr_dyjetsHist.axis('recoil').edges())
+    sr_dyjetsObservable = rl.Observable('recoil', sr_dyjetsTemplate[1])
     sr_dyjets = rl.ParametericSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, sr_dyjetsObservable, sr_dyjetsBinYields)
     sr_dyjets.setParamEffect(lumi, 1.027)
     sr_dyjets.setParamEffect(trig_met, 1.01)
     sr_dyjets.setParamEffect(veto_tau, 1.03)
     sr_dyjets.setParamEffect(dyjets_norm, 1.4)
     sr_dyjets.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'DY+jets').integrate('systematic','btagUp').values()[()]
-    btagDown=background['sr'].integrate('process', 'DY+jets').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'DY+jets','btagUp','sr')[0]
+    btagDown=template(background,'DY+jets','btagDown','sr')[0]
     sr_dyjets.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_dyjets)
 
-    sr_vvHist = background['sr'].integrate('process', 'VV').integrate('systematic','nominal')
-    sr_vvTemplate = template(sr_vvHist, 'recoil')
+    #sr_vvHist = background['sr'].integrate('process', 'VV').integrate('systematic','nominal')
+    sr_vvTemplate = template(background,'VV','nominal','sr')
     sr_vvBinYields = np.array([rl.IndependentParameter(ch_name+'_vv_bin_%d' % i,b,0,sr_vvTemplate[0].max()*2) for i,b in enumerate(sr_vvTemplate[0])])
     sr_vvBinYields = sr_vvBinYields * deepak15_weight['0tag']['VV']
-    sr_vvObservable = rl.Observable('recoil', sr_vvHist.axis('recoil').edges())
+    sr_vvObservable = rl.Observable('recoil', sr_vvTemplate[1])
     sr_vv = rl.ParametericSample(ch_name+'_vv', rl.Sample.BACKGROUND, sr_vvObservable, sr_vvBinYields)
     sr_vv.setParamEffect(lumi, 1.027)
     sr_vv.setParamEffect(trig_met, 1.01)
     sr_vv.setParamEffect(veto_tau, 1.03)
     sr_vv.setParamEffect(vv_norm, 1.2)
     sr_vv.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'VV').integrate('systematic','btagUp').values()[()]
-    btagDown=background['sr'].integrate('process', 'VV').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'VV','btagUp','sr')[0]
+    btagDown=template(background,'VV','btagDown','sr')[0]
     sr_vv.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_vv)
 
-    sr_hbbHist = background['sr'].integrate('process', 'Hbb').integrate('systematic','nominal')
-    sr_hbbTemplate = template(sr_hbbHist, 'recoil')
+    #sr_hbbHist = background['sr'].integrate('process', 'Hbb').integrate('systematic','nominal')
+    sr_hbbTemplate = template(background,'Hbb','nominal','sr')
     sr_hbbBinYields = np.array([rl.IndependentParameter(ch_name+'_hbb_bin_%d' % i,b,0,sr_hbbTemplate[0].max()*2) for i,b in enumerate(sr_hbbTemplate[0])])
     sr_hbbBinYields = sr_hbbBinYields * deepak15_weight['0tag']['Hbb']
-    sr_hbbObservable = rl.Observable('recoil', sr_hbbHist.axis('recoil').edges())
+    sr_hbbObservable = rl.Observable('recoil', sr_hbbTemplate[1])
     sr_hbb = rl.ParametericSample(ch_name+'_hbb', rl.Sample.BACKGROUND, sr_hbbObservable, sr_hbbBinYields)
     sr_hbb.setParamEffect(lumi, 1.027)
     sr_hbb.setParamEffect(trig_met, 1.01)
     sr_hbb.setParamEffect(veto_tau, 1.03)
     sr_hbb.setParamEffect(hbb_norm, 1.2)
     sr_hbb.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'Hbb').integrate('systematic','btagUp').values()[()]
-    btagDown=background['sr'].integrate('process', 'Hbb').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'Hbb','btagUp','sr')[0]
+    btagDown=template(background,'Hbb','btagDown','sr')[0]
     sr_hbb.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_hbb)
 
-    sr_qcdHist = background['sr'].integrate('process', 'QCD').integrate('systematic','nominal')
-    sr_qcdTemplate = template(sr_qcdHist, 'recoil')
+    #sr_qcdHist = background['sr'].integrate('process', 'QCD').integrate('systematic','nominal')
+    sr_qcdTemplate = template(background,'QCD','nominal','sr')
     sr_qcdBinYields = np.array([rl.IndependentParameter(ch_name+'_qcd_bin_%d' % i,b,0,sr_qcdTemplate[0].max()*2) for i,b in enumerate(sr_qcdTemplate[0])])
     sr_qcdBinYields = sr_qcdBinYields * deepak15_weight['0tag']['QCD']
-    sr_qcdObservable = rl.Observable('recoil', sr_qcdHist.axis('recoil').edges())
+    sr_qcdObservable = rl.Observable('recoil', sr_qcdTemplate[1])
     sr_qcd = rl.ParametericSample(ch_name+'_qcd', rl.Sample.BACKGROUND, sr_qcdObservable, sr_qcdBinYields)
     sr_qcd.setParamEffect(lumi, 1.027)
     sr_qcd.setParamEffect(trig_met, 1.01)
     sr_qcd.setParamEffect(veto_tau, 1.03)
     sr_qcd.setParamEffect(qcdsig_norm, 2.0)
     sr_qcd.setParamEffect(jec, 1.05)
-    btagUp=background['sr'].integrate('process', 'QCD').integrate('systematic','btagUp').values()[()]
-    btagDown=background['sr'].integrate('process', 'QCD').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'QCD','btagUp','sr')[0]
+    btagDown=template(background,'QCD','btagDown','sr')[0]
     sr_qcd.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_qcd)
 
-    for s in signal['sr'].identifiers('process'):
+    for s in signal['sr_mass0'].identifiers('process'):
         print(s)
-        sr_signalHist = signal['sr'].integrate('process', s).integrate('systematic','nominal')
-        sr_signalTemplate = template(sr_signalHist, 'recoil')
+        #sr_signalHist = signal['sr'].integrate('process', s).integrate('systematic','nominal')
+        sr_signalTemplate = template(signal,s,'nominal','sr')
         sr_signalBinYields = np.array([rl.IndependentParameter(ch_name+'_'+str(s)+'_bin_%d' % i,b,0,sr_signalTemplate[0].max()*2) for i,b in enumerate(sr_signalTemplate[0])])
         sr_signalBinYields = sr_signalBinYields * signal_weight[str(s)]
-        sr_signalObservable = rl.Observable('recoil', sr_signalHist.axis('recoil').edges())
+        sr_signalObservable = rl.Observable('recoil', sr_signalTemplate[1])
         sr_signal = rl.ParametericSample(ch_name+'_'+str(s), rl.Sample.SIGNAL, sr_signalObservable, sr_signalBinYields)
         sr_signal.setParamEffect(lumi, 1.027)
         sr_signal.setParamEffect(trig_met, 1.01)
         sr_signal.setParamEffect(veto_tau, 1.03)
         sr_signal.setParamEffect(jec, 1.05)
-        btagUp=signal['sr'].integrate('process', s).integrate('systematic','btagUp').values()[()]
-        btagDown=signal['sr'].integrate('process', s).integrate('systematic','btagDown').values()[()]
+        btagUp=template(signal, s,'btagUp','sr')[0]
+        btagDown=template(signal, s,'btagDown','sr')[0]
         sr_signal.setParamEffect(btag, btagUp, btagDown)
         sr.addSample(sr_signal)
 
@@ -700,14 +717,15 @@ def model(mass,category,year,grouping):
     # Add data distribution to the channel
     ###
 
-    wmcr.setObservation(template(data['wmcr'].integrate('process', 'MET').integrate('systematic','nominal'), 'recoil'))
+    #wmcr.setObservation(template(data['wmcr'].integrate('process', 'MET').integrate('systematic','nominal'), 'recoil'))
+    wmcr.setObservation(template(data,'MET','nominal','wmcr'))
 
     ###    
     # W(->lnu)+jets data-driven model                
     ### 
 
-    wmcr_wjetsHist = background['wmcr'].integrate('process', 'W+jets').integrate('systematic','nominal')
-    wmcr_wjetsTemplate = template(wmcr_wjetsHist, 'recoil')
+    #wmcr_wjetsHist = background['wmcr'].integrate('process', 'W+jets').integrate('systematic','nominal')
+    wmcr_wjetsTemplate = template(background,'W+jets','nominal','wmcr')
     wmcr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, wmcr_wjetsTemplate)
     wmcr_wjetsMC.setParamEffect(lumi, 1.027)
     wmcr_wjetsMC.setParamEffect(trig_met, 1.01)
@@ -716,8 +734,8 @@ def model(mass,category,year,grouping):
     wmcr_wjetsMC.setParamEffect(jec, 1.05)
     wmcr_wjetsMC.setParamEffect(id_mu, 1.02)
     wmcr_wjetsMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['wmcr'].integrate('process', 'W+jets').integrate('systematic','btagUp').values()[()]
-    btagDown=background['wmcr'].integrate('process', 'W+jets').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'W+jets','btagUp','wmcr')[0]
+    btagDown=template(background,'W+jets','btagDown','wmcr')[0]
     wmcr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() * hf_fraction_weight['0tag']['W+jets']
     wmcr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
@@ -727,8 +745,8 @@ def model(mass,category,year,grouping):
     # top-antitop data-driven model                                                                                                                                                                  
     ### 
 
-    wmcr_ttHist = background['wmcr'].integrate('process', 'TT').integrate('systematic','nominal')
-    wmcr_ttTemplate = template(wmcr_ttHist, 'recoil')
+    #wmcr_ttHist = background['wmcr'].integrate('process', 'TT').integrate('systematic','nominal')
+    wmcr_ttTemplate = template(background,'TT','nominal','wmcr')
     wmcr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, wmcr_ttTemplate)
     wmcr_ttMC.setParamEffect(lumi, 1.027)
     wmcr_ttMC.setParamEffect(trig_met, 1.01)
@@ -737,8 +755,8 @@ def model(mass,category,year,grouping):
     wmcr_ttMC.setParamEffect(jec, 1.05)
     wmcr_ttMC.setParamEffect(id_mu, 1.02)
     wmcr_ttMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['wmcr'].integrate('process', 'TT').integrate('systematic','btagUp').values()[()]
-    btagDown=background['wmcr'].integrate('process', 'TT').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'TT','btagUp','wmcr')[0]
+    btagDown=template(background,'TT','btagDown','wmcr')[0]
     wmcr_ttMC.setParamEffect(btag, btagUp, btagDown)
     wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() * deepak15_weight['0tag']['TT']
     wmcr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt)
@@ -748,11 +766,11 @@ def model(mass,category,year,grouping):
     # Other MC-driven processes
     ###
 
-    wmcr_stHist = background['wmcr'].integrate('process', 'ST').integrate('systematic','nominal')
-    wmcr_stTemplate = template(wmcr_stHist, 'recoil')
+    #wmcr_stHist = background['wmcr'].integrate('process', 'ST').integrate('systematic','nominal')
+    wmcr_stTemplate = template(background,'ST','nominal','wmcr')
     wmcr_stBinYields = np.array([rl.IndependentParameter(ch_name+'_st_bin_%d' % i,b,0,wmcr_stTemplate[0].max()*2) for i,b in enumerate(wmcr_stTemplate[0])])
     wmcr_stBinYields = wmcr_stBinYields * deepak15_weight['0tag']['ST']
-    wmcr_stObservable = rl.Observable('recoil', wmcr_stHist.axis('recoil').edges())
+    wmcr_stObservable = rl.Observable('recoil', wmcr_stTemplate[1])
     wmcr_st = rl.ParametericSample(ch_name+'_st', rl.Sample.BACKGROUND, wmcr_stObservable, wmcr_stBinYields)
     wmcr_st.setParamEffect(lumi, 1.027)
     wmcr_st.setParamEffect(trig_met, 1.01)
@@ -761,16 +779,16 @@ def model(mass,category,year,grouping):
     wmcr_st.setParamEffect(jec, 1.05)
     wmcr_st.setParamEffect(id_mu, 1.02)
     wmcr_st.setParamEffect(iso_mu, 1.02)
-    btagUp=background['wmcr'].integrate('process', 'ST').integrate('systematic','btagUp').values()[()]
-    btagDown=background['wmcr'].integrate('process', 'ST').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'ST','btagUp','wmcr')[0]
+    btagDown=template(background,'ST','btagDown','wmcr')[0]
     wmcr_st.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_st)
 
-    wmcr_dyjetsHist = background['wmcr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
-    wmcr_dyjetsTemplate = template(wmcr_dyjetsHist, 'recoil')
+    #wmcr_dyjetsHist = background['wmcr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
+    wmcr_dyjetsTemplate = template(background,'DY+jets','nominal','wmcr')
     wmcr_dyjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_dyjets_bin_%d' % i,b,0,wmcr_dyjetsTemplate[0].max()*2) for i,b in enumerate(wmcr_dyjetsTemplate[0])])
     wmcr_dyjetsBinYields = wmcr_dyjetsBinYields * hf_fraction_weight['0tag']['Z+jets']
-    wmcr_dyjetsObservable = rl.Observable('recoil', wmcr_dyjetsHist.axis('recoil').edges())
+    wmcr_dyjetsObservable = rl.Observable('recoil', wmcr_dyjetsTemplate[1])
     wmcr_dyjets = rl.ParametericSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, wmcr_dyjetsObservable, wmcr_dyjetsBinYields)
     wmcr_dyjets.setParamEffect(lumi, 1.027)
     wmcr_dyjets.setParamEffect(trig_met, 1.01)
@@ -779,16 +797,16 @@ def model(mass,category,year,grouping):
     wmcr_dyjets.setParamEffect(jec, 1.05)
     wmcr_dyjets.setParamEffect(id_mu, 1.02)
     wmcr_dyjets.setParamEffect(iso_mu, 1.02)
-    btagUp=background['wmcr'].integrate('process', 'DY+jets').integrate('systematic','btagUp').values()[()]
-    btagDown=background['wmcr'].integrate('process', 'DY+jets').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'DY+jets','btagUp','wmcr')[0]
+    btagDown=template(background,'DY+jets','btagDown','wmcr')[0]
     wmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_dyjets)
 
-    wmcr_vvHist = background['wmcr'].integrate('process', 'VV').integrate('systematic','nominal')
-    wmcr_vvTemplate = template(wmcr_vvHist, 'recoil')
+    #wmcr_vvHist = background['wmcr'].integrate('process', 'VV').integrate('systematic','nominal')
+    wmcr_vvTemplate = template(background,'VV','nominal','wmcr')
     wmcr_vvBinYields = np.array([rl.IndependentParameter(ch_name+'_vv_bin_%d' % i,b,0,wmcr_vvTemplate[0].max()*2) for i,b in enumerate(wmcr_vvTemplate[0])])
     wmcr_vvBinYields = wmcr_vvBinYields * deepak15_weight['0tag']['VV']
-    wmcr_vvObservable = rl.Observable('recoil', wmcr_vvHist.axis('recoil').edges())
+    wmcr_vvObservable = rl.Observable('recoil', wmcr_vvTemplate[1])
     wmcr_vv = rl.ParametericSample(ch_name+'_vv', rl.Sample.BACKGROUND, wmcr_vvObservable, wmcr_vvBinYields)
     wmcr_vv.setParamEffect(lumi, 1.027)
     wmcr_vv.setParamEffect(trig_met, 1.01)
@@ -797,16 +815,16 @@ def model(mass,category,year,grouping):
     wmcr_vv.setParamEffect(jec, 1.05)
     wmcr_vv.setParamEffect(id_mu, 1.02)
     wmcr_vv.setParamEffect(iso_mu, 1.02)
-    btagUp=background['wmcr'].integrate('process', 'VV').integrate('systematic','btagUp').values()[()]
-    btagDown=background['wmcr'].integrate('process', 'VV').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'VV','btagUp','wmcr')[0]
+    btagDown=template(background,'VV','btagDown','wmcr')[0]
     wmcr_vv.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_vv)
 
-    wmcr_hbbHist = background['wmcr'].integrate('process', 'Hbb').integrate('systematic','nominal')
-    wmcr_hbbTemplate = template(wmcr_hbbHist, 'recoil')
+    #wmcr_hbbHist = background['wmcr'].integrate('process', 'Hbb').integrate('systematic','nominal')
+    wmcr_hbbTemplate = template(background,'Hbb','nominal','wmcr')
     wmcr_hbbBinYields = np.array([rl.IndependentParameter(ch_name+'_hbb_bin_%d' % i,b,0,wmcr_hbbTemplate[0].max()*2) for i,b in enumerate(wmcr_hbbTemplate[0])])
     wmcr_hbbBinYields = wmcr_hbbBinYields * deepak15_weight['0tag']['Hbb']
-    wmcr_hbbObservable = rl.Observable('recoil', wmcr_hbbHist.axis('recoil').edges())
+    wmcr_hbbObservable = rl.Observable('recoil', wmcr_hbbTemplate[1])
     wmcr_hbb = rl.ParametericSample(ch_name+'_hbb', rl.Sample.BACKGROUND, wmcr_hbbObservable, wmcr_hbbBinYields)
     wmcr_hbb.setParamEffect(lumi, 1.027)
     wmcr_hbb.setParamEffect(trig_met, 1.01)
@@ -815,16 +833,16 @@ def model(mass,category,year,grouping):
     wmcr_hbb.setParamEffect(jec, 1.05)
     wmcr_hbb.setParamEffect(id_mu, 1.02)
     wmcr_hbb.setParamEffect(iso_mu, 1.02)
-    btagUp=background['wmcr'].integrate('process', 'Hbb').integrate('systematic','btagUp').values()[()]
-    btagDown=background['wmcr'].integrate('process', 'Hbb').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'Hbb','btagUp','wmcr')[0]
+    btagDown=template(background,'Hbb','btagDown','wmcr')[0]
     wmcr_hbb.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_hbb)
 
-    wmcr_qcdHist = background['wmcr'].integrate('process', 'QCD').integrate('systematic','nominal')
-    wmcr_qcdTemplate = template(wmcr_qcdHist, 'recoil')
+    #wmcr_qcdHist = background['wmcr'].integrate('process', 'QCD').integrate('systematic','nominal')
+    wmcr_qcdTemplate = template(background,'QCD','nominal','wmcr')
     wmcr_qcdBinYields = np.array([rl.IndependentParameter(ch_name+'_qcd_bin_%d' % i,b,0,wmcr_qcdTemplate[0].max()*2) for i,b in enumerate(wmcr_qcdTemplate[0])])
     wmcr_qcdBinYields = wmcr_qcdBinYields * deepak15_weight['0tag']['QCD']
-    wmcr_qcdObservable = rl.Observable('recoil', wmcr_qcdHist.axis('recoil').edges())
+    wmcr_qcdObservable = rl.Observable('recoil', wmcr_qcdTemplate[1])
     wmcr_qcd = rl.ParametericSample(ch_name+'_qcd', rl.Sample.BACKGROUND, wmcr_qcdObservable, wmcr_qcdBinYields)
     wmcr_qcd.setParamEffect(lumi, 1.027)
     wmcr_qcd.setParamEffect(trig_met, 1.01)
@@ -833,8 +851,8 @@ def model(mass,category,year,grouping):
     wmcr_qcd.setParamEffect(jec, 1.05)
     wmcr_qcd.setParamEffect(id_mu, 1.02)
     wmcr_qcd.setParamEffect(iso_mu, 1.02)
-    btagUp=background['wmcr'].integrate('process', 'QCD').integrate('systematic','btagUp').values()[()]
-    btagDown=background['wmcr'].integrate('process', 'QCD').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'QCD','btagUp','wmcr')[0]
+    btagDown=template(background,'QCD','btagDown','wmcr')[0]
     wmcr_qcd.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_qcd)
 
@@ -856,14 +874,15 @@ def model(mass,category,year,grouping):
     # Add data distribution to the channel
     ###
 
-    tmcr.setObservation(template(data['tmcr'].integrate('process', 'MET').integrate('systematic','nominal'), 'recoil'))
+    #tmcr.setObservation(template(data['tmcr'].integrate('process', 'MET').integrate('systematic','nominal'), 'recoil'))
+    tmcr.setObservation(template(data,'MET','nominal','tmcr'))
 
     ###    
     # W(->lnu)+jets data-driven model                
     ### 
 
-    tmcr_wjetsHist = background['tmcr'].integrate('process', 'W+jets').integrate('systematic','nominal')
-    tmcr_wjetsTemplate = template(tmcr_wjetsHist, 'recoil')
+    #tmcr_wjetsHist = background['tmcr'].integrate('process', 'W+jets').integrate('systematic','nominal')
+    tmcr_wjetsTemplate = template(background,'W+jets','nominal','tmcr')
     tmcr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, tmcr_wjetsTemplate)
     tmcr_wjetsMC.setParamEffect(lumi, 1.027)
     tmcr_wjetsMC.setParamEffect(trig_met, 1.01)
@@ -872,8 +891,8 @@ def model(mass,category,year,grouping):
     tmcr_wjetsMC.setParamEffect(jec, 1.05)
     tmcr_wjetsMC.setParamEffect(id_mu, 1.02)
     tmcr_wjetsMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['tmcr'].integrate('process', 'W+jets').integrate('systematic','btagUp').values()[()]
-    btagDown=background['tmcr'].integrate('process', 'W+jets').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'W+jets','btagUp','tmcr')[0]
+    btagDown=template(background,'W+jets','btagDown','tmcr')[0]
     tmcr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     tmcr_wjetsTransferFactor = tmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() * hf_fraction_weight['1tag']['W+jets']
     tmcr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, tmcr_wjetsTransferFactor, sr_wjets)
@@ -883,8 +902,8 @@ def model(mass,category,year,grouping):
     # top-antitop data-driven model                                                                                                                                                                  
     ### 
 
-    tmcr_ttHist = background['tmcr'].integrate('process', 'TT').integrate('systematic','nominal')
-    tmcr_ttTemplate = template(tmcr_ttHist, 'recoil')
+    #tmcr_ttHist = background['tmcr'].integrate('process', 'TT').integrate('systematic','nominal')
+    tmcr_ttTemplate = template(background,'TT','nominal','tmcr')
     tmcr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, tmcr_ttTemplate)
     tmcr_ttMC.setParamEffect(lumi, 1.027)
     tmcr_ttMC.setParamEffect(trig_met, 1.01)
@@ -893,8 +912,8 @@ def model(mass,category,year,grouping):
     tmcr_ttMC.setParamEffect(jec, 1.05)
     tmcr_ttMC.setParamEffect(id_mu, 1.02)
     tmcr_ttMC.setParamEffect(iso_mu, 1.02)
-    btagUp=background['tmcr'].integrate('process', 'TT').integrate('systematic','btagUp').values()[()]
-    btagDown=background['tmcr'].integrate('process', 'TT').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'TT','btagUp','tmcr')[0]
+    btagDown=template(background,'TT','btagDown','tmcr')[0]
     tmcr_ttMC.setParamEffect(btag, btagUp, btagDown)
     tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() * deepak15_weight['1tag']['TT']
     tmcr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt)
@@ -904,11 +923,11 @@ def model(mass,category,year,grouping):
     # Other MC-driven processes
     ###
 
-    tmcr_stHist = background['tmcr'].integrate('process', 'ST').integrate('systematic','nominal')
-    tmcr_stTemplate = template(tmcr_stHist, 'recoil')
+    #tmcr_stHist = background['tmcr'].integrate('process', 'ST').integrate('systematic','nominal')
+    tmcr_stTemplate = template(background,'ST','nominal','tmcr')
     tmcr_stBinYields = np.array([rl.IndependentParameter(ch_name+'_st_bin_%d' % i,b,0,tmcr_stTemplate[0].max()*2) for i,b in enumerate(tmcr_stTemplate[0])])
     tmcr_stBinYields = tmcr_stBinYields * deepak15_weight['1tag']['ST']
-    tmcr_stObservable = rl.Observable('recoil', tmcr_stHist.axis('recoil').edges())
+    tmcr_stObservable = rl.Observable('recoil', tmcr_stTemplate[1])
     tmcr_st = rl.ParametericSample(ch_name+'_st', rl.Sample.BACKGROUND, tmcr_stObservable, tmcr_stBinYields)
     tmcr_st.setParamEffect(lumi, 1.027)
     tmcr_st.setParamEffect(trig_met, 1.01)
@@ -917,16 +936,16 @@ def model(mass,category,year,grouping):
     tmcr_st.setParamEffect(jec, 1.05)
     tmcr_st.setParamEffect(id_mu, 1.02)
     tmcr_st.setParamEffect(iso_mu, 1.02)
-    btagUp=background['tmcr'].integrate('process', 'ST').integrate('systematic','btagUp').values()[()]
-    btagDown=background['tmcr'].integrate('process', 'ST').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'ST','btagUp','tmcr')[0]
+    btagDown=template(background,'ST','btagDown','tmcr')[0]
     tmcr_st.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_st)
 
-    tmcr_dyjetsHist = background['tmcr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
-    tmcr_dyjetsTemplate = template(tmcr_dyjetsHist, 'recoil')
+    #tmcr_dyjetsHist = background['tmcr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
+    tmcr_dyjetsTemplate = template(background,'DY+jets','nominal','tmcr')
     tmcr_dyjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_dyjets_bin_%d' % i,b,0,tmcr_dyjetsTemplate[0].max()*2) for i,b in enumerate(tmcr_dyjetsTemplate[0])])
     tmcr_dyjetsBinYields = tmcr_dyjetsBinYields * hf_fraction_weight['1tag']['Z+jets']
-    tmcr_dyjetsObservable = rl.Observable('recoil', tmcr_dyjetsHist.axis('recoil').edges())
+    tmcr_dyjetsObservable = rl.Observable('recoil', tmcr_dyjetsTemplate[1])
     tmcr_dyjets = rl.ParametericSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, tmcr_dyjetsObservable, tmcr_dyjetsBinYields)
     tmcr_dyjets.setParamEffect(lumi, 1.027)
     tmcr_dyjets.setParamEffect(trig_met, 1.01)
@@ -935,16 +954,16 @@ def model(mass,category,year,grouping):
     tmcr_dyjets.setParamEffect(jec, 1.05)
     tmcr_dyjets.setParamEffect(id_mu, 1.02)
     tmcr_dyjets.setParamEffect(iso_mu, 1.02)
-    btagUp=background['tmcr'].integrate('process', 'DY+jets').integrate('systematic','btagUp').values()[()]
-    btagDown=background['tmcr'].integrate('process', 'DY+jets').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'DY+jets','btagUp','tmcr')[0]
+    btagDown=template(background,'DY+jets','btagDown','tmcr')[0]
     tmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_dyjets)
 
-    tmcr_vvHist = background['tmcr'].integrate('process', 'VV').integrate('systematic','nominal')
-    tmcr_vvTemplate = template(tmcr_vvHist, 'recoil')
+    #tmcr_vvHist = background['tmcr'].integrate('process', 'VV').integrate('systematic','nominal')
+    tmcr_vvTemplate = template(background,'VV','nominal','tmcr')
     tmcr_vvBinYields = np.array([rl.IndependentParameter(ch_name+'_vv_bin_%d' % i,b,0,tmcr_vvTemplate[0].max()*2) for i,b in enumerate(tmcr_vvTemplate[0])])
     tmcr_vvBinYields = tmcr_vvBinYields * deepak15_weight['1tag']['VV']
-    tmcr_vvObservable = rl.Observable('recoil', tmcr_vvHist.axis('recoil').edges())
+    tmcr_vvObservable = rl.Observable('recoil', tmcr_vvTemplate[1])
     tmcr_vv = rl.ParametericSample(ch_name+'_vv', rl.Sample.BACKGROUND, tmcr_vvObservable, tmcr_vvBinYields)
     tmcr_vv.setParamEffect(lumi, 1.027)
     tmcr_vv.setParamEffect(trig_met, 1.01)
@@ -953,16 +972,16 @@ def model(mass,category,year,grouping):
     tmcr_vv.setParamEffect(jec, 1.05)
     tmcr_vv.setParamEffect(id_mu, 1.02)
     tmcr_vv.setParamEffect(iso_mu, 1.02)
-    btagUp=background['tmcr'].integrate('process', 'VV').integrate('systematic','btagUp').values()[()]
-    btagDown=background['tmcr'].integrate('process', 'VV').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'VV','btagUp','tmcr')[0]
+    btagDown=template(background,'VV','btagDown','tmcr')[0]
     tmcr_vv.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_vv)
 
-    tmcr_hbbHist = background['tmcr'].integrate('process', 'Hbb').integrate('systematic','nominal')
-    tmcr_hbbTemplate = template(tmcr_hbbHist, 'recoil')
+    #tmcr_hbbHist = background['tmcr'].integrate('process', 'Hbb').integrate('systematic','nominal')
+    tmcr_hbbTemplate = template(background,'Hbb','nominal','tmcr')
     tmcr_hbbBinYields = np.array([rl.IndependentParameter(ch_name+'_hbb_bin_%d' % i,b,0,tmcr_hbbTemplate[0].max()*2) for i,b in enumerate(tmcr_hbbTemplate[0])])
     tmcr_hbbBinYields = tmcr_hbbBinYields * deepak15_weight['1tag']['Hbb']
-    tmcr_hbbObservable = rl.Observable('recoil', tmcr_hbbHist.axis('recoil').edges())
+    tmcr_hbbObservable = rl.Observable('recoil', tmcr_hbbTemplate[1])
     tmcr_hbb = rl.ParametericSample(ch_name+'_hbb', rl.Sample.BACKGROUND, tmcr_hbbObservable, tmcr_hbbBinYields)
     tmcr_hbb.setParamEffect(lumi, 1.027)
     tmcr_hbb.setParamEffect(trig_met, 1.01)
@@ -971,16 +990,16 @@ def model(mass,category,year,grouping):
     tmcr_hbb.setParamEffect(jec, 1.05)
     tmcr_hbb.setParamEffect(id_mu, 1.02)
     tmcr_hbb.setParamEffect(iso_mu, 1.02)
-    btagUp=background['tmcr'].integrate('process', 'Hbb').integrate('systematic','btagUp').values()[()]
-    btagDown=background['tmcr'].integrate('process', 'Hbb').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'Hbb','btagUp','tmcr')[0]
+    btagDown=template(background,'Hbb','btagDown','tmcr')[0]
     tmcr_hbb.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_hbb)
 
-    tmcr_qcdHist = background['tmcr'].integrate('process', 'QCD').integrate('systematic','nominal')
-    tmcr_qcdTemplate = template(tmcr_qcdHist, 'recoil')
+    #tmcr_qcdHist = background['tmcr'].integrate('process', 'QCD').integrate('systematic','nominal')
+    tmcr_qcdTemplate = template(background,'QCD','nominal','tmcr')
     tmcr_qcdBinYields = np.array([rl.IndependentParameter(ch_name+'_qcd_bin_%d' % i,b,0,tmcr_qcdTemplate[0].max()*2) for i,b in enumerate(tmcr_qcdTemplate[0])])
     tmcr_qcdBinYields = tmcr_qcdBinYields * deepak15_weight['1tag']['QCD']
-    tmcr_qcdObservable = rl.Observable('recoil', tmcr_qcdHist.axis('recoil').edges())
+    tmcr_qcdObservable = rl.Observable('recoil', tmcr_qcdTemplate[1])
     tmcr_qcd = rl.ParametericSample(ch_name+'_qcd', rl.Sample.BACKGROUND, tmcr_qcdObservable, tmcr_qcdBinYields)
     tmcr_qcd.setParamEffect(lumi, 1.027)
     tmcr_qcd.setParamEffect(trig_met, 1.01)
@@ -989,8 +1008,8 @@ def model(mass,category,year,grouping):
     tmcr_qcd.setParamEffect(jec, 1.05)
     tmcr_qcd.setParamEffect(id_mu, 1.02)
     tmcr_qcd.setParamEffect(iso_mu, 1.02)
-    btagUp=background['tmcr'].integrate('process', 'QCD').integrate('systematic','btagUp').values()[()]
-    btagDown=background['tmcr'].integrate('process', 'QCD').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'QCD','btagUp','tmcr')[0]
+    btagDown=template(background,'QCD','btagDown','tmcr')[0]
     tmcr_qcd.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_qcd)
 
@@ -1012,14 +1031,15 @@ def model(mass,category,year,grouping):
     # Add data distribution to the channel
     ###
 
-    wecr.setObservation(template(data['wecr'].integrate('process', 'SingleElectron').integrate('systematic','nominal'), 'recoil'))
+    #wecr.setObservation(template(data['wecr'].integrate('process', 'SingleElectron').integrate('systematic','nominal'), 'recoil'))
+    wecr.setObservation(template(data,'SingleElectron','nominal','wecr'))
 
     ###    
     # W(->lnu)+jets data-driven model                
     ### 
 
-    wecr_wjetsHist = background['wecr'].integrate('process', 'W+jets').integrate('systematic','nominal')
-    wecr_wjetsTemplate = template(wecr_wjetsHist, 'recoil')
+    #wecr_wjetsHist = background['wecr'].integrate('process', 'W+jets').integrate('systematic','nominal')
+    wecr_wjetsTemplate = template(background,'W+jets','nominal','wecr')
     wecr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, wecr_wjetsTemplate)
     wecr_wjetsMC.setParamEffect(lumi, 1.027)
     wecr_wjetsMC.setParamEffect(trig_e, 1.01)
@@ -1028,8 +1048,8 @@ def model(mass,category,year,grouping):
     wecr_wjetsMC.setParamEffect(jec, 1.05)
     wecr_wjetsMC.setParamEffect(id_e, 1.02)
     wecr_wjetsMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['wecr'].integrate('process', 'W+jets').integrate('systematic','btagUp').values()[()]
-    btagDown=background['wecr'].integrate('process', 'W+jets').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'W+jets','btagUp','wecr')[0]
+    btagDown=template(background,'W+jets','btagDown','wecr')[0]
     wecr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() * hf_fraction_weight['0tag']['W+jets']
     wecr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets)
@@ -1039,8 +1059,8 @@ def model(mass,category,year,grouping):
     # top-antitop data-driven model                                                                                                                                                                  
     ### 
 
-    wecr_ttHist = background['wecr'].integrate('process', 'TT').integrate('systematic','nominal')
-    wecr_ttTemplate = template(wecr_ttHist, 'recoil')
+    #wecr_ttHist = background['wecr'].integrate('process', 'TT').integrate('systematic','nominal')
+    wecr_ttTemplate = template(background,'TT','nominal','wecr')
     wecr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, wecr_ttTemplate)
     wecr_ttMC.setParamEffect(lumi, 1.027)
     wecr_ttMC.setParamEffect(trig_e, 1.01)
@@ -1049,8 +1069,8 @@ def model(mass,category,year,grouping):
     wecr_ttMC.setParamEffect(jec, 1.05)
     wecr_ttMC.setParamEffect(id_e, 1.02)
     wecr_ttMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['wecr'].integrate('process', 'TT').integrate('systematic','btagUp').values()[()]
-    btagDown=background['wecr'].integrate('process', 'TT').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'TT','btagUp','wecr')[0]
+    btagDown=template(background,'TT','btagDown','wecr')[0]
     wecr_ttMC.setParamEffect(btag, btagUp, btagDown)
     wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation() * deepak15_weight['0tag']['TT']
     wecr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt)
@@ -1060,11 +1080,11 @@ def model(mass,category,year,grouping):
     # Other MC-driven processes
     ###
 
-    wecr_stHist = background['wecr'].integrate('process', 'ST').integrate('systematic','nominal')
-    wecr_stTemplate = template(wecr_stHist, 'recoil')
+    #wecr_stHist = background['wecr'].integrate('process', 'ST').integrate('systematic','nominal')
+    wecr_stTemplate = template(background,'ST','nominal','wecr')
     wecr_stBinYields = np.array([rl.IndependentParameter(ch_name+'_st_bin_%d' % i,b,0,wecr_stTemplate[0].max()*2) for i,b in enumerate(wecr_stTemplate[0])])
     wecr_stBinYields = wecr_stBinYields * deepak15_weight['0tag']['ST']
-    wecr_stObservable = rl.Observable('recoil', wecr_stHist.axis('recoil').edges())
+    wecr_stObservable = rl.Observable('recoil', wecr_stTemplate[1])
     wecr_st = rl.ParametericSample(ch_name+'_st', rl.Sample.BACKGROUND, wecr_stObservable, wecr_stBinYields)
     wecr_st.setParamEffect(lumi, 1.027)
     wecr_st.setParamEffect(trig_e, 1.01)
@@ -1073,16 +1093,16 @@ def model(mass,category,year,grouping):
     wecr_st.setParamEffect(jec, 1.05)
     wecr_st.setParamEffect(id_e, 1.02)
     wecr_st.setParamEffect(reco_e, 1.02)
-    btagUp=background['wecr'].integrate('process', 'ST').integrate('systematic','btagUp').values()[()]
-    btagDown=background['wecr'].integrate('process', 'ST').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'ST','btagUp','wecr')[0]
+    btagDown=template(background,'ST','btagDown','wecr')[0]
     wecr_st.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_st)
 
-    wecr_dyjetsHist = background['wecr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
-    wecr_dyjetsTemplate = template(wecr_dyjetsHist, 'recoil')
+    #wecr_dyjetsHist = background['wecr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
+    wecr_dyjetsTemplate = template(background,'DY+jets','nominal','wecr')
     wecr_dyjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_dyjets_bin_%d' % i,b,0,wecr_dyjetsTemplate[0].max()*2) for i,b in enumerate(wecr_dyjetsTemplate[0])])
     wecr_dyjetsBinYields = wecr_dyjetsBinYields * hf_fraction_weight['0tag']['Z+jets']
-    wecr_dyjetsObservable = rl.Observable('recoil', wecr_dyjetsHist.axis('recoil').edges())
+    wecr_dyjetsObservable = rl.Observable('recoil',wecr_dyjetsTemplate[1])
     wecr_dyjets = rl.ParametericSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, wecr_dyjetsObservable, wecr_dyjetsBinYields)
     wecr_dyjets.setParamEffect(lumi, 1.027)
     wecr_dyjets.setParamEffect(trig_e, 1.01)
@@ -1091,16 +1111,16 @@ def model(mass,category,year,grouping):
     wecr_dyjets.setParamEffect(jec, 1.05)
     wecr_dyjets.setParamEffect(id_e, 1.02)
     wecr_dyjets.setParamEffect(reco_e, 1.02)
-    btagUp=background['wecr'].integrate('process', 'DY+jets').integrate('systematic','btagUp').values()[()]
-    btagDown=background['wecr'].integrate('process', 'DY+jets').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'DY+jets','btagUp','wecr')[0]
+    btagDown=template(background,'DY+jets','btagDown','wecr')[0]
     wecr_dyjets.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_dyjets)
 
-    wecr_vvHist = background['wecr'].integrate('process', 'VV').integrate('systematic','nominal')
-    wecr_vvTemplate = template(wecr_vvHist, 'recoil')
+    #wecr_vvHist = background['wecr'].integrate('process', 'VV').integrate('systematic','nominal')
+    wecr_vvTemplate = template(background,'VV','nominal','wecr')
     wecr_vvBinYields = np.array([rl.IndependentParameter(ch_name+'_vv_bin_%d' % i,b,0,wecr_vvTemplate[0].max()*2) for i,b in enumerate(wecr_vvTemplate[0])])
     wecr_vvBinYields = wecr_vvBinYields * deepak15_weight['0tag']['VV']
-    wecr_vvObservable = rl.Observable('recoil', wecr_vvHist.axis('recoil').edges())
+    wecr_vvObservable = rl.Observable('recoil', wecr_vvTemplate[1])
     wecr_vv = rl.ParametericSample(ch_name+'_vv', rl.Sample.BACKGROUND, wecr_vvObservable, wecr_vvBinYields)
     wecr_vv.setParamEffect(lumi, 1.027)
     wecr_vv.setParamEffect(trig_e, 1.01)
@@ -1109,16 +1129,16 @@ def model(mass,category,year,grouping):
     wecr_vv.setParamEffect(jec, 1.05)
     wecr_vv.setParamEffect(id_e, 1.02)
     wecr_vv.setParamEffect(reco_e, 1.02)
-    btagUp=background['wecr'].integrate('process', 'VV').integrate('systematic','btagUp').values()[()]
-    btagDown=background['wecr'].integrate('process', 'VV').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'VV','btagUp','wecr')[0]
+    btagDown=template(background,'VV','btagDown','wecr')[0]
     wecr_vv.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_vv)
 
-    wecr_hbbHist = background['wecr'].integrate('process', 'Hbb').integrate('systematic','nominal')
-    wecr_hbbTemplate = template(wecr_hbbHist, 'recoil')
+    #wecr_hbbHist = background['wecr'].integrate('process', 'Hbb').integrate('systematic','nominal')
+    wecr_hbbTemplate = template(background,'Hbb','nominal','wecr')
     wecr_hbbBinYields = np.array([rl.IndependentParameter(ch_name+'_hbb_bin_%d' % i,b,0,wecr_hbbTemplate[0].max()*2) for i,b in enumerate(wecr_hbbTemplate[0])])
     wecr_hbbBinYields = wecr_hbbBinYields * deepak15_weight['0tag']['Hbb']
-    wecr_hbbObservable = rl.Observable('recoil', wecr_hbbHist.axis('recoil').edges())
+    wecr_hbbObservable = rl.Observable('recoil', wecr_hbbTemplate[1])
     wecr_hbb = rl.ParametericSample(ch_name+'_hbb', rl.Sample.BACKGROUND, wecr_hbbObservable, wecr_hbbBinYields)
     wecr_hbb.setParamEffect(lumi, 1.027)
     wecr_hbb.setParamEffect(trig_e, 1.01)
@@ -1127,16 +1147,16 @@ def model(mass,category,year,grouping):
     wecr_hbb.setParamEffect(jec, 1.05)
     wecr_hbb.setParamEffect(id_e, 1.02)
     wecr_hbb.setParamEffect(reco_e, 1.02)
-    btagUp=background['wecr'].integrate('process', 'Hbb').integrate('systematic','btagUp').values()[()]
-    btagDown=background['wecr'].integrate('process', 'Hbb').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'Hbb','btagUp','wecr')[0]
+    btagDown=template(background,'Hbb','btagDown','wecr')[0]
     wecr_hbb.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_hbb)
 
-    wecr_qcdHist = background['wecr'].integrate('process', 'QCD').integrate('systematic','nominal')
-    wecr_qcdTemplate = template(wecr_qcdHist, 'recoil')
+    #wecr_qcdHist = background['wecr'].integrate('process', 'QCD').integrate('systematic','nominal')
+    wecr_qcdTemplate = template(background,'QCD','nominal','wecr')
     wecr_qcdBinYields = np.array([rl.IndependentParameter(ch_name+'_qcd_bin_%d' % i,b,0,wecr_qcdTemplate[0].max()*2) for i,b in enumerate(wecr_qcdTemplate[0])])
     wecr_qcdBinYields = wecr_qcdBinYields * deepak15_weight['0tag']['QCD']
-    wecr_qcdObservable = rl.Observable('recoil', wecr_qcdHist.axis('recoil').edges())
+    wecr_qcdObservable = rl.Observable('recoil', wecr_qcdTemplate[1])
     wecr_qcd = rl.ParametericSample(ch_name+'_qcd', rl.Sample.BACKGROUND, wecr_qcdObservable, wecr_qcdBinYields)
     wecr_qcd.setParamEffect(lumi, 1.027)
     wecr_qcd.setParamEffect(trig_e, 1.01)
@@ -1145,8 +1165,8 @@ def model(mass,category,year,grouping):
     wecr_qcd.setParamEffect(jec, 1.05)
     wecr_qcd.setParamEffect(id_e, 1.02)
     wecr_qcd.setParamEffect(reco_e, 1.02)
-    btagUp=background['wecr'].integrate('process', 'QCD').integrate('systematic','btagUp').values()[()]
-    btagDown=background['wecr'].integrate('process', 'QCD').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'QCD','btagUp','wecr')[0]
+    btagDown=template(background,'QCD','btagDown','wecr')[0]
     wecr_qcd.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_qcd)
 
@@ -1168,14 +1188,15 @@ def model(mass,category,year,grouping):
     # Add data distribution to the channel
     ###
 
-    tecr.setObservation(template(data['tecr'].integrate('process', 'SingleElectron').integrate('systematic','nominal'), 'recoil'))
+    #tecr.setObservation(template(data['tecr'].integrate('process', 'SingleElectron').integrate('systematic','nominal'), 'recoil'))
+    tecr.setObservation(template(data,'SingleElectron','nominal','tecr'))
 
     ###    
     # W(->lnu)+jets data-driven model                
     ### 
 
-    tecr_wjetsHist = background['tecr'].integrate('process', 'W+jets').integrate('systematic','nominal')
-    tecr_wjetsTemplate = template(tecr_wjetsHist, 'recoil')
+    #tecr_wjetsHist = background['tecr'].integrate('process', 'W+jets').integrate('systematic','nominal')
+    tecr_wjetsTemplate = template(background,'W+jets','nominal','tecr')
     tecr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, tecr_wjetsTemplate)
     tecr_wjetsMC.setParamEffect(lumi, 1.027)
     tecr_wjetsMC.setParamEffect(trig_e, 1.01)
@@ -1184,8 +1205,8 @@ def model(mass,category,year,grouping):
     tecr_wjetsMC.setParamEffect(jec, 1.05)
     tecr_wjetsMC.setParamEffect(id_e, 1.02)
     tecr_wjetsMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['tecr'].integrate('process', 'W+jets').integrate('systematic','btagUp').values()[()]
-    btagDown=background['tecr'].integrate('process', 'W+jets').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'W+jets','btagUp','tecr')[0]
+    btagDown=template(background,'W+jets','btagDown','tecr')[0]
     tecr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     tecr_wjetsTransferFactor = tecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() * hf_fraction_weight['1tag']['W+jets']
     tecr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, tecr_wjetsTransferFactor, sr_wjets)
@@ -1195,8 +1216,8 @@ def model(mass,category,year,grouping):
     # top-antitop data-driven model                                                                                                                                                                  
     ### 
 
-    tecr_ttHist = background['tecr'].integrate('process', 'TT').integrate('systematic','nominal')
-    tecr_ttTemplate = template(tecr_ttHist, 'recoil')
+    #tecr_ttHist = background['tecr'].integrate('process', 'TT').integrate('systematic','nominal')
+    tecr_ttTemplate = template(background,'TT','nominal','tecr')
     tecr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, tecr_ttTemplate)
     tecr_ttMC.setParamEffect(lumi, 1.027)
     tecr_ttMC.setParamEffect(trig_e, 1.01)
@@ -1205,8 +1226,8 @@ def model(mass,category,year,grouping):
     tecr_ttMC.setParamEffect(jec, 1.05)
     tecr_ttMC.setParamEffect(id_e, 1.02)
     tecr_ttMC.setParamEffect(reco_e, 1.02)
-    btagUp=background['tecr'].integrate('process', 'TT').integrate('systematic','btagUp').values()[()]
-    btagDown=background['tecr'].integrate('process', 'TT').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'TT','btagUp','tecr')[0]
+    btagDown=template(background,'TT','btagDown','tecr')[0]
     tecr_ttMC.setParamEffect(btag, btagUp, btagDown)
     tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation() * deepak15_weight['1tag']['TT']
     tecr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt)
@@ -1216,11 +1237,11 @@ def model(mass,category,year,grouping):
     # Other MC-driven processes
     ###
 
-    tecr_stHist = background['tecr'].integrate('process', 'ST').integrate('systematic','nominal')
-    tecr_stTemplate = template(tecr_stHist, 'recoil')
+    #tecr_stHist = background['tecr'].integrate('process', 'ST').integrate('systematic','nominal')
+    tecr_stTemplate = template(background,'ST','nominal','tecr')
     tecr_stBinYields = np.array([rl.IndependentParameter(ch_name+'_st_bin_%d' % i,b,0,tecr_stTemplate[0].max()*2) for i,b in enumerate(tecr_stTemplate[0])])
     tecr_stBinYields = tecr_stBinYields * deepak15_weight['1tag']['ST']
-    tecr_stObservable = rl.Observable('recoil', tecr_stHist.axis('recoil').edges())
+    tecr_stObservable = rl.Observable('recoil', tecr_stTemplate[1])
     tecr_st = rl.ParametericSample(ch_name+'_st', rl.Sample.BACKGROUND, tecr_stObservable, tecr_stBinYields)
     tecr_st.setParamEffect(lumi, 1.027)
     tecr_st.setParamEffect(trig_e, 1.01)
@@ -1229,16 +1250,16 @@ def model(mass,category,year,grouping):
     tecr_st.setParamEffect(jec, 1.05)
     tecr_st.setParamEffect(id_e, 1.02)
     tecr_st.setParamEffect(reco_e, 1.02)
-    btagUp=background['tecr'].integrate('process', 'ST').integrate('systematic','btagUp').values()[()]
-    btagDown=background['tecr'].integrate('process', 'ST').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'ST','btagUp','tecr')[0]
+    btagDown=template(background,'ST','btagDown','tecr')[0]
     tecr_st.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_st)
 
-    tecr_dyjetsHist = background['tecr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
-    tecr_dyjetsTemplate = template(tecr_dyjetsHist, 'recoil')
+    #tecr_dyjetsHist = background['tecr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
+    tecr_dyjetsTemplate = template(background,'DY+jets','nominal','tecr')
     tecr_dyjetsBinYields = np.array([rl.IndependentParameter(ch_name+'_dyjets_bin_%d' % i,b,0,tecr_dyjetsTemplate[0].max()*2) for i,b in enumerate(tecr_dyjetsTemplate[0])])
     tecr_dyjetsBinYields = tecr_dyjetsBinYields * hf_fraction_weight['1tag']['Z+jets']
-    tecr_dyjetsObservable = rl.Observable('recoil', tecr_dyjetsHist.axis('recoil').edges())
+    tecr_dyjetsObservable = rl.Observable('recoil', tecr_dyjetsTemplate[1])
     tecr_dyjets = rl.ParametericSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, tecr_dyjetsObservable, tecr_dyjetsBinYields)
     tecr_dyjets.setParamEffect(lumi, 1.027)
     tecr_dyjets.setParamEffect(trig_e, 1.01)
@@ -1247,16 +1268,16 @@ def model(mass,category,year,grouping):
     tecr_dyjets.setParamEffect(jec, 1.05)
     tecr_dyjets.setParamEffect(id_e, 1.02)
     tecr_dyjets.setParamEffect(reco_e, 1.02)
-    btagUp=background['tecr'].integrate('process', 'DY+jets').integrate('systematic','btagUp').values()[()]
-    btagDown=background['tecr'].integrate('process', 'DY+jets').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'DY+jets','btagUp','tecr')[0]
+    btagDown=template(background,'DY+jets','btagDown','tecr')[0]
     tecr_dyjets.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_dyjets)
 
-    tecr_vvHist = background['tecr'].integrate('process', 'VV').integrate('systematic','nominal')
-    tecr_vvTemplate = template(tecr_vvHist, 'recoil')
+    #tecr_vvHist = background['tecr'].integrate('process', 'VV').integrate('systematic','nominal')
+    tecr_vvTemplate = template(background,'VV','nominal','tecr')
     tecr_vvBinYields = np.array([rl.IndependentParameter(ch_name+'_vv_bin_%d' % i,b,0,tecr_vvTemplate[0].max()*2) for i,b in enumerate(tecr_vvTemplate[0])])
     tecr_vvBinYields = tecr_vvBinYields * deepak15_weight['1tag']['VV']
-    tecr_vvObservable = rl.Observable('recoil', tecr_vvHist.axis('recoil').edges())
+    tecr_vvObservable = rl.Observable('recoil', tecr_vvTemplate[1])
     tecr_vv = rl.ParametericSample(ch_name+'_vv', rl.Sample.BACKGROUND, tecr_vvObservable, tecr_vvBinYields)
     tecr_vv.setParamEffect(lumi, 1.027)
     tecr_vv.setParamEffect(trig_e, 1.01)
@@ -1265,16 +1286,16 @@ def model(mass,category,year,grouping):
     tecr_vv.setParamEffect(jec, 1.05)
     tecr_vv.setParamEffect(id_e, 1.02)
     tecr_vv.setParamEffect(reco_e, 1.02)
-    btagUp=background['tecr'].integrate('process', 'VV').integrate('systematic','btagUp').values()[()]
-    btagDown=background['tecr'].integrate('process', 'VV').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'VV','btagUp','tecr')[0]
+    btagDown=template(background,'VV','btagDown','tecr')[0]
     tecr_vv.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_vv)
 
-    tecr_hbbHist = background['tecr'].integrate('process', 'Hbb').integrate('systematic','nominal')
-    tecr_hbbTemplate = template(tecr_hbbHist, 'recoil')
+    #tecr_hbbHist = background['tecr'].integrate('process', 'Hbb').integrate('systematic','nominal')
+    tecr_hbbTemplate = template(background,'Hbb','nominal','tecr')
     tecr_hbbBinYields = np.array([rl.IndependentParameter(ch_name+'_hbb_bin_%d' % i,b,0,tecr_hbbTemplate[0].max()*2) for i,b in enumerate(tecr_hbbTemplate[0])])
     tecr_hbbBinYields = tecr_hbbBinYields * deepak15_weight['1tag']['Hbb']
-    tecr_hbbObservable = rl.Observable('recoil', tecr_hbbHist.axis('recoil').edges())
+    tecr_hbbObservable = rl.Observable('recoil', tecr_hbbTemplate[1])
     tecr_hbb = rl.ParametericSample(ch_name+'_hbb', rl.Sample.BACKGROUND, tecr_hbbObservable, tecr_hbbBinYields)
     tecr_hbb.setParamEffect(lumi, 1.027)
     tecr_hbb.setParamEffect(trig_e, 1.01)
@@ -1283,16 +1304,16 @@ def model(mass,category,year,grouping):
     tecr_hbb.setParamEffect(jec, 1.05)
     tecr_hbb.setParamEffect(id_e, 1.02)
     tecr_hbb.setParamEffect(reco_e, 1.02)
-    btagUp=background['tecr'].integrate('process', 'Hbb').integrate('systematic','btagUp').values()[()]
-    btagDown=background['tecr'].integrate('process', 'Hbb').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'Hbb','btagUp','tecr')[0]
+    btagDown=template(background,'Hbb','btagDown','tecr')[0]
     tecr_hbb.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_hbb)
 
-    tecr_qcdHist = background['tecr'].integrate('process', 'QCD').integrate('systematic','nominal')
-    tecr_qcdTemplate = template(tecr_qcdHist, 'recoil')
+    #tecr_qcdHist = background['tecr'].integrate('process', 'QCD').integrate('systematic','nominal')
+    tecr_qcdTemplate = template(background,'QCD','nominal','tecr')
     tecr_qcdBinYields = np.array([rl.IndependentParameter(ch_name+'_qcd_bin_%d' % i,b,0,tecr_qcdTemplate[0].max()*2) for i,b in enumerate(tecr_qcdTemplate[0])])
     tecr_qcdBinYields = tecr_qcdBinYields * deepak15_weight['1tag']['QCD']
-    tecr_qcdObservable = rl.Observable('recoil', tecr_qcdHist.axis('recoil').edges())
+    tecr_qcdObservable = rl.Observable('recoil', tecr_qcdTemplate[1])
     tecr_qcd = rl.ParametericSample(ch_name+'_qcd', rl.Sample.BACKGROUND, tecr_qcdObservable, tecr_qcdBinYields)
     tecr_qcd.setParamEffect(lumi, 1.027)
     tecr_qcd.setParamEffect(trig_e, 1.01)
@@ -1301,8 +1322,8 @@ def model(mass,category,year,grouping):
     tecr_qcd.setParamEffect(jec, 1.05)
     tecr_qcd.setParamEffect(id_e, 1.02)
     tecr_qcd.setParamEffect(reco_e, 1.02)
-    btagUp=background['tecr'].integrate('process', 'QCD').integrate('systematic','btagUp').values()[()]
-    btagDown=background['tecr'].integrate('process', 'QCD').integrate('systematic','btagDown').values()[()]
+    btagUp=template(background,'QCD','btagUp','tecr')[0]
+    btagDown=template(background,'QCD','btagDown','tecr')[0]
     tecr_qcd.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_qcd)
 
@@ -1324,10 +1345,11 @@ def model(mass,category,year,grouping):
     # Add data distribution to the channel
     ###
 
-    zmcr.setObservation(template(data['zmcr'].integrate('process', 'MET').integrate('systematic','nominal'), 'recoil'))
+    #zmcr.setObservation(template(data['zmcr'].integrate('process', 'MET').integrate('systematic','nominal'), 'recoil'))
+    zmcr.setObservation(template(data,'MET','nominal','zmcr'))
 
-    zmcr_dyjetsHist = background['zmcr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
-    zmcr_dyjetsTemplate = template(zmcr_dyjetsHist, 'recoil')
+    #zmcr_dyjetsHist = background['zmcr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
+    zmcr_dyjetsTemplate = template(background,'DY+jets','nominal','zmcr')
     zmcr_dyjetsMC =  rl.TemplateSample(ch_name+'_dyjetsMC', rl.Sample.BACKGROUND, zmcr_dyjetsTemplate)
     zmcr_dyjetsMC.setParamEffect(lumi, 1.027)
     zmcr_dyjetsMC.setParamEffect(trig_met, 1.01)
@@ -1344,27 +1366,26 @@ def model(mass,category,year,grouping):
     # Other MC-driven processes
     ###
 
-    zmcr_ttHist = background['zmcr'].integrate('process', 'TT').integrate('systematic','nominal')
-    zmcr_ttTemplate = template(zmcr_ttHist, 'recoil')
-    zmcr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, zmcr_ttTemplate)
-    zmcr_ttMC.setParamEffect(lumi, 1.027)
-    zmcr_ttMC.setParamEffect(trig_met, 1.01)
-    zmcr_ttMC.setParamEffect(veto_tau, 1.03)
-    zmcr_ttMC.setParamEffect(tt_norm, 1.4)
-    zmcr_ttMC.setParamEffect(jec, 1.05)
-    zmcr_ttMC.setParamEffect(id_mu, 1.02)
-    zmcr_ttMC.setParamEffect(iso_mu, 1.02)
+    #zmcr_ttHist = background['zmcr'].integrate('process', 'TT').integrate('systematic','nominal')
+    zmcr_ttTemplate = template(background,'TT','nominal','zmcr')
     zmcr_ttBinYields = np.array([rl.IndependentParameter(ch_name+'_tt_bin_%d' % i,b,0,zmcr_ttTemplate[0].max()*2) for i,b in enumerate(zmcr_ttTemplate[0])])
     zmcr_ttBinYields = zmcr_ttBinYields * deepak15_weight['notag']['TT']
-    zmcr_ttObservable = rl.Observable('recoil', zmcr_ttHist.axis('recoil').edges())
+    zmcr_ttObservable = rl.Observable('recoil', zmcr_ttTemplate[1])
     zmcr_tt = rl.ParametericSample(ch_name+'_tt', rl.Sample.BACKGROUND, zmcr_ttObservable, zmcr_ttBinYields)
+    zmcr_tt.setParamEffect(lumi, 1.027)
+    zmcr_tt.setParamEffect(trig_met, 1.01)
+    zmcr_tt.setParamEffect(veto_tau, 1.03)
+    zmcr_tt.setParamEffect(tt_norm, 1.4)
+    zmcr_tt.setParamEffect(jec, 1.05)
+    zmcr_tt.setParamEffect(id_mu, 1.02)
+    zmcr_tt.setParamEffect(iso_mu, 1.02)
     zmcr.addSample(zmcr_tt)
 
-    zmcr_stHist = background['zmcr'].integrate('process', 'ST').integrate('systematic','nominal')
-    zmcr_stTemplate = template(zmcr_stHist, 'recoil')
+    #zmcr_stHist = background['zmcr'].integrate('process', 'ST').integrate('systematic','nominal')
+    zmcr_stTemplate = template(background,'ST','nominal','zmcr')
     zmcr_stBinYields = np.array([rl.IndependentParameter(ch_name+'_st_bin_%d' % i,b,0,zmcr_stTemplate[0].max()*2) for i,b in enumerate(zmcr_stTemplate[0])])
     zmcr_stBinYields = zmcr_stBinYields * deepak15_weight['notag']['ST']
-    zmcr_stObservable = rl.Observable('recoil', zmcr_stHist.axis('recoil').edges())
+    zmcr_stObservable = rl.Observable('recoil', zmcr_stTemplate[1])
     zmcr_st = rl.ParametericSample(ch_name+'_st', rl.Sample.BACKGROUND, zmcr_stObservable, zmcr_stBinYields)
     zmcr_st.setParamEffect(lumi, 1.027)
     zmcr_st.setParamEffect(trig_met, 1.01)
@@ -1375,11 +1396,11 @@ def model(mass,category,year,grouping):
     zmcr_st.setParamEffect(iso_mu, 1.02)
     zmcr.addSample(zmcr_st)
 
-    zmcr_vvHist = background['zmcr'].integrate('process', 'VV').integrate('systematic','nominal')
-    zmcr_vvTemplate = template(zmcr_vvHist, 'recoil')
+    #zmcr_vvHist = background['zmcr'].integrate('process', 'VV').integrate('systematic','nominal')
+    zmcr_vvTemplate = template(background,'VV','nominal','zmcr')
     zmcr_vvBinYields = np.array([rl.IndependentParameter(ch_name+'_vv_bin_%d' % i,b,0,zmcr_vvTemplate[0].max()*2) for i,b in enumerate(zmcr_vvTemplate[0])])
     zmcr_vvBinYields = zmcr_vvBinYields * deepak15_weight['notag']['VV']
-    zmcr_vvObservable = rl.Observable('recoil', zmcr_vvHist.axis('recoil').edges())
+    zmcr_vvObservable = rl.Observable('recoil', zmcr_vvTemplate[1])
     zmcr_vv = rl.ParametericSample(ch_name+'_vv', rl.Sample.BACKGROUND, zmcr_vvObservable, zmcr_vvBinYields)
     zmcr_vv.setParamEffect(lumi, 1.027)
     zmcr_vv.setParamEffect(trig_met, 1.01)
@@ -1390,11 +1411,11 @@ def model(mass,category,year,grouping):
     zmcr_vv.setParamEffect(iso_mu, 1.02)
     zmcr.addSample(zmcr_vv)
 
-    zmcr_hbbHist = background['zmcr'].integrate('process', 'Hbb').integrate('systematic','nominal')
-    zmcr_hbbTemplate = template(zmcr_hbbHist, 'recoil')
+    #zmcr_hbbHist = background['zmcr'].integrate('process', 'Hbb').integrate('systematic','nominal')
+    zmcr_hbbTemplate = template(background,'Hbb','nominal','zmcr')
     zmcr_hbbBinYields = np.array([rl.IndependentParameter(ch_name+'_hbb_bin_%d' % i,b,0,zmcr_hbbTemplate[0].max()*2) for i,b in enumerate(zmcr_hbbTemplate[0])])
     zmcr_hbbBinYields = zmcr_hbbBinYields * deepak15_weight['notag']['Hbb']
-    zmcr_hbbObservable = rl.Observable('recoil', zmcr_hbbHist.axis('recoil').edges())
+    zmcr_hbbObservable = rl.Observable('recoil', zmcr_hbbTemplate[1])
     zmcr_hbb = rl.ParametericSample(ch_name+'_hbb', rl.Sample.BACKGROUND, zmcr_hbbObservable, zmcr_hbbBinYields)
     zmcr_hbb.setParamEffect(lumi, 1.027)
     zmcr_hbb.setParamEffect(trig_met, 1.01)
@@ -1423,10 +1444,11 @@ def model(mass,category,year,grouping):
     # Add data distribution to the channel
     ###
 
-    zecr.setObservation(template(data['zecr'].integrate('process', 'SingleElectron').integrate('systematic','nominal'), 'recoil'))
+    #zecr.setObservation(template(data['zecr'].integrate('process', 'SingleElectron').integrate('systematic','nominal'), 'recoil'))
+    zecr.setObservation(template(data,'SingleElectron','nominal','zecr'))
 
-    zecr_dyjetsHist = background['zecr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
-    zecr_dyjetsTemplate = template(zecr_dyjetsHist, 'recoil')
+    #zecr_dyjetsHist = background['zecr'].integrate('process', 'DY+jets').integrate('systematic','nominal')
+    zecr_dyjetsTemplate = template(background,'DY+jets','nominal','zecr')
     zecr_dyjetsMC =  rl.TemplateSample(ch_name+'_dyjetsMC', rl.Sample.BACKGROUND, zecr_dyjetsTemplate)
     zecr_dyjetsMC.setParamEffect(lumi, 1.027)
     zecr_dyjetsMC.setParamEffect(trig_e, 1.01)
@@ -1443,11 +1465,11 @@ def model(mass,category,year,grouping):
     # Other MC-driven processes
     ###
 
-    zecr_ttHist = background['zecr'].integrate('process', 'TT').integrate('systematic','nominal')
-    zecr_ttTemplate = template(zecr_ttHist, 'recoil')
+    #zecr_ttHist = background['zecr'].integrate('process', 'TT').integrate('systematic','nominal')
+    zecr_ttTemplate = template(background,'TT','nominal','zecr')
     zecr_ttBinYields = np.array([rl.IndependentParameter(ch_name+'_tt_bin_%d' % i,b,0,zecr_ttTemplate[0].max()*2) for i,b in enumerate(zecr_ttTemplate[0])])
     zecr_ttBinYields = zecr_ttBinYields * deepak15_weight['notag']['TT']
-    zecr_ttObservable = rl.Observable('recoil', zecr_ttHist.axis('recoil').edges())
+    zecr_ttObservable = rl.Observable('recoil', zecr_ttTemplate[1])
     zecr_tt = rl.ParametericSample(ch_name+'_tt', rl.Sample.BACKGROUND, zecr_ttObservable, zecr_ttBinYields)
     zecr_tt.setParamEffect(lumi, 1.027)
     zecr_tt.setParamEffect(trig_e, 1.01)
@@ -1458,11 +1480,11 @@ def model(mass,category,year,grouping):
     zecr_tt.setParamEffect(reco_e, 1.02)
     zecr.addSample(zecr_tt)
 
-    zecr_stHist = background['zecr'].integrate('process', 'ST').integrate('systematic','nominal')
-    zecr_stTemplate = template(zecr_stHist, 'recoil')
+    #zecr_stHist = background['zecr'].integrate('process', 'ST').integrate('systematic','nominal')
+    zecr_stTemplate = template(background,'ST','nominal','zecr')
     zecr_stBinYields = np.array([rl.IndependentParameter(ch_name+'_st_bin_%d' % i,b,0,zecr_stTemplate[0].max()*2) for i,b in enumerate(zecr_stTemplate[0])])
     zecr_stBinYields = zecr_stBinYields * deepak15_weight['notag']['ST']
-    zecr_stObservable = rl.Observable('recoil', zecr_stHist.axis('recoil').edges())
+    zecr_stObservable = rl.Observable('recoil', zecr_stTemplate[1])
     zecr_st = rl.ParametericSample(ch_name+'_st', rl.Sample.BACKGROUND, zecr_stObservable, zecr_stBinYields)
     zecr_st.setParamEffect(lumi, 1.027)
     zecr_st.setParamEffect(trig_e, 1.01)
@@ -1473,11 +1495,11 @@ def model(mass,category,year,grouping):
     zecr_st.setParamEffect(reco_e, 1.02)
     zecr.addSample(zecr_st)
 
-    zecr_vvHist = background['zecr'].integrate('process', 'VV').integrate('systematic','nominal')
-    zecr_vvTemplate = template(zecr_vvHist, 'recoil')
+    #zecr_vvHist = background['zecr'].integrate('process', 'VV').integrate('systematic','nominal')
+    zecr_vvTemplate = template(background,'VV','nominal','zecr')
     zecr_vvBinYields = np.array([rl.IndependentParameter(ch_name+'_vv_bin_%d' % i,b,0,zecr_vvTemplate[0].max()*2) for i,b in enumerate(zecr_vvTemplate[0])])
     zecr_vvBinYields = zecr_vvBinYields * deepak15_weight['notag']['VV']
-    zecr_vvObservable = rl.Observable('recoil', zecr_vvHist.axis('recoil').edges())
+    zecr_vvObservable = rl.Observable('recoil', zecr_vvTemplate[1])
     zecr_vv = rl.ParametericSample(ch_name+'_vv', rl.Sample.BACKGROUND, zecr_vvObservable, zecr_vvBinYields)
     zecr_vv.setParamEffect(lumi, 1.027)
     zecr_vv.setParamEffect(trig_e, 1.01)
@@ -1488,11 +1510,11 @@ def model(mass,category,year,grouping):
     zecr_vv.setParamEffect(reco_e, 1.02)
     zecr.addSample(zecr_vv)
 
-    zecr_hbbHist = background['zecr'].integrate('process', 'Hbb').integrate('systematic','nominal')
-    zecr_hbbTemplate = template(zecr_hbbHist, 'recoil')
+    #zecr_hbbHist = background['zecr'].integrate('process', 'Hbb').integrate('systematic','nominal')
+    zecr_hbbTemplate = template(background,'Hbb','nominal','zecr')
     zecr_hbbBinYields = np.array([rl.IndependentParameter(ch_name+'_hbb_bin_%d' % i,b,0,zecr_hbbTemplate[0].max()*2) for i,b in enumerate(zecr_hbbTemplate[0])])
     zecr_hbbBinYields = zecr_hbbBinYields * deepak15_weight['notag']['Hbb']
-    zecr_hbbObservable = rl.Observable('recoil', zecr_hbbHist.axis('recoil').edges())
+    zecr_hbbObservable = rl.Observable('recoil', zecr_hbbTemplate[1])
     zecr_hbb = rl.ParametericSample(ch_name+'_hbb', rl.Sample.BACKGROUND, zecr_hbbObservable, zecr_hbbBinYields)
     zecr_hbb.setParamEffect(lumi, 1.027)
     zecr_hbb.setParamEffect(trig_e, 1.01)
@@ -1521,10 +1543,11 @@ def model(mass,category,year,grouping):
     # Add data distribution to the channel
     ###
 
-    gcr.setObservation(template(data['gcr'].integrate('process', 'SinglePhoton').integrate('systematic','nominal'), 'recoil'))
+    #gcr.setObservation(template(data['gcr'].integrate('process', 'SinglePhoton').integrate('systematic','nominal'), 'recoil'))
+    gcr.setObservation(template(data,'SinglePhoton','nominal','gcr'))
 
-    gcr_gjetsHist = background['gcr'].integrate('process', 'G+jets').integrate('systematic','nominal')
-    gcr_gjetsTemplate = template(gcr_gjetsHist, 'recoil')
+    #gcr_gjetsHist = background['gcr'].integrate('process', 'G+jets').integrate('systematic','nominal')
+    gcr_gjetsTemplate = template(background,'G+jets','nominal','gcr')
     gcr_gjetsMC =  rl.TemplateSample(ch_name+'_gjetsMC', rl.Sample.BACKGROUND, gcr_gjetsTemplate)
     gcr_gjetsMC.setParamEffect(lumi, 1.027)
     gcr_gjetsMC.setParamEffect(trig_pho, 1.01)
@@ -1536,11 +1559,11 @@ def model(mass,category,year,grouping):
     gcr_gjets = rl.TransferFactorSample(ch_name+'_gjets', rl.Sample.BACKGROUND, gcr_gjetsTransferFactor, sr_zjets)
     gcr.addSample(gcr_gjets)
 
-    gcr_qcdHist = background['gcr'].integrate('process', 'QCD').integrate('systematic','nominal')
-    gcr_qcdTemplate = template(gcr_qcdHist, 'recoil')
+    #gcr_qcdHist = background['gcr'].integrate('process', 'QCD').integrate('systematic','nominal')
+    gcr_qcdTemplate = template(background,'QCD','nominal','gcr')
     gcr_qcdBinYields = np.array([rl.IndependentParameter(ch_name+'_qcd_bin_%d' % i,b,0,gcr_qcdTemplate[0].max()*2) for i,b in enumerate(gcr_qcdTemplate[0])])
     gcr_qcdBinYields = gcr_qcdBinYields * deepak15_weight['notag']['QCD']
-    gcr_qcdObservable = rl.Observable('recoil', gcr_qcdHist.axis('recoil').edges())
+    gcr_qcdObservable = rl.Observable('recoil', gcr_qcdTemplate[1])
     gcr_qcd = rl.ParametericSample(ch_name+'_qcd', rl.Sample.BACKGROUND, gcr_qcdObservable, gcr_qcdBinYields)
     gcr_qcd.setParamEffect(lumi, 1.027)
     gcr_qcd.setParamEffect(trig_pho, 1.01)
@@ -1556,17 +1579,14 @@ if __name__ == '__main__':
     if not os.path.exists('datacards'):
         os.mkdir('datacards')
     parser = OptionParser()
-    parser.add_option('-m', '--mass', help='mass', dest='mass', default='')
     parser.add_option('-g', '--category', help='category', dest='category', default='')
     parser.add_option('-y', '--year', help='year', dest='year', default='')
     (options, args) = parser.parse_args()
     grouping=False
     model_dict={}
-    for mass in ['mass0','mass1','mass2','mass3','mass4']:
-        if options.mass and options.mass not in mass: continue
-        for category in ['monojet','monohs']:
-            if options.category and options.category in category: continue
-            with open('data/darkhiggs'+options.year+'-'+mass+'-'+category+'.model', "wb") as fout:
-                pickle.dump(model(mass,category,options.year,grouping), fout, protocol=2)
+    for category in ['monojet','monohs']:
+        if options.category and options.category in category: continue
+        with open('data/darkhiggs'+options.year+'-'+category+'.model', "wb") as fout:
+            pickle.dump(model(category,options.year,grouping), fout, protocol=2)
             #save(model(mass,category,options.year,grouping), 'data/darkhiggs'+options.year+'-'+mass+'-'+category+'.model')
 
