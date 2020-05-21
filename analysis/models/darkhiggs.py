@@ -19,8 +19,8 @@ rl.ParametericSample.PreferRooParametricHist = False
 def model(category,year,mass,grouping):
     
     def template(dictionary, process, systematic, region):
-        print('considering',region)
-        print(dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()])
+        print('Generating template for',process,'in',region)
+        #print(dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()])
         output=dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()]
         binning=dictionary[region].integrate('process', process).integrate('systematic',systematic).axis('recoil').edges()
         return (output, np.arange(output.size+1), 'recoil')
@@ -316,8 +316,8 @@ def model(category,year,mass,grouping):
         #deepak15_weight['notag'][process]=np.array([])
         for gentype in fractions[process].keys():
             if gentype not in gentypes[process]: continue
+            print('Extracting',gentype,'fraction for',process )
             if mass is not None:
-                print('Extracting',gentype,'fraction for',process )
                 try:
                     weight_0tag
                 except:
@@ -460,22 +460,22 @@ def model(category,year,mass,grouping):
         if mass is None and 'mass' in str(r): continue
         if mass is not None and mass not in str(r): continue
         m=mass
-        if mass None: m='nomass'
+        if mass is None: m='nomass'
         print('data',r,category,m)
         data[str(r).split("_")[0]]=data_hists['recoil'].integrate('region',r).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[m]))
 
     background = {}
     for r in data.keys():
         m=mass
-        if mass None: m='nomass'
-        print('bkg',r,category,mass)
+        if mass is None: m='nomass'
+        print('bkg',r,category,m)
         background[r]=bkg_hists['recoil'].integrate('region',str(r)).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[m]))
 
     signal = {}
     for r in data.keys():
         m=mass
-        if mass None: m='nomass'
-        print('sig',r,category,mass)
+        if mass is None: m='nomass'
+        print('sig',r,category,m)
         signal[r]=signal_hists['recoil'].integrate('region',str(r)).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[m]))
 
     ###
@@ -686,7 +686,7 @@ def model(category,year,mass,grouping):
     sr_qcd.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_qcd)
 
-    for s in signal['sr_mass0'].identifiers('process'):
+    for s in signal['sr'].identifiers('process'):
         print(s)
         #sr_signalHist = signal['sr'].integrate('process', s).integrate('systematic','nominal')
         sr_signalTemplate = template(signal,s,'nominal','sr')
@@ -1601,5 +1601,5 @@ if __name__ == '__main__':
             for mass in ['mass0','mass1','mass2','mass3','mass4']:
                 if options.mass and options.mass not in mass: continue
                 with open('data/darkhiggs'+options.year+'-'+category+'-'+mass+'.model', "wb") as fout:
-                pickle.dump(model(category,options.year,mass,grouping), fout, protocol=2)
+                    pickle.dump(model(category,options.year,mass,grouping), fout, protocol=2)
 
