@@ -16,18 +16,17 @@ from coffea.util import load, save
 rl.util.install_roofit_helpers()
 rl.ParametericSample.PreferRooParametricHist = False
 
-def model(category,year,grouping):
+def model(category,year,mass,grouping):
     
     def template(dictionary, process, systematic, region):
-        output=np.array([])
-        for key in dictionary.keys():
-            if region not in key: continue
-            print('considering',key)
-            print(dictionary[key].integrate('process', process).integrate('systematic',systematic).values()[()])
-            output=np.concatenate((output,dictionary[key].integrate('process', process).integrate('systematic',systematic).values()[()]))
-        return (output, np.arange(output.size+1), 'recoil')
+        print('Generating template for',process,'in',region)
+        #print(dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()])
+        output=dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()]
+        binning=dictionary[region].integrate('process', process).integrate('systematic',systematic).axis('recoil').edges()
+        return (output, binning, 'recoil')
 
     model_id='-'.join([year, category])
+    if mass is not None: model_id='-'.join([year, category, mass])
     model = rl.Model('darkhiggs'+model_id)
 
     whf_fraction=0.18
@@ -254,9 +253,6 @@ def model(category,year,grouping):
         'G+jets':0.8820319256963761
     }
 
-    with open('data/signal_fractions.json') as fin:
-        signal_fractions = json.load(fin)
-
     gentypes = {
         'Hbb': ['xbb','vqq','wcq','b','bb','bc','garbage','other','tbcq','tbqq'],
         'Z+HF': ['b','bb','c','cc','garbage','other'],
@@ -275,44 +271,53 @@ def model(category,year,grouping):
         'MonoZ': ['vqq','c','cc','other','zcc']
     }
         
+    with open('data/signal_fractions.json') as fin:
+        signal_fractions = json.load(fin)
+
+    with open('data/signal_fractions_no_mass.json') as fin:
+        signal_fractions_no_mass = json.load(fin)
+
     signal_weight={}
     for process in signal_fractions.keys():
-        signal_weight[process]=np.array([])
-        for mass in ['mass0','mass1','mass2','mass3','mass4']:
-            for gentype in signal_fractions[process].keys():
-                if gentype not in gentypes[process.split('_')[0]]: continue
-                print('Extracting',gentype,'fraction for',process)
+        #signal_weight[process]=np.array([])
+        for gentype in signal_fractions[process].keys():
+            if gentype not in gentypes[process.split('_')[0]]: continue
+            print('Extracting',gentype,'fraction for',process)
+            if mass is not None:
                 try:
                     weight
                 except:
                     weight = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(signal_fractions[process][gentype][mass])
                 else:
                     weight += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(signal_fractions[process][gentype][mass])
-                if 'monojet' in category:
-                    try:
-                        weight
-                    except:
-                        weight = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(signal_fractions[process][gentype][mass])
-                    else:
-                        weight += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(signal_fractions[process][gentype][mass])
+            else:
+                try:
+                    weight
+                except:
+                    weight = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(signal_fractions_no_mass[process][gentype])
+                else:
+                    weight += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(signal_fractions_no_mass[process][gentype])
 
-            signal_weight[process] = np.concatenate((signal_weight[process], weight))
+        signal_weight[process] = weight #np.concatenate((signal_weight[process], weight))
                 
     with open('data/fractions.json') as fin:
         fractions = json.load(fin)
+
+    with open('data/fractions_no_mass.json') as fin:
+        fractions_no_mass = json.load(fin)
 
     deepak15_weight={}
     deepak15_weight['0tag']={}
     deepak15_weight['1tag']={}
     deepak15_weight['notag']={}
     for process in ['Hbb','VV','ST','QCD','TT','Z+HF','Z+LF','W+HF','W+LF','G+HF','G+LF']:
-        deepak15_weight['0tag'][process]=np.array([])
-        deepak15_weight['1tag'][process]=np.array([])
-        deepak15_weight['notag'][process]=np.array([])
-        for mass in ['mass0','mass1','mass2','mass3','mass4']:
-            for gentype in fractions[process].keys():
-                if gentype not in gentypes[process]: continue
-                print('Extracting',gentype,'fraction for',process )
+        #deepak15_weight['0tag'][process]=np.array([])
+        #deepak15_weight['1tag'][process]=np.array([])
+        #deepak15_weight['notag'][process]=np.array([])
+        for gentype in fractions[process].keys():
+            if gentype not in gentypes[process]: continue
+            print('Extracting',gentype,'fraction for',process )
+            if mass is not None:
                 try:
                     weight_0tag
                 except:
@@ -331,30 +336,29 @@ def model(category,year,grouping):
                     weight_notag = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(fractions[process][gentype][mass])
                 else:
                     weight_notag += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(fractions[process][gentype][mass])
-                
-                if 'monojet' in category: 
-                    try:
-                        weight_0tag
-                    except:
-                        weight_0tag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
-                    else:
-                        weight_0tag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
-                    try:
-                        weight_1tag
-                    except:
-                        weight_1tag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
-                    else:
-                        weight_1tag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
-                    try:
-                        weight_notag
-                    except:
-                        weight_notag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(fractions[process][gentype][mass])
-                    else:
-                        weight_notag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(fractions[process][gentype][mass])
+            else:
+                try:
+                    weight_0tag
+                except:
+                    weight_0tag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions_no_mass[process][gentype])
+                else:
+                    weight_0tag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions_no_mass[process][gentype])
+                try:
+                    weight_1tag
+                except:
+                    weight_1tag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions_no_mass[process][gentype])
+                else:
+                    weight_1tag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions_no_mass[process][gentype])
+                try:
+                    weight_notag
+                except:
+                    weight_notag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(fractions_no_mass[process][gentype])
+                else:
+                    weight_notag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(fractions_no_mass[process][gentype])
 
-            deepak15_weight['0tag'][process]=np.concatenate((deepak15_weight['0tag'][process],np.nan_to_num(weight_0tag/deepak4_0tag_process_eff[process])))
-            deepak15_weight['1tag'][process]=np.concatenate((deepak15_weight['1tag'][process],np.nan_to_num(weight_1tag/(1 - deepak4_0tag_process_eff[process]))))
-            deepak15_weight['notag'][process]=np.concatenate((deepak15_weight['notag'][process],weight_notag))
+        deepak15_weight['0tag'][process]=np.nan_to_num(weight_0tag/deepak4_0tag_process_eff[process])
+        deepak15_weight['1tag'][process]=np.nan_to_num(weight_1tag/(1 - deepak4_0tag_process_eff[process]))
+        deepak15_weight['notag'][process]=weight_notag
 
     hf_fraction_weight={}
     hf_fraction_weight['0tag']={}
@@ -442,7 +446,8 @@ def model(category,year,grouping):
         'mass1': data_hists['recoil'].integrate('gentype','data').integrate('systematic','nominal').integrate('region','sr_mass1').integrate('process','MET').axis('recoil').edges(),
         'mass2': data_hists['recoil'].integrate('gentype','data').integrate('systematic','nominal').integrate('region','sr_mass2').integrate('process','MET').axis('recoil').edges(),
         'mass3': data_hists['recoil'].integrate('gentype','data').integrate('systematic','nominal').integrate('region','sr_mass3').integrate('process','MET').axis('recoil').edges(),
-        'mass4': data_hists['recoil'].integrate('gentype','data').integrate('systematic','nominal').integrate('region','sr_mass4').integrate('process','MET').axis('recoil').edges()
+        'mass4': data_hists['recoil'].integrate('gentype','data').integrate('systematic','nominal').integrate('region','sr_mass4').integrate('process','MET').axis('recoil').edges(),
+        'nomass': data_hists['recoil'].integrate('gentype','data').integrate('systematic','nominal').integrate('region','sr').integrate('process','MET').axis('recoil').edges()
     }    
 
     ###
@@ -452,24 +457,26 @@ def model(category,year,grouping):
     data = {}
     for r in data_hists['recoil'].identifiers('region'):
         if category not in str(r): continue
-        for mass in ['mass0','mass1','mass2','mass3','mass4']:
-            if mass not in str(r): continue
-            print('data',r,category,mass)
-            data[str(r).split("_")[0]+'_'+mass]=data_hists['recoil'].integrate('region',r).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[mass]))
+        if mass is None and 'mass' in str(r): continue
+        if mass is not None and mass not in str(r): continue
+        m=mass
+        if mass is None: m='nomass'
+        print('data',r,category,m)
+        data[str(r).split("_")[0]]=data_hists['recoil'].integrate('region',r).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[m]))
 
     background = {}
     for r in data.keys():
-        for mass in ['mass0','mass1','mass2','mass3','mass4']:
-            if mass not in str(r): continue
-            print('bkg',r,category,mass)
-            background[r]=bkg_hists['recoil'].integrate('region',str(r).split("_")[0]).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[mass]))
+        m=mass
+        if mass is None: m='nomass'
+        print('bkg',r,category,m)
+        background[r]=bkg_hists['recoil'].integrate('region',str(r)).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[m]))
 
     signal = {}
     for r in data.keys():
-        for mass in ['mass0','mass1','mass2','mass3','mass4']:
-            if mass not in str(r): continue
-            print('sig',r,category,mass)
-            signal[r]=signal_hists['recoil'].integrate('region',str(r).split("_")[0]).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[mass]))
+        m=mass
+        if mass is None: m='nomass'
+        print('sig',r,category,m)
+        signal[r]=signal_hists['recoil'].integrate('region',str(r)).integrate('gentype').rebin('recoil',hist.Bin('recoil','Hadronic recoil',binning[m]))
 
     ###
     ###
@@ -679,7 +686,7 @@ def model(category,year,grouping):
     sr_qcd.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_qcd)
 
-    for s in signal['sr_mass0'].identifiers('process'):
+    for s in signal['sr'].identifiers('process'):
         print(s)
         #sr_signalHist = signal['sr'].integrate('process', s).integrate('systematic','nominal')
         sr_signalTemplate = template(signal,s,'nominal','sr')
@@ -1581,12 +1588,18 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-g', '--category', help='category', dest='category', default='')
     parser.add_option('-y', '--year', help='year', dest='year', default='')
+    parser.add_option('-m', '--mass', help='mass', dest='mass', default=None)
     (options, args) = parser.parse_args()
     grouping=False
     model_dict={}
     for category in ['monojet','monohs']:
-        if options.category and options.category in category: continue
-        with open('data/darkhiggs'+options.year+'-'+category+'.model', "wb") as fout:
-            pickle.dump(model(category,options.year,grouping), fout, protocol=2)
-            #save(model(mass,category,options.year,grouping), 'data/darkhiggs'+options.year+'-'+mass+'-'+category+'.model')
+        if options.category and options.category not in category: continue
+        if category=='monojet':
+            with open('data/darkhiggs'+options.year+'-'+category+'.model', "wb") as fout:
+                pickle.dump(model(category,options.year,options.mass,grouping), fout, protocol=2)
+        elif category=='monohs':
+            for mass in ['mass0','mass1','mass2','mass3','mass4']:
+                if options.mass and options.mass not in mass: continue
+                with open('data/darkhiggs'+options.year+'-'+category+'-'+mass+'.model', "wb") as fout:
+                    pickle.dump(model(category,options.year,mass,grouping), fout, protocol=2)
 
