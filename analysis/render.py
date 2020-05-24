@@ -10,7 +10,7 @@ import pickle
 import cloudpickle
 import ROOT
 import gzip
-
+sys.setrecursionlimit(1500)
 rl.util.install_roofit_helpers()
 rl.ParametericSample.PreferRooParametricHist = False
 
@@ -25,7 +25,6 @@ def render(modelname):
 
     model_arr = []
     for ch in model:
-        #if 'gcr' not in ch.name: continue
         print('generating model for channel',ch.name)
         small_model = rl.Model('darkhiggs_'+ch.name.encode("ascii"))
         small_model.addChannel(model[ch.name])
@@ -33,7 +32,7 @@ def render(modelname):
     print(model_arr)
     print('Rendering')
 
-    with concurrent.futures.ProcessPoolExecutor(max_workers=len(model_arr)) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=16) as executor:
         futures = set()
         futures.update(executor.submit(futurerender,model_arr[i], modelname) for i in range(0,len(model_arr)))
         try:
@@ -51,7 +50,7 @@ def render(modelname):
         except:
             for job in futures: job.cancel()
             raise
-    
+
 if __name__ == '__main__':
     if not os.path.exists('datacards'):
         os.mkdir('datacards')
