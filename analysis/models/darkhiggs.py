@@ -33,9 +33,9 @@ def model(category,year,mass,grouping):
     zhf_fraction=0.10
     ghf_fraction=0.12
 
-    whf_k = rl.IndependentParameter('whf_k', 1., 0, 1/whf_fraction)
-    zhf_k = rl.IndependentParameter('zhf_k', 1., 0, 1/zhf_fraction)
-    ghf_k = rl.IndependentParameter('ghf_k', 1., 0, 1/ghf_fraction)
+    whf_k = rl.IndependentParameter('whf_k', 1., 0.6, 1.4)
+    zhf_k = rl.IndependentParameter('zhf_k', 1., 0.6, 1.4)
+    ghf_k = rl.IndependentParameter('ghf_k', 1., 0.6, 1.4)
 
     deepak15_pass_eff = {
         'xbb'    : 0.88, 
