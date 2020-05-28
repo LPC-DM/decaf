@@ -53,19 +53,19 @@ def model(category,year,mass,grouping):
         'zcc'    : 0.40
     }
     deepak15_pass_sf = {
-        'xbb'    : rl.IndependentParameter('xbb_sf_'+year, 1., 0, 1/deepak15_pass_eff['xbb']), 
-        'vqq'    : rl.IndependentParameter('vqq_sf_'+year, 1., 0, 1/deepak15_pass_eff['vqq']),
-        'wcq'    : rl.IndependentParameter('wcq_sf_'+year, 1., 0, 1/deepak15_pass_eff['wcq']),
-        'b'      : rl.IndependentParameter('b_sf_'+year, 1., 0, 1/deepak15_pass_eff['b']),
-        'bb'     : rl.IndependentParameter('bb_sf_'+year, 1., 0, 1/deepak15_pass_eff['bb']), 
-        'bc'     : rl.IndependentParameter('bc_sf_'+year, 1., 0, 1/deepak15_pass_eff['bc']),
-        'c'      : rl.IndependentParameter('c_sf_'+year, 1., 0, 1/deepak15_pass_eff['c']),
-        'cc'     : rl.IndependentParameter('cc_sf_'+year, 1., 0, 1/deepak15_pass_eff['cc']),
+        'xbb'    : rl.IndependentParameter('xbb_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['xbb']), 
+        'vqq'    : rl.IndependentParameter('vqq_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['vqq']),
+        'wcq'    : rl.IndependentParameter('wcq_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['wcq']),
+        'b'      : rl.IndependentParameter('b_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['b']),
+        'bb'     : rl.IndependentParameter('bb_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['bb']), 
+        'bc'     : rl.IndependentParameter('bc_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['bc']),
+        'c'      : rl.IndependentParameter('c_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['c']),
+        'cc'     : rl.IndependentParameter('cc_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['cc']),
         'garbage': 1.,
-        'other'  : rl.IndependentParameter('other_sf_'+year, 1., 0, 1/deepak15_pass_eff['other']),
-        'tbcq'   : rl.IndependentParameter('tbcq_sf_'+year, 1., 0, 1/deepak15_pass_eff['tbcq']),
-        'tbqq'   : rl.IndependentParameter('tbqq_sf_'+year, 1., 0, 1/deepak15_pass_eff['tbqq']),
-        'zcc'    : rl.IndependentParameter('zcc_sf_'+year, 1., 0, 1/deepak15_pass_eff['zcc'])
+        'other'  : rl.IndependentParameter('other_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['other']),
+        'tbcq'   : rl.IndependentParameter('tbcq_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['tbcq']),
+        'tbqq'   : rl.IndependentParameter('tbqq_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['tbqq']),
+        'zcc'    : rl.IndependentParameter('zcc_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['zcc'])
     }
     
     deepak4_0tag_gentype_eff = {
