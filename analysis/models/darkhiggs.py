@@ -20,7 +20,6 @@ def model(category,year,mass,grouping):
     
     def template(dictionary, process, systematic, region):
         print('Generating template for',process,'in',region)
-        #print(dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()])
         output=dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()]
         binning=dictionary[region].integrate('process', process).integrate('systematic',systematic).axis('recoil').edges()
         return (output, binning, 'recoil')
@@ -300,65 +299,30 @@ def model(category,year,mass,grouping):
 
         signal_weight[process] = weight #np.concatenate((signal_weight[process], weight))
                 
-    with open('data/fractions.json') as fin:
-        fractions = json.load(fin)
+    with open('data/abs_bkg_fractions_tot.json') as fin:
+        abs_fractions = json.load(fin)
 
-    with open('data/fractions_no_mass.json') as fin:
-        fractions_no_mass = json.load(fin)
+    with open('data/mass_bkg_fractions_variation_tot.json') as fin:
+        mass_modulation = json.load(fin)
 
     deepak15_weight={}
     deepak15_weight['0tag']={}
     deepak15_weight['1tag']={}
     deepak15_weight['notag']={}
     for process in ['Hbb','VV','ST','QCD','TT','Z+HF','Z+LF','W+HF','W+LF','G+HF','G+LF']:
-        #deepak15_weight['0tag'][process]=np.array([])
-        #deepak15_weight['1tag'][process]=np.array([])
-        #deepak15_weight['notag'][process]=np.array([])
-        for gentype in fractions[process].keys():
+        deepak15_weight['0tag'][process]=0.
+        deepak15_weight['1tag'][process]=0.
+        deepak15_weight['notag'][process]=0.
+        for gentype in abs_fractions[process].keys():
             if gentype not in gentypes[process]: continue
             print('Extracting',gentype,'fraction for',process )
-            if mass is not None:
-                try:
-                    weight_0tag
-                except:
-                    weight_0tag = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
-                else:
-                    weight_0tag += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions[process][gentype][mass])
-                try:
-                    weight_1tag
-                except:
-                    weight_1tag = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
-                else:
-                    weight_1tag += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions[process][gentype][mass])
-                try:
-                    weight_notag
-                except:
-                    weight_notag = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(fractions[process][gentype][mass])
-                else:
-                    weight_notag += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(fractions[process][gentype][mass])
-            else:
-                try:
-                    weight_0tag
-                except:
-                    weight_0tag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions_no_mass[process][gentype])
-                else:
-                    weight_0tag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*np.array(fractions_no_mass[process][gentype])
-                try:
-                    weight_1tag
-                except:
-                    weight_1tag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions_no_mass[process][gentype])
-                else:
-                    weight_1tag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*(1 - deepak4_0tag_gentype_eff[process][gentype])*np.array(fractions_no_mass[process][gentype])
-                try:
-                    weight_notag
-                except:
-                    weight_notag = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(fractions_no_mass[process][gentype])
-                else:
-                    weight_notag += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(fractions_no_mass[process][gentype])
-
-        deepak15_weight['0tag'][process]=np.nan_to_num(weight_0tag/deepak4_0tag_process_eff[process])
-        deepak15_weight['1tag'][process]=np.nan_to_num(weight_1tag/(1 - deepak4_0tag_process_eff[process]))
-        deepak15_weight['notag'][process]=weight_notag
+            fraction=abs_fractions[process][gentype]
+            if mass is not None: fraction*=mass_modulation[process][gentype][mass]
+            deepak15_weight['0tag'][process] += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*deepak4_0tag_gentype_eff[process][gentype]*fraction
+            deepak15_weight['1tag'][process] += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*(1 - deepak4_0tag_gentype_eff[process][gentype])*fraction
+            deepak15_weight['notag'][process] += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*fraction
+        deepak15_weight['0tag'][process]=np.nan_to_num(deepak15_weight['0tag'][process]/deepak4_0tag_process_eff[process])
+        deepak15_weight['1tag'][process]=np.nan_to_num(deepak15_weight['1tag'][process]/(1 - deepak4_0tag_process_eff[process]))
 
     hf_fraction_weight={}
     hf_fraction_weight['0tag']={}
@@ -368,14 +332,14 @@ def model(category,year,mass,grouping):
     hf_fraction_weight['0tag']['W+jets'] = np.nan_to_num(deepak15_weight['0tag']['W+HF']*(deepak4_0tag_process_eff['W+HF']/deepak4_0tag_process_eff['W+jets'])*whf_k*whf_fraction)
     hf_fraction_weight['0tag']['W+jets'] += np.nan_to_num(deepak15_weight['0tag']['W+LF']*(deepak4_0tag_process_eff['W+LF']/deepak4_0tag_process_eff['W+jets'])*(1 - whf_k*whf_fraction))
     hf_fraction_weight['1tag']['W+jets'] = np.nan_to_num(deepak15_weight['1tag']['W+HF']*((1-deepak4_0tag_process_eff['W+HF'])/(1-deepak4_0tag_process_eff['W+jets']))*whf_k*whf_fraction) 
-    hf_fraction_weight['1tag']['W+jets'] += np.nan_to_num(deepak15_weight['1tag']['W+LF']*((1-deepak4_0tag_process_eff['W+HF'])/(1-deepak4_0tag_process_eff['W+jets']))*(1 - whf_k*whf_fraction))
+    hf_fraction_weight['1tag']['W+jets'] += np.nan_to_num(deepak15_weight['1tag']['W+LF']*((1-deepak4_0tag_process_eff['W+LF'])/(1-deepak4_0tag_process_eff['W+jets']))*(1 - whf_k*whf_fraction))
     hf_fraction_weight['notag']['W+jets'] = deepak15_weight['notag']['W+HF']*whf_k*whf_fraction
     hf_fraction_weight['notag']['W+jets'] += deepak15_weight['notag']['W+LF']*(1 - whf_k*whf_fraction)
 
     hf_fraction_weight['0tag']['Z+jets'] = np.nan_to_num(deepak15_weight['0tag']['Z+HF']*(deepak4_0tag_process_eff['Z+HF']/deepak4_0tag_process_eff['Z+jets'])*zhf_k*zhf_fraction)
     hf_fraction_weight['0tag']['Z+jets'] += np.nan_to_num(deepak15_weight['0tag']['Z+LF']*(deepak4_0tag_process_eff['Z+LF']/deepak4_0tag_process_eff['Z+jets'])*(1 - zhf_k*zhf_fraction))
     hf_fraction_weight['1tag']['Z+jets'] = np.nan_to_num(deepak15_weight['1tag']['Z+HF']*((1-deepak4_0tag_process_eff['Z+HF'])/(1-deepak4_0tag_process_eff['Z+jets']))*zhf_k*zhf_fraction) 
-    hf_fraction_weight['1tag']['Z+jets'] += np.nan_to_num(deepak15_weight['1tag']['Z+LF']*((1-deepak4_0tag_process_eff['Z+HF'])/(1-deepak4_0tag_process_eff['Z+jets']))*(1 - zhf_k*zhf_fraction))
+    hf_fraction_weight['1tag']['Z+jets'] += np.nan_to_num(deepak15_weight['1tag']['Z+LF']*((1-deepak4_0tag_process_eff['Z+LF'])/(1-deepak4_0tag_process_eff['Z+jets']))*(1 - zhf_k*zhf_fraction))
     hf_fraction_weight['notag']['Z+jets'] = deepak15_weight['notag']['Z+HF']*zhf_k*zhf_fraction
     hf_fraction_weight['notag']['Z+jets'] += deepak15_weight['notag']['Z+LF']*(1 - zhf_k*zhf_fraction)
 
