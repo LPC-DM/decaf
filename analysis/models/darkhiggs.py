@@ -270,34 +270,24 @@ def model(category,year,mass,grouping):
         'MonoZ': ['vqq','c','cc','other','zcc']
     }
         
-    with open('data/signal_fractions.json') as fin:
-        signal_fractions = json.load(fin)
+    with open('data/abs_signal_fractions.json') as fin:
+        abs_signal_fractions = json.load(fin)
 
-    with open('data/signal_fractions_no_mass.json') as fin:
-        signal_fractions_no_mass = json.load(fin)
+    with open('data/mass_signal_fractions_variation.json') as fin:
+        signal_mass_modulation = json.load(fin)
 
     signal_weight={}
-    for process in signal_fractions.keys():
-        #signal_weight[process]=np.array([])
-        for gentype in signal_fractions[process].keys():
+    for process in abs_signal_fractions.keys():
+        signal_weight[process]=0.
+        for gentype in abs_signal_fractions[process].keys():
             if gentype not in gentypes[process.split('_')[0]]: continue
             print('Extracting',gentype,'fraction for',process)
-            if mass is not None:
-                try:
-                    weight
-                except:
-                    weight = deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(signal_fractions[process][gentype][mass])
-                else:
-                    weight += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*np.array(signal_fractions[process][gentype][mass])
-            else:
-                try:
-                    weight
-                except:
-                    weight = (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(signal_fractions_no_mass[process][gentype])
-                else:
-                    weight += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*np.array(signal_fractions_no_mass[process][gentype])
-
-        signal_weight[process] = weight #np.concatenate((signal_weight[process], weight))
+            fraction=abs_signal_fractions[process][gentype]
+            if mass is not None: fraction*=signal_mass_modulation[process][gentype][mass]
+            if 'monohs' in category:
+                signal_weight[process]+=deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*fraction
+            elif 'monojet' in category:
+                signal_weight[process]+=(1-deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*fraction
                 
     with open('data/abs_bkg_fractions_tot.json') as fin:
         abs_fractions = json.load(fin)
@@ -318,9 +308,14 @@ def model(category,year,mass,grouping):
             print('Extracting',gentype,'fraction for',process )
             fraction=abs_fractions[process][gentype]
             if mass is not None: fraction*=mass_modulation[process][gentype][mass]
-            deepak15_weight['0tag'][process] += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*deepak4_0tag_gentype_eff[process][gentype]*fraction
-            deepak15_weight['1tag'][process] += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*(1 - deepak4_0tag_gentype_eff[process][gentype])*fraction
-            deepak15_weight['notag'][process] += (1 - deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*fraction
+            if 'monohs' in category:
+                deepak15_weight['0tag'][process] += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*deepak4_0tag_gentype_eff[process][gentype]*fraction
+                deepak15_weight['1tag'][process] += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*(1 - deepak4_0tag_gentype_eff[process][gentype])*fraction
+                deepak15_weight['notag'][process] += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*fraction
+            elif 'monojet' in category:
+                deepak15_weight['0tag'][process] += (1-deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*fraction
+                deepak15_weight['1tag'][process] += (1-deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*(1 - deepak4_0tag_gentype_eff[process][gentype])*fraction
+                deepak15_weight['notag'][process] += (1-deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*fraction
         deepak15_weight['0tag'][process]=np.nan_to_num(deepak15_weight['0tag'][process]/deepak4_0tag_process_eff[process])
         deepak15_weight['1tag'][process]=np.nan_to_num(deepak15_weight['1tag'][process]/(1 - deepak4_0tag_process_eff[process]))
 
@@ -328,7 +323,6 @@ def model(category,year,mass,grouping):
     hf_fraction_weight['0tag']={}
     hf_fraction_weight['1tag']={}
     hf_fraction_weight['notag']={}
-
     hf_fraction_weight['0tag']['W+jets'] = np.nan_to_num(deepak15_weight['0tag']['W+HF']*(deepak4_0tag_process_eff['W+HF']/deepak4_0tag_process_eff['W+jets'])*whf_k*whf_fraction)
     hf_fraction_weight['0tag']['W+jets'] += np.nan_to_num(deepak15_weight['0tag']['W+LF']*(deepak4_0tag_process_eff['W+LF']/deepak4_0tag_process_eff['W+jets'])*(1 - whf_k*whf_fraction))
     hf_fraction_weight['1tag']['W+jets'] = np.nan_to_num(deepak15_weight['1tag']['W+HF']*((1-deepak4_0tag_process_eff['W+HF'])/(1-deepak4_0tag_process_eff['W+jets']))*whf_k*whf_fraction) 
