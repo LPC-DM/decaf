@@ -257,7 +257,7 @@ class BTagCorrector:
         filename = 'data/'+files[tagger][year]
         self.sf = BTagScaleFactor(filename, workingpoint)
         files = {
-            '2016': 'btag2017.merged',
+            '2016': 'btag2016.merged',
             '2017': 'btag2017.merged',
             '2018': 'btag2018.merged',
         }

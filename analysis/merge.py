@@ -75,8 +75,8 @@ def postprocess(folder):
      variables = []
      for filename in os.listdir(folder):
           if '.merged' not in filename: continue
-          if '--' not in filename: continue
-          if filename.split('--')[0] not in variables: variables.append(filename.split('--')[0])
+          #if '--' not in filename: continue
+          if filename.split('.')[0] not in variables: variables.append(filename.split('.')[0])
 
      hists = {}
      for variable in variables:
