@@ -1,4 +1,4 @@
-# Datacard for <Channel (gcr-2018-monohs-mass0) instance at 0x2b57c5204a50> generated on 2020-05-22 08:03:28.871084
+# Datacard for <Channel (gcr-2018-monohs-mass0) instance at 0x2b9a0c672b10> generated on 2020-05-29 03:38:02.624556
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 1 # number of samples minus 1
 kmax 10 # number of nuisance parameters

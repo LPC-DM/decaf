@@ -1,4 +1,4 @@
-# Datacard for <Channel (wmcr-2018-monohs-mass2) instance at 0x2b83e926f710> generated on 2020-05-22 08:19:22.965816
+# Datacard for <Channel (wmcr-2018-monohs-mass2) instance at 0x2b51cceb56d0> generated on 2020-05-29 03:57:22.257491
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
 kmax 14 # number of nuisance parameters
