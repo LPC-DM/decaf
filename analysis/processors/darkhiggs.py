@@ -1102,6 +1102,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             
             for r in selected_regions:
                 weights[r] = processor.Weights(len(events))
+                if 'L1PreFiringWeight' in events.columns: weights[r].add('prefiring',events.L1PreFiringWeight.Nom)
                 weights[r].add('genw',events.genWeight)
                 weights[r].add('nlo',nlo)
                 #weights[r].add('adhoc',adhoc)
