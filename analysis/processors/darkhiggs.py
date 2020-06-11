@@ -1299,7 +1299,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
             for r in regions:
                 cut = selection.all(*regions[r])
-                fill(dataset, r, None, 'data', np.ones(events.size), cut)
+                fill(dataset, r, None, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
         else:
             wgentype = { 
                 'xbb' : (
