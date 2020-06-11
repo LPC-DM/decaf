@@ -63,32 +63,6 @@ def scale(hists):
             hists[key].scale({d:1/scale[d]},axis='dataset')
     print('Histograms scaled')
 
-    ###
-    # Aggregate some of the gentypes together
-    ###
-
-    gentype = hist.Cat("gentype", "Gentype", sorting='placement')
-    cats = ("gentype",)
-    gen_map = OrderedDict()
-    gen_map["xbb"] = (["hbb", "hsbb", "zbb"],)
-    gen_map["vqq"] = (["vqq", "tqq"],)
-    gen_map["wcq"] = (["wcq", "tcq"],)
-    gen_map["b"] = (["b", "tbq"],)
-    gen_map["bb"] = (["b"],)
-    gen_map["bc"] = (["bc", "tbc"],)
-    gen_map["c"] = (["c"],)
-    gen_map["cc"] = (["cc"],)
-    gen_map["garbage"] = (["garbage"],) 
-    gen_map["other"] = (["other"],) 
-    gen_map["tbcq"] = (["tbcq"],)
-    gen_map["tbqq"] = (["tbqq"],)
-    gen_map["zcc"] = (["zcc"],)
-    gen_map["data"] = (["data"],)
-    print("Update gentype")
-    for key in hists.keys():
-        if key=='sumw': continue
-        hists[key] = hists[key].group(cats, gentype, gen_map)
-    print("Histograms grouped")
 
     ###
     # Defining 'process', to aggregate different samples into a single process
