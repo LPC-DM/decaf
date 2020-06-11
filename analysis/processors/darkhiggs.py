@@ -164,6 +164,22 @@ class AnalysisProcessor(processor.ProcessorABC):
             'MonoW': ['vqq','wcq','c','other'],
             'MonoZ': ['vqq','c','cc','other','zcc']
         }
+        
+        self._gentype_map = {
+            'xbb':      1,
+            'tbcq':     2,
+            'tbqq':     3,
+            'zcc':      4,
+            'wcq':      5,
+            'vqq':      6,
+            'bb':       7,
+            'bc':       8,
+            'b':        9,
+            'cc' :     10,
+            'c':       11,
+            'other':   12
+            #'garbage': 13
+        }
 
         self._met_triggers = {
             '2016': [
@@ -298,7 +314,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('CaloMinusPfOverRecoil','Calo - Pf / Recoil',35,0,1)
             ),
             'recoil': hist.Hist(
@@ -306,7 +322,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'),
-                hist.Cat('gentype', 'Gen Type'), 
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]), 
                 hist.Bin('recoil','Hadronic Recoil',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'met': hist.Hist(
@@ -314,7 +330,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Cat('systematic', 'Systematic'),
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('met','MET',30,0,600)
             ),
             'mindphi': hist.Hist(
@@ -322,7 +338,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('mindphi','Min dPhi(MET,AK4s)',30,0,3.5)
             ),
             'j1pt': hist.Hist(
@@ -330,7 +346,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('j1pt','AK4 Leading Jet Pt',[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'j1eta': hist.Hist(
@@ -338,7 +354,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('j1eta','AK4 Leading Jet Eta',35,-3.5,3.5)
             ),
             'j1phi': hist.Hist(
@@ -346,7 +362,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('j1phi','AK4 Leading Jet Phi',35,-3.5,3.5)
             ),
             'fj1pt': hist.Hist(
@@ -354,7 +370,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('fj1pt','AK15 Leading Jet Pt',[200.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'fj1eta': hist.Hist(
@@ -362,7 +378,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('fj1eta','AK15 Leading Jet Eta',35,-3.5,3.5)
             ),
             'fj1phi': hist.Hist(
@@ -370,7 +386,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('fj1phi','AK15 Leading Jet Phi',35,-3.5,3.5)
             ),
             'njets': hist.Hist(
@@ -378,7 +394,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('njets','AK4 Number of Jets',6,-0.5,5.5)
             ),
             'ndcsvL': hist.Hist(
@@ -386,7 +402,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('ndcsvL','AK4 Number of deepCSV Loose Jets',6,-0.5,5.5)
             ),
             'ndflvL': hist.Hist(
@@ -394,7 +410,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('ndflvL','AK4 Number of deepFlavor Loose Jets',6,-0.5,5.5)
             ),
             'nfjclean': hist.Hist(
@@ -402,7 +418,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('nfjclean','AK15 Number of cleaned Jets',4,-0.5,3.5)
             ),
             'fjmass': hist.Hist(
@@ -410,7 +426,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('fjmass','AK15 Jet Mass',30,0,300)
             ),
             'e1pt': hist.Hist(
@@ -418,7 +434,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('e1pt','Leading Electron Pt',[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'e1eta': hist.Hist(
@@ -426,7 +442,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('e1eta','Leading Electron Eta',48,-2.4,2.4)
             ),
             'e1phi': hist.Hist(
@@ -434,7 +450,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('e1phi','Leading Electron Phi',64,-3.2,3.2)
             ),
             'dielemass': hist.Hist(
@@ -442,7 +458,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('dielemass','Dielectron mass',100,0,500)
             ),
             'dielept': hist.Hist(
@@ -450,7 +466,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Cat('systematic', 'Systematic'),
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('dielept','Dielectron Pt',150,0,800)
             ),
             'mu1pt': hist.Hist(
@@ -458,7 +474,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('mu1pt','Leading Muon Pt',[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'mu1eta': hist.Hist(
@@ -466,7 +482,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('mu1eta','Leading Muon Eta',48,-2.4,2.4)
             ),
             'mu1phi': hist.Hist(
@@ -474,7 +490,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('mu1phi','Leading Muon Phi',64,-3.2,3.2)
             ),
             'dimumass': hist.Hist(
@@ -482,7 +498,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('dimumass','Dimuon mass',100,0,500)
             ),
             'dimupt': hist.Hist(
@@ -490,7 +506,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Cat('systematic', 'Systematic'),
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('dimupt','Dimuon Pt',150,0,800)
             ),
             'ZHbbvsQCD': hist.Hist(
@@ -498,7 +514,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
-                hist.Cat('gentype', 'Gen Type'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1)
             ),
         })
@@ -1253,22 +1269,20 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['nfjgood']   = fj_ngood
             variables['nfjclean']  = fj_nclean
             variables['ZHbbvsQCD'] = leading_fj.ZHbbvsQCD
+            variables['recoil']    = u[region.split('_')[0]].mag
+            variables['mindphi']   = abs(u[region.split('_')[0]].delta_phi(j_clean.T)).min()
+            variables['CaloMinusPfOverRecoil'] = abs(calomet.pt - met.pt) / u[region.split('_')[0]].mag
             flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
             flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
+            flat_gentype = {k: (~np.isnan(v[cut])*gentype[cut]).flatten() for k, v in variables.items()}
             for histname, h in hout.items():
                 if not isinstance(h, hist.Hist):
                     continue
                 elif histname == 'sumw':
                     continue
-                elif histname == 'recoil':
-                    h.fill(dataset=dataset, region=region, systematic=sname, gentype=gentype, recoil=u[region.split('_')[0]].mag, weight=weight*cut)
-                elif histname == 'CaloMinusPfOverRecoil':
-                    h.fill(dataset=dataset, region=region, systematic=sname, gentype=gentype, CaloMinusPfOverRecoil= abs(calomet.pt - met.pt) / u[region.split('_')[0]].mag, weight=weight*cut)
-                elif histname == 'mindphi':
-                    h.fill(dataset=dataset, region=region, systematic=sname, gentype=gentype, mindphi=abs(u[region.split('_')[0]].delta_phi(j_clean.T)).min(), weight=weight*cut)
                 else:
                     flat_variable = {histname: flat_variables[histname]}
-                    h.fill(dataset=dataset, region=region, systematic=sname, gentype=gentype, **flat_variable, weight=flat_weights[histname])
+                    h.fill(dataset=dataset, region=region, systematic=sname, gentype=flat_gentype[histname], **flat_variable, weight=flat_weights[histname])
 
         def get_weight(region,systematic=None):
             region=region.split('_')[0]
@@ -1399,28 +1413,25 @@ class AnalysisProcessor(processor.ProcessorABC):
                 for r in regions:
                     cut = selection.all(*regions[r])
                     for systematic in systematics:
-                        wgarbage=np.ones(events.size, dtype=np.bool)
+                        vgentype=np.zeros(events.size, dtype=np.int)
                         for gentype in self._gentypes['V+HF']:
-                            wgarbage=wgarbage&(~(wgentype[gentype].astype(np.bool))).astype(np.int)
-                            fill('HF--'+dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*whf*wgentype[gentype], cut)
-                        fill('HF--'+dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*whf*wgarbage, cut)
-                        wgarbage=np.ones(events.size, dtype=np.bool)
+                            vgentype += self._gentype_map[gentype]*wgentype[gentype]
+                        fill('HF--'+dataset, r, systematic, vgentype, get_weight(r,systematic=systematic)*whf, cut)
+                        vgentype=np.zeros(events.size, dtype=np.int)
                         for gentype in self._gentypes['V+LF']:
-                            wgarbage=wgarbage&(~(wgentype[gentype].astype(np.bool))).astype(np.int)
-                            fill('LF--'+dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*wlf*wgentype[gentype], cut)
-                        fill('LF--'+dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*wlf*wgarbage, cut)
+                            vgentype += self._gentype_map[gentype]*wgentype[gentype]
+                        fill('LF--'+dataset, r, systematic, vgentype, get_weight(r,systematic=systematic)*wlf, cut)
             else:
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
                 for r in regions:
                     cut = selection.all(*regions[r])
                     for systematic in systematics:
-                        wgarbage=np.ones(events.size, dtype=np.bool)
+                        vgentype=np.zeros(events.size, dtype=np.int)
                         for sample in self._gentypes.keys():
                             if sample not in dataset: continue
                             for gentype in self._gentypes[sample]:
-                                wgarbage=wgarbage&(~(wgentype[gentype].astype(np.bool))).astype(np.int)
-                                fill(dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*wgentype[gentype], cut)
-                            fill(dataset, r, systematic, gentype, get_weight(r,systematic=systematic)*wgarbage, cut)
+                                vgentype += self._gentype_map[gentype]*wgentype[gentype]
+                            fill(dataset, r, systematic, vgentype, get_weight(r,systematic=systematic), cut)
                                     
         return hout
 
