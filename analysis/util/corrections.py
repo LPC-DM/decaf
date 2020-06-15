@@ -192,9 +192,11 @@ get_nnlo_nlo_weight = {}
 kfactor_eej = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_eej_madgraph_"+year+".root")
 kfactor_evj = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_evj_madgraph_"+year+".root")
 kfactor_vvj = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_vvj_madgraph_"+year+".root")
-get_nnlo_nlo_weight['dy']=lookup_tools.dense_lookup.dense_lookup(kfactor_eej['eej_NNLO_NLO_nnn_nnn_n'].values, kfactor_eej['eej_NNLO_NLO_nnn_nnn_n'].edges)
-get_nnlo_nlo_weight['w']=lookup_tools.dense_lookup.dense_lookup(kfactor_evj['evj_NNLO_NLO_nnn_nnn_n'].values, kfactor_evj['evj_NNLO_NLO_nnn_nnn_n'].edges)
-get_nnlo_nlo_weight['z']=lookup_tools.dense_lookup.dense_lookup(kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n'].values, kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n'].edges)
+kfactor_aj  = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_aj_madgraph_"+year+".root")
+get_nnlo_nlo_weight['dy'] = lookup_tools.dense_lookup.dense_lookup(kfactor_eej['eej_NNLO_NLO_nnn_nnn_n'].values, kfactor_eej['eej_NNLO_NLO_nnn_nnn_n'].edges)
+get_nnlo_nlo_weight['w']  = lookup_tools.dense_lookup.dense_lookup(kfactor_evj['evj_NNLO_NLO_nnn_nnn_n'].values, kfactor_evj['evj_NNLO_NLO_nnn_nnn_n'].edges)
+get_nnlo_nlo_weight['z']  = lookup_tools.dense_lookup.dense_lookup(kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n'].values, kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n'].edges)
+get_nnlo_nlo_weight['a']  = lookup_tools.dense_lookup.dense_lookup(kfactor_aj['aj_NNLO_NLO_nnn_nnn_n'].values, kfactor_aj['aj_NNLO_NLO_nnn_nnn_n'].edges)
 
 def get_ttbar_weight(pt):
     return np.exp(0.0615 - 0.0005 * np.clip(pt, 0, 800))

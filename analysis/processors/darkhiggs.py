@@ -977,8 +977,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             adhoc = np.ones(events.size)
             if('TTJets' in dataset): 
                 nlo = np.sqrt(get_ttbar_weight(genTops[:,0].pt.sum()) * get_ttbar_weight(genTops[:,1].pt.sum()))
-            #elif('GJets' in dataset): 
+            elif('GJets' in dataset): 
             #    nlo = get_nlo_weight['a'](genAs.pt.max())
+                nnlo_nlo = get_nnlo_nlo_weight['a'](genAs.pt.max())*(genAs.pt.max()>100).astype(np.int) + (genAs.pt.max()<=100).astype(np.int)
             elif('WJets' in dataset): 
                 #nlo = get_nlo_weight['w'](genWs.pt.max())
                 #if self._year != '2016': adhoc = get_adhoc_weight['w'](genWs.pt.max())
