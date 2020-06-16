@@ -180,6 +180,12 @@ class AnalysisProcessor(processor.ProcessorABC):
             'other':   12
             #'garbage': 13
         }
+        
+        self._deepak15wp = {
+            '2016': 0.53,
+            '2017': 0.61,
+            '2018': 0.65
+        }
 
         self._met_triggers = {
             '2016': [
@@ -1182,6 +1188,9 @@ class AnalysisProcessor(processor.ProcessorABC):
         noHEMj = np.ones(events.size, dtype=np.bool)
         if self._year=='2018': noHEMj = (j_nHEM==0)
 
+        noHEMmet = np.ones(events.size, dtype=np.bool)
+        if self._year=='2018': noHEMmet = (met.phi>-1.8)&(met.phi<-0.6)
+
         selection.add('iszeroL',
                       (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
                       &(abs(met.T.delta_phi(j_clean.T)).min()>0.8)
@@ -1219,8 +1228,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                       &(abs(ua.delta_phi(j_clean.T)).min()>0.8)
                       &(ua.mag>250)
                   )
-        selection.add('monohs', (leading_fj.ZHbbvsQCD.sum()>0.65))
-        selection.add('monojet', ~(leading_fj.ZHbbvsQCD.sum()>0.65))
+        selection.add('monohs', (leading_fj.ZHbbvsQCD.sum()>self._deepak15wp[self._year]))
+        selection.add('monojet', ~(leading_fj.ZHbbvsQCD.sum()>self._deepak15wp[self._year]))
         selection.add('noextrab', (j_ndflvL==0))
         selection.add('extrab', (j_ndflvL>0))
         selection.add('mass0', (leading_fj.msd_corr.sum()<30))
@@ -1230,9 +1239,10 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('mass4', (leading_fj.msd_corr.sum()>=120))
         selection.add('fatjet', (fj_nclean>0)&(fj_clean.pt.max()>160))
         selection.add('noHEMj', noHEMj)
+        selection.add('noHEMmet', noHEMmet)
 
         regions = {}
-        regions['sr']={'iszeroL','fatjet','noextrab','noHEMj','met_filters','met_triggers'}
+        regions['sr']={'iszeroL','fatjet','noextrab','noHEMmet','met_filters','met_triggers'}
         regions['wmcr']={'isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers'}
         regions['tmcr']={'isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'}
         regions['wecr']={'isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers'}
