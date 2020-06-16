@@ -310,20 +310,28 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('sumw', 'Weight value', [0.])
             ),
             'CaloMinusPfOverRecoil': hist.Hist(
-                'Events', 
-                hist.Cat('dataset', 'Dataset'), 
-                hist.Cat('region', 'Region'), 
-                hist.Cat('systematic', 'Systematic'), 
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Cat('systematic', 'Systematic'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('CaloMinusPfOverRecoil','Calo - Pf / Recoil',35,0,1)
             ),
             'recoil': hist.Hist(
-                'Events', 
-                hist.Cat('dataset', 'Dataset'), 
-                hist.Cat('region', 'Region'), 
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
                 hist.Cat('systematic', 'Systematic'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]), 
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('recoil','Hadronic Recoil',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
+            ),
+            'recoilphi': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Cat('systematic', 'Systematic'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('recoilphi','Hadronic Recoil phi',35,-3.5,3.5)
             ),
             'met': hist.Hist(
             'Events',
@@ -333,27 +341,35 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('met','MET',30,0,600)
             ),
+            'metphi': hist.Hist(
+            'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Cat('systematic', 'Systematic'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('metphi','MET phi',35,-3.5,3.5)
+            ),
             'mindphi': hist.Hist(
-                'Events', 
-                hist.Cat('dataset', 'Dataset'), 
-                hist.Cat('region', 'Region'), 
-                hist.Cat('systematic', 'Systematic'), 
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Cat('systematic', 'Systematic'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('mindphi','Min dPhi(MET,AK4s)',30,0,3.5)
             ),
             'j1pt': hist.Hist(
-                'Events', 
-                hist.Cat('dataset', 'Dataset'), 
-                hist.Cat('region', 'Region'), 
-                hist.Cat('systematic', 'Systematic'), 
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Cat('systematic', 'Systematic'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('j1pt','AK4 Leading Jet Pt',[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'j1eta': hist.Hist(
-                'Events', 
-                hist.Cat('dataset', 'Dataset'), 
-                hist.Cat('region', 'Region'), 
-                hist.Cat('systematic', 'Systematic'), 
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Cat('systematic', 'Systematic'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('j1eta','AK4 Leading Jet Eta',35,-3.5,3.5)
             ),
@@ -371,7 +387,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('region', 'Region'), 
                 hist.Cat('systematic', 'Systematic'), 
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('fj1pt','AK15 Leading Jet Pt',[200.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
+                hist.Bin('fj1pt','AK15 Leading Jet Pt',[160.0, 200.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'fj1eta': hist.Hist(
                 'Events', 
@@ -1246,6 +1262,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             sname = 'nominal' if systematic is None else systematic
             variables = {}
             variables['met']       = met.pt
+            variables['metphi']    = met.phi
             variables['j1pt']      = leading_j.pt
             variables['j1eta']     = leading_j.eta
             variables['j1phi']     = leading_j.phi
@@ -1271,6 +1288,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['nfjclean']  = fj_nclean
             variables['ZHbbvsQCD'] = leading_fj.ZHbbvsQCD
             variables['recoil']    = u[region.split('_')[0]].mag
+            variables['recoilphi'] = u[region.split('_')[0]].phi
             variables['mindphi']   = abs(u[region.split('_')[0]].delta_phi(j_clean.T)).min()
             variables['CaloMinusPfOverRecoil'] = abs(calomet.pt - met.pt) / u[region.split('_')[0]].mag
             flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
