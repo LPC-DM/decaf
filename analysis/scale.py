@@ -76,7 +76,10 @@ def scale(hists):
     bkg_map["Hbb"] = ("*HTo*")
     bkg_map["DY+HF"] = ("HF--DYJets*",)
     bkg_map["DY+LF"] = ("LF--DYJets*",)
-    bkg_map["VV"] = ("*_TuneCP5_13TeV-pythia8*",)
+    #bkg_map["VV"] = (["WW*","WZ*","ZZ*"],)
+    bkg_map["WW"] = ("WW*", )
+    bkg_map["WZ"] = ("WZ*", )
+    bkg_map["ZZ"] = ("ZZ*", )
     bkg_map["ST"] = ("ST*",)
     bkg_map["TT"] = ("TT*",)
     bkg_map["W+HF"] = ("HF--WJets*",)
@@ -93,8 +96,9 @@ def scale(hists):
     sig_map["MonoW"] = ("MonoW*",)    ## signals
     sig_map["MonoZ"] = ("MonoZ*",)    ## signals
     data_map["MET"] = ("MET*", )
-    data_map["SingleElectron"] = (["EGamma*", "SingleElectron*"],)
-    data_map["SinglePhoton"] = (["EGamma*", "SinglePhoton*"],)
+    data_map["SingleElectron"] = ("SingleElectron*", )
+    data_map["SinglePhoton"] = ("SinglePhoton*", )
+    data_map["EGamma"] = ("EGamma*", )
     print('Processes defined')
     
     ###
