@@ -1003,38 +1003,33 @@ class AnalysisProcessor(processor.ProcessorABC):
             genZs = gen[gen.isZ]
             genAs = gen[gen.isA]
 
-            nlo  = np.ones(events.size)
-            nnlo = np.ones(events.size)
             nnlo_nlo = np.ones(events.size)
-            adhoc = np.ones(events.size)
+            nnlo_nloUp = np.ones(events.size)
+            nnlo_nloDown = np.ones(events.size)
             if('TTJets' in dataset): 
                 nlo = np.sqrt(get_ttbar_weight(genTops[:,0].pt.sum()) * get_ttbar_weight(genTops[:,1].pt.sum()))
             elif('GJets' in dataset): 
-            #    nlo = get_nlo_weight['a'](genAs.pt.max())
-                nnlo_nlo = get_nnlo_nlo_weight['a'](genAs.pt.max())*(genAs.pt.max()>100).astype(np.int) + (genAs.pt.max()<=100).astype(np.int)
+                nnlo_nlo = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>100).astype(np.int) + (genAs.pt.max()<=100).astype(np.int)
+                nnlo_nloUp = get_nnlo_nlo_weight['a']['up'](genAs.pt.max())*(genAs.pt.max()>100).astype(np.int) + (genAs.pt.max()<=100).astype(np.int)
+                nnlo_nloDown = get_nnlo_nlo_weight['a']['down'](genAs.pt.max())*(genAs.pt.max()>100).astype(np.int) + (genAs.pt.max()<=100).astype(np.int)
             elif('WJets' in dataset): 
-                #nlo = get_nlo_weight['w'](genWs.pt.max())
-                #if self._year != '2016': adhoc = get_adhoc_weight['w'](genWs.pt.max())
-                #nnlo = get_nnlo_weight['w'](genWs.pt.max())
-                nnlo_nlo = get_nnlo_nlo_weight['w'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nlo = get_nnlo_nlo_weight['w']['cen'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nloUp = get_nnlo_nlo_weight['w']['up'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nloDown = get_nnlo_nlo_weight['w']['down'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
             elif('DY' in dataset): 
-                #nlo = get_nlo_weight['z'](genZs.pt.max())
-                #if self._year != '2016': adhoc = get_adhoc_weight['z'](genZs.pt.max())
-                #nnlo = get_nnlo_weight['dy'](genZs.pt.max())
-                nnlo_nlo = get_nnlo_nlo_weight['dy'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo = get_nnlo_nlo_weight['dy']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nloUp = get_nnlo_nlo_weight['dy']['up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nloDown = get_nnlo_nlo_weight['dy']['down'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
             elif('ZJets' in dataset): 
-                #nlo = get_nlo_weight['z'](genZs.pt.max())
-                #if self._year != '2016': adhoc = get_adhoc_weight['z'](genZs.pt.max())
-                #nnlo = get_nnlo_weight['z'](genZs.pt.max())
-                nnlo_nlo = get_nnlo_nlo_weight['z'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo = get_nnlo_nlo_weight['z']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nloUp = get_nnlo_nlo_weight['z']['up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nloDown = get_nnlo_nlo_weight['z']['down'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
 
             ###
             # Calculate PU weight and systematic variations
             ###
 
             pu = get_pu_weight['cen'](events.PV.npvs)
-            #puUp = get_pu_weight['up'](events.PV.npvs)
-            #puDown = get_pu_weight['down'](events.PV.npvs)
 
             ###
             # Trigger efficiency weight
@@ -1154,9 +1149,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 if 'L1PreFiringWeight' in events.columns: weights[r].add('prefiring',events.L1PreFiringWeight.Nom)
                 weights[r].add('genw',events.genWeight)
                 weights[r].add('nlo',nlo)
-                #weights[r].add('adhoc',adhoc)
-                #weights[r].add('nnlo',nnlo)
-                weights[r].add('nnlo_nlo',nnlo_nlo)
+                weights[r].add('nnlo_nlo',nnlo_nlo, nnlo_nloUp, nnlo_nloDown)
                 weights[r].add('pileup',pu)#,puUp,puDown)
                 weights[r].add('trig', trig[r])
                 weights[r].add('ids', ids[r])
@@ -1332,6 +1325,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             None,
             'btagUp',
             'btagDown',
+            'nnlo_nloUp',
+            'nnlo_nloDown',
         ]
 
         if isData:
