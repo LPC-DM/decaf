@@ -7,6 +7,7 @@ import numpy as np
 from collections import defaultdict, OrderedDict
 from coffea import hist, processor 
 from coffea.util import load, save
+from util.futures_patch import patch_mp_connection_bpo_17560
 
 def add(chunk_tmp_arr):
      print('Job started')
@@ -84,5 +85,6 @@ if __name__ == '__main__':
     parser.add_option('-d', '--dataset', help='dataset', dest='dataset', default=None)
     parser.add_option('-v', '--variable', help='variable', dest='variable', default=None)
     (options, args) = parser.parse_args()
-    
+
+    patch_mp_connection_bpo_17560()    
     reduce(options.folder,options.dataset,options.variable)
