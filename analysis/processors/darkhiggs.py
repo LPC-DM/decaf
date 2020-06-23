@@ -1003,6 +1003,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             genZs = gen[gen.isZ]
             genAs = gen[gen.isA]
 
+            nlo = np.ones(events.size)
             nnlo_nlo = np.ones(events.size)
             nnlo_nloUp = np.ones(events.size)
             nnlo_nloDown = np.ones(events.size)

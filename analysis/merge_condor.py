@@ -75,6 +75,7 @@ variables = [
     'CaloMinusPfOverRecoil',
     'recoil',
     'met',
+    'metphi',
     'mindphi',
     'j1pt',
     'j1eta',
