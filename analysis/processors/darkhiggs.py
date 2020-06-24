@@ -1005,26 +1005,56 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             nlo = np.ones(events.size)
             nnlo_nlo = np.ones(events.size)
-            nnlo_nloUp = np.ones(events.size)
-            nnlo_nloDown = np.ones(events.size)
+            qcd1Up = np.ones(events.size)
+            qcd1Down = np.ones(events.size)
+            qcd2Up = np.ones(events.size)
+            qcd2Down = np.ones(events.size)
+            muFUp = np.ones(events.size)
+            muFDown = np.ones(events.size)
+            muRUp = np.ones(events.size)
+            muRDown = np.ones(events.size)
             if('TTJets' in dataset): 
                 nlo = np.sqrt(get_ttbar_weight(genTops[:,0].pt.sum()) * get_ttbar_weight(genTops[:,1].pt.sum()))
             elif('GJets' in dataset): 
-                nnlo_nlo = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>100).astype(np.int) + (genAs.pt.max()<=100).astype(np.int)
-                nnlo_nloUp = get_nnlo_nlo_weight['a']['up'](genAs.pt.max())*(genAs.pt.max()>100).astype(np.int) + (genAs.pt.max()<=100).astype(np.int)
-                nnlo_nloDown = get_nnlo_nlo_weight['a']['down'](genAs.pt.max())*(genAs.pt.max()>100).astype(np.int) + (genAs.pt.max()<=100).astype(np.int)
+                nnlo_nlo = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                qcd1Up = get_nnlo_nlo_weight['a']['qcd1up'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                qcd1Down = get_nnlo_nlo_weight['a']['qcd1down'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                qcd2Up = get_nnlo_nlo_weight['a']['qcd2up'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                qcd2Down = get_nnlo_nlo_weight['a']['qcd2down'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                muFUp = get_nnlo_nlo_weight['a']['muFup'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                muFDown = get_nnlo_nlo_weight['a']['muFdown'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                muRUp = get_nnlo_nlo_weight['a']['muRup'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                muRDown = get_nnlo_nlo_weight['a']['muRown'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
             elif('WJets' in dataset): 
                 nnlo_nlo = get_nnlo_nlo_weight['w']['cen'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
-                nnlo_nloUp = get_nnlo_nlo_weight['w']['up'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
-                nnlo_nloDown = get_nnlo_nlo_weight['w']['down'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                qcd1Up = get_nnlo_nlo_weight['w']['qcd1up'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                qcd1Down = get_nnlo_nlo_weight['w']['qcd1down'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                qcd2Up = get_nnlo_nlo_weight['w']['qcd2up'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                qcd2Down = get_nnlo_nlo_weight['w']['qcd2down'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                muFUp = get_nnlo_nlo_weight['w']['muFup'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                muFDown = get_nnlo_nlo_weight['w']['muFdown'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                muRUp = get_nnlo_nlo_weight['w']['muRup'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                muRDown = get_nnlo_nlo_weight['w']['muRdown'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
             elif('DY' in dataset): 
                 nnlo_nlo = get_nnlo_nlo_weight['dy']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                nnlo_nloUp = get_nnlo_nlo_weight['dy']['up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                nnlo_nloDown = get_nnlo_nlo_weight['dy']['down'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                qcd1Up = get_nnlo_nlo_weight['dy']['qcd1up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                qcd1Down = get_nnlo_nlo_weight['dy']['qcd1down'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                qcd2Up = get_nnlo_nlo_weight['dy']['qcd2up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                qcd2Down = get_nnlo_nlo_weight['dy']['qcd2down'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                muFUp = get_nnlo_nlo_weight['dy']['muFup'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                muFDown = get_nnlo_nlo_weight['dy']['muFdown'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                muRUp = get_nnlo_nlo_weight['dy']['muRup'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                muRDown = get_nnlo_nlo_weight['dy']['muRdown'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
             elif('ZJets' in dataset): 
                 nnlo_nlo = get_nnlo_nlo_weight['z']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                nnlo_nloUp = get_nnlo_nlo_weight['z']['up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                nnlo_nloDown = get_nnlo_nlo_weight['z']['down'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                qcd1Up = get_nnlo_nlo_weight['z']['qcd1up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                qcd1Down = get_nnlo_nlo_weight['z']['qcd1down'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                qcd2Up = get_nnlo_nlo_weight['z']['qcd2up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                qcd2Down = get_nnlo_nlo_weight['z']['qcd2down'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                muFUp = get_nnlo_nlo_weight['z']['muFup'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                muFDown = get_nnlo_nlo_weight['z']['muFdown'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                muRUp = get_nnlo_nlo_weight['z']['muRup'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                muRDown = get_nnlo_nlo_weight['z']['muRdown'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
 
             ###
             # Calculate PU weight and systematic variations
@@ -1150,8 +1180,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                 if 'L1PreFiringWeight' in events.columns: weights[r].add('prefiring',events.L1PreFiringWeight.Nom)
                 weights[r].add('genw',events.genWeight)
                 weights[r].add('nlo',nlo)
-                weights[r].add('nnlo_nlo',nnlo_nlo, nnlo_nloUp, nnlo_nloDown)
-                weights[r].add('pileup',pu)#,puUp,puDown)
+                weights[r].add('nnlo_nlo',nnlo_nlo)
+                weights[r].add('qcd1',np.ones(events.size), qcd1Up, qcd1Down)
+                weights[r].add('qcd2',np.ones(events.size), qcd2Up, qcd2Down)
+                weights[r].add('muF',np.ones(events.size), muFUp, muFDown)
+                weights[r].add('muR',np.ones(events.size), muRUp, muRDown)
+                weights[r].add('pileup',pu)
                 weights[r].add('trig', trig[r])
                 weights[r].add('ids', ids[r])
                 weights[r].add('reco', reco[r])
@@ -1326,8 +1360,14 @@ class AnalysisProcessor(processor.ProcessorABC):
             None,
             'btagUp',
             'btagDown',
-            'nnlo_nloUp',
-            'nnlo_nloDown',
+            #'qcd1Up',
+            #'qcd1Down',
+            #'qcd2Up',
+            #'qcd2Down',
+            'muFUp',
+            'muFDown',
+            'muRUp',
+            'muRDown',
         ]
 
         if isData:
