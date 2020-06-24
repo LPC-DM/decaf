@@ -1193,7 +1193,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         if self._year=='2018': noHEMj = (j_nHEM==0)
 
         noHEMmet = np.ones(events.size, dtype=np.bool)
-        if self._year=='2018': noHEMmet = (met.phi>-1.8)&(met.phi<-0.6)
+        if self._year=='2018': noHEMmet = ~((met.phi>-1.8)&(met.phi<-0.6))
 
         selection.add('iszeroL',
                       (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
@@ -1201,12 +1201,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                       &(met.pt>250)
                   )
         selection.add('isoneM', 
-                      (e_nloose==0)&(mu_ntight==1)&(tau_nloose==0)&(pho_nloose==0)
+                      (e_nloose==0)&(mu_ntight==1)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)
                       &(abs(um.delta_phi(j_clean.T)).min()>0.8)
                       &(um.mag>250)
                   )
         selection.add('isoneE', 
-                      (e_ntight==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
+                      (e_ntight==1)&(e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
                       &(met.pt>50)
                       &(abs(ue.delta_phi(j_clean.T)).min()>0.8)
                       &(ue.mag>250)
