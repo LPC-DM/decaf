@@ -1242,42 +1242,45 @@ class AnalysisProcessor(processor.ProcessorABC):
             temp[r]=regions[r]
         regions=temp
 
-        variables = {}
-        variables['met']       = np.array(met.pt)
-        variables['metphi']    = np.array(met.phi)
-        variables['j1pt']      = leading_j.pt.sum()
-        variables['j1eta']     = leading_j.eta.sum()
-        variables['j1phi']     = leading_j.phi.sum()
-        variables['fjmass']    = leading_fj.msd_corr.sum()
-        variables['fj1pt']     = leading_fj.pt.sum()
-        variables['fj1eta']    = leading_fj.eta.sum()
-        variables['fj1phi']    = leading_fj.phi.sum()
-        variables['e1pt']      = leading_e.pt.sum()
-        variables['e1phi']     = leading_e.phi.sum()
-        variables['e1eta']     = leading_e.eta.sum()
-        variables['dielemass'] = leading_diele.mass.sum()
-        variables['dielept']   = leading_diele.pt.sum()
-        variables['mu1pt']     = leading_mu.pt.sum()
-        variables['mu1phi']    = leading_mu.phi.sum()
-        variables['mu1eta']    = leading_mu.eta.sum()
-        variables['dimumass']  = leading_dimu.mass.sum()
-        variables['dimupt']    = leading_dimu.pt.sum()
-        variables['njets']     = j_nclean
-        variables['ndcsvL']    = j_ndcsvL
-        variables['ndflvL']    = j_ndflvL
-        variables['nfjtot']    = fj_ntot
-        variables['nfjgood']   = fj_ngood
-        variables['nfjclean']  = fj_nclean
-        variables['ZHbbvsQCD'] = leading_fj.ZHbbvsQCD.sum()
-        variables['recoil']    = u[region.split('_')[0]].mag
-        variables['recoilphi'] = u[region.split('_')[0]].phi
-        variables['mindphi']   = abs(u[region.split('_')[0]].delta_phi(j_clean.T)).min()
-        variables['CaloMinusPfOverRecoil'] = abs(calomet.pt - met.pt) / u[region.split('_')[0]].mag
 
         def fill(dataset, region, gentype, weight, cut):
-            #flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
-            #flat_gentype = {k: (~np.isnan(v[cut])*gentype[cut]).flatten() for k, v in variables.items()}
-            #flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
+
+            variables = {}
+            variables['met']       = met.pt
+            variables['metphi']    = met.phi
+            variables['j1pt']      = leading_j.pt
+            variables['j1eta']     = leading_j.eta
+            variables['j1phi']     = leading_j.phi
+            variables['fjmass']    = leading_fj.msd_corr
+            variables['fj1pt']     = leading_fj.pt
+            variables['fj1eta']    = leading_fj.eta
+            variables['fj1phi']    = leading_fj.phi
+            variables['e1pt']      = leading_e.pt
+            variables['e1phi']     = leading_e.phi
+            variables['e1eta']     = leading_e.eta
+            variables['dielemass'] = leading_diele.mass
+            variables['dielept']   = leading_diele.pt
+            variables['mu1pt']     = leading_mu.pt
+            variables['mu1phi']    = leading_mu.phi
+            variables['mu1eta']    = leading_mu.eta
+            variables['dimumass']  = leading_dimu.mass
+            variables['dimupt']    = leading_dimu.pt
+            variables['njets']     = j_nclean
+            variables['ndcsvL']    = j_ndcsvL
+            variables['ndflvL']    = j_ndflvL
+            variables['nfjtot']    = fj_ntot
+            variables['nfjgood']   = fj_ngood
+            variables['nfjclean']  = fj_nclean
+            variables['ZHbbvsQCD'] = leading_fj.ZHbbvsQCD
+            variables['recoil']    = u[region].mag
+            variables['recoilphi'] = u[region].phi
+            variables['mindphi']   = abs(u[region].delta_phi(j_clean.T)).min()
+            variables['CaloMinusPfOverRecoil'] = abs(calomet.pt - met.pt) / u[region].mag
+
+            flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
+            flat_gentype = {k: (~np.isnan(v[cut])*gentype[cut]).flatten() for k, v in variables.items()}
+            flat_weight = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
+            
             for histname, h in hout.items():
                 if not isinstance(h, hist.Hist):
                     continue
@@ -1286,12 +1289,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                 elif histname == 'template':
                     continue
                 else:
-                    variable = {histname: variables[histname]}
+                    flat_variable = {histname: flat_variables[histname]}
                     h.fill(dataset=dataset, 
                            region=region, 
-                           gentype=gentype, 
-                           **variable, 
-                           weight=weight*cut)
+                           gentype=flat_gentype[histname], 
+                           **flat_variable, 
+                           weight=flat_weight[histname])
 
         if isData:
             hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
