@@ -969,57 +969,40 @@ class AnalysisProcessor(processor.ProcessorABC):
             genAs = gen[gen.isA]
 
             nlo = np.ones(events.size)
-            nnlo_nlo = np.ones(events.size)
-            qcd1Up = np.ones(events.size)
-            qcd1Down = np.ones(events.size)
-            qcd2Up = np.ones(events.size)
-            qcd2Down = np.ones(events.size)
-            muFUp = np.ones(events.size)
-            muFDown = np.ones(events.size)
-            muRUp = np.ones(events.size)
-            muRDown = np.ones(events.size)
+            nnlo_nlo = {}
+            nnlo_nlo['cen'] = np.ones(events.size)
+            nnlo_nlo['qcd1up'] = np.ones(events.size)
+            nnlo_nlo['qcd1do'] = np.ones(events.size)
+            nnlo_nlo['qcd2up'] = np.ones(events.size)
+            nnlo_nlo['qcd2do'] = np.ones(events.size)
+            nnlo_nlo['qcd3up'] = np.ones(events.size)
+            nnlo_nlo['qcd3do'] = np.ones(events.size)
+            nnlo_nlo['ew1up'] = np.ones(events.size)
+            nnlo_nlo['ew1do'] = np.ones(events.size)
+            nnlo_nlo['ew2up'] = np.ones(events.size)
+            nnlo_nlo['ew2do'] = np.ones(events.size)
+            nnlo_nlo['ew3up'] = np.ones(events.size)
+            nnlo_nlo['ew3do'] = np.ones(events.size)
+            nnlo_nlo['mixup'] = np.ones(events.size)
+            nnlo_nlo['mixdo'] = np.ones(events.size)
+            nnlo_nlo['muFup'] = np.ones(events.size)
+            nnlo_nlo['muFdo'] = np.ones(events.size)
+            nnlo_nlo['muRup'] = np.ones(events.size)
+            nnlo_nlo['muRdo'] = np.ones(events.size)
             if('TTJets' in dataset): 
                 nlo = np.sqrt(get_ttbar_weight(genTops[:,0].pt.sum()) * get_ttbar_weight(genTops[:,1].pt.sum()))
             elif('GJets' in dataset): 
-                nnlo_nlo = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                qcd1Up = get_nnlo_nlo_weight['a']['qcd1up'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                qcd1Down = get_nnlo_nlo_weight['a']['qcd1down'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                qcd2Up = get_nnlo_nlo_weight['a']['qcd2up'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                qcd2Down = get_nnlo_nlo_weight['a']['qcd2down'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                muFUp = get_nnlo_nlo_weight['a']['muFup'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                muFDown = get_nnlo_nlo_weight['a']['muFdown'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                muRUp = get_nnlo_nlo_weight['a']['muRup'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                muRDown = get_nnlo_nlo_weight['a']['muRown'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                for systematic in nnlo_nlo.keys():
+                    nnlo_nlo[systematic]=get_nnlo_nlo_weight['a'][systematic](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
             elif('WJets' in dataset): 
-                nnlo_nlo = get_nnlo_nlo_weight['w']['cen'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
-                qcd1Up = get_nnlo_nlo_weight['w']['qcd1up'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
-                qcd1Down = get_nnlo_nlo_weight['w']['qcd1down'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
-                qcd2Up = get_nnlo_nlo_weight['w']['qcd2up'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
-                qcd2Down = get_nnlo_nlo_weight['w']['qcd2down'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
-                muFUp = get_nnlo_nlo_weight['w']['muFup'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
-                muFDown = get_nnlo_nlo_weight['w']['muFdown'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
-                muRUp = get_nnlo_nlo_weight['w']['muRup'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
-                muRDown = get_nnlo_nlo_weight['w']['muRdown'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                for systematic in nnlo_nlo.keys():
+                    nnlo_nlo[systematic]= get_nnlo_nlo_weight['w'][systematic](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
             elif('DY' in dataset): 
-                nnlo_nlo = get_nnlo_nlo_weight['dy']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                qcd1Up = get_nnlo_nlo_weight['dy']['qcd1up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                qcd1Down = get_nnlo_nlo_weight['dy']['qcd1down'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                qcd2Up = get_nnlo_nlo_weight['dy']['qcd2up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                qcd2Down = get_nnlo_nlo_weight['dy']['qcd2down'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                muFUp = get_nnlo_nlo_weight['dy']['muFup'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                muFDown = get_nnlo_nlo_weight['dy']['muFdown'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                muRUp = get_nnlo_nlo_weight['dy']['muRup'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                muRDown = get_nnlo_nlo_weight['dy']['muRdown'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                for systematic in nnlo_nlo.keys():
+                    nnlo_nlo[systematic]=get_nnlo_nlo_weight['dy'][systematic](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
             elif('ZJets' in dataset): 
-                nnlo_nlo = get_nnlo_nlo_weight['z']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                qcd1Up = get_nnlo_nlo_weight['z']['qcd1up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                qcd1Down = get_nnlo_nlo_weight['z']['qcd1down'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                qcd2Up = get_nnlo_nlo_weight['z']['qcd2up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                qcd2Down = get_nnlo_nlo_weight['z']['qcd2down'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                muFUp = get_nnlo_nlo_weight['z']['muFup'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                muFDown = get_nnlo_nlo_weight['z']['muFdown'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                muRUp = get_nnlo_nlo_weight['z']['muRup'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
-                muRDown = get_nnlo_nlo_weight['z']['muRdown'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                for systematic in nnlo_nlo.keys():
+                    nnlo_nlo[systematic]=get_nnlo_nlo_weight['z'][systematic](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
 
             ###
             # Calculate PU weight and systematic variations
@@ -1145,11 +1128,16 @@ class AnalysisProcessor(processor.ProcessorABC):
                 if 'L1PreFiringWeight' in events.columns: weights[r].add('prefiring',events.L1PreFiringWeight.Nom)
                 weights[r].add('genw',events.genWeight)
                 weights[r].add('nlo',nlo)
-                weights[r].add('nnlo_nlo',nnlo_nlo)
-                weights[r].add('qcd1',np.ones(events.size), qcd1Up, qcd1Down)
-                weights[r].add('qcd2',np.ones(events.size), qcd2Up, qcd2Down)
-                weights[r].add('muF',np.ones(events.size), muFUp, muFDown)
-                weights[r].add('muR',np.ones(events.size), muRUp, muRDown)
+                weights[r].add('nnlo_nlo',nnlo_nlo['cen'])
+                weights[r].add('qcd1',np.ones(events.size), nnlo_nlo['qcd1up'], nnlo_nlo['qcd1do'])
+                weights[r].add('qcd2',np.ones(events.size), nnlo_nlo['qcd2up'], nnlo_nlo['qcd2do'])
+                weights[r].add('qcd3',np.ones(events.size), nnlo_nlo['qcd3up'], nnlo_nlo['qcd3do'])
+                #weights[r].add('ew1',np.ones(events.size), nnlo_nlo['ew1up'], nnlo_nlo['ew1do'])
+                #weights[r].add('ew2',np.ones(events.size), nnlo_nlo['ew2up'], nnlo_nlo['ew2do'])
+                #weights[r].add('ew3',np.ones(events.size), nnlo_nlo['ew3up'], nnlo_nlo['ew3do'])
+                #weights[r].add('mix',np.ones(events.size), nnlo_nlo['mixup'], nnlo_nlo['mixdo'])
+                weights[r].add('muF',np.ones(events.size), nnlo_nlo['muFup'], nnlo_nlo['muFdo'])
+                weights[r].add('muR',np.ones(events.size), nnlo_nlo['muRup'], nnlo_nlo['muRdo'])
                 weights[r].add('pileup',pu)
                 weights[r].add('trig', trig[r])
                 weights[r].add('ids', ids[r])
@@ -1249,42 +1237,47 @@ class AnalysisProcessor(processor.ProcessorABC):
         regions['zecr']={'istwoE','fatjet','noHEMj','met_filters','singleelectron_triggers'}
         regions['gcr']={'isoneA','fatjet','noHEMj','met_filters','singlephoton_triggers'}
 
+        temp={}
+        for r in selected_regions: 
+            temp[r]=regions[r]
+        regions=temp
+
         variables = {}
-        variables['met']       = met.pt
-        variables['metphi']    = met.phi
-        variables['j1pt']      = leading_j.pt
-        variables['j1eta']     = leading_j.eta
-        variables['j1phi']     = leading_j.phi
-        variables['fjmass']    = leading_fj.msd_corr
-        variables['fj1pt']     = leading_fj.pt
-        variables['fj1eta']    = leading_fj.eta
-        variables['fj1phi']    = leading_fj.phi
-        variables['e1pt']      = leading_e.pt
-        variables['e1phi']     = leading_e.phi
-        variables['e1eta']     = leading_e.eta
-        variables['dielemass'] = leading_diele.mass
-        variables['dielept']   = leading_diele.pt
-        variables['mu1pt']     = leading_mu.pt
-        variables['mu1phi']    = leading_mu.phi
-        variables['mu1eta']    = leading_mu.eta
-        variables['dimumass']  = leading_dimu.mass
-        variables['dimupt']    = leading_dimu.pt
+        variables['met']       = np.array(met.pt)
+        variables['metphi']    = np.array(met.phi)
+        variables['j1pt']      = leading_j.pt.sum()
+        variables['j1eta']     = leading_j.eta.sum()
+        variables['j1phi']     = leading_j.phi.sum()
+        variables['fjmass']    = leading_fj.msd_corr.sum()
+        variables['fj1pt']     = leading_fj.pt.sum()
+        variables['fj1eta']    = leading_fj.eta.sum()
+        variables['fj1phi']    = leading_fj.phi.sum()
+        variables['e1pt']      = leading_e.pt.sum()
+        variables['e1phi']     = leading_e.phi.sum()
+        variables['e1eta']     = leading_e.eta.sum()
+        variables['dielemass'] = leading_diele.mass.sum()
+        variables['dielept']   = leading_diele.pt.sum()
+        variables['mu1pt']     = leading_mu.pt.sum()
+        variables['mu1phi']    = leading_mu.phi.sum()
+        variables['mu1eta']    = leading_mu.eta.sum()
+        variables['dimumass']  = leading_dimu.mass.sum()
+        variables['dimupt']    = leading_dimu.pt.sum()
         variables['njets']     = j_nclean
         variables['ndcsvL']    = j_ndcsvL
         variables['ndflvL']    = j_ndflvL
         variables['nfjtot']    = fj_ntot
         variables['nfjgood']   = fj_ngood
         variables['nfjclean']  = fj_nclean
-        variables['ZHbbvsQCD'] = leading_fj.ZHbbvsQCD
+        variables['ZHbbvsQCD'] = leading_fj.ZHbbvsQCD.sum()
         variables['recoil']    = u[region.split('_')[0]].mag
         variables['recoilphi'] = u[region.split('_')[0]].phi
         variables['mindphi']   = abs(u[region.split('_')[0]].delta_phi(j_clean.T)).min()
         variables['CaloMinusPfOverRecoil'] = abs(calomet.pt - met.pt) / u[region.split('_')[0]].mag
 
         def fill(dataset, region, gentype, weight, cut):
-            flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
-            flat_gentype = {k: (~np.isnan(v[cut])*gentype[cut]).flatten() for k, v in variables.items()}
-            flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
+            #flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
+            #flat_gentype = {k: (~np.isnan(v[cut])*gentype[cut]).flatten() for k, v in variables.items()}
+            #flat_weights = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
             for histname, h in hout.items():
                 if not isinstance(h, hist.Hist):
                     continue
@@ -1293,25 +1286,25 @@ class AnalysisProcessor(processor.ProcessorABC):
                 elif histname == 'template':
                     continue
                 else:
-                    flat_variable = {histname: flat_variables[histname]}
+                    variable = {histname: variables[histname]}
                     h.fill(dataset=dataset, 
                            region=region, 
-                           gentype=flat_gentype[histname], 
-                           **flat_variable, 
-                           weight=flat_weights[histname])
+                           gentype=gentype, 
+                           **variable, 
+                           weight=weight*cut)
 
         if isData:
             hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
             for region in regions:
                 cut = selection.all(*regions[region])
                 hout['template'].fill(dataset=dataset,
-                                    region=region,
-                                    systematic='nominal',
-                                    gentype=np.zeros(events.size, dtype=np.int),
-                                    recoil=u[region].mag[cut].flatten(),
-                                    fjmass=leading_fj.msd_corr[cut].flatten(),
-                                    ZHbbvsQCD=leading_fj.ZHbbvsQCD[cut].flatten(),
-                                    weight=np.ones(events.size))
+                                      region=region,
+                                      systematic='nominal',
+                                      gentype=np.zeros(events.size, dtype=np.int),
+                                      recoil=u[region].mag,
+                                      fjmass=leading_fj.msd_corr.sum(),
+                                      ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                      weight=np.ones(events.size)*cut)
                 fill(dataset, region, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
         else:
             wgentype = { 
@@ -1429,40 +1422,40 @@ class AnalysisProcessor(processor.ProcessorABC):
                 wlf = (~(whf.astype(np.bool))).astype(np.int)
                 for region in regions:
                     cut = selection.all(*regions[region])
-                    for systematic in [None, 'btagUp', 'btagDown']:
+                    for systematic in [None,'btagUp','btagDown','qcd1Up','qcd1Down','qcd2Up','qcd2Down','qcd3Up','qcd3Down','muFUp','muFDown','muRUp','muRDown']:
                         sname = 'nominal' if systematic is None else systematic
                         hout['template'].fill(dataset='HF--'+dataset,
                                               region=region,
                                               systematic=sname,
                                               gentype=vgentype,
-                                              recoil=u[region].mag[cut].flatten(),
-                                              fjmass=leading_fj.msd_corr[cut].flatten(),
-                                              ZHbbvsQCD=leading_fj.ZHbbvsQCD[cut].flatten(),
-                                              weight=weights[region].weight(modifier=systematic)*whf)
+                                              recoil=u[region].mag,
+                                              fjmass=leading_fj.msd_corr.sum(),
+                                              ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                              weight=weights[region].weight(modifier=systematic)*whf*cut)
                         hout['template'].fill(dataset='LF--'+dataset,
                                               region=region,
                                               systematic=sname,
                                               gentype=vgentype,
-                                              recoil=u[region].mag[cut].flatten(),
-                                              fjmass=leading_fj.msd_corr[cut].flatten(),
-                                              ZHbbvsQCD=leading_fj.ZHbbvsQCD[cut].flatten(),
-                                              weight=weights[region].weight(modifier=systematic)*wlf)
+                                              recoil=u[region].mag,
+                                              fjmass=leading_fj.msd_corr.sum(),
+                                              ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                              weight=weights[region].weight(modifier=systematic)*wlf*cut)
                     fill('HF--'+dataset, region, vgentype, weights[region].weight()*whf, cut)
                     fill('LF--'+dataset, region, vgentype, weights[region].weight()*wlf, cut)
             else:
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
-                for r in regions:
-                    cut = selection.all(*regions[r])
+                for region in regions:
+                    cut = selection.all(*regions[region])
                     for systematic in [None, 'btagUp', 'btagDown']:
                         sname = 'nominal' if systematic is None else systematic
                         hout['template'].fill(dataset=dataset,
                                               region=region,
                                               systematic=sname,
                                               gentype=vgentype,
-                                              recoil=u[region].mag[cut].flatten(),
-                                              fjmass=leading_fj.msd_corr[cut].flatten(),
-                                              ZHbbvsQCD=leading_fj.ZHbbvsQCD[cut].flatten(),
-                                              weight=weights[region].weight(modifier=systematic))
+                                              recoil=u[region].mag,
+                                              fjmass=leading_fj.msd_corr.sum(),
+                                              ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                              weight=weights[region].weight(modifier=systematic)*cut)
                     fill(dataset, r, vgentype, weights[region].weight(), cut)
                                     
         return hout

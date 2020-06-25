@@ -20,12 +20,8 @@ pu["2016"] = uproot.open("data/pileup/puWeights_80x_37ifb.root")
 for year in ['2016','2017','2018']:
     fpu = pu[year]
     pu_cen = fpu["puWeights"].values
-    pu_up = fpu["puWeightsUp"].values
-    pu_down= fpu["puWeightsDown"].values
     get_pu_weight[year] = {}
     get_pu_weight[year]['cen'] = lookup_tools.dense_lookup.dense_lookup(pu_cen, fpu["puWeights"].edges)
-    get_pu_weight[year]['up'] = lookup_tools.dense_lookup.dense_lookup(pu_up, fpu["puWeightsUp"].edges)    
-    get_pu_weight[year]['down'] = lookup_tools.dense_lookup.dense_lookup(pu_down, fpu["puWeightsDown"].edges)
 
 get_met_trig_weight = {}
 
@@ -188,52 +184,41 @@ get_nnlo_weight['w'] = lookup_tools.dense_lookup.dense_lookup(kfactor["evj"].val
 get_nnlo_weight['z'] = lookup_tools.dense_lookup.dense_lookup(kfactor["vvj"].values, kfactor["vvj"].edges)
 
 #the schema is process_NNLO_NLO_QCD1QCD2QCD3_EW1EW2EW3_MIX, where 'n' stands for 'nominal', 'u' for 'up', and 'd' for 'down'
+kfactor={}
+kfactor['dy'] = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_eej_madgraph_"+year+".root")
+kfactor['w'] = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_evj_madgraph_"+year+".root")
+kfactor['z'] = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_vvj_madgraph_"+year+".root")
+kfactor['a']  = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_aj_madgraph_"+year+".root")
+histname={}
+histname['dy']='eej_NNLO_NLO_'
+histname['w']='evj_NNLO_NLO_'
+histname['z']='vvj_NNLO_NLO_'
+histname['a']='aj_NNLO_NLO_'
 get_nnlo_nlo_weight = {}
-kfactor_eej = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_eej_madgraph_"+year+".root")
-kfactor_evj = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_evj_madgraph_"+year+".root")
-kfactor_vvj = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_vvj_madgraph_"+year+".root")
-kfactor_aj  = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_aj_madgraph_"+year+".root")
 get_nnlo_nlo_weight['dy'] = {}
 get_nnlo_nlo_weight['w']  = {}
 get_nnlo_nlo_weight['z']  = {}
 get_nnlo_nlo_weight['a']  = {}
-get_nnlo_nlo_weight['dy']['cen'] = lookup_tools.dense_lookup.dense_lookup(kfactor_eej['eej_NNLO_NLO_nnn_nnn_n'].values, kfactor_eej['eej_NNLO_NLO_nnn_nnn_n'].edges)
-get_nnlo_nlo_weight['w']['cen']  = lookup_tools.dense_lookup.dense_lookup(kfactor_evj['evj_NNLO_NLO_nnn_nnn_n'].values, kfactor_evj['evj_NNLO_NLO_nnn_nnn_n'].edges)
-get_nnlo_nlo_weight['z']['cen']  = lookup_tools.dense_lookup.dense_lookup(kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n'].values, kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n'].edges)
-get_nnlo_nlo_weight['a']['cen']  = lookup_tools.dense_lookup.dense_lookup(kfactor_aj['aj_NNLO_NLO_nnn_nnn_n'].values, kfactor_aj['aj_NNLO_NLO_nnn_nnn_n'].edges)
-get_nnlo_nlo_weight['dy']['qcd1up'] = lookup_tools.dense_lookup.dense_lookup(kfactor_eej['eej_NNLO_NLO_unn_nnn_n'].values, kfactor_eej['eej_NNLO_NLO_unn_nnn_n'].edges)
-get_nnlo_nlo_weight['w']['qcd1up']  = lookup_tools.dense_lookup.dense_lookup(kfactor_evj['evj_NNLO_NLO_unn_nnn_n'].values, kfactor_evj['evj_NNLO_NLO_unn_nnn_n'].edges)
-get_nnlo_nlo_weight['z']['qcd1up']  = lookup_tools.dense_lookup.dense_lookup(kfactor_vvj['vvj_NNLO_NLO_unn_nnn_n'].values, kfactor_vvj['vvj_NNLO_NLO_unn_nnn_n'].edges)
-get_nnlo_nlo_weight['a']['qcd1up']  = lookup_tools.dense_lookup.dense_lookup(kfactor_aj['aj_NNLO_NLO_unn_nnn_n'].values, kfactor_aj['aj_NNLO_NLO_unn_nnn_n'].edges)
-get_nnlo_nlo_weight['dy']['qcd1down'] = lookup_tools.dense_lookup.dense_lookup(kfactor_eej['eej_NNLO_NLO_dnn_nnn_n'].values, kfactor_eej['eej_NNLO_NLO_dnn_nnn_n'].edges)
-get_nnlo_nlo_weight['w']['qcd1down']  = lookup_tools.dense_lookup.dense_lookup(kfactor_evj['evj_NNLO_NLO_dnn_nnn_n'].values, kfactor_evj['evj_NNLO_NLO_dnn_nnn_n'].edges)
-get_nnlo_nlo_weight['z']['qcd1down']  = lookup_tools.dense_lookup.dense_lookup(kfactor_vvj['vvj_NNLO_NLO_dnn_nnn_n'].values, kfactor_vvj['vvj_NNLO_NLO_dnn_nnn_n'].edges)
-get_nnlo_nlo_weight['a']['qcd1down']  = lookup_tools.dense_lookup.dense_lookup(kfactor_aj['aj_NNLO_NLO_dnn_nnn_n'].values, kfactor_aj['aj_NNLO_NLO_dnn_nnn_n'].edges)
-get_nnlo_nlo_weight['dy']['qcd2up'] = lookup_tools.dense_lookup.dense_lookup(kfactor_eej['eej_NNLO_NLO_nun_nnn_n'].values, kfactor_eej['eej_NNLO_NLO_nun_nnn_n'].edges)
-get_nnlo_nlo_weight['w']['qcd2up']  = lookup_tools.dense_lookup.dense_lookup(kfactor_evj['evj_NNLO_NLO_nun_nnn_n'].values, kfactor_evj['evj_NNLO_NLO_nun_nnn_n'].edges)
-get_nnlo_nlo_weight['z']['qcd2up']  = lookup_tools.dense_lookup.dense_lookup(kfactor_vvj['vvj_NNLO_NLO_nun_nnn_n'].values, kfactor_vvj['vvj_NNLO_NLO_nun_nnn_n'].edges)
-get_nnlo_nlo_weight['a']['qcd2up']  = lookup_tools.dense_lookup.dense_lookup(kfactor_aj['aj_NNLO_NLO_nun_nnn_n'].values, kfactor_aj['aj_NNLO_NLO_nun_nnn_n'].edges)
-get_nnlo_nlo_weight['dy']['qcd2down'] = lookup_tools.dense_lookup.dense_lookup(kfactor_eej['eej_NNLO_NLO_ndn_nnn_n'].values, kfactor_eej['eej_NNLO_NLO_ndn_nnn_n'].edges)
-get_nnlo_nlo_weight['w']['qcd2down']  = lookup_tools.dense_lookup.dense_lookup(kfactor_evj['evj_NNLO_NLO_ndn_nnn_n'].values, kfactor_evj['evj_NNLO_NLO_ndn_nnn_n'].edges)
-get_nnlo_nlo_weight['z']['qcd2down']  = lookup_tools.dense_lookup.dense_lookup(kfactor_vvj['vvj_NNLO_NLO_ndn_nnn_n'].values, kfactor_vvj['vvj_NNLO_NLO_ndn_nnn_n'].edges)
-get_nnlo_nlo_weight['a']['qcd2down']  = lookup_tools.dense_lookup.dense_lookup(kfactor_aj['aj_NNLO_NLO_ndn_nnn_n'].values, kfactor_aj['aj_NNLO_NLO_ndn_nnn_n'].edges)
-get_nnlo_nlo_weight['dy']['muFup'] = lookup_tools.dense_lookup.dense_lookup(kfactor_eej['eej_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_2p0'].values, kfactor_eej['eej_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_2p0'].edges)
-get_nnlo_nlo_weight['w']['muFup']  = lookup_tools.dense_lookup.dense_lookup(kfactor_evj['evj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_2p0'].values, kfactor_evj['evj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_2p0'].edges)
-get_nnlo_nlo_weight['z']['muFup']  = lookup_tools.dense_lookup.dense_lookup(kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_2p0'].values, kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_2p0'].edges)
-get_nnlo_nlo_weight['a']['muFup']  = lookup_tools.dense_lookup.dense_lookup(kfactor_aj['aj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_2p0'].values, kfactor_aj['aj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_2p0'].edges)
-get_nnlo_nlo_weight['dy']['muFdown'] = lookup_tools.dense_lookup.dense_lookup(kfactor_eej['eej_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_0p5'].values, kfactor_eej['eej_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_0p5'].edges)
-get_nnlo_nlo_weight['w']['muFdown']  = lookup_tools.dense_lookup.dense_lookup(kfactor_evj['evj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_0p5'].values, kfactor_evj['evj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_0p5'].edges)
-get_nnlo_nlo_weight['z']['muFdown']  = lookup_tools.dense_lookup.dense_lookup(kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_0p5'].values, kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_0p5'].edges)
-get_nnlo_nlo_weight['a']['muFdown']  = lookup_tools.dense_lookup.dense_lookup(kfactor_aj['aj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_0p5'].values, kfactor_aj['aj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_0p5'].edges)
-get_nnlo_nlo_weight['dy']['muRup'] = lookup_tools.dense_lookup.dense_lookup(kfactor_eej['eej_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_2p0_muF_1p0'].values, kfactor_eej['eej_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_2p0_muF_1p0'].edges)
-get_nnlo_nlo_weight['w']['muRup']  = lookup_tools.dense_lookup.dense_lookup(kfactor_evj['evj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_2p0_muF_1p0'].values, kfactor_evj['evj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_2p0_muF_1p0'].edges)
-get_nnlo_nlo_weight['z']['muRup']  = lookup_tools.dense_lookup.dense_lookup(kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_2p0_muF_1p0'].values, kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_2p0_muF_1p0'].edges)
-get_nnlo_nlo_weight['a']['muRup']  = lookup_tools.dense_lookup.dense_lookup(kfactor_aj['aj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_2p0_muF_1p0'].values, kfactor_aj['aj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_2p0_muF_1p0'].edges)
-get_nnlo_nlo_weight['dy']['muRdown'] = lookup_tools.dense_lookup.dense_lookup(kfactor_eej['eej_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_0p5_muF_1p0'].values, kfactor_eej['eej_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_0p5_muF_1p0'].edges)
-get_nnlo_nlo_weight['w']['muRdown']  = lookup_tools.dense_lookup.dense_lookup(kfactor_evj['evj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_0p5_muF_1p0'].values, kfactor_evj['evj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_0p5_muF_1p0'].edges)
-get_nnlo_nlo_weight['z']['muRdown']  = lookup_tools.dense_lookup.dense_lookup(kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_0p5_muF_1p0'].values, kfactor_vvj['vvj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_0p5_muF_1p0'].edges)
-get_nnlo_nlo_weight['a']['muRdown']  = lookup_tools.dense_lookup.dense_lookup(kfactor_aj['aj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_0p5_muF_1p0'].values, kfactor_aj['aj_NNLO_NLO_nnn_nnn_n_Weight_scale_variation_muR_0p5_muF_1p0'].edges)
-
+for p in ['dy','w','z','a']:
+    get_nnlo_nlo_weight[p]['cen'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnn_n'].values, kfactor[p][histname[p]+'nnn_nnn_n'].edges)
+    get_nnlo_nlo_weight[p]['qcd1up'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'unn_nnn_n'].values, kfactor[p][histname[p]+'unn_nnn_n'].edges)
+    get_nnlo_nlo_weight[p]['qcd1do'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'dnn_nnn_n'].values, kfactor[p][histname[p]+'dnn_nnn_n'].edges)
+    get_nnlo_nlo_weight[p]['qcd2up'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nun_nnn_n'].values, kfactor[p][histname[p]+'nun_nnn_n'].edges)
+    get_nnlo_nlo_weight[p]['qcd2do'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'ndn_nnn_n'].values, kfactor[p][histname[p]+'ndn_nnn_n'].edges)
+    get_nnlo_nlo_weight[p]['qcd3up'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnu_nnn_n'].values, kfactor[p][histname[p]+'nnu_nnn_n'].edges)
+    get_nnlo_nlo_weight[p]['qcd3do'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnd_nnn_n'].values, kfactor[p][histname[p]+'nnd_nnn_n'].edges)
+    get_nnlo_nlo_weight[p]['ew1up'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_unn_n'].values, kfactor[p][histname[p]+'nnn_unn_n'].edges)
+    get_nnlo_nlo_weight[p]['ew1do'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_dnn_n'].values, kfactor[p][histname[p]+'nnn_dnn_n'].edges)
+    get_nnlo_nlo_weight[p]['ew2up'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nun_n'].values, kfactor[p][histname[p]+'nnn_nun_n'].edges)
+    get_nnlo_nlo_weight[p]['ew2do'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_ndn_n'].values, kfactor[p][histname[p]+'nnn_ndn_n'].edges)
+    get_nnlo_nlo_weight[p]['ew3up'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnu_n'].values, kfactor[p][histname[p]+'nnn_nnu_n'].edges)
+    get_nnlo_nlo_weight[p]['ew3do'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnd_n'].values, kfactor[p][histname[p]+'nnn_nnd_n'].edges)
+    get_nnlo_nlo_weight[p]['mixup'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnn_u'].values, kfactor[p][histname[p]+'nnn_nnn_u'].edges)
+    get_nnlo_nlo_weight[p]['mixdo'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnn_d'].values, kfactor[p][histname[p]+'nnn_nnn_d'].edges)
+    get_nnlo_nlo_weight[p]['muFup'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_2p0'].values, kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_2p0'].edges)
+    get_nnlo_nlo_weight[p]['muFdo'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_0p5'].values, kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_0p5'].edges)
+    get_nnlo_nlo_weight[p]['muRup'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_2p0_muF_1p0'].values, kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_2p0_muF_1p0'].edges)
+    get_nnlo_nlo_weight[p]['muRdo'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_0p5_muF_1p0'].values, kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_0p5_muF_1p0'].edges)
 
 def get_ttbar_weight(pt):
     return np.exp(0.0615 - 0.0005 * np.clip(pt, 0, 800))
