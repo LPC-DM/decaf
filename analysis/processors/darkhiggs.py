@@ -1456,7 +1456,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               fjmass=leading_fj.msd_corr.sum(),
                                               ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                               weight=weights[region].weight(modifier=systematic)*cut)
-                    fill(dataset, r, vgentype, weights[region].weight(), cut)
+                    fill(dataset, region, vgentype, weights[region].weight(), cut)
                                     
         return hout
 
