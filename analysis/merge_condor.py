@@ -74,6 +74,7 @@ variables = [
     'sumw',
     'CaloMinusPfOverRecoil',
     'recoil',
+    'template',
     'met',
     'metphi',
     'mindphi',

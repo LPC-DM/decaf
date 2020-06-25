@@ -80,6 +80,7 @@ for filename in os.listdir(options.folder):
 variables = [
     'sumw',
     'CaloMinusPfOverRecoil',
+    'template',
     'recoil',
     'met',
     'metphi',
