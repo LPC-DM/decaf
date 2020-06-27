@@ -1122,7 +1122,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             btag['zmcr'], btagUp['zmcr'], btagDown['zmcr'] = np.ones(events.size), np.ones(events.size), np.ones(events.size)#get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['zecr'], btagUp['zecr'], btagDown['zecr'] = np.ones(events.size), np.ones(events.size), np.ones(events.size)#get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['gcr'],  btagUp['gcr'],  btagDown['gcr']  = np.ones(events.size), np.ones(events.size), np.ones(events.size)#get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
-            
+            print('nnlo_nlo[qcd1up]',nnlo_nlo['qcd1up'])
+            print('nnlo_nlo[cen]',nnlo_nlo['cen'])
+            print('ratio',nnlo_nlo['qcd1up']/nnlo_nlo['cen'])
+
             for r in selected_regions:
                 weights[r] = processor.Weights(len(events))
                 if 'L1PreFiringWeight' in events.columns: weights[r].add('prefiring',events.L1PreFiringWeight.Nom)
@@ -1144,6 +1147,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights[r].add('reco', reco[r])
                 weights[r].add('isolation', isolation[r])
                 weights[r].add('btag',btag[r], btagUp[r], btagDown[r])
+                print('weight qcd1Up',weights[r].weight('qcd1Up')/weights[r].weight())
                 
         leading_fj = fj[fj.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
