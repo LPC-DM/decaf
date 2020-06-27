@@ -1238,20 +1238,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights[r].add('reco', reco[r])
                 weights[r].add('isolation', isolation[r])
                 weights[r].add('btag',btag[r], btagUp[r], btagDown[r])
-                print('weight ew1Up',weights[r].weight('ew1Up')/weights[r].weight())
-                print('weight qcd1Up',weights[r].weight('qcd1Up')/weights[r].weight())
-                print('weight qcd2Down',weights[r].weight('qcd2Down')/weights[r].weight())
-                print('weight qcd3Up',weights[r].weight('qcd3Up')/weights[r].weight())
-                print('weight mixUp',weights[r].weight('mixUp')/weights[r].weight())
-                print('weight muFUp',weights[r].weight('muFUp')/weights[r].weight())
-                print('weight muRUp',weights[r].weight('muRUp')/weights[r].weight())
-                print('weight ew2GUp',weights[r].weight('ew2GUp')/weights[r].weight())
-                print('weight ew3GUp',weights[r].weight('ew3GUp')/weights[r].weight())
-                print('weight ew2WUp',weights[r].weight('ew2WUp')/weights[r].weight())
-                print('weight ew3WUp',weights[r].weight('ew3WUp')/weights[r].weight())
-                print('weight ew2ZUp',weights[r].weight('ew2ZUp')/weights[r].weight())
-                print('weight ew3ZUp',weights[r].weight('ew3ZUp')/weights[r].weight())
-
 
         leading_fj = fj[fj.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
@@ -1533,7 +1519,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 wlf = (~(whf.astype(np.bool))).astype(np.int)
                 for region in regions:
                     cut = selection.all(*regions[region])
-                    for systematic in [None,'btagUp','btagDown','qcd1Up','qcd1Down','qcd2Up','qcd2Down','qcd3Up','qcd3Down','muFUp','muFDown','muRUp','muRDown']:
+                    for systematic in [None,'btagUp','btagDown','qcd1Up','qcd1Down','qcd2Up','qcd2Down','qcd3Up','qcd3Down','muFUp','muFDown','muRUp','muRDown','ew1Up','ew1Down','ew2GUp','ew2GDown','ew2WUp','ew2WDown','ew2ZUp','ew2ZDown','ew3GUp','ew3GDown','ew3WUp','ew3WDown','ew3ZUp','ew3ZDown']:
                         sname = 'nominal' if systematic is None else systematic
                         hout['template'].fill(dataset='HF--'+dataset,
                                               region=region,
