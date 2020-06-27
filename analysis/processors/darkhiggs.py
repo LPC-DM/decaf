@@ -946,7 +946,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             jetgenb = fj.cross(gen[gen.isb], nested=True)
             bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==1)&(gen[gen.isb].counts>0)
             fj['isb']  = bmatch
-
+        
             bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==2)&(gen[gen.isb].counts>0)
             fj['isbb']  = bmatch
 
@@ -969,6 +969,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             genAs = gen[gen.isA]
 
             nlo = np.ones(events.size)
+            if('TTJets' in dataset): 
+                nlo = np.sqrt(get_ttbar_weight(genTops[:,0].pt.sum()) * get_ttbar_weight(genTops[:,1].pt.sum()))
+                
             nnlo_nlo = {}
             nnlo_nlo['cen'] = np.ones(events.size)
             nnlo_nlo['qcd1up'] = np.ones(events.size)
@@ -979,30 +982,89 @@ class AnalysisProcessor(processor.ProcessorABC):
             nnlo_nlo['qcd3do'] = np.ones(events.size)
             nnlo_nlo['ew1up'] = np.ones(events.size)
             nnlo_nlo['ew1do'] = np.ones(events.size)
-            nnlo_nlo['ew2up'] = np.ones(events.size)
-            nnlo_nlo['ew2do'] = np.ones(events.size)
-            nnlo_nlo['ew3up'] = np.ones(events.size)
-            nnlo_nlo['ew3do'] = np.ones(events.size)
+            nnlo_nlo['ew2Gup'] = np.ones(events.size)
+            nnlo_nlo['ew2Gdo'] = np.ones(events.size)
+            nnlo_nlo['ew2Wup'] = np.ones(events.size)
+            nnlo_nlo['ew2Wdo'] = np.ones(events.size)
+            nnlo_nlo['ew2Zup'] = np.ones(events.size)
+            nnlo_nlo['ew2Zdo'] = np.ones(events.size)
+            nnlo_nlo['ew3Gup'] = np.ones(events.size)
+            nnlo_nlo['ew3Gdo'] = np.ones(events.size)
+            nnlo_nlo['ew3Wup'] = np.ones(events.size)
+            nnlo_nlo['ew3Wdo'] = np.ones(events.size)
+            nnlo_nlo['ew3Zup'] = np.ones(events.size)
+            nnlo_nlo['ew3Zdo'] = np.ones(events.size)
             nnlo_nlo['mixup'] = np.ones(events.size)
             nnlo_nlo['mixdo'] = np.ones(events.size)
             nnlo_nlo['muFup'] = np.ones(events.size)
             nnlo_nlo['muFdo'] = np.ones(events.size)
             nnlo_nlo['muRup'] = np.ones(events.size)
             nnlo_nlo['muRdo'] = np.ones(events.size)
-            if('TTJets' in dataset): 
-                nlo = np.sqrt(get_ttbar_weight(genTops[:,0].pt.sum()) * get_ttbar_weight(genTops[:,1].pt.sum()))
-            elif('GJets' in dataset): 
+            
+            if('GJets' in dataset): 
                 for systematic in nnlo_nlo.keys():
-                    nnlo_nlo[systematic]=get_nnlo_nlo_weight['a'][systematic](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                    if systematic in get_nnlo_nlo_weight['a']:
+                        nnlo_nlo[systematic]=get_nnlo_nlo_weight['a'][systematic](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                nnlo_nlo['ew2Gup'] = get_nnlo_nlo_weight['a']['ew2up'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                nnlo_nlo['ew2Gdo'] = get_nnlo_nlo_weight['a']['ew2do'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                nnlo_nlo['ew3Gup'] = get_nnlo_nlo_weight['a']['ew3up'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                nnlo_nlo['ew3Gdo'] = get_nnlo_nlo_weight['a']['ew3do'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                nnlo_nlo['ew2Wup'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                nnlo_nlo['ew2Wdo'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                nnlo_nlo['ew3Wup'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                nnlo_nlo['ew3Wdo'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                nnlo_nlo['ew2Zup'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                nnlo_nlo['ew2Zdo'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                nnlo_nlo['ew3Zup'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                nnlo_nlo['ew3Zdo'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
             elif('WJets' in dataset): 
                 for systematic in nnlo_nlo.keys():
-                    nnlo_nlo[systematic]= get_nnlo_nlo_weight['w'][systematic](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                    if systematic in get_nnlo_nlo_weight['w']:
+                        nnlo_nlo[systematic]= get_nnlo_nlo_weight['w'][systematic](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Gup'] = get_nnlo_nlo_weight['w']['cen'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Gdo'] = get_nnlo_nlo_weight['w']['cen'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Gup'] = get_nnlo_nlo_weight['w']['cen'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Gdo'] = get_nnlo_nlo_weight['w']['cen'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Wup'] = get_nnlo_nlo_weight['w']['ew2up'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Wdo'] = get_nnlo_nlo_weight['w']['ew2do'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Wup'] = get_nnlo_nlo_weight['w']['ew3up'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Wdo'] = get_nnlo_nlo_weight['w']['ew3do'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Zup'] = get_nnlo_nlo_weight['w']['cen'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Zdo'] = get_nnlo_nlo_weight['w']['cen'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Zup'] = get_nnlo_nlo_weight['w']['cen'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Zdo'] = get_nnlo_nlo_weight['w']['cen'](genWs.pt.max())*(genWs.pt.max()>100).astype(np.int) + (genWs.pt.max()<=100).astype(np.int)
             elif('DY' in dataset): 
                 for systematic in nnlo_nlo.keys():
-                    nnlo_nlo[systematic]=get_nnlo_nlo_weight['dy'][systematic](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                    if systematic in get_nnlo_nlo_weight['dy']:
+                        nnlo_nlo[systematic]=get_nnlo_nlo_weight['dy'][systematic](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Gup'] = get_nnlo_nlo_weight['dy']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Gdo'] = get_nnlo_nlo_weight['dy']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Gup'] = get_nnlo_nlo_weight['dy']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Gdo'] = get_nnlo_nlo_weight['dy']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Wup'] = get_nnlo_nlo_weight['dy']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Wdo'] = get_nnlo_nlo_weight['dy']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Wup'] = get_nnlo_nlo_weight['dy']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Wdo'] = get_nnlo_nlo_weight['dy']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Zup'] = get_nnlo_nlo_weight['dy']['ew2up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Zdo'] = get_nnlo_nlo_weight['dy']['ew2do'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Zup'] = get_nnlo_nlo_weight['dy']['ew3up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Zdo'] = get_nnlo_nlo_weight['dy']['ew3do'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
             elif('ZJets' in dataset): 
                 for systematic in nnlo_nlo.keys():
-                    nnlo_nlo[systematic]=get_nnlo_nlo_weight['z'][systematic](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                    if systematic in get_nnlo_nlo_weight['z']:
+                        nnlo_nlo[systematic]=get_nnlo_nlo_weight['z'][systematic](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Gup'] = get_nnlo_nlo_weight['z']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Gdo'] = get_nnlo_nlo_weight['z']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Gup'] = get_nnlo_nlo_weight['z']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Gdo'] = get_nnlo_nlo_weight['z']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Wup'] = get_nnlo_nlo_weight['z']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Wdo'] = get_nnlo_nlo_weight['z']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Wup'] = get_nnlo_nlo_weight['z']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Wdo'] = get_nnlo_nlo_weight['z']['cen'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Zup'] = get_nnlo_nlo_weight['z']['ew2up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Zdo'] = get_nnlo_nlo_weight['z']['ew2do'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Zup'] = get_nnlo_nlo_weight['z']['ew3up'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Zdo'] = get_nnlo_nlo_weight['z']['ew3do'](genZs.pt.max())*(genZs.pt.max()>100).astype(np.int) + (genZs.pt.max()<=100).astype(np.int)
 
             ###
             # Calculate PU weight and systematic variations
@@ -1122,9 +1184,34 @@ class AnalysisProcessor(processor.ProcessorABC):
             btag['zmcr'], btagUp['zmcr'], btagDown['zmcr'] = np.ones(events.size), np.ones(events.size), np.ones(events.size)#get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['zecr'], btagUp['zecr'], btagDown['zecr'] = np.ones(events.size), np.ones(events.size), np.ones(events.size)#get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['gcr'],  btagUp['gcr'],  btagDown['gcr']  = np.ones(events.size), np.ones(events.size), np.ones(events.size)#get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
-            print('nnlo_nlo[qcd1up]',nnlo_nlo['qcd1up'])
             print('nnlo_nlo[cen]',nnlo_nlo['cen'])
+            print('nnlo_nlo[ew1up]',nnlo_nlo['ew1up'])
+            print('ratio',nnlo_nlo['ew1up']/nnlo_nlo['cen'])
+            print('nnlo_nlo[qcd1up]',nnlo_nlo['qcd1up'])
             print('ratio',nnlo_nlo['qcd1up']/nnlo_nlo['cen'])
+            print('nnlo_nlo[qcd2do]',nnlo_nlo['qcd2do'])
+            print('ratio',nnlo_nlo['qcd2do']/nnlo_nlo['cen'])
+            print('nnlo_nlo[qcd3up]',nnlo_nlo['qcd3up'])
+            print('ratio',nnlo_nlo['qcd3up']/nnlo_nlo['cen'])
+            print('nnlo_nlo[mixup]',nnlo_nlo['mixup'])
+            print('ratio',nnlo_nlo['mixup']/nnlo_nlo['cen'])
+            print('nnlo_nlo[muFup]',nnlo_nlo['muFup'])
+            print('ratio',nnlo_nlo['muFup']/nnlo_nlo['cen'])
+            print('nnlo_nlo[muRup]',nnlo_nlo['muRup'])
+            print('ratio',nnlo_nlo['muRup']/nnlo_nlo['cen'])
+            print('nnlo_nlo[ew2Gup]',nnlo_nlo['ew2Gup'])
+            print('ratio',nnlo_nlo['ew2Gup']/nnlo_nlo['cen'])
+            print('nnlo_nlo[ew3Gup]',nnlo_nlo['ew3Gup'])
+            print('ratio',nnlo_nlo['ew3Gup']/nnlo_nlo['cen'])
+            print('nnlo_nlo[ew2Wup]',nnlo_nlo['ew2Wup'])
+            print('ratio',nnlo_nlo['ew2Wup']/nnlo_nlo['cen'])
+            print('nnlo_nlo[ew3Wup]',nnlo_nlo['ew3Wup'])
+            print('ratio',nnlo_nlo['ew3Wup']/nnlo_nlo['cen'])
+            print('nnlo_nlo[ew2Zup]',nnlo_nlo['ew2Zup'])
+            print('ratio',nnlo_nlo['ew2Zup']/nnlo_nlo['cen'])
+            print('nnlo_nlo[ew3Zup]',nnlo_nlo['ew3Zup'])
+            print('ratio',nnlo_nlo['ew3Zup']/nnlo_nlo['cen'])
+
 
             for r in selected_regions:
                 weights[r] = processor.Weights(len(events))
@@ -1135,10 +1222,14 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights[r].add('qcd1',np.ones(events.size), nnlo_nlo['qcd1up']/nnlo_nlo['cen'], nnlo_nlo['qcd1do']/nnlo_nlo['cen'])
                 weights[r].add('qcd2',np.ones(events.size), nnlo_nlo['qcd2up']/nnlo_nlo['cen'], nnlo_nlo['qcd2do']/nnlo_nlo['cen'])
                 weights[r].add('qcd3',np.ones(events.size), nnlo_nlo['qcd3up']/nnlo_nlo['cen'], nnlo_nlo['qcd3do']/nnlo_nlo['cen'])
-                #weights[r].add('ew1',np.ones(events.size), nnlo_nlo['ew1up']/nnlo_nlo['cen'], nnlo_nlo['ew1do']/nnlo_nlo['cen'])
-                #weights[r].add('ew2',np.ones(events.size), nnlo_nlo['ew2up']/nnlo_nlo['cen'], nnlo_nlo['ew2do']/nnlo_nlo['cen'])
-                #weights[r].add('ew3',np.ones(events.size), nnlo_nlo['ew3up']/nnlo_nlo['cen'], nnlo_nlo['ew3do']/nnlo_nlo['cen'])
-                #weights[r].add('mix',np.ones(events.size), nnlo_nlo['mixup']/nnlo_nlo['cen'], nnlo_nlo['mixdo']/nnlo_nlo['cen'])
+                weights[r].add('ew1',np.ones(events.size), nnlo_nlo['ew1up']/nnlo_nlo['cen'], nnlo_nlo['ew1do']/nnlo_nlo['cen'])
+                weights[r].add('ew2G',np.ones(events.size), nnlo_nlo['ew2Gup']/nnlo_nlo['cen'], nnlo_nlo['ew2Gdo']/nnlo_nlo['cen'])
+                weights[r].add('ew3G',np.ones(events.size), nnlo_nlo['ew3Gup']/nnlo_nlo['cen'], nnlo_nlo['ew3Gdo']/nnlo_nlo['cen'])
+                weights[r].add('ew2W',np.ones(events.size), nnlo_nlo['ew2Wup']/nnlo_nlo['cen'], nnlo_nlo['ew2Wdo']/nnlo_nlo['cen'])
+                weights[r].add('ew3W',np.ones(events.size), nnlo_nlo['ew3Wup']/nnlo_nlo['cen'], nnlo_nlo['ew3Wdo']/nnlo_nlo['cen'])
+                weights[r].add('ew2Z',np.ones(events.size), nnlo_nlo['ew2Zup']/nnlo_nlo['cen'], nnlo_nlo['ew2Zdo']/nnlo_nlo['cen'])
+                weights[r].add('ew3Z',np.ones(events.size), nnlo_nlo['ew3Zup']/nnlo_nlo['cen'], nnlo_nlo['ew3Zdo']/nnlo_nlo['cen'])
+                weights[r].add('mix',np.ones(events.size), nnlo_nlo['mixup']/nnlo_nlo['cen'], nnlo_nlo['mixdo']/nnlo_nlo['cen'])
                 weights[r].add('muF',np.ones(events.size), nnlo_nlo['muFup']/nnlo_nlo['cen'], nnlo_nlo['muFdo']/nnlo_nlo['cen'])
                 weights[r].add('muR',np.ones(events.size), nnlo_nlo['muRup']/nnlo_nlo['cen'], nnlo_nlo['muRdo']/nnlo_nlo['cen'])
                 weights[r].add('pileup',pu)
@@ -1147,8 +1238,21 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights[r].add('reco', reco[r])
                 weights[r].add('isolation', isolation[r])
                 weights[r].add('btag',btag[r], btagUp[r], btagDown[r])
+                print('weight ew1Up',weights[r].weight('ew1Up')/weights[r].weight())
                 print('weight qcd1Up',weights[r].weight('qcd1Up')/weights[r].weight())
-                
+                print('weight qcd2Down',weights[r].weight('qcd2Down')/weights[r].weight())
+                print('weight qcd3Up',weights[r].weight('qcd3Up')/weights[r].weight())
+                print('weight mixUp',weights[r].weight('mixUp')/weights[r].weight())
+                print('weight muFUp',weights[r].weight('muFUp')/weights[r].weight())
+                print('weight muRUp',weights[r].weight('muRUp')/weights[r].weight())
+                print('weight ew2GUp',weights[r].weight('ew2GUp')/weights[r].weight())
+                print('weight ew3GUp',weights[r].weight('ew3GUp')/weights[r].weight())
+                print('weight ew2WUp',weights[r].weight('ew2WUp')/weights[r].weight())
+                print('weight ew3WUp',weights[r].weight('ew3WUp')/weights[r].weight())
+                print('weight ew2ZUp',weights[r].weight('ew2ZUp')/weights[r].weight())
+                print('weight ew3ZUp',weights[r].weight('ew3ZUp')/weights[r].weight())
+
+
         leading_fj = fj[fj.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
         leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
