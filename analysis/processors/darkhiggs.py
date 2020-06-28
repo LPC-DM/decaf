@@ -4,6 +4,7 @@ import cloudpickle
 import json
 import pprint
 import numpy as np
+import math 
 import awkward
 np.seterr(divide='ignore', invalid='ignore', over='ignore')
 from coffea.arrays import Initialize
@@ -959,19 +960,44 @@ class AnalysisProcessor(processor.ProcessorABC):
             fj['iscc']  = cmatch
 
             gen['isTop'] = (abs(gen.pdgId)==6)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
-            gen['isW'] = (abs(gen.pdgId)==24)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
-            gen['isZ'] = (abs(gen.pdgId)==23)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
-            gen['isA'] = (abs(gen.pdgId)==22)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
-
             genTops = gen[gen.isTop]
-            genWs = gen[gen.isW]
-            genZs = gen[gen.isZ]
-            genAs = gen[gen.isA]
-
             nlo = np.ones(events.size)
             if('TTJets' in dataset): 
                 nlo = np.sqrt(get_ttbar_weight(genTops[:,0].pt.sum()) * get_ttbar_weight(genTops[:,1].pt.sum()))
                 
+
+            gen['isW'] = (abs(gen.pdgId)==24)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
+            gen['isZ'] = (abs(gen.pdgId)==23)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
+            gen['isA'] = (abs(gen.pdgId)==22)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
+
+            epsilon_0_dyn = 0.1
+            n_dyn = 1
+            gen['R_dyn'] = (91.1876/(gen.pt * np.sqrt(epsilon_0_dyn)))*(gen.isA).astype(np.int) + (-999)*(~gen.isA).astype(np.int)
+            gen['R_0_dyn'] = gen.R_dyn*(gen.R_dyn<1.0).astype(np.int) + (gen.R_dyn>=1.0).astype(np.int)
+
+            def isolation(R):
+                hadrons = gen[
+                    (gen.status == 1) &
+                    ~( (abs(gen.pdgId)==22) | ((abs(gen.pdgId)>= 11) & (abs(gen.pdgId)<= 16)))
+                ]
+                print(hadrons.status)
+                genhadrons = gen.cross(hadrons, nested=True)
+                hadronic_et = genhadrons.i1[(genhadrons.i0.delta_r(genhadrons.i1) <= R)].pt.sum()
+                return (hadronic_et<=(epsilon_0_dyn * gen.pt * np.power((1 - np.cos(R)) / (1 - np.cos(gen.R_0_dyn)), n_dyn))) | (hadrons.counts==0)
+
+            isIsoA=gen.isA
+            iterations = 5.
+            for i in range(1, int(iterations) + 1):
+                isIsoA=isIsoA&isolation(gen.R_0_dyn*i/iterations)
+            gen['isIsoA']=isIsoA
+
+            genWs = gen[gen.isW]
+            genZs = gen[gen.isZ]
+            genAs = gen[gen.isA]
+            genIsoAs = gen[gen.isIsoA]
+            print('photons',genAs.counts.sum())
+            print('iso photons',genIsoAs.counts.sum())
+
             nnlo_nlo = {}
             nnlo_nlo['cen'] = np.ones(events.size)
             nnlo_nlo['qcd1up'] = np.ones(events.size)
@@ -1184,34 +1210,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             btag['zmcr'], btagUp['zmcr'], btagDown['zmcr'] = np.ones(events.size), np.ones(events.size), np.ones(events.size)#get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['zecr'], btagUp['zecr'], btagDown['zecr'] = np.ones(events.size), np.ones(events.size), np.ones(events.size)#get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['gcr'],  btagUp['gcr'],  btagDown['gcr']  = np.ones(events.size), np.ones(events.size), np.ones(events.size)#get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
-            print('nnlo_nlo[cen]',nnlo_nlo['cen'])
-            print('nnlo_nlo[ew1up]',nnlo_nlo['ew1up'])
-            print('ratio',nnlo_nlo['ew1up']/nnlo_nlo['cen'])
-            print('nnlo_nlo[qcd1up]',nnlo_nlo['qcd1up'])
-            print('ratio',nnlo_nlo['qcd1up']/nnlo_nlo['cen'])
-            print('nnlo_nlo[qcd2do]',nnlo_nlo['qcd2do'])
-            print('ratio',nnlo_nlo['qcd2do']/nnlo_nlo['cen'])
-            print('nnlo_nlo[qcd3up]',nnlo_nlo['qcd3up'])
-            print('ratio',nnlo_nlo['qcd3up']/nnlo_nlo['cen'])
-            print('nnlo_nlo[mixup]',nnlo_nlo['mixup'])
-            print('ratio',nnlo_nlo['mixup']/nnlo_nlo['cen'])
-            print('nnlo_nlo[muFup]',nnlo_nlo['muFup'])
-            print('ratio',nnlo_nlo['muFup']/nnlo_nlo['cen'])
-            print('nnlo_nlo[muRup]',nnlo_nlo['muRup'])
-            print('ratio',nnlo_nlo['muRup']/nnlo_nlo['cen'])
-            print('nnlo_nlo[ew2Gup]',nnlo_nlo['ew2Gup'])
-            print('ratio',nnlo_nlo['ew2Gup']/nnlo_nlo['cen'])
-            print('nnlo_nlo[ew3Gup]',nnlo_nlo['ew3Gup'])
-            print('ratio',nnlo_nlo['ew3Gup']/nnlo_nlo['cen'])
-            print('nnlo_nlo[ew2Wup]',nnlo_nlo['ew2Wup'])
-            print('ratio',nnlo_nlo['ew2Wup']/nnlo_nlo['cen'])
-            print('nnlo_nlo[ew3Wup]',nnlo_nlo['ew3Wup'])
-            print('ratio',nnlo_nlo['ew3Wup']/nnlo_nlo['cen'])
-            print('nnlo_nlo[ew2Zup]',nnlo_nlo['ew2Zup'])
-            print('ratio',nnlo_nlo['ew2Zup']/nnlo_nlo['cen'])
-            print('nnlo_nlo[ew3Zup]',nnlo_nlo['ew3Zup'])
-            print('ratio',nnlo_nlo['ew3Zup']/nnlo_nlo['cen'])
-
 
             for r in selected_regions:
                 weights[r] = processor.Weights(len(events))
