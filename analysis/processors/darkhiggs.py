@@ -968,7 +968,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             gen['isW'] = (abs(gen.pdgId)==24)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isZ'] = (abs(gen.pdgId)==23)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
-            gen['isA'] = (abs(gen.pdgId)==22)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
+            gen['isA'] = (abs(gen.pdgId)==22)&gen.hasFlags(['isPrompt', 'fromHardProcess', 'isLastCopy'])&(gen.status==1)
 
             epsilon_0_dyn = 0.1
             n_dyn = 1
@@ -977,10 +977,9 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             def isolation(R):
                 hadrons = gen[
-                    (gen.status == 1) &
-                    ~( (abs(gen.pdgId)==22) | ((abs(gen.pdgId)>= 11) & (abs(gen.pdgId)<= 16)))
+                    ((abs(gen.pdgId)<=5)|(abs(gen.pdgId)==21)) &
+                    gen.hasFlags(['fromHardProcess', 'isFirstCopy'])
                 ]
-                print(hadrons.status)
                 genhadrons = gen.cross(hadrons, nested=True)
                 hadronic_et = genhadrons.i1[(genhadrons.i0.delta_r(genhadrons.i1) <= R)].pt.sum()
                 return (hadronic_et<=(epsilon_0_dyn * gen.pt * np.power((1 - np.cos(R)) / (1 - np.cos(gen.R_0_dyn)), n_dyn))) | (hadrons.counts==0)
@@ -993,10 +992,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             genWs = gen[gen.isW]
             genZs = gen[gen.isZ]
-            genAs = gen[gen.isA]
             genIsoAs = gen[gen.isIsoA]
-            print('photons',genAs.counts.sum())
-            print('iso photons',genIsoAs.counts.sum())
 
             nnlo_nlo = {}
             nnlo_nlo['cen'] = np.ones(events.size)
@@ -1030,19 +1026,19 @@ class AnalysisProcessor(processor.ProcessorABC):
             if('GJets' in dataset): 
                 for systematic in nnlo_nlo.keys():
                     if systematic in get_nnlo_nlo_weight['a']:
-                        nnlo_nlo[systematic]=get_nnlo_nlo_weight['a'][systematic](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                nnlo_nlo['ew2Gup'] = get_nnlo_nlo_weight['a']['ew2up'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                nnlo_nlo['ew2Gdo'] = get_nnlo_nlo_weight['a']['ew2do'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                nnlo_nlo['ew3Gup'] = get_nnlo_nlo_weight['a']['ew3up'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                nnlo_nlo['ew3Gdo'] = get_nnlo_nlo_weight['a']['ew3do'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                nnlo_nlo['ew2Wup'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                nnlo_nlo['ew2Wdo'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                nnlo_nlo['ew3Wup'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                nnlo_nlo['ew3Wdo'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                nnlo_nlo['ew2Zup'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                nnlo_nlo['ew2Zdo'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                nnlo_nlo['ew3Zup'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
-                nnlo_nlo['ew3Zdo'] = get_nnlo_nlo_weight['a']['cen'](genAs.pt.max())*(genAs.pt.max()>290).astype(np.int) + (genAs.pt.max()<=290).astype(np.int)
+                        nnlo_nlo[systematic]=get_nnlo_nlo_weight['a'][systematic](genIsoAs.pt.max())*(genIsoAs.pt.max()>100).astype(np.int) + (genIsoAs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Gup'] = get_nnlo_nlo_weight['a']['ew2up'](genIsoAs.pt.max())*(genIsoAs.pt.max()>100).astype(np.int) + (genIsoAs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Gdo'] = get_nnlo_nlo_weight['a']['ew2do'](genIsoAs.pt.max())*(genIsoAs.pt.max()>100).astype(np.int) + (genIsoAs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Gup'] = get_nnlo_nlo_weight['a']['ew3up'](genIsoAs.pt.max())*(genIsoAs.pt.max()>100).astype(np.int) + (genIsoAs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Gdo'] = get_nnlo_nlo_weight['a']['ew3do'](genIsoAs.pt.max())*(genIsoAs.pt.max()>100).astype(np.int) + (genIsoAs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Wup'] = get_nnlo_nlo_weight['a']['cen'](genIsoAs.pt.max())*(genIsoAs.pt.max()>100).astype(np.int) + (genIsoAs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Wdo'] = get_nnlo_nlo_weight['a']['cen'](genIsoAs.pt.max())*(genIsoAs.pt.max()>100).astype(np.int) + (genIsoAs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Wup'] = get_nnlo_nlo_weight['a']['cen'](genIsoAs.pt.max())*(genIsoAs.pt.max()>100).astype(np.int) + (genIsoAs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Wdo'] = get_nnlo_nlo_weight['a']['cen'](genIsoAs.pt.max())*(genIsoAs.pt.max()>100).astype(np.int) + (genIsoAs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Zup'] = get_nnlo_nlo_weight['a']['cen'](genIsoAs.pt.max())*(genIsoAs.pt.max()>100).astype(np.int) + (genIsoAs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew2Zdo'] = get_nnlo_nlo_weight['a']['cen'](genIsoAs.pt.max())*(genIsoAs.pt.max()>100).astype(np.int) + (genIsoAs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Zup'] = get_nnlo_nlo_weight['a']['cen'](genIsoAs.pt.max())*(genIsoAs.pt.max()>100).astype(np.int) + (genIsoAs.pt.max()<=100).astype(np.int)
+                nnlo_nlo['ew3Zdo'] = get_nnlo_nlo_weight['a']['cen'](genIsoAs.pt.max())*(genIsoAs.pt.max()>100).astype(np.int) + (genIsoAs.pt.max()<=100).astype(np.int)
             elif('WJets' in dataset): 
                 for systematic in nnlo_nlo.keys():
                     if systematic in get_nnlo_nlo_weight['w']:

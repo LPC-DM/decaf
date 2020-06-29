@@ -43,8 +43,8 @@ export PYTHONPATH=$(find ${_CONDOR_SCRATCH_DIR}/site-packages/ -name *.egg |tr '
 export PYTHONWARNINGS="ignore"
 echo "Updated python path: " $PYTHONPATH
 cd analysis
-echo "python run.py --year ${1} --dataset ${2} --analysis ${3}"
-python run.py --year ${1} --dataset ${2} --analysis ${3}
-ls hists/${3}${1}/${2}.futures
-cp hists/${3}${1}/${2}.futures ${_CONDOR_SCRATCH_DIR}/${3}${1}_${2}.futures
+echo "python run.py --metadata ${1} --dataset ${2} --processor ${3}"
+python run.py --metadata ${1} --dataset ${2} --processor ${3}
+ls hists/${3}/${2}.futures
+cp hists/${3}/${2}.futures ${_CONDOR_SCRATCH_DIR}/${3}_${2}.futures
 

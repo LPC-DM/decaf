@@ -18,24 +18,16 @@ collection_methods['AK15Puppi'] = LorentzVector
 collection_methods['AK15PuppiSubJet'] = LorentzVector
 
 parser = OptionParser()
-parser.add_option('-a', '--analysis', help='analysis', dest='analysis') 
-parser.add_option('-y', '--year', help='year', dest='year')
+parser.add_option('-p', '--processor', help='processor', dest='processor')
+parser.add_option('-m', '--metadata', help='metadata', dest='metadata')
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 parser.add_option('-w', '--workers', help='Number of workers to use for multi-worker executors (e.g. futures or condor)', dest='workers', type=int, default=8)
 (options, args) = parser.parse_args()
 
-year=''
-if options.year: year=options.year
-
-processor_file = ''
-for filename in os.listdir('data'):
-    if '.processor' not in filename: continue
-    if options.analysis+year in filename: processor_file = filename
-
-processor_instance=load('data/'+processor_file)
+processor_instance=load('data/'+options.processor+'.processor')
 
 fileslice = slice(None)
-with open("metadata/"+options.year+".json") as fin:
+with open("metadata/"+options.metadata+".json") as fin:
     samplefiles = json.load(fin)
 
 for dataset, info in samplefiles.items():
@@ -60,8 +52,8 @@ for dataset, info in samplefiles.items():
     #print("Filled %.1fM bins" % (nbins/1e6, ))
     #print("Nonzero bins: %.1f%%" % (100*nfilled/nbins, ))
 
-    os.system("mkdir -p hists/"+options.analysis+year)
-    save(output,'hists/'+options.analysis+year+'/'+dataset+'.futures')        
+    os.system("mkdir -p hists/"+options.processor)
+    save(output,'hists/'+options.processor+'/'+dataset+'.futures')        
     dt = time.time() - tstart
     nworkers = options.workers
     print("%.2f us*cpu overall" % (1e6*dt*nworkers, ))
