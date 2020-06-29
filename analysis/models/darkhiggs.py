@@ -18,11 +18,17 @@ rl.ParametericSample.PreferRooParametricHist = False
 
 def model(year,mass,category):
     
+    category_map = {
+        'monohs': 1,
+        'monojet': 0
+    }
+    
     def template(dictionary, process, systematic, region):
         print('Generating template for',process,'in',region)
-        output=dictionary[region].integrate('process', process).integrate('systematic',systematic).sum('fjmass').values()[()][:,0]
-        if 'monohs' in category:
-            output=dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()][:,mass,1]
+        if mass is None:
+            output=dictionary[region].integrate('process', process).integrate('systematic',systematic).sum('fjmass').values()[()][:,category_map[category]]
+        else:
+            output=dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()][:,mass,category_map[category]]
         binning=dictionary[region].integrate('process', process).integrate('systematic',systematic).axis('recoil').edges()
         return (output, binning, 'recoil')
 
@@ -278,16 +284,21 @@ def model(year,mass,category):
     btagUp=template(background,'W+jets','btagUp','sr')[0]
     btagDown=template(background,'W+jets','btagDown','sr')[0]
     sr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-    sr_wjetsBinYields = np.array([rl.IndependentParameter('sr'+year+'_wjets_bin_%d' % i,b,0,sr_wjetsTemplate[0].max()*2) for i,b in enumerate(sr_wjetsTemplate[0])]) 
-    sr_wjetsObservable = rl.Observable('recoil', sr_wjetsTemplate[1])
-    sr_wjets = rl.ParametericSample('sr'+year+'_wjets', rl.Sample.BACKGROUND, sr_wjetsObservable, sr_wjetsBinYields)
-    sr_wjetsBinYields = sr_wjetsBinYields * hf_fraction_weight['0tag']['W+jets']
-    sr_wjetsXweight = rl.ParametericSample(ch_name+'_wjets', rl.Sample.BACKGROUND, sr_wjetsObservable, sr_wjetsBinYields)
+    #sr_wjetsBinYields = np.array([rl.IndependentParameter('sr'+year+'_wjets_bin_%d' % i,b,0,sr_wjetsTemplate[0].max()*2) for i,b in enumerate(sr_wjetsTemplate[0])]) 
+    #sr_wjetsObservable = rl.Observable('recoil', sr_wjetsTemplate[1])
+    #sr_wjets = rl.ParametericSample('sr'+year+'_wjets', rl.Sample.BACKGROUND, sr_wjetsObservable, sr_wjetsBinYields)
+    #sr_wjetsBinYields = sr_wjetsBinYields * hf_fraction_weight['0tag']['W+jets']
+    #sr_wjetsXweight = rl.ParametericSample(ch_name+'_wjets', rl.Sample.BACKGROUND, sr_wjetsObservable, sr_wjetsBinYields)
+    #sr.addSample(sr_wjetsXweight)
+    #Adding W-Z link
+    sr_wjetsTransferFactor = sr_wjetsMC.getExpectation() / sr_zjetsMC.getExpectation()# * hf_fraction_weight['0tag']['W+jets']
+    sr_wjets = rl.TransferFactorSample('sr'+year+'_wjets', rl.Sample.BACKGROUND, sr_wjetsTransferFactor, sr_zjets)
+    sr_wjetsTransferFactor = sr_wjetsTransferFactor * hf_fraction_weight['0tag']['W+jets']
+    sr_wjetsXweight = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, sr_wjetsTransferFactor, sr_zjets)
     sr.addSample(sr_wjetsXweight)
 
     ###    
-    # top-antitop data-driven model                                                                                                                                                                  
-    ### 
+    # top-antitop data-driven model                                                                                                                                                                  ### 
 
     sr_ttTemplate = template(background,'TT','nominal','sr')
     sr_ttMC =  rl.TemplateSample('sr'+year+'_ttMC', rl.Sample.BACKGROUND, sr_ttTemplate)
@@ -687,7 +698,10 @@ def model(year,mass,category):
     # Add data distribution to the channel
     ###
 
-    wecr.setObservation(template(data,'SingleElectron','nominal','wecr'))
+    if year=='2018': 
+        wecr.setObservation(template(data,'EGamma','nominal','wecr'))
+    else: 
+        wecr.setObservation(template(data,'SingleElectron','nominal','wecr'))
 
     ###    
     # W(->lnu)+jets data-driven model                
@@ -827,7 +841,10 @@ def model(year,mass,category):
     # Add data distribution to the channel
     ###
 
-    tecr.setObservation(template(data,'SingleElectron','nominal','tecr'))
+    if year=='2018': 
+        tecr.setObservation(template(data,'EGamma','nominal','tecr'))
+    else: 
+        tecr.setObservation(template(data,'SingleElectron','nominal','tecr'))
 
     ###    
     # W(->lnu)+jets data-driven model                
@@ -1051,7 +1068,10 @@ def model(year,mass,category):
     # Add data distribution to the channel
     ###
 
-    zecr.setObservation(template(data,'SingleElectron','nominal','zecr'))
+    if year=='2018': 
+        zecr.setObservation(template(data,'EGamma','nominal','zecr'))
+    else:
+        zecr.setObservation(template(data,'SingleElectron','nominal','zecr'))
 
     zecr_dyjetsTemplate = template(background,'DY+jets','nominal','zecr')
     zecr_dyjetsMC =  rl.TemplateSample('zecr'+year+'_dyjetsMC', rl.Sample.BACKGROUND, zecr_dyjetsTemplate)
@@ -1136,7 +1156,10 @@ def model(year,mass,category):
     # Add data distribution to the channel
     ###
 
-    gcr.setObservation(template(data,'SinglePhoton','nominal','gcr'))
+    if year=='2018': 
+        gcr.setObservation(template(data,'EGamma','nominal','gcr'))
+    else: 
+        gcr.setObservation(template(data,'SinglePhoton','nominal','gcr'))
 
     gcr_gjetsTemplate = template(background,'G+jets','nominal','gcr')
     gcr_gjetsMC =  rl.TemplateSample('gcr'+year+'_gjetsMC', rl.Sample.BACKGROUND, gcr_gjetsTemplate)
@@ -1167,7 +1190,6 @@ if __name__ == '__main__':
     if not os.path.exists('datacards'):
         os.mkdir('datacards')
     parser = OptionParser()
-    parser.add_option('-g', '--category', help='category', dest='category', default='')
     parser.add_option('-y', '--year', help='year', dest='year', default='')
     (options, args) = parser.parse_args()
         
@@ -1203,8 +1225,9 @@ if __name__ == '__main__':
     sig_map["MonoW"] = ("MonoW*",)    ## signals
     sig_map["MonoZ"] = ("MonoZ*",)    ## signals
     data_map["MET"] = ("MET*", )
-    data_map["SingleElectron"] = ("EGamma*", )
-    data_map["SinglePhoton"] = ("EGamma*", )
+    data_map["SingleElectron"] = ("SingleElectron*", )
+    data_map["SinglePhoton"] = ("SinglePhoton*", )
+    data_map["EGamma"] = ("EGamma*", )
     
     for key in hists['data'].keys():
         bkg_hists[key] = hists['bkg'][key].group(cats, process, bkg_map)
@@ -1219,7 +1242,6 @@ if __name__ == '__main__':
 
     model_dict={}
     for category in ['monojet','monohs']:
-        if options.category and options.category not in category: continue
         if category=='monojet':
             with open('data/darkhiggs'+options.year+'-'+category+'.model', "wb") as fout:
                 pickle.dump(model(options.year,None,category), fout, protocol=2)
