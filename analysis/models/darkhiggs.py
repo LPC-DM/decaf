@@ -401,7 +401,7 @@ def model(year,mass,category):
     ###
     ###
 
-    ch_name = 'wmcr-'+model_id
+    ch_name = 'wmcr'+model_id
     wmcr = rl.Channel(ch_name)
     model.addChannel(wmcr)
 
@@ -540,7 +540,7 @@ def model(year,mass,category):
     ###
     ###
 
-    ch_name = 'tmcr-'+model_id
+    ch_name = 'tmcr'+model_id
     tmcr = rl.Channel(ch_name)
     model.addChannel(tmcr)
 
@@ -679,7 +679,7 @@ def model(year,mass,category):
     ###
     ###
 
-    ch_name = 'wecr-'+model_id
+    ch_name = 'wecr'+model_id
     wecr = rl.Channel(ch_name)
     model.addChannel(wecr)
 
@@ -819,7 +819,7 @@ def model(year,mass,category):
     ###
     ###
 
-    ch_name = 'tecr-'+model_id
+    ch_name = 'tecr'+model_id
     tecr = rl.Channel(ch_name)
     model.addChannel(tecr)
 
@@ -958,7 +958,7 @@ def model(year,mass,category):
     ###
     ###
 
-    ch_name = 'zmcr-'+model_id
+    ch_name = 'zmcr'+model_id
     zmcr = rl.Channel(ch_name)
     model.addChannel(zmcr)
 
@@ -1043,7 +1043,7 @@ def model(year,mass,category):
     ###
     ###
 
-    ch_name = 'zecr-'+model_id
+    ch_name = 'zecr'+model_id
     zecr = rl.Channel(ch_name)
     model.addChannel(zecr)
 
@@ -1128,7 +1128,7 @@ def model(year,mass,category):
     ###
     ###
 
-    ch_name = 'gcr-'+model_id
+    ch_name = 'gcr'+model_id
     gcr = rl.Channel(ch_name)
     model.addChannel(gcr)
 
@@ -1139,7 +1139,7 @@ def model(year,mass,category):
     gcr.setObservation(template(data,'SinglePhoton','nominal','gcr'))
 
     gcr_gjetsTemplate = template(background,'G+jets','nominal','gcr')
-    gcr_gjetsMC =  rl.TemplateSample(ch_name+'_gjetsMC', rl.Sample.BACKGROUND, gcr_gjetsTemplate)
+    gcr_gjetsMC =  rl.TemplateSample('gcr'+year+'_gjetsMC', rl.Sample.BACKGROUND, gcr_gjetsTemplate)
     gcr_gjetsMC.setParamEffect(lumi, 1.027)
     gcr_gjetsMC.setParamEffect(trig_pho, 1.01)
     gcr_gjetsMC.setParamEffect(veto_tau, 1.03)
