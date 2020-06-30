@@ -1513,7 +1513,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 wlf = (~(whf.astype(np.bool))).astype(np.int)
                 for region in regions:
                     cut = selection.all(*regions[region])
-                    for systematic in [None,'btagUp','btagDown','qcd1Up','qcd1Down','qcd2Up','qcd2Down','qcd3Up','qcd3Down','muFUp','muFDown','muRUp','muRDown','ew1Up','ew1Down','ew2GUp','ew2GDown','ew2WUp','ew2WDown','ew2ZUp','ew2ZDown','ew3GUp','ew3GDown','ew3WUp','ew3WDown','ew3ZUp','ew3ZDown']:
+                    for systematic in [None,'btagUp','btagDown','qcd1Up','qcd1Down','qcd2Up','qcd2Down','qcd3Up','qcd3Down','muFUp','muFDown','muRUp','muRDown','ew1Up','ew1Down','ew2GUp','ew2GDown','ew2WUp','ew2WDown','ew2ZUp','ew2ZDown','ew3GUp','ew3GDown','ew3WUp','ew3WDown','ew3ZUp','ew3ZDown','mixUp','mixDown']:
                         sname = 'nominal' if systematic is None else systematic
                         hout['template'].fill(dataset='HF--'+dataset,
                                               region=region,
