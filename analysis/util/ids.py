@@ -75,11 +75,11 @@ def isLoosePhoton(pt,eta,loose_id,year):
 def isTightPhoton(pt,eta,tight_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>230)&(abs(eta)<1.4442)&(tight_id==3) # Trigger threshold is at 175
+        mask = (pt>200)&(abs(eta)<2.5)&(tight_id==3) # Trigger threshold is at 175
     elif year=='2017':
-        mask = (pt>230)&(abs(eta)<1.4442)&((tight_id&2)==2) # Trigger threshold is at 200
+        mask = (pt>220)&(abs(eta)<2.5)&((tight_id&4)==4) # Trigger threshold is at 200
     elif year=='2018':
-        mask = (pt>230)&(abs(eta)<1.4442)&((tight_id&2)==2) # Trigger threshold is at 200
+        mask = (pt>220)&(abs(eta)<2.5)&((tight_id&4)==4) # Trigger threshold is at 200
     return mask
 
 def isGoodFatJet(pt,eta, jet_id):
