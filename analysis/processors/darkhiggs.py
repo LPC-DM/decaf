@@ -438,6 +438,13 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('nfjclean','AK15 Number of cleaned Jets',4,-0.5,3.5)
             ),
+            'mTe': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('mTe','Electron Transverse Mass',[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
+            ),
             'e1pt': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
@@ -473,6 +480,13 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('dielept','Dielectron Pt',150,0,800)
             ),
+            'mTmu': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('mTmu','Muon Transverse Mass',[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
+            ),
             'mu1pt': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
@@ -507,6 +521,27 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('region', 'Region'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('dimupt','Dimuon Pt',150,0,800)
+            ),
+            'pho1pt': hist.Hist(
+                'Events', 
+                hist.Cat('dataset', 'Dataset'), 
+                hist.Cat('region', 'Region'), 
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('pho1pt','Leading Photon Pt',[150.0, 180.0, 200.0, 220.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
+            ),
+            'pho1eta': hist.Hist(
+                'Events', 
+                hist.Cat('dataset', 'Dataset'), 
+                hist.Cat('region', 'Region'), 
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('pho1eta','Leading Photon Eta',48,-2.4,2.4)
+            ),
+            'pho1phi': hist.Hist(
+                'Events', 
+                hist.Cat('dataset', 'Dataset'), 
+                hist.Cat('region', 'Region'), 
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('pho1phi','Leading Photon Phi',64,-3.2,3.2)
             ),
             'ZHbbvsQCD': hist.Hist(
                 'Events', 
@@ -1343,16 +1378,21 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['fj1pt']     = leading_fj.pt
             variables['fj1eta']    = leading_fj.eta
             variables['fj1phi']    = leading_fj.phi
+            variables['mTe']       = np.sqrt(2*leading_e.pt.sum()*met.pt*(1-np.cos(met.T.delta_phi(leading_e.T.sum()))))
             variables['e1pt']      = leading_e.pt
             variables['e1phi']     = leading_e.phi
             variables['e1eta']     = leading_e.eta
             variables['dielemass'] = leading_diele.mass
             variables['dielept']   = leading_diele.pt
+            variables['mTmu']      = np.sqrt(2*leading_mu.pt.sum()*met.pt*(1-np.cos(met.T.delta_phi(leading_mu.T.sum()))))
             variables['mu1pt']     = leading_mu.pt
             variables['mu1phi']    = leading_mu.phi
             variables['mu1eta']    = leading_mu.eta
             variables['dimumass']  = leading_dimu.mass
             variables['dimupt']    = leading_dimu.pt
+            variables['pho1pt']    = leading_pho.pt
+            variables['pho1phi']   = leading_pho.phi
+            variables['pho1eta']   = leading_pho.eta
             variables['njets']     = j_nclean
             variables['ndcsvL']    = j_ndcsvL
             variables['ndflvL']    = j_ndflvL
