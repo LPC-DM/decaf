@@ -1280,6 +1280,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
 
         met_filters =  np.ones(events.size, dtype=np.bool)
+        if isData: met_filters = met_filters & events.Flag['eeBadScFilter']
         for flag in AnalysisProcessor.met_filter_flags[self._year]:
             met_filters = met_filters & events.Flag[flag]
         selection.add('met_filters',met_filters)
@@ -1343,7 +1344,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                       &(uee.mag>250)
                   )
         selection.add('isoneA', 
-                      (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1)
+                      (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1)&(pho_nloose==0)
                       &(abs(ua.delta_phi(j_clean.T)).min()>0.8)
                       &(ua.mag>250)
                   )
