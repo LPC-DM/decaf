@@ -443,7 +443,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('mTe','Electron Transverse Mass',[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
+                hist.Bin('mTe','Electron Transverse Mass',20,0,80.387)
             ),
             'e1pt': hist.Hist(
                 'Events', 
@@ -485,7 +485,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('mTmu','Muon Transverse Mass',[30.0, 60.0, 90.0, 120.0, 150.0, 180.0, 210.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
+                hist.Bin('mTmu','Muon Transverse Mass',20,0,80.387)
             ),
             'mu1pt': hist.Hist(
                 'Events', 
@@ -756,7 +756,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_dimu = dimu[dimu.pt.argmax()]
 
         ###
-        # Calculate recoil
+        # Calculate recoil and transverse mass
         ###
 
         um = met.T+leading_mu.T.sum()
@@ -774,6 +774,9 @@ class AnalysisProcessor(processor.ProcessorABC):
         u['zecr']=uee
         u['zmcr']=umm
         u['gcr']=ua
+
+        mTe = np.sqrt(2*leading_e.pt.sum()*met.pt*(1-np.cos(met.T.delta_phi(leading_e.T.sum()))))
+        mTmu = np.sqrt(2*leading_mu.pt.sum()*met.pt*(1-np.cos(met.T.delta_phi(leading_mu.T.sum())))) 
 
         ###
         #Calculating weights
@@ -1313,12 +1316,14 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('isoneM', 
                       (e_nloose==0)&(mu_ntight==1)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)
                       &(abs(um.delta_phi(j_clean.T)).min()>0.8)
+                      &(mTmu<80.387)
                       &(um.mag>250)
                   )
         selection.add('isoneE', 
                       (e_ntight==1)&(e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
-                      &(met.pt>50)
+                      #&(met.pt>50)
                       &(abs(ue.delta_phi(j_clean.T)).min()>0.8)
+                      &(mTe<80.387)
                       &(ue.mag>250)
                   )
         selection.add('istwoM', 
@@ -1378,13 +1383,13 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables['fj1pt']     = leading_fj.pt
             variables['fj1eta']    = leading_fj.eta
             variables['fj1phi']    = leading_fj.phi
-            variables['mTe']       = np.sqrt(2*leading_e.pt.sum()*met.pt*(1-np.cos(met.T.delta_phi(leading_e.T.sum()))))
+            variables['mTe']       = mTe
             variables['e1pt']      = leading_e.pt
             variables['e1phi']     = leading_e.phi
             variables['e1eta']     = leading_e.eta
             variables['dielemass'] = leading_diele.mass
             variables['dielept']   = leading_diele.pt
-            variables['mTmu']      = np.sqrt(2*leading_mu.pt.sum()*met.pt*(1-np.cos(met.T.delta_phi(leading_mu.T.sum()))))
+            variables['mTmu']      = mTmu
             variables['mu1pt']     = leading_mu.pt
             variables['mu1phi']    = leading_mu.phi
             variables['mu1eta']    = leading_mu.eta
