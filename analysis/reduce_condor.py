@@ -13,6 +13,7 @@ from optparse import OptionParser
 import uproot, uproot_methods
 import numpy as np
 from coffea import hist
+from coffea.util import load
 
 parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset', default='')
@@ -73,42 +74,13 @@ jdl_file.write(jdl)
 jdl_file.close() 
 
 pd = []
+futurefile=''
 for filename in os.listdir(options.folder):
     if '.futures' not in filename: continue
+    futurefile=filename
     if filename.split("____")[0] not in pd: pd.append(filename.split("____")[0])
 
-variables = [
-    'sumw',
-    'CaloMinusPfOverRecoil',
-    'template',
-    'recoil',
-    'met',
-    'metphi',
-    'mindphi',
-    'j1pt',
-    'j1eta',
-    'j1phi',
-    'fj1pt',
-    'fj1eta',
-    'fj1phi',
-    'njets',
-    'ndcsvL',
-    'ndflvL',
-    'nfjclean',
-    'fjmass',
-    'e1pt',
-    'e1eta',
-    'e1phi',
-    'dielemass',
-    'dielept',
-    'mu1pt',
-    'mu1eta',
-    'mu1phi',
-    'dimumass',
-    'dimupt',
-    'ZHbbvsQCD'
-]
-
+variables=load(options.folder+'/'+futurefile).keys()
 for pdi in pd:
     if options.dataset and options.dataset not in pdi: continue
     if options.exclude and options.exclude in pdi: continue

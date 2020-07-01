@@ -70,37 +70,10 @@ jdl_file = open("merge.submit", "w")
 jdl_file.write(jdl) 
 jdl_file.close() 
 
-variables = [
-    'sumw',
-    'CaloMinusPfOverRecoil',
-    'recoil',
-    'template',
-    'met',
-    'metphi',
-    'mindphi',
-    'j1pt',
-    'j1eta',
-    'j1phi',
-    'fj1pt',
-    'fj1eta',
-    'fj1phi',
-    'njets',
-    'ndcsvL',
-    'ndflvL',
-    'nfjclean',
-    'fjmass',
-    'e1pt',
-    'e1eta',
-    'e1phi',
-    'dielemass',
-    'dielept',
-    'mu1pt',
-    'mu1eta',
-    'mu1phi',
-    'dimumass',
-    'dimupt',
-    'ZHbbvsQCD'
-]
+variables = []
+for filename in os.listdir(options.folder):
+          if '.reduced' not in filename: continue
+          if filename.split('--')[0] not in variables: variables.append(filename.split('--')[0])
 
 for variable in variables:
     if options.variable and options.variable not in variable: continue
