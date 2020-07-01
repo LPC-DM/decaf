@@ -8,21 +8,21 @@ from coffea.util import save
 def isLooseElectron(pt,eta,dxy,dz,veto_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = ((pt>10)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(veto_id>=1)) | ((pt>10)&(abs(eta)>1.4442)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(veto_id>=1))
+        mask = ((pt>10)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(veto_id>=1)) | ((pt>10)&(abs(eta)>1.5660)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(veto_id>=1))
     elif year=='2017':
-        mask = ((pt>10)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(veto_id>=1)) | ((pt>10)&(abs(eta)>1.4442)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(veto_id>=1))
+        mask = ((pt>10)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(veto_id>=1)) | ((pt>10)&(abs(eta)>1.5660)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(veto_id>=1))
     elif year=='2018':
-        mask = ((pt>10)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(veto_id>=1)) | ((pt>10)&(abs(eta)>1.4442)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(veto_id>=1))
+        mask = ((pt>10)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(veto_id>=1)) | ((pt>10)&(abs(eta)>1.5660)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(veto_id>=1))
     return mask
 
 def isTightElectron(pt,eta,dxy,dz,tight_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = ((pt>29)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(tight_id==4)) | ((pt>29)&(abs(eta)>1.4442)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(tight_id==4)) # Trigger: HLT_Ele27_WPTight_Gsf_v
+        mask = ((pt>29)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(tight_id==4)) | ((pt>29)&(abs(eta)>1.5660)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(tight_id==4)) # Trigger: HLT_Ele27_WPTight_Gsf_v
     elif year=='2017':
-        mask = ((pt>34)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(tight_id==4)) | ((pt>34)&(abs(eta)>1.4442)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(tight_id==4)) # Trigger: HLT_Ele35_WPTight_Gsf_v
+        mask = ((pt>34)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(tight_id==4)) | ((pt>34)&(abs(eta)>1.5660)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(tight_id==4)) # Trigger: HLT_Ele35_WPTight_Gsf_v
     elif year=='2018':
-        mask = ((pt>34)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(tight_id==4)) | ((pt>34)&(abs(eta)>1.4442)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(tight_id==4)) # Trigger: HLT_Ele32_WPTight_Gsf_v
+        mask = ((pt>34)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(tight_id==4)) | ((pt>34)&(abs(eta)>1.5660)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(tight_id==4)) # Trigger: HLT_Ele32_WPTight_Gsf_v
     return mask
 
 
@@ -90,7 +90,7 @@ def isGoodFatJet(pt,eta, jet_id):
 #POG use tight jetID as a standart JetID 
 
 def isGoodJet(pt, eta, jet_id, nhf, nef, chf, cef):
-    mask = (pt>25) & (abs(eta)<2.4) & ((jet_id&2)==2) & (nhf<0.8) & (nef<0.99) & (chf>0.1) & (cef<0.99)
+    mask = (pt>30) & (abs(eta)<2.4) & ((jet_id&2)==2) & (nhf<0.8) & (nef<0.99) & (chf>0.1) & (cef<0.99)
     return mask
 
 def isHEMJet(pt, eta, phi):
