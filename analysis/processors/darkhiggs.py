@@ -710,17 +710,44 @@ class AnalysisProcessor(processor.ProcessorABC):
         ua = met.T+leading_pho.T.sum()
 
         u = {}
-        u['sr']=met.T
-        u['wecr']=ue
-        u['tecr']=ue
-        u['wmcr']=um
-        u['tmcr']=um
-        u['zecr']=uee
-        u['zmcr']=umm
-        u['gcr']=ua
+        u['sr']   = met.T
+        u['wecr'] = ue
+        u['tecr'] = ue
+        u['wmcr'] = um
+        u['tmcr'] = um
+        u['zecr'] = uee
+        u['zmcr'] = umm
+        u['gcr']  = ua
+
+        mindphimet = abs(met.T.delta_phi(j_clean.T)).min()
+        mindphim   = abs(um.delta_phi(j_clean.T)).min()
+        mindphie   = abs(ue.delta_phi(j_clean.T)).min()
+        mindphimm  = abs(umm.delta_phi(j_clean.T)).min()
+        mindphiee  = abs(uee.delta_phi(j_clean.T)).min()
+        mindphia   = abs(ua.delta_phi(j_clean.T)).min()
+
+        mindphi = {}
+        mindphi['sr']   = mindphimet
+        mindphi['wecr'] = mindphie
+        mindphi['tecr'] = mindphie
+        mindphi['wmcr'] = mindphim
+        mindphi['tmcr'] = mindphim
+        mindphi['zecr'] = mindphiee
+        mindphi['zmcr'] = mindphimm
+        mindphi['gcr']  = mindphia
 
         mTe = np.sqrt(2*leading_e.pt.sum()*met.pt*(1-np.cos(met.T.delta_phi(leading_e.T.sum()))))
         mTmu = np.sqrt(2*leading_mu.pt.sum()*met.pt*(1-np.cos(met.T.delta_phi(leading_mu.T.sum())))) 
+
+        mT= {}
+        mT['sr']   = mTe
+        mT['wecr'] = mTe
+        mT['tecr'] = mTe
+        mT['wmcr'] = mTmu
+        mT['tmcr'] = mTmu
+        mT['zecr'] = mTe
+        mT['zmcr'] = mTmu
+        mT['gcr']  = mTe
 
         ###
         #Calculating weights
@@ -1255,45 +1282,41 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         selection.add('iszeroL',
                       (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
-                      &(abs(met.T.delta_phi(j_clean.T)).min()>0.8)
+                      &(mindphimet>0.8)
                       &(met.pt>250)
                   )
         selection.add('isoneM', 
                       (e_nloose==0)&(mu_ntight==1)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0)
-                      &(abs(um.delta_phi(j_clean.T)).min()>0.8)
+                      &(mindphim>0.8)
                       &(mTmu<80.387)
                       &(um.mag>250)
                   )
         selection.add('isoneE', 
                       (e_ntight==1)&(e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
                       #&(met.pt>50)
-                      &(abs(ue.delta_phi(j_clean.T)).min()>0.8)
+                      &(mindphie>0.8)
                       &(mTe<80.387)
                       &(ue.mag>250)
                   )
         selection.add('istwoM', 
-                      #(e_nloose==0)&(mu_ntight>=1)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)
                       (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0)
                       &(leading_dimu.mass.sum()>60)&(leading_dimu.mass.sum()<120)
-                      &(leading_dimu.pt.sum()>200)
-                      &(abs(umm.delta_phi(j_clean.T)).min()>0.8)
+                      #&(leading_dimu.pt.sum()>200)
+                      &(mindphimm>0.8)
                       &(umm.mag>250)
                   )
         selection.add('istwoE', 
-                      #(e_ntight>=1)&(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
                       (e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0)
                       &(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120)
-                      &(leading_diele.pt.sum()>200)
-                      &(abs(uee.delta_phi(j_clean.T)).min()>0.8)
+                      #&(leading_diele.pt.sum()>200)
+                      &(mindphiee>0.8)
                       &(uee.mag>250)
                   )
         selection.add('isoneA', 
                       (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1)&(pho_nloose==1)
-                      &(abs(ua.delta_phi(j_clean.T)).min()>0.8)
+                      &(mindphia>0.8)
                       &(ua.mag>250)
                   )
-        selection.add('monohs', (leading_fj.ZHbbvsQCD.sum()>self._deepak15wp[self._year]))
-        selection.add('monojet', ~(leading_fj.ZHbbvsQCD.sum()>self._deepak15wp[self._year]))
         selection.add('noextrab', (j_ndflvL==0))
         selection.add('extrab', (j_ndflvL>0))
         selection.add('fatjet', (fj_nclean>0)&(fj_clean.pt.max()>160))
@@ -1319,41 +1342,31 @@ class AnalysisProcessor(processor.ProcessorABC):
         def fill(dataset, region, gentype, weight, cut):
 
             variables = {}
+            variables['recoil']    = u[region].mag
+            variables['mindphirecoil'] = abs(u[region].delta_phi(j_clean.T)).min()
+            variables['fjmass']    = leading_fj.msd_corr
+            variables['CaloMinusPfOverRecoil'] = abs(calomet.pt - met.pt) / u[region].mag
             variables['met']       = met.pt
             variables['metphi']    = met.phi
+            variables['mindphimet'] = abs(met.T.delta_phi(j_clean.T)).min()
             variables['j1pt']      = leading_j.pt
             variables['j1eta']     = leading_j.eta
             variables['j1phi']     = leading_j.phi
-            variables['fjmass']    = leading_fj.msd_corr
             variables['fj1pt']     = leading_fj.pt
             variables['fj1eta']    = leading_fj.eta
             variables['fj1phi']    = leading_fj.phi
-            variables['mTe']       = mTe
-            variables['e1pt']      = leading_e.pt
-            variables['e1phi']     = leading_e.phi
-            variables['e1eta']     = leading_e.eta
-            variables['dielemass'] = leading_diele.mass
-            variables['dielept']   = leading_diele.pt
-            variables['mTmu']      = mTmu
-            variables['mu1pt']     = leading_mu.pt
-            variables['mu1phi']    = leading_mu.phi
-            variables['mu1eta']    = leading_mu.eta
-            variables['dimumass']  = leading_dimu.mass
-            variables['dimupt']    = leading_dimu.pt
-            variables['pho1pt']    = leading_pho.pt
-            variables['pho1phi']   = leading_pho.phi
-            variables['pho1eta']   = leading_pho.eta
             variables['njets']     = j_nclean
-            variables['ndcsvL']    = j_ndcsvL
             variables['ndflvL']    = j_ndflvL
-            variables['nfjtot']    = fj_ntot
-            variables['nfjgood']   = fj_ngood
             variables['nfjclean']  = fj_nclean
+            variables['mTe']       = mT[region]
+            variables['dphilep']       = dphilep[region]
+            variables['l1pt']      = leading_l[region].pt
+            variables['l1phi']     = leading_l[region].phi
+            variables['l1eta']     = leading_l[region].eta
+            variables['dilepmass']  = leading_dilep[region].mass
+            variables['dileppt']    = leading_dilep[region].pt
+            variables['drlep']    = drlep[region]
             variables['ZHbbvsQCD'] = leading_fj.ZHbbvsQCD
-            variables['recoil']    = u[region].mag
-            variables['recoilphi'] = u[region].phi
-            variables['mindphi']   = abs(u[region].delta_phi(j_clean.T)).min()
-            variables['CaloMinusPfOverRecoil'] = abs(calomet.pt - met.pt) / u[region].mag
 
             flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
             flat_gentype = {k: (~np.isnan(v[cut])*gentype[cut]).flatten() for k, v in variables.items()}
