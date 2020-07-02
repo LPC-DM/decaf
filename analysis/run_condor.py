@@ -28,9 +28,9 @@ os.system('rm -rf hists/'+options.processor+'/run_condor/err/'+options.dataset+'
 os.system('rm -rf hists/'+options.processor+'/run_condor/log/'+options.dataset+'*')
 os.system('rm -rf hists/'+options.processor+'/run_condor/out/'+options.dataset+'*')
 
-#if options.tar:
-    #os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*____*\' --exclude=\'analysis/hists/*/*condor/*/*\' ../../decaf')
-    #os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../pylocal.tgz -C ~/.local/lib/python3.6/ site-packages')
+if options.tar:
+    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*____*\' --exclude=\'analysis/hists/*/*condor/*/*\' ../../decaf')
+    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../pylocal.tgz -C ~/.local/lib/python3.6/ site-packages')
 
 if options.cluster == 'kisti':
     if options.tar:
