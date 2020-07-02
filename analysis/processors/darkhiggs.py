@@ -366,7 +366,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('mindphirecoil','Min dPhi(MET,AK4s)',30,0,3.5)
+                hist.Bin('mindphimet','Min dPhi(MET,AK4s)',30,0,3.5)
             ),
             'j1pt': hist.Hist(
                 'Events',
