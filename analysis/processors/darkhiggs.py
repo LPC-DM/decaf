@@ -1344,7 +1344,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                       &(uee.mag>250)
                   )
         selection.add('isoneA', 
-                      (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1)&(pho_nloose==0)
+                      (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1)&(pho_nloose==1)
                       &(abs(ua.delta_phi(j_clean.T)).min()>0.8)
                       &(ua.mag>250)
                   )
