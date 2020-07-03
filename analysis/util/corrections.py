@@ -8,217 +8,284 @@ from coffea.lookup_tools import extractor, dense_lookup
 from coffea.util import save, load
 from coffea.btag_tools import BTagScaleFactor
 
+###
+# Pile-up weight
+###
 
+pu_files = {
+    '2018': uproot.open("data/pileup/puWeights_10x_56ifb.root"),
+    '2017': uproot.open("data/pileup/puWeights_90x_41ifb.root"),
+    '2016': uproot.open("data/pileup/puWeights_80x_37ifb.root")
+}
 get_pu_weight = {}
-get_pu_weight['2017'] = {}
-get_pu_weight['2018'] = {}
-
-pu = {}
-pu["2018"] = uproot.open("data/pileup/puWeights_10x_56ifb.root")
-pu["2017"] = uproot.open("data/pileup/puWeights_90x_41ifb.root")
-pu["2016"] = uproot.open("data/pileup/puWeights_80x_37ifb.root")
 for year in ['2016','2017','2018']:
-    fpu = pu[year]
-    pu_cen = fpu["puWeights"].values
-    get_pu_weight[year] = {}
-    get_pu_weight[year]['cen'] = lookup_tools.dense_lookup.dense_lookup(pu_cen, fpu["puWeights"].edges)
+    pu_hist=pu_files[year]['puWeights']
+    get_pu_weight[year] = lookup_tools.dense_lookup.dense_lookup(pu_hist.values, pu_hist.edges)
 
+###
+# MET trigger efficiency correction
+###
+
+met_trig_files = {
+    '2016': uproot.open("data/trigger_eff/metTriggerEfficiency_recoil_monojet_TH1F.root"),
+    '2017': uproot.open("data/trigger_eff/metTriggerEfficiency_recoil_monojet_TH1F.root"),
+    '2018': uproot.open("data/trigger_eff/metTriggerEfficiency_recoil_monojet_TH1F.root")
+}
 get_met_trig_weight = {}
-
-met_trig = {}
-met_trig["2016"] = uproot.open("data/trigger_eff/metTriggerEfficiency_recoil_monojet_TH1F.root")
-met_trig["2017"] = uproot.open("data/trigger_eff/metTriggerEfficiency_recoil_monojet_TH1F.root")
-met_trig["2018"] = uproot.open("data/trigger_eff/metTriggerEfficiency_recoil_monojet_TH1F.root")
 for year in ['2016','2017','2018']:
-    fmet_trig = met_trig[year]
-    met_trig_corr = fmet_trig["hden_monojet_recoil_clone_passed"].values
-    get_met_trig_weight[year] = lookup_tools.dense_lookup.dense_lookup(met_trig_corr, fmet_trig["hden_monojet_recoil_clone_passed"].edges)
+    met_trig_hist=met_trig_files[year]['hden_monojet_recoil_clone_passed']
+    get_met_trig_weight[year] = lookup_tools.dense_lookup.dense_lookup(met_trig_hist.values, met_trig_hist.edges)
 
+###
+# MET Z->mumu efficiency correction
+###
+
+zmm_trig_files ={
+    '2016': uproot.open("data/trigger_eff/metTriggerEfficiency_zmm_recoil_monojet_TH1F.root"),
+    '2017': uproot.open("data/trigger_eff/metTriggerEfficiency_zmm_recoil_monojet_TH1F.root"),
+    '2018': uproot.open("data/trigger_eff/metTriggerEfficiency_zmm_recoil_monojet_TH1F.root")
+}
 get_met_zmm_trig_weight = {}
-
-met_zmm_trig = {}
-met_zmm_trig["2016"] = uproot.open("data/trigger_eff/metTriggerEfficiency_zmm_recoil_monojet_TH1F.root")
-met_zmm_trig["2017"] = uproot.open("data/trigger_eff/metTriggerEfficiency_zmm_recoil_monojet_TH1F.root")
-met_zmm_trig["2018"] = uproot.open("data/trigger_eff/metTriggerEfficiency_zmm_recoil_monojet_TH1F.root")
 for year in ['2016','2017','2018']:
-    fmet_zmm_trig = met_zmm_trig[year]
-    met_zmm_trig_corr = fmet_zmm_trig["hden_monojet_recoil_clone_passed"].values
-    get_met_zmm_trig_weight[year] = lookup_tools.dense_lookup.dense_lookup(met_zmm_trig_corr, fmet_zmm_trig["hden_monojet_recoil_clone_passed"].edges)
+    zmm_trig_hist = zmm_trig_files[year]['hden_monojet_recoil_clone_passed']
+    get_met_zmm_trig_weight[year] = lookup_tools.dense_lookup.dense_lookup(zmm_trig_hist.values, zmm_trig_hist.edges)
 
+###
+# Electron trigger correction
+###
 
+ele_trig_files = {
+    '2016': uproot.open("data/trigger_eff/eleTrig.root"),
+    '2017': uproot.open("data/trigger_eff/eleTrig.root"),
+    '2018': uproot.open("data/trigger_eff/eleTrig.root")
+}
 get_ele_trig_weight = {}
-
-ele_trig = {}
-ele_trig["2016"] = uproot.open("data/trigger_eff/eleTrig.root")
-ele_trig["2017"] = uproot.open("data/trigger_eff/eleTrig.root")
-ele_trig["2018"] = uproot.open("data/trigger_eff/eleTrig.root")
-
 for year in ['2016','2017','2018']:
-    fele_trig = ele_trig[year]
-    ele_trig_corr = fele_trig["hEffEtaPt"].values
-    get_ele_trig_weight[year] = lookup_tools.dense_lookup.dense_lookup(ele_trig_corr, fele_trig["hEffEtaPt"].edges)
+    ele_trig_hist = ele_trig_files[year]['hEffEtaPt']
+    get_ele_trig_weight[year] = lookup_tools.dense_lookup.dense_lookup(ele_trig_hist.values, ele_trig_hist.edges)
 
+###
+# Photon trigger correction
+###
+
+pho_trig_files = {
+    '2016': uproot.open("data/trigger_eff/photonTriggerEfficiency_photon_TH1F.root"),
+    "2017": uproot.open("data/trigger_eff/photonTriggerEfficiency_photon_TH1F.root"),
+    "2018": uproot.open("data/trigger_eff/photonTriggerEfficiency_photon_TH1F.root")
+}
 get_pho_trig_weight = {}
-
-pho_trig = {}
-pho_trig["2016"] = uproot.open("data/trigger_eff/photonTriggerEfficiency_photon_TH1F.root")
-pho_trig["2017"] = uproot.open("data/trigger_eff/photonTriggerEfficiency_photon_TH1F.root")
-pho_trig["2018"] = uproot.open("data/trigger_eff/photonTriggerEfficiency_photon_TH1F.root")
 for year in ['2016','2017','2018']:
-    fpho_trig = pho_trig[year]
-    pho_trig_corr = fpho_trig["hden_photonpt_clone_passed"].values
-    get_pho_trig_weight[year] = lookup_tools.dense_lookup.dense_lookup(pho_trig_corr, fpho_trig["hden_photonpt_clone_passed"].edges)
+    pho_trig_hist = pho_trig_files[year]["hden_photonpt_clone_passed"]
+    get_pho_trig_weight[year] = lookup_tools.dense_lookup.dense_lookup(pho_trig_hist.values, pho_trig_hist.edges)
 
+###
+# Electron ID weights
+###
+ele_loose_files = {
+    '2016': uproot.open("data/ScaleFactor/2016LegacyReReco_ElectronLoose_Fall17V2.root"),
+    '2017': uproot.open("data/ScaleFactor/2017_ElectronLoose.root"),
+    '2018': uproot.open("data/ScaleFactor/2018_ElectronLoose.root")
+}
+ele_tight_files = {
+    '2016': uproot.open("data/ScaleFactor/2016LegacyReReco_ElectronTight_Fall17V2.root"),
+    '2017': uproot.open("data/ScaleFactor/2017_ElectronTight.root"),
+    '2018': uproot.open("data/ScaleFactor/2018_ElectronTight.root")
+}
 get_ele_loose_id_sf = {}
 get_ele_tight_id_sf = {}
 get_ele_loose_id_eff = {}
 get_ele_tight_id_eff = {}
-
-ele_loose = {}
-ele_loose['2016'] = uproot.open("data/ScaleFactor/2016LegacyReReco_ElectronLoose_Fall17V2.root")
-ele_loose['2017'] = uproot.open("data/ScaleFactor/2017_ElectronLoose.root")
-ele_loose['2018'] = uproot.open("data/ScaleFactor/2018_ElectronLoose.root")
-ele_tight = {}
-ele_tight['2016'] = uproot.open("data/ScaleFactor/2016LegacyReReco_ElectronTight_Fall17V2.root")
-ele_tight['2017'] = uproot.open("data/ScaleFactor/2017_ElectronTight.root")
-ele_tight['2018'] = uproot.open("data/ScaleFactor/2018_ElectronTight.root")
 for year in ['2016','2017','2018']:
-    fele_loose = ele_loose[year]
-    get_ele_loose_id_sf[year]  = lookup_tools.dense_lookup.dense_lookup(fele_loose["EGamma_SF2D"].values, fele_loose["EGamma_SF2D"].edges)
-    get_ele_loose_id_eff[year] = lookup_tools.dense_lookup.dense_lookup(fele_loose["EGamma_EffMC2D"].values, fele_loose["EGamma_EffMC2D"].edges)
-    fele_tight  = ele_tight[year]
-    get_ele_tight_id_sf[year]  = lookup_tools.dense_lookup.dense_lookup(fele_tight["EGamma_SF2D"].values, fele_tight["EGamma_SF2D"].edges)
-    get_ele_tight_id_eff[year] = lookup_tools.dense_lookup.dense_lookup(fele_tight["EGamma_EffMC2D"].values, fele_tight["EGamma_EffMC2D"].edges)
+    ele_loose_sf_hist = ele_loose_files[year]["EGamma_SF2D"]
+    ele_loose_eff_hist = ele_loose_files[year]["EGamma_EffMC2D"]
+    get_ele_loose_id_sf[year]  = lookup_tools.dense_lookup.dense_lookup(ele_loose_sf_hist.values, ele_loose_sf_hist.edges)
+    get_ele_loose_id_eff[year] = lookup_tools.dense_lookup.dense_lookup(ele_loose_eff_hist.values, ele_loose_eff_hist.edges)
+    ele_tight_sf_hist =ele_tight_files[year]["EGamma_SF2D"]
+    ele_tight_eff_hist = ele_tight_files[year]["EGamma_EffMC2D"]
+    get_ele_tight_id_sf[year]  = lookup_tools.dense_lookup.dense_lookup(ele_tight_sf_hist.values, ele_tight_sf_hist.edges)
+    get_ele_tight_id_eff[year] = lookup_tools.dense_lookup.dense_lookup(ele_tight_eff_hist.values, ele_tight_eff_hist.edges)
 
+###
+# Photon ID weights
+###
+
+pho_tight_files = {
+    '2016': uproot.open("data/ScaleFactor/Fall17V2_2016_Tight_photons.root"),
+    '2017': uproot.open("data/ScaleFactor/2017_PhotonsTight.root"),
+    '2018': uproot.open("data/ScaleFactor/2018_PhotonsTight.root")
+}
 get_pho_tight_id_sf = {}
-
-pho_tight = {}
-pho_tight['2016'] = uproot.open("data/ScaleFactor/Fall17V2_2016_Tight_photons.root")
-pho_tight['2017'] = uproot.open("data/ScaleFactor/2017_PhotonsTight.root")
-pho_tight['2018'] = uproot.open("data/ScaleFactor/2018_PhotonsTight.root")
 for year in ['2016','2017','2018']:
-    fpho_tight=pho_tight[year]
-    get_pho_tight_id_sf[year] = lookup_tools.dense_lookup.dense_lookup(fpho_tight["EGamma_SF2D"].values, fpho_tight["EGamma_SF2D"].edges)
+    pho_tight_hist=pho_tight_files[year]["EGamma_SF2D"]
+    get_pho_tight_id_sf[year] = lookup_tools.dense_lookup.dense_lookup(pho_tight_hist.values, pho_tight_hist.edges)
 
+###
+# Muon ID weights
+###
+
+mu_files = {
+    '2016': uproot.open("data/ScaleFactor/2016LegacyReReco_Muon_SF_ID.root"),
+    '2017': uproot.open("data/ScaleFactor/2017_Muon_RunBCDEF_SF_ID.root"),
+    '2018': uproot.open("data/ScaleFactor/2018_Muon_RunABCD_SF_ID.root")
+}
+mu_tight_hist = {
+    '2016': mu_files['2016']["NUM_TightID_DEN_genTracks_eta_pt"],
+    '2017': mu_files['2017']["NUM_TightID_DEN_genTracks_pt_abseta"],
+    '2018': mu_files['2018']["NUM_TightID_DEN_TrackerMuons_pt_abseta"]
+}
+mu_loose_hist = {
+    '2016': mu_files['2016']["NUM_LooseID_DEN_genTracks_eta_pt"],
+    '2017': mu_files['2017']["NUM_LooseID_DEN_genTracks_pt_abseta"],
+    '2018': mu_files['2018']["NUM_LooseID_DEN_TrackerMuons_pt_abseta"]
+}
 get_mu_tight_id_sf = {}
 get_mu_loose_id_sf = {}
-
-mu_id2016 = uproot.open("data/ScaleFactor/2016LegacyReReco_Muon_SF_ID.root")
-get_mu_tight_id_sf['2016'] = lookup_tools.dense_lookup.dense_lookup(mu_id2016["NUM_TightID_DEN_genTracks_eta_pt"].values, mu_id2016["NUM_TightID_DEN_genTracks_eta_pt"].edges)
-get_mu_loose_id_sf['2016'] = lookup_tools.dense_lookup.dense_lookup(mu_id2016["NUM_LooseID_DEN_genTracks_eta_pt"].values, mu_id2016["NUM_LooseID_DEN_genTracks_eta_pt"].edges)
-mu_id2017 = uproot.open("data/ScaleFactor/2017_Muon_RunBCDEF_SF_ID.root")
-get_mu_tight_id_sf['2017'] = lookup_tools.dense_lookup.dense_lookup(mu_id2017["NUM_TightID_DEN_genTracks_pt_abseta"].values, mu_id2017["NUM_TightID_DEN_genTracks_pt_abseta"].edges)
-get_mu_loose_id_sf['2017'] = lookup_tools.dense_lookup.dense_lookup(mu_id2017["NUM_LooseID_DEN_genTracks_pt_abseta"].values, mu_id2017["NUM_LooseID_DEN_genTracks_pt_abseta"].edges)
-mu_id2018 = uproot.open("data/ScaleFactor/2018_Muon_RunABCD_SF_ID.root")
-get_mu_tight_id_sf['2018'] = lookup_tools.dense_lookup.dense_lookup(mu_id2018["NUM_TightID_DEN_TrackerMuons_pt_abseta"].values, mu_id2018["NUM_TightID_DEN_TrackerMuons_pt_abseta"].edges)
-get_mu_loose_id_sf['2018'] = lookup_tools.dense_lookup.dense_lookup(mu_id2018["NUM_LooseID_DEN_TrackerMuons_pt_abseta"].values, mu_id2018["NUM_LooseID_DEN_TrackerMuons_pt_abseta"].edges)
-
-get_ele_reco_sf = {}
-
-ele_reco = {}
-ele_reco['2016']=uproot.open("data/ScaleFactor/2016_ElectronReco.root")    
-ele_reco['2017']=uproot.open("data/ScaleFactor/2017_ElectronReco.root")
-ele_reco['2018']=uproot.open("data/ScaleFactor/2018_ElectronReco.root")
 for year in ['2016','2017','2018']:
-    fele_reco = ele_reco[year]
-    get_ele_reco_sf[year]=lookup_tools.dense_lookup.dense_lookup(fele_reco["EGamma_SF2D"].values, fele_reco["EGamma_SF2D"].edges)
+    get_mu_tight_id_sf[year] = lookup_tools.dense_lookup.dense_lookup(mu_tight_hist[year].values, mu_tight_hist[year].edges)
+    get_mu_loose_id_sf[year] = lookup_tools.dense_lookup.dense_lookup(mu_loose_hist[year].values, mu_loose_hist[year].edges)
 
+###
+# Electron reconstruction weights
+###
+
+ele_reco_files = {
+    '2016': uproot.open("data/ScaleFactor/2016_ElectronReco.root"),
+    '2017': uproot.open("data/ScaleFactor/2017_ElectronReco.root"),
+    '2018': uproot.open("data/ScaleFactor/2018_ElectronReco.root")
+}
+get_ele_reco_sf = {}
+for year in ['2016','2017','2018']:
+    ele_reco_hist = ele_reco_files[year]["EGamma_SF2D"]
+    get_ele_reco_sf[year]=lookup_tools.dense_lookup.dense_lookup(ele_reco_hist.values, ele_reco_hist.edges)
+
+###
+# Muon isolation weights
+###
+
+mu_iso_files = {
+    '2016': uproot.open("data/ScaleFactor/Merged_SF_ISO.root"),
+    '2017': uproot.open("data/ScaleFactor/RunBCDEF_SF_ISO_syst.root"),
+    '2018': uproot.open("data/ScaleFactor/RunABCD_SF_ISO.root")
+}
+mu_iso_tight_hist = {
+    '2016': mu_iso_files['2016']["NUM_TightRelIso_DEN_TightIDandIPCut_eta_pt"],
+    '2017': mu_iso_files['2017']["NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta"],
+    '2018': mu_iso_files['2018']["NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta"]
+}
+mu_iso_loose_hist = {
+    '2016': mu_iso_files['2016']["NUM_LooseRelIso_DEN_LooseID_eta_pt"],
+    '2017': mu_iso_files['2017']["NUM_LooseRelIso_DEN_LooseID_pt_abseta"],
+    '2018': mu_iso_files['2018']["NUM_LooseRelIso_DEN_LooseID_pt_abseta"]
+}
 get_mu_tight_iso_sf = {}
 get_mu_loose_iso_sf = {}
-
-mu_iso2016=uproot.open("data/ScaleFactor/Merged_SF_ISO.root")
-mu_iso2017=uproot.open("data/ScaleFactor/RunBCDEF_SF_ISO_syst.root")
-mu_iso2018=uproot.open("data/ScaleFactor/RunABCD_SF_ISO.root")
-get_mu_tight_iso_sf['2016'] = lookup_tools.dense_lookup.dense_lookup(mu_iso2016["NUM_TightRelIso_DEN_TightIDandIPCut_eta_pt"].values,mu_iso2016["NUM_TightRelIso_DEN_TightIDandIPCut_eta_pt"].edges)
-get_mu_loose_iso_sf['2016'] = lookup_tools.dense_lookup.dense_lookup(mu_iso2016["NUM_LooseRelIso_DEN_LooseID_eta_pt"].values,mu_iso2016["NUM_LooseRelIso_DEN_LooseID_eta_pt"].edges)
-get_mu_tight_iso_sf['2017'] = lookup_tools.dense_lookup.dense_lookup(mu_iso2017["NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta"].values,mu_iso2017["NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta"].edges)
-get_mu_loose_iso_sf['2017'] = lookup_tools.dense_lookup.dense_lookup(mu_iso2017["NUM_LooseRelIso_DEN_LooseID_pt_abseta"].values,mu_iso2017["NUM_LooseRelIso_DEN_LooseID_pt_abseta"].edges)
-get_mu_tight_iso_sf['2018'] = lookup_tools.dense_lookup.dense_lookup(mu_iso2018["NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta"].values,mu_iso2018["NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta"].edges)
-get_mu_loose_iso_sf['2018'] = lookup_tools.dense_lookup.dense_lookup(mu_iso2018["NUM_LooseRelIso_DEN_LooseID_pt_abseta"].values,mu_iso2018["NUM_LooseRelIso_DEN_LooseID_pt_abseta"].edges)
-
-get_nlo_weight = {}
-kfactor = uproot.open("data/nlo/kfactors.root")
 for year in ['2016','2017','2018']:
+    get_mu_tight_iso_sf[year] = lookup_tools.dense_lookup.dense_lookup(mu_iso_tight_hist[year].values, mu_iso_tight_hist[year].edges)
+    get_mu_loose_iso_sf[year] = lookup_tools.dense_lookup.dense_lookup(mu_iso_loose_hist[year].values, mu_iso_loose_hist[year].edges)
 
-    get_nlo_weight[year] = {}
+###
+# V+jets NNLO weights
+# The schema is process_NNLO_NLO_QCD1QCD2QCD3_EW1EW2EW3_MIX, where 'n' stands for 'nominal', 'u' for 'up', and 'd' for 'down'
+###
 
-    sf_qcd = 1
-    sf_ewk = 1
-    #sf_qcd2j = 1
-
-    lo = {}
-    lo['z'] = "ZJets_LO/inv_pt"    
-    lo['w'] = "WJets_LO/inv_pt"
-    lo['a'] = "GJets_LO/inv_pt_G"
-
-    nlo = {}
-    nlo['z'] = "ZJets_012j_NLO/nominal"
-    nlo['w'] = "WJets_012j_NLO/nominal"
-    nlo['a'] = "GJets_1j_NLO/nominal_G"
-
-    ewk = {}
-    ewk['z'] = "EWKcorr/Z"
-    ewk['w'] = "EWKcorr/W"
-    ewk['a'] = "EWKcorr/photon"
-
-    for type in ['z','w','a']:
-        LO = kfactor[lo[type]].values
-        NLO = kfactor[nlo[type]].values
-        EWK = kfactor[ewk[type]].values
-
-        sf_qcd = NLO / LO
-        sf_ewk = EWK / LO
-
-        get_nlo_weight[year][type]=lookup_tools.dense_lookup.dense_lookup(sf_qcd*sf_ewk, kfactor[nlo[type]].edges)
-        if (year != '2016' and type != 'a'): get_nlo_weight[year][type]=lookup_tools.dense_lookup.dense_lookup(sf_ewk, kfactor[nlo[type]].edges)
-
-get_adhoc_weight = {}                                       
-kfactor = uproot.open("data/nlo/2017_gen_v_pt_stat1_qcd_sf.root")
-get_adhoc_weight['z']=lookup_tools.dense_lookup.dense_lookup(kfactor["dy_monojet"].values, kfactor["dy_monojet"].edges)
-get_adhoc_weight['w']=lookup_tools.dense_lookup.dense_lookup(kfactor["wjet_monojet"].values, kfactor["wjet_monojet"].edges)
-
-get_nnlo_weight = {}
-kfactor = uproot.open("data/nnlo/lindert_qcd_nnlo_sf.root")
-get_nnlo_weight['dy'] = lookup_tools.dense_lookup.dense_lookup(kfactor["eej"].values, kfactor["eej"].edges)
-get_nnlo_weight['w'] = lookup_tools.dense_lookup.dense_lookup(kfactor["evj"].values, kfactor["evj"].edges)
-get_nnlo_weight['z'] = lookup_tools.dense_lookup.dense_lookup(kfactor["vvj"].values, kfactor["vvj"].edges)
-
-#the schema is process_NNLO_NLO_QCD1QCD2QCD3_EW1EW2EW3_MIX, where 'n' stands for 'nominal', 'u' for 'up', and 'd' for 'down'
-kfactor={}
-kfactor['dy'] = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_eej_madgraph_"+year+".root")
-kfactor['w'] = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_evj_madgraph_"+year+".root")
-kfactor['z'] = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_vvj_madgraph_"+year+".root")
-kfactor['a']  = uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_aj_madgraph_"+year+".root")
-histname={}
-histname['dy']='eej_NNLO_NLO_'
-histname['w']='evj_NNLO_NLO_'
-histname['z']='vvj_NNLO_NLO_'
-histname['a']='aj_NNLO_NLO_'
+histname={
+    'dy': 'eej_NNLO_NLO_',
+    'w':  'evj_NNLO_NLO_',
+    'z': 'vvj_NNLO_NLO_',
+    'a': 'aj_NNLO_NLO_'
+}
+correlated_variations = {
+    'cen':    'nnn_nnn_n',
+    'qcd1up': 'unn_nnn_n',
+    'qcd1do': 'dnn_nnn_n',
+    'qcd2up': 'nun_nnn_n',
+    'qcd2do': 'ndn_nnn_n',
+    'qcd3up': 'nnu_nnn_n',
+    'qcd3do': 'nnd_nnn_n',
+    'ew1up' : 'nnn_unn_n',
+    'ew1do' : 'nnn_dnn_n',
+    'mixup' : 'nnn_nnn_u',
+    'mixdo' : 'nnn_nnn_d',
+    'muFup' : 'nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_2p0',
+    'muFdo' : 'nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_0p5',
+    'muRup' : 'nnn_nnn_n_Weight_scale_variation_muR_2p0_muF_1p0',
+    'muRdo' : 'nnn_nnn_n_Weight_scale_variation_muR_0p5_muF_1p0'
+}
+uncorrelated_variations = {
+    'dy': {
+        'ew2Gup': 'nnn_nnn_n',
+        'ew2Gdo': 'nnn_nnn_n',
+        'ew2Wup': 'nnn_nnn_n',
+        'ew2Wdo': 'nnn_nnn_n',
+        'ew2Zup': 'nnn_nun_n',
+        'ew2Zdo': 'nnn_ndn_n',
+        'ew3Gup': 'nnn_nnn_n',
+        'ew3Gdo': 'nnn_nnn_n',
+        'ew3Wup': 'nnn_nnn_n',
+        'ew3Wdo': 'nnn_nnn_n',
+        'ew3Zup': 'nnn_nnu_n',
+        'ew3Zdo': 'nnn_nnd_n'
+    },
+    'w': {
+        'ew2Gup': 'nnn_nnn_n',
+        'ew2Gdo': 'nnn_nnn_n',
+        'ew2Wup': 'nnn_nun_n',
+        'ew2Wdo': 'nnn_ndn_n',
+        'ew2Zup': 'nnn_nnn_n',
+        'ew2Zdo': 'nnn_nnn_n',
+        'ew3Gup': 'nnn_nnn_n',
+        'ew3Gdo': 'nnn_nnn_n',
+        'ew3Wup': 'nnn_nnu_n',
+        'ew3Wdo': 'nnn_nnd_n',
+        'ew3Zup': 'nnn_nnn_n',
+        'ew3Zdo': 'nnn_nnn_n'
+    },
+    'z': {
+        'ew2Gup': 'nnn_nnn_n',
+        'ew2Gdo': 'nnn_nnn_n',
+        'ew2Wup': 'nnn_nnn_n',
+        'ew2Wdo': 'nnn_nnn_n',
+        'ew2Zup': 'nnn_nun_n',
+        'ew2Zdo': 'nnn_ndn_n',
+        'ew3Gup': 'nnn_nnn_n',
+        'ew3Gdo': 'nnn_nnn_n',
+        'ew3Wup': 'nnn_nnn_n',
+        'ew3Wdo': 'nnn_nnn_n',
+        'ew3Zup': 'nnn_nnu_n',
+        'ew3Zdo': 'nnn_nnd_n'
+    },
+    'a': {
+        'ew2Gup': 'nnn_nun_n',
+        'ew2Gdo': 'nnn_ndn_n',
+        'ew2Wup': 'nnn_nnn_n',
+        'ew2Wdo': 'nnn_nnn_n',
+        'ew2Zup': 'nnn_nnn_n',
+        'ew2Zdo': 'nnn_nnn_n',
+        'ew3Gup': 'nnn_nnu_n',
+        'ew3Gdo': 'nnn_nnd_n',
+        'ew3Wup': 'nnn_nnn_n',
+        'ew3Wdo': 'nnn_nnn_n',
+        'ew3Zup': 'nnn_nnn_n',
+        'ew3Zdo': 'nnn_nnn_n'
+    }
+}
 get_nnlo_nlo_weight = {}
-get_nnlo_nlo_weight['dy'] = {}
-get_nnlo_nlo_weight['w']  = {}
-get_nnlo_nlo_weight['z']  = {}
-get_nnlo_nlo_weight['a']  = {}
-for p in ['dy','w','z','a']:
-    get_nnlo_nlo_weight[p]['cen'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnn_n'].values, kfactor[p][histname[p]+'nnn_nnn_n'].edges)
-    get_nnlo_nlo_weight[p]['qcd1up'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'unn_nnn_n'].values, kfactor[p][histname[p]+'unn_nnn_n'].edges)
-    get_nnlo_nlo_weight[p]['qcd1do'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'dnn_nnn_n'].values, kfactor[p][histname[p]+'dnn_nnn_n'].edges)
-    get_nnlo_nlo_weight[p]['qcd2up'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nun_nnn_n'].values, kfactor[p][histname[p]+'nun_nnn_n'].edges)
-    get_nnlo_nlo_weight[p]['qcd2do'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'ndn_nnn_n'].values, kfactor[p][histname[p]+'ndn_nnn_n'].edges)
-    get_nnlo_nlo_weight[p]['qcd3up'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnu_nnn_n'].values, kfactor[p][histname[p]+'nnu_nnn_n'].edges)
-    get_nnlo_nlo_weight[p]['qcd3do'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnd_nnn_n'].values, kfactor[p][histname[p]+'nnd_nnn_n'].edges)
-    get_nnlo_nlo_weight[p]['ew1up'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_unn_n'].values, kfactor[p][histname[p]+'nnn_unn_n'].edges)
-    get_nnlo_nlo_weight[p]['ew1do'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_dnn_n'].values, kfactor[p][histname[p]+'nnn_dnn_n'].edges)
-    get_nnlo_nlo_weight[p]['ew2up'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nun_n'].values, kfactor[p][histname[p]+'nnn_nun_n'].edges)
-    get_nnlo_nlo_weight[p]['ew2do'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_ndn_n'].values, kfactor[p][histname[p]+'nnn_ndn_n'].edges)
-    get_nnlo_nlo_weight[p]['ew3up'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnu_n'].values, kfactor[p][histname[p]+'nnn_nnu_n'].edges)
-    get_nnlo_nlo_weight[p]['ew3do'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnd_n'].values, kfactor[p][histname[p]+'nnn_nnd_n'].edges)
-    get_nnlo_nlo_weight[p]['mixup'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnn_u'].values, kfactor[p][histname[p]+'nnn_nnn_u'].edges)
-    get_nnlo_nlo_weight[p]['mixdo'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnn_d'].values, kfactor[p][histname[p]+'nnn_nnn_d'].edges)
-    get_nnlo_nlo_weight[p]['muFup'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_2p0'].values, kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_2p0'].edges)
-    get_nnlo_nlo_weight[p]['muFdo'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_0p5'].values, kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_1p0_muF_0p5'].edges)
-    get_nnlo_nlo_weight[p]['muRup'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_2p0_muF_1p0'].values, kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_2p0_muF_1p0'].edges)
-    get_nnlo_nlo_weight[p]['muRdo'] = lookup_tools.dense_lookup.dense_lookup(kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_0p5_muF_1p0'].values, kfactor[p][histname[p]+'nnn_nnn_n_Weight_scale_variation_muR_0p5_muF_1p0'].edges)
+for year in ['2016','2017','2018']:
+    get_nnlo_nlo_weight[year] = {}
+    nnlo_file = {
+        'dy': uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_eej_madgraph_"+year+".root"),
+        'w': uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_evj_madgraph_"+year+".root"),
+        'z': uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_vvj_madgraph_"+year+".root"),
+        'a': uproot.open("data/Vboson_Pt_Reweighting/"+year+"/TheoryXS_aj_madgraph_"+year+".root")
+    }
+    for p in ['dy','w','z','a']:
+        get_nnlo_nlo_weight[year][p] = {}
+        for cv in correlated_variations:
+            hist=nnlo_file[p][histname[p]+correlated_variations[cv]]
+            get_nnlo_nlo_weight[year][p][cv]=lookup_tools.dense_lookup.dense_lookup(hist.values, hist.edges)
+        for uv in uncorrelated_variations[p]:
+            hist=nnlo_file[p][histname[p]+uncorrelated_variations[p][uv]]
+            get_nnlo_nlo_weight[year][p][uv]=lookup_tools.dense_lookup.dense_lookup(hist.values, hist.edges)
 
 def get_ttbar_weight(pt):
     return np.exp(0.0615 - 0.0005 * np.clip(pt, 0, 800))
@@ -371,32 +438,29 @@ for directory in ['jec', 'jersf', 'jr', 'junc']:
 Jetext.finalize()
 Jetevaluator = Jetext.make_evaluator()
 
-corrections = {}
-corrections['get_msd_weight']          = get_msd_weight
-corrections['get_ttbar_weight']        = get_ttbar_weight
-corrections['get_nlo_weight']          = get_nlo_weight
-corrections['get_nnlo_weight']         = get_nnlo_weight
-corrections['get_nnlo_nlo_weight']     = get_nnlo_nlo_weight
-corrections['get_adhoc_weight']        = get_adhoc_weight
-corrections['get_pu_weight']           = get_pu_weight
-corrections['get_met_trig_weight']     = get_met_trig_weight
-corrections['get_met_zmm_trig_weight'] = get_met_zmm_trig_weight
-corrections['get_ele_trig_weight']     = get_ele_trig_weight
-corrections['get_pho_trig_weight']     = get_pho_trig_weight
-corrections['get_ele_loose_id_sf']     = get_ele_loose_id_sf
-corrections['get_ele_tight_id_sf']     = get_ele_tight_id_sf
-corrections['get_ele_loose_id_eff']    = get_ele_loose_id_eff
-corrections['get_ele_tight_id_eff']    = get_ele_tight_id_eff
-corrections['get_pho_tight_id_sf']     = get_pho_tight_id_sf 
-corrections['get_mu_tight_id_sf']      = get_mu_tight_id_sf
-corrections['get_mu_loose_id_sf']      = get_mu_loose_id_sf
-corrections['get_ele_reco_sf']         = get_ele_reco_sf
-corrections['get_mu_tight_iso_sf']     = get_mu_tight_iso_sf
-corrections['get_mu_loose_iso_sf']     = get_mu_loose_iso_sf
-corrections['get_ecal_bad_calib']      = get_ecal_bad_calib
-corrections['get_btag_weight']         = get_btag_weight
-corrections['Jetevaluator']            = Jetevaluator
-
+corrections = {
+    'get_msd_weight':           get_msd_weight,
+    'get_ttbar_weight':         get_ttbar_weight,
+    'get_nnlo_nlo_weight':      get_nnlo_nlo_weight,
+    'get_pu_weight':            get_pu_weight,
+    'get_met_trig_weight':      get_met_trig_weight,
+    'get_met_zmm_trig_weight':  get_met_zmm_trig_weight,
+    'get_ele_trig_weight':      get_ele_trig_weight,
+    'get_pho_trig_weight':      get_pho_trig_weight,
+    'get_ele_loose_id_sf':      get_ele_loose_id_sf,
+    'get_ele_tight_id_sf':      get_ele_tight_id_sf,
+    'get_ele_loose_id_eff':     get_ele_loose_id_eff,
+    'get_ele_tight_id_eff':     get_ele_tight_id_eff,
+    'get_pho_tight_id_sf':      get_pho_tight_id_sf,
+    'get_mu_tight_id_sf':       get_mu_tight_id_sf,
+    'get_mu_loose_id_sf':       get_mu_loose_id_sf,
+    'get_ele_reco_sf':          get_ele_reco_sf,
+    'get_mu_tight_iso_sf':      get_mu_tight_iso_sf,
+    'get_mu_loose_iso_sf':      get_mu_loose_iso_sf,
+    'get_ecal_bad_calib':       get_ecal_bad_calib,
+    'get_btag_weight':          get_btag_weight,
+    'Jetevaluator':             Jetevaluator,
+}
 save(corrections, 'data/corrections.coffea')
 
 
