@@ -1147,9 +1147,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             # Adding recoil and minDPhi requirements
             ###
 
-            selection.add('recoil', (u[region].mag>250))
-            selection.add('mindphi', (abs(u[region].delta_phi(j_clean.T)).min()>0.8))
-            regions[region].update({'recoil','mindphi'})
+            selection.add('recoil_'+region, (u[region].mag>250))
+            selection.add('mindphi_'+region, (abs(u[region].delta_phi(j_clean.T)).min()>0.8))
+            regions[region].update({'recoil_'+region,'mindphi_'+region})
             print('Selection:',regions[region])
             variables = {
                 'recoil':                 u[region].mag,
