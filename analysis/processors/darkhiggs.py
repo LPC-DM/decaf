@@ -326,6 +326,13 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('recoil','Hadronic Recoil',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0, 3000])
             ),
+            'recoilphiWRF': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('recoilphiWRF','Recoil Phi WRF',30,0,3.5)
+            ),
             'mindphirecoil': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
@@ -1171,7 +1178,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'ZHbbvsQCD':              leading_fj.ZHbbvsQCD
             }
             if region in mT:
-                variables['mT']  = mT[region]
+                variables['mT']           = mT[region]
+                if 'e' in region:
+                    WRF = leading_e.T.sum()-met.T
+                else:
+                    WRF = leading_mu.T.sum()-met.T
+                variables['recoilphiWRF'] = abs(u[region].delta_phi(WRF))
             if 'e' in region:
                 variables['dphilep']   = abs(met.T.delta_phi(leading_e.T).sum())
                 variables['l1pt']      = leading_e.pt
