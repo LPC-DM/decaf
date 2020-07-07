@@ -2,7 +2,6 @@
 import uproot, uproot_methods
 import numpy as np
 import os
-from coffea.arrays import Initialize
 from coffea import hist, lookup_tools
 from coffea.lookup_tools import extractor, dense_lookup
 from coffea.util import save, load
@@ -23,49 +22,49 @@ for year in ['2016','2017','2018']:
     get_pu_weight[year] = lookup_tools.dense_lookup.dense_lookup(pu_hist.values, pu_hist.edges)
 
 ###
-# MET trigger efficiency correction
+# MET trigger efficiency SFs, 2017/18 from monojet. Depends on recoil.
 ###
 
-met_trig_files = {
-    '2016': uproot.open("data/trigger_eff/metTriggerEfficiency_recoil_monojet_TH1F.root"),
-    '2017': uproot.open("data/trigger_eff/metTriggerEfficiency_recoil_monojet_TH1F.root"),
-    '2018': uproot.open("data/trigger_eff/metTriggerEfficiency_recoil_monojet_TH1F.root")
+met_trig_hists = {
+    '2016': uproot.open("data/trigger_eff/metTriggerEfficiency_recoil_monojet_TH1F.root")['hden_monojet_recoil_clone_passed'],
+    '2017': uproot.open("data/trigger_eff/met_trigger_sf.root")['120pfht_hltmu_1m_2017'],
+    '2018': uproot.open("data/trigger_eff/met_trigger_sf.root")['120pfht_hltmu_1m_2018']
 }
 get_met_trig_weight = {}
 for year in ['2016','2017','2018']:
-    met_trig_hist=met_trig_files[year]['hden_monojet_recoil_clone_passed']
+    met_trig_hist=met_trig_hists[year]
     get_met_trig_weight[year] = lookup_tools.dense_lookup.dense_lookup(met_trig_hist.values, met_trig_hist.edges)
 
 ###
-# MET Z->mumu efficiency correction
+# MET z->mumu efficiency SF. 2017/18 using 1m as done in monojet, 2m used only for systematics. Depends on recoil.
 ###
 
-zmm_trig_files ={
-    '2016': uproot.open("data/trigger_eff/metTriggerEfficiency_zmm_recoil_monojet_TH1F.root"),
-    '2017': uproot.open("data/trigger_eff/metTriggerEfficiency_zmm_recoil_monojet_TH1F.root"),
-    '2018': uproot.open("data/trigger_eff/metTriggerEfficiency_zmm_recoil_monojet_TH1F.root")
+zmm_trig_hists ={
+    '2016': uproot.open("data/trigger_eff/metTriggerEfficiency_zmm_recoil_monojet_TH1F.root")['hden_monojet_recoil_clone_passed'],
+    '2017': uproot.open("data/trigger_eff/met_trigger_sf.root")['120pfht_hltmu_1m_2017'],
+    '2018': uproot.open("data/trigger_eff/met_trigger_sf.root")['120pfht_hltmu_1m_2018']
 }
 get_met_zmm_trig_weight = {}
 for year in ['2016','2017','2018']:
-    zmm_trig_hist = zmm_trig_files[year]['hden_monojet_recoil_clone_passed']
+    zmm_trig_hist = zmm_trig_hists[year]
     get_met_zmm_trig_weight[year] = lookup_tools.dense_lookup.dense_lookup(zmm_trig_hist.values, zmm_trig_hist.edges)
 
 ###
-# Electron trigger correction
+# Electron trigger efficiency SFs. depends on supercluster eta and pt:
 ###
 
-ele_trig_files = {
-    '2016': uproot.open("data/trigger_eff/eleTrig.root"),
-    '2017': uproot.open("data/trigger_eff/eleTrig.root"),
-    '2018': uproot.open("data/trigger_eff/eleTrig.root")
+ele_trig_hists = {
+    '2016': uproot.open("data/trigger_eff/eleTrig.root")['hEffEtaPt'],
+    '2017': uproot.open("data/trigger_eff/electron_trigger_sf_2017.root")['EGamma_SF2D'],#monojet measurement for the combined trigger path
+    '2018': uproot.open("data/trigger_eff/electron_trigger_sf_2018.root")['EGamma_SF2D'] #approved by egamma group: https://indico.cern.ch/event/924522/
 }
 get_ele_trig_weight = {}
 for year in ['2016','2017','2018']:
-    ele_trig_hist = ele_trig_files[year]['hEffEtaPt']
+    ele_trig_hist = ele_trig_hists[year]
     get_ele_trig_weight[year] = lookup_tools.dense_lookup.dense_lookup(ele_trig_hist.values, ele_trig_hist.edges)
 
 ###
-# Photon trigger correction
+# Photon trigger efficiency SFs. 2017/18 not actually used, sigmoid is used instead.
 ###
 
 pho_trig_files = {
@@ -79,48 +78,74 @@ for year in ['2016','2017','2018']:
     get_pho_trig_weight[year] = lookup_tools.dense_lookup.dense_lookup(pho_trig_hist.values, pho_trig_hist.edges)
 
 ###
-# Electron ID weights
+# Electron id SFs. 2017/18 used dedicated weights from monojet. depends on supercluster eta and pt.
 ###
+
 ele_loose_files = {
-    '2016': uproot.open("data/ScaleFactor/2016LegacyReReco_ElectronLoose_Fall17V2.root"),
-    '2017': uproot.open("data/ScaleFactor/2017_ElectronLoose.root"),
-    '2018': uproot.open("data/ScaleFactor/2018_ElectronLoose.root")
+    '2016': uproot.open("data/ScaleFactor/2016_ElectronWPVeto_Fall17V2.root"),
+    '2017': uproot.open("data/ScaleFactor/2017_ElectronWPVeto_Fall17V2_BU.root"),
+    '2018': uproot.open("data/ScaleFactor/2018_ElectronWPVeto_Fall17V2_BU.root")
 }
 ele_tight_files = {
     '2016': uproot.open("data/ScaleFactor/2016LegacyReReco_ElectronTight_Fall17V2.root"),
-    '2017': uproot.open("data/ScaleFactor/2017_ElectronTight.root"),
-    '2018': uproot.open("data/ScaleFactor/2018_ElectronTight.root")
+    '2017': uproot.open("data/ScaleFactor/2017_ElectronTight_Fall17V2_BU.root"),
+    '2018': uproot.open("data/ScaleFactor/2018_ElectronTight_Fall17V2_BU.root")
 }
 get_ele_loose_id_sf = {}
 get_ele_tight_id_sf = {}
-get_ele_loose_id_eff = {}
-get_ele_tight_id_eff = {}
 for year in ['2016','2017','2018']:
     ele_loose_sf_hist = ele_loose_files[year]["EGamma_SF2D"]
-    ele_loose_eff_hist = ele_loose_files[year]["EGamma_EffMC2D"]
     get_ele_loose_id_sf[year]  = lookup_tools.dense_lookup.dense_lookup(ele_loose_sf_hist.values, ele_loose_sf_hist.edges)
-    get_ele_loose_id_eff[year] = lookup_tools.dense_lookup.dense_lookup(ele_loose_eff_hist.values, ele_loose_eff_hist.edges)
     ele_tight_sf_hist =ele_tight_files[year]["EGamma_SF2D"]
-    ele_tight_eff_hist = ele_tight_files[year]["EGamma_EffMC2D"]
     get_ele_tight_id_sf[year]  = lookup_tools.dense_lookup.dense_lookup(ele_tight_sf_hist.values, ele_tight_sf_hist.edges)
-    get_ele_tight_id_eff[year] = lookup_tools.dense_lookup.dense_lookup(ele_tight_eff_hist.values, ele_tight_eff_hist.edges)
 
 ###
-# Photon ID weights
+# Electron reconstruction SFs. Depends on supercluster eta and pt.    
 ###
 
-pho_tight_files = {
-    '2016': uproot.open("data/ScaleFactor/Fall17V2_2016_Tight_photons.root"),
-    '2017': uproot.open("data/ScaleFactor/2017_PhotonsTight.root"),
-    '2018': uproot.open("data/ScaleFactor/2018_PhotonsTight.root")
+ele_reco_files = {
+    '2016': uproot.open("data/ScaleFactor/EGM2D_BtoH_GT20GeV_RecoSF_Legacy2016.root"),
+    '2017': uproot.open("data/ScaleFactor/2017_egammaEffi_txt_EGM2D_runBCDEF_passingRECO.root"),
+    '2018': uproot.open("data/ScaleFactor/2018_egammaEffi_txt_EGM2D_updatedAll.root")
+}
+get_ele_reco_sf = {}
+for year in ['2016','2017','2018']:
+    ele_reco_hist = ele_reco_files[year]["EGamma_SF2D"]
+    get_ele_reco_sf[year]=lookup_tools.dense_lookup.dense_lookup(ele_reco_hist.values, ele_reco_hist.edges)
+#2017 has a separate set of weights for low pt electrons (pt<20).
+ele_reco_lowet_hist = uproot.open("data/ScaleFactor/2017_egammaEffi_txt_EGM2D_runBCDEF_passingRECO_lowEt.root")['EGamma_SF2D']
+get_ele_reco_lowet_sf=lookup_tools.dense_lookup.dense_lookup(ele_reco_lowet_hist.values, ele_reco_lowet_hist.edges)
+
+###
+# Photon ID SFs. Tight photons use medium id. 2017/18 use dedicated measurement from monojet, depends only on abs(eta): https://indico.cern.ch/event/879924/
+###
+
+pho_tight_hists = {
+    '2016': uproot.open("data/ScaleFactor/Fall17V2_2016_Medium_photons.root")['EGamma_SF2D'],
+    '2017': uproot.open("data/ScaleFactor/photon_medium_id_sf_v0.root")['photon_medium_id_sf_2017'],
+    '2018': uproot.open("data/ScaleFactor/photon_medium_id_sf_v0.root")['photon_medium_id_sf_2018']
 }
 get_pho_tight_id_sf = {}
 for year in ['2016','2017','2018']:
-    pho_tight_hist=pho_tight_files[year]["EGamma_SF2D"]
+    pho_tight_hist=pho_tight_hists[year]
     get_pho_tight_id_sf[year] = lookup_tools.dense_lookup.dense_lookup(pho_tight_hist.values, pho_tight_hist.edges)
 
 ###
-# Muon ID weights
+# Photon CSEV weight: https://twiki.cern.ch/twiki/bin/view/CMS/EgammaIDRecipesRun2#Electron_Veto_CSEV_or_pixel_seed
+###
+
+pho_csev_hists = {
+    '2016': uproot.open("data/ScaleFactor/ScalingFactors_80X_Summer16_rename.root")['Scaling_Factors_CSEV_R9_Inclusive'],
+    '2017': uproot.open("data/ScaleFactor/CSEV_ScaleFactors_2017.root")['Medium_ID'],
+    '2018': uproot.open("data/ScaleFactor/CSEV_2018.root")['eleVeto_SF'],
+}
+get_pho_csev_sf = {}
+for year in ['2016','2017','2018']:
+    pho_csev_hist=pho_csev_hists[year]
+    get_pho_csev_sf[year] = lookup_tools.dense_lookup.dense_lookup(pho_csev_hist.values, pho_csev_hist.edges)
+
+###
+# Muon ID SFs
 ###
 
 mu_files = {
@@ -145,21 +170,7 @@ for year in ['2016','2017','2018']:
     get_mu_loose_id_sf[year] = lookup_tools.dense_lookup.dense_lookup(mu_loose_hist[year].values, mu_loose_hist[year].edges)
 
 ###
-# Electron reconstruction weights
-###
-
-ele_reco_files = {
-    '2016': uproot.open("data/ScaleFactor/2016_ElectronReco.root"),
-    '2017': uproot.open("data/ScaleFactor/2017_ElectronReco.root"),
-    '2018': uproot.open("data/ScaleFactor/2018_ElectronReco.root")
-}
-get_ele_reco_sf = {}
-for year in ['2016','2017','2018']:
-    ele_reco_hist = ele_reco_files[year]["EGamma_SF2D"]
-    get_ele_reco_sf[year]=lookup_tools.dense_lookup.dense_lookup(ele_reco_hist.values, ele_reco_hist.edges)
-
-###
-# Muon isolation weights
+# Muon isolation SFs
 ###
 
 mu_iso_files = {
@@ -449,12 +460,12 @@ corrections = {
     'get_pho_trig_weight':      get_pho_trig_weight,
     'get_ele_loose_id_sf':      get_ele_loose_id_sf,
     'get_ele_tight_id_sf':      get_ele_tight_id_sf,
-    'get_ele_loose_id_eff':     get_ele_loose_id_eff,
-    'get_ele_tight_id_eff':     get_ele_tight_id_eff,
     'get_pho_tight_id_sf':      get_pho_tight_id_sf,
+    'get_pho_csev_sf':          get_pho_csev_sf,
     'get_mu_tight_id_sf':       get_mu_tight_id_sf,
     'get_mu_loose_id_sf':       get_mu_loose_id_sf,
     'get_ele_reco_sf':          get_ele_reco_sf,
+    'get_ele_reco_lowet_sf':    get_ele_reco_lowet_sf,
     'get_mu_tight_iso_sf':      get_mu_tight_iso_sf,
     'get_mu_loose_iso_sf':      get_mu_loose_iso_sf,
     'get_ecal_bad_calib':       get_ecal_bad_calib,

@@ -3,7 +3,6 @@ import uproot, uproot_methods
 import numpy as np
 from coffea.util import save
 
-#POG  Tight - https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2?rev=41#Offline_selection_criteria
 #Electron_cutBased  Int_t   cut-based ID Fall17 V2 (0:fail, 1:veto, 2:loose, 3:medium, 4:tight)
 def isLooseElectron(pt,eta,dxy,dz,veto_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
@@ -15,19 +14,20 @@ def isLooseElectron(pt,eta,dxy,dz,veto_id,year):
         mask = ((pt>10)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(veto_id>=1)) | ((pt>10)&(abs(eta)>1.5660)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(veto_id>=1))
     return mask
 
+#2017/18 pT thresholds adjusted to match monojet, using dedicated ID SFs
 def isTightElectron(pt,eta,dxy,dz,tight_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
         mask = ((pt>29)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(tight_id==4)) | ((pt>29)&(abs(eta)>1.5660)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(tight_id==4)) # Trigger: HLT_Ele27_WPTight_Gsf_v
     elif year=='2017':
-        mask = ((pt>34)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(tight_id==4)) | ((pt>34)&(abs(eta)>1.5660)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(tight_id==4)) # Trigger: HLT_Ele35_WPTight_Gsf_v
+        mask = ((pt>40)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(tight_id==4)) | ((pt>40)&(abs(eta)>1.5660)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(tight_id==4)) # Trigger: HLT_Ele35_WPTight_Gsf_v
     elif year=='2018':
-        mask = ((pt>34)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(tight_id==4)) | ((pt>34)&(abs(eta)>1.5660)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(tight_id==4)) # Trigger: HLT_Ele32_WPTight_Gsf_v
+        mask = ((pt>40)&(abs(eta)<1.4442)&(abs(dxy)<0.05)&(abs(dz)<0.1)&(tight_id==4)) | ((pt>40)&(abs(eta)>1.5660)&(abs(eta)<2.5)&(abs(dxy)<0.1)&(abs(dz)<0.2)&(tight_id==4)) # Trigger: HLT_Ele32_WPTight_Gsf_v
     return mask
 
 
 def isLooseMuon(pt,eta,iso,loose_id,year):
-    #dxy and dz cuts are missing from med_id; very loose isolation is 0.4
+    #dxy and dz cuts are missing from med_id; loose isolation is 0.25
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
         mask = (pt>10)&(abs(eta)<2.4)&(loose_id>0)&(iso<0.25)
@@ -65,21 +65,24 @@ def isLooseTau(pt,eta,decayMode,_id,year):
 def isLoosePhoton(pt,eta,loose_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>15)&(abs(eta)<2.5)&(loose_id>=1)
+        mask = (pt>15)&~((abs(eta)>1.4442)&(abs(eta)<1.5660))&(abs(eta)<2.5)&(loose_id>=1)
     elif year=='2017':
-        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&1)==1)
+        mask = (pt>15)&~((abs(eta)>1.4442)&(abs(eta)<1.5660))&(abs(eta)<2.5)&((loose_id&1)==1)
     elif year=='2018':
-        mask = (pt>15)&(abs(eta)<2.5)&((loose_id&1)==1)
+        mask = (pt>15)&~((abs(eta)>1.4442)&(abs(eta)<1.5660))&(abs(eta)<2.5)&((loose_id&1)==1)
     return mask
 
-def isTightPhoton(pt,eta,tight_id,year):
+def isTightPhoton(pt,tight_id,year):
+    #isScEtaEB is used (barrel only), so no eta requirement
+    #2017/18 pT requirement adjusted to match monojet, using dedicated ID SFs
+    #Tight photon use medium ID, as in monojet
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>200)&(abs(eta)<2.5)&(tight_id==3) # Trigger threshold is at 175
+        mask = (pt>200)&(tight_id>=2) # Trigger threshold is at 175
     elif year=='2017':
-        mask = (pt>220)&(abs(eta)<2.5)&((tight_id&4)==4) # Trigger threshold is at 200
+        mask = (pt>230)&((tight_id&2)==2) # Trigger threshold is at 200
     elif year=='2018':
-        mask = (pt>220)&(abs(eta)<2.5)&((tight_id&4)==4) # Trigger threshold is at 200
+        mask = (pt>230)&((tight_id&2)==2) # Trigger threshold is at 200
     return mask
 
 def isGoodFatJet(pt,eta, jet_id):

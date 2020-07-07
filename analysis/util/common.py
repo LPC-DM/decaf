@@ -7,6 +7,13 @@ def match(a, b, val):
     combinations = a.cross(b, nested=True)
     return (combinations.i0.delta_r(combinations.i1)<val).any()
 
+def sigmoid(x,a,b,c,d):
+    """
+    Sigmoid function for trigger turn-on fits.
+    f(x) = c + (d-c) / (1 + np.exp(-a * (x-b)))
+    """
+    return c + (d-c) / (1 + np.exp(-a * (x-b)))
+
 deepflavWPs = {
     '2016': {
         'loose' : 0.0614,
@@ -49,5 +56,6 @@ btagWPs = {
     
 common = {}
 common['match'] = match
+common['sigmoid'] = sigmoid
 common['btagWPs'] = btagWPs
 save(common, 'data/common.coffea')
