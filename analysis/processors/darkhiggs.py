@@ -37,7 +37,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                  'HBHENoiseFilter',
                  'HBHENoiseIsoFilter',
                  'EcalDeadCellTriggerPrimitiveFilter',
-                 'BadPFMuonFilter'
+                 'BadPFMuonFilter',
+                 'ecalBadCalibFilterV2'
              ],
 
         '2018': ['goodVertices',
@@ -45,7 +46,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                  'HBHENoiseFilter',
                  'HBHENoiseIsoFilter',
                  'EcalDeadCellTriggerPrimitiveFilter',
-                 'BadPFMuonFilter'
+                 'BadPFMuonFilter',
+                 'ecalBadCalibFilterV2'
              ]
     }
 
@@ -1131,7 +1133,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
 
         met_filters =  np.ones(events.size, dtype=np.bool)
-        if isData: met_filters = met_filters & events.Flag['eeBadScFilter']
+        if isData: met_filters = met_filters & events.Flag['eeBadScFilter']#this filter is recommended for data only
         for flag in AnalysisProcessor.met_filter_flags[self._year]:
             met_filters = met_filters & events.Flag[flag]
         selection.add('met_filters',met_filters)
