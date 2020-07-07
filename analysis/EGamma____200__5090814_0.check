@@ -1,76 +1,0 @@
-
-Couldn't find a valid proxy.
-
-Preprocessing:   0%|          | 0/32 [00:00<?, ?file/s]Preprocessing:   3%|3         | 1/32 [00:10<05:25, 10.51s/file]Preprocessing:  22%|##1       | 7/32 [00:11<03:04,  7.38s/file]Preprocessing:  28%|##8       | 9/32 [00:18<02:23,  6.22s/file]Preprocessing:  31%|###1      | 10/32 [00:18<01:39,  4.50s/file]Preprocessing:  44%|####3     | 14/32 [00:19<00:58,  3.23s/file]Preprocessing:  47%|####6     | 15/32 [00:20<00:42,  2.49s/file]Preprocessing:  53%|#####3    | 17/32 [00:23<00:34,  2.27s/file]Preprocessing:  56%|#####6    | 18/32 [00:24<00:26,  1.89s/file]Preprocessing:  66%|######5   | 21/32 [00:25<00:15,  1.37s/file]Preprocessing:  69%|######8   | 22/32 [00:25<00:11,  1.11s/file]Preprocessing:  78%|#######8  | 25/32 [00:28<00:07,  1.03s/file]Preprocessing:  81%|########1 | 26/32 [00:30<00:08,  1.47s/file]Preprocessing:  84%|########4 | 27/32 [00:31<00:05,  1.18s/file]Preprocessing:  94%|#########3| 30/32 [00:31<00:01,  1.14file/s]Preprocessing: 100%|##########| 32/32 [00:32<00:00,  1.01s/file]
-Processing:   0%|          | 0/32 [00:00<?, ?chunk/s]Processing:   3%|3         | 1/32 [00:38<19:55, 38.58s/chunk]Processing:   6%|6         | 2/32 [00:45<14:33, 29.11s/chunk]Processing:   9%|9         | 3/32 [00:47<10:04, 20.83s/chunk]Processing:  12%|#2        | 4/32 [00:49<07:09, 15.33s/chunk]Processing:  16%|#5        | 5/32 [00:50<04:53, 10.89s/chunk]Processing:  19%|#8        | 6/32 [00:53<03:45,  8.68s/chunk]Processing:  22%|##1       | 7/32 [00:54<02:39,  6.38s/chunk]Processing:  22%|##1       | 7/32 [12:19<44:00, 105.63s/chunk]
-concurrent.futures.process._RemoteTraceback: 
-"""
-Traceback (most recent call last):
-  File "/var/lib/condor/execute/dir_15021/site-packages/awkward/array/virtual.py", line 309, in array
-    return self._cache[self._array]
-KeyError: '0001585935ea191511ea940458b6b8bcbeef;Events;0;47966;Photon_pt'
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/cvmfs/sft.cern.ch/lcg/releases/Python/3.6.5-f74f0/x86_64-centos7-gcc8-opt/lib/python3.6/concurrent/futures/process.py", line 175, in _process_worker
-    r = call_item.fn(*call_item.args, **call_item.kwargs)
-  File "/var/lib/condor/execute/dir_15021/site-packages/coffea/processor/executor.py", line 134, in __call__
-    out = self.function(*args, **kwargs)
-  File "/var/lib/condor/execute/dir_15021/site-packages/coffea/processor/executor.py", line 539, in _work_function
-    raise e
-  File "/var/lib/condor/execute/dir_15021/site-packages/coffea/processor/executor.py", line 522, in _work_function
-    out = processor_instance.process(df)
-  File "processors/darkhiggs.py", line 631, in process
-    pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho[_id],self._year)&(pho.electronVeto) #added electron veto flag
-  File "util/ids.py", line 66, in isLoosePhoton
-    mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
-  File "/var/lib/condor/execute/dir_15021/site-packages/numpy/lib/mixins.py", line 25, in func
-    return ufunc(self, other)
-  File "/var/lib/condor/execute/dir_15021/site-packages/awkward/array/jagged.py", line 1033, in __array_ufunc__
-    inputs[i] = inputs[i].flatten()
-  File "/var/lib/condor/execute/dir_15021/site-packages/awkward/array/jagged.py", line 1414, in flatten
-    return self._content[self._starts[0]:self._stops[-1]]
-  File "/var/lib/condor/execute/dir_15021/site-packages/awkward/array/virtual.py", line 369, in __getitem__
-    return self.array[where]
-  File "/var/lib/condor/execute/dir_15021/site-packages/awkward/array/virtual.py", line 312, in array
-    return self.materialize()
-  File "/var/lib/condor/execute/dir_15021/site-packages/awkward/array/virtual.py", line 326, in materialize
-    array = self._util_toarray(self._generator(*self._args, **self._kwargs), self.DEFAULTTYPE)
-  File "/var/lib/condor/execute/dir_15021/site-packages/uproot/tree.py", line 1434, in array
-    _delayedraise(fill(j))
-  File "/var/lib/condor/execute/dir_15021/site-packages/uproot/tree.py", line 59, in _delayedraise
-    raise err.with_traceback(trc)
-  File "/var/lib/condor/execute/dir_15021/site-packages/uproot/tree.py", line 1402, in fill
-    source = self._basket(i, interpretation, local_entrystart, local_entrystop, awkward, basketcache, keycache)
-  File "/var/lib/condor/execute/dir_15021/site-packages/uproot/tree.py", line 1185, in _basket
-    basketdata = key.basketdata()
-  File "/var/lib/condor/execute/dir_15021/site-packages/uproot/tree.py", line 1692, in basketdata
-    return self.cursor.copied().bytes(datasource, self._fObjlen)
-  File "/var/lib/condor/execute/dir_15021/site-packages/uproot/source/cursor.py", line 54, in bytes
-    return source.data(start, stop)
-  File "/var/lib/condor/execute/dir_15021/site-packages/uproot/source/chunked.py", line 119, in data
-    self._open()
-  File "/var/lib/condor/execute/dir_15021/site-packages/uproot/source/xrootd.py", line 36, in _open
-    raise OSError(status["message"])
-OSError: [FATAL] Redirect limit has been reached
-"""
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "run.py", line 47, in <module>
-    executor_args={'nano': True, 'workers': options.workers},
-  File "/var/lib/condor/execute/dir_15021/site-packages/coffea/processor/executor.py", line 796, in run_uproot_job
-    executor(chunks, closure, wrapped_out, **exe_args)
-  File "/var/lib/condor/execute/dir_15021/site-packages/coffea/processor/executor.py", line 299, in futures_executor
-    _futures_handler(futures, accumulator, status, unit, desc, add_fn, tailtimeout)
-  File "/var/lib/condor/execute/dir_15021/site-packages/coffea/processor/executor.py", line 192, in _futures_handler
-    add_fn(output, finished.pop().result())
-  File "/cvmfs/sft.cern.ch/lcg/releases/Python/3.6.5-f74f0/x86_64-centos7-gcc8-opt/lib/python3.6/concurrent/futures/_base.py", line 425, in result
-    return self.__get_result()
-  File "/cvmfs/sft.cern.ch/lcg/releases/Python/3.6.5-f74f0/x86_64-centos7-gcc8-opt/lib/python3.6/concurrent/futures/_base.py", line 384, in __get_result
-    raise self._exception
-OSError: [FATAL] Redirect limit has been reached
-ls: cannot access hists/darkhiggs2018/EGamma____200_.futures: No such file or directory
-cp: cannot stat 'hists/darkhiggs2018/EGamma____200_.futures': No such file or directory
