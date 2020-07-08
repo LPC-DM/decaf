@@ -584,9 +584,10 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
 
         met = events.MET
+        if self._year == '2017': events.METFixEE2017#Recommended for 2017
         met['T']  = TVector2Array.from_polar(met.pt, met.phi)
-        met['p4'] = TLorentzVectorArray.from_ptetaphim(met.pt, 0., met.phi, 0.)
         calomet = events.CaloMET
+        puppimet = events.PuppiMET
 
         ###
         #Initialize physics objects
@@ -646,13 +647,18 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_pho = leading_pho[leading_pho.istight.astype(np.bool)]
 
         fj = events.AK15Puppi
+        sj = events.AK15PuppiSubJet
+        #print(sj[fj[fj.hassj1].subJetIdx1],sj[fj[fj.hassj2].subJetIdx2])
+        fj['hassjs'] = (fj.subJetIdx1>-1)&(fj.subJetIdx2>-1)
         fj['isgood'] = isGoodFatJet(fj.pt, fj.eta, fj.jetId)
         fj['isclean'] =~match(fj,pho_loose,1.5)&~match(fj,mu_loose,1.5)&~match(fj,e_loose,1.5)
         fj['msd_corr'] = fj.msoftdrop*awkward.JaggedArray.fromoffsets(fj.array.offsets, get_msd_weight(fj.pt.flatten(),fj.eta.flatten()))
         fj['ZHbbvsQCD'] = (fj.probZbb + fj.probHbb) / (fj.probZbb+ fj.probHbb+ fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers)
+        fj_hassjs = fj[fj.hassjs.astype(np.bool)]
         fj_good = fj[fj.isgood.astype(np.bool)]
         fj_clean=fj_good[fj_good.isclean.astype(np.bool)]
         fj_ntot=fj.counts
+        fj_nhassjs=fj_hassjs.counts
         fj_ngood=fj_good.counts
         fj_nclean=fj_clean.counts
 
@@ -1167,7 +1173,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_fj = fj[fj.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
         leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
-
+        #print(leading_fj.counts.sum())
+        #print(leading_fj.hassjs.sum().sum())
         selection.add('iszeroL', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
         selection.add('isoneM', (e_nloose==0)&(mu_ntight==1)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0))
         selection.add('isoneE', (e_ntight==1)&(e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
@@ -1178,20 +1185,21 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('diele_mass',(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
         selection.add('noextrab', (j_ndflvL==0))
         selection.add('extrab', (j_ndflvL>0))
-        selection.add('fatjet', (fj_nclean>0)&(fj_clean.pt.max()>160))
+        selection.add('fatjet', (fj_nclean>0))
         selection.add('noHEMj', noHEMj)
         selection.add('noHEMmet', noHEMmet)
-        selection.add('met60',(met.pt<60))
+        selection.add('met80',(met.pt<80))
         selection.add('met100',(met.pt>100))
+        selection.add('mindphimet',(abs(met.T.delta_phi(j_clean.T)).min())>0.7)
 
         regions = {
             'sr': {'iszeroL','fatjet','noextrab','noHEMmet','met_filters','met_triggers','noHEMj'},
             'wmcr': {'isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers'},
             'tmcr': {'isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'},
-            'wecr': {'isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100'},
-            'tecr': {'isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100'},
-            'zmcr': {'istwoM','fatjet','noHEMj','met_filters','met_triggers', 'dimu_mass','met60'},
-            'zecr': {'istwoE','fatjet','noHEMj','met_filters','singleelectron_triggers', 'diele_mass','met60'},
+            'wecr': {'isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'},
+            'tecr': {'isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'},
+            'zmcr': {'istwoM','fatjet','noHEMj','met_filters','met_triggers', 'dimu_mass','met80'},
+            'zecr': {'istwoE','fatjet','noHEMj','met_filters','singleelectron_triggers', 'diele_mass','met80'},
             'gcr': {'isoneA','fatjet','noHEMj','met_filters','singlephoton_triggers'}
         }
 
@@ -1513,6 +1521,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             print('Scaling:',d.name)
             dataset = d.name
             if '--' in dataset: dataset = dataset.split('--')[1]
+            print('Cross section:',self._xsec[dataset])
             if self._xsec[dataset]!= -1: scale[d.name] = self._lumi*self._xsec[dataset]
             else: scale[d.name] = 1
 
