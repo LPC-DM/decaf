@@ -18,7 +18,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
     lumis = { #Values from https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable                                                      
         '2016': 35.92,
-        '2017': 41.53,
+        '2017': 40.66,
         '2018': 59.74
     }
 
@@ -184,6 +184,9 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         self._met_triggers = {
             '2016': [
+                'PFMETNoMu90_PFMHTNoMu90_IDTight',
+                'PFMETNoMu100_PFMHTNoMu100_IDTight',
+                'PFMETNoMu110_PFMHTNoMu110_IDTight',
                 'PFMETNoMu120_PFMHTNoMu120_IDTight'
             ],
             '2017': [
@@ -212,8 +215,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         self._singleelectron_triggers = { #2017 and 2018 from monojet, applying dedicated trigger weights
             '2016': [
                 'Ele27_WPTight_Gsf',
-                'Ele115_CaloIdVT_GsfTrkIdT',
-                'Photon175'
+                'Ele105_CaloIdVT_GsfTrkIdT'
             ],
             '2017': [
                 'Ele35_WPTight_Gsf',
