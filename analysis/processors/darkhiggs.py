@@ -985,7 +985,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             genWs = gen[gen.isW&(gen.pt>100)]
             genZs = gen[gen.isZ&(gen.pt>100)]
-            genIsoAs = gen[gen.isIsoA&(gen.pt>100)&match(gen,leading_pho,0.4)] #Based on photon weight distribution
+            genIsoAs = gen[gen.isIsoA&(gen.pt>100)] #Based on photon weight distribution
 
             nnlo_nlo = {}
             if('GJets' in dataset): 
@@ -1011,6 +1011,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             # Trigger efficiency weight
             ###
 
+            e1sf = get_ele_trig_weight(leading_ele_pair.i0.eta.sum()+leading_ele_pair.i0.deltaEtaSC.sum(),leading_ele_pair.i0.pt.sum())*(leading_ele_pair.i0.pt.sum()>40).astype(np.int)
+            e2sf = get_ele_trig_weight(leading_ele_pair.i1.eta.sum()+leading_ele_pair.i1.deltaEtaSC.sum(),leading_ele_pair.i1.pt.sum())*(leading_ele_pair.i1.pt.sum()>40).astype(np.int)
+
             if self._year == '2016':
                 sf =  get_pho_trig_weight(leading_pho.pt.sum())
             elif self._year == '2017': #Sigmoid used for 2017 and 2018, values from monojet
@@ -1027,7 +1030,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'zmcr': get_met_zmm_trig_weight(u['zmcr'].mag),
                 'wecr': get_ele_trig_weight(leading_e.eta.sum()+leading_e.deltaEtaSC.sum(), leading_e.pt.sum()),
                 'tecr': get_ele_trig_weight(leading_e.eta.sum()+leading_e.deltaEtaSC.sum(), leading_e.pt.sum()),
-                'zecr': 1 - (1-get_ele_trig_weight(leading_ele_pair.i0.eta.sum()+leading_ele_pair.i0.deltaEtaSC.sum(),leading_ele_pair.i0.pt.sum()))*(1-get_ele_trig_weight(leading_ele_pair.i1.eta.sum()+leading_ele_pair.i1.deltaEtaSC.sum(),leading_ele_pair.i1.pt.sum())),
+                'zecr': 1 - (1 - e1sf)*(1 - e2sf),
                 'gcr':  sf
             }
 
@@ -1168,7 +1171,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         if self._year=='2018': noHEMj = (j_nHEM==0)
 
         noHEMmet = np.ones(events.size, dtype=np.bool)
-        if self._year=='2018': noHEMmet = ~((met.phi>-1.8)&(met.phi<-0.6))
+        if self._year=='2018': noHEMmet = (met.pt>470)|(met.phi>-0.62)|(met.phi<-1.62)
 
         leading_fj = fj[fj.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
@@ -1181,7 +1184,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('istwoM', (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0))
         selection.add('istwoE',(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
         selection.add('isoneA', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1)&(pho_nloose==1))
-        selection.add('leading_mu_pt',(mu_loose.pt.max()>30))
         selection.add('leading_e_pt',(e_loose.pt.max()>40))
         selection.add('dimu_mass',(leading_dimu.mass.sum()>60)&(leading_dimu.mass.sum()<120))
         selection.add('diele_mass',(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
@@ -1195,12 +1197,12 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('mindphimet',(abs(met.T.delta_phi(j_clean.T)).min())>0.7)
 
         regions = {
-            'sr': {'iszeroL','fatjet','noextrab','noHEMmet','met_filters','met_triggers','noHEMj'},
-            'wmcr': {'isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers','leading_mu_pt'},
-            'tmcr': {'isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers','leading_mu_pt'},
+            'sr': {'iszeroL','fatjet','noextrab','noHEMmet','met_filters','met_triggers'},
+            'wmcr': {'isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers'},
+            'tmcr': {'isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'},
             'wecr': {'isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'},
             'tecr': {'isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'},
-            'zmcr': {'istwoM','fatjet','noHEMj','met_filters','met_triggers', 'dimu_mass','met80','leading_mu_pt'},
+            'zmcr': {'istwoM','fatjet','noHEMj','met_filters','met_triggers', 'dimu_mass','met80'},
             'zecr': {'istwoE','fatjet','noHEMj','met_filters','singleelectron_triggers', 'diele_mass','met80','leading_e_pt'},
             'gcr': {'isoneA','fatjet','noHEMj','met_filters','singlephoton_triggers'}
         }

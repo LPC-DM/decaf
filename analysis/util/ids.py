@@ -30,22 +30,22 @@ def isLooseMuon(pt,eta,iso,loose_id,year):
     #dxy and dz cuts are missing from med_id; loose isolation is 0.25
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>10)&(abs(eta)<2.4)&(loose_id>0)&(iso<0.25)
+        mask = (pt>20)&(abs(eta)<2.4)&(loose_id>0)&(iso<0.25)
     elif year=='2017':
-        mask = (pt>10)&(abs(eta)<2.4)&(loose_id>0)&(iso<0.25)
+        mask = (pt>20)&(abs(eta)<2.4)&(loose_id>0)&(iso<0.25)
     elif year=='2018':
-        mask = (pt>10)&(abs(eta)<2.4)&(loose_id>0)&(iso<0.25)
+        mask = (pt>15)&(abs(eta)<2.4)&(loose_id>0)&(iso<0.25)
     return mask
 
 def isTightMuon(pt,eta,iso,tight_id,year):
     #dxy and dz cuts are baked on tight_id; tight isolation is 0.15
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>20)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
+        mask = (pt>30)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
     elif year=='2017':
-        mask = (pt>20)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
-    elif year=='2018':
-        mask = (pt>20)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
+        mask = (pt>30)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
+    elif year=='201':
+        mask = (pt>30)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
     return mask
 
 #bitmask 1 = VVLoose, 2 = VLoose, 4 = Loose, 8 = Medium, 16 = Tight, 32 = VTight, 64 = VVTight
@@ -93,7 +93,7 @@ def isGoodFatJet(pt,eta, jet_id):
 #POG use tight jetID as a standart JetID 
 
 def isGoodJet(pt, eta, jet_id, nhf, nef, chf, cef):
-    mask = (pt>30) & (abs(eta)<2.4) & ((jet_id&2)==2) & (nhf<0.8) & (nef<0.99) & (chf>0.1) & (cef<0.99)
+    mask = (pt>30) & (abs(eta)<2.4) & ((jet_id&2)==2) & (nhf<0.8) & (chf>0.1)# & (nef<0.99) & (cef<0.99)
     return mask
 
 def isHEMJet(pt, eta, phi):
