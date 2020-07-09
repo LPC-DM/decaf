@@ -985,7 +985,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             genWs = gen[gen.isW&(gen.pt>100)]
             genZs = gen[gen.isZ&(gen.pt>100)]
-            genIsoAs = gen[gen.isIsoA&(gen.pt>290)] #Based on photon weight distribution
+            genIsoAs = gen[gen.isIsoA&(gen.pt>100)&match(gen,leading_pho,0.4)] #Based on photon weight distribution
 
             nnlo_nlo = {}
             if('GJets' in dataset): 
@@ -1181,6 +1181,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('istwoM', (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0))
         selection.add('istwoE',(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
         selection.add('isoneA', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1)&(pho_nloose==1))
+        selection.add('leading_mu_pt',(mu_loose.pt.max()>30))
+        selection.add('leading_e_pt',(e_loose.pt.max()>40))
         selection.add('dimu_mass',(leading_dimu.mass.sum()>60)&(leading_dimu.mass.sum()<120))
         selection.add('diele_mass',(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
         selection.add('noextrab', (j_ndflvL==0))
@@ -1194,12 +1196,12 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         regions = {
             'sr': {'iszeroL','fatjet','noextrab','noHEMmet','met_filters','met_triggers','noHEMj'},
-            'wmcr': {'isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers'},
-            'tmcr': {'isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'},
+            'wmcr': {'isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers','leading_mu_pt'},
+            'tmcr': {'isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers','leading_mu_pt'},
             'wecr': {'isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'},
             'tecr': {'isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'},
-            'zmcr': {'istwoM','fatjet','noHEMj','met_filters','met_triggers', 'dimu_mass','met80'},
-            'zecr': {'istwoE','fatjet','noHEMj','met_filters','singleelectron_triggers', 'diele_mass','met80'},
+            'zmcr': {'istwoM','fatjet','noHEMj','met_filters','met_triggers', 'dimu_mass','met80','leading_mu_pt'},
+            'zecr': {'istwoE','fatjet','noHEMj','met_filters','singleelectron_triggers', 'diele_mass','met80','leading_e_pt'},
             'gcr': {'isoneA','fatjet','noHEMj','met_filters','singlephoton_triggers'}
         }
 
