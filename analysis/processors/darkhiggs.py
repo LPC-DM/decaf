@@ -666,7 +666,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         j['isgood'] = isGoodJet(j.pt, j.eta, j.jetId, j.neHEF, j.neEmEF, j.chHEF, j.chEmEF)
         j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
         j['isclean'] = ~match(j,e_loose,0.4)&~match(j,mu_loose,0.4)&~match(j,pho_loose,0.4)
-        j['isiso'] = ~match(j,fj_clean,1.5)
+        j['isiso'] = ~match(j,fj_clean[fj_clean.pt.argmax()],1.5)
         j['isdcsvL'] = (j.btagDeepB>deepcsvWPs['loose'])
         j['isdflvL'] = (j.btagDeepFlavB>deepflavWPs['loose'])
         j['T'] = TVector2Array.from_polar(j.pt, j.phi)

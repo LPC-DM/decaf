@@ -44,7 +44,7 @@ def isTightMuon(pt,eta,iso,tight_id,year):
         mask = (pt>30)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
     elif year=='2017':
         mask = (pt>30)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
-    elif year=='201':
+    elif year=='2018':
         mask = (pt>30)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
     return mask
 
