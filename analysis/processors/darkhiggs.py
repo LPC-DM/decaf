@@ -320,8 +320,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('recoil','Hadronic Recoil',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0, 3000]),
                 hist.Bin('fjmass','AK15 Jet Mass', 30, 0, 300),#[0, 30, 60, 80, 120, 300]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
-                hist.Bin('TvsQCD','TvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
-                hist.Bin('VvsQCD','VvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
+                #hist.Bin('TvsQCD','TvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
                 hist.Bin('XvsQCD','XvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
             'recoil': hist.Hist(
@@ -513,12 +512,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('TvsQCD','TvsQCD',15,0,1)
             ),
-            'VvsQCD': hist.Hist(
+            'XvsQCD': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('VvsQCD','VvsQCD',15,0,1)
+                hist.Bin('XvsQCD','XvsQCD',15,0,1)
             ),
         })
 
@@ -676,8 +675,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         probT=fj.probTbcq+fj.probTbqq
         fj['TvsQCD'] = probT/(probT+probQCD)
         probV=fj.probWcq+fj.probWqq+fj.probZbb+fj.probZcc+fj.probZqq
-        fj['VvsQCD'] = probV/(probV+probQCD)
-        probX=probZHbb+probT+probV
+        probX=probZHbb+probV
         fj['XvsQCD'] = probX/(probX+probQCD)
         fj_hassjs = fj[fj.hassjs.astype(np.bool)]
         fj_good = fj[fj.isgood.astype(np.bool)]
@@ -1264,7 +1262,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'nfjclean':               fj_nclean,
                 'ZHbbvsQCD':              leading_fj.ZHbbvsQCD,
                 'TvsQCD':                 leading_fj.TvsQCD,
-                'VvsQCD':                 leading_fj.VvsQCD,
                 'XvsQCD':                 leading_fj.XvsQCD,
             }
             if region in mT:
@@ -1334,6 +1331,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                                       recoil=u[region].mag,
                                       fjmass=leading_fj.msd_corr.sum(),
                                       ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                      #TvsQCD=leading_fj.TvsQCD.sum(),
+                                      XvsQCD=leading_fj.XvsQCD.sum(),
                                       weight=np.ones(events.size)*cut)
                 fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
             else:
@@ -1517,6 +1516,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               recoil=u[region].mag,
                                               fjmass=leading_fj.msd_corr.sum(),
                                               ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                              #TvsQCD=leading_fj.TvsQCD.sum(),
+                                              XvsQCD=leading_fj.XvsQCD.sum(),
                                               weight=weights.weight(modifier=systematic)*whf*cut)
                         hout['template'].fill(dataset='LF--'+dataset,
                                               region=region,
@@ -1525,6 +1526,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               recoil=u[region].mag,
                                               fjmass=leading_fj.msd_corr.sum(),
                                               ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                              #TvsQCD=leading_fj.TvsQCD.sum(),
+                                              XvsQCD=leading_fj.XvsQCD.sum(),
                                               weight=weights.weight(modifier=systematic)*wlf*cut)
                     fill('HF--'+dataset, vgentype, weights.weight()*whf, cut)
                     fill('LF--'+dataset, vgentype, weights.weight()*wlf, cut)
@@ -1542,6 +1545,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               recoil=u[region].mag,
                                               fjmass=leading_fj.msd_corr.sum(),
                                               ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                              #TvsQCD=leading_fj.TvsQCD.sum(),
+                                              XvsQCD=leading_fj.XvsQCD.sum(),
                                               weight=weights.weight(modifier=systematic)*cut)
                     fill(dataset, vgentype, weights.weight(), cut)
                                     
