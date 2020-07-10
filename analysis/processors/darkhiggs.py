@@ -318,7 +318,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('systematic', 'Systematic'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('recoil','Hadronic Recoil',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0, 3000]),
-                hist.Bin('fjmass','AK15 Jet Mass',[0, 30, 60, 80, 120, 300]),
+                hist.Bin('fjmass','AK15 Jet Mass', 30, 0, 300)#[0, 30, 60, 80, 120, 300]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._deepak15wp[self._year], 1])
             ),
             'recoil': hist.Hist(
@@ -1197,7 +1197,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('mindphimet',(abs(met.T.delta_phi(j_clean.T)).min())>0.7)
 
         regions = {
-            'sr': {'iszeroL','fatjet','noextrab','noHEMmet','met_filters','met_triggers'},
+            'sr': {'iszeroL','fatjet','noextrab','noHEMmet','met_filters','met_triggers','noHEMj'},
             'wmcr': {'isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers'},
             'tmcr': {'isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'},
             'wecr': {'isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'},
