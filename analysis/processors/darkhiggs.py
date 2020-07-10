@@ -176,7 +176,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             #'garbage': 13
         }
         
-        self._deepak15wp = {
+        self._ZHbbvsQCDwp = {
             '2016': 0.53,
             '2017': 0.61,
             '2018': 0.65
@@ -318,8 +318,11 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('systematic', 'Systematic'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('recoil','Hadronic Recoil',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0, 3000]),
-                hist.Bin('fjmass','AK15 Jet Mass', 30, 0, 300)#[0, 30, 60, 80, 120, 300]),
-                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._deepak15wp[self._year], 1])
+                hist.Bin('fjmass','AK15 Jet Mass', 30, 0, 300),#[0, 30, 60, 80, 120, 300]),
+                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
+                hist.Bin('TvsQCD','TvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
+                hist.Bin('VvsQCD','VvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
+                hist.Bin('XvsQCD','XvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
             'recoil': hist.Hist(
                 'Events',
@@ -503,6 +506,20 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1)
             ),
+            'TvsQCD': hist.Hist(
+                'Events', 
+                hist.Cat('dataset', 'Dataset'), 
+                hist.Cat('region', 'Region'), 
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('TvsQCD','TvsQCD',15,0,1)
+            ),
+            'VvsQCD': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('VvsQCD','VvsQCD',15,0,1)
+            ),
         })
 
     @property
@@ -653,7 +670,15 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj['isgood'] = isGoodFatJet(fj.pt, fj.eta, fj.jetId)
         fj['isclean'] =~match(fj,pho_loose,1.5)&~match(fj,mu_loose,1.5)&~match(fj,e_loose,1.5)
         fj['msd_corr'] = fj.msoftdrop*awkward.JaggedArray.fromoffsets(fj.array.offsets, get_msd_weight(fj.pt.flatten(),fj.eta.flatten()))
-        fj['ZHbbvsQCD'] = (fj.probZbb + fj.probHbb) / (fj.probZbb+ fj.probHbb+ fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers)
+        probQCD=fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
+        probZHbb=fj.probZbb+fj.probHbb
+        fj['ZHbbvsQCD'] = probZHbb/(probZHbb+probQCD)
+        probT=fj.probTbcq+fj.probTbqq
+        fj['TvsQCD'] = probT/(probT+probQCD)
+        probV=fj.probWcq+fj.probWqq+fj.probZbb+fj.probZcc+fj.probZqq
+        fj['VvsQCD'] = probV/(probV+probQCD)
+        probX=probZHbb+probT+probV
+        fj['XvsQCD'] = probX/(probX+probQCD)
         fj_hassjs = fj[fj.hassjs.astype(np.bool)]
         fj_good = fj[fj.isgood.astype(np.bool)]
         fj_clean=fj_good[fj_good.isclean.astype(np.bool)]
@@ -1237,7 +1262,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'njets':                  j_nclean,
                 'ndflvL':                 j_ndflvL,
                 'nfjclean':               fj_nclean,
-                'ZHbbvsQCD':              leading_fj.ZHbbvsQCD
+                'ZHbbvsQCD':              leading_fj.ZHbbvsQCD,
+                'TvsQCD':                 leading_fj.TvsQCD,
+                'VvsQCD':                 leading_fj.VvsQCD,
+                'XvsQCD':                 leading_fj.XvsQCD,
             }
             if region in mT:
                 variables['mT']           = mT[region]
