@@ -5,7 +5,6 @@ from coffea import processor, hist, util
 from coffea.util import save, load
 from optparse import OptionParser
 from coffea.lookup_tools.dense_lookup import dense_lookup
-from coffea.lumi_tools import LumiMask
 
 
 # VID map definition
@@ -82,26 +81,18 @@ class PhotonPurity(processor.ProcessorABC):
 
     def __init__(self, year, ids, common):
         self._year = year
-        self._accumulator = processor.dict_accumulator({
-            'sumw': hist.Hist(
-                'sumw',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Bin('sumw', 'Weight value', [0.])
-            ),
-            'sumw2': hist.Hist(
-                'sumw2',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Bin('sumw2', 'Weight value', [0.])
-            ),
-            'count':
-            hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Cat('cat', 'Cat'),
-                hist.Bin('pt', 'Photon pT', 50, 200, 1200),
-                hist.Bin('sieie', 'sieie', 100, 0, 0.02),
-                )
-            })
+
+        items = {}
+        items['count'] = hist.Hist( 'Events',
+                                    hist.Cat('dataset', 'Dataset'),
+                                    hist.Cat('cat', 'Cat'),
+                                    hist.Bin('pt', 'Photon pT', 50, 200, 1200),
+                                    hist.Bin('sieie', 'sieie', 100, 0, 0.02)
+                                    )
+        items['sumw'] = processor.defaultdict_accumulator(float)
+        items['sumw2'] = processor.defaultdict_accumulator(float)
+
+        self._accumulator = processor.dict_accumulator(items)
 
         self._singlephoton_triggers = {
             '2016': [
@@ -128,6 +119,7 @@ class PhotonPurity(processor.ProcessorABC):
         dataset = events.metadata['dataset']
         isData = 'genWeight' not in events.columns
         selection = processor.PackedSelection()
+        hout = self.accumulator.identity()
         match = self._common['match']
 
         isLooseElectron = self._ids['isLooseElectron']
@@ -165,6 +157,8 @@ class PhotonPurity(processor.ProcessorABC):
         pho['ispurity'] = isPurityPhoton(pho.pt, pho[_id])&(pho.isScEtaEB)&(pho.electronVeto)
         pho_clean=pho[pho.isclean.astype(np.bool)]
         pho_purity=pho_clean[pho_clean.ispurity.astype(np.bool)]
+        pho_nosieie = pho_clean[(pho_clean.pt > 200) & (pho_clean.isScEtaEB) & (pho_clean.electronVeto) & medium_id_no_sieie(pho_clean)]
+        pho_nosieie_inv_iso = pho_clean[(pho_clean.pt > 200) & (pho_clean.isScEtaEB) & (pho_clean.electronVeto) & medium_id_no_sieie_inv_iso(pho_clean)]
 
         #### Consider AK4 jet 
         def isPurityJet(pt, eta, jet_id):
@@ -172,6 +166,8 @@ class PhotonPurity(processor.ProcessorABC):
             return mask
 
         j = events.Jet
+        #30 GeV cut on jet pT, we need to check later
+        #j['isgood'] = isGoodJet(j.pt, j.eta, j.jetId, j.neHEF, j.neEmEF, j.chHEF, j.chEmEF)
         j['ispurity'] = isPurityJet(j.pt, j.eta, j,jetId)
         j['isclean'] = ~match(j,e_loose,0.4)&~match(j,mu_loose,0.4)&~match(j,pho_loose,0.4)
         j_purity = j[j.ispurity.astype(np.bool)]
@@ -179,20 +175,6 @@ class PhotonPurity(processor.ProcessorABC):
         j_nclean = j_clean.counts
 
         met = events.MET
-
-        '''
-        #### Lumi mask
-        if isData:
-            if self._year == '2016':
-                json = #filepath
-            elif self._year == '2017':
-                json = #filepath
-            elif self._year == '2018':
-                json = #filepath
-            lumi_mask = LumiMask(json)(events['run'], events['luminosityBlock'])
-        else
-            lumi_mask = np.ones(events.size)==1
-        '''
 
         #### Genweights
         weights = processor.Weights(len(events), storeIndividual=True)
@@ -207,18 +189,42 @@ class PhotonPurity(processor.ProcessorABC):
         if isData: met_filters = met_filters & events.Flag['eeBadScFilter']
         for flag in AnalysisProcessor.met_filter_flags[self._year]:
             met_filters = met_filters & events.Flag[flag]
-        selection.add('met_filters',met_filters)
+        #selection.add('met_filters',met_filters)
 
         triggers = np.zeros(events.size, dtype=np.bool)
         for path in self._singlephoton_triggers[self._year]:
             if path not in events.HLT.columns: continue
             triggers = triggers | events.HLT[path]
-        selection.add('singlephoton_triggers', triggers)
+        #selection.add('singlephoton_triggers', triggers)
 
-        selection.add('jet_cut', (j_nclean>0))
-        selection.add('met60', (met.pt<60))
+        #selection.add('jet_cut', (j_nclean>0))
+        #selection.add('met60', (met.pt<60))
 
-        #{'met_filters', 'singlephoton_triggers', 'jet_cut', 'met60'}
+        event_mask = met_filters & triggers & (met.pt<60) & (j_nclean>0)
+
+        hout['count'].fill(dataset = dataset, cat = 'medium',
+                            sisie = pho_purity.sieie[event_mask].flatten(),
+                            pt = pho_purity.pt[event_mask].flatten(),
+                            weights=weight_shape(pho_purity.sieie[event_mask], weights.weight()[event_mask])
+                            )
+
+        hout['count'].fill(dataset = dataset, cat = 'medium_nosieie',
+                            sisie = pho_nosieie.sieie[event_mask].flatten(),
+                            pt = pho_nosieie.pt[event_mask].flatten(),
+                            weights=weight_shape(pho_nosieie.sieie[event_mask], weights.weight()[event_mask])
+                            )
+
+        hout['count'].fill(dataset = dataset, cat = 'medium_nosieie_invertiso',
+                            sisie = pho_nosieie_inv_iso.sieie[event_mask].flatten(),
+                            pt = pho_nosieie_inv_iso.pt[event_mask].flatten(),
+                            weights=weight_shape(pho_nosieie_inv_iso.sieie[event_mask], weights.weight()[event_mask])
+                            )
+
+        if not isData:
+            hout['sumw'][dataset] += events.genSumw
+            hout['sumw2'][dataset] += events.genSumw2
+
+        return hout
 
     def postprocess(self, accumulator):
         return accumulator
