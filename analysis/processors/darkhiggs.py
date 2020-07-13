@@ -319,9 +319,9 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('recoil','Hadronic Recoil',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0, 3000]),
                 hist.Bin('fjmass','AK15 Jet Mass', 30, 0, 300),#[0, 30, 60, 80, 120, 300]),
-                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
+                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
                 #hist.Bin('TvsQCD','TvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
-                hist.Bin('XvsQCD','XvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
+                #hist.Bin('XvsQCD','XvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
             'recoil': hist.Hist(
                 'Events',
@@ -686,7 +686,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj_nclean=fj_clean.counts
 
         j = events.Jet
-        j['isgood'] = isGoodJet(j.pt, j.eta, j.jetId, j.neHEF, j.neEmEF, j.chHEF, j.chEmEF)
+        j['isgood'] = isGoodJet(j.pt, j.eta, j.jetId, j.puId, j.neHEF, j.chHEF)
         j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
         j['isclean'] = ~match(j,e_loose,0.4)&~match(j,mu_loose,0.4)&~match(j,pho_loose,0.4)
         j['isiso'] = ~match(j,fj_clean[fj_clean.pt.argmax()],1.5)
@@ -1332,7 +1332,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                       fjmass=leading_fj.msd_corr.sum(),
                                       ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                       #TvsQCD=leading_fj.TvsQCD.sum(),
-                                      XvsQCD=leading_fj.XvsQCD.sum(),
+                                      #XvsQCD=leading_fj.XvsQCD.sum(),
                                       weight=np.ones(events.size)*cut)
                 fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
             else:
@@ -1517,7 +1517,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               fjmass=leading_fj.msd_corr.sum(),
                                               ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                               #TvsQCD=leading_fj.TvsQCD.sum(),
-                                              XvsQCD=leading_fj.XvsQCD.sum(),
+                                              #XvsQCD=leading_fj.XvsQCD.sum(),
                                               weight=weights.weight(modifier=systematic)*whf*cut)
                         hout['template'].fill(dataset='LF--'+dataset,
                                               region=region,
@@ -1527,7 +1527,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               fjmass=leading_fj.msd_corr.sum(),
                                               ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                               #TvsQCD=leading_fj.TvsQCD.sum(),
-                                              XvsQCD=leading_fj.XvsQCD.sum(),
+                                              #XvsQCD=leading_fj.XvsQCD.sum(),
                                               weight=weights.weight(modifier=systematic)*wlf*cut)
                     fill('HF--'+dataset, vgentype, weights.weight()*whf, cut)
                     fill('LF--'+dataset, vgentype, weights.weight()*wlf, cut)
@@ -1546,7 +1546,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               fjmass=leading_fj.msd_corr.sum(),
                                               ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                               #TvsQCD=leading_fj.TvsQCD.sum(),
-                                              XvsQCD=leading_fj.XvsQCD.sum(),
+                                              #XvsQCD=leading_fj.XvsQCD.sum(),
                                               weight=weights.weight(modifier=systematic)*cut)
                     fill(dataset, vgentype, weights.weight(), cut)
                                     

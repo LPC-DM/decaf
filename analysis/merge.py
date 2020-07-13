@@ -7,6 +7,7 @@ import numpy as np
 from collections import defaultdict, OrderedDict
 from coffea import hist, processor 
 from coffea.util import load, save
+from util.futures_patch import patch_mp_connection_bpo_17560
 
 def add(chunk_tmp_arr):
      print('Job started')
@@ -43,7 +44,7 @@ def futuresum(tmp_arr):
           print(tmp_arr)
      return tmp_arr
 
-def merge(folder,variable=None):
+def merge(folder,variable=None, exclude=None):
 
      lists = {}
      for filename in os.listdir(folder):
@@ -54,6 +55,7 @@ def merge(folder,variable=None):
      for var in lists.keys():
           tmp={}
           if variable is not None and var not in variable: continue
+          if exclude is not None and var in exclude: continue
           print(lists[var])
           for filename in lists[var]:
                print('Opening:',filename)
@@ -94,10 +96,12 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-f', '--folder', help='folder', dest='folder')
     parser.add_option('-v', '--variable', help='variable', dest='variable', default=None)
+    parser.add_option('-e', '--exclude', help='exclude', dest='exclude', default=None)
     parser.add_option('-p', '--postprocess', action='store_true', dest='postprocess')
     (options, args) = parser.parse_args()
-    
+
+    patch_mp_connection_bpo_17560()    
     if options.postprocess:
          postprocess(options.folder)
     else:
-         merge(options.folder,options.variable)
+         merge(options.folder,options.variable,options.exclude)

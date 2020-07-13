@@ -46,8 +46,8 @@ Error = hists/$ENV(PROCESSOR)/run_condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).
 Log = hists/$ENV(PROCESSOR)/run_condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(PROCESSOR)_$ENV(SAMPLE).futures=$ENV(PWD)/hists/$ENV(PROCESSOR)/$ENV(SAMPLE).futures"
 Arguments = $ENV(METADATA) $ENV(SAMPLE) $ENV(PROCESSOR) $ENV(CLUSTER) $ENV(USER)
-JobBatchName = $ENV(SAMPLE)
 accounting_group=group_cms
+JobBatchName = $ENV(BTCN)
 request_cpus = 8
 request_memory = 6000
 Queue 1"""
@@ -81,6 +81,7 @@ for dataset, info in datadef.items():
     if options.dataset and options.dataset not in dataset: continue
     if options.exclude and options.exclude in dataset: continue
     os.environ['SAMPLE'] = dataset
+    os.environ['BTCN'] = dataset.split('____')[0]
     os.environ['PROCESSOR']   = options.processor
     os.environ['METADATA']   = options.metadata
     os.environ['CLUSTER'] = options.cluster
