@@ -1,5 +1,5 @@
 import os
-import numpy
+import numpy as np
 import json
 from coffea import processor, hist, util
 from coffea.util import save, load
@@ -32,14 +32,16 @@ def medium_id_no_sieie(photons):
     # We are going to check the logical AND of the mask
     # and the bitmap, so set all X to 0
     mask = int('10101000101010',2)
-    return (photons.vid & mask) == mask
+    #return (photons.vid & mask) == mask
+    return (photons.vidNestedWPBitmap & mask) == mask
 
 def medium_id_no_sieie_inv_iso(photons):
     # Same as medium_id_no_sieie, but in first step,
     # ignore isolation bits
     # --> XX-XX-XX-XX-1X-1X-1X
     mask1 = int('00000000101010',2)
-    medium_id_no_iso = (photons.vid & mask1) == mask1
+    #medium_id_no_iso = (photons.vid & mask1) == mask1
+    medium_id_no_iso = (photons.vidNestedWPBitmap & mask1) == mask1
 
     # In second step, require that at least one
     # of the most significant isolation bits
@@ -47,9 +49,14 @@ def medium_id_no_sieie_inv_iso(photons):
     # that would *pass* and then requiring that
     # (vid & mask) != mask
     mask2 = int('10101000000000',2)
-    inv_iso = (photons.vid & mask2) != mask2
+    #inv_iso = (photons.vid & mask2) != mask2
+    inv_iso = (photons.vidNestedWPBitmap & mask2) != mask2
 
     return medium_id_no_iso & inv_iso
+
+def weight_shape(values, weight):
+    #Broadcasts weight array to right shape for given values
+    return (~np.isnan(values) * weight).flatten()
 
 class PhotonPurity(processor.ProcessorABC):
 
@@ -124,6 +131,7 @@ class PhotonPurity(processor.ProcessorABC):
 
         isLooseElectron = self._ids['isLooseElectron']
         isLooseMuon     = self._ids['isLooseMuon']
+        isLoosePhoton   = self._ids['isLoosePhoton']
         isTightPhoton   = self._ids['isTightPhoton']
         isGoodJet       = self._ids['isGoodJet']
 
@@ -148,27 +156,29 @@ class PhotonPurity(processor.ProcessorABC):
 
         def isPurityPhoton(pt, medium_id):
             mask = ~(pt == np.nan)
-            if year == '2016':
+            if self._year == '2016':
                 mask = (pt>200)&(medium_id>=2)
             else:
                 mask = (pt>200)&((medium_id&2)==2)
             return mask
 
+        pho['isloose']=isLoosePhoton(pho.pt,pho.eta,pho[_id],self._year)&(pho.electronVeto)
         pho['ispurity'] = isPurityPhoton(pho.pt, pho[_id])&(pho.isScEtaEB)&(pho.electronVeto)
         pho_clean=pho[pho.isclean.astype(np.bool)]
+        pho_loose=pho_clean[pho_clean.isloose.astype(np.bool)]
         pho_purity=pho_clean[pho_clean.ispurity.astype(np.bool)]
         pho_nosieie = pho_clean[(pho_clean.pt > 200) & (pho_clean.isScEtaEB) & (pho_clean.electronVeto) & medium_id_no_sieie(pho_clean)]
         pho_nosieie_inv_iso = pho_clean[(pho_clean.pt > 200) & (pho_clean.isScEtaEB) & (pho_clean.electronVeto) & medium_id_no_sieie_inv_iso(pho_clean)]
 
         #### Consider AK4 jet 
         def isPurityJet(pt, eta, jet_id):
-            mask = (pt > 100) & (abs(eta) < 2.4) & ((jet_id&2)==2)
+            mask = (pt > 30) & (abs(eta) < 2.4) & ((jet_id&2)==2)
             return mask
 
         j = events.Jet
         #30 GeV cut on jet pT, we need to check later
         #j['isgood'] = isGoodJet(j.pt, j.eta, j.jetId, j.neHEF, j.neEmEF, j.chHEF, j.chEmEF)
-        j['ispurity'] = isPurityJet(j.pt, j.eta, j,jetId)
+        j['ispurity'] = isPurityJet(j.pt, j.eta, j.jetId)
         j['isclean'] = ~match(j,e_loose,0.4)&~match(j,mu_loose,0.4)&~match(j,pho_loose,0.4)
         j_purity = j[j.ispurity.astype(np.bool)]
         j_clean = j_purity[j_purity.isclean.astype(np.bool)]
@@ -187,7 +197,7 @@ class PhotonPurity(processor.ProcessorABC):
         #### MET filter & single photon trigger
         met_filters =  np.ones(events.size, dtype=np.bool)
         if isData: met_filters = met_filters & events.Flag['eeBadScFilter']
-        for flag in AnalysisProcessor.met_filter_flags[self._year]:
+        for flag in PhotonPurity.met_filter_flags[self._year]:
             met_filters = met_filters & events.Flag[flag]
         #selection.add('met_filters',met_filters)
 
@@ -203,21 +213,21 @@ class PhotonPurity(processor.ProcessorABC):
         event_mask = met_filters & triggers & (met.pt<60) & (j_nclean>0)
 
         hout['count'].fill(dataset = dataset, cat = 'medium',
-                            sisie = pho_purity.sieie[event_mask].flatten(),
+                            sieie = pho_purity.sieie[event_mask].flatten(),
                             pt = pho_purity.pt[event_mask].flatten(),
-                            weights=weight_shape(pho_purity.sieie[event_mask], weights.weight()[event_mask])
+                            weight=weight_shape(pho_purity.sieie[event_mask], weights.weight()[event_mask])
                             )
 
         hout['count'].fill(dataset = dataset, cat = 'medium_nosieie',
-                            sisie = pho_nosieie.sieie[event_mask].flatten(),
+                            sieie = pho_nosieie.sieie[event_mask].flatten(),
                             pt = pho_nosieie.pt[event_mask].flatten(),
-                            weights=weight_shape(pho_nosieie.sieie[event_mask], weights.weight()[event_mask])
+                            weight=weight_shape(pho_nosieie.sieie[event_mask], weights.weight()[event_mask])
                             )
 
         hout['count'].fill(dataset = dataset, cat = 'medium_nosieie_invertiso',
-                            sisie = pho_nosieie_inv_iso.sieie[event_mask].flatten(),
+                            sieie = pho_nosieie_inv_iso.sieie[event_mask].flatten(),
                             pt = pho_nosieie_inv_iso.pt[event_mask].flatten(),
-                            weights=weight_shape(pho_nosieie_inv_iso.sieie[event_mask], weights.weight()[event_mask])
+                            weight=weight_shape(pho_nosieie_inv_iso.sieie[event_mask], weights.weight()[event_mask])
                             )
 
         if not isData:
