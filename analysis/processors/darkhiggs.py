@@ -317,8 +317,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('region', 'Region'),
                 hist.Cat('systematic', 'Systematic'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('recoil','Hadronic Recoil',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0, 3000]),
-                hist.Bin('fjmass','AK15 Jet Mass', 30, 0, 300),#[0, 30, 60, 80, 120, 300]),
+                hist.Bin('recoil','Hadronic Recoil',[250,310,370,470,590,840,1020,1250,3000]),
+                hist.Bin('fjmass','AK15 Jet Mass', [40,50,60,70,80,90,100,110,120,130,150,160,180,200,220,240,300]),#[0, 30, 60, 80, 120, 300]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
             'recoil': hist.Hist(
@@ -1368,7 +1368,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights.add('genw',events.genWeight)
                 weights.add('nlo',nlo)
                 if 'cen' in nnlo_nlo:
-                    weights.add('nnlo_nlo',nnlo_nlo['cen'])
+                    weights.add('nnlo_nlo',nnlo_nlo['cen']/nnlo_nlo['cen'])
                     weights.add('qcd1',np.ones(events.size), nnlo_nlo['qcd1up']/nnlo_nlo['cen'], nnlo_nlo['qcd1do']/nnlo_nlo['cen'])
                     weights.add('qcd2',np.ones(events.size), nnlo_nlo['qcd2up']/nnlo_nlo['cen'], nnlo_nlo['qcd2do']/nnlo_nlo['cen'])
                     weights.add('qcd3',np.ones(events.size), nnlo_nlo['qcd3up']/nnlo_nlo['cen'], nnlo_nlo['qcd3do']/nnlo_nlo['cen'])
