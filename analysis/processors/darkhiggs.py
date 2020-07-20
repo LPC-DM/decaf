@@ -320,8 +320,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('recoil','Hadronic Recoil',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0, 3000]),
                 hist.Bin('fjmass','AK15 Jet Mass', 30, 0, 300),#[0, 30, 60, 80, 120, 300]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
-                #hist.Bin('TvsQCD','TvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
-                #hist.Bin('XvsQCD','XvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
             'recoil': hist.Hist(
                 'Events',
@@ -406,6 +404,27 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('region', 'Region'), 
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('fj1pt','AK15 Leading Jet Pt',[160.0, 200.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
+            ),
+            'fj1rho': hist.Hist(
+                'Events', 
+                hist.Cat('dataset', 'Dataset'), 
+                hist.Cat('region', 'Region'), 
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('fj1rho','AK15 Leading Jet Rho',30,-7,-1)
+            ),
+            'fj1ptsd': hist.Hist(
+                'Events', 
+                hist.Cat('dataset', 'Dataset'), 
+                hist.Cat('region', 'Region'), 
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('fj1ptsd','AK15 Leading Jet Soft Drop Pt',[160.0, 200.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
+            ),
+            'fj1rhosd': hist.Hist(
+                'Events', 
+                hist.Cat('dataset', 'Dataset'), 
+                hist.Cat('region', 'Region'), 
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('fj1rhosd','AK15 Leading Jet Soft Drop Rho',30,-7,-1)
             ),
             'fj1eta': hist.Hist(
                 'Events', 
@@ -664,11 +683,14 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         fj = events.AK15Puppi
         sj = events.AK15PuppiSubJet
-        #print(sj[fj[fj.hassj1].subJetIdx1],sj[fj[fj.hassj2].subJetIdx2])
-        fj['hassjs'] = (fj.subJetIdx1>-1)&(fj.subJetIdx2>-1)
-        fj['isgood'] = isGoodFatJet(fj.pt, fj.eta, fj.jetId)
         fj['isclean'] =~match(fj,pho_loose,1.5)&~match(fj,mu_loose,1.5)&~match(fj,e_loose,1.5)
-        fj['msd_corr'] = fj.msoftdrop*awkward.JaggedArray.fromoffsets(fj.array.offsets, get_msd_weight(fj.pt.flatten(),fj.eta.flatten()))
+        fj['msd_raw'] = (fj.subjets * (1 - fj.subjets.rawFactor)).sum().mass
+        fj['msd_corr'] = fj.msd_raw * awkward.JaggedArray.fromoffsets(fj.array.offsets, np.maximum(1e-5, get_msd_weight(fj.pt.flatten(),fj.eta.flatten())))
+        fj['rho'] = 2 * np.log(fj.msd_corr / fj.pt)
+        fj['ptsd'] = fj.subjets.sum().pt
+        fj['rhosd'] = 2 * np.log(fj.msd_corr / fj.ptsd)
+        fj['isgood'] = isGoodFatJet(fj.pt, fj.eta, fj.jetId)
+        fj['isgoodsd'] = isGoodFatJet(fj.ptsd, fj.eta, fj.jetId)
         probQCD=fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
         probZHbb=fj.probZbb+fj.probHbb
         fj['ZHbbvsQCD'] = probZHbb/(probZHbb+probQCD)
@@ -677,13 +699,14 @@ class AnalysisProcessor(processor.ProcessorABC):
         probV=fj.probWcq+fj.probWqq+fj.probZbb+fj.probZcc+fj.probZqq
         probX=probZHbb+probV
         fj['XvsQCD'] = probX/(probX+probQCD)
-        fj_hassjs = fj[fj.hassjs.astype(np.bool)]
         fj_good = fj[fj.isgood.astype(np.bool)]
+        fj_goodsd = fj[fj.isgoodsd.astype(np.bool)]
         fj_clean=fj_good[fj_good.isclean.astype(np.bool)]
+        fj_cleansd=fj_goodsd[fj_goodsd.isclean.astype(np.bool)]
         fj_ntot=fj.counts
-        fj_nhassjs=fj_hassjs.counts
         fj_ngood=fj_good.counts
         fj_nclean=fj_clean.counts
+        fj_ncleansd=fj_cleansd.counts
 
         j = events.Jet
         j['isgood'] = isGoodJet(j.pt, j.eta, j.jetId, j.puId, j.neHEF, j.chHEF)
@@ -1212,7 +1235,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('diele_mass',(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
         selection.add('noextrab', (j_ndflvL==0))
         selection.add('extrab', (j_ndflvL>0))
-        selection.add('fatjet', (fj_nclean>0))
+        selection.add('fatjet', (fj_nclean>0))#|(fj_ncleansd>0))
+        selection.add('rho', ((leading_fj.rho.sum()>-6.)&(leading_fj.rho.sum()<0.86))|((leading_fj.rhosd.sum()>-6.)&(leading_fj.rhosd.sum()<0.86)) )
         selection.add('noHEMj', noHEMj)
         selection.add('noHEMmet', noHEMmet)
         selection.add('met80',(met.pt<80))
@@ -1255,6 +1279,9 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'j1eta':                  leading_j.eta,
                 'j1phi':                  leading_j.phi,
                 'fj1pt':                  leading_fj.pt,
+                'fj1ptsd':                leading_fj.ptsd,
+                'fj1rho':                 leading_fj.rho,
+                'fj1rhosd':               leading_fj.rhosd,
                 'fj1eta':                 leading_fj.eta,
                 'fj1phi':                 leading_fj.phi,
                 'njets':                  j_nclean,
