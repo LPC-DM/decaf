@@ -1222,8 +1222,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_fj = fj[fj.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
         leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
-        #print(leading_fj.counts.sum())
-        #print(leading_fj.hassjs.sum().sum())
         selection.add('iszeroL', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
         selection.add('isoneM', (e_nloose==0)&(mu_ntight==1)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0))
         selection.add('isoneE', (e_ntight==1)&(e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
@@ -1235,7 +1233,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('diele_mass',(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
         selection.add('noextrab', (j_ndflvL==0))
         selection.add('extrab', (j_ndflvL>0))
-        selection.add('fatjet', (fj_nclean>0))#|(fj_ncleansd>0))
+        selection.add('fatjet', (fj_nclean>0)|(fj_ncleansd>0))
         selection.add('rho', ((leading_fj.rho.sum()>-6.)&(leading_fj.rho.sum()<0.86))|((leading_fj.rhosd.sum()>-6.)&(leading_fj.rhosd.sum()<0.86)) )
         selection.add('noHEMj', noHEMj)
         selection.add('noHEMmet', noHEMmet)
@@ -1368,7 +1366,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights.add('genw',events.genWeight)
                 weights.add('nlo',nlo)
                 if 'cen' in nnlo_nlo:
-                    weights.add('nnlo_nlo',nnlo_nlo['cen']/nnlo_nlo['cen'])
+                    weights.add('nnlo_nlo',nnlo_nlo['cen'])
                     weights.add('qcd1',np.ones(events.size), nnlo_nlo['qcd1up']/nnlo_nlo['cen'], nnlo_nlo['qcd1do']/nnlo_nlo['cen'])
                     weights.add('qcd2',np.ones(events.size), nnlo_nlo['qcd2up']/nnlo_nlo['cen'], nnlo_nlo['qcd2do']/nnlo_nlo['cen'])
                     weights.add('qcd3',np.ones(events.size), nnlo_nlo['qcd3up']/nnlo_nlo['cen'], nnlo_nlo['qcd3do']/nnlo_nlo['cen'])
