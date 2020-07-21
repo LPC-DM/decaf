@@ -403,42 +403,28 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('fj1pt','AK15 Leading Jet Pt',[160.0, 200.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
+                hist.Bin('fj1pt','AK15 Leading SoftDrop Jet Pt',[160.0, 200.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'fj1rho': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('fj1rho','AK15 Leading Jet Rho',30,-7,-1)
-            ),
-            'fj1ptsd': hist.Hist(
-                'Events', 
-                hist.Cat('dataset', 'Dataset'), 
-                hist.Cat('region', 'Region'), 
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('fj1ptsd','AK15 Leading Jet Soft Drop Pt',[160.0, 200.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
-            ),
-            'fj1rhosd': hist.Hist(
-                'Events', 
-                hist.Cat('dataset', 'Dataset'), 
-                hist.Cat('region', 'Region'), 
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('fj1rhosd','AK15 Leading Jet Soft Drop Rho',30,-7,-1)
+                hist.Bin('fj1rho','AK15 Leading SoftDrop Jet Rho',30,-7,-1)
             ),
             'fj1eta': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('fj1eta','AK15 Leading Jet Eta',35,-3.5,3.5)
+                hist.Bin('fj1eta','AK15 Leading SoftDrop Jet Eta',35,-3.5,3.5)
             ),
             'fj1phi': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('fj1phi','AK15 Leading Jet Phi',35,-3.5,3.5)
+                hist.Bin('fj1phi','AK15 Leading SoftDrop Jet Phi',35,-3.5,3.5)
             ),
             'njets': hist.Hist(
                 'Events', 
@@ -459,7 +445,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('nfjclean','AK15 Number of cleaned Jets',4,-0.5,3.5)
+                hist.Bin('nfjclean','AK15 Number of Cleaned Jets',4,-0.5,3.5)
             ),
             'mT': hist.Hist(
                 'Events',
@@ -682,15 +668,12 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_pho = leading_pho[leading_pho.istight.astype(np.bool)]
 
         fj = events.AK15Puppi
-        sj = events.AK15PuppiSubJet
-        fj['isclean'] =~match(fj,pho_loose,1.5)&~match(fj,mu_loose,1.5)&~match(fj,e_loose,1.5)
+        fj['sd'] = fj.subjets.sum()
+        fj['isclean'] =~match(fj.sd,pho_loose,1.5)&~match(fj.sd,mu_loose,1.5)&~match(fj.sd,e_loose,1.5)
+        fj['isgood'] = isGoodFatJet(fj.sd.pt, fj.sd.eta, fj.jetId)
         fj['msd_raw'] = (fj.subjets * (1 - fj.subjets.rawFactor)).sum().mass
-        fj['msd_corr'] = fj.msd_raw * awkward.JaggedArray.fromoffsets(fj.array.offsets, np.maximum(1e-5, get_msd_weight(fj.pt.flatten(),fj.eta.flatten())))
-        fj['rho'] = 2 * np.log(fj.msd_corr / fj.pt)
-        fj['ptsd'] = fj.subjets.sum().pt
-        fj['rhosd'] = 2 * np.log(fj.msd_corr / fj.ptsd)
-        fj['isgood'] = isGoodFatJet(fj.pt, fj.eta, fj.jetId)
-        fj['isgoodsd'] = isGoodFatJet(fj.ptsd, fj.eta, fj.jetId)
+        fj['msd_corr'] = fj.msd_raw * awkward.JaggedArray.fromoffsets(fj.array.offsets, np.maximum(1e-5, get_msd_weight(fj.sd.pt.flatten(),fj.sd.eta.flatten())))
+        fj['rho'] = 2 * np.log(fj.msd_corr / fj.sd.pt)
         probQCD=fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
         probZHbb=fj.probZbb+fj.probHbb
         fj['ZHbbvsQCD'] = probZHbb/(probZHbb+probQCD)
@@ -700,13 +683,10 @@ class AnalysisProcessor(processor.ProcessorABC):
         probX=probZHbb+probV
         fj['XvsQCD'] = probX/(probX+probQCD)
         fj_good = fj[fj.isgood.astype(np.bool)]
-        fj_goodsd = fj[fj.isgoodsd.astype(np.bool)]
-        fj_clean=fj_good[fj_good.isclean.astype(np.bool)]
-        fj_cleansd=fj_goodsd[fj_goodsd.isclean.astype(np.bool)]
-        fj_ntot=fj.counts
-        fj_ngood=fj_good.counts
-        fj_nclean=fj_clean.counts
-        fj_ncleansd=fj_cleansd.counts
+        fj_clean = fj_good[fj_good.isclean.astype(np.bool)]
+        fj_ntot = fj.counts
+        fj_ngood = fj_good.counts
+        fj_nclean = fj_clean.counts
 
         j = events.Jet
         j['isgood'] = isGoodJet(j.pt, j.eta, j.jetId, j.puId, j.neHEF, j.chHEF)
@@ -811,8 +791,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                     gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                     (gen.distinctParent.pdgId == topid)
                 ]
-                jetgenWq = fj.cross(qFromWFromTop, nested=True)
-                jetgenb = fj.cross(bFromTop, nested=True)
+                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
+                jetgenb = fj.sd.cross(bFromTop, nested=True)
                 qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==2) & (qFromWFromTop.counts>0)
                 bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1) & (bFromTop.counts>0)
                 return qWmatch & bmatch
@@ -826,9 +806,9 @@ class AnalysisProcessor(processor.ProcessorABC):
                     gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                     (gen.distinctParent.pdgId == topid)
                 ]
-                jetgenWq = fj.cross(qFromWFromTop, nested=True)
-                jetgenWc = fj.cross(cFromWFromTop, nested=True)
-                jetgenb = fj.cross(bFromTop, nested=True)
+                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
+                jetgenWc = fj.sd.cross(cFromWFromTop, nested=True)
+                jetgenb = fj.sd.cross(bFromTop, nested=True)
                 qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==1) & (qFromWFromTop.counts>0)
                 cWmatch = ((jetgenWc.i0.delta_r(jetgenWc.i1) < dR).sum()==1) & (cFromWFromTop.counts>0)
                 bmatch =  ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1)   & (bFromTop.counts>0)
@@ -837,7 +817,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             def tqqmatch(topid, dR=1.5):
                 qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
-                jetgenWq = fj.cross(qFromWFromTop, nested=True)
+                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
                 qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==2) & (qFromWFromTop.counts>0)
                 return qWmatch
             fj['isTqq'] = tqqmatch(6)|tqqmatch(-6)
@@ -845,8 +825,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             def tcqmatch(topid, dR=1.5):
                 qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
                 cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
-                jetgenWq = fj.cross(qFromWFromTop, nested=True)
-                jetgenWc = fj.cross(cFromWFromTop, nested=True)
+                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
+                jetgenWc = fj.sd.cross(cFromWFromTop, nested=True)
                 qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==1) & (qFromWFromTop.counts>0)
                 cWmatch = ((jetgenWc.i0.delta_r(jetgenWc.i1) < dR).sum()==1) & (cFromWFromTop.counts>0)
                 return cWmatch & qWmatch
@@ -859,8 +839,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                     gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                     (gen.distinctParent.pdgId == topid)
                 ]
-                jetgenWq = fj.cross(qFromWFromTop, nested=True)
-                jetgenb = fj.cross(bFromTop, nested=True)
+                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
+                jetgenb = fj.sd.cross(bFromTop, nested=True)
                 qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==1) & (qFromWFromTop.counts>0)
                 bmatch =  ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1)   & (bFromTop.counts>0)
                 return qWmatch & bmatch
@@ -873,8 +853,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                     gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                     (gen.distinctParent.pdgId == topid)
                 ]
-                jetgenWc = fj.cross(cFromWFromTop, nested=True)
-                jetgenb = fj.cross(bFromTop, nested=True)
+                jetgenWc = fj.sd.cross(cFromWFromTop, nested=True)
+                jetgenb = fj.sd.cross(bFromTop, nested=True)
                 cWmatch = ((jetgenWc.i0.delta_r(jetgenWc.i1) < dR).sum()==1) & (cFromWFromTop.counts>0)
                 bmatch =  ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1)   & (bFromTop.counts>0)
                 return cWmatch & bmatch
@@ -885,7 +865,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             def wqqmatch(wid, dR=1.5):
                 qFromSameW = qFromW[qFromW.distinctParent.pdgId == wid]
-                jetgenq = fj.cross(qFromSameW, nested=True)
+                jetgenq = fj.sd.cross(qFromSameW, nested=True)
                 qqmatch = ((jetgenq.i0.delta_r(jetgenq.i1) < dR).sum()==2) & (qFromSameW.counts>0)
                 return qqmatch
             fj['isWqq']  = wqqmatch(24)|wqqmatch(-24)
@@ -896,8 +876,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             def wcqmatch(wid, dR=1.5):
                 qFromSameW = qFromW[qFromW.distinctParent.pdgId == wid]
                 cFromSameW = cFromW[cFromW.distinctParent.pdgId == wid]
-                jetgenq = fj.cross(qFromSameW, nested=True)
-                jetgenc = fj.cross(cFromSameW, nested=True)
+                jetgenq = fj.sd.cross(qFromSameW, nested=True)
+                jetgenc = fj.sd.cross(cFromSameW, nested=True)
                 qmatch = ((jetgenq.i0.delta_r(jetgenq.i1) < dR).sum()==1) & (qFromSameW.counts>0)
                 cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < dR).sum()==1) & (cFromSameW.counts>0)
                 return qmatch & cmatch
@@ -913,7 +893,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ]
             def zbbmatch(zid, dR=1.5):
                 bFromSameZ = bFromZ[bFromZ.distinctParent.pdgId == zid]
-                jetgenb = fj.cross(bFromSameZ, nested=True)
+                jetgenb = fj.sd.cross(bFromSameZ, nested=True)
                 bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameZ.counts>0)
                 return bbmatch
             fj['isZbb']  = zbbmatch(23)|zbbmatch(-23)
@@ -928,7 +908,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ]
             def zccmatch(zid, dR=1.5):
                 cFromSameZ = cFromZ[cFromZ.distinctParent.pdgId == zid]
-                jetgenc = fj.cross(cFromSameZ, nested=True)
+                jetgenc = fj.sd.cross(cFromSameZ, nested=True)
                 ccmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < dR).sum()==2) & (cFromSameZ.counts>0)
                 return ccmatch
             fj['isZcc']  = zccmatch(23)|zccmatch(-23)
@@ -943,7 +923,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ]
             def zqqmatch(zid, dR=1.5):
                 qFromSameZ = qFromZ[qFromZ.distinctParent.pdgId == zid]
-                jetgenq = fj.cross(qFromSameZ, nested=True)
+                jetgenq = fj.sd.cross(qFromSameZ, nested=True)
                 qqmatch = ((jetgenq.i0.delta_r(jetgenq.i1) < dR).sum()==2) & (qFromSameZ.counts>0)
                 return qqmatch
             fj['isZqq']  = zqqmatch(23)|zqqmatch(-23)
@@ -958,7 +938,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ]
             def hbbmatch(hid, dR=1.5):
                 bFromSameH = bFromH[bFromH.distinctParent.pdgId == hid]
-                jetgenb = fj.cross(bFromSameH, nested=True)
+                jetgenb = fj.sd.cross(bFromSameH, nested=True)
                 bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameH.counts>0)
                 return bbmatch
             fj['isHbb']  = hbbmatch(25)|hbbmatch(-25)
@@ -973,13 +953,13 @@ class AnalysisProcessor(processor.ProcessorABC):
             ]
             def hsbbmatch(hid, dR=1.5):
                 bFromSameHs = bFromHs[bFromHs.distinctParent.pdgId == hid]
-                jetgenb = fj.cross(bFromSameHs, nested=True)
+                jetgenb = fj.sd.cross(bFromSameHs, nested=True)
                 bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameHs.counts>0)
                 return bbmatch
             fj['isHsbb']  = hsbbmatch(54)|hsbbmatch(-54)
 
             gen['isb'] = (abs(gen.pdgId)==5)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
-            jetgenb = fj.cross(gen[gen.isb], nested=True)
+            jetgenb = fj.sd.cross(gen[gen.isb], nested=True)
             bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==1)&(gen[gen.isb].counts>0)
             fj['isb']  = bmatch
         
@@ -987,7 +967,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             fj['isbb']  = bmatch
 
             gen['isc'] = (abs(gen.pdgId)==4)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
-            jetgenc = fj.cross(gen[gen.isc], nested=True)
+            jetgenc = fj.sd.cross(gen[gen.isc], nested=True)
             cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==1)&(gen[gen.isc].counts>0)
             fj['isc']  = cmatch
 
@@ -1219,7 +1199,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         noHEMmet = np.ones(events.size, dtype=np.bool)
         if self._year=='2018': noHEMmet = (met.pt>470)|(met.phi>-0.62)|(met.phi<-1.62)
 
-        leading_fj = fj[fj.pt.argmax()]
+        leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
         leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
         selection.add('iszeroL', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
@@ -1233,8 +1213,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('diele_mass',(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
         selection.add('noextrab', (j_ndflvL==0))
         selection.add('extrab', (j_ndflvL>0))
-        selection.add('fatjet', (fj_nclean>0)|(fj_ncleansd>0))
-        selection.add('rho', ((leading_fj.rho.sum()>-6.)&(leading_fj.rho.sum()<0.86))|((leading_fj.rhosd.sum()>-6.)&(leading_fj.rhosd.sum()<0.86)) )
+        selection.add('fatjet', (fj_nclean>0))
+        selection.add('rho', (leading_fj.rho.sum()>-6.)&(leading_fj.rho.sum()<0.86))
         selection.add('noHEMj', noHEMj)
         selection.add('noHEMmet', noHEMmet)
         selection.add('met80',(met.pt<80))
@@ -1268,7 +1248,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables = {
                 'recoil':                 u[region].mag,
                 'mindphirecoil':          abs(u[region].delta_phi(j_clean.T)).min(),
-                'fjmass':                 leading_fj.msd_corr,
                 'CaloMinusPfOverRecoil':  abs(calomet.pt - met.pt) / u[region].mag,
                 'met':                    met.pt,
                 'metphi':                 met.phi,
@@ -1276,12 +1255,11 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'j1pt':                   leading_j.pt,
                 'j1eta':                  leading_j.eta,
                 'j1phi':                  leading_j.phi,
-                'fj1pt':                  leading_fj.pt,
-                'fj1ptsd':                leading_fj.ptsd,
+                'fj1pt':                  leading_fj.sd.pt,
                 'fj1rho':                 leading_fj.rho,
-                'fj1rhosd':               leading_fj.rhosd,
-                'fj1eta':                 leading_fj.eta,
-                'fj1phi':                 leading_fj.phi,
+                'fj1eta':                 leading_fj.sd.eta,
+                'fj1phi':                 leading_fj.sd.phi,
+                'fjmass':                 leading_fj.msd_corr,
                 'njets':                  j_nclean,
                 'ndflvL':                 j_ndflvL,
                 'nfjclean':               fj_nclean,
@@ -1356,8 +1334,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                                       recoil=u[region].mag,
                                       fjmass=leading_fj.msd_corr.sum(),
                                       ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                      #TvsQCD=leading_fj.TvsQCD.sum(),
-                                      #XvsQCD=leading_fj.XvsQCD.sum(),
                                       weight=np.ones(events.size)*cut)
                 fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
             else:
@@ -1541,8 +1517,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               recoil=u[region].mag,
                                               fjmass=leading_fj.msd_corr.sum(),
                                               ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                              #TvsQCD=leading_fj.TvsQCD.sum(),
-                                              #XvsQCD=leading_fj.XvsQCD.sum(),
                                               weight=weights.weight(modifier=systematic)*whf*cut)
                         hout['template'].fill(dataset='LF--'+dataset,
                                               region=region,
@@ -1551,8 +1525,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               recoil=u[region].mag,
                                               fjmass=leading_fj.msd_corr.sum(),
                                               ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                              #TvsQCD=leading_fj.TvsQCD.sum(),
-                                              #XvsQCD=leading_fj.XvsQCD.sum(),
                                               weight=weights.weight(modifier=systematic)*wlf*cut)
                     fill('HF--'+dataset, vgentype, weights.weight()*whf, cut)
                     fill('LF--'+dataset, vgentype, weights.weight()*wlf, cut)
