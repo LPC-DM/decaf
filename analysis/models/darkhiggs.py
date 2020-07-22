@@ -16,24 +16,20 @@ from coffea.util import load, save
 rl.util.install_roofit_helpers()
 rl.ParametericSample.PreferRooParametricHist = False
 
-def model(year,mass,category):
+def model(year,recoil,category):
     
     category_map = {
-        'monohs': 1,
-        'monojet': 0
+        'pass': 1,
+        'fail': 0
     }
     
     def template(dictionary, process, systematic, region):
         print('Generating template for',process,'in',region)
-        if mass is None:
-            output=dictionary[region].integrate('process', process).integrate('systematic',systematic).sum('fjmass').values()[()][:,category_map[category]]
-        else:
-            output=dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()][:,mass,category_map[category]]
-        binning=dictionary[region].integrate('process', process).integrate('systematic',systematic).axis('recoil').edges()
+        output=dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()][recoil,:,category_map[category]]
+        binning=dictionary[region].integrate('process', process).integrate('systematic',systematic).axis('mass').edges()
         return (output, binning, 'recoil')
 
-    model_id=year+category
-    if mass is not None: model_id=year+'mass'+str(mass)+category
+    model_id=year+'recoil'+str(recoil)+category
     print(model_id)
     model = rl.Model('darkhiggs'+model_id)
 
@@ -175,16 +171,6 @@ def model(year,mass,category):
     bkg_hists    = hists['bkg']
     signal_hists = hists['sig']
 
-    '''
-    binning = {
-        'mass0': data_hists['recoil'].integrate('region','sr').integrate('systematic','nominal').integrate('process','MET').sum('gentype').axis('recoil').edges(),
-        'mass1': data_hists['recoil'].integrate('region','sr').integrate('systematic','nominal').integrate('process','MET').sum('gentype').axis('recoil').edges(),
-        'mass2': data_hists['recoil'].integrate('region','sr').integrate('systematic','nominal').integrate('process','MET').sum('gentype').axis('recoil').edges(),
-        'mass3': data_hists['recoil'].integrate('region','sr').integrate('systematic','nominal').integrate('process','MET').sum('gentype').axis('recoil').edges(),
-        'mass4': data_hists['recoil'].integrate('region','sr').integrate('systematic','nominal').integrate('process','MET').sum('gentype').axis('recoil').edges(),
-        'nomass': data_hists['recoil'].integrate('region','sr').integrate('systematic','nominal').integrate('process','MET').sum('gentype').axis('recoil').edges()
-    }    
-    '''
 
     ###
     # Preparing histograms for fit
