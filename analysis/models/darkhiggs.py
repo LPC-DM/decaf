@@ -12,9 +12,87 @@ import gzip
 import json
 from coffea import hist, processor 
 from coffea.util import load, save
+import ROOT
 
 rl.util.install_roofit_helpers()
 rl.ParametericSample.PreferRooParametricHist = False
+
+def rhalphabeth():
+
+    process = hist.Cat("process", "Process", sorting='placement')
+    cats = ("process",)
+    bkg_map = OrderedDict()
+    #bkg_map['V+jets'] = (['Z+jets','W+jets'],)
+    bkg_map['V+jets'] = (['Z+jets'],) 
+    vjets_hists={}
+    for key in hists['data'].keys():
+        vjets_hists[key] = hists['bkg'][key].group(cats, process, bkg_map)
+
+    # Build qcd MC pass+fail model and fit to polynomial
+    qcdmodel = rl.Model("qcdmodel")
+    qcdpass, qcdfail = 0., 0.
+    msdbins = [0,40,50,60,70,80,90,100,110,120,130,150,160,180,200,220,240,300]
+    msds = np.meshgrid(msdbins[:-1] + 0.5 * np.diff(msdbins), indexing='ij')[0]
+    msds =  np.sqrt(msds)*np.sqrt(msds)
+    print(msds)
+    msdscaled=msds/300.
+    msd = rl.Observable('fjmass', msdbins)
+    failCh = rl.Channel('fail')
+    passCh = rl.Channel('pass')
+    qcdmodel.addChannel(failCh)
+    qcdmodel.addChannel(passCh)
+    # mock template
+    ptnorm = 1
+    failTempl = (vjets_hists['template'].integrate('region','sr').sum('gentype','recoil').integrate('process', 'V+jets').integrate('systematic','nominal').values()[()][:,0], 
+                 vjets_hists['template'].integrate('region','sr').sum('gentype','recoil').integrate('process', 'V+jets').integrate('systematic','nominal').axis('fjmass').edges(),
+                 'fjmass')
+    passTempl = (vjets_hists['template'].integrate('region','sr').sum('gentype','recoil').integrate('process', 'V+jets').integrate('systematic','nominal').values()[()][:,1],
+                 vjets_hists['template'].integrate('region','sr').sum('gentype','recoil').integrate('process', 'V+jets').integrate('systematic','nominal').axis('fjmass').edges(),
+                 'fjmass')
+    failCh.setObservation(failTempl)
+    passCh.setObservation(passTempl)
+    qcdfail += failCh.getObservation().sum()
+    qcdpass += passCh.getObservation().sum()
+        
+    qcdeff = qcdpass / qcdfail
+    tf_MCtempl = rl.BernsteinPoly("tf_MCtempl", (2,), ['fjmass',])
+    tf_MCtempl_params = qcdeff * tf_MCtempl(msdscaled)
+    failCh = qcdmodel['fail']
+    passCh = qcdmodel['pass']
+    failObs = failCh.getObservation()
+    qcdparams = np.array([rl.IndependentParameter('qcdparam_msdbin%d' % i, 0) for i in range(msd.nbins)])
+    sigmascale = 10.
+    scaledparams = failObs * (1 + sigmascale/np.maximum(1., np.sqrt(failObs)))**qcdparams
+    fail_qcd = rl.ParametericSample('fail_qcd', rl.Sample.BACKGROUND, msd, scaledparams)
+    failCh.addSample(fail_qcd)
+    print(tf_MCtempl_params)
+    pass_qcd = rl.TransferFactorSample('pass_qcd', rl.Sample.BACKGROUND, tf_MCtempl_params, fail_qcd)
+    passCh.addSample(pass_qcd)
+
+    qcdfit_ws = ROOT.RooWorkspace('qcdfit_ws')
+    simpdf, obs = qcdmodel.renderRoofit(qcdfit_ws)
+    qcdfit = simpdf.fitTo(obs,
+                          ROOT.RooFit.Extended(True),
+                          ROOT.RooFit.SumW2Error(True),
+                          ROOT.RooFit.Strategy(2),
+                          ROOT.RooFit.Save(),
+                          ROOT.RooFit.Minimizer('Minuit2', 'migrad'),
+                          ROOT.RooFit.PrintLevel(-1),
+                          )
+    qcdfit_ws.add(qcdfit)
+    if "pytest" not in sys.modules:
+         qcdfit_ws.writeToFile(os.path.join(str('models'), 'testModel_qcdfit.root'))
+    if qcdfit.status() != 0:
+        raise RuntimeError('Could not fit qcd')
+
+    param_names = [p.name for p in tf_MCtempl.parameters.reshape(-1)]
+    decoVector = rl.DecorrelatedNuisanceVector.fromRooFitResult(tf_MCtempl.name + '_deco', qcdfit, param_names)
+    tf_MCtempl.parameters = decoVector.correlated_params.reshape(tf_MCtempl.parameters.shape)
+    tf_MCtempl_params_final = tf_MCtempl(msdscaled)
+    tf_dataResidual = rl.BernsteinPoly("tf_dataResidual", (2,), ['fjmass',], limits=(0, 10))
+    tf_dataResidual_params = tf_dataResidual(msdscaled)
+    tf_params = qcdeff * tf_MCtempl_params_final * tf_dataResidual_params
+    return tf_params
 
 def model(year,recoil,category):
     
@@ -24,153 +102,28 @@ def model(year,recoil,category):
     }
     
     def template(dictionary, process, systematic, region):
-        print('Generating template for',process,'in',region)
         output=dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()][recoil,:,category_map[category]]
-        binning=dictionary[region].integrate('process', process).integrate('systematic',systematic).axis('mass').edges()
-        return (output, binning, 'recoil')
+        binning=dictionary[region].integrate('process', process).integrate('systematic',systematic).axis('fjmass').edges()
+        return (output, binning, 'fjmass')
 
     model_id=year+'recoil'+str(recoil)+category
     print(model_id)
     model = rl.Model('darkhiggs'+model_id)
-
-    whf_fraction=0.18
-    zhf_fraction=0.10
-    ghf_fraction=0.12
-
-    whf_k = rl.IndependentParameter('whf_k', 1., 0.6, 1.4)
-    zhf_k = rl.IndependentParameter('zhf_k', 1., 0.6, 1.4)
-    ghf_k = rl.IndependentParameter('ghf_k', 1., 0.6, 1.4)
-
-
-    gentypes = {
-        'Hbb': ['xbb','vqq','wcq','b','bb','bc','garbage','other','tbcq','tbqq'],
-        'DY+HF': ['b','bb','c','cc','garbage','other'],
-        'DY+LF': ['garbage','other'],
-        'G+HF': ['b','bb','c','cc','garbage','other'],
-        'G+LF': ['garbage','other'],
-        'VV': ['xbb','vqq','wcq','b','c','garbage','other','zcc'],
-        'ST': ['vqq','wcq','b','bb','bc','c','garbage','other','tbcq','tbqq'],
-        'TT': ['vqq','wcq','b','bb','bc','c','garbage','other','tbcq','tbqq'],
-        'W+HF': ['b','bb','c','cc','garbage','other'],
-        'W+LF': ['garbage','other'],
-        'QCD': ['b','bb','c','cc','garbage','other'],
-        'Mhs': ['xbb','b','bb','other'],
-        'MonoJet': ['c','cc','other'],
-        'MonoW': ['vqq','wcq','c','other'],
-        'MonoZ': ['vqq','c','cc','other','zcc']
-    }
-
-    with open('data/'+year+'_deepak15_pass_eff.json') as fin:
-        deepak15_pass_eff = json.load(fin)
-
-    deepak15_pass_sf = {
-        'xbb'    : rl.IndependentParameter('xbb_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['xbb']), 
-        'vqq'    : rl.IndependentParameter('vqq_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['vqq']),
-        'wcq'    : rl.IndependentParameter('wcq_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['wcq']),
-        'b'      : rl.IndependentParameter('b_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['b']),
-        'bb'     : rl.IndependentParameter('bb_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['bb']), 
-        'bc'     : rl.IndependentParameter('bc_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['bc']),
-        'c'      : rl.IndependentParameter('c_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['c']),
-        'cc'     : rl.IndependentParameter('cc_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['cc']),
-        'garbage': 1.,
-        'other'  : rl.IndependentParameter('other_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['other']),
-        'tbcq'   : rl.IndependentParameter('tbcq_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['tbcq']),
-        'tbqq'   : rl.IndependentParameter('tbqq_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['tbqq']),
-        'zcc'    : rl.IndependentParameter('zcc_sf_'+year, 1., 0.01, 1/deepak15_pass_eff['zcc'])
-    }
     
-    with open('data/'+year+'_deepak4_0tag_eff.json') as fin:
-        deepak4_0tag_gentype_eff = json.load(fin)
+    with open('data/hf_systematic.json') as fin:
+        hf_systematic = json.load(fin)
 
-    with open('data/'+year+'_deepak4_0tag_process_eff.json') as fin:
-        deepak4_0tag_process_eff = json.load(fin)
-
-    with open('data/'+year+'_abs_signal_fractions.json') as fin:
-        abs_signal_fractions = json.load(fin)
-
-    with open('data/'+year+'_mass_signal_fractions_modulation.json') as fin:
-        signal_mass_modulation = json.load(fin)
-
-    signal_weight={}
-    for process in abs_signal_fractions.keys():
-        signal_weight[process]=0.
-        for gentype in abs_signal_fractions[process].keys():
-            if gentype not in gentypes[process.split('_')[0]]: continue
-            print('Extracting',gentype,'fraction for',process)
-            fraction=abs_signal_fractions[process][gentype]
-            if mass is not None: fraction*=signal_mass_modulation[process][gentype]['mass'+str(mass)]
-            if 'monohs' in category:
-                signal_weight[process]+=deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*fraction
-            elif 'monojet' in category:
-                signal_weight[process]+=(1-deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*fraction
-                
-    with open('data/'+year+'_abs_bkg_fractions_tot.json') as fin:
-        abs_fractions = json.load(fin)
-
-    with open('data/'+year+'_mass_bkg_fractions_modulation_tot.json') as fin:
-        mass_modulation = json.load(fin)
-
-    deepak15_weight={}
-    deepak15_weight['0tag']={}
-    deepak15_weight['1tag']={}
-    deepak15_weight['notag']={}
-    for process in ['Hbb','VV','ST','QCD','TT','DY+HF','DY+LF','W+HF','W+LF']:
-        deepak15_weight['0tag'][process]=0.
-        deepak15_weight['1tag'][process]=0.
-        deepak15_weight['notag'][process]=0.
-        for gentype in abs_fractions[process].keys():
-            if gentype not in gentypes[process]: continue
-            print('Extracting',gentype,'fraction for',process )
-            fraction=abs_fractions[process][gentype]
-            if mass is not None: fraction*=mass_modulation[process][gentype]['mass'+str(mass)]
-            if 'monohs' in category:
-                deepak15_weight['0tag'][process] += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*deepak4_0tag_gentype_eff[process][gentype]*fraction
-                deepak15_weight['1tag'][process] += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*(1 - deepak4_0tag_gentype_eff[process][gentype])*fraction
-                deepak15_weight['notag'][process] += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*fraction
-            elif 'monojet' in category:
-                deepak15_weight['0tag'][process] += (1-deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*deepak4_0tag_gentype_eff[process][gentype]*fraction
-                deepak15_weight['1tag'][process] += (1-deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*(1 - deepak4_0tag_gentype_eff[process][gentype])*fraction
-                deepak15_weight['notag'][process] += (1-deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*fraction
-        deepak15_weight['0tag'][process]=np.nan_to_num(deepak15_weight['0tag'][process]/deepak4_0tag_process_eff[process])
-        deepak15_weight['1tag'][process]=np.nan_to_num(deepak15_weight['1tag'][process]/(1 - deepak4_0tag_process_eff[process]))
-
-    for process in ['G+HF','G+LF']:
-        deepak15_weight['notag'][process]=0.
-        for gentype in abs_fractions[process].keys():
-            if gentype not in gentypes[process]: continue
-            print('Extracting',gentype,'fraction for',process )
-            fraction=abs_fractions[process][gentype]
-            if mass is not None: fraction*=mass_modulation[process][gentype]['mass'+str(mass)]
-            if 'monohs' in category:
-                deepak15_weight['notag'][process] += deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype]*fraction
-            elif 'monojet' in category:
-                deepak15_weight['notag'][process] += (1-deepak15_pass_sf[gentype]*deepak15_pass_eff[gentype])*fraction
-
-    hf_fraction_weight={}
-    hf_fraction_weight['0tag']={}
-    hf_fraction_weight['1tag']={}
-    hf_fraction_weight['notag']={}
-    hf_fraction_weight['0tag']['W+jets'] = np.nan_to_num(deepak15_weight['0tag']['W+HF']*(deepak4_0tag_process_eff['W+HF']/deepak4_0tag_process_eff['W+jets'])*whf_k*whf_fraction)
-    hf_fraction_weight['0tag']['W+jets'] += np.nan_to_num(deepak15_weight['0tag']['W+LF']*(deepak4_0tag_process_eff['W+LF']/deepak4_0tag_process_eff['W+jets'])*(1 - whf_k*whf_fraction))
-    hf_fraction_weight['1tag']['W+jets'] = np.nan_to_num(deepak15_weight['1tag']['W+HF']*((1-deepak4_0tag_process_eff['W+HF'])/(1-deepak4_0tag_process_eff['W+jets']))*whf_k*whf_fraction) 
-    hf_fraction_weight['1tag']['W+jets'] += np.nan_to_num(deepak15_weight['1tag']['W+LF']*((1-deepak4_0tag_process_eff['W+LF'])/(1-deepak4_0tag_process_eff['W+jets']))*(1 - whf_k*whf_fraction))
-    hf_fraction_weight['notag']['W+jets'] = deepak15_weight['notag']['W+HF']*whf_k*whf_fraction
-    hf_fraction_weight['notag']['W+jets'] += deepak15_weight['notag']['W+LF']*(1 - whf_k*whf_fraction)
-
-    hf_fraction_weight['0tag']['DY+jets'] = np.nan_to_num(deepak15_weight['0tag']['DY+HF']*(deepak4_0tag_process_eff['DY+HF']/deepak4_0tag_process_eff['DY+jets'])*zhf_k*zhf_fraction)
-    hf_fraction_weight['0tag']['DY+jets'] += np.nan_to_num(deepak15_weight['0tag']['DY+LF']*(deepak4_0tag_process_eff['DY+LF']/deepak4_0tag_process_eff['DY+jets'])*(1 - zhf_k*zhf_fraction))
-    hf_fraction_weight['1tag']['DY+jets'] = np.nan_to_num(deepak15_weight['1tag']['DY+HF']*((1-deepak4_0tag_process_eff['DY+HF'])/(1-deepak4_0tag_process_eff['DY+jets']))*zhf_k*zhf_fraction) 
-    hf_fraction_weight['1tag']['DY+jets'] += np.nan_to_num(deepak15_weight['1tag']['DY+LF']*((1-deepak4_0tag_process_eff['DY+LF'])/(1-deepak4_0tag_process_eff['DY+jets']))*(1 - zhf_k*zhf_fraction))
-    hf_fraction_weight['notag']['DY+jets'] = deepak15_weight['notag']['DY+HF']*zhf_k*zhf_fraction
-    hf_fraction_weight['notag']['DY+jets'] += deepak15_weight['notag']['DY+LF']*(1 - zhf_k*zhf_fraction)
-
-    hf_fraction_weight['notag']['G+jets'] = deepak15_weight['notag']['G+HF']*ghf_k*ghf_fraction
-    hf_fraction_weight['notag']['G+jets'] += deepak15_weight['notag']['G+LF']*(1 - ghf_k*ghf_fraction)
+    tt_efficiency={
+        '2018': 0.5,
+    }
+    tt_weight={
+        'pass': rl.IndependentParameter(year+'sf_tt_pass', 1., 0.01, 1./tt_efficiency[year])*tt_efficiency[year],
+        'fail': 1-(rl.IndependentParameter(year+'sf_tt_fail', 1., 0.01, 1./tt_efficiency[year]*tt_efficiency[year]))
+    }
 
     data_hists   = hists['data']
     bkg_hists    = hists['bkg']
     signal_hists = hists['sig']
-
 
     ###
     # Preparing histograms for fit
@@ -203,10 +156,10 @@ def model(year,recoil,category):
     tt_norm = rl.NuisanceParameter('tt_norm', 'lnN')
     vv_norm = rl.NuisanceParameter('vv_norm', 'lnN')
     hbb_norm = rl.NuisanceParameter('hbb_norm', 'lnN')
-    dyjets_norm = rl.NuisanceParameter('dyjets_norm', 'lnN') 
     zjets_norm = rl.NuisanceParameter('zjets_norm', 'lnN')
     wjets_norm = rl.NuisanceParameter('wjets_norm', 'lnN')
     gjets_norm = rl.NuisanceParameter('gjets_norm', 'lnN')
+    hf_fraction = rl.NuisanceParameter('hf_fraction', 'lnN')
     id_e = rl.NuisanceParameter('id_e_'+year, 'lnN')
     id_mu = rl.NuisanceParameter('id_mu_'+year, 'lnN')
     id_pho = rl.NuisanceParameter('id_pho_'+year, 'lnN')
@@ -238,23 +191,23 @@ def model(year,recoil,category):
     ###
     # Z(->nunu)+jets data-driven model
     ###
-
     sr_zjetsTemplate = template(background,'Z+jets','nominal','sr')
     sr_zjetsMC =  rl.TemplateSample('sr'+year+'_zjetsMC', rl.Sample.BACKGROUND, sr_zjetsTemplate)
     sr_zjetsMC.setParamEffect(lumi, 1.027)
+    sr_zjetsMC.setParamEffect(zjets_norm, 1.4)
     sr_zjetsMC.setParamEffect(trig_met, 1.01)
     sr_zjetsMC.setParamEffect(veto_tau, 1.03)
-    sr_zjetsMC.setParamEffect(zjets_norm, 1.4)
     sr_zjetsMC.setParamEffect(jec, 1.05)
+    sr_zjetsMC.setParamEffect(hf_fraction, hf_systematic['Z+jets']['sr'][category])
     btagUp=template(background,'Z+jets','btagUp','sr')[0]
     btagDown=template(background,'Z+jets','btagDown','sr')[0]
     sr_zjetsMC.setParamEffect(btag, btagUp, btagDown)
-    sr_zjetsBinYields = np.array([rl.IndependentParameter('sr'+year+'_zjets_bin_%d' % i, b, 0, sr_zjetsTemplate[0].max()*2) for i,b in enumerate(sr_zjetsTemplate[0])]) 
-    sr_zjetsObservable = rl.Observable('recoil', sr_zjetsTemplate[1])
-    sr_zjets = rl.ParametericSample('sr'+year+'_zjets', rl.Sample.BACKGROUND, sr_zjetsObservable, sr_zjetsBinYields)
-    sr_zjetsBinYields = sr_zjetsBinYields * hf_fraction_weight['0tag']['DY+jets']
-    sr_zjetsXweight = rl.ParametericSample(ch_name+'_zjets', rl.Sample.BACKGROUND, sr_zjetsObservable, sr_zjetsBinYields)
-    sr.addSample(sr_zjetsXweight)
+    sr_zjetsBinYields = np.array([rl.IndependentParameter('sr'+year+'_zjets_recoil'+str(recoil)+'_mass%d', b, 0, sr_zjetsTemplate[0].max()*2) for b in sr_zjetsTemplate[0]])
+    if category == 'pass':
+        sr_zjetsBinYields = sr_zjetsBinYields * tf_params
+    sr_zjetsObservable = rl.Observable('fjmass', sr_zjetsTemplate[1])
+    sr_zjets = rl.ParametericSample(ch_name+'_zjets', rl.Sample.BACKGROUND, sr_zjetsObservable, sr_zjetsBinYields)
+    sr.addSample(sr_zjets)
 
     ###    
     # W(->lnu)+jets data-driven model                
@@ -263,45 +216,39 @@ def model(year,recoil,category):
     sr_wjetsTemplate = template(background,'W+jets','nominal','sr')
     sr_wjetsMC =  rl.TemplateSample('sr'+year+'_wjetsMC', rl.Sample.BACKGROUND, sr_wjetsTemplate)
     sr_wjetsMC.setParamEffect(lumi, 1.027)
+    sr_wjetsMC.setParamEffect(wjets_norm, 1.4)
     sr_wjetsMC.setParamEffect(trig_met, 1.01)
     sr_wjetsMC.setParamEffect(veto_tau, 1.03)
-    sr_wjetsMC.setParamEffect(wjets_norm, 1.4)
     sr_wjetsMC.setParamEffect(jec, 1.05)
+    sr_wjetsMC.setParamEffect(hf_fraction, hf_systematic['W+jets']['sr'][category])
     btagUp=template(background,'W+jets','btagUp','sr')[0]
     btagDown=template(background,'W+jets','btagDown','sr')[0]
     sr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-    #sr_wjetsBinYields = np.array([rl.IndependentParameter('sr'+year+'_wjets_bin_%d' % i,b,0,sr_wjetsTemplate[0].max()*2) for i,b in enumerate(sr_wjetsTemplate[0])]) 
-    #sr_wjetsObservable = rl.Observable('recoil', sr_wjetsTemplate[1])
-    #sr_wjets = rl.ParametericSample('sr'+year+'_wjets', rl.Sample.BACKGROUND, sr_wjetsObservable, sr_wjetsBinYields)
-    #sr_wjetsBinYields = sr_wjetsBinYields * hf_fraction_weight['0tag']['W+jets']
-    #sr_wjetsXweight = rl.ParametericSample(ch_name+'_wjets', rl.Sample.BACKGROUND, sr_wjetsObservable, sr_wjetsBinYields)
-    #sr.addSample(sr_wjetsXweight)
     #Adding W-Z link
-    sr_wjetsTransferFactor = sr_wjetsMC.getExpectation() / sr_zjetsMC.getExpectation()# * hf_fraction_weight['0tag']['W+jets']
-    sr_wjets = rl.TransferFactorSample('sr'+year+'_wjets', rl.Sample.BACKGROUND, sr_wjetsTransferFactor, sr_zjets)
-    sr_wjetsTransferFactor = sr_wjetsTransferFactor * hf_fraction_weight['0tag']['W+jets']
-    sr_wjetsXweight = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, sr_wjetsTransferFactor, sr_zjets)
-    sr.addSample(sr_wjetsXweight)
+    sr_wjetsTransferFactor = sr_wjetsMC.getExpectation() / sr_zjetsMC.getExpectation()
+    sr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, sr_wjetsTransferFactor, sr_zjets)
+    sr.addSample(sr_wjets)
 
     ###    
-    # top-antitop data-driven model                                                                                                                                                                  ### 
+    # top-antitop data-driven model                                                                                                                                                                  
+    ### 
 
     sr_ttTemplate = template(background,'TT','nominal','sr')
     sr_ttMC =  rl.TemplateSample('sr'+year+'_ttMC', rl.Sample.BACKGROUND, sr_ttTemplate)
     sr_ttMC.setParamEffect(lumi, 1.027)
+    sr_ttMC.setParamEffect(tt_norm, 1.2)
     sr_ttMC.setParamEffect(trig_met, 1.01)
     sr_ttMC.setParamEffect(veto_tau, 1.03)
-    sr_ttMC.setParamEffect(tt_norm, 1.4)
     sr_ttMC.setParamEffect(jec, 1.05)
     btagUp=template(background,'TT','btagUp','sr')[0]
     btagDown=template(background,'TT','btagDown','sr')[0]
     sr_ttMC.setParamEffect(btag, btagUp, btagDown)
-    sr_ttBinYields = np.array([rl.IndependentParameter('sr'+year+'_tt_bin_%d' % i,b,0,sr_ttTemplate[0].max()*2) for i,b in enumerate(sr_ttTemplate[0])])
-    sr_ttObservable = rl.Observable('recoil', sr_ttTemplate[1])
-    sr_tt = rl.ParametericSample('sr'+year+'_tt', rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields)
-    sr_ttBinYields = sr_ttBinYields * deepak15_weight['0tag']['TT']
-    sr_ttXweight = rl.ParametericSample(ch_name+'_tt', rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields)
-    sr.addSample(sr_ttXweight)
+    sr_ttBinYields = np.array([rl.IndependentParameter('sr'+year+'_tt_'+category+'_mass%d', b, 0, sr_ttTemplate[0].max()*2) for b in sr_ttTemplate[0]])
+    sr_ttBinYields = sr_ttBinYields*rl.IndependentParameter('sr'+year+'_tt_recoil'+str(recoil), 0, sr_ttTemplate[0].sum()*2)
+    sr_ttBinYields = sr_ttBinYields*tt_weight[category]
+    sr_ttObservable = rl.Observable('fjmass', sr_ttTemplate[1])
+    sr_tt = rl.ParametericSample(ch_name+'_tt', rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields)
+    sr.addSample(sr_tt)
 
     ###
     # Other MC-driven processes
@@ -317,7 +264,6 @@ def model(year,recoil,category):
     btagUp=template(background,'ST','btagUp','sr')[0]
     btagDown=template(background,'ST','btagDown','sr')[0]
     sr_st.setParamEffect(btag, btagUp, btagDown)
-    sr_st.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['0tag']['ST'])
     sr.addSample(sr_st)
 
     sr_dyjetsTemplate = template(background,'DY+jets','nominal','sr')
@@ -325,12 +271,11 @@ def model(year,recoil,category):
     sr_dyjets.setParamEffect(lumi, 1.027)
     sr_dyjets.setParamEffect(trig_met, 1.01)
     sr_dyjets.setParamEffect(veto_tau, 1.03)
-    sr_dyjets.setParamEffect(dyjets_norm, 1.4)
+    sr_dyjets.setParamEffect(zjets_norm, 1.4)
     sr_dyjets.setParamEffect(jec, 1.05)
     btagUp=template(background,'DY+jets','btagUp','sr')[0]
     btagDown=template(background,'DY+jets','btagDown','sr')[0]
     sr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    sr_dyjets.setParamEffect(deepak15_pass_sf['other'], hf_fraction_weight['0tag']['DY+jets'])
     sr.addSample(sr_dyjets)
 
     sr_vvTemplate = template(background,'VV','nominal','sr')
@@ -343,7 +288,6 @@ def model(year,recoil,category):
     btagUp=template(background,'VV','btagUp','sr')[0]
     btagDown=template(background,'VV','btagDown','sr')[0]
     sr_vv.setParamEffect(btag, btagUp, btagDown)
-    sr_vv.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['0tag']['VV'])
     sr.addSample(sr_vv)
 
     sr_hbbTemplate = template(background,'Hbb','nominal','sr')
@@ -356,7 +300,6 @@ def model(year,recoil,category):
     btagUp=template(background,'Hbb','btagUp','sr')[0]
     btagDown=template(background,'Hbb','btagDown','sr')[0]
     sr_hbb.setParamEffect(btag, btagUp, btagDown)
-    sr_hbb.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['0tag']['Hbb'])
     sr.addSample(sr_hbb)
 
     sr_qcdTemplate = template(background,'QCD','nominal','sr')
@@ -369,7 +312,6 @@ def model(year,recoil,category):
     btagUp=template(background,'QCD','btagUp','sr')[0]
     btagDown=template(background,'QCD','btagDown','sr')[0]
     sr_qcd.setParamEffect(btag, btagUp, btagDown)
-    sr_qcd.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['0tag']['QCD'])
     sr.addSample(sr_qcd)
 
     for s in signal['sr'].identifiers('process'):
@@ -382,7 +324,6 @@ def model(year,recoil,category):
         btagUp=template(signal, s,'btagUp','sr')[0]
         btagDown=template(signal, s,'btagDown','sr')[0]
         sr_signal.setParamEffect(btag, btagUp, btagDown)
-        sr_signal.setParamEffect(deepak15_pass_sf['other'], signal_weight[str(s)])
         sr.addSample(sr_signal)
 
 
@@ -421,12 +362,13 @@ def model(year,recoil,category):
     wmcr_wjetsMC.setParamEffect(jec, 1.05)
     wmcr_wjetsMC.setParamEffect(id_mu, 1.02)
     wmcr_wjetsMC.setParamEffect(iso_mu, 1.02)
+    wmcr_wjetsMC.setParamEffect(hf_fraction, hf_systematic['W+jets']['wmcr'][category])
     btagUp=template(background,'W+jets','btagUp','wmcr')[0]
     btagDown=template(background,'W+jets','btagDown','wmcr')[0]
     wmcr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-    wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() * hf_fraction_weight['0tag']['W+jets']
-    wmcr_wjetsXweight = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
-    wmcr.addSample(wmcr_wjetsXweight)
+    wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
+    wmcr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
+    wmcr.addSample(wmcr_wjets)
 
     ###    
     # top-antitop data-driven model                                                                                                                                                                  
@@ -437,16 +379,16 @@ def model(year,recoil,category):
     wmcr_ttMC.setParamEffect(lumi, 1.027)
     wmcr_ttMC.setParamEffect(trig_met, 1.01)
     wmcr_ttMC.setParamEffect(veto_tau, 1.03)
-    wmcr_ttMC.setParamEffect(tt_norm, 1.4)
+    wmcr_ttMC.setParamEffect(tt_norm, 1.2)
     wmcr_ttMC.setParamEffect(jec, 1.05)
     wmcr_ttMC.setParamEffect(id_mu, 1.02)
     wmcr_ttMC.setParamEffect(iso_mu, 1.02)
     btagUp=template(background,'TT','btagUp','wmcr')[0]
     btagDown=template(background,'TT','btagDown','wmcr')[0]
     wmcr_ttMC.setParamEffect(btag, btagUp, btagDown)
-    wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() * deepak15_weight['0tag']['TT']
-    wmcr_ttXweight = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt)
-    wmcr.addSample(wmcr_ttXweight)
+    wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+    wmcr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt)
+    wmcr.addSample(wmcr_tt)
 
     ###
     # Other MC-driven processes
@@ -464,7 +406,6 @@ def model(year,recoil,category):
     btagUp=template(background,'ST','btagUp','wmcr')[0]
     btagDown=template(background,'ST','btagDown','wmcr')[0]
     wmcr_st.setParamEffect(btag, btagUp, btagDown)
-    wmcr_st.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['0tag']['ST'])
     wmcr.addSample(wmcr_st)
 
     wmcr_dyjetsTemplate = template(background,'DY+jets','nominal','wmcr')
@@ -472,14 +413,13 @@ def model(year,recoil,category):
     wmcr_dyjets.setParamEffect(lumi, 1.027)
     wmcr_dyjets.setParamEffect(trig_met, 1.01)
     wmcr_dyjets.setParamEffect(veto_tau, 1.03)
-    wmcr_dyjets.setParamEffect(dyjets_norm, 1.4)
+    wmcr_dyjets.setParamEffect(zjets_norm, 1.4)
     wmcr_dyjets.setParamEffect(jec, 1.05)
     wmcr_dyjets.setParamEffect(id_mu, 1.02)
     wmcr_dyjets.setParamEffect(iso_mu, 1.02)
     btagUp=template(background,'DY+jets','btagUp','wmcr')[0]
     btagDown=template(background,'DY+jets','btagDown','wmcr')[0]
     wmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    wmcr_dyjets.setParamEffect(deepak15_pass_sf['other'], hf_fraction_weight['0tag']['DY+jets'])
     wmcr.addSample(wmcr_dyjets)
 
     wmcr_vvTemplate = template(background,'VV','nominal','wmcr')
@@ -494,7 +434,6 @@ def model(year,recoil,category):
     btagUp=template(background,'VV','btagUp','wmcr')[0]
     btagDown=template(background,'VV','btagDown','wmcr')[0]
     wmcr_vv.setParamEffect(btag, btagUp, btagDown)
-    wmcr_vv.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['0tag']['VV'])
     wmcr.addSample(wmcr_vv)
 
     wmcr_hbbTemplate = template(background,'Hbb','nominal','wmcr')
@@ -509,7 +448,6 @@ def model(year,recoil,category):
     btagUp=template(background,'Hbb','btagUp','wmcr')[0]
     btagDown=template(background,'Hbb','btagDown','wmcr')[0]
     wmcr_hbb.setParamEffect(btag, btagUp, btagDown)
-    wmcr_hbb.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['0tag']['Hbb'])
     wmcr.addSample(wmcr_hbb)
 
     wmcr_qcdTemplate = template(background,'QCD','nominal','wmcr')
@@ -524,7 +462,6 @@ def model(year,recoil,category):
     btagUp=template(background,'QCD','btagUp','wmcr')[0]
     btagDown=template(background,'QCD','btagDown','wmcr')[0]
     wmcr_qcd.setParamEffect(btag, btagUp, btagDown)
-    wmcr_qcd.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['0tag']['QCD'])
     wmcr.addSample(wmcr_qcd)
 
     ###
@@ -560,12 +497,13 @@ def model(year,recoil,category):
     tmcr_wjetsMC.setParamEffect(jec, 1.05)
     tmcr_wjetsMC.setParamEffect(id_mu, 1.02)
     tmcr_wjetsMC.setParamEffect(iso_mu, 1.02)
+    tmcr_wjetsMC.setParamEffect(hf_fraction, hf_systematic['W+jets']['tmcr'][category])
     btagUp=template(background,'W+jets','btagUp','tmcr')[0]
     btagDown=template(background,'W+jets','btagDown','tmcr')[0]
     tmcr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-    tmcr_wjetsTransferFactor = tmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() * hf_fraction_weight['1tag']['W+jets']
-    tmcr_wjetsXweight = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, tmcr_wjetsTransferFactor, sr_wjets)
-    tmcr.addSample(tmcr_wjetsXweight)
+    tmcr_wjetsTransferFactor = tmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
+    tmcr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, tmcr_wjetsTransferFactor, sr_wjets)
+    tmcr.addSample(tmcr_wjets)
 
     ###    
     # top-antitop data-driven model                                                                                                                                                                  
@@ -576,16 +514,16 @@ def model(year,recoil,category):
     tmcr_ttMC.setParamEffect(lumi, 1.027)
     tmcr_ttMC.setParamEffect(trig_met, 1.01)
     tmcr_ttMC.setParamEffect(veto_tau, 1.03)
-    tmcr_ttMC.setParamEffect(tt_norm, 1.4)
+    tmcr_ttMC.setParamEffect(tt_norm, 1.2)
     tmcr_ttMC.setParamEffect(jec, 1.05)
     tmcr_ttMC.setParamEffect(id_mu, 1.02)
     tmcr_ttMC.setParamEffect(iso_mu, 1.02)
     btagUp=template(background,'TT','btagUp','tmcr')[0]
     btagDown=template(background,'TT','btagDown','tmcr')[0]
     tmcr_ttMC.setParamEffect(btag, btagUp, btagDown)
-    tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() * deepak15_weight['1tag']['TT']
-    tmcr_ttXweight = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt)
-    tmcr.addSample(tmcr_ttXweight)
+    tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+    tmcr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt)
+    tmcr.addSample(tmcr_tt)
 
     ###
     # Other MC-driven processes
@@ -603,7 +541,6 @@ def model(year,recoil,category):
     btagUp=template(background,'ST','btagUp','tmcr')[0]
     btagDown=template(background,'ST','btagDown','tmcr')[0]
     tmcr_st.setParamEffect(btag, btagUp, btagDown)
-    tmcr_st.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['1tag']['ST'])
     tmcr.addSample(tmcr_st)
 
     tmcr_dyjetsTemplate = template(background,'DY+jets','nominal','tmcr')
@@ -611,14 +548,13 @@ def model(year,recoil,category):
     tmcr_dyjets.setParamEffect(lumi, 1.027)
     tmcr_dyjets.setParamEffect(trig_met, 1.01)
     tmcr_dyjets.setParamEffect(veto_tau, 1.03)
-    tmcr_dyjets.setParamEffect(dyjets_norm, 1.4)
+    tmcr_dyjets.setParamEffect(zjets_norm, 1.4)
     tmcr_dyjets.setParamEffect(jec, 1.05)
     tmcr_dyjets.setParamEffect(id_mu, 1.02)
     tmcr_dyjets.setParamEffect(iso_mu, 1.02)
     btagUp=template(background,'DY+jets','btagUp','tmcr')[0]
     btagDown=template(background,'DY+jets','btagDown','tmcr')[0]
     tmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    tmcr_dyjets.setParamEffect(deepak15_pass_sf['other'], hf_fraction_weight['1tag']['DY+jets'])
     tmcr.addSample(tmcr_dyjets)
 
     tmcr_vvTemplate = template(background,'VV','nominal','tmcr')
@@ -633,7 +569,6 @@ def model(year,recoil,category):
     btagUp=template(background,'VV','btagUp','tmcr')[0]
     btagDown=template(background,'VV','btagDown','tmcr')[0]
     tmcr_vv.setParamEffect(btag, btagUp, btagDown)
-    tmcr_vv.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['1tag']['VV'])
     tmcr.addSample(tmcr_vv)
 
     tmcr_hbbTemplate = template(background,'Hbb','nominal','tmcr')
@@ -648,7 +583,6 @@ def model(year,recoil,category):
     btagUp=template(background,'Hbb','btagUp','tmcr')[0]
     btagDown=template(background,'Hbb','btagDown','tmcr')[0]
     tmcr_hbb.setParamEffect(btag, btagUp, btagDown)
-    tmcr_hbb.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['1tag']['Hbb'])
     tmcr.addSample(tmcr_hbb)
 
     tmcr_qcdTemplate = template(background,'QCD','nominal','tmcr')
@@ -663,7 +597,6 @@ def model(year,recoil,category):
     btagUp=template(background,'QCD','btagUp','tmcr')[0]
     btagDown=template(background,'QCD','btagDown','tmcr')[0]
     tmcr_qcd.setParamEffect(btag, btagUp, btagDown)
-    tmcr_qcd.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['1tag']['QCD'])
     tmcr.addSample(tmcr_qcd)
 
     ###
@@ -702,33 +635,33 @@ def model(year,recoil,category):
     wecr_wjetsMC.setParamEffect(jec, 1.05)
     wecr_wjetsMC.setParamEffect(id_e, 1.02)
     wecr_wjetsMC.setParamEffect(reco_e, 1.02)
+    wecr_wjetsMC.setParamEffect(hf_fraction, hf_systematic['W+jets']['wecr'][category])
     btagUp=template(background,'W+jets','btagUp','wecr')[0]
     btagDown=template(background,'W+jets','btagDown','wecr')[0]
     wecr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-    wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() * hf_fraction_weight['0tag']['W+jets']
-    wecr_wjetsXweight = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets)
-    wecr.addSample(wecr_wjetsXweight)
+    wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
+    wecr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets)
+    wecr.addSample(wecr_wjets)
 
     ###    
     # top-antitop data-driven model                                                                                                                                                                  
     ### 
 
-    #wecr_ttHist = background['wecr'].integrate('process', 'TT').integrate('systematic','nominal')
     wecr_ttTemplate = template(background,'TT','nominal','wecr')
     wecr_ttMC =  rl.TemplateSample('wecr'+year+'_ttMC', rl.Sample.BACKGROUND, wecr_ttTemplate)
     wecr_ttMC.setParamEffect(lumi, 1.027)
     wecr_ttMC.setParamEffect(trig_e, 1.01)
     wecr_ttMC.setParamEffect(veto_tau, 1.03)
-    wecr_ttMC.setParamEffect(tt_norm, 1.4)
+    wecr_ttMC.setParamEffect(tt_norm, 1.2)
     wecr_ttMC.setParamEffect(jec, 1.05)
     wecr_ttMC.setParamEffect(id_e, 1.02)
     wecr_ttMC.setParamEffect(reco_e, 1.02)
     btagUp=template(background,'TT','btagUp','wecr')[0]
     btagDown=template(background,'TT','btagDown','wecr')[0]
     wecr_ttMC.setParamEffect(btag, btagUp, btagDown)
-    wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation() * deepak15_weight['0tag']['TT']
-    wecr_ttXweight = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt)
-    wecr.addSample(wecr_ttXweight)
+    wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+    wecr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt)
+    wecr.addSample(wecr_tt)
 
     ###
     # Other MC-driven processes
@@ -746,7 +679,6 @@ def model(year,recoil,category):
     btagUp=template(background,'ST','btagUp','wecr')[0]
     btagDown=template(background,'ST','btagDown','wecr')[0]
     wecr_st.setParamEffect(btag, btagUp, btagDown)
-    wecr_st.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['0tag']['ST'])
     wecr.addSample(wecr_st)
 
     wecr_dyjetsTemplate = template(background,'DY+jets','nominal','wecr')
@@ -754,14 +686,13 @@ def model(year,recoil,category):
     wecr_dyjets.setParamEffect(lumi, 1.027)
     wecr_dyjets.setParamEffect(trig_e, 1.01)
     wecr_dyjets.setParamEffect(veto_tau, 1.03)
-    wecr_dyjets.setParamEffect(dyjets_norm, 1.4)
+    wecr_dyjets.setParamEffect(zjets_norm, 1.4)
     wecr_dyjets.setParamEffect(jec, 1.05)
     wecr_dyjets.setParamEffect(id_e, 1.02)
     wecr_dyjets.setParamEffect(reco_e, 1.02)
     btagUp=template(background,'DY+jets','btagUp','wecr')[0]
     btagDown=template(background,'DY+jets','btagDown','wecr')[0]
     wecr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    wecr_dyjets.setParamEffect(deepak15_pass_sf['other'], hf_fraction_weight['0tag']['DY+jets'])
     wecr.addSample(wecr_dyjets)
 
     wecr_vvTemplate = template(background,'VV','nominal','wecr')
@@ -776,7 +707,6 @@ def model(year,recoil,category):
     btagUp=template(background,'VV','btagUp','wecr')[0]
     btagDown=template(background,'VV','btagDown','wecr')[0]
     wecr_vv.setParamEffect(btag, btagUp, btagDown)
-    wecr_vv.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['0tag']['VV'])
     wecr.addSample(wecr_vv)
 
     wecr_hbbTemplate = template(background,'Hbb','nominal','wecr')
@@ -791,7 +721,6 @@ def model(year,recoil,category):
     btagUp=template(background,'Hbb','btagUp','wecr')[0]
     btagDown=template(background,'Hbb','btagDown','wecr')[0]
     wecr_hbb.setParamEffect(btag, btagUp, btagDown)
-    wecr_hbb.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['0tag']['Hbb'])
     wecr.addSample(wecr_hbb)
 
     wecr_qcdTemplate = template(background,'QCD','nominal','wecr')
@@ -799,14 +728,13 @@ def model(year,recoil,category):
     wecr_qcd.setParamEffect(lumi, 1.027)
     wecr_qcd.setParamEffect(trig_e, 1.01)
     wecr_qcd.setParamEffect(veto_tau, 1.03)
-    wecr_qcd.setParamEffect(qcdmu_norm, 2.0)
+    wecr_qcd.setParamEffect(qcde_norm, 2.0)
     wecr_qcd.setParamEffect(jec, 1.05)
     wecr_qcd.setParamEffect(id_e, 1.02)
     wecr_qcd.setParamEffect(reco_e, 1.02)
     btagUp=template(background,'QCD','btagUp','wecr')[0]
     btagDown=template(background,'QCD','btagDown','wecr')[0]
     wecr_qcd.setParamEffect(btag, btagUp, btagDown)
-    wecr_qcd.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['0tag']['QCD'])
     wecr.addSample(wecr_qcd)
 
     ###
@@ -845,12 +773,13 @@ def model(year,recoil,category):
     tecr_wjetsMC.setParamEffect(jec, 1.05)
     tecr_wjetsMC.setParamEffect(id_e, 1.02)
     tecr_wjetsMC.setParamEffect(reco_e, 1.02)
+    tecr_wjetsMC.setParamEffect(hf_fraction, hf_systematic['W+jets']['tecr'][category])
     btagUp=template(background,'W+jets','btagUp','tecr')[0]
     btagDown=template(background,'W+jets','btagDown','tecr')[0]
     tecr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-    tecr_wjetsTransferFactor = tecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() * hf_fraction_weight['1tag']['W+jets']
-    tecr_wjetsXweight = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, tecr_wjetsTransferFactor, sr_wjets)
-    tecr.addSample(tecr_wjetsXweight)
+    tecr_wjetsTransferFactor = tecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
+    tecr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, tecr_wjetsTransferFactor, sr_wjets)
+    tecr.addSample(tecr_wjets)
 
     ###    
     # top-antitop data-driven model                                                                                                                                                                  
@@ -861,16 +790,16 @@ def model(year,recoil,category):
     tecr_ttMC.setParamEffect(lumi, 1.027)
     tecr_ttMC.setParamEffect(trig_e, 1.01)
     tecr_ttMC.setParamEffect(veto_tau, 1.03)
-    tecr_ttMC.setParamEffect(tt_norm, 1.4)
+    tecr_ttMC.setParamEffect(tt_norm, 1.2)
     tecr_ttMC.setParamEffect(jec, 1.05)
     tecr_ttMC.setParamEffect(id_e, 1.02)
     tecr_ttMC.setParamEffect(reco_e, 1.02)
     btagUp=template(background,'TT','btagUp','tecr')[0]
     btagDown=template(background,'TT','btagDown','tecr')[0]
     tecr_ttMC.setParamEffect(btag, btagUp, btagDown)
-    tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation() * deepak15_weight['1tag']['TT']
-    tecr_ttXweight = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt)
-    tecr.addSample(tecr_ttXweight)
+    tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+    tecr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt)
+    tecr.addSample(tecr_tt)
 
     ###
     # Other MC-driven processes
@@ -888,7 +817,6 @@ def model(year,recoil,category):
     btagUp=template(background,'ST','btagUp','tecr')[0]
     btagDown=template(background,'ST','btagDown','tecr')[0]
     tecr_st.setParamEffect(btag, btagUp, btagDown)
-    tecr_st.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['1tag']['ST'])
     tecr.addSample(tecr_st)
 
     tecr_dyjetsTemplate = template(background,'DY+jets','nominal','tecr')
@@ -896,14 +824,13 @@ def model(year,recoil,category):
     tecr_dyjets.setParamEffect(lumi, 1.027)
     tecr_dyjets.setParamEffect(trig_e, 1.01)
     tecr_dyjets.setParamEffect(veto_tau, 1.03)
-    tecr_dyjets.setParamEffect(dyjets_norm, 1.4)
+    tecr_dyjets.setParamEffect(zjets_norm, 1.4)
     tecr_dyjets.setParamEffect(jec, 1.05)
     tecr_dyjets.setParamEffect(id_e, 1.02)
     tecr_dyjets.setParamEffect(reco_e, 1.02)
     btagUp=template(background,'DY+jets','btagUp','tecr')[0]
     btagDown=template(background,'DY+jets','btagDown','tecr')[0]
     tecr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    tecr_dyjets.setParamEffect(deepak15_pass_sf['other'], hf_fraction_weight['1tag']['DY+jets'])
     tecr.addSample(tecr_dyjets)
 
     tecr_vvTemplate = template(background,'VV','nominal','tecr')
@@ -918,7 +845,6 @@ def model(year,recoil,category):
     btagUp=template(background,'VV','btagUp','tecr')[0]
     btagDown=template(background,'VV','btagDown','tecr')[0]
     tecr_vv.setParamEffect(btag, btagUp, btagDown)
-    tecr_vv.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['1tag']['VV'])
     tecr.addSample(tecr_vv)
 
     tecr_hbbTemplate = template(background,'Hbb','nominal','tecr')
@@ -933,7 +859,6 @@ def model(year,recoil,category):
     btagUp=template(background,'Hbb','btagUp','tecr')[0]
     btagDown=template(background,'Hbb','btagDown','tecr')[0]
     tecr_hbb.setParamEffect(btag, btagUp, btagDown)
-    tecr_hbb.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['1tag']['Hbb'])
     tecr.addSample(tecr_hbb)
 
     tecr_qcdTemplate = template(background,'QCD','nominal','tecr')
@@ -941,14 +866,13 @@ def model(year,recoil,category):
     tecr_qcd.setParamEffect(lumi, 1.027)
     tecr_qcd.setParamEffect(trig_e, 1.01)
     tecr_qcd.setParamEffect(veto_tau, 1.03)
-    tecr_qcd.setParamEffect(qcdmu_norm, 2.0)
+    tecr_qcd.setParamEffect(qcde_norm, 2.0)
     tecr_qcd.setParamEffect(jec, 1.05)
     tecr_qcd.setParamEffect(id_e, 1.02)
     tecr_qcd.setParamEffect(reco_e, 1.02)
     btagUp=template(background,'QCD','btagUp','tecr')[0]
     btagDown=template(background,'QCD','btagDown','tecr')[0]
     tecr_qcd.setParamEffect(btag, btagUp, btagDown)
-    tecr_qcd.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['1tag']['QCD'])
     tecr.addSample(tecr_qcd)
 
     ###
@@ -976,13 +900,14 @@ def model(year,recoil,category):
     zmcr_dyjetsMC.setParamEffect(lumi, 1.027)
     zmcr_dyjetsMC.setParamEffect(trig_met, 1.01)
     zmcr_dyjetsMC.setParamEffect(veto_tau, 1.03)
-    zmcr_dyjetsMC.setParamEffect(dyjets_norm, 1.4)
+    zmcr_dyjetsMC.setParamEffect(zjets_norm, 1.4)
     zmcr_dyjetsMC.setParamEffect(jec, 1.05)
     zmcr_dyjetsMC.setParamEffect(id_mu, 1.02)
     zmcr_dyjetsMC.setParamEffect(iso_mu, 1.02)
-    zmcr_dyjetsTransferFactor = zmcr_dyjetsMC.getExpectation() / sr_zjetsMC.getExpectation() * hf_fraction_weight['notag']['DY+jets']
-    zmcr_dyjetsXweight = rl.TransferFactorSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, zmcr_dyjetsTransferFactor, sr_zjets)
-    zmcr.addSample(zmcr_dyjetsXweight)
+    zmcr_dyjetsMC.setParamEffect(hf_fraction, hf_systematic['DY+jets']['zmcr'][category])
+    zmcr_dyjetsTransferFactor = zmcr_dyjetsMC.getExpectation() / sr_zjetsMC.getExpectation()
+    zmcr_dyjets = rl.TransferFactorSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, zmcr_dyjetsTransferFactor, sr_zjets)
+    zmcr.addSample(zmcr_dyjets)
 
     ###
     # Other MC-driven processes
@@ -993,11 +918,10 @@ def model(year,recoil,category):
     zmcr_tt.setParamEffect(lumi, 1.027)
     zmcr_tt.setParamEffect(trig_met, 1.01)
     zmcr_tt.setParamEffect(veto_tau, 1.03)
-    zmcr_tt.setParamEffect(tt_norm, 1.4)
+    zmcr_tt.setParamEffect(tt_norm, 1.2)
     zmcr_tt.setParamEffect(jec, 1.05)
     zmcr_tt.setParamEffect(id_mu, 1.02)
     zmcr_tt.setParamEffect(iso_mu, 1.02)
-    zmcr_tt.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['notag']['TT'])
     zmcr.addSample(zmcr_tt)
 
     zmcr_stTemplate = template(background,'ST','nominal','zmcr')
@@ -1009,7 +933,6 @@ def model(year,recoil,category):
     zmcr_st.setParamEffect(jec, 1.05)
     zmcr_st.setParamEffect(id_mu, 1.02)
     zmcr_st.setParamEffect(iso_mu, 1.02)
-    zmcr_st.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['notag']['ST'])
     zmcr.addSample(zmcr_st)
 
     zmcr_vvTemplate = template(background,'VV','nominal','zmcr')
@@ -1021,7 +944,6 @@ def model(year,recoil,category):
     zmcr_vv.setParamEffect(jec, 1.05)
     zmcr_vv.setParamEffect(id_mu, 1.02)
     zmcr_vv.setParamEffect(iso_mu, 1.02)
-    zmcr_vv.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['notag']['VV'])
     zmcr.addSample(zmcr_vv)
 
     zmcr_hbbTemplate = template(background,'Hbb','nominal','zmcr')
@@ -1033,7 +955,6 @@ def model(year,recoil,category):
     zmcr_hbb.setParamEffect(jec, 1.05)
     zmcr_hbb.setParamEffect(id_mu, 1.02)
     zmcr_hbb.setParamEffect(iso_mu, 1.02)
-    zmcr_hbb.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['notag']['Hbb'])
     zmcr.addSample(zmcr_hbb)
 
     ###
@@ -1064,13 +985,14 @@ def model(year,recoil,category):
     zecr_dyjetsMC.setParamEffect(lumi, 1.027)
     zecr_dyjetsMC.setParamEffect(trig_e, 1.01)
     zecr_dyjetsMC.setParamEffect(veto_tau, 1.03)
-    zecr_dyjetsMC.setParamEffect(dyjets_norm, 1.4)
+    zecr_dyjetsMC.setParamEffect(zjets_norm, 1.4)
     zecr_dyjetsMC.setParamEffect(jec, 1.05)
     zecr_dyjetsMC.setParamEffect(id_e, 1.02)
     zecr_dyjetsMC.setParamEffect(reco_e, 1.02)
-    zecr_dyjetsTransferFactor = zecr_dyjetsMC.getExpectation() / sr_zjetsMC.getExpectation() * hf_fraction_weight['notag']['DY+jets']
-    zecr_dyjetsXweight = rl.TransferFactorSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, zecr_dyjetsTransferFactor, sr_zjets)
-    zecr.addSample(zecr_dyjetsXweight)
+    zecr_dyjetsMC.setParamEffect(hf_fraction, hf_systematic['DY+jets']['zecr'][category])
+    zecr_dyjetsTransferFactor = zecr_dyjetsMC.getExpectation() / sr_zjetsMC.getExpectation()
+    zecr_dyjets = rl.TransferFactorSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, zecr_dyjetsTransferFactor, sr_zjets)
+    zecr.addSample(zecr_dyjets)
 
     ###
     # Other MC-driven processes
@@ -1081,11 +1003,10 @@ def model(year,recoil,category):
     zecr_tt.setParamEffect(lumi, 1.027)
     zecr_tt.setParamEffect(trig_e, 1.01)
     zecr_tt.setParamEffect(veto_tau, 1.03)
-    zecr_tt.setParamEffect(tt_norm, 1.4)
+    zecr_tt.setParamEffect(tt_norm, 1.2)
     zecr_tt.setParamEffect(jec, 1.05)
     zecr_tt.setParamEffect(id_e, 1.02)
     zecr_tt.setParamEffect(reco_e, 1.02)
-    zecr_tt.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['notag']['TT'])
     zecr.addSample(zecr_tt)
 
     zecr_stTemplate = template(background,'ST','nominal','zecr')
@@ -1097,7 +1018,6 @@ def model(year,recoil,category):
     zecr_st.setParamEffect(jec, 1.05)
     zecr_st.setParamEffect(id_e, 1.02)
     zecr_st.setParamEffect(reco_e, 1.02)
-    zecr_st.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['notag']['ST'])
     zecr.addSample(zecr_st)
 
     zecr_vvTemplate = template(background,'VV','nominal','zecr')
@@ -1109,7 +1029,6 @@ def model(year,recoil,category):
     zecr_vv.setParamEffect(jec, 1.05)
     zecr_vv.setParamEffect(id_e, 1.02)
     zecr_vv.setParamEffect(reco_e, 1.02)
-    zecr_vv.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['notag']['VV'])
     zecr.addSample(zecr_vv)
 
     zecr_hbbTemplate = template(background,'Hbb','nominal','zecr')
@@ -1121,7 +1040,6 @@ def model(year,recoil,category):
     zecr_hbb.setParamEffect(jec, 1.05)
     zecr_hbb.setParamEffect(id_e, 1.02)
     zecr_hbb.setParamEffect(reco_e, 1.02)
-    zecr_hbb.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['notag']['Hbb'])
     zecr.addSample(zecr_hbb)
 
     ###
@@ -1155,9 +1073,10 @@ def model(year,recoil,category):
     gcr_gjetsMC.setParamEffect(gjets_norm, 1.4)
     gcr_gjetsMC.setParamEffect(jec, 1.05)
     gcr_gjetsMC.setParamEffect(id_pho, 1.02)
-    gcr_gjetsTransferFactor = gcr_gjetsMC.getExpectation() / sr_zjetsMC.getExpectation() * hf_fraction_weight['notag']['G+jets']
-    gcr_gjetsXweight = rl.TransferFactorSample(ch_name+'_gjets', rl.Sample.BACKGROUND, gcr_gjetsTransferFactor, sr_zjets)
-    gcr.addSample(gcr_gjetsXweight)
+    gcr_gjetsMC.setParamEffect(hf_fraction, hf_systematic['G+jets']['gcr'][category])
+    gcr_gjetsTransferFactor = gcr_gjetsMC.getExpectation() / sr_zjetsMC.getExpectation()
+    gcr_gjets = rl.TransferFactorSample(ch_name+'_gjets', rl.Sample.BACKGROUND, gcr_gjetsTransferFactor, sr_zjets)
+    gcr.addSample(gcr_gjets)
 
     gcr_qcdTemplate = template(background,'QCD','nominal','gcr')
     gcr_qcd=rl.TemplateSample(ch_name+'_qcdMC', rl.Sample.BACKGROUND, gcr_qcdTemplate)
@@ -1167,7 +1086,6 @@ def model(year,recoil,category):
     gcr_qcd.setParamEffect(qcdpho_norm, 2.0)
     gcr_qcd.setParamEffect(jec, 1.05)
     gcr_qcd.setParamEffect(id_pho, 1.02)
-    gcr_qcd.setParamEffect(deepak15_pass_sf['other'], deepak15_weight['notag']['QCD'])
     gcr.addSample(gcr_qcd)
 
     return model
@@ -1226,13 +1144,14 @@ if __name__ == '__main__':
         'data': data_hists
     }
 
+    tf_params = rhalphabeth()
+    #tf_params=1.
+
     model_dict={}
-    for category in ['monojet','monohs']:
-        if category=='monojet':
-            with open('data/darkhiggs'+options.year+'-'+category+'.model', "wb") as fout:
-                pickle.dump(model(options.year,None,category), fout, protocol=2)
-        elif category=='monohs':
-            for mass in [0,1,2,3,4]:
-                with open('data/darkhiggs'+options.year+'-'+category+'-mass'+str(mass)+'.model', "wb") as fout:
-                    pickle.dump(model(options.year,mass,category), fout, protocol=2)
+    recoilbins = np.array([250,310,370,470,590,840,1020,1250,3000])
+    nrecoil = len(recoilbins) - 1
+    for recoilbin in range(nrecoil):
+        for category in ['pass','fail']:
+            with open('data/darkhiggs'+options.year+'-'+category+'-recoil'+str(recoilbin)+'.model', "wb") as fout:
+                pickle.dump(model(options.year,recoilbin,category), fout, protocol=2)
 
