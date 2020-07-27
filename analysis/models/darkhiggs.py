@@ -244,7 +244,9 @@ def model(year,recoil,category):
     btagDown=template(background,'TT','btagDown','sr')[0]
     sr_ttMC.setParamEffect(btag, btagUp, btagDown)
     sr_ttBinYields = np.array([rl.IndependentParameter('sr'+year+'_tt_'+category+'_mass%d', b, 0, sr_ttTemplate[0].max()*2) for b in sr_ttTemplate[0]])
-    sr_ttBinYields = sr_ttBinYields*rl.IndependentParameter('sr'+year+'_tt_recoil'+str(recoil), 0, sr_ttTemplate[0].sum()*2)
+    eff=tt_efficiency[year]
+    if category=='fail': eff=(1-tt_efficiency[year])
+    sr_ttBinYields = sr_ttBinYields*rl.IndependentParameter('sr'+year+'_tt_recoil'+str(recoil), sr_ttTemplate[0].sum()/eff, 0, sr_ttTemplate[0].sum()/eff*2)
     sr_ttBinYields = sr_ttBinYields*tt_weight[category]
     sr_ttObservable = rl.Observable('fjmass', sr_ttTemplate[1])
     sr_tt = rl.ParametericSample(ch_name+'_tt', rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields)
