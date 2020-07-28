@@ -1,4 +1,4 @@
-# Datacard for <Channel (sr2018recoil4fail) instance at 0x2b644ebb3d10> generated on 2020-07-29 03:52:45.230922
+# Datacard for <Channel (sr2018recoil4fail) instance at 0x2b10e9647b10> generated on 2020-07-29 04:37:05.094222
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 13 # number of samples minus 1
 kmax 12 # number of nuisance parameters
@@ -22,24 +22,24 @@ zjets_norm lnN                     -                  -                  -      
 hf_fraction param 0 1
 wjets_norm param 0 1
 2018sf_tt extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
-sr2018_tt_fail_mass%d extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
 sr2018_tt_recoil4 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass0 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass1 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass10 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass11 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass12 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass13 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass14 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass15 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass16 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass2 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass3 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass4 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass5 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass6 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass7 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass8 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
+sr2018_ttshape_fail_mass9 extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
 sr2018recoil4fail_wjetsMC_bin0_nominal extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
 sr2018recoil4fail_wjetsMC_bin10_nominal extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail
 sr2018recoil4fail_wjetsMC_bin11_nominal extArg darkhiggs_sr2018recoil4fail.root:darkhiggs_sr2018recoil4fail

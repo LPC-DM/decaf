@@ -1,2 +1,2 @@
-combineCards.py tmcr2018recoil4fail=tmcr2018recoil4fail.txt > darkhiggs_tmcr2018recoil4fail_combined.txt
-text2workspace.py darkhiggs_tmcr2018recoil4fail_combined.txt
+combineCards.py tecr2018recoil4fail=tecr2018recoil4fail.txt > darkhiggs_tecr2018recoil4fail_combined.txt
+text2workspace.py darkhiggs_tecr2018recoil4fail_combined.txt
