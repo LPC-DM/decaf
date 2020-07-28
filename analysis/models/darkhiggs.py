@@ -116,9 +116,10 @@ def model(year,recoil,category):
     tt_efficiency={
         '2018': 0.5,
     }
+    sf_tt = rl.IndependentParameter(year+'sf_tt', 1., 0.01, 1./tt_efficiency[year])
     tt_weight={
-        'pass': rl.IndependentParameter(year+'sf_tt_pass', 1., 0.01, 1./tt_efficiency[year])*tt_efficiency[year],
-        'fail': 1-(rl.IndependentParameter(year+'sf_tt_fail', 1., 0.01, 1./tt_efficiency[year]*tt_efficiency[year]))
+        'pass': sf_tt*tt_efficiency[year],
+        'fail': 1-(sf_tt*tt_efficiency[year])
     }
 
     data_hists   = hists['data']
@@ -192,7 +193,7 @@ def model(year,recoil,category):
     # Z(->nunu)+jets data-driven model
     ###
     sr_zjetsTemplate = template(background,'Z+jets','nominal','sr')
-    sr_zjetsMC =  rl.TemplateSample('sr'+year+'_zjetsMC', rl.Sample.BACKGROUND, sr_zjetsTemplate)
+    sr_zjetsMC =  rl.TemplateSample(ch_name+'_zjetsMC', rl.Sample.BACKGROUND, sr_zjetsTemplate)
     sr_zjetsMC.setParamEffect(lumi, 1.027)
     sr_zjetsMC.setParamEffect(zjets_norm, 1.4)
     sr_zjetsMC.setParamEffect(trig_met, 1.01)
@@ -214,7 +215,7 @@ def model(year,recoil,category):
     ### 
 
     sr_wjetsTemplate = template(background,'W+jets','nominal','sr')
-    sr_wjetsMC =  rl.TemplateSample('sr'+year+'_wjetsMC', rl.Sample.BACKGROUND, sr_wjetsTemplate)
+    sr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, sr_wjetsTemplate)
     sr_wjetsMC.setParamEffect(lumi, 1.027)
     sr_wjetsMC.setParamEffect(wjets_norm, 1.4)
     sr_wjetsMC.setParamEffect(trig_met, 1.01)
@@ -234,7 +235,7 @@ def model(year,recoil,category):
     ### 
 
     sr_ttTemplate = template(background,'TT','nominal','sr')
-    sr_ttMC =  rl.TemplateSample('sr'+year+'_ttMC', rl.Sample.BACKGROUND, sr_ttTemplate)
+    sr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, sr_ttTemplate)
     sr_ttMC.setParamEffect(lumi, 1.027)
     sr_ttMC.setParamEffect(tt_norm, 1.2)
     sr_ttMC.setParamEffect(trig_met, 1.01)
@@ -356,7 +357,7 @@ def model(year,recoil,category):
     ### 
 
     wmcr_wjetsTemplate = template(background,'W+jets','nominal','wmcr')
-    wmcr_wjetsMC =  rl.TemplateSample('wmcr'+year+'_wjetsMC', rl.Sample.BACKGROUND, wmcr_wjetsTemplate)
+    wmcr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, wmcr_wjetsTemplate)
     wmcr_wjetsMC.setParamEffect(lumi, 1.027)
     wmcr_wjetsMC.setParamEffect(trig_met, 1.01)
     wmcr_wjetsMC.setParamEffect(veto_tau, 1.03)
@@ -377,7 +378,7 @@ def model(year,recoil,category):
     ### 
 
     wmcr_ttTemplate = template(background,'TT','nominal','wmcr')
-    wmcr_ttMC =  rl.TemplateSample('wmcr'+year+'_ttMC', rl.Sample.BACKGROUND, wmcr_ttTemplate)
+    wmcr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, wmcr_ttTemplate)
     wmcr_ttMC.setParamEffect(lumi, 1.027)
     wmcr_ttMC.setParamEffect(trig_met, 1.01)
     wmcr_ttMC.setParamEffect(veto_tau, 1.03)
@@ -491,7 +492,7 @@ def model(year,recoil,category):
     ### 
 
     tmcr_wjetsTemplate = template(background,'W+jets','nominal','tmcr')
-    tmcr_wjetsMC =  rl.TemplateSample('tmcr'+year+'_wjetsMC', rl.Sample.BACKGROUND, tmcr_wjetsTemplate)
+    tmcr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, tmcr_wjetsTemplate)
     tmcr_wjetsMC.setParamEffect(lumi, 1.027)
     tmcr_wjetsMC.setParamEffect(trig_met, 1.01)
     tmcr_wjetsMC.setParamEffect(veto_tau, 1.03)
@@ -512,7 +513,7 @@ def model(year,recoil,category):
     ### 
 
     tmcr_ttTemplate = template(background,'TT','nominal','tmcr')
-    tmcr_ttMC =  rl.TemplateSample('tmcr'+year+'_ttMC', rl.Sample.BACKGROUND, tmcr_ttTemplate)
+    tmcr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, tmcr_ttTemplate)
     tmcr_ttMC.setParamEffect(lumi, 1.027)
     tmcr_ttMC.setParamEffect(trig_met, 1.01)
     tmcr_ttMC.setParamEffect(veto_tau, 1.03)
@@ -629,7 +630,7 @@ def model(year,recoil,category):
     ### 
 
     wecr_wjetsTemplate = template(background,'W+jets','nominal','wecr')
-    wecr_wjetsMC =  rl.TemplateSample('wecr'+year+'_wjetsMC', rl.Sample.BACKGROUND, wecr_wjetsTemplate)
+    wecr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, wecr_wjetsTemplate)
     wecr_wjetsMC.setParamEffect(lumi, 1.027)
     wecr_wjetsMC.setParamEffect(trig_e, 1.01)
     wecr_wjetsMC.setParamEffect(veto_tau, 1.03)
@@ -650,7 +651,7 @@ def model(year,recoil,category):
     ### 
 
     wecr_ttTemplate = template(background,'TT','nominal','wecr')
-    wecr_ttMC =  rl.TemplateSample('wecr'+year+'_ttMC', rl.Sample.BACKGROUND, wecr_ttTemplate)
+    wecr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, wecr_ttTemplate)
     wecr_ttMC.setParamEffect(lumi, 1.027)
     wecr_ttMC.setParamEffect(trig_e, 1.01)
     wecr_ttMC.setParamEffect(veto_tau, 1.03)
@@ -767,7 +768,7 @@ def model(year,recoil,category):
     ### 
 
     tecr_wjetsTemplate = template(background,'W+jets','nominal','tecr')
-    tecr_wjetsMC =  rl.TemplateSample('tecr'+year+'_wjetsMC', rl.Sample.BACKGROUND, tecr_wjetsTemplate)
+    tecr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, tecr_wjetsTemplate)
     tecr_wjetsMC.setParamEffect(lumi, 1.027)
     tecr_wjetsMC.setParamEffect(trig_e, 1.01)
     tecr_wjetsMC.setParamEffect(veto_tau, 1.03)
@@ -788,7 +789,7 @@ def model(year,recoil,category):
     ### 
 
     tecr_ttTemplate = template(background,'TT','nominal','tecr')
-    tecr_ttMC =  rl.TemplateSample('tecr'+year+'_ttMC', rl.Sample.BACKGROUND, tecr_ttTemplate)
+    tecr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, tecr_ttTemplate)
     tecr_ttMC.setParamEffect(lumi, 1.027)
     tecr_ttMC.setParamEffect(trig_e, 1.01)
     tecr_ttMC.setParamEffect(veto_tau, 1.03)
@@ -898,7 +899,7 @@ def model(year,recoil,category):
     zmcr.setObservation(template(data,'MET','nominal','zmcr'))
 
     zmcr_dyjetsTemplate = template(background,'DY+jets','nominal','zmcr')
-    zmcr_dyjetsMC =  rl.TemplateSample('zmcr'+year+'_dyjetsMC', rl.Sample.BACKGROUND, zmcr_dyjetsTemplate)
+    zmcr_dyjetsMC =  rl.TemplateSample(ch_name+'_dyjetsMC', rl.Sample.BACKGROUND, zmcr_dyjetsTemplate)
     zmcr_dyjetsMC.setParamEffect(lumi, 1.027)
     zmcr_dyjetsMC.setParamEffect(trig_met, 1.01)
     zmcr_dyjetsMC.setParamEffect(veto_tau, 1.03)
@@ -983,7 +984,7 @@ def model(year,recoil,category):
         zecr.setObservation(template(data,'SingleElectron','nominal','zecr'))
 
     zecr_dyjetsTemplate = template(background,'DY+jets','nominal','zecr')
-    zecr_dyjetsMC =  rl.TemplateSample('zecr'+year+'_dyjetsMC', rl.Sample.BACKGROUND, zecr_dyjetsTemplate)
+    zecr_dyjetsMC =  rl.TemplateSample(ch_name+'_dyjetsMC', rl.Sample.BACKGROUND, zecr_dyjetsTemplate)
     zecr_dyjetsMC.setParamEffect(lumi, 1.027)
     zecr_dyjetsMC.setParamEffect(trig_e, 1.01)
     zecr_dyjetsMC.setParamEffect(veto_tau, 1.03)
@@ -1068,7 +1069,7 @@ def model(year,recoil,category):
         gcr.setObservation(template(data,'SinglePhoton','nominal','gcr'))
 
     gcr_gjetsTemplate = template(background,'G+jets','nominal','gcr')
-    gcr_gjetsMC =  rl.TemplateSample('gcr'+year+'_gjetsMC', rl.Sample.BACKGROUND, gcr_gjetsTemplate)
+    gcr_gjetsMC =  rl.TemplateSample(ch_name+'_gjetsMC', rl.Sample.BACKGROUND, gcr_gjetsTemplate)
     gcr_gjetsMC.setParamEffect(lumi, 1.027)
     gcr_gjetsMC.setParamEffect(trig_pho, 1.01)
     gcr_gjetsMC.setParamEffect(veto_tau, 1.03)

@@ -9,8 +9,8 @@ command='combineCards.py '
 filenames = 'datacards/*'+options.analysis+'* -name \'*.txt\''
 os.system('find '+filenames+' > cards.txt')
 for card in open('cards.txt'):
-    if 'sr' not in card: continue
-    if 'monojet' not in card: continue
+    #if 'sr' not in card: continue
+    #if 'monojet' not in card: continue
     filename=card.strip()
     binname=filename.split(".")[0].split('/')[len(filename.split(".")[0].split('/'))-1].replace('-','')
     command=command+binname+'='+filename+' '
