@@ -1,2 +1,2 @@
-combineCards.py wecr2018recoil4pass=wecr2018recoil4pass.txt > darkhiggs_wecr2018recoil4pass_combined.txt
-text2workspace.py darkhiggs_wecr2018recoil4pass_combined.txt
+combineCards.py sr2018recoil4pass=sr2018recoil4pass.txt > darkhiggs_sr2018recoil4pass_combined.txt
+text2workspace.py darkhiggs_sr2018recoil4pass_combined.txt

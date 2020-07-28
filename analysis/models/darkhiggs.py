@@ -203,7 +203,7 @@ def model(year,recoil,category):
     btagUp=template(background,'Z+jets','btagUp','sr')[0]
     btagDown=template(background,'Z+jets','btagDown','sr')[0]
     sr_zjetsMC.setParamEffect(btag, btagUp, btagDown)
-    sr_zjetsBinYields = np.array([rl.IndependentParameter('sr'+year+'_zjets_recoil'+str(recoil)+'_mass%d', b, 0, sr_zjetsTemplate[0].max()*2) for b in sr_zjetsTemplate[0]])
+    sr_zjetsBinYields = np.array([rl.IndependentParameter('sr'+year+'_zjets_recoil'+str(recoil)+'_mass%d' % i, b, 0, sr_zjetsTemplate[0].max()*2) for i,b in enumerate(sr_zjetsTemplate[0])])
     if category == 'pass':
         sr_zjetsBinYields = sr_zjetsBinYields * tf_params
     sr_zjetsObservable = rl.Observable('fjmass', sr_zjetsTemplate[1])
@@ -244,7 +244,7 @@ def model(year,recoil,category):
     btagUp=template(background,'TT','btagUp','sr')[0]
     btagDown=template(background,'TT','btagDown','sr')[0]
     sr_ttMC.setParamEffect(btag, btagUp, btagDown)
-    sr_ttBinYields = np.array([rl.IndependentParameter('sr'+year+'_tt_'+category+'_mass%d', b, 0, sr_ttTemplate[0].max()*2) for b in sr_ttTemplate[0]])
+    sr_ttBinYields = np.array([rl.IndependentParameter('sr'+year+'_ttshape_'+category+'_mass%d' % i, b, 0, sr_ttTemplate[0].max()*2) for i,b in enumerate(sr_ttTemplate[0])])
     eff=tt_efficiency[year]
     if category=='fail': eff=(1-tt_efficiency[year])
     sr_ttBinYields = sr_ttBinYields*rl.IndependentParameter('sr'+year+'_tt_recoil'+str(recoil), sr_ttTemplate[0].sum()/eff, 0, sr_ttTemplate[0].sum()/eff*2)
