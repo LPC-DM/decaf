@@ -1,0 +1,99 @@
+# Datacard for <Channel (sr2018recoil3pass) instance at 0x2b59e5207990> generated on 2020-07-28 08:26:16.958731
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 13 # number of samples minus 1
+kmax 15 # number of nuisance parameters
+shapes * sr2018recoil3pass darkhiggs_sr2018recoil3pass.root darkhiggs_sr2018recoil3pass:sr2018recoil3pass_$PROCESS darkhiggs_sr2018recoil3pass:sr2018recoil3pass_$PROCESS_$SYSTEMATIC
+bin sr2018recoil3pass
+observation 1390.000
+bin                sr2018recoil3pass  sr2018recoil3pass  sr2018recoil3pass  sr2018recoil3pass  sr2018recoil3pass  sr2018recoil3pass  sr2018recoil3pass  sr2018recoil3pass  sr2018recoil3pass  sr2018recoil3pass  sr2018recoil3pass  sr2018recoil3pass  sr2018recoil3pass  sr2018recoil3pass
+process                       Mhs_50             Mhs_70             Mhs_90            MonoJet              MonoW              MonoZ              zjets              wjets                 tt               stMC           dyjetsMC               vvMC              hbbMC              qcdMC
+process                           -5                 -4                 -3                 -2                 -1                  0                  1                  2                  3                  4                  5                  6                  7                  8
+rate                         302.894            289.506            272.532            207.096             11.373              3.702              1.000              1.000              1.000             17.467              1.117             57.152              6.413              6.249
+btag_2018 shape                1.000              1.000              1.000              1.000              1.000              1.000                  -                  -                  -              1.000              1.000              1.000              1.000              1.000
+hbb_norm lnN                       -                  -                  -                  -                  -                  -                  -                  -                  -                  -                  -                  -              1.200                  -
+jec_2018 lnN                   1.050              1.050              1.050              1.050              1.050              1.050                  -                  -                  -              1.050              1.050              1.050              1.050              1.050
+lumi_2018 lnN                  1.027              1.027              1.027              1.027              1.027              1.027                  -                  -                  -              1.027              1.027              1.027              1.027              1.027
+qcdsig_norm lnN                    -                  -                  -                  -                  -                  -                  -                  -                  -                  -                  -                  -                  -              2.000
+st_norm lnN                        -                  -                  -                  -                  -                  -                  -                  -                  -              1.200                  -                  -                  -                  -
+trig_met_2018 lnN              1.010              1.010              1.010              1.010              1.010              1.010                  -                  -                  -              1.010              1.010              1.010              1.010              1.010
+veto_tau_2018 lnN              1.030              1.030              1.030              1.030              1.030              1.030                  -                  -                  -              1.030              1.030              1.030              1.030              1.030
+vv_norm lnN                        -                  -                  -                  -                  -                  -                  -                  -                  -                  -                  -              1.200                  -                  -
+zjets_norm lnN                     -                  -                  -                  -                  -                  -                  -                  -                  -                  -              1.400                  -                  -                  -
+hf_fraction param 0 1
+tf_MCtempl_deco0 param 0 1
+tf_MCtempl_deco1 param 0 1
+tf_MCtempl_deco2 param 0 1
+wjets_norm param 0 1
+2018sf_tt_pass extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_pass_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_tt_recoil3 extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin0_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin10_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin11_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin12_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin13_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin14_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin15_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin16_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin1_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin2_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin3_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin4_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin5_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin6_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin7_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin8_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_wjetsMC_bin9_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin0_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin10_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin11_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin12_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin13_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin14_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin15_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin16_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin1_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin2_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin3_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin4_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin5_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin6_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin7_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin8_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjetsMC_bin9_nominal extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+sr2018_zjets_recoil3_mass%d extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+tf_dataResidual_fjmass_par0 extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+tf_dataResidual_fjmass_par1 extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass
+tf_dataResidual_fjmass_par2 extArg darkhiggs_sr2018recoil3pass.root:darkhiggs_sr2018recoil3pass

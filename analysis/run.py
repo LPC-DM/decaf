@@ -12,10 +12,11 @@ import uproot
 import numpy as np
 from coffea import hist, processor
 from coffea.util import load, save
-from coffea.nanoaod.methods import collection_methods, LorentzVector
+from coffea.nanoaod.methods import collection_methods, LorentzVector, FatJet 
 
-collection_methods['AK15Puppi'] = LorentzVector
+collection_methods['AK15Puppi'] = FatJet
 collection_methods['AK15PuppiSubJet'] = LorentzVector
+FatJet.subjetmap['AK15Puppi'] = 'AK15PuppiSubJet' 
 
 parser = OptionParser()
 parser.add_option('-p', '--processor', help='processor', dest='processor')
