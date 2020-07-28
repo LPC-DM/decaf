@@ -60,6 +60,12 @@ def weight_shape(values, weight):
 
 class PhotonPurity(processor.ProcessorABC):
 
+    lumis = {
+        '2016': 35.92,
+        '2017': 40.66,
+        '2018':'59.74'
+    }
+
     met_filter_flags = {
         '2016': ['goodVertices',
                 'globalSuperTightHalo2016Filter',
@@ -86,20 +92,26 @@ class PhotonPurity(processor.ProcessorABC):
         }
 
 
-    def __init__(self, year, ids, common):
+    def __init__(self, year, ids, xsec, common):
         self._year = year
 
-        items = {}
-        items['count'] = hist.Hist( 'Events',
-                                    hist.Cat('dataset', 'Dataset'),
-                                    hist.Cat('cat', 'Cat'),
-                                    hist.Bin('pt', 'Photon pT', 50, 200, 1200),
-                                    hist.Bin('sieie', 'sieie', 100, 0, 0.02)
-                                    )
-        items['sumw'] = processor.defaultdict_accumulator(float)
-        items['sumw2'] = processor.defaultdict_accumulator(float)
+        self._lumi = 1000.*float(PhotonPurity.lumis[year])
+        self._xsec = xsec
 
-        self._accumulator = processor.dict_accumulator(items)
+        self._accumulator = processor.dict_accumulator({
+            'sumw': hist.Hist(
+                'sumw',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('sumw', 'Weight value', [0.])
+                ),
+            'count': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('cat', 'Cat'),
+                hist.Bin('pt', 'Photon pT', 50, 200, 1200),
+                hist.Bin('sieie', 'sieie', 100, 0, 0.02)
+                )
+            })
 
         self._singlephoton_triggers = {
             '2016': [
@@ -230,13 +242,27 @@ class PhotonPurity(processor.ProcessorABC):
                             weight=weight_shape(pho_nosieie_inv_iso.sieie[event_mask], weights.weight()[event_mask])
                             )
 
-        if not isData:
-            hout['sumw'][dataset] += events.genSumw
-            hout['sumw2'][dataset] += events.genSumw2
+        if isData:
+            hout['sumw'].fill(dataset = dataset, sumw=1, weight=1)
+        else:
+            hout['sumw'].fill(dataset = dataset, sumw=1, weight=events.genWeight.sum())
 
         return hout
 
     def postprocess(self, accumulator):
+        scale = {}
+        for d in accumulator['sumw'].identifiers('dataset'):
+            print('Scaling:',d.name)
+            dataset = d.name
+            print('Cross section:',self._xsec[dataset])
+            if self._xsec[dataset]!= -1: scale[d.name] = self._lumi*self._xsec[dataset]
+            else: scale[d.name] = 1
+
+        for histname, h in accumulator.items():
+            if histname == 'sumw': continue
+            if isinstance(h, hist.Hist):
+                h.scale(scale, axis='dataset')
+
         return accumulator
 
 if __name__ == '__main__':
@@ -253,6 +279,7 @@ if __name__ == '__main__':
 
     processor_instance=PhotonPurity(year=options.year,
                                     ids=ids,
+                                    xsec=xsec,
                                     common=common)
 
     save(processor_instance, 'data/purity'+options.year+'.processor')
