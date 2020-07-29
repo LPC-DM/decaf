@@ -13,7 +13,6 @@ from optparse import OptionParser
 
 parser = OptionParser()
 parser.add_option('-m', '--model', help='model', dest='model', default='')
-parser.add_option('-a', '--analysis', help='analysis', dest='analysis', default='')
 parser.add_option('-c', '--cluster', help='cluster', dest='cluster', default='lpc')
 parser.add_option('-t', '--tar', action='store_true', dest='tar')
 (options, args) = parser.parse_args()
@@ -60,25 +59,15 @@ jdl_file = open("render.submit", "w")
 jdl_file.write(jdl) 
 jdl_file.close() 
 
-if options.analysis:
-    for filename in os.listdir('data'):
-        if '.model' not in filename: continue
-        if options.analysis not in filename: continue
-        print('Preparing job for model', filename.split('.')[0])
-        os.system('mkdir -p datacards/'+filename.split('.')[0])
-        os.system('rm -rf datacards/condor/err/'+filename.split('.')[0]+'*')
-        os.system('rm -rf datacards/condor/log/'+filename.split('.')[0]+'*')
-        os.system('rm -rf datacards/condor/out/'+filename.split('.')[0]+'*')
-        os.environ['MODEL']   = filename.split('.')[0]
-        os.environ['CLUSTER'] = options.cluster
-        os.system('condor_submit render.submit')
-elif options.model:
-    print('Preparing job for model', options.model)
-    os.system('mkdir -p datacards/'+options.model)
-    os.system('rm -rf datacards/condor/err/'+options.model+'*')
-    os.system('rm -rf datacards/condor/log/'+options.model+'*')
-    os.system('rm -rf datacards/condor/out/'+options.model+'*')
-    os.environ['MODEL']   = options.model
+for filename in os.listdir('data'):
+    if '.model' not in filename: continue
+    if options.model not in filename: continue
+    print('Preparing job for model', filename.split('.')[0])
+    os.system('mkdir -p datacards/'+filename.split('.')[0])
+    os.system('rm -rf datacards/condor/err/'+filename.split('.')[0]+'*')
+    os.system('rm -rf datacards/condor/log/'+filename.split('.')[0]+'*')
+    os.system('rm -rf datacards/condor/out/'+filename.split('.')[0]+'*')
+    os.environ['MODEL']   = filename.split('.')[0]
     os.environ['CLUSTER'] = options.cluster
     os.system('condor_submit render.submit')
 os.system('rm render.submit')
