@@ -314,7 +314,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             'cutflow': hist.Hist(
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('cut', 'Cut index', 11, 0, 11),
             ),
             'template': hist.Hist(
@@ -1537,24 +1536,24 @@ class AnalysisProcessor(processor.ProcessorABC):
                         isFilled=True
                         ## Cutflow loop
                         allcuts = set()
-                        hout['cutflow'].fill(dataset='HF--'+dataset, region=region, gentype=vgentype, cut=0, weight=weights.weight()*whf)
-                        hout['cutflow'].fill(dataset='LF--'+dataset, region=region, gentype=vgentype, cut=0, weight=weights.weight()*wlf)
+                        hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=0, weight=weights.weight()*whf[jcut])
+                        hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=0, weight=weights.weight()*wlf[jcut])
                         for i, icut in enumerate(cuts):
                             allcuts.add(icut)
                             jcut = selection.all(*allcuts)
-                            hout['cutflow'].fill(dataset='HF--'+dataset, region=region, gentype=vgentype, cut=i+1, weight=weights.weight()*whf)
-                            hout['cutflow'].fill(dataset='LF--'+dataset, region=region, gentype=vgentype, cut=i+1, weight=weights.weight()*wlf)
+                            hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=i+1, weight=weights.weight()*whf[jcut])
+                            hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=i+1, weight=weights.weight()*wlf[jcut])
                 else:
                     if not isFilled:
                         hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
                         isFilled=True
                         ## Cutflow loop
                         allcuts = set()
-                        hout['cutflow'].fill(dataset=dataset, region=region, gentype=vgentype, cut=0, weight=weights.weight())
+                        hout['cutflow'].fill(dataset=dataset, region=region, cut=0, weight=weights.weight())
                         for i, icut in enumerate(cuts):
                             allcuts.add(icut)
                             jcut = selection.all(*allcuts)
-                            hout['cutflow'].fill(dataset=dataset, region=region, gentype=vgentype, cut=i+1, weight=weights.weight())
+                            hout['cutflow'].fill(dataset=dataset, region=region, cut=i+1, weight=weights.weight()[jcut])
                     cut = selection.all(*regions[region])
                     for systematic in [None, 'btagUp', 'btagDown']:
                         sname = 'nominal' if systematic is None else systematic
