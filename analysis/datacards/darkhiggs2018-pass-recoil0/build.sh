@@ -1,2 +1,0 @@
-combineCards.py wmcr2018recoil0pass=wmcr2018recoil0pass.txt > darkhiggs_wmcr2018recoil0pass_combined.txt
-text2workspace.py darkhiggs_wmcr2018recoil0pass_combined.txt

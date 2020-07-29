@@ -1,0 +1,79 @@
+# Datacard for <Channel (zecr2018passrecoil5) instance at 0x2acdb816ebd0> generated on 2020-07-30 06:50:13.918904
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 4 # number of samples minus 1
+kmax 14 # number of nuisance parameters
+shapes * zecr2018passrecoil5 zecr2018passrecoil5.root zecr2018passrecoil5:zecr2018passrecoil5_$PROCESS zecr2018passrecoil5:zecr2018passrecoil5_$PROCESS_$SYSTEMATIC
+bin zecr2018passrecoil5
+observation 0.000
+bin                zecr2018passrecoil5  zecr2018passrecoil5  zecr2018passrecoil5  zecr2018passrecoil5  zecr2018passrecoil5
+process                         dyjets                 ttMC                 stMC                 vvMC                hbbMC
+process                              1                    2                    3                    4                    5
+rate                             1.000                0.000                0.000                0.000                0.002
+hbb_norm lnN                         -                    -                    -                    -                1.200
+id_e_2018 lnN                        -                    -                    -                    -                1.020
+jec_2018 lnN                         -                    -                    -                    -                1.050
+lumi_2018 lnN                        -                    -                    -                    -                1.027
+reco_e_2018 lnN                      -                    -                    -                    -                1.020
+trig_e_2018 lnN                      -                    -                    -                    -                1.010
+veto_tau_2018 lnN                    -                    -                    -                    -                1.030
+btag_2018 param 0 1
+tf_MCtempl_deco0 param 0 1
+tf_MCtempl_deco1 param 0 1
+tf_MCtempl_deco2 param 0 1
+trig_met_2018 param 0 1
+zhf_fraction param 0 1
+zjets_norm param 0 1
+sr2018_zjets_recoil5_mass0 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass1 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass10 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass11 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass12 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass13 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass14 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass15 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass16 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass2 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass3 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass4 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass5 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass6 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass7 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass8 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018_zjets_recoil5_mass9 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin0_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin10_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin11_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin12_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin13_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin14_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin15_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin16_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin1_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin2_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin3_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin4_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin5_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin6_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin7_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin8_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+sr2018passrecoil5_zjetsMC_bin9_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+tf_dataResidual_fjmass_par0 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+tf_dataResidual_fjmass_par1 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+tf_dataResidual_fjmass_par2 extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin0_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin10_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin11_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin12_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin13_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin14_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin15_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin16_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin1_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin2_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin3_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin4_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin5_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin6_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin7_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin8_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5
+zecr2018passrecoil5_dyjetsMC_bin9_nominal extArg zecr2018passrecoil5.root:zecr2018passrecoil5

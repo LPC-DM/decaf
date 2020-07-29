@@ -1,0 +1,2 @@
+combineCards.py tecr2018failrecoil4=tecr2018failrecoil4.txt > tecr2018failrecoil4_combined.txt
+text2workspace.py tecr2018failrecoil4_combined.txt

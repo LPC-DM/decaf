@@ -5,8 +5,7 @@ parser = OptionParser()
 parser.add_option('-a', '--analysis', help='analysis', dest='analysis', default='darkhiggs')
 (options, args) = parser.parse_args()
 os.system('mkdir -p datacards/'+options.analysis)
-os.system('rm datacards/'+options.analysis+'/'+options.analysis+'.txt')
-os.system('rm datacards/'+options.analysis+'/'+options.analysis+'.root')
+os.system('rm datacards/'+options.analysis+'/*')
 command='combineCards.py '
 cards = 'datacards/*'+options.analysis+'* -name \'*.txt\''
 rootfiles = 'datacards/*'+options.analysis+'* -name \'*.root\''
