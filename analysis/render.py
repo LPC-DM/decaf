@@ -26,7 +26,7 @@ def render(modelname):
     model_arr = []
     for ch in model:
         print('generating model for channel',ch.name)
-        small_model = rl.Model('darkhiggs_'+ch.name.encode("ascii"))
+        small_model = rl.Model(ch.name.encode("ascii"))
         small_model.addChannel(model[ch.name])
         model_arr.append(small_model)
     print(model_arr)
@@ -57,5 +57,8 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-m', '--model', help='model', dest='model', default='')
     (options, args) = parser.parse_args()
-    os.system('mkdir -p datacards/'+options.model)
-    render(options.model)
+    for filename in os.listdir('data'):
+        if '.model' not in filename: continue
+        if options.model not in filename: continue    
+        os.system('mkdir -p datacards/'+filename.split('.')[0])
+        render(filename.split('.')[0])

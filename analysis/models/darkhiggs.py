@@ -106,7 +106,7 @@ def model(year,recoil,category):
         binning=dictionary[region].integrate('process', process).integrate('systematic',systematic).axis('fjmass').edges()
         return (output, binning, 'fjmass')
 
-    model_id=year+'recoil'+str(recoil)+category
+    model_id=year+category+'recoil'+str(recoil)
     print(model_id)
     model = rl.Model('darkhiggs'+model_id)
     
@@ -1157,6 +1157,6 @@ if __name__ == '__main__':
     nrecoil = len(recoilbins) - 1
     for recoilbin in range(nrecoil):
         for category in ['pass','fail']:
-            with open('data/darkhiggs'+options.year+'-'+category+'-recoil'+str(recoilbin)+'.model', "wb") as fout:
+            with open('data/darkhiggs-'+options.year+'-'+category+'-recoil'+str(recoilbin)+'.model', "wb") as fout:
                 pickle.dump(model(options.year,recoilbin,category), fout, protocol=2)
 
