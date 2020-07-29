@@ -312,6 +312,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('sumw', 'Weight value', [0.])
             ),
             'cutflow': hist.Hist(
+                'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Bin('cut', 'Cut index', 11, 0, 11),
@@ -1370,7 +1371,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights.add('csev', csev[region])
                 weights.add('btag',btag[region], btagUp[region], btagDown[region])
 
-                wgentype = { 
+                wgentype = {
                     'xbb' : (
                         (leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)
                     ).sum(),
@@ -1478,6 +1479,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                     vgentype += self._gentype_map[gentype]*wgentype[gentype]
 
                 if 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset or 'GJets' in dataset:
+                    if not isFilled:
+                        hout['sumw'].fill(dataset='HF--'+dataset, sumw=1, weight=events.genWeight.sum())
+                        hout['sumw'].fill(dataset='LF--'+dataset, sumw=1, weight=events.genWeight.sum())
+                        isFilled=True
                     whf = ((gen[gen.isb].counts>0)|(gen[gen.isc].counts>0)).astype(np.int)
                     wlf = (~(whf.astype(np.bool))).astype(np.int)
                     cut = selection.all(*regions[region])
@@ -1528,32 +1533,23 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               fjmass=leading_fj.msd_corr.sum(),
                                               ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                               weight=weights.weight(modifier=systematic)*wlf*cut)
+
+                    ## Cutflow loop
+                    allcuts = set()
+                    hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=0, weight=weights.weight()*whf)
+                    hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=0, weight=weights.weight()*wlf)
+                    for i, icut in enumerate(cuts):
+                        allcuts.add(icut)
+                        jcut = selection.all(*allcuts)
+                        hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=i+1, weight=weights.weight()*whf[jcut])
+                        hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=i+1, weight=weights.weight()*wlf[jcut])
+
                     fill('HF--'+dataset, vgentype, weights.weight()*whf, cut)
                     fill('LF--'+dataset, vgentype, weights.weight()*wlf, cut)
-                    if not isFilled:
-                        hout['sumw'].fill(dataset='HF--'+dataset, sumw=1, weight=events.genWeight.sum())
-                        hout['sumw'].fill(dataset='LF--'+dataset, sumw=1, weight=events.genWeight.sum())
-                        isFilled=True
-                        ## Cutflow loop
-                        allcuts = set()
-                        hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=0, weight=weights.weight()*whf[jcut])
-                        hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=0, weight=weights.weight()*wlf[jcut])
-                        for i, icut in enumerate(cuts):
-                            allcuts.add(icut)
-                            jcut = selection.all(*allcuts)
-                            hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=i+1, weight=weights.weight()*whf[jcut])
-                            hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=i+1, weight=weights.weight()*wlf[jcut])
                 else:
                     if not isFilled:
                         hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
                         isFilled=True
-                        ## Cutflow loop
-                        allcuts = set()
-                        hout['cutflow'].fill(dataset=dataset, region=region, cut=0, weight=weights.weight())
-                        for i, icut in enumerate(cuts):
-                            allcuts.add(icut)
-                            jcut = selection.all(*allcuts)
-                            hout['cutflow'].fill(dataset=dataset, region=region, cut=i+1, weight=weights.weight()[jcut])
                     cut = selection.all(*regions[region])
                     for systematic in [None, 'btagUp', 'btagDown']:
                         sname = 'nominal' if systematic is None else systematic
@@ -1567,6 +1563,14 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               #TvsQCD=leading_fj.TvsQCD.sum(),
                                               #XvsQCD=leading_fj.XvsQCD.sum(),
                                               weight=weights.weight(modifier=systematic)*cut)
+                    ## Cutflow loop
+                    allcuts = set()
+                    hout['cutflow'].fill(dataset=dataset, region=region, cut=0, weight=weights.weight())
+                    for i, icut in enumerate(cuts):
+                        allcuts.add(icut)
+                        jcut = selection.all(*allcuts)
+                        hout['cutflow'].fill(dataset=dataset, region=region, cut=i+1, weight=weights.weight()[jcut])
+
                     fill(dataset, vgentype, weights.weight(), cut)
 
         return hout
@@ -1607,5 +1611,5 @@ if __name__ == '__main__':
                                          corrections=corrections,
                                          ids=ids,
                                          common=common)
-    
+
     save(processor_instance, 'data/darkhiggs'+options.year+'.processor')
