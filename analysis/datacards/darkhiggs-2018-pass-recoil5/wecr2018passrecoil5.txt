@@ -1,34 +1,34 @@
-# Datacard for <Channel (wecr2018passrecoil5) instance at 0x2acdb816e9d0> generated on 2020-07-30 06:53:46.424910
+# Datacard for <Channel (wecr2018passrecoil5) instance at 0x2ae803a9e9d0> generated on 2020-07-31 02:15:49.497472
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
 kmax 19 # number of nuisance parameters
 shapes * wecr2018passrecoil5 wecr2018passrecoil5.root wecr2018passrecoil5:wecr2018passrecoil5_$PROCESS wecr2018passrecoil5:wecr2018passrecoil5_$PROCESS_$SYSTEMATIC
 bin wecr2018passrecoil5
 observation 43.000
-bin                wecr2018passrecoil5  wecr2018passrecoil5  wecr2018passrecoil5  wecr2018passrecoil5  wecr2018passrecoil5  wecr2018passrecoil5  wecr2018passrecoil5
-process                          wjets                   tt                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
-process                              1                    2                    3                    4                    5                    6                    7
-rate                             1.000                1.000                8.676                0.124                2.185                0.287                0.000
-btag_2018 shape                      -                    -                1.000                1.000                1.000                1.000                    -
-hbb_norm lnN                         -                    -                    -                    -                    -                1.200                    -
-id_e_2018 lnN                        -                    -                1.020                1.020                1.020                1.020                    -
-jec_2018 lnN                         -                    -                1.050                1.050                1.050                1.050                    -
-lumi_2018 lnN                        -                    -                1.027                1.027                1.027                1.027                    -
-reco_e_2018 lnN                      -                    -                1.020                1.020                1.020                1.020                    -
-st_norm lnN                          -                    -                1.200                    -                    -                    -                    -
-trig_e_2018 lnN                      -                    -                1.010                1.010                1.010                1.010                    -
-veto_tau_2018 lnN                    -                    -                1.030                1.030                1.030                1.030                    -
-vv_norm lnN                          -                    -                    -                    -                1.200                    -                    -
-zjets_norm lnN                       -                    -                    -                1.400                    -                    -                    -
+bin               wecr2018passrecoil5  wecr2018passrecoil5  wecr2018passrecoil5  wecr2018passrecoil5  wecr2018passrecoil5  wecr2018passrecoil5  wecr2018passrecoil5
+process                         wjets                   tt                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
+process                             1                    2                    3                    4                    5                    6                    7
+rate                            1.000                1.000                8.676                0.124                2.185                0.287                0.000
+btag2018 shape                      -                    -                1.000                1.000                1.000                1.000                    -
+hbb_norm lnN                        -                    -                    -                    -                    -                1.200                    -
+id_e2018 lnN                        -                    -                1.020                1.020                1.020                1.020                    -
+jec2018 lnN                         -                    -                1.050                1.050                1.050                1.050                    -
+lumi2018 lnN                        -                    -                1.027                1.027                1.027                1.027                    -
+reco_e2018 lnN                      -                    -                1.020                1.020                1.020                1.020                    -
+st_norm lnN                         -                    -                1.200                    -                    -                    -                    -
+trig_e2018 lnN                      -                    -                1.010                1.010                1.010                1.010                    -
+veto_tau2018 lnN                    -                    -                1.030                1.030                1.030                1.030                    -
+vv_norm lnN                         -                    -                    -                    -                1.200                    -                    -
+zjets_norm lnN                      -                    -                    -                1.400                    -                    -                    -
 tf_MCtempl_deco0 param 0 1
 tf_MCtempl_deco1 param 0 1
 tf_MCtempl_deco2 param 0 1
-trig_met_2018 param 0 1
+trig_met2018 param 0 1
 tt_norm param 0 1
 whf_fraction param 0 1
 wjets_norm param 0 1
 zhf_fraction param 0 1
-2018sf_tt extArg wecr2018passrecoil5.root:wecr2018passrecoil5
+sf_tt2018 extArg wecr2018passrecoil5.root:wecr2018passrecoil5
 sr2018_tt_recoil5 extArg wecr2018passrecoil5.root:wecr2018passrecoil5
 sr2018_ttshape_pass_mass0 extArg wecr2018passrecoil5.root:wecr2018passrecoil5
 sr2018_ttshape_pass_mass1 extArg wecr2018passrecoil5.root:wecr2018passrecoil5

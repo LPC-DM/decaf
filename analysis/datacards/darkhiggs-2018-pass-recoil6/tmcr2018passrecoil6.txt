@@ -1,25 +1,25 @@
-# Datacard for <Channel (tmcr2018passrecoil6) instance at 0x2b708dc01e50> generated on 2020-07-30 06:51:15.966806
+# Datacard for <Channel (tmcr2018passrecoil6) instance at 0x2b92eabb1f50> generated on 2020-07-31 02:17:02.661993
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
 kmax 18 # number of nuisance parameters
 shapes * tmcr2018passrecoil6 tmcr2018passrecoil6.root tmcr2018passrecoil6:tmcr2018passrecoil6_$PROCESS tmcr2018passrecoil6:tmcr2018passrecoil6_$PROCESS_$SYSTEMATIC
 bin tmcr2018passrecoil6
 observation 1.000
-bin                tmcr2018passrecoil6  tmcr2018passrecoil6  tmcr2018passrecoil6  tmcr2018passrecoil6  tmcr2018passrecoil6  tmcr2018passrecoil6  tmcr2018passrecoil6
-process                          wjets                   tt                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
-process                              1                    2                    3                    4                    5                    6                    7
-rate                             1.000                1.000                2.120                0.008                0.000                0.021                0.315
-btag_2018 shape                      -                    -                1.000                1.000                    -                1.000                1.000
-hbb_norm lnN                         -                    -                    -                    -                    -                1.200                    -
-id_mu_2018 lnN                       -                    -                1.020                1.020                    -                1.020                1.020
-iso_mu_2018 lnN                      -                    -                1.020                1.020                    -                1.020                1.020
-jec_2018 lnN                         -                    -                1.050                1.050                    -                1.050                1.050
-lumi_2018 lnN                        -                    -                1.027                1.027                    -                1.027                1.027
-qcdmu_norm lnN                       -                    -                    -                    -                    -                    -                2.000
-st_norm lnN                          -                    -                1.200                    -                    -                    -                    -
-trig_met_2018 lnN                    -                    -                1.010                1.010                    -                1.010                1.010
-veto_tau_2018 lnN                    -                    -                1.030                1.030                    -                1.030                1.030
-zjets_norm lnN                       -                    -                    -                1.400                    -                    -                    -
+bin               tmcr2018passrecoil6  tmcr2018passrecoil6  tmcr2018passrecoil6  tmcr2018passrecoil6  tmcr2018passrecoil6  tmcr2018passrecoil6  tmcr2018passrecoil6
+process                         wjets                   tt                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
+process                             1                    2                    3                    4                    5                    6                    7
+rate                            1.000                1.000                2.120                0.008                0.000                0.021                0.315
+btag2018 shape                      -                    -                1.000                1.000                    -                1.000                1.000
+hbb_norm lnN                        -                    -                    -                    -                    -                1.200                    -
+id_mu2018 lnN                       -                    -                1.020                1.020                    -                1.020                1.020
+iso_mu2018 lnN                      -                    -                1.020                1.020                    -                1.020                1.020
+jec2018 lnN                         -                    -                1.050                1.050                    -                1.050                1.050
+lumi2018 lnN                        -                    -                1.027                1.027                    -                1.027                1.027
+qcdmu_norm lnN                      -                    -                    -                    -                    -                    -                2.000
+st_norm lnN                         -                    -                1.200                    -                    -                    -                    -
+trig_met2018 lnN                    -                    -                1.010                1.010                    -                1.010                1.010
+veto_tau2018 lnN                    -                    -                1.030                1.030                    -                1.030                1.030
+zjets_norm lnN                      -                    -                    -                1.400                    -                    -                    -
 tf_MCtempl_deco0 param 0 1
 tf_MCtempl_deco1 param 0 1
 tf_MCtempl_deco2 param 0 1
@@ -27,7 +27,7 @@ tt_norm param 0 1
 whf_fraction param 0 1
 wjets_norm param 0 1
 zhf_fraction param 0 1
-2018sf_tt extArg tmcr2018passrecoil6.root:tmcr2018passrecoil6
+sf_tt2018 extArg tmcr2018passrecoil6.root:tmcr2018passrecoil6
 sr2018_tt_recoil6 extArg tmcr2018passrecoil6.root:tmcr2018passrecoil6
 sr2018_ttshape_pass_mass0 extArg tmcr2018passrecoil6.root:tmcr2018passrecoil6
 sr2018_ttshape_pass_mass1 extArg tmcr2018passrecoil6.root:tmcr2018passrecoil6

@@ -1,26 +1,26 @@
-# Datacard for <Channel (zecr2018passrecoil5) instance at 0x2acdb816ebd0> generated on 2020-07-30 06:50:13.918904
+# Datacard for <Channel (zecr2018passrecoil5) instance at 0x2ae803a9ec10> generated on 2020-07-31 02:12:07.790231
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 4 # number of samples minus 1
 kmax 14 # number of nuisance parameters
 shapes * zecr2018passrecoil5 zecr2018passrecoil5.root zecr2018passrecoil5:zecr2018passrecoil5_$PROCESS zecr2018passrecoil5:zecr2018passrecoil5_$PROCESS_$SYSTEMATIC
 bin zecr2018passrecoil5
 observation 0.000
-bin                zecr2018passrecoil5  zecr2018passrecoil5  zecr2018passrecoil5  zecr2018passrecoil5  zecr2018passrecoil5
-process                         dyjets                 ttMC                 stMC                 vvMC                hbbMC
-process                              1                    2                    3                    4                    5
-rate                             1.000                0.000                0.000                0.000                0.002
-hbb_norm lnN                         -                    -                    -                    -                1.200
-id_e_2018 lnN                        -                    -                    -                    -                1.020
-jec_2018 lnN                         -                    -                    -                    -                1.050
-lumi_2018 lnN                        -                    -                    -                    -                1.027
-reco_e_2018 lnN                      -                    -                    -                    -                1.020
-trig_e_2018 lnN                      -                    -                    -                    -                1.010
-veto_tau_2018 lnN                    -                    -                    -                    -                1.030
-btag_2018 param 0 1
+bin               zecr2018passrecoil5  zecr2018passrecoil5  zecr2018passrecoil5  zecr2018passrecoil5  zecr2018passrecoil5
+process                        dyjets                 ttMC                 stMC                 vvMC                hbbMC
+process                             1                    2                    3                    4                    5
+rate                            1.000                0.000                0.000                0.000                0.002
+hbb_norm lnN                        -                    -                    -                    -                1.200
+id_e2018 lnN                        -                    -                    -                    -                1.020
+jec2018 lnN                         -                    -                    -                    -                1.050
+lumi2018 lnN                        -                    -                    -                    -                1.027
+reco_e2018 lnN                      -                    -                    -                    -                1.020
+trig_e2018 lnN                      -                    -                    -                    -                1.010
+veto_tau2018 lnN                    -                    -                    -                    -                1.030
+btag2018 param 0 1
 tf_MCtempl_deco0 param 0 1
 tf_MCtempl_deco1 param 0 1
 tf_MCtempl_deco2 param 0 1
-trig_met_2018 param 0 1
+trig_met2018 param 0 1
 zhf_fraction param 0 1
 zjets_norm param 0 1
 sr2018_zjets_recoil5_mass0 extArg zecr2018passrecoil5.root:zecr2018passrecoil5

@@ -1,24 +1,24 @@
-# Datacard for <Channel (zmcr2018passrecoil3) instance at 0x2b1b82cfc1d0> generated on 2020-07-30 06:49:15.320864
+# Datacard for <Channel (zmcr2018passrecoil3) instance at 0x2b40b4d291d0> generated on 2020-07-31 02:12:03.904563
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 4 # number of samples minus 1
 kmax 15 # number of nuisance parameters
 shapes * zmcr2018passrecoil3 zmcr2018passrecoil3.root zmcr2018passrecoil3:zmcr2018passrecoil3_$PROCESS zmcr2018passrecoil3:zmcr2018passrecoil3_$PROCESS_$SYSTEMATIC
 bin zmcr2018passrecoil3
 observation 7.000
-bin                zmcr2018passrecoil3  zmcr2018passrecoil3  zmcr2018passrecoil3  zmcr2018passrecoil3  zmcr2018passrecoil3
-process                         dyjets                 ttMC                 stMC                 vvMC                hbbMC
-process                              1                    2                    3                    4                    5
-rate                             1.000                0.990                0.000                0.761                0.068
-hbb_norm lnN                         -                    -                    -                    -                1.200
-id_mu_2018 lnN                       -                1.020                    -                1.020                1.020
-iso_mu_2018 lnN                      -                1.020                    -                1.020                1.020
-jec_2018 lnN                         -                1.050                    -                1.050                1.050
-lumi_2018 lnN                        -                1.027                    -                1.027                1.027
-trig_met_2018 lnN                    -                1.010                    -                1.010                1.010
-tt_norm lnN                          -                1.200                    -                    -                    -
-veto_tau_2018 lnN                    -                1.030                    -                1.030                1.030
-vv_norm lnN                          -                    -                    -                1.200                    -
-btag_2018 param 0 1
+bin               zmcr2018passrecoil3  zmcr2018passrecoil3  zmcr2018passrecoil3  zmcr2018passrecoil3  zmcr2018passrecoil3
+process                        dyjets                 ttMC                 stMC                 vvMC                hbbMC
+process                             1                    2                    3                    4                    5
+rate                            1.000                0.990                0.000                0.761                0.068
+hbb_norm lnN                        -                    -                    -                    -                1.200
+id_mu2018 lnN                       -                1.020                    -                1.020                1.020
+iso_mu2018 lnN                      -                1.020                    -                1.020                1.020
+jec2018 lnN                         -                1.050                    -                1.050                1.050
+lumi2018 lnN                        -                1.027                    -                1.027                1.027
+trig_met2018 lnN                    -                1.010                    -                1.010                1.010
+tt_norm lnN                         -                1.200                    -                    -                    -
+veto_tau2018 lnN                    -                1.030                    -                1.030                1.030
+vv_norm lnN                         -                    -                    -                1.200                    -
+btag2018 param 0 1
 tf_MCtempl_deco0 param 0 1
 tf_MCtempl_deco1 param 0 1
 tf_MCtempl_deco2 param 0 1

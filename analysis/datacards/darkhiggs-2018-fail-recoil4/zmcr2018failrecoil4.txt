@@ -1,23 +1,23 @@
-# Datacard for <Channel (zmcr2018failrecoil4) instance at 0x2ba1579a7510> generated on 2020-07-30 06:44:24.183204
+# Datacard for <Channel (zmcr2018failrecoil4) instance at 0x2b8118e72510> generated on 2020-07-31 02:06:25.191819
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 4 # number of samples minus 1
 kmax 11 # number of nuisance parameters
 shapes * zmcr2018failrecoil4 zmcr2018failrecoil4.root zmcr2018failrecoil4:zmcr2018failrecoil4_$PROCESS zmcr2018failrecoil4:zmcr2018failrecoil4_$PROCESS_$SYSTEMATIC
 bin zmcr2018failrecoil4
 observation 558.000
-bin                zmcr2018failrecoil4  zmcr2018failrecoil4  zmcr2018failrecoil4  zmcr2018failrecoil4  zmcr2018failrecoil4
-process                         dyjets                 ttMC                 stMC                 vvMC                hbbMC
-process                              1                    2                    3                    4                    5
-rate                             1.000                0.000                0.000               22.711                0.473
-hbb_norm lnN                         -                    -                    -                    -                1.200
-id_mu_2018 lnN                       -                    -                    -                1.020                1.020
-iso_mu_2018 lnN                      -                    -                    -                1.020                1.020
-jec_2018 lnN                         -                    -                    -                1.050                1.050
-lumi_2018 lnN                        -                    -                    -                1.027                1.027
-trig_met_2018 lnN                    -                    -                    -                1.010                1.010
-veto_tau_2018 lnN                    -                    -                    -                1.030                1.030
-vv_norm lnN                          -                    -                    -                1.200                    -
-btag_2018 param 0 1
+bin               zmcr2018failrecoil4  zmcr2018failrecoil4  zmcr2018failrecoil4  zmcr2018failrecoil4  zmcr2018failrecoil4
+process                        dyjets                 ttMC                 stMC                 vvMC                hbbMC
+process                             1                    2                    3                    4                    5
+rate                            1.000                0.000                0.000               22.711                0.473
+hbb_norm lnN                        -                    -                    -                    -                1.200
+id_mu2018 lnN                       -                    -                    -                1.020                1.020
+iso_mu2018 lnN                      -                    -                    -                1.020                1.020
+jec2018 lnN                         -                    -                    -                1.050                1.050
+lumi2018 lnN                        -                    -                    -                1.027                1.027
+trig_met2018 lnN                    -                    -                    -                1.010                1.010
+veto_tau2018 lnN                    -                    -                    -                1.030                1.030
+vv_norm lnN                         -                    -                    -                1.200                    -
+btag2018 param 0 1
 zhf_fraction param 0 1
 zjets_norm param 0 1
 sr2018failrecoil4_zjetsMC_bin0_nominal extArg zmcr2018failrecoil4.root:zmcr2018failrecoil4

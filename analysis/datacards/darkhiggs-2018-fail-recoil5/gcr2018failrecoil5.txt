@@ -1,24 +1,24 @@
-# Datacard for <Channel (gcr2018failrecoil5) instance at 0x2ab91e309390> generated on 2020-07-30 06:43:30.184320
+# Datacard for <Channel (gcr2018failrecoil5) instance at 0x2b8e76882410> generated on 2020-07-31 02:06:54.315660
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 1 # number of samples minus 1
 kmax 12 # number of nuisance parameters
 shapes * gcr2018failrecoil5 gcr2018failrecoil5.root gcr2018failrecoil5:gcr2018failrecoil5_$PROCESS gcr2018failrecoil5:gcr2018failrecoil5_$PROCESS_$SYSTEMATIC
 bin gcr2018failrecoil5
 observation 1423.000
-bin                gcr2018failrecoil5  gcr2018failrecoil5
-process                         gjets               qcdMC
-process                             1                   2
-rate                            1.000              27.076
-id_pho_2018 lnN                     -               1.020
-jec_2018 lnN                        -               1.050
-lumi_2018 lnN                       -               1.027
-qcdpho_norm lnN                     -               2.000
-trig_pho_2018 lnN                   -               1.010
-veto_tau_2018 lnN                   -               1.030
-btag_2018 param 0 1
+bin               gcr2018failrecoil5  gcr2018failrecoil5
+process                        gjets               qcdMC
+process                            1                   2
+rate                           1.000              27.076
+id_pho2018 lnN                     -               1.020
+jec2018 lnN                        -               1.050
+lumi2018 lnN                       -               1.027
+qcdpho_norm lnN                    -               2.000
+trig_pho2018 lnN                   -               1.010
+veto_tau2018 lnN                   -               1.030
+btag2018 param 0 1
 ghf_fraction param 0 1
 gjets_norm param 0 1
-trig_met_2018 param 0 1
+trig_met2018 param 0 1
 zhf_fraction param 0 1
 zjets_norm param 0 1
 gcr2018failrecoil5_gjetsMC_bin0_nominal extArg gcr2018failrecoil5.root:gcr2018failrecoil5

@@ -1,26 +1,26 @@
-# Datacard for <Channel (zecr2018failrecoil2) instance at 0x2af96c0eb490> generated on 2020-07-30 06:44:33.245348
+# Datacard for <Channel (zecr2018failrecoil2) instance at 0x2b3be1767410> generated on 2020-07-31 02:06:46.719077
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 4 # number of samples minus 1
 kmax 14 # number of nuisance parameters
 shapes * zecr2018failrecoil2 zecr2018failrecoil2.root zecr2018failrecoil2:zecr2018failrecoil2_$PROCESS zecr2018failrecoil2:zecr2018failrecoil2_$PROCESS_$SYSTEMATIC
 bin zecr2018failrecoil2
 observation 4372.000
-bin                zecr2018failrecoil2  zecr2018failrecoil2  zecr2018failrecoil2  zecr2018failrecoil2  zecr2018failrecoil2
-process                         dyjets                 ttMC                 stMC                 vvMC                hbbMC
-process                              1                    2                    3                    4                    5
-rate                             1.000               10.693                1.850              108.238                2.711
-hbb_norm lnN                         -                    -                    -                    -                1.200
-id_e_2018 lnN                        -                1.020                1.020                1.020                1.020
-jec_2018 lnN                         -                1.050                1.050                1.050                1.050
-lumi_2018 lnN                        -                1.027                1.027                1.027                1.027
-reco_e_2018 lnN                      -                1.020                1.020                1.020                1.020
-st_norm lnN                          -                    -                1.200                    -                    -
-trig_e_2018 lnN                      -                1.010                1.010                1.010                1.010
-tt_norm lnN                          -                1.200                    -                    -                    -
-veto_tau_2018 lnN                    -                1.030                1.030                1.030                1.030
-vv_norm lnN                          -                    -                    -                1.200                    -
-btag_2018 param 0 1
-trig_met_2018 param 0 1
+bin               zecr2018failrecoil2  zecr2018failrecoil2  zecr2018failrecoil2  zecr2018failrecoil2  zecr2018failrecoil2
+process                        dyjets                 ttMC                 stMC                 vvMC                hbbMC
+process                             1                    2                    3                    4                    5
+rate                            1.000               10.693                1.850              108.238                2.711
+hbb_norm lnN                        -                    -                    -                    -                1.200
+id_e2018 lnN                        -                1.020                1.020                1.020                1.020
+jec2018 lnN                         -                1.050                1.050                1.050                1.050
+lumi2018 lnN                        -                1.027                1.027                1.027                1.027
+reco_e2018 lnN                      -                1.020                1.020                1.020                1.020
+st_norm lnN                         -                    -                1.200                    -                    -
+trig_e2018 lnN                      -                1.010                1.010                1.010                1.010
+tt_norm lnN                         -                1.200                    -                    -                    -
+veto_tau2018 lnN                    -                1.030                1.030                1.030                1.030
+vv_norm lnN                         -                    -                    -                1.200                    -
+btag2018 param 0 1
+trig_met2018 param 0 1
 zhf_fraction param 0 1
 zjets_norm param 0 1
 sr2018failrecoil2_zjetsMC_bin0_nominal extArg zecr2018failrecoil2.root:zecr2018failrecoil2
