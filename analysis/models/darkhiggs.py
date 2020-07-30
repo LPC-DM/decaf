@@ -116,7 +116,7 @@ def model(year,recoil,category):
     tt_efficiency={
         '2018': 0.5,
     }
-    sf_tt = rl.IndependentParameter(year+'sf_tt', 1., 0.01, 1./tt_efficiency[year])
+    sf_tt = rl.IndependentParameter('sf_tt'+year, 1., 0.01, 1./tt_efficiency[year])
     tt_weight={
         'pass': sf_tt*tt_efficiency[year],
         'fail': 1-(sf_tt*tt_efficiency[year])
@@ -148,7 +148,7 @@ def model(year,recoil,category):
     ###
     ###
 
-    lumi = rl.NuisanceParameter('lumi_'+year, 'lnN')
+    lumi = rl.NuisanceParameter('lumi'+year, 'lnN')
     qcdpho_norm = rl.NuisanceParameter('qcdpho_norm', 'lnN')
     qcde_norm = rl.NuisanceParameter('qcde_norm', 'lnN')
     qcdmu_norm = rl.NuisanceParameter('qcdmu_norm', 'lnN')
@@ -163,17 +163,17 @@ def model(year,recoil,category):
     whf_fraction = rl.NuisanceParameter('whf_fraction', 'lnN')
     zhf_fraction = rl.NuisanceParameter('zhf_fraction', 'lnN')
     ghf_fraction = rl.NuisanceParameter('ghf_fraction', 'lnN')
-    id_e = rl.NuisanceParameter('id_e_'+year, 'lnN')
-    id_mu = rl.NuisanceParameter('id_mu_'+year, 'lnN')
-    id_pho = rl.NuisanceParameter('id_pho_'+year, 'lnN')
-    reco_e = rl.NuisanceParameter('reco_e_'+year, 'lnN')
-    iso_mu = rl.NuisanceParameter('iso_mu_'+year, 'lnN')
-    trig_e = rl.NuisanceParameter('trig_e_'+year, 'lnN')
-    trig_met = rl.NuisanceParameter('trig_met_'+year, 'lnN')
-    trig_pho = rl.NuisanceParameter('trig_pho_'+year, 'lnN')
-    veto_tau = rl.NuisanceParameter('veto_tau_'+year, 'lnN')
-    jec = rl.NuisanceParameter('jec_'+year, 'lnN')
-    btag = rl.NuisanceParameter('btag_'+year, 'shape') #AK4 btag
+    id_e = rl.NuisanceParameter('id_e'+year, 'lnN')
+    id_mu = rl.NuisanceParameter('id_mu'+year, 'lnN')
+    id_pho = rl.NuisanceParameter('id_pho'+year, 'lnN')
+    reco_e = rl.NuisanceParameter('reco_e'+year, 'lnN')
+    iso_mu = rl.NuisanceParameter('iso_mu'+year, 'lnN')
+    trig_e = rl.NuisanceParameter('trig_e'+year, 'lnN')
+    trig_met = rl.NuisanceParameter('trig_met'+year, 'lnN')
+    trig_pho = rl.NuisanceParameter('trig_pho'+year, 'lnN')
+    veto_tau = rl.NuisanceParameter('veto_tau'+year, 'lnN')
+    jec = rl.NuisanceParameter('jec'+year, 'lnN')
+    btag = rl.NuisanceParameter('btag'+year, 'shape') #AK4 btag
 
     ###
     ###
