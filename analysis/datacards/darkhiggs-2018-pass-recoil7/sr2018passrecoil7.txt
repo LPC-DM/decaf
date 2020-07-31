@@ -1,21 +1,20 @@
-# Datacard for <Channel (sr2018passrecoil7) instance at 0x2b7aea0e6990> generated on 2020-07-31 02:24:05.122804
+# Datacard for <Channel (sr2018passrecoil7) instance at 0x2b03fb6c1390> generated on 2020-08-01 02:01:01.902862
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 13 # number of samples minus 1
-kmax 14 # number of nuisance parameters
+kmax 13 # number of nuisance parameters
 shapes * sr2018passrecoil7 sr2018passrecoil7.root sr2018passrecoil7:sr2018passrecoil7_$PROCESS sr2018passrecoil7:sr2018passrecoil7_$PROCESS_$SYSTEMATIC
 bin sr2018passrecoil7
 observation 4.000
 bin               sr2018passrecoil7  sr2018passrecoil7  sr2018passrecoil7  sr2018passrecoil7  sr2018passrecoil7  sr2018passrecoil7  sr2018passrecoil7  sr2018passrecoil7  sr2018passrecoil7  sr2018passrecoil7  sr2018passrecoil7  sr2018passrecoil7  sr2018passrecoil7  sr2018passrecoil7
 process                      Mhs_50             Mhs_70             Mhs_90            MonoJet              MonoW              MonoZ              zjets              wjets                 tt               stMC           dyjetsMC               vvMC              hbbMC              qcdMC
 process                          -5                 -4                 -3                 -2                 -1                  0                  1                  2                  3                  4                  5                  6                  7                  8
-rate                          0.650              0.998              1.445              2.113              0.106              0.058              1.000              1.000              1.000             -0.068              0.000              0.000              0.022              0.000
-btag2018 shape                1.000              1.000              1.000              1.000              1.000              1.000                  -                  -                  -              1.000              1.000                  -              1.000                  -
+rate                          0.650              0.998              1.445              2.113              0.106              0.058              1.000              1.000              1.000              0.000              0.000              0.000              0.022              0.000
+btag2018 shape                1.000              1.000              1.000              1.000              1.000              1.000                  -                  -                  -                  -              1.000                  -              1.000                  -
 hbb_norm lnN                      -                  -                  -                  -                  -                  -                  -                  -                  -                  -                  -                  -              1.200                  -
-jec2018 lnN                   1.050              1.050              1.050              1.050              1.050              1.050                  -                  -                  -              1.050              1.050                  -              1.050                  -
-lumi2018 lnN                  1.027              1.027              1.027              1.027              1.027              1.027                  -                  -                  -              1.027              1.027                  -              1.027                  -
-st_norm lnN                       -                  -                  -                  -                  -                  -                  -                  -                  -              1.200                  -                  -                  -                  -
-trig_met2018 lnN              1.010              1.010              1.010              1.010              1.010              1.010                  -                  -                  -              1.010              1.010                  -              1.010                  -
-veto_tau2018 lnN              1.030              1.030              1.030              1.030              1.030              1.030                  -                  -                  -              1.030              1.030                  -              1.030                  -
+jec2018 lnN                   1.050              1.050              1.050              1.050              1.050              1.050                  -                  -                  -                  -              1.050                  -              1.050                  -
+lumi2018 lnN                  1.027              1.027              1.027              1.027              1.027              1.027                  -                  -                  -                  -              1.027                  -              1.027                  -
+trig_met2018 lnN              1.010              1.010              1.010              1.010              1.010              1.010                  -                  -                  -                  -              1.010                  -              1.010                  -
+veto_tau2018 lnN              1.030              1.030              1.030              1.030              1.030              1.030                  -                  -                  -                  -              1.030                  -              1.030                  -
 zjets_norm lnN                    -                  -                  -                  -                  -                  -                  -                  -                  -                  -              1.400                  -                  -                  -
 tf_MCtempl_deco0 param 0 1
 tf_MCtempl_deco1 param 0 1

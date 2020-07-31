@@ -1,4 +1,4 @@
-# Datacard for <Channel (sr2018failrecoil5) instance at 0x2b8e76e83dd0> generated on 2020-07-31 02:08:57.345851
+# Datacard for <Channel (sr2018failrecoil5) instance at 0x2aab72682d50> generated on 2020-08-01 01:48:54.685661
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 13 # number of samples minus 1
 kmax 13 # number of nuisance parameters
@@ -8,7 +8,7 @@ observation 489.000
 bin               sr2018failrecoil5  sr2018failrecoil5  sr2018failrecoil5  sr2018failrecoil5  sr2018failrecoil5  sr2018failrecoil5  sr2018failrecoil5  sr2018failrecoil5  sr2018failrecoil5  sr2018failrecoil5  sr2018failrecoil5  sr2018failrecoil5  sr2018failrecoil5  sr2018failrecoil5
 process                      Mhs_50             Mhs_70             Mhs_90            MonoJet              MonoW              MonoZ              zjets              wjets                 tt               stMC           dyjetsMC               vvMC              hbbMC              qcdMC
 process                          -5                 -4                 -3                 -2                 -1                  0                  1                  2                  3                  4                  5                  6                  7                  8
-rate                          4.690              1.821              0.820            256.572              4.781              1.473              1.000              1.000              1.000             -0.015              0.259             18.256              0.029              0.686
+rate                          4.690              1.821              0.820            256.572              4.781              1.473              1.000              1.000              1.000              0.051              0.259             18.256              0.029              0.686
 btag2018 shape                1.000              1.000              1.000              1.000              1.000              1.000                  -                  -                  -              1.000              1.000              1.000              1.000              1.000
 hbb_norm lnN                      -                  -                  -                  -                  -                  -                  -                  -                  -                  -                  -                  -              1.200                  -
 jec2018 lnN                   1.050              1.050              1.050              1.050              1.050              1.050                  -                  -                  -              1.050              1.050              1.050              1.050              1.050

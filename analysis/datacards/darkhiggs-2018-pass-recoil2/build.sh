@@ -1,2 +1,2 @@
-combineCards.py wmcr2018passrecoil2=wmcr2018passrecoil2.txt > wmcr2018passrecoil2_combined.txt
-text2workspace.py wmcr2018passrecoil2_combined.txt
+combineCards.py wecr2018passrecoil2=wecr2018passrecoil2.txt > wecr2018passrecoil2_combined.txt
+text2workspace.py wecr2018passrecoil2_combined.txt
