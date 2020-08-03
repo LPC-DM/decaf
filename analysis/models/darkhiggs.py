@@ -103,10 +103,11 @@ def model(year,recoil,category):
     
     def template(dictionary, process, systematic, region):
         output=dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()][recoil,:,category_map[category]]
+        output[output<0]=0
         binning=dictionary[region].integrate('process', process).integrate('systematic',systematic).axis('fjmass').edges()
         return (output, binning, 'fjmass')
 
-    model_id=year+'recoil'+str(recoil)+category
+    model_id=year+category+'recoil'+str(recoil)
     print(model_id)
     model = rl.Model('darkhiggs'+model_id)
     
@@ -116,7 +117,7 @@ def model(year,recoil,category):
     tt_efficiency={
         '2018': 0.5,
     }
-    sf_tt = rl.IndependentParameter(year+'sf_tt', 1., 0.01, 1./tt_efficiency[year])
+    sf_tt = rl.IndependentParameter('sf_tt'+year, 1., 0.01, 1./tt_efficiency[year])
     tt_weight={
         'pass': sf_tt*tt_efficiency[year],
         'fail': 1-(sf_tt*tt_efficiency[year])
@@ -148,7 +149,7 @@ def model(year,recoil,category):
     ###
     ###
 
-    lumi = rl.NuisanceParameter('lumi_'+year, 'lnN')
+    lumi = rl.NuisanceParameter('lumi'+year, 'lnN')
     qcdpho_norm = rl.NuisanceParameter('qcdpho_norm', 'lnN')
     qcde_norm = rl.NuisanceParameter('qcde_norm', 'lnN')
     qcdmu_norm = rl.NuisanceParameter('qcdmu_norm', 'lnN')
@@ -160,18 +161,20 @@ def model(year,recoil,category):
     zjets_norm = rl.NuisanceParameter('zjets_norm', 'lnN')
     wjets_norm = rl.NuisanceParameter('wjets_norm', 'lnN')
     gjets_norm = rl.NuisanceParameter('gjets_norm', 'lnN')
-    hf_fraction = rl.NuisanceParameter('hf_fraction', 'lnN')
-    id_e = rl.NuisanceParameter('id_e_'+year, 'lnN')
-    id_mu = rl.NuisanceParameter('id_mu_'+year, 'lnN')
-    id_pho = rl.NuisanceParameter('id_pho_'+year, 'lnN')
-    reco_e = rl.NuisanceParameter('reco_e_'+year, 'lnN')
-    iso_mu = rl.NuisanceParameter('iso_mu_'+year, 'lnN')
-    trig_e = rl.NuisanceParameter('trig_e_'+year, 'lnN')
-    trig_met = rl.NuisanceParameter('trig_met_'+year, 'lnN')
-    trig_pho = rl.NuisanceParameter('trig_pho_'+year, 'lnN')
-    veto_tau = rl.NuisanceParameter('veto_tau_'+year, 'lnN')
-    jec = rl.NuisanceParameter('jec_'+year, 'lnN')
-    btag = rl.NuisanceParameter('btag_'+year, 'shape') #AK4 btag
+    whf_fraction = rl.NuisanceParameter('whf_fraction', 'lnN')
+    zhf_fraction = rl.NuisanceParameter('zhf_fraction', 'lnN')
+    ghf_fraction = rl.NuisanceParameter('ghf_fraction', 'lnN')
+    id_e = rl.NuisanceParameter('id_e'+year, 'lnN')
+    id_mu = rl.NuisanceParameter('id_mu'+year, 'lnN')
+    id_pho = rl.NuisanceParameter('id_pho'+year, 'lnN')
+    reco_e = rl.NuisanceParameter('reco_e'+year, 'lnN')
+    iso_mu = rl.NuisanceParameter('iso_mu'+year, 'lnN')
+    trig_e = rl.NuisanceParameter('trig_e'+year, 'lnN')
+    trig_met = rl.NuisanceParameter('trig_met'+year, 'lnN')
+    trig_pho = rl.NuisanceParameter('trig_pho'+year, 'lnN')
+    veto_tau = rl.NuisanceParameter('veto_tau'+year, 'lnN')
+    jec = rl.NuisanceParameter('jec'+year, 'lnN')
+    btag = rl.NuisanceParameter('btag'+year, 'shape') #AK4 btag
 
     ###
     ###
@@ -199,11 +202,11 @@ def model(year,recoil,category):
     sr_zjetsMC.setParamEffect(trig_met, 1.01)
     sr_zjetsMC.setParamEffect(veto_tau, 1.03)
     sr_zjetsMC.setParamEffect(jec, 1.05)
-    sr_zjetsMC.setParamEffect(hf_fraction, hf_systematic['Z+jets']['sr'][category])
+    sr_zjetsMC.setParamEffect(zhf_fraction, hf_systematic['Z+jets']['sr'][category])
     btagUp=template(background,'Z+jets','btagUp','sr')[0]
     btagDown=template(background,'Z+jets','btagDown','sr')[0]
     sr_zjetsMC.setParamEffect(btag, btagUp, btagDown)
-    sr_zjetsBinYields = np.array([rl.IndependentParameter('sr'+year+'_zjets_recoil'+str(recoil)+'_mass%d', b, 0, sr_zjetsTemplate[0].max()*2) for b in sr_zjetsTemplate[0]])
+    sr_zjetsBinYields = np.array([rl.IndependentParameter('sr'+year+'_zjets_recoil'+str(recoil)+'_mass%d' % i, b, 0, sr_zjetsTemplate[0].max()*2) for i,b in enumerate(sr_zjetsTemplate[0])])
     if category == 'pass':
         sr_zjetsBinYields = sr_zjetsBinYields * tf_params
     sr_zjetsObservable = rl.Observable('fjmass', sr_zjetsTemplate[1])
@@ -221,12 +224,12 @@ def model(year,recoil,category):
     sr_wjetsMC.setParamEffect(trig_met, 1.01)
     sr_wjetsMC.setParamEffect(veto_tau, 1.03)
     sr_wjetsMC.setParamEffect(jec, 1.05)
-    sr_wjetsMC.setParamEffect(hf_fraction, hf_systematic['W+jets']['sr'][category])
+    sr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['sr'][category])
     btagUp=template(background,'W+jets','btagUp','sr')[0]
     btagDown=template(background,'W+jets','btagDown','sr')[0]
     sr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     #Adding W-Z link
-    sr_wjetsTransferFactor = sr_wjetsMC.getExpectation() / sr_zjetsMC.getExpectation()
+    sr_wjetsTransferFactor = np.nan_to_num( sr_wjetsMC.getExpectation() / sr_zjetsMC.getExpectation() )
     sr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, sr_wjetsTransferFactor, sr_zjets)
     sr.addSample(sr_wjets)
 
@@ -244,7 +247,7 @@ def model(year,recoil,category):
     btagUp=template(background,'TT','btagUp','sr')[0]
     btagDown=template(background,'TT','btagDown','sr')[0]
     sr_ttMC.setParamEffect(btag, btagUp, btagDown)
-    sr_ttBinYields = np.array([rl.IndependentParameter('sr'+year+'_tt_'+category+'_mass%d', b, 0, sr_ttTemplate[0].max()*2) for b in sr_ttTemplate[0]])
+    sr_ttBinYields = np.array([rl.IndependentParameter('sr'+year+'_ttshape_'+category+'_mass%d' % i, b, 0, sr_ttTemplate[0].max()*2) for i,b in enumerate(sr_ttTemplate[0])])
     eff=tt_efficiency[year]
     if category=='fail': eff=(1-tt_efficiency[year])
     sr_ttBinYields = sr_ttBinYields*rl.IndependentParameter('sr'+year+'_tt_recoil'+str(recoil), sr_ttTemplate[0].sum()/eff, 0, sr_ttTemplate[0].sum()/eff*2)
@@ -365,11 +368,11 @@ def model(year,recoil,category):
     wmcr_wjetsMC.setParamEffect(jec, 1.05)
     wmcr_wjetsMC.setParamEffect(id_mu, 1.02)
     wmcr_wjetsMC.setParamEffect(iso_mu, 1.02)
-    wmcr_wjetsMC.setParamEffect(hf_fraction, hf_systematic['W+jets']['wmcr'][category])
+    wmcr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['wmcr'][category])
     btagUp=template(background,'W+jets','btagUp','wmcr')[0]
     btagDown=template(background,'W+jets','btagDown','wmcr')[0]
     wmcr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-    wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
+    wmcr_wjetsTransferFactor = np.nan_to_num( wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() )
     wmcr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
     wmcr.addSample(wmcr_wjets)
 
@@ -389,7 +392,7 @@ def model(year,recoil,category):
     btagUp=template(background,'TT','btagUp','wmcr')[0]
     btagDown=template(background,'TT','btagDown','wmcr')[0]
     wmcr_ttMC.setParamEffect(btag, btagUp, btagDown)
-    wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+    wmcr_ttTransferFactor = np.nan_to_num( wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() )
     wmcr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt)
     wmcr.addSample(wmcr_tt)
 
@@ -500,11 +503,11 @@ def model(year,recoil,category):
     tmcr_wjetsMC.setParamEffect(jec, 1.05)
     tmcr_wjetsMC.setParamEffect(id_mu, 1.02)
     tmcr_wjetsMC.setParamEffect(iso_mu, 1.02)
-    tmcr_wjetsMC.setParamEffect(hf_fraction, hf_systematic['W+jets']['tmcr'][category])
+    tmcr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['tmcr'][category])
     btagUp=template(background,'W+jets','btagUp','tmcr')[0]
     btagDown=template(background,'W+jets','btagDown','tmcr')[0]
     tmcr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-    tmcr_wjetsTransferFactor = tmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
+    tmcr_wjetsTransferFactor = np.nan_to_num( tmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() )
     tmcr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, tmcr_wjetsTransferFactor, sr_wjets)
     tmcr.addSample(tmcr_wjets)
 
@@ -524,7 +527,7 @@ def model(year,recoil,category):
     btagUp=template(background,'TT','btagUp','tmcr')[0]
     btagDown=template(background,'TT','btagDown','tmcr')[0]
     tmcr_ttMC.setParamEffect(btag, btagUp, btagDown)
-    tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+    tmcr_ttTransferFactor = np.nan_to_num( tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() )
     tmcr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt)
     tmcr.addSample(tmcr_tt)
 
@@ -638,11 +641,11 @@ def model(year,recoil,category):
     wecr_wjetsMC.setParamEffect(jec, 1.05)
     wecr_wjetsMC.setParamEffect(id_e, 1.02)
     wecr_wjetsMC.setParamEffect(reco_e, 1.02)
-    wecr_wjetsMC.setParamEffect(hf_fraction, hf_systematic['W+jets']['wecr'][category])
+    wecr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['wecr'][category])
     btagUp=template(background,'W+jets','btagUp','wecr')[0]
     btagDown=template(background,'W+jets','btagDown','wecr')[0]
     wecr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-    wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
+    wecr_wjetsTransferFactor = np.nan_to_num( wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() )
     wecr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets)
     wecr.addSample(wecr_wjets)
 
@@ -662,7 +665,7 @@ def model(year,recoil,category):
     btagUp=template(background,'TT','btagUp','wecr')[0]
     btagDown=template(background,'TT','btagDown','wecr')[0]
     wecr_ttMC.setParamEffect(btag, btagUp, btagDown)
-    wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+    wecr_ttTransferFactor = np.nan_to_num( wecr_ttMC.getExpectation() / sr_ttMC.getExpectation() )
     wecr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt)
     wecr.addSample(wecr_tt)
 
@@ -776,11 +779,11 @@ def model(year,recoil,category):
     tecr_wjetsMC.setParamEffect(jec, 1.05)
     tecr_wjetsMC.setParamEffect(id_e, 1.02)
     tecr_wjetsMC.setParamEffect(reco_e, 1.02)
-    tecr_wjetsMC.setParamEffect(hf_fraction, hf_systematic['W+jets']['tecr'][category])
+    tecr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['tecr'][category])
     btagUp=template(background,'W+jets','btagUp','tecr')[0]
     btagDown=template(background,'W+jets','btagDown','tecr')[0]
     tecr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
-    tecr_wjetsTransferFactor = tecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
+    tecr_wjetsTransferFactor = np.nan_to_num( tecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation() )
     tecr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, tecr_wjetsTransferFactor, sr_wjets)
     tecr.addSample(tecr_wjets)
 
@@ -800,7 +803,7 @@ def model(year,recoil,category):
     btagUp=template(background,'TT','btagUp','tecr')[0]
     btagDown=template(background,'TT','btagDown','tecr')[0]
     tecr_ttMC.setParamEffect(btag, btagUp, btagDown)
-    tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+    tecr_ttTransferFactor = np.nan_to_num( tecr_ttMC.getExpectation() / sr_ttMC.getExpectation() )
     tecr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt)
     tecr.addSample(tecr_tt)
 
@@ -907,8 +910,8 @@ def model(year,recoil,category):
     zmcr_dyjetsMC.setParamEffect(jec, 1.05)
     zmcr_dyjetsMC.setParamEffect(id_mu, 1.02)
     zmcr_dyjetsMC.setParamEffect(iso_mu, 1.02)
-    zmcr_dyjetsMC.setParamEffect(hf_fraction, hf_systematic['DY+jets']['zmcr'][category])
-    zmcr_dyjetsTransferFactor = zmcr_dyjetsMC.getExpectation() / sr_zjetsMC.getExpectation()
+    zmcr_dyjetsMC.setParamEffect(zhf_fraction, hf_systematic['DY+jets']['zmcr'][category])
+    zmcr_dyjetsTransferFactor = np.nan_to_num( zmcr_dyjetsMC.getExpectation() / sr_zjetsMC.getExpectation() )
     zmcr_dyjets = rl.TransferFactorSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, zmcr_dyjetsTransferFactor, sr_zjets)
     zmcr.addSample(zmcr_dyjets)
 
@@ -992,8 +995,8 @@ def model(year,recoil,category):
     zecr_dyjetsMC.setParamEffect(jec, 1.05)
     zecr_dyjetsMC.setParamEffect(id_e, 1.02)
     zecr_dyjetsMC.setParamEffect(reco_e, 1.02)
-    zecr_dyjetsMC.setParamEffect(hf_fraction, hf_systematic['DY+jets']['zecr'][category])
-    zecr_dyjetsTransferFactor = zecr_dyjetsMC.getExpectation() / sr_zjetsMC.getExpectation()
+    zecr_dyjetsMC.setParamEffect(zhf_fraction, hf_systematic['DY+jets']['zecr'][category])
+    zecr_dyjetsTransferFactor = np.nan_to_num( zecr_dyjetsMC.getExpectation() / sr_zjetsMC.getExpectation() )
     zecr_dyjets = rl.TransferFactorSample(ch_name+'_dyjets', rl.Sample.BACKGROUND, zecr_dyjetsTransferFactor, sr_zjets)
     zecr.addSample(zecr_dyjets)
 
@@ -1076,8 +1079,8 @@ def model(year,recoil,category):
     gcr_gjetsMC.setParamEffect(gjets_norm, 1.4)
     gcr_gjetsMC.setParamEffect(jec, 1.05)
     gcr_gjetsMC.setParamEffect(id_pho, 1.02)
-    gcr_gjetsMC.setParamEffect(hf_fraction, hf_systematic['G+jets']['gcr'][category])
-    gcr_gjetsTransferFactor = gcr_gjetsMC.getExpectation() / sr_zjetsMC.getExpectation()
+    gcr_gjetsMC.setParamEffect(ghf_fraction, hf_systematic['G+jets']['gcr'][category])
+    gcr_gjetsTransferFactor = np.nan_to_num( gcr_gjetsMC.getExpectation() / sr_zjetsMC.getExpectation() )
     gcr_gjets = rl.TransferFactorSample(ch_name+'_gjets', rl.Sample.BACKGROUND, gcr_gjetsTransferFactor, sr_zjets)
     gcr.addSample(gcr_gjets)
 
@@ -1155,6 +1158,6 @@ if __name__ == '__main__':
     nrecoil = len(recoilbins) - 1
     for recoilbin in range(nrecoil):
         for category in ['pass','fail']:
-            with open('data/darkhiggs'+options.year+'-'+category+'-recoil'+str(recoilbin)+'.model', "wb") as fout:
+            with open('data/darkhiggs-'+options.year+'-'+category+'-recoil'+str(recoilbin)+'.model', "wb") as fout:
                 pickle.dump(model(options.year,recoilbin,category), fout, protocol=2)
 

@@ -1,0 +1,74 @@
+# Datacard for <Channel (zecr2018failrecoil5) instance at 0x2aab7227f2d0> generated on 2020-08-01 01:46:24.161398
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 4 # number of samples minus 1
+kmax 12 # number of nuisance parameters
+shapes * zecr2018failrecoil5 zecr2018failrecoil5.root zecr2018failrecoil5:zecr2018failrecoil5_$PROCESS zecr2018failrecoil5:zecr2018failrecoil5_$PROCESS_$SYSTEMATIC
+bin zecr2018failrecoil5
+observation 43.000
+bin               zecr2018failrecoil5  zecr2018failrecoil5  zecr2018failrecoil5  zecr2018failrecoil5  zecr2018failrecoil5
+process                        dyjets                 ttMC                 stMC                 vvMC                hbbMC
+process                             1                    2                    3                    4                    5
+rate                            1.000                0.000                0.000                2.543                0.045
+hbb_norm lnN                        -                    -                    -                    -                1.200
+id_e2018 lnN                        -                    -                    -                1.020                1.020
+jec2018 lnN                         -                    -                    -                1.050                1.050
+lumi2018 lnN                        -                    -                    -                1.027                1.027
+reco_e2018 lnN                      -                    -                    -                1.020                1.020
+trig_e2018 lnN                      -                    -                    -                1.010                1.010
+veto_tau2018 lnN                    -                    -                    -                1.030                1.030
+vv_norm lnN                         -                    -                    -                1.200                    -
+btag2018 param 0 1
+trig_met2018 param 0 1
+zhf_fraction param 0 1
+zjets_norm param 0 1
+sr2018failrecoil5_zjetsMC_bin0_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin10_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin11_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin12_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin13_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin14_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin15_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin16_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin1_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin2_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin3_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin4_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin5_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin6_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin7_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin8_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin9_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin0 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin1 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin10 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin11 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin12 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin13 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin14 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin15 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin16 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin2 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin3 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin4 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin5 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin6 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin7 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin8 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+sr2018failrecoil5_zjets_bin9 extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin0_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin10_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin11_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin12_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin13_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin14_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin15_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin16_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin1_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin2_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin3_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin4_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin5_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin6_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin7_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin8_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5
+zecr2018failrecoil5_dyjetsMC_bin9_nominal extArg zecr2018failrecoil5.root:zecr2018failrecoil5

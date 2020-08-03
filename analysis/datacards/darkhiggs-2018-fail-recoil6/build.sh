@@ -1,0 +1,2 @@
+combineCards.py wmcr2018failrecoil6=wmcr2018failrecoil6.txt > wmcr2018failrecoil6_combined.txt
+text2workspace.py wmcr2018failrecoil6_combined.txt

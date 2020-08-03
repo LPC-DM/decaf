@@ -1,2 +1,0 @@
-combineCards.py sr2018recoil5pass=sr2018recoil5pass.txt > darkhiggs_sr2018recoil5pass_combined.txt
-text2workspace.py darkhiggs_sr2018recoil5pass_combined.txt
