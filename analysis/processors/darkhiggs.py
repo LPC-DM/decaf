@@ -1244,7 +1244,8 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         #for region in selected_regions: 
         for region, cuts in regions.items():
-            #print('Considering region:', region)
+            if region not in selected_regions: continue
+            print('Considering region:', region)
 
             ###
             # Adding recoil and minDPhi requirements
@@ -1547,8 +1548,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                         allcuts.add(icut)
                         jcut = selection.all(*allcuts)
                         vcut = (i+1)*jcut
-                        if region == 'sr':
-                            print(i, icut, vcut)
                         hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=vcut, weight=whf)
                         hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=vcut, weight=wlf)
 
