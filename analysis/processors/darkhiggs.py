@@ -1229,14 +1229,15 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('mindphimet',(abs(met.T.delta_phi(j_clean.T)).min())>0.7)
 
         regions = {
-            'sr': {'iszeroL','fatjet','noextrab','noHEMmet','met_filters','met_triggers','noHEMj'},
-            'wmcr': {'isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers'},
-            'tmcr': {'isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'},
-            'wecr': {'isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'},
-            'tecr': {'isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'},
-            'zmcr': {'istwoM','fatjet','noHEMj','met_filters','met_triggers', 'dimu_mass','met80'},
-            'zecr': {'istwoE','fatjet','noHEMj','met_filters','singleelectron_triggers', 'diele_mass','met80','leading_e_pt'},
-            'gcr': {'isoneA','fatjet','noHEMj','met_filters','singlephoton_triggers'}
+            #'sr': ['iszeroL','fatjet','noextrab','noHEMmet','met_filters','met_triggers','noHEMj'],
+            'sr': ['fatjet', 'noHEMj', 'iszeroL', 'noextrab','met_filters','met_triggers','noHEMmet'],
+            'wmcr': ['isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers'],
+            'tmcr': ['isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'],
+            'wecr': ['isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'],
+            'tecr': ['isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'],
+            'zmcr': ['istwoM','fatjet','noHEMj','met_filters','met_triggers', 'dimu_mass','met80'],
+            'zecr': ['istwoE','fatjet','noHEMj','met_filters','singleelectron_triggers', 'diele_mass','met80','leading_e_pt'],
+            'gcr': ['isoneA','fatjet','noHEMj','met_filters','singlephoton_triggers']
         }
 
         isFilled = False
@@ -1251,7 +1252,9 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             selection.add('recoil_'+region, (u[region].mag>250))
             selection.add('mindphi_'+region, (abs(u[region].delta_phi(j_clean.T)).min()>0.8))
-            regions[region].update({'recoil_'+region,'mindphi_'+region})
+            #regions[region].update({'recoil_'+region,'mindphi_'+region})
+            regions[region].insert(0, 'recoil_'+region)
+            regions[region].insert(3, 'mindphi_'+region)
             #print('Selection:',regions[region])
             variables = {
                 'recoil':                 u[region].mag,
@@ -1538,17 +1541,16 @@ class AnalysisProcessor(processor.ProcessorABC):
                     ## Cutflow loop
                     hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=0)
                     hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=0)
-                    vcut_whf=np.zeros(events.size, dtype=np.int)
-                    vcut_wlf=np.zeros(events.size, dtype=np.int)
+                    vcut=np.zeros(events.size, dtype=np.int)
                     allcuts = set()
                     for i, icut in enumerate(cuts):
-                        if region == 'sr': print(icut)
                         allcuts.add(icut)
                         jcut = selection.all(*allcuts)
-                        vcut_whf += (i+1)*jcut*whf
-                        vcut_wlf += (i+1)*jcut*wlf
-                    hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=vcut_whf)
-                    hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=vcut_wlf)
+                        vcut += (i+1)*jcut
+                        if region == 'sr':
+                            print(i, icut, vcut)
+                    hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=vcut, weight=whf)
+                    hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=vcut, weight=wlf)
 
                     fill('HF--'+dataset, vgentype, weights.weight()*whf, cut)
                     fill('LF--'+dataset, vgentype, weights.weight()*wlf, cut)
