@@ -1038,7 +1038,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             # Calculate PU weight and systematic variations
             ###
 
-            pu = get_pu_weight(events.PV.npvs)
+            pu = get_pu_weight(events.Pileup.nTrueInt)
 
             ###
             # Trigger efficiency weight
