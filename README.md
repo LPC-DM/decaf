@@ -200,3 +200,67 @@ The script will print a link inside start_jupyter.log. Copy-paste it on your bro
 ```
 sh stop_jupyter.sh
 ```
+
+## From Coffea Histograms to Fits
+
+### Generating the model
+
+Taking as example the dark Higgs analysis, run the following command to generate the background model:
+
+```
+python models/darkhiggs.py -y 2018
+```
+The ```models/darkhiggs.py``` module extracts coffea histgrams from the ```hists/darkhiggs201?.scaled``` files and utilize them to generate the different templates that will later be rendered into datacards/workspaces. It also defines transfer factors for the data-driven background models. It produces ```.model``` files that are saved into the ```data``` folder. More specifically, the ```models/darkhiggs.py``` module produces one ```.model``` file for each pass/fail and recoil bin. 
+
+### Rendering the model
+
+The models saved in the ```.model``` files at the previous step can be rendered into datacards by running the following command:
+
+```
+python render.py -m model_name
+```
+
+the ```-m``` or ```--model``` options provide in input the name of the model to render, that corresponds to the name of the ```.model``` file where the model is stored. The ```render.py``` module launches python futures jobs to process in parallel the different control/signal regions that belongs to a single model. Different models can also be rendered in parallel, by using condor. In order to run rendering condor job, the following command should be ran:
+
+```
+python render_condor.py -m model_name
+```
+
+this time, all the models stored into ```.model``` files whose name contains the sting passed via the  ```-m``` options are going to be rendered.
+In order for the rendering step to be completed successfully and for the resulting datacards and workspaces to be used in later steps, both the python version and the ROOT version should correspond to the ones that are going to be set when running ```combine```. It is therefore suggested to clone the ```decaf``` repository inside the ```src``` folder of ```CMSSSW``` release that will be used to perform the combine fit and run the rendering from there, without running the ```env_lcg.sh```. At the time of writing, the recommended version is ```CMSSW_10_2_13``` (https://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/#cc7-release-cmssw_10_2_x-recommended-version). This version uses python 2.7 and ROOT 6.12.
+The ```render.py``` module saves datacards and workspaces into folders that show the following naming:
+
+```
+datacards/model_name
+```
+
+The ```render_condor.py``` module returns ```.tgz``` tarballs that contain the different datacards/workspaces, and are stored into the ```datacards``` folder. To untar them, simply do:
+
+```
+python macros/untar_cards.py -a darkhiggs
+```
+
+Where the ```-a``` or ```--analysis``` options correspond to the analysis name. The ```untar_cards.py``` script will untar all the tarballs that contain the string that is passed through the ```-a``` option.
+To merge the datacards, run the following script:
+
+```
+python macros/combine_datacards.py -a darkhiggs
+```
+Where the ```-a``` or ```--analysis``` options correspond to the analysis name. The ```combine_datacards.py``` script will combine all the datacards whose name contains the string that is passed through the ```-a``` option. The script will create a folder inside ```datacards``` whose name corresponds to the string that is passed through the ```-a``` option, will move all the workspaces that correspond to the datacards it combined inside it, and will save in it the combined datacard, whose name will be set to the string that is passed through the ```-a``` option.
+
+### Using Combine
+
+Move inside the newly generated folder:
+
+```
+cd datacards/darkhiggs
+```
+
+From here, to convert the datacard into the workspace you will use to run the fit, do:
+
+```
+text2workspace.py darkhiggs.txt
+```
+
+The result of this step will be a ```darkhiggs.root``` file to be used for the combine fit.
+where ```darkhiggs.txt``` is the name of the combined datacard generated at the previous step.
