@@ -1548,8 +1548,13 @@ class AnalysisProcessor(processor.ProcessorABC):
                         allcuts.add(icut)
                         jcut = selection.all(*allcuts)
                         vcut = (i+1)*jcut
+<<<<<<< HEAD
                         hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=vcut, weight=weights.weight()*jcut*whf)
                         hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=vcut, weight=weights.weight()*jcut*wlf)
+=======
+                        hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=vcut, weight=whf)
+                        hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=vcut, weight=wlf)
+>>>>>>> ab61a200bcadf758d38b78fbbd6bb9d0a0979525
 
                     fill('HF--'+dataset, vgentype, weights.weight()*whf, cut)
                     fill('LF--'+dataset, vgentype, weights.weight()*wlf, cut)
@@ -1578,7 +1583,11 @@ class AnalysisProcessor(processor.ProcessorABC):
                         allcuts.add(icut)
                         jcut = selection.all(*allcuts)
                         vcut = (i+1)*jcut
+<<<<<<< HEAD
                         hout['cutflow'].fill(dataset=dataset, region=region, cut=vcut, weight=weights.weight()*jcut)
+=======
+                        hout['cutflow'].fill(dataset=dataset, region=region, cut=vcut)
+>>>>>>> ab61a200bcadf758d38b78fbbd6bb9d0a0979525
 
                     fill(dataset, vgentype, weights.weight(), cut)
 

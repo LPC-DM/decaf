@@ -12,9 +12,9 @@ from coffea.btag_tools import BTagScaleFactor
 ###
 
 pu_files = {
-    '2018': uproot.open("data/pileup/puWeights_10x_56ifb.root"),
-    '2017': uproot.open("data/pileup/puWeights_90x_41ifb.root"),
-    '2016': uproot.open("data/pileup/puWeights_80x_37ifb.root")
+    '2018': uproot.open("data/pileup/PileupHistograms_2018_69mb_pm5.root"),
+    '2017': uproot.open("data/pileup/PileupHistograms_2017_69mb_pm5.root"),
+    '2016': uproot.open("data/pileup/PileupHistograms_2016_69mb_pm5.root")
 }
 get_pu_weight = {}
 for year in ['2016','2017','2018']:
