@@ -1159,8 +1159,8 @@ if __name__ == '__main__':
     signal_hists['template']=signal_hists['template'].rebin('recoil',hist.Bin('recoil','Recoil',recoil_binning))
     data_hists['template']=data_hists['template'].rebin('recoil',hist.Bin('recoil','Recoil',recoil_binning))
 
-    tf_params = rhalphabeth(mass_binning)
-    #tf_params=1.
+    #tf_params = rhalphabeth(mass_binning)
+    tf_params=0.05
 
     model_dict={}
     recoilbins = np.array(recoil_binning)
