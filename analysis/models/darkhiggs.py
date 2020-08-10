@@ -17,7 +17,7 @@ import ROOT
 rl.util.install_roofit_helpers()
 rl.ParametericSample.PreferRooParametricHist = False
 
-def rhalphabeth():
+def rhalphabeth(msdbins):
 
     process = hist.Cat("process", "Process", sorting='placement')
     cats = ("process",)
@@ -31,7 +31,6 @@ def rhalphabeth():
     # Build qcd MC pass+fail model and fit to polynomial
     qcdmodel = rl.Model("qcdmodel")
     qcdpass, qcdfail = 0., 0.
-    msdbins = [0,40,50,60,70,80,90,100,110,120,130,150,160,180,200,220,240,300]
     msds = np.meshgrid(msdbins[:-1] + 0.5 * np.diff(msdbins), indexing='ij')[0]
     msds =  np.sqrt(msds)*np.sqrt(msds)
     print(msds)
@@ -1150,11 +1149,21 @@ if __name__ == '__main__':
         'data': data_hists
     }
 
-    tf_params = rhalphabeth()
+    mass_binning=[0,150,300]#[40,50,60,70,80,90,100,110,120,130,150,160,180,200,220,240,300]
+    bkg_hists['template']=bkg_hists['template'].rebin('fjmass',hist.Bin('fjmass','Mass', mass_binning))
+    signal_hists['template']=signal_hists['template'].rebin('fjmass',hist.Bin('fjmass','Mass',mass_binning))
+    data_hists['template']=data_hists['template'].rebin('fjmass',hist.Bin('fjmass','Mass',mass_binning))
+
+    recoil_binning=[250,590,3000]#[250,310,370,470,590,840,1020,1250,3000]
+    bkg_hists['template']=bkg_hists['template'].rebin('recoil',hist.Bin('recoil','Recoil',recoil_binning))
+    signal_hists['template']=signal_hists['template'].rebin('recoil',hist.Bin('recoil','Recoil',recoil_binning))
+    data_hists['template']=data_hists['template'].rebin('recoil',hist.Bin('recoil','Recoil',recoil_binning))
+
+    tf_params = rhalphabeth(mass_binning)
     #tf_params=1.
 
     model_dict={}
-    recoilbins = np.array([250,310,370,470,590,840,1020,1250,3000])
+    recoilbins = np.array(recoil_binning)
     nrecoil = len(recoilbins) - 1
     for recoilbin in range(nrecoil):
         for category in ['pass','fail']:

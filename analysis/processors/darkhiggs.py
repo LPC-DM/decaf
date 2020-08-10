@@ -1018,7 +1018,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             genWs = gen[gen.isW&(gen.pt>100)]
             genZs = gen[gen.isZ&(gen.pt>100)]
-            genIsoAs = gen[gen.isIsoA&(gen.pt>100)] #Based on photon weight distribution
+            genIsoAs = gen[gen.isIsoA&(gen.pt>290)] #Based on photon weight distribution
 
             nnlo_nlo = {}
             if('GJets' in dataset): 
