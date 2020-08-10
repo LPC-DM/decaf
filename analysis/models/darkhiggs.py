@@ -1149,12 +1149,12 @@ if __name__ == '__main__':
         'data': data_hists
     }
 
-    mass_binning=[0,150,300]#[40,50,60,70,80,90,100,110,120,130,150,160,180,200,220,240,300]
+    mass_binning=[0,40,50,60,70,80,90,100,110,120,130,150,160,180,200,220,240,300]
     bkg_hists['template']=bkg_hists['template'].rebin('fjmass',hist.Bin('fjmass','Mass', mass_binning))
     signal_hists['template']=signal_hists['template'].rebin('fjmass',hist.Bin('fjmass','Mass',mass_binning))
     data_hists['template']=data_hists['template'].rebin('fjmass',hist.Bin('fjmass','Mass',mass_binning))
 
-    recoil_binning=[250,590,3000]#[250,310,370,470,590,840,1020,1250,3000]
+    recoil_binning=[250,3000]#[250,310,370,470,590,840,1020,1250,3000]
     bkg_hists['template']=bkg_hists['template'].rebin('recoil',hist.Bin('recoil','Recoil',recoil_binning))
     signal_hists['template']=signal_hists['template'].rebin('recoil',hist.Bin('recoil','Recoil',recoil_binning))
     data_hists['template']=data_hists['template'].rebin('recoil',hist.Bin('recoil','Recoil',recoil_binning))
