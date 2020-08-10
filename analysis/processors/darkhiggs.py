@@ -1038,7 +1038,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             # Calculate PU weight and systematic variations
             ###
 
-            pu = get_pu_weight(events.PV.npvs)
+            pu = get_pu_weight(events.Pileup.nTrueInt)
 
             ###
             # Trigger efficiency weight
@@ -1105,7 +1105,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 sf = ele_reco_sf
             else:
                 sf = get_ele_reco_sf
-            
+
             reco = {
                 'sr': np.ones(events.size),
                 'wmcr': np.ones(events.size),
@@ -1153,7 +1153,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'wecr': np.ones(events.size),
                 'tecr': np.ones(events.size),
                 'zecr': np.ones(events.size),
-                'gcr':  csev_weight  
+                'gcr':  csev_weight
             }
 
             ###
@@ -1244,7 +1244,8 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         #for region in selected_regions: 
         for region, cuts in regions.items():
-            #print('Considering region:', region)
+            if region not in selected_regions: continue
+            print('Considering region:', region)
 
             ###
             # Adding recoil and minDPhi requirements
@@ -1255,7 +1256,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             #regions[region].update({'recoil_'+region,'mindphi_'+region})
             regions[region].insert(0, 'recoil_'+region)
             regions[region].insert(3, 'mindphi_'+region)
-            #print('Selection:',regions[region])
+            print('Selection:',regions[region])
             variables = {
                 'recoil':                 u[region].mag,
                 'mindphirecoil':          abs(u[region].delta_phi(j_clean.T)).min(),
@@ -1308,7 +1309,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 variables['l1pt']      = leading_pho.pt
                 variables['l1phi']     = leading_pho.phi
                 variables['l1eta']     = leading_pho.eta
-            #print('Variables:',variables.keys())
+            print('Variables:',variables.keys())
 
             def fill(dataset, gentype, weight, cut):
 
@@ -1539,18 +1540,16 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               weight=weights.weight(modifier=systematic)*wlf*cut)
 
                     ## Cutflow loop
-                    hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=0)
-                    hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=0)
                     vcut=np.zeros(events.size, dtype=np.int)
+                    hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=vcut, weight=weights.weight()*whf)
+                    hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=vcut, weight=weights.weight()*wlf)
                     allcuts = set()
                     for i, icut in enumerate(cuts):
                         allcuts.add(icut)
                         jcut = selection.all(*allcuts)
-                        vcut += (i+1)*jcut
-                        if region == 'sr':
-                            print(i, icut, vcut)
-                    hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=vcut, weight=whf)
-                    hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=vcut, weight=wlf)
+                        vcut = (i+1)*jcut
+                        hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=vcut, weight=weights.weight()*jcut*whf)
+                        hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=vcut, weight=weights.weight()*jcut*wlf)
 
                     fill('HF--'+dataset, vgentype, weights.weight()*whf, cut)
                     fill('LF--'+dataset, vgentype, weights.weight()*wlf, cut)
@@ -1572,15 +1571,14 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               #XvsQCD=leading_fj.XvsQCD.sum(),
                                               weight=weights.weight(modifier=systematic)*cut)
                     ## Cutflow loop
-                    hout['cutflow'].fill(dataset=dataset, region=region, cut=0)
                     vcut=np.zeros(events.size, dtype=np.int)
+                    hout['cutflow'].fill(dataset=dataset, region=region, cut=vcut, weight=weights.weight())
                     allcuts = set()
                     for i, icut in enumerate(cuts):
-                        if region == 'sr': print(icut)
                         allcuts.add(icut)
                         jcut = selection.all(*allcuts)
-                        vcut += (i+1)*jcut
-                    hout['cutflow'].fill(dataset=dataset, region=region, cut=vcut)
+                        vcut = (i+1)*jcut
+                        hout['cutflow'].fill(dataset=dataset, region=region, cut=vcut, weight=weights.weight()*jcut)
 
                     fill(dataset, vgentype, weights.weight(), cut)
 
