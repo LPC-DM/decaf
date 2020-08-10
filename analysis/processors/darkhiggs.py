@@ -1105,7 +1105,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 sf = ele_reco_sf
             else:
                 sf = get_ele_reco_sf
-            
+
             reco = {
                 'sr': np.ones(events.size),
                 'wmcr': np.ones(events.size),
@@ -1153,7 +1153,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'wecr': np.ones(events.size),
                 'tecr': np.ones(events.size),
                 'zecr': np.ones(events.size),
-                'gcr':  csev_weight  
+                'gcr':  csev_weight
             }
 
             ###
@@ -1540,16 +1540,16 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               weight=weights.weight(modifier=systematic)*wlf*cut)
 
                     ## Cutflow loop
-                    hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=0)
-                    hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=0)
                     vcut=np.zeros(events.size, dtype=np.int)
+                    hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=vcut, weight=weights.weight()*whf)
+                    hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=vcut, weight=weights.weight()*wlf)
                     allcuts = set()
                     for i, icut in enumerate(cuts):
                         allcuts.add(icut)
                         jcut = selection.all(*allcuts)
                         vcut = (i+1)*jcut
-                        hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=vcut, weight=whf)
-                        hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=vcut, weight=wlf)
+                        hout['cutflow'].fill(dataset='HF--'+dataset, region=region, cut=vcut, weight=weights.weight()*jcut*whf)
+                        hout['cutflow'].fill(dataset='LF--'+dataset, region=region, cut=vcut, weight=weights.weight()*jcut*wlf)
 
                     fill('HF--'+dataset, vgentype, weights.weight()*whf, cut)
                     fill('LF--'+dataset, vgentype, weights.weight()*wlf, cut)
@@ -1571,14 +1571,14 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               #XvsQCD=leading_fj.XvsQCD.sum(),
                                               weight=weights.weight(modifier=systematic)*cut)
                     ## Cutflow loop
-                    hout['cutflow'].fill(dataset=dataset, region=region, cut=0)
                     vcut=np.zeros(events.size, dtype=np.int)
+                    hout['cutflow'].fill(dataset=dataset, region=region, cut=vcut, weight=weights.weight())
                     allcuts = set()
                     for i, icut in enumerate(cuts):
                         allcuts.add(icut)
                         jcut = selection.all(*allcuts)
                         vcut = (i+1)*jcut
-                        hout['cutflow'].fill(dataset=dataset, region=region, cut=vcut)
+                        hout['cutflow'].fill(dataset=dataset, region=region, cut=vcut, weight=weights.weight()*jcut)
 
                     fill(dataset, vgentype, weights.weight(), cut)
 
