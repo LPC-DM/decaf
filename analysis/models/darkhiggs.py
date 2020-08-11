@@ -320,6 +320,8 @@ def model(year,recoil,category):
     sr.addSample(sr_qcd)
 
     for s in signal['sr'].identifiers('process'):
+        if 'Mhs_50' not in str(s): continue
+        print(s)
         sr_signalTemplate = template(signal,s,'nominal','sr')
         sr_signal=rl.TemplateSample(ch_name+'_'+str(s), rl.Sample.SIGNAL, sr_signalTemplate)
         sr_signal.setParamEffect(lumi, 1.027)
