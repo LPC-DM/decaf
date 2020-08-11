@@ -1,0 +1,165 @@
+# Datacard for <Channel (tmcr2018passrecoil0) instance at 0x2af9b56fbb90> generated on 2020-08-11 08:24:38.492799
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 6 # number of samples minus 1
+kmax 16 # number of nuisance parameters
+shapes * tmcr2018passrecoil0 tmcr2018passrecoil0.root tmcr2018passrecoil0:tmcr2018passrecoil0_$PROCESS tmcr2018passrecoil0:tmcr2018passrecoil0_$PROCESS_$SYSTEMATIC
+bin tmcr2018passrecoil0
+observation 9913.000
+bin               tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0
+process                         wjets                   tt                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
+process                             1                    2                    3                    4                    5                    6                    7
+rate                            1.000                1.000             1586.826               34.975               54.164               21.100              313.760
+btag2018 shape                      -                    -                1.000                1.000                1.000                1.000                1.000
+hbb_norm lnN                        -                    -                    -                    -                    -                1.200                    -
+id_mu2018 lnN                       -                    -                1.020                1.020                1.020                1.020                1.020
+iso_mu2018 lnN                      -                    -                1.020                1.020                1.020                1.020                1.020
+jec2018 lnN                         -                    -                1.050                1.050                1.050                1.050                1.050
+lumi2018 lnN                        -                    -                1.027                1.027                1.027                1.027                1.027
+qcdmu_norm lnN                      -                    -                    -                    -                    -                    -                2.000
+st_norm lnN                         -                    -                1.200                    -                    -                    -                    -
+trig_met2018 lnN                    -                    -                1.010                1.010                1.010                1.010                1.010
+veto_tau2018 lnN                    -                    -                1.030                1.030                1.030                1.030                1.030
+vv_norm lnN                         -                    -                    -                    -                1.200                    -                    -
+zjets_norm lnN                      -                    -                    -                1.400                    -                    -                    -
+tt_norm param 0 1
+whf_fraction param 0 1
+wjets_norm param 0 1
+zhf_fraction param 0 1
+sf_tt2018 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_tt_recoil0 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass0 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass1 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass10 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass11 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass12 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass13 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass14 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass15 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass16 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass2 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass3 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass4 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass5 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass6 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass7 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass8 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_ttshape_pass_mass9 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass0 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass1 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass10 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass11 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass12 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass13 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass14 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass15 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass16 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass2 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass3 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass4 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass5 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass6 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass7 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass8 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018_zjets_recoil0_mass9 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin0_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin10_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin11_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin12_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin13_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin14_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin15_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin16_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin1_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin2_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin3_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin4_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin5_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin6_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin7_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin8_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin9_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin0_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin0_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin10_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin10_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin11_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin11_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin12_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin12_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin13_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin13_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin14_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin14_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin15_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin15_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin16_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin16_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin1_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin1_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin2_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin2_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin3_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin3_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin4_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin4_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin5_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin5_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin6_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin6_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin7_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin7_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin8_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin8_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin9_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin9_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin0_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin10_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin11_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin12_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin13_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin14_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin15_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin16_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin1_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin2_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin3_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin4_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin5_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin6_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin7_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin8_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin9_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin0_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin10_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin11_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin12_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin13_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin14_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin15_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin16_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin1_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin2_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin3_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin4_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin5_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin6_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin7_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin8_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin9_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin0_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin10_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin11_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin12_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin13_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin14_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin15_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin16_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin1_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin2_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin3_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin4_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin5_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin6_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin7_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin8_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin9_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0

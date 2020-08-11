@@ -1,0 +1,606 @@
+Combination of wmcr2018failrecoil0=wmcr2018failrecoil0.txt  zecr2018failrecoil0=zecr2018failrecoil0.txt  gcr2018failrecoil0=gcr2018failrecoil0.txt  zmcr2018failrecoil0=zmcr2018failrecoil0.txt  tmcr2018failrecoil0=tmcr2018failrecoil0.txt  wecr2018failrecoil0=wecr2018failrecoil0.txt  sr2018failrecoil0=sr2018failrecoil0.txt  tecr2018failrecoil0=tecr2018failrecoil0.txt  zmcr2018passrecoil0=zmcr2018passrecoil0.txt  zecr2018passrecoil0=zecr2018passrecoil0.txt  gcr2018passrecoil0=gcr2018passrecoil0.txt  sr2018passrecoil0=sr2018passrecoil0.txt  tmcr2018passrecoil0=tmcr2018passrecoil0.txt  wmcr2018passrecoil0=wmcr2018passrecoil0.txt  wecr2018passrecoil0=wecr2018passrecoil0.txt  tecr2018passrecoil0=tecr2018passrecoil0.txt
+imax 16 number of bins
+jmax 16 number of processes minus 1
+kmax 30 number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes *                    gcr2018failrecoil0   gcr2018failrecoil0.root gcr2018failrecoil0:gcr2018failrecoil0_$PROCESS gcr2018failrecoil0:gcr2018failrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    gcr2018passrecoil0   gcr2018passrecoil0.root gcr2018passrecoil0:gcr2018passrecoil0_$PROCESS gcr2018passrecoil0:gcr2018passrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    sr2018failrecoil0    sr2018failrecoil0.root sr2018failrecoil0:sr2018failrecoil0_$PROCESS sr2018failrecoil0:sr2018failrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    sr2018passrecoil0    sr2018passrecoil0.root sr2018passrecoil0:sr2018passrecoil0_$PROCESS sr2018passrecoil0:sr2018passrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    tecr2018failrecoil0  tecr2018failrecoil0.root tecr2018failrecoil0:tecr2018failrecoil0_$PROCESS tecr2018failrecoil0:tecr2018failrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    tecr2018passrecoil0  tecr2018passrecoil0.root tecr2018passrecoil0:tecr2018passrecoil0_$PROCESS tecr2018passrecoil0:tecr2018passrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    tmcr2018failrecoil0  tmcr2018failrecoil0.root tmcr2018failrecoil0:tmcr2018failrecoil0_$PROCESS tmcr2018failrecoil0:tmcr2018failrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    tmcr2018passrecoil0  tmcr2018passrecoil0.root tmcr2018passrecoil0:tmcr2018passrecoil0_$PROCESS tmcr2018passrecoil0:tmcr2018passrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    wecr2018failrecoil0  wecr2018failrecoil0.root wecr2018failrecoil0:wecr2018failrecoil0_$PROCESS wecr2018failrecoil0:wecr2018failrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    wecr2018passrecoil0  wecr2018passrecoil0.root wecr2018passrecoil0:wecr2018passrecoil0_$PROCESS wecr2018passrecoil0:wecr2018passrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    wmcr2018failrecoil0  wmcr2018failrecoil0.root wmcr2018failrecoil0:wmcr2018failrecoil0_$PROCESS wmcr2018failrecoil0:wmcr2018failrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    wmcr2018passrecoil0  wmcr2018passrecoil0.root wmcr2018passrecoil0:wmcr2018passrecoil0_$PROCESS wmcr2018passrecoil0:wmcr2018passrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    zecr2018failrecoil0  zecr2018failrecoil0.root zecr2018failrecoil0:zecr2018failrecoil0_$PROCESS zecr2018failrecoil0:zecr2018failrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    zecr2018passrecoil0  zecr2018passrecoil0.root zecr2018passrecoil0:zecr2018passrecoil0_$PROCESS zecr2018passrecoil0:zecr2018passrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    zmcr2018failrecoil0  zmcr2018failrecoil0.root zmcr2018failrecoil0:zmcr2018failrecoil0_$PROCESS zmcr2018failrecoil0:zmcr2018failrecoil0_$PROCESS_$SYSTEMATIC
+shapes *                    zmcr2018passrecoil0  zmcr2018passrecoil0.root zmcr2018passrecoil0:zmcr2018passrecoil0_$PROCESS zmcr2018passrecoil0:zmcr2018passrecoil0_$PROCESS_$SYSTEMATIC
+----------------------------------------------------------------------------------------------------------------------------------
+bin          wmcr2018failrecoil0  zecr2018failrecoil0  gcr2018failrecoil0   zmcr2018failrecoil0  tmcr2018failrecoil0  wecr2018failrecoil0  sr2018failrecoil0    tecr2018failrecoil0  zmcr2018passrecoil0  zecr2018passrecoil0  gcr2018passrecoil0   sr2018passrecoil0    tmcr2018passrecoil0  wmcr2018passrecoil0  wecr2018passrecoil0  tecr2018passrecoil0
+observation  383650               32233                601064               39067                49562                175382               461056               22821                183                  178                  3533                 34204                9913                 34159                19125                5611               
+----------------------------------------------------------------------------------------------------------------------------------
+bin                               wmcr2018failrecoil0  wmcr2018failrecoil0  wmcr2018failrecoil0  wmcr2018failrecoil0  wmcr2018failrecoil0  wmcr2018failrecoil0  wmcr2018failrecoil0  zecr2018failrecoil0  zecr2018failrecoil0  zecr2018failrecoil0  zecr2018failrecoil0  zecr2018failrecoil0  gcr2018failrecoil0   gcr2018failrecoil0   zmcr2018failrecoil0  zmcr2018failrecoil0  zmcr2018failrecoil0  zmcr2018failrecoil0  zmcr2018failrecoil0  tmcr2018failrecoil0  tmcr2018failrecoil0  tmcr2018failrecoil0  tmcr2018failrecoil0  tmcr2018failrecoil0  tmcr2018failrecoil0  tmcr2018failrecoil0  wecr2018failrecoil0  wecr2018failrecoil0  wecr2018failrecoil0  wecr2018failrecoil0  wecr2018failrecoil0  wecr2018failrecoil0  wecr2018failrecoil0  sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0  zmcr2018passrecoil0  zmcr2018passrecoil0  zmcr2018passrecoil0  zmcr2018passrecoil0  zmcr2018passrecoil0  zecr2018passrecoil0  zecr2018passrecoil0  zecr2018passrecoil0  zecr2018passrecoil0  zecr2018passrecoil0  gcr2018passrecoil0   gcr2018passrecoil0   sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  wmcr2018passrecoil0  wmcr2018passrecoil0  wmcr2018passrecoil0  wmcr2018passrecoil0  wmcr2018passrecoil0  wmcr2018passrecoil0  wmcr2018passrecoil0  wecr2018passrecoil0  wecr2018passrecoil0  wecr2018passrecoil0  wecr2018passrecoil0  wecr2018passrecoil0  wecr2018passrecoil0  wecr2018passrecoil0  tecr2018passrecoil0  tecr2018passrecoil0  tecr2018passrecoil0  tecr2018passrecoil0  tecr2018passrecoil0  tecr2018passrecoil0  tecr2018passrecoil0
+process                           dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC                ttMC                 stMC                 dyjets               vvMC                 hbbMC                gjets                qcdMC                ttMC                 stMC                 dyjets               vvMC                 hbbMC                dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC                dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC                MonoZ                Mhs_90               MonoJet              Mhs_50               Mhs_70               MonoW                vvMC                 qcdMC                dyjetsMC             tt                   wjets                stMC                 zjets                hbbMC                dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC                ttMC                 stMC                 dyjets               vvMC                 hbbMC                ttMC                 stMC                 dyjets               vvMC                 hbbMC                gjets                qcdMC                MonoZ                Mhs_90               MonoJet              Mhs_50               Mhs_70               MonoW                vvMC                 qcdMC                dyjetsMC             tt                   wjets                stMC                 zjets                hbbMC                dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC                dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC                dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC                dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC              
+process                           1                    2                    3                    4                    5                    6                    7                    8                    6                    9                    4                    7                    10                   5                    8                    6                    9                    4                    7                    1                    2                    3                    4                    5                    6                    7                    1                    2                    3                    4                    5                    6                    7                    -5                   -4                   -3                   -2                   -1                   0                    4                    5                    1                    2                    3                    6                    11                   7                    1                    2                    3                    4                    5                    6                    7                    8                    6                    9                    4                    7                    8                    6                    9                    4                    7                    10                   5                    -5                   -4                   -3                   -2                   -1                   0                    4                    5                    1                    2                    3                    6                    11                   7                    1                    2                    3                    4                    5                    6                    7                    1                    2                    3                    4                    5                    6                    7                    1                    2                    3                    4                    5                    6                    7                    1                    2                    3                    4                    5                    6                    7                  
+rate                              11569.005            1                    1                    8502.334             14295.994            6231.191             29.779               95.954               18.445               1                    621.593              18.103               1                    24934.42             87.343               18.17                1                    761.858              23.109               942.12               1                    1                    707.796              1929.92              3644.921             19.962               1690.518             1                    1                    3968.054             391.403              2764.238             10.323               251.845              642.472              40353.67             1514.993             890.937              800.328              7114.12              3942.837             1593.836             1                    1                    1366.865             1                    21.563               147.423              1                    1                    364.676              31.869               1744.027             8.99                 21.117               1.888                1                    12.662               1.858                14.573               2.11                 1                    9.251                1.479                1                    175.152              28.26                3420.289             1699.327             3932.095             3741.881             86.916               906.683              635.895              76.102               1                    1                    828.342              1                    109.82               34.975               1                    1                    54.164               313.76               1586.826             21.1                 295.514              1                    1                    778.888              2395.789             4374.609             92.746               87.12                1                    1                    442.706              6.859                2481.76              56.499               11.036               1                    1                    28.059               43.656               966.333              12.28              
+----------------------------------------------------------------------------------------------------------------------------------
+btag2018                shape     1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                  1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                  1.0                  1.0                  1.0                  1.0                  1.0                  1.0                  1.0                  1.0                  1.0                  -                    -                    1.0                  -                    1.0                  1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.0                  1.0                  1.0                  1.0                  1.0                  1.0                  1.0                  1.0                  1.0                  -                    -                    1.0                  -                    1.0                  1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                  1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                  1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                  1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                
+hbb_norm                lnN       -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    1.2                  -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                
+id_e2018                lnN       -                    -                    -                    -                    -                    -                    -                    1.02                 1.02                 -                    1.02                 1.02                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.02                 -                    -                    1.02                 1.02                 1.02                 1.02                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.02                 -                    -                    1.02                 1.02                 1.02                 1.02                 -                    -                    -                    -                    -                    1.02                 1.02                 -                    1.02                 1.02                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.02                 -                    -                    1.02                 1.02                 1.02                 1.02                 1.02                 -                    -                    1.02                 1.02                 1.02                 1.02               
+id_mu2018               lnN       1.02                 -                    -                    1.02                 1.02                 1.02                 1.02                 -                    -                    -                    -                    -                    -                    -                    1.02                 1.02                 -                    1.02                 1.02                 1.02                 -                    -                    1.02                 1.02                 1.02                 1.02                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.02                 1.02                 -                    1.02                 1.02                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.02                 -                    -                    1.02                 1.02                 1.02                 1.02                 1.02                 -                    -                    1.02                 1.02                 1.02                 1.02                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                  
+id_pho2018              lnN       -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.02                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.02                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                  
+iso_mu2018              lnN       1.02                 -                    -                    1.02                 1.02                 1.02                 1.02                 -                    -                    -                    -                    -                    -                    -                    1.02                 1.02                 -                    1.02                 1.02                 1.02                 -                    -                    1.02                 1.02                 1.02                 1.02                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.02                 1.02                 -                    1.02                 1.02                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.02                 -                    -                    1.02                 1.02                 1.02                 1.02                 1.02                 -                    -                    1.02                 1.02                 1.02                 1.02                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                  
+jec2018                 lnN       1.05                 -                    -                    1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 -                    1.05                 1.05                 -                    1.05                 1.05                 1.05                 -                    1.05                 1.05                 1.05                 -                    -                    1.05                 1.05                 1.05                 1.05                 1.05                 -                    -                    1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 -                    -                    1.05                 -                    1.05                 1.05                 -                    -                    1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 -                    1.05                 1.05                 1.05                 1.05                 -                    1.05                 1.05                 -                    1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 1.05                 -                    -                    1.05                 -                    1.05                 1.05                 -                    -                    1.05                 1.05                 1.05                 1.05                 1.05                 -                    -                    1.05                 1.05                 1.05                 1.05                 1.05                 -                    -                    1.05                 1.05                 1.05                 1.05                 1.05                 -                    -                    1.05                 1.05                 1.05                 1.05               
+lumi2018                lnN       1.027                -                    -                    1.027                1.027                1.027                1.027                1.027                1.027                -                    1.027                1.027                -                    1.027                1.027                1.027                -                    1.027                1.027                1.027                -                    -                    1.027                1.027                1.027                1.027                1.027                -                    -                    1.027                1.027                1.027                1.027                1.027                1.027                1.027                1.027                1.027                1.027                1.027                1.027                1.027                -                    -                    1.027                -                    1.027                1.027                -                    -                    1.027                1.027                1.027                1.027                1.027                1.027                -                    1.027                1.027                1.027                1.027                -                    1.027                1.027                -                    1.027                1.027                1.027                1.027                1.027                1.027                1.027                1.027                1.027                1.027                -                    -                    1.027                -                    1.027                1.027                -                    -                    1.027                1.027                1.027                1.027                1.027                -                    -                    1.027                1.027                1.027                1.027                1.027                -                    -                    1.027                1.027                1.027                1.027                1.027                -                    -                    1.027                1.027                1.027                1.027              
+qcde_norm               lnN       -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    2.0                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    2.0                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    2.0                  -                    -                    -                    -                    -                    -                    2.0                  -                    -                  
+qcdmu_norm              lnN       -                    -                    -                    -                    2.0                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    2.0                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    2.0                  -                    -                    -                    -                    -                    -                    2.0                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                  
+qcdpho_norm             lnN       -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    2.0                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    2.0                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                  
+qcdsig_norm             lnN       -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    2.0                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    2.0                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                  
+reco_e2018              lnN       -                    -                    -                    -                    -                    -                    -                    1.02                 1.02                 -                    1.02                 1.02                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.02                 -                    -                    1.02                 1.02                 1.02                 1.02                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.02                 -                    -                    1.02                 1.02                 1.02                 1.02                 -                    -                    -                    -                    -                    1.02                 1.02                 -                    1.02                 1.02                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.02                 -                    -                    1.02                 1.02                 1.02                 1.02                 1.02                 -                    -                    1.02                 1.02                 1.02                 1.02               
+st_norm                 lnN       -                    -                    -                    -                    -                    1.2                  -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    1.2                  -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                  
+trig_e2018              lnN       -                    -                    -                    -                    -                    -                    -                    1.01                 1.01                 -                    1.01                 1.01                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.01                 -                    -                    1.01                 1.01                 1.01                 1.01                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.01                 -                    -                    1.01                 1.01                 1.01                 1.01                 -                    -                    -                    -                    -                    1.01                 1.01                 -                    1.01                 1.01                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.01                 -                    -                    1.01                 1.01                 1.01                 1.01                 1.01                 -                    -                    1.01                 1.01                 1.01                 1.01               
+trig_met2018            lnN       1.01                 -                    -                    1.01                 1.01                 1.01                 1.01                 -                    -                    -                    -                    -                    -                    -                    1.01                 1.01                 -                    1.01                 1.01                 1.01                 -                    -                    1.01                 1.01                 1.01                 1.01                 -                    -                    -                    -                    -                    -                    -                    1.01                 1.01                 1.01                 1.01                 1.01                 1.01                 1.01                 1.01                 1.01                 -                    -                    1.01                 -                    1.01                 -                    -                    -                    -                    -                    -                    -                    1.01                 1.01                 -                    1.01                 1.01                 -                    -                    -                    -                    -                    -                    -                    1.01                 1.01                 1.01                 1.01                 1.01                 1.01                 1.01                 1.01                 1.01                 -                    -                    1.01                 -                    1.01                 1.01                 -                    -                    1.01                 1.01                 1.01                 1.01                 1.01                 -                    -                    1.01                 1.01                 1.01                 1.01                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                  
+trig_pho2018            lnN       -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.01                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.01                 -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                  
+tt_norm                 lnN       -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                  
+veto_tau2018            lnN       1.03                 -                    -                    1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 -                    1.03                 1.03                 -                    1.03                 1.03                 1.03                 -                    1.03                 1.03                 1.03                 -                    -                    1.03                 1.03                 1.03                 1.03                 1.03                 -                    -                    1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 -                    -                    1.03                 -                    1.03                 1.03                 -                    -                    1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 -                    1.03                 1.03                 1.03                 1.03                 -                    1.03                 1.03                 -                    1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 1.03                 -                    -                    1.03                 -                    1.03                 1.03                 -                    -                    1.03                 1.03                 1.03                 1.03                 1.03                 -                    -                    1.03                 1.03                 1.03                 1.03                 1.03                 -                    -                    1.03                 1.03                 1.03                 1.03                 1.03                 -                    -                    1.03                 1.03                 1.03                 1.03               
+vv_norm                 lnN       -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                  
+zjets_norm              lnN       1.4                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.4                  -                    -                    -                    -                    -                    -                    1.4                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.4                  -                    -                    -                    -                    -                    1.4                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.4                  -                    -                    -                    -                    -                    1.4                  -                    -                    -                    -                    -                    -                    1.4                  -                    -                    -                    -                    -                    -                    1.4                  -                    -                    -                    -                    -                    -                    1.4                  -                    -                    -                    -                    -                    -                  
+trig_met2018  param  0 1
+zhf_fraction  param  0 1
+zjets_norm    param  0 1
+whf_fraction  param  0 1
+gjets_norm    param  0 1
+btag2018      param  0 1
+tt_norm       param  0 1
+ghf_fraction  param  0 1
+wjets_norm    param  0 1
+wmcr2018failrecoil0_wjetsMC_bin5_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+sr2018passrecoil0_ttMC_bin1_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018failrecoil0_ttMC_bin13_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018passrecoil0_wjetsMC_bin8_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin7_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+gcr2018passrecoil0_gjetsMC_bin10_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+tecr2018failrecoil0_wjetsMC_bin1_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_zjetsMC_bin13_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin14_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tecr2018passrecoil0_wjetsMC_bin7_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018failrecoil0_wjetsMC_bin6_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+tecr2018passrecoil0_wjetsMC_bin16_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018failrecoil0_wjetsMC_bin10_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+sr2018passrecoil0_zjetsMC_bin1_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+zecr2018failrecoil0_dyjetsMC_bin16_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+tmcr2018failrecoil0_ttMC_bin13_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+tecr2018failrecoil0_ttMC_bin9_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin1_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+wmcr2018passrecoil0_wjetsMC_bin16_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+wmcr2018passrecoil0_ttMC_bin7_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin8_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018failrecoil0_zjetsMC_bin4_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tecr2018passrecoil0_ttMC_bin16_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+gcr2018passrecoil0_gjetsMC_bin8_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+tecr2018passrecoil0_ttMC_bin12_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018failrecoil0_wjetsMC_bin13_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+sr2018_ttshape_fail_mass9 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass8 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass7 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass6 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass5 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass4 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass3 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass2 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass1 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass0 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_wjetsMC_bin11_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018failrecoil0_ttMC_bin3_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tecr2018failrecoil0_ttMC_bin7_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018passrecoil0_ttMC_bin4_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+sr2018failrecoil0_ttMC_bin7_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tecr2018failrecoil0_wjetsMC_bin3_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tmcr2018failrecoil0_ttMC_bin8_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wecr2018passrecoil0_ttMC_bin15_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+sr2018failrecoil0_wjetsMC_bin1_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wecr2018passrecoil0_wjetsMC_bin2_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+tecr2018passrecoil0_wjetsMC_bin0_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin12_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+tmcr2018passrecoil0_wjetsMC_bin1_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+wmcr2018passrecoil0_ttMC_bin6_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+tecr2018failrecoil0_wjetsMC_bin13_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+gcr2018passrecoil0_gjetsMC_bin3_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+tecr2018failrecoil0_wjetsMC_bin0_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tecr2018passrecoil0_wjetsMC_bin5_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin10_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+gcr2018passrecoil0_gjetsMC_bin9_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+tmcr2018failrecoil0_ttMC_bin5_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wecr2018passrecoil0_ttMC_bin0_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+zecr2018failrecoil0_dyjetsMC_bin13_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+sr2018_zjets_recoil0_mass1 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_zjets_recoil0_mass0 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_zjets_recoil0_mass3 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_zjets_recoil0_mass2 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_zjets_recoil0_mass5 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+gcr2018failrecoil0_gjetsMC_bin4_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+sr2018_zjets_recoil0_mass7 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_zjets_recoil0_mass6 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_zjets_recoil0_mass9 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_zjets_recoil0_mass8 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tecr2018failrecoil0_wjetsMC_bin2_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018failrecoil0_ttMC_bin8_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+sr2018failrecoil0_ttMC_bin10_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_zjetsMC_bin9_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_fail_mass16 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass15 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass14 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass13 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass12 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass11 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_ttshape_fail_mass10 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+gcr2018passrecoil0_gjetsMC_bin2_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+sr2018_zjets_recoil0_mass4 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+gcr2018passrecoil0_gjetsMC_bin4_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+tecr2018failrecoil0_wjetsMC_bin14_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_wjetsMC_bin3_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018passrecoil0_wjetsMC_bin14_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+sr2018passrecoil0_ttMC_bin7_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+gcr2018passrecoil0_gjetsMC_bin16_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+wmcr2018failrecoil0_ttMC_bin5_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+tecr2018passrecoil0_ttMC_bin15_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018passrecoil0_ttMC_bin2_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin12_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018failrecoil0_wjetsMC_bin7_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+tmcr2018passrecoil0_ttMC_bin3_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tecr2018passrecoil0_wjetsMC_bin8_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018passrecoil0_ttMC_bin11_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+zecr2018passrecoil0_dyjetsMC_bin14_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+sr2018failrecoil0_wjetsMC_bin7_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tmcr2018passrecoil0_ttMC_bin5_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tecr2018failrecoil0_wjetsMC_bin5_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_wjetsMC_bin15_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin4_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+sr2018failrecoil0_zjetsMC_bin12_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tmcr2018passrecoil0_wjetsMC_bin0_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin7_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+gcr2018passrecoil0_gjetsMC_bin6_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin9_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tecr2018failrecoil0_wjetsMC_bin16_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tmcr2018failrecoil0_ttMC_bin1_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+sr2018passrecoil0_ttMC_bin12_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tecr2018passrecoil0_wjetsMC_bin15_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin12_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+wmcr2018passrecoil0_ttMC_bin1_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin3_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+wmcr2018passrecoil0_wjetsMC_bin5_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+wmcr2018passrecoil0_wjetsMC_bin0_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+wecr2018failrecoil0_ttMC_bin12_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+tecr2018failrecoil0_ttMC_bin1_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018failrecoil0_wjetsMC_bin0_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+sr2018passrecoil0_zjetsMC_bin16_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018failrecoil0_wjetsMC_bin8_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+tmcr2018failrecoil0_ttMC_bin16_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wmcr2018failrecoil0_wjetsMC_bin10_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+tecr2018failrecoil0_wjetsMC_bin10_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tecr2018passrecoil0_ttMC_bin1_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tecr2018failrecoil0_ttMC_bin14_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjetsMC_bin5_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018failrecoil0_ttMC_bin12_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+gcr2018failrecoil0_gjetsMC_bin12_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+tmcr2018passrecoil0_ttMC_bin2_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018failrecoil0_zjetsMC_bin7_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tmcr2018failrecoil0_ttMC_bin0_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wmcr2018failrecoil0_wjetsMC_bin16_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+tmcr2018passrecoil0_wjetsMC_bin5_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tecr2018failrecoil0_ttMC_bin10_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018passrecoil0_wjetsMC_bin4_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+tecr2018failrecoil0_wjetsMC_bin8_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tecr2018passrecoil0_ttMC_bin10_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018failrecoil0_wjetsMC_bin11_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+gcr2018passrecoil0_gjetsMC_bin12_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+wecr2018failrecoil0_ttMC_bin1_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+wecr2018passrecoil0_ttMC_bin9_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin10_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+zecr2018failrecoil0_dyjetsMC_bin5_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+tecr2018passrecoil0_ttMC_bin3_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018passrecoil0_wjetsMC_bin1_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+wecr2018passrecoil0_wjetsMC_bin5_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+sr2018failrecoil0_wjetsMC_bin6_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wecr2018passrecoil0_ttMC_bin6_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+sr2018failrecoil0_wjetsMC_bin2_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tmcr2018passrecoil0_wjetsMC_bin6_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018failrecoil0_zjetsMC_bin8_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_wjetsMC_bin9_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018failrecoil0_wjetsMC_bin6_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+sr2018failrecoil0_ttMC_bin0_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018failrecoil0_ttMC_bin14_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin2_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+wmcr2018passrecoil0_wjetsMC_bin15_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+gcr2018failrecoil0_gjetsMC_bin16_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin16_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+gcr2018failrecoil0_gjetsMC_bin0_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+wmcr2018failrecoil0_ttMC_bin13_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+tecr2018passrecoil0_ttMC_bin5_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018failrecoil0_zjetsMC_bin13_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjetsMC_bin0_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_ttMC_bin6_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wecr2018failrecoil0_ttMC_bin6_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+sr2018passrecoil0_wjetsMC_bin1_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wmcr2018passrecoil0_wjetsMC_bin13_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+wmcr2018failrecoil0_ttMC_bin11_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+tecr2018passrecoil0_ttMC_bin13_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018failrecoil0_wjetsMC_bin8_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+sr2018failrecoil0_ttMC_bin8_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tmcr2018failrecoil0_wjetsMC_bin10_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wmcr2018passrecoil0_wjetsMC_bin10_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+tecr2018passrecoil0_ttMC_bin8_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018failrecoil0_ttMC_bin7_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+gcr2018passrecoil0_gjetsMC_bin7_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+sr2018failrecoil0_wjetsMC_bin13_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+gcr2018failrecoil0_gjetsMC_bin3_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+sr2018failrecoil0_wjetsMC_bin5_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+gcr2018failrecoil0_gjetsMC_bin10_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+gcr2018failrecoil0_gjetsMC_bin14_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+tmcr2018passrecoil0_wjetsMC_bin16_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+wecr2018passrecoil0_wjetsMC_bin6_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+wmcr2018passrecoil0_ttMC_bin0_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+wmcr2018passrecoil0_wjetsMC_bin6_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin11_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+wmcr2018passrecoil0_ttMC_bin2_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+tecr2018passrecoil0_ttMC_bin9_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wmcr2018failrecoil0_wjetsMC_bin7_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+sr2018failrecoil0_ttMC_bin11_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_wjetsMC_bin4_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018failrecoil0_ttMC_bin15_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+sr2018passrecoil0_zjetsMC_bin4_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tecr2018failrecoil0_wjetsMC_bin4_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tecr2018passrecoil0_wjetsMC_bin2_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wmcr2018failrecoil0_ttMC_bin16_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+tmcr2018failrecoil0_wjetsMC_bin0_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+tecr2018passrecoil0_wjetsMC_bin10_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+gcr2018passrecoil0_gjetsMC_bin11_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin0_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin0_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+gcr2018failrecoil0_gjetsMC_bin15_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+wecr2018failrecoil0_ttMC_bin11_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+wecr2018failrecoil0_ttMC_bin4_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+sr2018passrecoil0_ttMC_bin9_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+gcr2018passrecoil0_gjetsMC_bin0_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+sr2018failrecoil0_ttMC_bin16_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_ttMC_bin3_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018failrecoil0_zjets_bin16 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin15 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin14 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin13 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin12 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin11 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin10 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin4_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+wecr2018passrecoil0_wjetsMC_bin11_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+sr2018failrecoil0_zjets_bin9 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin8 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin3 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin2 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin1 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin0 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin7 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin6 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin5 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjets_bin4 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+zecr2018passrecoil0_dyjetsMC_bin9_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+zecr2018passrecoil0_dyjetsMC_bin13_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+sr2018failrecoil0_zjetsMC_bin1_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_ttMC_bin5_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wmcr2018passrecoil0_wjetsMC_bin9_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+sr2018failrecoil0_zjetsMC_bin16_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wecr2018failrecoil0_ttMC_bin8_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+gcr2018passrecoil0_gjetsMC_bin14_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+wmcr2018failrecoil0_ttMC_bin3_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+wmcr2018passrecoil0_ttMC_bin5_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+wmcr2018failrecoil0_wjetsMC_bin12_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+tecr2018failrecoil0_ttMC_bin16_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tmcr2018passrecoil0_wjetsMC_bin11_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tmcr2018failrecoil0_ttMC_bin11_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wmcr2018passrecoil0_wjetsMC_bin3_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+wecr2018passrecoil0_ttMC_bin4_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin4_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+wmcr2018failrecoil0_wjetsMC_bin9_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+tecr2018failrecoil0_ttMC_bin6_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+zecr2018failrecoil0_dyjetsMC_bin9_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+sr2018failrecoil0_ttMC_bin14_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wecr2018failrecoil0_ttMC_bin13_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+wmcr2018failrecoil0_wjetsMC_bin2_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+sr2018passrecoil0_ttMC_bin15_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tecr2018failrecoil0_ttMC_bin5_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_wjetsMC_bin13_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018passrecoil0_ttMC_bin8_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+wecr2018passrecoil0_wjetsMC_bin10_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+gcr2018failrecoil0_gjetsMC_bin8_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+sr2018passrecoil0_ttMC_bin6_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018failrecoil0_ttMC_bin6_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+zecr2018failrecoil0_dyjetsMC_bin6_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin14_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+tecr2018failrecoil0_ttMC_bin15_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin13_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+tecr2018failrecoil0_wjetsMC_bin9_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tmcr2018failrecoil0_ttMC_bin4_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+sr2018passrecoil0_wjetsMC_bin15_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tecr2018failrecoil0_ttMC_bin3_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_wjetsMC_bin10_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin14_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018failrecoil0_ttMC_bin2_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_wjetsMC_bin11_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_wjetsMC_bin3_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tecr2018failrecoil0_ttMC_bin12_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wecr2018passrecoil0_wjetsMC_bin0_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+wecr2018failrecoil0_ttMC_bin7_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+wmcr2018passrecoil0_ttMC_bin9_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin14_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wmcr2018passrecoil0_ttMC_bin8_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin6_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin3_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+wecr2018passrecoil0_ttMC_bin16_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin8_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tecr2018passrecoil0_ttMC_bin14_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tecr2018failrecoil0_ttMC_bin0_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_wjetsMC_bin16_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin11_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018failrecoil0_wjetsMC_bin13_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+sr2018_ttshape_pass_mass0 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass1 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass2 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass3 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass4 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass5 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass6 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass7 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass8 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass9 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin15_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+gcr2018failrecoil0_gjetsMC_bin7_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+tecr2018failrecoil0_wjetsMC_bin11_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018passrecoil0_wjetsMC_bin2_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+wecr2018failrecoil0_wjetsMC_bin0_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+wmcr2018passrecoil0_ttMC_bin16_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin13_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018failrecoil0_ttMC_bin3_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+sr2018failrecoil0_wjetsMC_bin14_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin8_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+wmcr2018failrecoil0_ttMC_bin9_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+wmcr2018failrecoil0_ttMC_bin10_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+wmcr2018failrecoil0_ttMC_bin7_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin15_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+sr2018failrecoil0_zjetsMC_bin15_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin10_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+wmcr2018failrecoil0_ttMC_bin15_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+zecr2018failrecoil0_dyjetsMC_bin11_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+wmcr2018failrecoil0_wjetsMC_bin3_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+zecr2018failrecoil0_dyjetsMC_bin15_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+sr2018failrecoil0_ttMC_bin15_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tmcr2018passrecoil0_ttMC_bin10_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin15_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin12_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin10_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018failrecoil0_wjetsMC_bin16_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+zecr2018failrecoil0_dyjetsMC_bin3_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+wmcr2018failrecoil0_ttMC_bin6_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+wmcr2018passrecoil0_ttMC_bin11_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+zecr2018passrecoil0_dyjetsMC_bin12_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+tecr2018failrecoil0_ttMC_bin11_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+zecr2018passrecoil0_dyjetsMC_bin7_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+wecr2018failrecoil0_wjetsMC_bin9_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+wmcr2018failrecoil0_ttMC_bin2_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin2_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+wmcr2018failrecoil0_wjetsMC_bin14_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+sr2018_tt_recoil0 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+gcr2018failrecoil0_gjetsMC_bin13_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+zecr2018passrecoil0_dyjetsMC_bin3_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+zecr2018failrecoil0_dyjetsMC_bin4_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+gcr2018passrecoil0_gjetsMC_bin15_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin3_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+wecr2018failrecoil0_ttMC_bin10_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+sr2018passrecoil0_ttMC_bin4_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018failrecoil0_zjetsMC_bin6_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wecr2018failrecoil0_ttMC_bin9_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+wecr2018passrecoil0_ttMC_bin12_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+wecr2018failrecoil0_ttMC_bin3_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+tmcr2018passrecoil0_wjetsMC_bin2_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+wecr2018passrecoil0_ttMC_bin13_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+sr2018failrecoil0_ttMC_bin12_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wecr2018failrecoil0_ttMC_bin14_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin0_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+tmcr2018passrecoil0_wjetsMC_bin12_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin16_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+tecr2018passrecoil0_ttMC_bin2_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018failrecoil0_wjetsMC_bin15_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wmcr2018passrecoil0_wjetsMC_bin1_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+tmcr2018failrecoil0_ttMC_bin14_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wecr2018failrecoil0_wjetsMC_bin14_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin5_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+tmcr2018failrecoil0_ttMC_bin2_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wmcr2018failrecoil0_ttMC_bin0_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+wecr2018passrecoil0_ttMC_bin1_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+sr2018_zjets_recoil0_mass15 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_zjets_recoil0_mass14 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_zjets_recoil0_mass16 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_zjets_recoil0_mass11 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_zjets_recoil0_mass10 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_zjets_recoil0_mass13 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_zjets_recoil0_mass12 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+zecr2018failrecoil0_dyjetsMC_bin1_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin6_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+tmcr2018passrecoil0_wjetsMC_bin14_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin10_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018passrecoil0_wjetsMC_bin8_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin4_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+wmcr2018failrecoil0_wjetsMC_bin6_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+wecr2018failrecoil0_wjetsMC_bin4_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+sr2018failrecoil0_zjetsMC_bin11_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018passrecoil0_wjetsMC_bin14_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin14_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018failrecoil0_ttMC_bin4_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tecr2018failrecoil0_ttMC_bin2_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tmcr2018failrecoil0_wjetsMC_bin4_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+tecr2018passrecoil0_wjetsMC_bin14_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tecr2018failrecoil0_ttMC_bin8_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_zjetsMC_bin6_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+gcr2018failrecoil0_gjetsMC_bin9_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin5_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+wecr2018passrecoil0_ttMC_bin10_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+wecr2018passrecoil0_wjetsMC_bin7_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+sr2018failrecoil0_wjetsMC_bin4_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_zjetsMC_bin3_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018failrecoil0_ttMC_bin12_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+zecr2018passrecoil0_dyjetsMC_bin0_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin8_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wmcr2018failrecoil0_wjetsMC_bin4_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+tecr2018failrecoil0_wjetsMC_bin15_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+gcr2018failrecoil0_gjetsMC_bin6_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+wecr2018failrecoil0_wjetsMC_bin5_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+gcr2018passrecoil0_gjetsMC_bin5_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+wecr2018passrecoil0_wjetsMC_bin16_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+wecr2018failrecoil0_wjetsMC_bin1_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+tmcr2018failrecoil0_wjetsMC_bin5_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wmcr2018passrecoil0_wjetsMC_bin11_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+zecr2018failrecoil0_dyjetsMC_bin12_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+tecr2018passrecoil0_wjetsMC_bin1_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin0_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+wmcr2018passrecoil0_ttMC_bin3_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+tecr2018passrecoil0_ttMC_bin6_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin0_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tecr2018passrecoil0_ttMC_bin7_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin6_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin9_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+zecr2018passrecoil0_dyjetsMC_bin11_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+zecr2018passrecoil0_dyjetsMC_bin4_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+zecr2018passrecoil0_dyjetsMC_bin15_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+tecr2018failrecoil0_wjetsMC_bin6_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_wjetsMC_bin6_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018failrecoil0_wjetsMC_bin9_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018failrecoil0_ttMC_bin4_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+sr2018failrecoil0_wjetsMC_bin8_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wecr2018failrecoil0_wjetsMC_bin12_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+wmcr2018failrecoil0_wjetsMC_bin11_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+tmcr2018failrecoil0_ttMC_bin9_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wecr2018passrecoil0_ttMC_bin14_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+zecr2018failrecoil0_dyjetsMC_bin10_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+gcr2018passrecoil0_gjetsMC_bin1_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+tmcr2018passrecoil0_wjetsMC_bin8_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+wecr2018failrecoil0_wjetsMC_bin3_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+sr2018passrecoil0_zjetsMC_bin2_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tecr2018passrecoil0_wjetsMC_bin4_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass12 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass13 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass10 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass11 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass16 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass14 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_ttshape_pass_mass15 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+zecr2018passrecoil0_dyjetsMC_bin5_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin15_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+gcr2018passrecoil0_gjetsMC_bin13_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
+sr2018passrecoil0_ttMC_bin11_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018passrecoil0_ttMC_bin2_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018passrecoil0_wjetsMC_bin2_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018failrecoil0_wjetsMC_bin2_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wecr2018passrecoil0_wjetsMC_bin9_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+zecr2018passrecoil0_dyjetsMC_bin8_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin13_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tecr2018passrecoil0_wjetsMC_bin12_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sf_tt2018 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018failrecoil0_ttMC_bin1_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tecr2018passrecoil0_ttMC_bin4_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018failrecoil0_zjetsMC_bin14_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tmcr2018passrecoil0_ttMC_bin9_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+wmcr2018failrecoil0_ttMC_bin1_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+zecr2018passrecoil0_dyjetsMC_bin16_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+tecr2018passrecoil0_wjetsMC_bin3_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tecr2018passrecoil0_wjetsMC_bin9_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+zecr2018passrecoil0_dyjetsMC_bin6_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+wmcr2018passrecoil0_ttMC_bin15_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+wmcr2018passrecoil0_ttMC_bin12_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin5_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018failrecoil0_ttMC_bin0_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin1_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin11_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin14_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+sr2018failrecoil0_ttMC_bin9_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018passrecoil0_wjetsMC_bin7_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+wmcr2018failrecoil0_wjetsMC_bin8_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin7_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+wecr2018passrecoil0_wjetsMC_bin12_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+tmcr2018failrecoil0_wjetsMC_bin12_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+zecr2018passrecoil0_dyjetsMC_bin1_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+zecr2018failrecoil0_dyjetsMC_bin7_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin8_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+wecr2018passrecoil0_ttMC_bin5_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+tecr2018failrecoil0_ttMC_bin4_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018passrecoil0_wjetsMC_bin12_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018failrecoil0_zjetsMC_bin9_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tecr2018failrecoil0_wjetsMC_bin12_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tmcr2018failrecoil0_wjetsMC_bin9_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+zecr2018failrecoil0_dyjetsMC_bin14_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+gcr2018failrecoil0_gjetsMC_bin1_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+gcr2018failrecoil0_gjetsMC_bin5_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+tmcr2018failrecoil0_wjetsMC_bin11_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+sr2018failrecoil0_zjetsMC_bin10_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_ttMC_bin5_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018failrecoil0_wjetsMC_bin15_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+wecr2018failrecoil0_wjetsMC_bin7_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+tecr2018passrecoil0_ttMC_bin0_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018passrecoil0_ttMC_bin16_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018passrecoil0_ttMC_bin7_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+wecr2018passrecoil0_wjetsMC_bin3_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+wecr2018passrecoil0_wjetsMC_bin4_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+tecr2018passrecoil0_ttMC_bin11_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018passrecoil0_wjetsMC_bin13_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+sr2018failrecoil0_wjetsMC_bin0_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+zecr2018failrecoil0_dyjetsMC_bin0_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+sr2018passrecoil0_zjetsMC_bin0_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tecr2018passrecoil0_wjetsMC_bin6_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018failrecoil0_ttMC_bin15_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+wmcr2018passrecoil0_ttMC_bin13_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+tecr2018failrecoil0_ttMC_bin13_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wecr2018passrecoil0_ttMC_bin3_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+sr2018failrecoil0_wjetsMC_bin10_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin9_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+wmcr2018passrecoil0_wjetsMC_bin12_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+sr2018failrecoil0_zjetsMC_bin2_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin13_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+wecr2018passrecoil0_ttMC_bin7_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+tmcr2018failrecoil0_wjetsMC_bin14_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wecr2018failrecoil0_wjetsMC_bin2_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+tmcr2018passrecoil0_wjetsMC_bin7_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+wecr2018failrecoil0_ttMC_bin5_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+gcr2018failrecoil0_gjetsMC_bin2_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+sr2018passrecoil0_ttMC_bin8_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+zmcr2018passrecoil0_dyjetsMC_bin11_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
+wmcr2018passrecoil0_ttMC_bin14_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
+wecr2018failrecoil0_wjetsMC_bin16_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+wmcr2018failrecoil0_wjetsMC_bin1_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+zecr2018passrecoil0_dyjetsMC_bin2_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+wecr2018passrecoil0_wjetsMC_bin15_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+tecr2018passrecoil0_wjetsMC_bin13_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018failrecoil0_wjetsMC_bin3_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+tmcr2018passrecoil0_wjetsMC_bin13_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+sr2018failrecoil0_zjetsMC_bin3_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tecr2018passrecoil0_wjetsMC_bin11_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+tmcr2018failrecoil0_wjetsMC_bin1_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+sr2018passrecoil0_wjetsMC_bin5_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin7_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+wecr2018failrecoil0_wjetsMC_bin15_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+tmcr2018passrecoil0_ttMC_bin16_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+zecr2018passrecoil0_dyjetsMC_bin10_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
+tmcr2018failrecoil0_ttMC_bin10_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wecr2018failrecoil0_ttMC_bin2_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+sr2018failrecoil0_wjetsMC_bin16_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+tmcr2018passrecoil0_ttMC_bin1_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+zecr2018failrecoil0_dyjetsMC_bin2_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+tmcr2018passrecoil0_ttMC_bin15_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
+tecr2018failrecoil0_wjetsMC_bin7_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_wjetsMC_bin12_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+gcr2018failrecoil0_gjetsMC_bin11_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
+zecr2018failrecoil0_dyjetsMC_bin8_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
+wmcr2018failrecoil0_wjetsMC_bin13_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+wecr2018failrecoil0_ttMC_bin16_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
+wmcr2018passrecoil0_ttMC_bin10_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
