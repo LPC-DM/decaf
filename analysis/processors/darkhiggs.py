@@ -1020,19 +1020,37 @@ class AnalysisProcessor(processor.ProcessorABC):
             genZs = gen[gen.isZ&(gen.pt>100)]
             genIsoAs = gen[gen.isIsoA&(gen.pt>290)] #Based on photon weight distribution
 
+            kfactor = {
+                'WJets': {
+                    '2018': 1.014*1.034,
+                    '2017': 1.045*1.034
+                },
+                'ZJets': {
+                    '2018': 1.094*1.084,
+                    '2017': 1.12*1.084
+                },
+                'DY': {
+                    '2018': 1.132*1.043,
+                    '2017': 1.137*1.043
+                }
+            }
+
             nnlo_nlo = {}
             if('GJets' in dataset): 
                 for systematic in get_nnlo_nlo_weight['a']:
                     nnlo_nlo[systematic]=get_nnlo_nlo_weight['a'][systematic](genIsoAs.pt.max())*(genIsoAs.counts>0).astype(np.int) + (~(genIsoAs.counts>0)).astype(np.int)
             elif('WJets' in dataset): 
                 for systematic in get_nnlo_nlo_weight['w']:
-                    nnlo_nlo[systematic]= get_nnlo_nlo_weight['w'][systematic](genWs.pt.max())*(genWs.counts>0).astype(np.int) + (~(genWs.counts>0)).astype(np.int)
+                    nnlo_nlo[systematic]=get_nnlo_nlo_weight['w'][systematic](genWs.pt.max())*(genWs.counts>0).astype(np.int) + (~(genWs.counts>0)).astype(np.int)
+                    nnlo_nlo[systematic]=nnlo_nlo[systematic]*kfactor['WJets'][self._year]
             elif('DY' in dataset): 
                 for systematic in get_nnlo_nlo_weight['dy']:
                     nnlo_nlo[systematic]=get_nnlo_nlo_weight['dy'][systematic](genZs.pt.max())*(genZs.counts>0).astype(np.int) + (~(genZs.counts>0)).astype(np.int)
+                    nnlo_nlo[systematic]=nnlo_nlo[systematic]*kfactor['DY'][self._year]
             elif('ZJets' in dataset): 
                 for systematic in get_nnlo_nlo_weight['z']:
                     nnlo_nlo[systematic]=get_nnlo_nlo_weight['z'][systematic](genZs.pt.max())*(genZs.counts>0).astype(np.int) + (~(genZs.counts>0)).astype(np.int)
+                    nnlo_nlo[systematic]=nnlo_nlo[systematic]*kfactor['ZJets'][self._year]
 
             ###
             # Calculate PU weight and systematic variations
