@@ -74,13 +74,20 @@ processes =    {
     
     # LO W->lnu
     #2018/2017
-    'WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht100to200_CP5','MC',1392),
-    'WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht200to400_CP5','MC',410.3),
-    'WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht400to600_CP5','MC',57.85),
-    'WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht600to800_CP5','MC',12.95),
-    'WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht800to1200_CP5','MC',5.451),
-    'WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht1200to2500_CP5','MC',1.084),
-    'WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht2500toinf_CP5','MC',0.008061),
+    #'WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht100to200_CP5','MC',1392),
+    'WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht100to200_CP5','MC',1345),
+    #'WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht200to400_CP5','MC',410.3),
+    'WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht200to400_CP5','MC',359.7),
+    #'WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht400to600_CP5','MC',57.85),
+    'WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht400to600_CP5','MC',48.91),
+    #'WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht600to800_CP5','MC',12.95),
+    'WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht600to800_CP5','MC',12.05),
+    #'WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht800to1200_CP5','MC',5.451),
+    'WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht800to1200_CP5','MC',5.501),
+    #'WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht1200to2500_CP5','MC',1.084),
+    'WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht1200to2500_CP5','MC',1.329),
+    #'WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht2500toinf_CP5','MC',0.008061),
+    'WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8':('WJets_ht2500toinf_CP5','MC',0.03216),
     #2016
     'WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8':('WJets_ht100to200','MC',1346),
     'WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8':('WJets_ht200to400','MC',359.1),
