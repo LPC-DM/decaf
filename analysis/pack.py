@@ -73,11 +73,17 @@ def parse_xsec(cfgfile):
 #xsections = parse_xsec("data/xsec.conf")
 xsections={}
 for k,v in processes.items():
-    if v[1]=='MC':
-        xsections[k] = v[2]
-    else:
-        xsections[k] = -1
-
+     if v[1]=='MC':
+          if not isinstance(k, str):
+               print(k)
+               print(options.year,k[1])
+               if options.year!=str(k[1]): continue
+               xsections[k[0]] = v[2]
+          else: 
+               xsections[k] = v[2]
+     else:
+          xsections[k] = -1
+print(xsections)
 datadef = {}
 for folder in beans[options.year]:
     print("Opening",folder)
