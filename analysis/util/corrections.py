@@ -18,7 +18,7 @@ pu_files = {
 }
 get_pu_weight = {}
 for year in ['2016','2017','2018']:
-    pu_hist=pu_files[year]['puWeights']
+    pu_hist=pu_files[year]['pu_weights_central']
     get_pu_weight[year] = lookup_tools.dense_lookup.dense_lookup(pu_hist.values, pu_hist.edges)
 
 ###
