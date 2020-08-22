@@ -80,7 +80,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         genWs = gen[gen.isW&(gen.pt>100)]
         genZs = gen[gen.isZ&(gen.pt>100)]
-        genIsoAs = gen[gen.isIsoA&(gen.pt>150)] #Based on photon weight distribution
+        genIsoAs = gen[gen.isIsoA&(gen.pt>290)] #Based on photon weight distribution
 
         nnlo_nlo = np.ones(events.size)
         lo = np.ones(events.size)

@@ -80,11 +80,10 @@ with open('metadata/'+options.metadata+'.json') as fin:
 for dataset, info in datadef.items():
     if options.dataset and options.dataset not in dataset: continue
     if options.exclude and options.exclude in dataset: continue
-    print(dataset)
     os.environ['SAMPLE'] = dataset
     os.environ['BTCN'] = dataset.split('____')[0]
     os.environ['PROCESSOR']   = options.processor
     os.environ['METADATA']   = options.metadata
     os.environ['CLUSTER'] = options.cluster
-    #os.system('condor_submit run.submit')
+    os.system('condor_submit run.submit')
 os.system('rm run.submit')
