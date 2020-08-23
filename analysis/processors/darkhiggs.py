@@ -1041,8 +1041,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             nnlo_nlo = {}
             if('GJets' in dataset): 
                 for systematic in get_nnlo_nlo_weight['a']:
-                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['a'][systematic](genIsoAs.pt.max())*((genIsoAs.counts>0)&(genIsoAs.pt.max()>=100)) + \
-                                           get_nnlo_nlo_weight['a'][systematic](100)*((genIsoAs.counts>0)&~(genIsoAs.pt.max()>=100)) + \
+                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['a'][systematic](genIsoAs.pt.max())*((genIsoAs.counts>0)&(genIsoAs.pt.max()>=290)) + \
+                                           get_nnlo_nlo_weight['a'][systematic](290)*((genIsoAs.counts>0)&~(genIsoAs.pt.max()>=290)) + \
                                            (~(genIsoAs.counts>0)).astype(np.int)
             elif('WJets' in dataset): 
                 for systematic in get_nnlo_nlo_weight['w']:
