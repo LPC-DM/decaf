@@ -113,15 +113,6 @@ def model(year,recoil,category):
     with open('data/hf_systematic.json') as fin:
         hf_systematic = json.load(fin)
 
-    tt_efficiency={
-        '2018': 0.5,
-    }
-    sf_tt = rl.IndependentParameter('sf_tt'+year, 1., 0.01, 1./tt_efficiency[year])
-    tt_weight={
-        'pass': sf_tt*tt_efficiency[year],
-        'fail': 1-(sf_tt*tt_efficiency[year])
-    }
-
     data_hists   = hists['data']
     bkg_hists    = hists['bkg']
     signal_hists = hists['sig']
@@ -141,39 +132,6 @@ def model(year,recoil,category):
     signal = {}
     for r in bkg_hists['template'].identifiers('region'):
         signal[str(r)]=signal_hists['template'].integrate('region',r).sum('gentype')
-
-    ###
-    ###
-    # Setting up systematics
-    ###
-    ###
-
-    lumi = rl.NuisanceParameter('lumi'+year, 'lnN')
-    qcdpho_norm = rl.NuisanceParameter('qcdpho_norm', 'lnN')
-    qcde_norm = rl.NuisanceParameter('qcde_norm', 'lnN')
-    qcdmu_norm = rl.NuisanceParameter('qcdmu_norm', 'lnN')
-    qcdsig_norm = rl.NuisanceParameter('qcdsig_norm', 'lnN')
-    st_norm = rl.NuisanceParameter('st_norm', 'lnN')
-    tt_norm = rl.NuisanceParameter('tt_norm', 'lnN')
-    vv_norm = rl.NuisanceParameter('vv_norm', 'lnN')
-    hbb_norm = rl.NuisanceParameter('hbb_norm', 'lnN')
-    zjets_norm = rl.NuisanceParameter('zjets_norm', 'lnN')
-    wjets_norm = rl.NuisanceParameter('wjets_norm', 'lnN')
-    gjets_norm = rl.NuisanceParameter('gjets_norm', 'lnN')
-    whf_fraction = rl.NuisanceParameter('whf_fraction', 'lnN')
-    zhf_fraction = rl.NuisanceParameter('zhf_fraction', 'lnN')
-    ghf_fraction = rl.NuisanceParameter('ghf_fraction', 'lnN')
-    id_e = rl.NuisanceParameter('id_e'+year, 'lnN')
-    id_mu = rl.NuisanceParameter('id_mu'+year, 'lnN')
-    id_pho = rl.NuisanceParameter('id_pho'+year, 'lnN')
-    reco_e = rl.NuisanceParameter('reco_e'+year, 'lnN')
-    iso_mu = rl.NuisanceParameter('iso_mu'+year, 'lnN')
-    trig_e = rl.NuisanceParameter('trig_e'+year, 'lnN')
-    trig_met = rl.NuisanceParameter('trig_met'+year, 'lnN')
-    trig_pho = rl.NuisanceParameter('trig_pho'+year, 'lnN')
-    veto_tau = rl.NuisanceParameter('veto_tau'+year, 'lnN')
-    jec = rl.NuisanceParameter('jec'+year, 'lnN')
-    btag = rl.NuisanceParameter('btag'+year, 'shape') #AK4 btag
 
     ###
     ###
@@ -205,11 +163,11 @@ def model(year,recoil,category):
     btagUp=template(background,'Z+jets','btagUp','sr')[0]
     btagDown=template(background,'Z+jets','btagDown','sr')[0]
     sr_zjetsMC.setParamEffect(btag, btagUp, btagDown)
-    sr_zjetsBinYields = np.array([rl.IndependentParameter('sr'+year+'_zjets_recoil'+str(recoil)+'_mass%d' % i, b, 0, sr_zjetsTemplate[0].max()*2) for i,b in enumerate(sr_zjetsTemplate[0])])
-    if category == 'pass':
-        sr_zjetsBinYields = sr_zjetsBinYields * tf_params
     sr_zjetsObservable = rl.Observable('fjmass', sr_zjetsTemplate[1])
-    sr_zjets = rl.ParametericSample(ch_name+'_zjets', rl.Sample.BACKGROUND, sr_zjetsObservable, sr_zjetsBinYields)
+    if category == 'pass':
+        sr_zjets = rl.ParametericSample(ch_name+'_zjets', rl.Sample.BACKGROUND, sr_zjetsObservable, sr_zjetsBinYields * tf_params)
+    else:
+        sr_zjets = rl.ParametericSample(ch_name+'_zjets', rl.Sample.BACKGROUND, sr_zjetsObservable, sr_zjetsBinYields * 1.0)
     sr.addSample(sr_zjets)
 
     ###    
@@ -246,11 +204,6 @@ def model(year,recoil,category):
     btagUp=template(background,'TT','btagUp','sr')[0]
     btagDown=template(background,'TT','btagDown','sr')[0]
     sr_ttMC.setParamEffect(btag, btagUp, btagDown)
-    sr_ttBinYields = np.array([rl.IndependentParameter('sr'+year+'_ttshape_'+category+'_mass%d' % i, b, 0, sr_ttTemplate[0].max()*2) for i,b in enumerate(sr_ttTemplate[0])])
-    eff=tt_efficiency[year]
-    if category=='fail': eff=(1-tt_efficiency[year])
-    sr_ttBinYields = sr_ttBinYields*rl.IndependentParameter('sr'+year+'_tt_recoil'+str(recoil), sr_ttTemplate[0].sum()/eff, 0, sr_ttTemplate[0].sum()/eff*2)
-    sr_ttBinYields = sr_ttBinYields*tt_weight[category]
     sr_ttObservable = rl.Observable('fjmass', sr_ttTemplate[1])
     sr_tt = rl.ParametericSample(ch_name+'_tt', rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields)
     sr.addSample(sr_tt)
@@ -1164,11 +1117,66 @@ if __name__ == '__main__':
     #tf_params = rhalphabeth(mass_binning)
     tf_params=0.05
 
+    tt_efficiency={
+        '2018': 0.5,
+    }
+    sf_tt = rl.IndependentParameter('sf_tt'+options.year, 1., 0.01, 1./tt_efficiency[options.year])
+    tt_weight={
+        'pass': sf_tt*tt_efficiency[options.year],
+        'fail': 1-(sf_tt*tt_efficiency[options.year])
+    }
+    sr_ttHistPass = hists['bkg']['template'].integrate('region','sr').sum('gentype','recoil').integrate('process','TT').integrate('systematic','nominal').values()[()][:,1]
+    sr_ttHistPass = sr_ttHistPass/sr_ttHistPass.sum()
+    sr_ttHistFail = hists['bkg']['template'].integrate('region','sr').sum('gentype','recoil').integrate('process','TT').integrate('systematic','nominal').values()[()][:,0]
+    sr_ttHistFail = sr_ttHistFail/sr_ttHistFail.sum()
+    sr_ttShape = {
+        'pass': np.array([rl.IndependentParameter('sr'+options.year+'_ttshape_pass_mass%d' % i, b, 0, sr_ttHistPass.max()*2) for i,b in enumerate(sr_ttHistPass)]),
+        'fail': np.array([rl.IndependentParameter('sr'+options.year+'_ttshape_fail_mass%d' % i, b, 0, sr_ttHistFail.max()*2) for i,b in enumerate(sr_ttHistFail)])
+    }
+
+    ###
+    ###
+    # Setting up systematics
+    ###
+    ###
+
+    lumi = rl.NuisanceParameter('lumi'+options.year, 'lnN')
+    qcdpho_norm = rl.NuisanceParameter('qcdpho_norm', 'lnN')
+    qcde_norm = rl.NuisanceParameter('qcde_norm', 'lnN')
+    qcdmu_norm = rl.NuisanceParameter('qcdmu_norm', 'lnN')
+    qcdsig_norm = rl.NuisanceParameter('qcdsig_norm', 'lnN')
+    st_norm = rl.NuisanceParameter('st_norm', 'lnN')
+    tt_norm = rl.NuisanceParameter('tt_norm', 'lnN')
+    vv_norm = rl.NuisanceParameter('vv_norm', 'lnN')
+    hbb_norm = rl.NuisanceParameter('hbb_norm', 'lnN')
+    zjets_norm = rl.NuisanceParameter('zjets_norm', 'lnN')
+    wjets_norm = rl.NuisanceParameter('wjets_norm', 'lnN')
+    gjets_norm = rl.NuisanceParameter('gjets_norm', 'lnN')
+    whf_fraction = rl.NuisanceParameter('whf_fraction', 'lnN')
+    zhf_fraction = rl.NuisanceParameter('zhf_fraction', 'lnN')
+    ghf_fraction = rl.NuisanceParameter('ghf_fraction', 'lnN')
+    id_e = rl.NuisanceParameter('id_e'+options.year, 'lnN')
+    id_mu = rl.NuisanceParameter('id_mu'+options.year, 'lnN')
+    id_pho = rl.NuisanceParameter('id_pho'+options.year, 'lnN')
+    reco_e = rl.NuisanceParameter('reco_e'+options.year, 'lnN')
+    iso_mu = rl.NuisanceParameter('iso_mu'+options.year, 'lnN')
+    trig_e = rl.NuisanceParameter('trig_e'+options.year, 'lnN')
+    trig_met = rl.NuisanceParameter('trig_met'+options.year, 'lnN')
+    trig_pho = rl.NuisanceParameter('trig_pho'+options.year, 'lnN')
+    veto_tau = rl.NuisanceParameter('veto_tau'+options.year, 'lnN')
+    jec = rl.NuisanceParameter('jec'+options.year, 'lnN')
+    btag = rl.NuisanceParameter('btag'+options.year, 'shape') #AK4 btag
+
     model_dict={}
     recoilbins = np.array(recoil_binning)
     nrecoil = len(recoilbins) - 1
     for recoilbin in range(nrecoil):
+        sr_zjetsHist = hists['bkg']['template'].integrate('region','sr').sum('gentype').integrate('process','Z+jets').integrate('systematic','nominal').values()[()][recoilbin,:,0]
+        sr_zjetsBinYields = np.array([rl.IndependentParameter('sr'+options.year+'_zjets_recoil'+str(recoilbin)+'_mass%d' % i, b, 0, sr_zjetsHist.max()*2) for i,b in enumerate(sr_zjetsHist)])
+        sr_ttRecoil = hists['bkg']['template'].integrate('region','sr').sum('gentype','fjmass','ZHbbvsQCD').integrate('process','TT').integrate('systematic','nominal').values()[()][recoilbin]
+        sr_ttRate = rl.IndependentParameter('sr'+options.year+'_tt_recoil'+str(recoilbin), sr_ttRecoil, 0, sr_ttRecoil*2)
         for category in ['pass','fail']:
+            sr_ttBinYields = sr_ttShape[category]*sr_ttRate*tt_weight[category]
             with open('data/darkhiggs-'+options.year+'-'+category+'-recoil'+str(recoilbin)+'.model', "wb") as fout:
                 pickle.dump(model(options.year,recoilbin,category), fout, protocol=2)
 

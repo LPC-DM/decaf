@@ -78,27 +78,32 @@ class AnalysisProcessor(processor.ProcessorABC):
             isIsoA=isIsoA&isolation(gen.R_0_dyn*i/iterations)
         gen['isIsoA']=isIsoA
 
-        genWs = gen[gen.isW&(gen.pt>100)]
-        genZs = gen[gen.isZ&(gen.pt>100)]
-        genIsoAs = gen[gen.isIsoA&(gen.pt>290)] #Based on photon weight distribution
+        genWs = gen[gen.isW] 
+        genZs = gen[gen.isZ]
+        genDYs = gen[gen.isZ&(gen.mass>30)]
+        genIsoAs = gen[gen.isIsoA] 
 
         nnlo_nlo = np.ones(events.size)
-        lo = np.ones(events.size)
         if('GJets' in dataset): 
-            nnlo_nlo=get_nnlo_nlo_weight['a']['cen'](genIsoAs.pt.max())*(genIsoAs.counts>0)
-            lo=(genIsoAs.counts>0).astype(np.int)
+            nnlo_nlo = get_nnlo_nlo_weight['a'][systematic](genIsoAs.pt.max())*((genIsoAs.counts>0)&(genIsoAs.pt>=100)) + \
+                       get_nnlo_nlo_weight['a'][systematic](100)*((genIsoAs.counts>0)&~(genIsoAs.pt>=100)) + \
+                       (~(genIsoAs.counts>0)).astype(np.int)
         elif('WJets' in dataset): 
-            nnlo_nlo=get_nnlo_nlo_weight['w']['cen'](genWs.pt.max())*(genWs.counts>0)
-            lo=(genWs.counts>0).astype(np.int)
-        elif('DY' in dataset):
-            nnlo_nlo=get_nnlo_nlo_weight['dy']['cen'](genZs.pt.max())*(genZs.counts>0)
-            lo=(genZs.counts>0).astype(np.int)
+            nnlo_nlo = get_nnlo_nlo_weight['w'][systematic](genWs.pt.max())*((genWs.counts>0)&(genWs.pt>=100)) + \
+                       get_nnlo_nlo_weight['w'][systematic](100)*((genWs.counts>0)&~(genWs.pt>=100)) + \
+                       (~(genWs.counts>0)).astype(np.int)
+        elif('DY' in dataset): 
+            nnlo_nlo = get_nnlo_nlo_weight['dy'][systematic](genDYs.pt.max())*((genDYs.counts>0)&(genDYs.pt>=100)) + \
+                       get_nnlo_nlo_weight['dy'][systematic](100)*((genDYs.counts>0)&~(genDYs.pt>=100)) + \
+                       (~(genDYs.counts>0)).astype(np.int)
         elif('ZJets' in dataset): 
-            nnlo_nlo=get_nnlo_nlo_weight['z']['cen'](genZs.pt.max())*(genZs.counts>0)
-            lo=(genZs.counts>0).astype(np.int)
+            nnlo_nlo = get_nnlo_nlo_weight['z'][systematic](genZs.pt.max())*((genZs.counts>0)&(genZs.pt>=100)) + \
+                       get_nnlo_nlo_weight['z'][systematic](100)*((genZs.counts>0)&~(genZs.pt>=100)) + \
+                       (~(genZs.counts>0)).astype(np.int)
+
         hout['sumw'].fill(dataset='lo--'+dataset, sumw=1, weight=events.genWeight.sum())
         hout['sumw'].fill(dataset='nnlo--'+dataset, sumw=1, weight=events.genWeight.sum())
-        hout['yields'].fill(dataset='lo--'+dataset, yields=np.zeros(events.size), weight=events.genWeight*lo)
+        hout['yields'].fill(dataset='lo--'+dataset, yields=np.zeros(events.size), weight=events.genWeight)
         hout['yields'].fill(dataset='nnlo--'+dataset, yields=np.zeros(events.size), weight=events.genWeight*nnlo_nlo)
         return hout
 

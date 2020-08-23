@@ -1019,7 +1019,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             #genWs = gen[gen.isW&(gen.pt>=100)]
             genWs = gen[gen.isW] 
             genZs = gen[gen.isZ]
-            genIsoAs = gen[gen.isIsoA] #Based on photon weight distribution
+            genDYs = gen[gen.isZ&(gen.mass>30)]
+            genIsoAs = gen[gen.isIsoA] 
 
             '''
             kfactor = {
@@ -1051,9 +1052,9 @@ class AnalysisProcessor(processor.ProcessorABC):
                     #nnlo_nlo[systematic]=nnlo_nlo[systematic]*kfactor['WJets'][self._year]
             elif('DY' in dataset): 
                 for systematic in get_nnlo_nlo_weight['dy']:
-                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['dy'][systematic](genZs.pt.max())*((genZs.counts>0)&(genZs.pt>=100)) + \
-                                           get_nnlo_nlo_weight['dy'][systematic](100)*((genZs.counts>0)&~(genZs.pt>=100)) + \
-                                           (~(genZs.counts>0)).astype(np.int)
+                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['dy'][systematic](genDYs.pt.max())*((genDYs.counts>0)&(genDYs.pt>=100)) + \
+                                           get_nnlo_nlo_weight['dy'][systematic](100)*((genDYs.counts>0)&~(genDYs.pt>=100)) + \
+                                           (~(genDYs.counts>0)).astype(np.int)
                     #nnlo_nlo[systematic]=nnlo_nlo[systematic]*kfactor['DY'][self._year]
             elif('ZJets' in dataset): 
                 for systematic in get_nnlo_nlo_weight['z']:
