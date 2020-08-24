@@ -26,7 +26,7 @@ observation  383650               32233                601064               3906
 bin                               wmcr2018failrecoil0  wmcr2018failrecoil0  wmcr2018failrecoil0  wmcr2018failrecoil0  wmcr2018failrecoil0  wmcr2018failrecoil0  wmcr2018failrecoil0  zecr2018failrecoil0  zecr2018failrecoil0  zecr2018failrecoil0  zecr2018failrecoil0  zecr2018failrecoil0  gcr2018failrecoil0   gcr2018failrecoil0   zmcr2018failrecoil0  zmcr2018failrecoil0  zmcr2018failrecoil0  zmcr2018failrecoil0  zmcr2018failrecoil0  tmcr2018failrecoil0  tmcr2018failrecoil0  tmcr2018failrecoil0  tmcr2018failrecoil0  tmcr2018failrecoil0  tmcr2018failrecoil0  tmcr2018failrecoil0  wecr2018failrecoil0  wecr2018failrecoil0  wecr2018failrecoil0  wecr2018failrecoil0  wecr2018failrecoil0  wecr2018failrecoil0  wecr2018failrecoil0  sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    sr2018failrecoil0    tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0  zmcr2018passrecoil0  zmcr2018passrecoil0  zmcr2018passrecoil0  zmcr2018passrecoil0  zmcr2018passrecoil0  zecr2018passrecoil0  zecr2018passrecoil0  zecr2018passrecoil0  zecr2018passrecoil0  zecr2018passrecoil0  gcr2018passrecoil0   gcr2018passrecoil0   sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    sr2018passrecoil0    tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  wmcr2018passrecoil0  wmcr2018passrecoil0  wmcr2018passrecoil0  wmcr2018passrecoil0  wmcr2018passrecoil0  wmcr2018passrecoil0  wmcr2018passrecoil0  wecr2018passrecoil0  wecr2018passrecoil0  wecr2018passrecoil0  wecr2018passrecoil0  wecr2018passrecoil0  wecr2018passrecoil0  wecr2018passrecoil0  tecr2018passrecoil0  tecr2018passrecoil0  tecr2018passrecoil0  tecr2018passrecoil0  tecr2018passrecoil0  tecr2018passrecoil0  tecr2018passrecoil0
 process                           dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC                ttMC                 stMC                 dyjets               vvMC                 hbbMC                gjets                qcdMC                ttMC                 stMC                 dyjets               vvMC                 hbbMC                dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC                dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC                Mhs_50               dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 zjets                hbbMC                dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC                ttMC                 stMC                 dyjets               vvMC                 hbbMC                ttMC                 stMC                 dyjets               vvMC                 hbbMC                gjets                qcdMC                Mhs_50               dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 zjets                hbbMC                dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC                dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC                dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC                dyjetsMC             tt                   wjets                vvMC                 qcdMC                stMC                 hbbMC              
 process                           1                    2                    3                    4                    5                    6                    7                    8                    6                    9                    4                    7                    10                   5                    8                    6                    9                    4                    7                    1                    2                    3                    4                    5                    6                    7                    1                    2                    3                    4                    5                    6                    7                    0                    1                    2                    3                    4                    5                    6                    11                   7                    1                    2                    3                    4                    5                    6                    7                    8                    6                    9                    4                    7                    8                    6                    9                    4                    7                    10                   5                    0                    1                    2                    3                    4                    5                    6                    11                   7                    1                    2                    3                    4                    5                    6                    7                    1                    2                    3                    4                    5                    6                    7                    1                    2                    3                    4                    5                    6                    7                    1                    2                    3                    4                    5                    6                    7                  
-rate                              11569.005            1                    1                    8502.334             14295.994            6231.191             29.779               95.954               18.445               1                    621.593              18.103               1                    24934.42             87.343               18.17                1                    761.858              23.109               942.12               1                    1                    707.796              1929.92              3644.921             19.962               1690.518             1                    1                    3968.054             391.403              2764.238             10.323               1514.993             1593.836             1                    1                    7114.12              3942.837             1366.865             1                    21.563               147.423              1                    1                    364.676              31.869               1744.027             8.99                 21.117               1.888                1                    12.662               1.858                14.573               2.11                 1                    9.251                1.479                1                    175.152              3932.095             76.102               1                    1                    906.683              635.895              828.342              1                    109.82               34.975               1                    1                    54.164               313.76               1586.826             21.1                 295.514              1                    1                    778.888              2395.789             4374.609             92.746               87.12                1                    1                    442.706              6.859                2481.76              56.499               11.036               1                    1                    28.059               43.656               966.333              12.28              
+rate                              11549.463            1                    1                    7217.233             11917.561            5303.759             25.301               87.795               15.433               1                    533.2                15.475               1                    21284.138            77.132               15.389               1                    652.481              19.715               930.303              1                    1                    592.81               1645.543             3104.345             17.084               1696.263             1                    1                    3393.449             327.893              2357.716             8.836                1293.816             1596.899             1                    1                    6015.258             3322.484             1162.886             1                    18.392               145.225              1                    1                    307.441              31.379               1487.568             7.739                19.104               1.36                 1                    10.544               1.593                11.839               1.988                1                    7.086                1.267                1                    150.51               3338.635             78.083               1                    1                    757.517              542.231              695.021              1                    93.592               35.136               1                    1                    46.438               280.562              1343.374             18.026               295.535              1                    1                    654.478              1818.48              3708.529             79.159               83.47                1                    1                    376.03               1.95                 2107.77              48.28                10.984               1                    1                    24.022               23.902               826.151              10.497             
 ----------------------------------------------------------------------------------------------------------------------------------
 btag2018                shape     1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                  1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                  1.0                  1.0                  -                    -                    1.0                  1.0                  1.0                  -                    1.0                  1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.0                  1.0                  -                    -                    1.0                  1.0                  1.0                  -                    1.0                  1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                  1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                  1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                  1.0                  -                    -                    1.0                  1.0                  1.0                  1.0                
 hbb_norm                lnN       -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    1.2                  -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                  -                    -                    -                    -                    -                    -                    1.2                
@@ -117,7 +117,7 @@ gcr2018passrecoil0_gjetsMC_bin9_nominal extArg gcr2018passrecoil0.root:gcr2018pa
 tmcr2018failrecoil0_ttMC_bin5_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
 wecr2018passrecoil0_ttMC_bin0_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
 zecr2018failrecoil0_dyjetsMC_bin13_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
-sr2018_zjets_recoil0_mass1 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018passrecoil0_zjetsMC_bin15_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 sr2018_zjets_recoil0_mass0 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 sr2018_zjets_recoil0_mass3 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 sr2018_zjets_recoil0_mass2 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
@@ -160,7 +160,6 @@ tmcr2018passrecoil0_ttMC_bin5_nominal extArg tmcr2018passrecoil0.root:tmcr2018pa
 tecr2018failrecoil0_wjetsMC_bin5_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 sr2018failrecoil0_wjetsMC_bin15_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 zmcr2018passrecoil0_dyjetsMC_bin4_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
-sr2018failrecoil0_zjetsMC_bin12_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 tmcr2018passrecoil0_wjetsMC_bin0_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 zmcr2018passrecoil0_dyjetsMC_bin7_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
 gcr2018passrecoil0_gjetsMC_bin6_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
@@ -176,12 +175,10 @@ wmcr2018passrecoil0_wjetsMC_bin5_nominal extArg wmcr2018passrecoil0.root:wmcr201
 wmcr2018passrecoil0_wjetsMC_bin0_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
 wecr2018failrecoil0_ttMC_bin12_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
 tecr2018failrecoil0_ttMC_bin1_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-wmcr2018failrecoil0_wjetsMC_bin0_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
 sr2018passrecoil0_zjetsMC_bin16_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 tmcr2018failrecoil0_wjetsMC_bin8_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
-tmcr2018failrecoil0_ttMC_bin16_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
 wmcr2018failrecoil0_wjetsMC_bin10_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
-tecr2018failrecoil0_wjetsMC_bin10_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+gcr2018passrecoil0_gjetsMC_bin12_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
 tecr2018passrecoil0_ttMC_bin1_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 tecr2018failrecoil0_ttMC_bin14_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 sr2018failrecoil0_zjetsMC_bin5_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
@@ -197,7 +194,6 @@ wmcr2018passrecoil0_wjetsMC_bin4_nominal extArg wmcr2018passrecoil0.root:wmcr201
 tecr2018failrecoil0_wjetsMC_bin8_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 tecr2018passrecoil0_ttMC_bin10_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 wecr2018failrecoil0_wjetsMC_bin11_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
-gcr2018passrecoil0_gjetsMC_bin12_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
 wecr2018failrecoil0_ttMC_bin1_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
 wecr2018passrecoil0_ttMC_bin9_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
 tmcr2018passrecoil0_wjetsMC_bin10_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
@@ -213,7 +209,7 @@ sr2018failrecoil0_zjetsMC_bin8_nominal extArg tecr2018failrecoil0.root:tecr2018f
 sr2018passrecoil0_wjetsMC_bin9_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 wecr2018failrecoil0_wjetsMC_bin6_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
 sr2018failrecoil0_ttMC_bin0_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-wmcr2018failrecoil0_ttMC_bin14_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+sr2018failrecoil0_zjetsMC_bin15_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 zmcr2018failrecoil0_dyjetsMC_bin2_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
 wmcr2018passrecoil0_wjetsMC_bin15_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
 gcr2018failrecoil0_gjetsMC_bin16_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
@@ -232,7 +228,6 @@ tecr2018passrecoil0_ttMC_bin13_nominal extArg tecr2018passrecoil0.root:tecr2018p
 wecr2018failrecoil0_wjetsMC_bin8_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
 sr2018failrecoil0_ttMC_bin8_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 tmcr2018failrecoil0_wjetsMC_bin10_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
-wmcr2018passrecoil0_wjetsMC_bin10_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
 tecr2018passrecoil0_ttMC_bin8_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 tmcr2018failrecoil0_ttMC_bin7_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
 gcr2018passrecoil0_gjetsMC_bin7_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
@@ -268,25 +263,14 @@ sr2018passrecoil0_ttMC_bin9_nominal extArg tecr2018passrecoil0.root:tecr2018pass
 gcr2018passrecoil0_gjetsMC_bin0_nominal extArg gcr2018passrecoil0.root:gcr2018passrecoil0
 sr2018failrecoil0_ttMC_bin16_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 sr2018passrecoil0_ttMC_bin3_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
-sr2018failrecoil0_zjets_bin16 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin15 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin14 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin13 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin12 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin11 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin10 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018failrecoil0_wjetsMC_bin0_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+tmcr2018failrecoil0_ttMC_bin16_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
+wecr2018passrecoil0_wjetsMC_bin9_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+tecr2018failrecoil0_wjetsMC_bin10_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 zmcr2018failrecoil0_dyjetsMC_bin4_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
 wecr2018passrecoil0_wjetsMC_bin11_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
-sr2018failrecoil0_zjets_bin9 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin8 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin3 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin2 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin1 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin0 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin7 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin6 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin5 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin4 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018failrecoil0_zjetsMC_bin12_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018passrecoil0_wjetsMC_bin10_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
 zecr2018passrecoil0_dyjetsMC_bin9_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
 zecr2018passrecoil0_dyjetsMC_bin13_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
 sr2018failrecoil0_zjetsMC_bin1_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
@@ -370,7 +354,7 @@ wmcr2018failrecoil0_ttMC_bin9_nominal extArg wmcr2018failrecoil0.root:wmcr2018fa
 wmcr2018failrecoil0_ttMC_bin10_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
 wmcr2018failrecoil0_ttMC_bin7_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
 zmcr2018passrecoil0_dyjetsMC_bin15_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
-sr2018failrecoil0_zjetsMC_bin15_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+wmcr2018failrecoil0_ttMC_bin14_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
 zmcr2018passrecoil0_dyjetsMC_bin10_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
 wmcr2018failrecoil0_ttMC_bin15_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
 zecr2018failrecoil0_dyjetsMC_bin11_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
@@ -378,7 +362,7 @@ wmcr2018failrecoil0_wjetsMC_bin3_nominal extArg wmcr2018failrecoil0.root:wmcr201
 zecr2018failrecoil0_dyjetsMC_bin15_nominal extArg zecr2018failrecoil0.root:zecr2018failrecoil0
 sr2018failrecoil0_ttMC_bin15_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 tmcr2018passrecoil0_ttMC_bin10_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
-sr2018passrecoil0_zjetsMC_bin15_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
+sr2018_zjets_recoil0_mass1 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 zmcr2018passrecoil0_dyjetsMC_bin12_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
 sr2018passrecoil0_ttMC_bin10_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 tmcr2018failrecoil0_wjetsMC_bin16_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
@@ -408,7 +392,7 @@ tmcr2018passrecoil0_wjetsMC_bin2_nominal extArg tmcr2018passrecoil0.root:tmcr201
 wecr2018passrecoil0_ttMC_bin13_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
 sr2018failrecoil0_ttMC_bin12_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 wecr2018failrecoil0_ttMC_bin14_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
-zmcr2018failrecoil0_dyjetsMC_bin0_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
+wmcr2018failrecoil0_wjetsMC_bin4_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
 tmcr2018passrecoil0_wjetsMC_bin12_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 zmcr2018passrecoil0_dyjetsMC_bin16_nominal extArg zmcr2018passrecoil0.root:zmcr2018passrecoil0
 tecr2018passrecoil0_ttMC_bin2_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
@@ -453,7 +437,7 @@ sr2018passrecoil0_zjetsMC_bin3_nominal extArg tecr2018passrecoil0.root:tecr2018p
 tmcr2018failrecoil0_ttMC_bin12_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
 zecr2018passrecoil0_dyjetsMC_bin0_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
 sr2018passrecoil0_wjetsMC_bin8_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
-wmcr2018failrecoil0_wjetsMC_bin4_nominal extArg wmcr2018failrecoil0.root:wmcr2018failrecoil0
+zmcr2018failrecoil0_dyjetsMC_bin0_nominal extArg zmcr2018failrecoil0.root:zmcr2018failrecoil0
 tecr2018failrecoil0_wjetsMC_bin15_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 gcr2018failrecoil0_gjetsMC_bin6_nominal extArg gcr2018failrecoil0.root:gcr2018failrecoil0
 wecr2018failrecoil0_wjetsMC_bin5_nominal extArg wecr2018failrecoil0.root:wecr2018failrecoil0
@@ -503,10 +487,9 @@ sr2018passrecoil0_ttMC_bin11_nominal extArg tecr2018passrecoil0.root:tecr2018pas
 sr2018passrecoil0_ttMC_bin2_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 sr2018passrecoil0_wjetsMC_bin2_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 tmcr2018failrecoil0_wjetsMC_bin2_nominal extArg tmcr2018failrecoil0.root:tmcr2018failrecoil0
-wecr2018passrecoil0_wjetsMC_bin9_nominal extArg wecr2018passrecoil0.root:wecr2018passrecoil0
+tecr2018passrecoil0_wjetsMC_bin12_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 zecr2018passrecoil0_dyjetsMC_bin8_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
 tmcr2018passrecoil0_ttMC_bin13_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
-tecr2018passrecoil0_wjetsMC_bin12_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 sf_tt2018 extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 sr2018failrecoil0_ttMC_bin1_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 tecr2018passrecoil0_ttMC_bin4_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0

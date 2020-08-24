@@ -1,4 +1,4 @@
-# Datacard for <Channel (tecr2018failrecoil0) instance at 0x2b75463c7dd0> generated on 2020-08-12 04:42:17.995314
+# Datacard for <Channel (tecr2018failrecoil0) instance at 0x2b5bc32846d0> generated on 2020-08-24 08:33:41.273959
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
 kmax 17 # number of nuisance parameters
@@ -8,7 +8,7 @@ observation 22821.000
 bin               tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0  tecr2018failrecoil0
 process                         wjets                   tt                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
 process                             1                    2                    3                    4                    5                    6                    7
-rate                            1.000                1.000             1744.027              147.423              364.676                8.990               31.869
+rate                            1.000                1.000             1487.568              145.225              307.441                7.739               31.379
 btag2018 shape                      -                    -                1.000                1.000                1.000                1.000                1.000
 hbb_norm lnN                        -                    -                    -                    -                    -                1.200                    -
 id_e2018 lnN                        -                    -                1.020                1.020                1.020                1.020                1.020
@@ -45,6 +45,23 @@ sr2018_ttshape_fail_mass6 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 sr2018_ttshape_fail_mass7 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 sr2018_ttshape_fail_mass8 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 sr2018_ttshape_fail_mass9 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass0 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass1 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass10 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass11 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass12 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass13 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass14 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass15 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass16 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass2 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass3 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass4 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass5 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass6 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass7 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass8 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
+sr2018_zjets_recoil0_mass9 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 sr2018failrecoil0_ttMC_bin0_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 sr2018failrecoil0_ttMC_bin10_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 sr2018failrecoil0_ttMC_bin11_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
@@ -113,23 +130,6 @@ sr2018failrecoil0_zjetsMC_bin6_nominal extArg tecr2018failrecoil0.root:tecr2018f
 sr2018failrecoil0_zjetsMC_bin7_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 sr2018failrecoil0_zjetsMC_bin8_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 sr2018failrecoil0_zjetsMC_bin9_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin0 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin1 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin10 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin11 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin12 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin13 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin14 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin15 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin16 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin2 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin3 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin4 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin5 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin6 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin7 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin8 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
-sr2018failrecoil0_zjets_bin9 extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 tecr2018failrecoil0_ttMC_bin0_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 tecr2018failrecoil0_ttMC_bin10_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 tecr2018failrecoil0_ttMC_bin11_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0

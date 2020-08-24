@@ -1,4 +1,4 @@
-# Datacard for <Channel (gcr2018passrecoil0) instance at 0x2b77a4c2c790> generated on 2020-08-12 04:35:00.737656
+# Datacard for <Channel (gcr2018passrecoil0) instance at 0x2b0bf54bd810> generated on 2020-08-24 08:25:58.902937
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 1 # number of samples minus 1
 kmax 12 # number of nuisance parameters
@@ -8,7 +8,7 @@ observation 3533.000
 bin               gcr2018passrecoil0  gcr2018passrecoil0
 process                        gjets               qcdMC
 process                            1                   2
-rate                           1.000             175.152
+rate                           1.000             150.510
 id_pho2018 lnN                     -               1.020
 jec2018 lnN                        -               1.050
 lumi2018 lnN                       -               1.027
