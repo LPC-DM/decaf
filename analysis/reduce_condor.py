@@ -55,6 +55,7 @@ Arguments = $ENV(FOLDER) $ENV(VARIABLE) $ENV(SAMPLE) $ENV(CLUSTER) $ENV(USER)
 JobBatchName = $ENV(VARIABLE)
 accounting_group=group_cms
 request_cpus = 16
+request_disk = 10G
 Queue 1"""
 
 if options.cluster == 'lpc':
