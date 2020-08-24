@@ -1383,7 +1383,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights = processor.Weights(len(events))
                 if 'L1PreFiringWeight' in events.columns: weights.add('prefiring',events.L1PreFiringWeight.Nom)
                 weights.add('genw',events.genWeight)
-                weights.add('nlo',nlo)
+                #weights.add('nlo',nlo)
                 if 'cen' in nnlo_nlo:
                     weights.add('nnlo_nlo',nnlo_nlo['cen'])
                     weights.add('qcd1',np.ones(events.size), nnlo_nlo['qcd1up']/nnlo_nlo['cen'], nnlo_nlo['qcd1do']/nnlo_nlo['cen'])
