@@ -987,7 +987,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             if('TTJets' in dataset): 
                 nlo = np.sqrt(get_ttbar_weight(genTops[:,0].pt.sum()) * get_ttbar_weight(genTops[:,1].pt.sum()))
                 
-
             gen['isW'] = (abs(gen.pdgId)==24)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isZ'] = (abs(gen.pdgId)==23)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isA'] = (abs(gen.pdgId)==22)&gen.hasFlags(['isPrompt', 'fromHardProcess', 'isLastCopy'])&(gen.status==1)
@@ -1042,27 +1041,26 @@ class AnalysisProcessor(processor.ProcessorABC):
             if('GJets' in dataset): 
                 for systematic in get_nnlo_nlo_weight['a']:
                     nnlo_nlo[systematic] = get_nnlo_nlo_weight['a'][systematic](genIsoAs.pt.max())*((genIsoAs.counts>0)&(genIsoAs.pt.max()>=290)) + \
-                                           (~((genIsoAs.counts>0)&(genIsoAs.pt.max()>=290))).astype(np.int)
-                                           #get_nnlo_nlo_weight['a'][systematic](290)*((genIsoAs.counts>0)&~(genIsoAs.pt.max()>=290)) + \
-                                           #(~(genIsoAs.counts>0)).astype(np.int)
+                                           get_nnlo_nlo_weight['a'][systematic](290)*((genIsoAs.counts>0)&~(genIsoAs.pt.max()>=290)&(genIsoAs.pt.max()>=100)) + \
+                                           (~((genIsoAs.counts>0)&(genIsoAs.pt.max()>=100))).astype(np.int)
             elif('WJets' in dataset): 
                 for systematic in get_nnlo_nlo_weight['w']:
-                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['w'][systematic](genWs.pt.max())*((genWs.counts>0)&(genWs.pt.max()>=30)) + \
-                                           (~((genWs.counts>0)&(genWs.pt.max()>=30))).astype(np.int)
+                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['w'][systematic](genWs.pt.max())*((genWs.counts>0)&(genWs.pt.max()>=100)) + \
+                                           (~((genWs.counts>0)&(genWs.pt.max()>=100))).astype(np.int)
                                            #get_nnlo_nlo_weight['w'][systematic](100)*((genWs.counts>0)&~(genWs.pt.max()>=100)) + \
                                            #(~(genWs.counts>0)).astype(np.int)
                     #nnlo_nlo[systematic]=nnlo_nlo[systematic]*kfactor['WJets'][self._year]
             elif('DY' in dataset): 
                 for systematic in get_nnlo_nlo_weight['dy']:
-                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['dy'][systematic](genDYs.pt.max())*((genDYs.counts>0)&(genDYs.pt.max()>=30)) + \
-                                           (~((genDYs.counts>0)&(genDYs.pt.max()>=30))).astype(np.int)
+                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['dy'][systematic](genDYs.pt.max())*((genDYs.counts>0)&(genDYs.pt.max()>=100)) + \
+                                           (~((genDYs.counts>0)&(genDYs.pt.max()>=100))).astype(np.int)
                                            #get_nnlo_nlo_weight['dy'][systematic](100)*((genDYs.counts>0)&~(genDYs.pt.max()>=100)) + \
                                            #(~(genDYs.counts>0)).astype(np.int)
                     #nnlo_nlo[systematic]=nnlo_nlo[systematic]*kfactor['DY'][self._year]
             elif('ZJets' in dataset): 
                 for systematic in get_nnlo_nlo_weight['z']:
-                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['z'][systematic](genZs.pt.max())*((genZs.counts>0)&(genZs.pt.max()>=30)) + \
-                                           (~((genZs.counts>0)&(genZs.pt.max()>=30))).astype(np.int)
+                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['z'][systematic](genZs.pt.max())*((genZs.counts>0)&(genZs.pt.max()>=100)) + \
+                                           (~((genZs.counts>0)&(genZs.pt.max()>=100))).astype(np.int)
                                            #get_nnlo_nlo_weight['z'][systematic](100)*((genZs.counts>0)&~(genZs.pt.max()>=100)) + \
                                            #(~(genZs.counts>0)).astype(np.int)
                     #nnlo_nlo[systematic]=nnlo_nlo[systematic]*kfactor['ZJets'][self._year]
