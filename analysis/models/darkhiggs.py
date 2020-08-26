@@ -165,7 +165,9 @@ def model(year,recoil,category):
     sr_zjetsMC.setParamEffect(jec, 1.05)
     sr_zjetsMC.setParamEffect(zhf_fraction, hf_systematic['Z+jets']['sr'][category])
     btagUp=np.nan_to_num(template(background,'Z+jets','btagUp','sr')[0]/sr_zjetsTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'Z+jets','btagDown','sr')[0]/sr_zjetsTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     sr_zjetsMC.setParamEffect(btag, btagUp, btagDown)
     sr_zjetsObservable = rl.Observable('fjmass', sr_zjetsTemplate[1])
     if category == 'pass':
@@ -187,7 +189,9 @@ def model(year,recoil,category):
     sr_wjetsMC.setParamEffect(jec, 1.05)
     sr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['sr'][category])
     btagUp=np.nan_to_num(template(background,'W+jets','btagUp','sr')[0]/sr_wjetsTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'W+jets','btagDown','sr')[0]/sr_wjetsTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     sr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     #Adding W-Z link
     sr_wjetsTransferFactor = np.nan_to_num(sr_wjetsMC.getExpectation() / sr_zjetsMC.getExpectation(), nan=1e-7)
@@ -206,7 +210,9 @@ def model(year,recoil,category):
     sr_ttMC.setParamEffect(veto_tau, 1.03)
     sr_ttMC.setParamEffect(jec, 1.05)
     btagUp=np.nan_to_num(template(background,'TT','btagUp','sr')[0]/sr_ttTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'TT','btagDown','sr')[0]/sr_ttTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     sr_ttMC.setParamEffect(btag, btagUp, btagDown)
     sr_ttObservable = rl.Observable('fjmass', sr_ttTemplate[1])
     sr_tt = rl.ParametericSample(ch_name+'_tt', rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields)
@@ -224,7 +230,9 @@ def model(year,recoil,category):
     sr_st.setParamEffect(st_norm, 1.2)
     sr_st.setParamEffect(jec, 1.05)
     btagUp=np.nan_to_num(template(background,'ST','btagUp','sr')[0]/sr_stTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'ST','btagDown','sr')[0]/sr_stTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     sr_st.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_st)
 
@@ -236,7 +244,9 @@ def model(year,recoil,category):
     sr_dyjets.setParamEffect(zjets_norm, 1.4)
     sr_dyjets.setParamEffect(jec, 1.05)
     btagUp=np.nan_to_num(template(background,'DY+jets','btagUp','sr')[0]/sr_dyjetsTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'DY+jets','btagDown','sr')[0]/sr_dyjetsTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     sr_dyjets.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_dyjets)
 
@@ -248,7 +258,9 @@ def model(year,recoil,category):
     sr_vv.setParamEffect(vv_norm, 1.2)
     sr_vv.setParamEffect(jec, 1.05)
     btagUp=np.nan_to_num(template(background,'VV','btagUp','sr')[0]/sr_vvTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'VV','btagDown','sr')[0]/sr_vvTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     sr_vv.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_vv)
 
@@ -260,7 +272,9 @@ def model(year,recoil,category):
     sr_hbb.setParamEffect(hbb_norm, 1.2)
     sr_hbb.setParamEffect(jec, 1.05)
     btagUp=np.nan_to_num(template(background,'Hbb','btagUp','sr')[0]/sr_hbbTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'Hbb','btagDown','sr')[0]/sr_hbbTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     sr_hbb.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_hbb)
 
@@ -272,7 +286,9 @@ def model(year,recoil,category):
     sr_qcd.setParamEffect(qcdsig_norm, 2.0)
     sr_qcd.setParamEffect(jec, 1.05)
     btagUp=np.nan_to_num(template(background,'QCD','btagUp','sr')[0]/sr_qcdTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'QCD','btagDown','sr')[0]/sr_qcdTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     sr_qcd.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_qcd)
 
@@ -286,7 +302,9 @@ def model(year,recoil,category):
         sr_signal.setParamEffect(veto_tau, 1.03)
         sr_signal.setParamEffect(jec, 1.05)
         btagUp=np.nan_to_num(template(signal, s,'btagUp','sr')[0]/sr_signalTemplate[0])
+        btagUp[btagUp<=0]=1e-7
         btagDown=np.nan_to_num(template(signal, s,'btagDown','sr')[0]/sr_signalTemplate[0])
+        btagDown[btagDown<=0]=1e-7
         sr_signal.setParamEffect(btag, btagUp, btagDown)
         sr.addSample(sr_signal)
 
@@ -328,7 +346,9 @@ def model(year,recoil,category):
     wmcr_wjetsMC.setParamEffect(iso_mu, 1.02)
     wmcr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['wmcr'][category])
     btagUp=np.nan_to_num(template(background,'W+jets','btagUp','wmcr')[0]/wmcr_wjetsTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'W+jets','btagDown','wmcr')[0]/wmcr_wjetsTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     wmcr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     wmcr_wjetsTransferFactor = np.nan_to_num(wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation(), nan=1e-7)
     wmcr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
@@ -348,7 +368,9 @@ def model(year,recoil,category):
     wmcr_ttMC.setParamEffect(id_mu, 1.02)
     wmcr_ttMC.setParamEffect(iso_mu, 1.02)
     btagUp=np.nan_to_num(template(background,'TT','btagUp','wmcr')[0]/wmcr_ttTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'TT','btagDown','wmcr')[0]/wmcr_ttTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     wmcr_ttMC.setParamEffect(btag, btagUp, btagDown)
     wmcr_ttTransferFactor = np.nan_to_num(wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation(), nan=1e-7)
     wmcr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt)
@@ -368,7 +390,9 @@ def model(year,recoil,category):
     wmcr_st.setParamEffect(id_mu, 1.02)
     wmcr_st.setParamEffect(iso_mu, 1.02)
     btagUp=np.nan_to_num(template(background,'ST','btagUp','wmcr')[0]/wmcr_stTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'ST','btagDown','wmcr')[0]/wmcr_stTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     wmcr_st.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_st)
 
@@ -382,7 +406,9 @@ def model(year,recoil,category):
     wmcr_dyjets.setParamEffect(id_mu, 1.02)
     wmcr_dyjets.setParamEffect(iso_mu, 1.02)
     btagUp=np.nan_to_num(template(background,'DY+jets','btagUp','wmcr')[0]/wmcr_dyjetsTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'DY+jets','btagDown','wmcr')[0]/wmcr_dyjetsTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     wmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_dyjets)
 
@@ -396,7 +422,9 @@ def model(year,recoil,category):
     wmcr_vv.setParamEffect(id_mu, 1.02)
     wmcr_vv.setParamEffect(iso_mu, 1.02)
     btagUp=np.nan_to_num(template(background,'VV','btagUp','wmcr')[0]/wmcr_vvTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'VV','btagDown','wmcr')[0]/wmcr_vvTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     wmcr_vv.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_vv)
 
@@ -410,7 +438,9 @@ def model(year,recoil,category):
     wmcr_hbb.setParamEffect(id_mu, 1.02)
     wmcr_hbb.setParamEffect(iso_mu, 1.02)
     btagUp=np.nan_to_num(template(background,'Hbb','btagUp','wmcr')[0]/wmcr_hbbTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'Hbb','btagDown','wmcr')[0]/wmcr_hbbTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     wmcr_hbb.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_hbb)
 
@@ -424,7 +454,9 @@ def model(year,recoil,category):
     wmcr_qcd.setParamEffect(id_mu, 1.02)
     wmcr_qcd.setParamEffect(iso_mu, 1.02)
     btagUp=np.nan_to_num(template(background,'QCD','btagUp','wmcr')[0]/wmcr_qcdTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'QCD','btagDown','wmcr')[0]/wmcr_qcdTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     wmcr_qcd.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_qcd)
 
@@ -463,7 +495,9 @@ def model(year,recoil,category):
     tmcr_wjetsMC.setParamEffect(iso_mu, 1.02)
     tmcr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['tmcr'][category])
     btagUp=np.nan_to_num(template(background,'W+jets','btagUp','tmcr')[0]/tmcr_wjetsTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'W+jets','btagDown','tmcr')[0]/tmcr_wjetsTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     tmcr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     tmcr_wjetsTransferFactor = np.nan_to_num(tmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation(), nan=1e-7)
     tmcr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, tmcr_wjetsTransferFactor, sr_wjets)
@@ -483,7 +517,9 @@ def model(year,recoil,category):
     tmcr_ttMC.setParamEffect(id_mu, 1.02)
     tmcr_ttMC.setParamEffect(iso_mu, 1.02)
     btagUp=np.nan_to_num(template(background,'TT','btagUp','tmcr')[0]/tmcr_ttTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'TT','btagDown','tmcr')[0]/tmcr_ttTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     tmcr_ttMC.setParamEffect(btag, btagUp, btagDown)
     tmcr_ttTransferFactor = np.nan_to_num(tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation(), nan=1e-7)
     tmcr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt)
@@ -503,7 +539,9 @@ def model(year,recoil,category):
     tmcr_st.setParamEffect(id_mu, 1.02)
     tmcr_st.setParamEffect(iso_mu, 1.02)
     btagUp=np.nan_to_num(template(background,'ST','btagUp','tmcr')[0]/tmcr_stTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'ST','btagDown','tmcr')[0]/tmcr_stTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     tmcr_st.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_st)
 
@@ -517,7 +555,9 @@ def model(year,recoil,category):
     tmcr_dyjets.setParamEffect(id_mu, 1.02)
     tmcr_dyjets.setParamEffect(iso_mu, 1.02)
     btagUp=np.nan_to_num(template(background,'DY+jets','btagUp','tmcr')[0]/tmcr_dyjetsTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'DY+jets','btagDown','tmcr')[0]/tmcr_dyjetsTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     tmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_dyjets)
 
@@ -531,7 +571,9 @@ def model(year,recoil,category):
     tmcr_vv.setParamEffect(id_mu, 1.02)
     tmcr_vv.setParamEffect(iso_mu, 1.02)
     btagUp=np.nan_to_num(template(background,'VV','btagUp','tmcr')[0]/tmcr_vvTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'VV','btagDown','tmcr')[0]/tmcr_vvTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     tmcr_vv.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_vv)
 
@@ -545,7 +587,9 @@ def model(year,recoil,category):
     tmcr_hbb.setParamEffect(id_mu, 1.02)
     tmcr_hbb.setParamEffect(iso_mu, 1.02)
     btagUp=np.nan_to_num(template(background,'Hbb','btagUp','tmcr')[0]/tmcr_hbbTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'Hbb','btagDown','tmcr')[0]/tmcr_hbbTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     tmcr_hbb.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_hbb)
 
@@ -559,7 +603,9 @@ def model(year,recoil,category):
     tmcr_qcd.setParamEffect(id_mu, 1.02)
     tmcr_qcd.setParamEffect(iso_mu, 1.02)
     btagUp=np.nan_to_num(template(background,'QCD','btagUp','tmcr')[0]/tmcr_qcdTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'QCD','btagDown','tmcr')[0]/tmcr_qcdTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     tmcr_qcd.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_qcd)
 
@@ -601,7 +647,9 @@ def model(year,recoil,category):
     wecr_wjetsMC.setParamEffect(reco_e, 1.02)
     wecr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['wecr'][category])
     btagUp=np.nan_to_num(template(background,'W+jets','btagUp','wecr')[0]/wecr_wjetsTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'W+jets','btagDown','wecr')[0]/wecr_wjetsTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     wecr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     wecr_wjetsTransferFactor = np.nan_to_num(wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation(), nan=1e-7)
     wecr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets)
@@ -621,7 +669,9 @@ def model(year,recoil,category):
     wecr_ttMC.setParamEffect(id_e, 1.02)
     wecr_ttMC.setParamEffect(reco_e, 1.02)
     btagUp=np.nan_to_num(template(background,'TT','btagUp','wecr')[0]/wecr_ttTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'TT','btagDown','wecr')[0]/wecr_ttTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     wecr_ttMC.setParamEffect(btag, btagUp, btagDown)
     wecr_ttTransferFactor = np.nan_to_num(wecr_ttMC.getExpectation() / sr_ttMC.getExpectation(), nan=1e-7)
     wecr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt)
@@ -641,7 +691,9 @@ def model(year,recoil,category):
     wecr_st.setParamEffect(id_e, 1.02)
     wecr_st.setParamEffect(reco_e, 1.02)
     btagUp=np.nan_to_num(template(background,'ST','btagUp','wecr')[0]/wecr_stTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'ST','btagDown','wecr')[0]/wecr_stTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     wecr_st.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_st)
 
@@ -655,7 +707,9 @@ def model(year,recoil,category):
     wecr_dyjets.setParamEffect(id_e, 1.02)
     wecr_dyjets.setParamEffect(reco_e, 1.02)
     btagUp=np.nan_to_num(template(background,'DY+jets','btagUp','wecr')[0]/wecr_dyjetsTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'DY+jets','btagDown','wecr')[0]/wecr_dyjetsTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     wecr_dyjets.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_dyjets)
 
@@ -669,7 +723,9 @@ def model(year,recoil,category):
     wecr_vv.setParamEffect(id_e, 1.02)
     wecr_vv.setParamEffect(reco_e, 1.02)
     btagUp=np.nan_to_num(template(background,'VV','btagUp','wecr')[0]/wecr_vvTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'VV','btagDown','wecr')[0]/wecr_vvTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     wecr_vv.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_vv)
 
@@ -683,7 +739,9 @@ def model(year,recoil,category):
     wecr_hbb.setParamEffect(id_e, 1.02)
     wecr_hbb.setParamEffect(reco_e, 1.02)
     btagUp=np.nan_to_num(template(background,'Hbb','btagUp','wecr')[0]/wecr_hbbTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'Hbb','btagDown','wecr')[0]/wecr_hbbTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     wecr_hbb.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_hbb)
 
@@ -697,7 +755,9 @@ def model(year,recoil,category):
     wecr_qcd.setParamEffect(id_e, 1.02)
     wecr_qcd.setParamEffect(reco_e, 1.02)
     btagUp=np.nan_to_num(template(background,'QCD','btagUp','wecr')[0]/wecr_qcdTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'QCD','btagDown','wecr')[0]/wecr_qcdTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     wecr_qcd.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_qcd)
 
@@ -739,7 +799,9 @@ def model(year,recoil,category):
     tecr_wjetsMC.setParamEffect(reco_e, 1.02)
     tecr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['tecr'][category])
     btagUp=np.nan_to_num(template(background,'W+jets','btagUp','tecr')[0]/tecr_wjetsTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'W+jets','btagDown','tecr')[0]/tecr_wjetsTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     tecr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     tecr_wjetsTransferFactor = np.nan_to_num(tecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation(), nan=1e-7)
     tecr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, tecr_wjetsTransferFactor, sr_wjets)
@@ -759,7 +821,9 @@ def model(year,recoil,category):
     tecr_ttMC.setParamEffect(id_e, 1.02)
     tecr_ttMC.setParamEffect(reco_e, 1.02)
     btagUp=np.nan_to_num(template(background,'TT','btagUp','tecr')[0]/tecr_ttTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'TT','btagDown','tecr')[0]/tecr_ttTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     tecr_ttMC.setParamEffect(btag, btagUp, btagDown)
     tecr_ttTransferFactor = np.nan_to_num(tecr_ttMC.getExpectation() / sr_ttMC.getExpectation(), nan=1e-7)
     tecr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt)
@@ -779,7 +843,9 @@ def model(year,recoil,category):
     tecr_st.setParamEffect(id_e, 1.02)
     tecr_st.setParamEffect(reco_e, 1.02)
     btagUp=np.nan_to_num(template(background,'ST','btagUp','tecr')[0]/tecr_stTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'ST','btagDown','tecr')[0]/tecr_stTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     tecr_st.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_st)
 
@@ -793,7 +859,9 @@ def model(year,recoil,category):
     tecr_dyjets.setParamEffect(id_e, 1.02)
     tecr_dyjets.setParamEffect(reco_e, 1.02)
     btagUp=np.nan_to_num(template(background,'DY+jets','btagUp','tecr')[0]/tecr_dyjetsTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'DY+jets','btagDown','tecr')[0]/tecr_dyjetsTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     tecr_dyjets.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_dyjets)
 
@@ -807,7 +875,9 @@ def model(year,recoil,category):
     tecr_vv.setParamEffect(id_e, 1.02)
     tecr_vv.setParamEffect(reco_e, 1.02)
     btagUp=np.nan_to_num(template(background,'VV','btagUp','tecr')[0]/tecr_vvTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'VV','btagDown','tecr')[0]/tecr_vvTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     tecr_vv.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_vv)
 
@@ -821,7 +891,9 @@ def model(year,recoil,category):
     tecr_hbb.setParamEffect(id_e, 1.02)
     tecr_hbb.setParamEffect(reco_e, 1.02)
     btagUp=np.nan_to_num(template(background,'Hbb','btagUp','tecr')[0]/tecr_hbbTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'Hbb','btagDown','tecr')[0]/tecr_hbbTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     tecr_hbb.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_hbb)
 
@@ -835,7 +907,9 @@ def model(year,recoil,category):
     tecr_qcd.setParamEffect(id_e, 1.02)
     tecr_qcd.setParamEffect(reco_e, 1.02)
     btagUp=np.nan_to_num(template(background,'QCD','btagUp','tecr')[0]/tecr_qcdTemplate[0])
+    btagUp[btagUp<=0]=1e-7
     btagDown=np.nan_to_num(template(background,'QCD','btagDown','tecr')[0]/tecr_qcdTemplate[0])
+    btagDown[btagDown<=0]=1e-7
     tecr_qcd.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_qcd)
 
