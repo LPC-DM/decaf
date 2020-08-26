@@ -650,8 +650,8 @@ def model(year,recoil,category):
     wecr_dyjets.setParamEffect(jec, 1.05)
     wecr_dyjets.setParamEffect(id_e, 1.02)
     wecr_dyjets.setParamEffect(reco_e, 1.02)
-    btagUp=np.nan_to_num(template(background,'DY+jets','btagUp','wecr')[0]/wecr_stTemplate[0])
-    btagDown=np.nan_to_num(template(background,'DY+jets','btagDown','wecr')[0]/wecr_stTemplate[0])
+    btagUp=np.nan_to_num(template(background,'DY+jets','btagUp','wecr')[0]/wecr_dyjetsTemplate[0])
+    btagDown=np.nan_to_num(template(background,'DY+jets','btagDown','wecr')[0]/wecr_dyjetsTemplate[0])
     wecr_dyjets.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_dyjets)
 
@@ -664,8 +664,8 @@ def model(year,recoil,category):
     wecr_vv.setParamEffect(jec, 1.05)
     wecr_vv.setParamEffect(id_e, 1.02)
     wecr_vv.setParamEffect(reco_e, 1.02)
-    btagUp=np.nan_to_num(template(background,'VV','btagUp','wecr')[0]/wecr_stTemplate[0])
-    btagDown=np.nan_to_num(template(background,'VV','btagDown','wecr')[0]/wecr_stTemplate[0])
+    btagUp=np.nan_to_num(template(background,'VV','btagUp','wecr')[0]/wecr_vvTemplate[0])
+    btagDown=np.nan_to_num(template(background,'VV','btagDown','wecr')[0]/wecr_vvTemplate[0])
     wecr_vv.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_vv)
 
@@ -678,8 +678,8 @@ def model(year,recoil,category):
     wecr_hbb.setParamEffect(jec, 1.05)
     wecr_hbb.setParamEffect(id_e, 1.02)
     wecr_hbb.setParamEffect(reco_e, 1.02)
-    btagUp=np.nan_to_num(template(background,'Hbb','btagUp','wecr')[0]/wecr_stTemplate[0])
-    btagDown=np.nan_to_num(template(background,'Hbb','btagDown','wecr')[0]/wecr_stTemplate[0])
+    btagUp=np.nan_to_num(template(background,'Hbb','btagUp','wecr')[0]/wecr_hbbTemplate[0])
+    btagDown=np.nan_to_num(template(background,'Hbb','btagDown','wecr')[0]/wecr_hbbTemplate[0])
     wecr_hbb.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_hbb)
 
@@ -692,8 +692,8 @@ def model(year,recoil,category):
     wecr_qcd.setParamEffect(jec, 1.05)
     wecr_qcd.setParamEffect(id_e, 1.02)
     wecr_qcd.setParamEffect(reco_e, 1.02)
-    btagUp=np.nan_to_num(template(background,'QCD','btagUp','wecr')[0]/wecr_stTemplate[0])
-    btagDown=np.nan_to_num(template(background,'QCD','btagDown','wecr')[0]/wecr_stTemplate[0])
+    btagUp=np.nan_to_num(template(background,'QCD','btagUp','wecr')[0]/wecr_qcdTemplate[0])
+    btagDown=np.nan_to_num(template(background,'QCD','btagDown','wecr')[0]/wecr_qcdTemplate[0])
     wecr_qcd.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_qcd)
 
