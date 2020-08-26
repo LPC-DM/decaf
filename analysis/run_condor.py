@@ -25,9 +25,6 @@ parser.add_option('-y', '--copy', action='store_true', dest='copy')
 (options, args) = parser.parse_args()
 
 os.system('mkdir -p hists/'+options.processor+'/run_condor/out hists/'+options.processor+'/run_condor/err hists/'+options.processor+'/run_condor/log')
-os.system('rm -rf hists/'+options.processor+'/run_condor/err/'+options.dataset+'*')
-os.system('rm -rf hists/'+options.processor+'/run_condor/log/'+options.dataset+'*')
-os.system('rm -rf hists/'+options.processor+'/run_condor/out/'+options.dataset+'*')
 
 if options.tar:
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*____*\' --exclude=\'analysis/hists/*/*condor/*/*\' ../../decaf')
@@ -54,7 +51,7 @@ Arguments = $ENV(METADATA) $ENV(SAMPLE) $ENV(PROCESSOR) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
 JobBatchName = $ENV(BTCN)
 request_cpus = 8
-request_memory = 6000
+request_memory = 7000
 Queue 1"""
 
 if options.cluster == 'lpc':
@@ -85,6 +82,9 @@ with open('metadata/'+options.metadata+'.json') as fin:
 for dataset, info in datadef.items():
     if options.dataset and options.dataset not in dataset: continue
     if options.exclude and options.exclude in dataset: continue
+    os.system('rm -rf hists/'+options.processor+'/run_condor/err/'+dataset+'*')
+    os.system('rm -rf hists/'+options.processor+'/run_condor/log/'+dataset+'*')
+    os.system('rm -rf hists/'+options.processor+'/run_condor/out/'+dataset+'*')
     os.environ['SAMPLE'] = dataset
     os.environ['BTCN'] = dataset.split('____')[0]
     os.environ['PROCESSOR']   = options.processor
