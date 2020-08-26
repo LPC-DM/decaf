@@ -42,10 +42,14 @@ def rhalphabeth(msdbins):
     qcdmodel.addChannel(passCh)
     # mock template
     ptnorm = 1
-    failTempl = (vjets_hists['template'].integrate('region','sr').sum('gentype','recoil').integrate('process', 'V+jets').integrate('systematic','nominal').values()[()][:,0], 
+    vjetsHistFail=vjets_hists['template'].integrate('region','sr').sum('gentype','recoil').integrate('process', 'V+jets').integrate('systematic','nominal').values()[()][:,0]
+    vjetsHistFail[vjetsHistFail<=0]=1e-7
+    failTempl = (vjetsHistFail, 
                  vjets_hists['template'].integrate('region','sr').sum('gentype','recoil').integrate('process', 'V+jets').integrate('systematic','nominal').axis('fjmass').edges(),
                  'fjmass')
-    passTempl = (vjets_hists['template'].integrate('region','sr').sum('gentype','recoil').integrate('process', 'V+jets').integrate('systematic','nominal').values()[()][:,1],
+    vjetsHistPass=vjets_hists['template'].integrate('region','sr').sum('gentype','recoil').integrate('process', 'V+jets').integrate('systematic','nominal').values()[()][:,1]
+    vjetsHistPass[vjetsHistPass<=0]=1e-7
+    passTempl = (vjetsHistPass,
                  vjets_hists['template'].integrate('region','sr').sum('gentype','recoil').integrate('process', 'V+jets').integrate('systematic','nominal').axis('fjmass').edges(),
                  'fjmass')
     failCh.setObservation(failTempl)
@@ -102,7 +106,7 @@ def model(year,recoil,category):
     
     def template(dictionary, process, systematic, region):
         output=dictionary[region].integrate('process', process).integrate('systematic',systematic).values()[()][recoil,:,category_map[category]]
-        output[output<0]=1e-7
+        output[output<=0]=1e-7
         binning=dictionary[region].integrate('process', process).integrate('systematic',systematic).axis('fjmass').edges()
         return (output, binning, 'fjmass')
 
@@ -1126,8 +1130,10 @@ if __name__ == '__main__':
         'fail': 1-(sf_tt*tt_efficiency[options.year])
     }
     sr_ttHistPass = hists['bkg']['template'].integrate('region','sr').sum('gentype','recoil').integrate('process','TT').integrate('systematic','nominal').values()[()][:,1]
+    sr_ttHistPass[sr_ttHistPass<=0]=1e-7
     sr_ttHistPass = sr_ttHistPass/sr_ttHistPass.sum()
     sr_ttHistFail = hists['bkg']['template'].integrate('region','sr').sum('gentype','recoil').integrate('process','TT').integrate('systematic','nominal').values()[()][:,0]
+    sr_ttHistFail[sr_ttHistFail<=0]=1e-7
     sr_ttHistFail = sr_ttHistFail/sr_ttHistFail.sum()
     sr_ttShape = {
         'pass': np.array([rl.IndependentParameter('sr'+options.year+'_ttshape_pass_mass%d' % i, b, 0, sr_ttHistPass.max()*2) for i,b in enumerate(sr_ttHistPass)]),
@@ -1172,8 +1178,10 @@ if __name__ == '__main__':
     nrecoil = len(recoilbins) - 1
     for recoilbin in range(nrecoil):
         sr_zjetsHist = hists['bkg']['template'].integrate('region','sr').sum('gentype').integrate('process','Z+jets').integrate('systematic','nominal').values()[()][recoilbin,:,0]
+        sr_zjetsHist[sr_zjetsHist<=0]=1e-7
         sr_zjetsBinYields = np.array([rl.IndependentParameter('sr'+options.year+'_zjets_recoil'+str(recoilbin)+'_mass%d' % i, b, 0, sr_zjetsHist.max()*2) for i,b in enumerate(sr_zjetsHist)])
         sr_ttRecoil = hists['bkg']['template'].integrate('region','sr').sum('gentype','fjmass','ZHbbvsQCD').integrate('process','TT').integrate('systematic','nominal').values()[()][recoilbin]
+        if sr_ttRecoil<=0: sr_ttRecoil=1e-7
         sr_ttRate = rl.IndependentParameter('sr'+options.year+'_tt_recoil'+str(recoilbin), sr_ttRecoil, 0, sr_ttRecoil*2)
         for category in ['pass','fail']:
             sr_ttBinYields = sr_ttShape[category]*sr_ttRate*tt_weight[category]
