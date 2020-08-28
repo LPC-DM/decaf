@@ -15,6 +15,7 @@ parser = OptionParser()
 parser.add_option('-m', '--model', help='model', dest='model', default='')
 parser.add_option('-c', '--cluster', help='cluster', dest='cluster', default='lpc')
 parser.add_option('-t', '--tar', action='store_true', dest='tar')
+parser.add_option('-x', '--copy', action='store_true', dest='copy')
 (options, args) = parser.parse_args()
 
 os.system('mkdir -p datacards/condor/out datacards/condor/err datacards/condor/log')
@@ -23,7 +24,10 @@ if options.tar:
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../../../cmssw.tgz --exclude=\'src/decaf/analysis/hists/*\' ../../../../CMSSW_10_2_13')
 
 if options.cluster == 'kisti':
-    os.system('xrdcp -f ../../../../cmssw.tgz root://cms-xrdr.private.lo:2094//xrd/store/user/'+os.environ['USER']+'/cmssw.tgz')
+    if options.copy:
+        os.system('xrdfs root://cms-xrdr.private.lo:2094/ rm /xrd/store/user/'+os.environ['USER']+'/cmssw.tgz')
+        print('cmssw removed')
+        os.system('xrdcp -f ../../../../cmssw.tgz root://cms-xrdr.private.lo:2094//xrd/store/user/'+os.environ['USER']+'/cmssw.tgz')
     jdl = """universe = vanilla
 Executable = render.sh
 Should_Transfer_Files = YES

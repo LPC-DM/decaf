@@ -21,7 +21,7 @@ parser.add_option('-p', '--processor', help='processor', dest='processor', defau
 parser.add_option('-m', '--metadata', help='metadata', dest='metadata', default='')
 parser.add_option('-c', '--cluster', help='cluster', dest='cluster', default='lpc')
 parser.add_option('-t', '--tar', action='store_true', dest='tar')
-parser.add_option('-y', '--copy', action='store_true', dest='copy')
+parser.add_option('-x', '--copy', action='store_true', dest='copy')
 (options, args) = parser.parse_args()
 
 os.system('mkdir -p hists/'+options.processor+'/run_condor/out hists/'+options.processor+'/run_condor/err hists/'+options.processor+'/run_condor/log')

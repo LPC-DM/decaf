@@ -1,0 +1,75 @@
+# Datacard for <Channel (zmcr2018failrecoil5) instance at 0x2ac6cc2aae10> generated on 2020-08-27 05:36:50.357008
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 4 # number of samples minus 1
+kmax 13 # number of nuisance parameters
+shapes * zmcr2018failrecoil5 zmcr2018failrecoil5.root zmcr2018failrecoil5:zmcr2018failrecoil5_$PROCESS zmcr2018failrecoil5:zmcr2018failrecoil5_$PROCESS_$SYSTEMATIC
+bin zmcr2018failrecoil5
+observation 48.000
+bin               zmcr2018failrecoil5  zmcr2018failrecoil5  zmcr2018failrecoil5  zmcr2018failrecoil5  zmcr2018failrecoil5
+process                        dyjets                 ttMC                 stMC                 vvMC                hbbMC
+process                             1                    2                    3                    4                    5
+rate                            1.000                0.000                0.000                0.000                0.035
+hbb_norm lnN                        -                    -                    -                    -                1.200
+id_mu2018 lnN                       -                1.020                1.020                1.020                1.020
+iso_mu2018 lnN                      -                1.020                1.020                1.020                1.020
+jec2018 lnN                         -                1.050                1.050                1.050                1.050
+lumi2018 lnN                        -                1.027                1.027                1.027                1.027
+st_norm lnN                         -                    -                1.200                    -                    -
+trig_met2018 lnN                    -                1.010                1.010                1.010                1.010
+tt_norm lnN                         -                1.200                    -                    -                    -
+veto_tau2018 lnN                    -                1.030                1.030                1.030                1.030
+vv_norm lnN                         -                    -                    -                1.200                    -
+btag2018 param 0 1
+zhf_fraction param 0 1
+zjets_norm param 0 1
+sr2018_zjets_recoil5_mass0 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass1 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass10 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass11 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass12 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass13 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass14 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass15 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass16 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass2 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass3 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass4 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass5 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass6 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass7 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass8 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018_zjets_recoil5_mass9 extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin0_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin10_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin11_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin12_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin13_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin14_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin15_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin16_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin1_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin2_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin3_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin4_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin5_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin6_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin7_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin8_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+sr2018failrecoil5_zjetsMC_bin9_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin0_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin10_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin11_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin12_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin13_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin14_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin15_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin16_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin1_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin2_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin3_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin4_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin5_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin6_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin7_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin8_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5
+zmcr2018failrecoil5_dyjetsMC_bin9_nominal extArg zmcr2018failrecoil5.root:zmcr2018failrecoil5

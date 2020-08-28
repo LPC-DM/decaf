@@ -1,14 +1,14 @@
-# Datacard for <Channel (sr2018failrecoil0) instance at 0x2b5bc3284290> generated on 2020-08-24 08:31:47.079115
+# Datacard for <Channel (sr2018failrecoil0) instance at 0x2ae69dc40e90> generated on 2020-08-27 05:41:02.977851
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 8 # number of samples minus 1
 kmax 13 # number of nuisance parameters
 shapes * sr2018failrecoil0 sr2018failrecoil0.root sr2018failrecoil0:sr2018failrecoil0_$PROCESS sr2018failrecoil0:sr2018failrecoil0_$PROCESS_$SYSTEMATIC
 bin sr2018failrecoil0
-observation 461056.000
+observation 290747.000
 bin               sr2018failrecoil0  sr2018failrecoil0  sr2018failrecoil0  sr2018failrecoil0  sr2018failrecoil0  sr2018failrecoil0  sr2018failrecoil0  sr2018failrecoil0  sr2018failrecoil0
 process                      Mhs_50              zjets              wjets                 tt               stMC           dyjetsMC               vvMC              hbbMC              qcdMC
 process                           0                  1                  2                  3                  4                  5                  6                  7                  8
-rate                       1293.816              1.000              1.000              1.000           1162.886           1596.899           6015.258             18.392           3322.484
+rate                        655.367              1.000              1.000              1.000            838.696           1218.492           3406.986             11.600           2632.317
 btag2018 shape                1.000                  -                  -                  -              1.000              1.000              1.000              1.000              1.000
 hbb_norm lnN                      -                  -                  -                  -                  -                  -                  -              1.200                  -
 jec2018 lnN                   1.050                  -                  -                  -              1.050              1.050              1.050              1.050              1.050
