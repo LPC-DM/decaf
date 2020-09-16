@@ -170,7 +170,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             'hseta':                  hs.eta,
         }
         print('Variables:',variables.keys())
-        flat_variables = {k: v.flatten() for k, v in variables.items()}
+        flat_variables = {k: v[mask].flatten() for k, v in variables.items()}
+        flat_weight = {k: ~np.isnan(v[mask]).flatten() for k, v in variables.items()}
 
         for histname, h in hout.items():
             if not isinstance(h, hist.Hist):
@@ -181,7 +182,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hout['yields'].fill(dataset=dataset_name, yields=np.zeros(events.size), weight=mask.astype(np.int))
             else:
                 flat_variable = {histname: flat_variables[histname]}
-                h.fill(dataset=dataset, **flat_variable, weight=mask.astype(np.int))
+                h.fill(dataset=dataset, **flat_variable, weight=flat_weight[histname])
 
         return hout
 
