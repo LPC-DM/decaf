@@ -562,6 +562,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         get_msd_weight          = self._corrections['get_msd_weight']
         get_ttbar_weight        = self._corrections['get_ttbar_weight']
         get_nnlo_nlo_weight     = self._corrections['get_nnlo_nlo_weight'][self._year]
+        get_nlo_qcd_weight      = self._corrections['get_nlo_qcd_weight'][self._year]
+        get_nlo_ewk_weight      = self._corrections['get_nlo_ewk_weight'][self._year]
         get_pu_weight           = self._corrections['get_pu_weight'][self._year]          
         get_met_trig_weight     = self._corrections['get_met_trig_weight'][self._year]    
         get_met_zmm_trig_weight = self._corrections['get_met_zmm_trig_weight'][self._year]
@@ -1038,12 +1040,18 @@ class AnalysisProcessor(processor.ProcessorABC):
             }
             '''
             nnlo_nlo = {}
+            nlo_qcd = np.ones(events.size)
+            nlo_ewk = np.ones(events.size)
             if('GJets' in dataset): 
+                nlo_qcd = get_nlo_qcd_weight['a'](genIsoAs.pt.max())
+                nlo_ewk = get_nlo_ewk_weight['a'](genIsoAs.pt.max())
                 for systematic in get_nnlo_nlo_weight['a']:
                     nnlo_nlo[systematic] = get_nnlo_nlo_weight['a'][systematic](genIsoAs.pt.max())*((genIsoAs.counts>0)&(genIsoAs.pt.max()>=290)) + \
                                            get_nnlo_nlo_weight['a'][systematic](290)*((genIsoAs.counts>0)&~(genIsoAs.pt.max()>=290)&(genIsoAs.pt.max()>=100)) + \
                                            (~((genIsoAs.counts>0)&(genIsoAs.pt.max()>=100))).astype(np.int)
             elif('WJets' in dataset): 
+                nlo_qcd = get_nlo_qcd_weight['w'](genWs.pt.max())
+                nlo_ewk = get_nlo_ewk_weight['w'](genWs.pt.max())
                 for systematic in get_nnlo_nlo_weight['w']:
                     nnlo_nlo[systematic] = get_nnlo_nlo_weight['w'][systematic](genWs.pt.max())*((genWs.counts>0)&(genWs.pt.max()>=100)) + \
                                            (~((genWs.counts>0)&(genWs.pt.max()>=100))).astype(np.int)
@@ -1051,6 +1059,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                                            #(~(genWs.counts>0)).astype(np.int)
                     #nnlo_nlo[systematic]=nnlo_nlo[systematic]*kfactor['WJets'][self._year]
             elif('DY' in dataset): 
+                nlo_qcd = get_nlo_qcd_weight['dy'](genDYs.pt.max())
+                nlo_ewk = get_nlo_ewk_weight['dy'](genDYs.pt.max())
                 for systematic in get_nnlo_nlo_weight['dy']:
                     nnlo_nlo[systematic] = get_nnlo_nlo_weight['dy'][systematic](genDYs.pt.max())*((genDYs.counts>0)&(genDYs.pt.max()>=100)) + \
                                            (~((genDYs.counts>0)&(genDYs.pt.max()>=100))).astype(np.int)
@@ -1058,6 +1068,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                                            #(~(genDYs.counts>0)).astype(np.int)
                     #nnlo_nlo[systematic]=nnlo_nlo[systematic]*kfactor['DY'][self._year]
             elif('ZJets' in dataset): 
+                nlo_qcd = get_nlo_qcd_weight['z'](genZs.pt.max())
+                nlo_ewk = get_nlo_ewk_weight['z'](genZs.pt.max())
                 for systematic in get_nnlo_nlo_weight['z']:
                     nnlo_nlo[systematic] = get_nnlo_nlo_weight['z'][systematic](genZs.pt.max())*((genZs.counts>0)&(genZs.pt.max()>=100)) + \
                                            (~((genZs.counts>0)&(genZs.pt.max()>=100))).astype(np.int)
@@ -1383,9 +1395,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights = processor.Weights(len(events))
                 if 'L1PreFiringWeight' in events.columns: weights.add('prefiring',events.L1PreFiringWeight.Nom)
                 weights.add('genw',events.genWeight)
-                #weights.add('nlo',nlo)
+                weights.add('nlo_qcd',nlo_qcd)
+                weights.add('nlo_ewk',nlo_ewk)
                 if 'cen' in nnlo_nlo:
-                    weights.add('nnlo_nlo',nnlo_nlo['cen'])
+                    #weights.add('nnlo_nlo',nnlo_nlo['cen'])
                     weights.add('qcd1',np.ones(events.size), nnlo_nlo['qcd1up']/nnlo_nlo['cen'], nnlo_nlo['qcd1do']/nnlo_nlo['cen'])
                     weights.add('qcd2',np.ones(events.size), nnlo_nlo['qcd2up']/nnlo_nlo['cen'], nnlo_nlo['qcd2do']/nnlo_nlo['cen'])
                     weights.add('qcd3',np.ones(events.size), nnlo_nlo['qcd3up']/nnlo_nlo['cen'], nnlo_nlo['qcd3do']/nnlo_nlo['cen'])
