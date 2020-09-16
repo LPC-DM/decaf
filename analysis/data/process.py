@@ -353,7 +353,7 @@ processes =    {
     'VBFHToBB_M125_13TeV_amcatnlo_pythia8':('VBFHbb','MC',3.782*0.5824),
     'VBFHToBB_M-125_13TeV_powheg_pythia8_weightfix':('VBFHbb','MC',3.782*0.5824),
     
-        # B enriched V+jets samples
+    # B enriched V+jets samples
     #'DYBJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8':('ZJets_bQuarks','MC',71.77),
     #'DYBJetsToLL_M-50_Zpt-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8':('ZJets_bQuarks_pt100to200','MC',3.027),
     #'DYBJetsToLL_M-50_Zpt-200toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8':('ZJets_bQuarks_pt200toinf','MC',0.297),
@@ -369,15 +369,16 @@ processes =    {
     #'ZJetsToNuNu_BGenFilter_Zpt-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8':('ZtoNuNu_bHadrons_pt100to200','MC',2.099),
     #'ZJetsToNuNu_BGenFilter_Zpt-200toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8':('ZtoNuNu_bHadrons_pt200toinf','MC',0.3083),
     
-        # Old Signals
+    # Old Signals
     #'Mjet1DM_LO_MZprime_1000_Mhs_50_Mchi_100_gSM_0p25_gDM_1p0_th_0p01_13TeV_madgraph':('Mjet1DM_LO_MZprime_1000_Mhs_50_Mchi_100_gSM_0p25_gDM_1p0_th_0p01_13TeV_madgraph','MC',1)
 
-        # New Signals
+    # New Signals
 
-        'MonoHs_MZprime_500_Mhs_50_Mchi_150_2018':('MonoHs_MZprime_500_Mhs_50_Mchi_150','MC',0.5302),
+    'MonoHs_MZprime_500_Mhs_50_Mchi_150_2018':('MonoHs_MZprime_500_Mhs_50_Mchi_150','MC',0.5302),
     'MonoHs_MZprime_500_Mhs_70_Mchi_150_2018':('MonoHs_MZprime_500_Mhs_70_Mchi_150','MC',0.4331),                                                                                         
     'MonoHs_MZprime_500_Mhs_90_Mchi_150_2018':('MonoHs_MZprime_500_Mhs_90_Mchi_150','MC',0.3656),
     'MonoJet_MZprime_500_Mchi_150_2018':('MonoJet_MZprime_500_Mchi_150','MC',2.621),
     'MonoW_MZprime_500_Mchi_150_2018':('MonoW_MZprime_500_Mchi_150','MC',0.05872),
     'MonoZ_MZprime_500_Mchi_150_2018':('MonoZ_MZprime_500_Mchi_150','MC',0.01820),
+    'DarkHiggs_MonoHs_LO_TuneCP5_13TeV-madgraph-pythia8':('DarkHiggs_MonoHs_LO_TuneCP5_13TeV-madgraph-pythia8','MC',1.),
 }

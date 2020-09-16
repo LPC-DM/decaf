@@ -19,7 +19,7 @@ parser.add_option('-y', '--year', help='year', dest='year')
 parser.add_option('-p', '--pack', help='pack', dest='pack')
 parser.add_option('-k', '--keep', action="store_true", dest="keep")
 (options, args) = parser.parse_args()
-fnaleos = "root://cmsxrootd.fnal.gov/"
+fnaleos = "root://cmseos.fnal.gov/"
 
 beans={}
 beans['2016'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2016"]
@@ -91,7 +91,12 @@ for folder in beans[options.year]:
         if options.dataset and options.dataset not in dataset: continue
         print("Looking into",folder+"/"+dataset)
         filenames = folder+"/"+dataset+" -name \'nano_*.root\'"
-        os.system("find "+filenames+" > metadata/"+dataset+".txt")
+        exist=False
+        for filename in os.listdir('metadata'):
+             if dataset+".txt" not in filename: continue
+             exist=True
+        if not exist:
+             os.system("find "+filenames+" > metadata/"+dataset+".txt")
         with open("metadata/"+dataset+".txt") as flist:
              new_content=flist.read().replace('/eos/uscms',fnaleos)
         with open("metadata/"+dataset+".txt", 'w') as flist:
