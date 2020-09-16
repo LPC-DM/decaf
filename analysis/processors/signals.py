@@ -16,10 +16,8 @@ from uproot_methods import TVector2Array, TLorentzVectorArray
 
 class AnalysisProcessor(processor.ProcessorABC):
 
-    def __init__(self, year, ids, common):
+    def __init__(self, year):
         self._year = year
-        self._ids = ids
-        self._common = common
         self._accumulator = processor.dict_accumulator({
             'yields': hist.Hist(
                 'Events',
@@ -115,7 +113,6 @@ class AnalysisProcessor(processor.ProcessorABC):
     def process(self, events):
         dataset = events.metadata['dataset']
         hout = self.accumulator.identity()
-        match = self._common['match']
         isCentral = 'GenModel' in events.columns
         mask=np.zeros(events.size, dtype=np.bool)
         dataset_name=dataset
@@ -140,37 +137,10 @@ class AnalysisProcessor(processor.ProcessorABC):
         #Initialize physics objects
         ###
 
-        mu = events.Muon
-        mu['T'] = TVector2Array.from_polar(mu.pt, mu.phi)
-        mu_ntot = mu.counts
-        leading_mu = mu[mu.pt.argmax()]
-
-        e = events.Electron
-        e['isclean'] = ~match(e,mu_loose,0.3)
-        e['T'] = TVector2Array.from_polar(e.pt, e.phi)
-        e_clean = e[e.isclean.astype(np.bool)]
-        e_ntot = e.counts
-        leading_e = e[e.pt.argmax()]
-        leading_e = leading_e[leading_e.isclean.astype(np.bool)]
-
-        pho = events.Photon
-        pho['isclean']=~match(pho,mu_loose,0.5)&~match(pho,e_loose,0.5)
-        _id = 'cutBasedBitmap'
-        if self._year=='2016':
-            _id = 'cutBased'
-        pho['T'] = TVector2Array.from_polar(pho.pt, pho.phi)
-        pho_clean=pho[pho.isclean.astype(np.bool)]
-        pho_ntot=pho.counts
-        leading_pho = leading_pho[leading_pho.isclean.astype(np.bool)]
-
         j = events.Jet
-        j['isclean'] = ~match(j,e_loose,0.4)&~match(j,mu_loose,0.4)&~match(j,pho_loose,0.4)
         j['T'] = TVector2Array.from_polar(j.pt, j.phi)
-        j_clean = j[j.isclean.astype(np.bool)]
         j_ntot=j.counts
-        j_nclean=j_clean.counts
         leading_j = j[j.pt.argmax()]
-        leading_j = leading_j[leading_j.isclean.astype(np.bool)]
 
         ### Gen information
         # pdgId = 52: dark matter, 54: dark Higgs, 55: Zprime
@@ -184,11 +154,11 @@ class AnalysisProcessor(processor.ProcessorABC):
         variables = {
             'met':                    met.pt,
             'metphi':                 met.phi,
-            'mindphimet':             abs(met.T.delta_phi(j_clean.T)).min(),
+            'mindphimet':             abs(met.T.delta_phi(j.T)).min(),
             'j1pt':                   leading_j.pt,
             'j1eta':                  leading_j.eta,
             'j1phi':                  leading_j.phi,
-            'njets':                  j_nclean,
+            'njets':                  j_ntot,
             'medmass':                zp.mass,
             'medpt':                  zp.pt,
             'medeta':                 zp.eta,
@@ -223,10 +193,5 @@ if __name__ == '__main__':
     parser.add_option('-y', '--year', help='year', dest='year')
     (options, args) = parser.parse_args()
 
-    ids         = load('data/ids.coffea')
-    common      = load('data/common.coffea')
-
-    processor_instance=AnalysisProcessor(year=options.year,
-                                         ids=ids,
-                                         common=common)
+    processor_instance=AnalysisProcessor(year=options.year)
     save(processor_instance, 'data/signals'+options.year+'.processor')
