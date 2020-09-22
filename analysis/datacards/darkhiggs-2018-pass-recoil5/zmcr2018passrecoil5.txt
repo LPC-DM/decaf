@@ -1,4 +1,4 @@
-# Datacard for <Channel (zmcr2018passrecoil5) instance at 0x2ad720b93c50> generated on 2020-08-29 05:53:27.523764
+# Datacard for <Channel (zmcr2018passrecoil5) instance at 0x2acf5d1cfcd0> generated on 2020-09-22 13:18:20.578920
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 4 # number of samples minus 1
 kmax 13 # number of nuisance parameters
