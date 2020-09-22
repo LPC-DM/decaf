@@ -1,4 +1,4 @@
-# Datacard for <Channel (wmcr2018passrecoil6) instance at 0x2ad2ec931b10> generated on 2020-08-27 05:43:11.476399
+# Datacard for <Channel (wmcr2018passrecoil6) instance at 0x2b17b6756d90> generated on 2020-08-29 05:58:04.354966
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
 kmax 16 # number of nuisance parameters
@@ -9,7 +9,7 @@ bin               wmcr2018passrecoil6  wmcr2018passrecoil6  wmcr2018passrecoil6 
 process                         wjets                   tt                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
 process                             1                    2                    3                    4                    5                    6                    7
 rate                            1.000                1.000                2.048                0.089                1.945                0.102                0.888
-btag2018 shape                      -                    -                1.000                1.000                1.000                1.000                    -
+btag2018 shape                      -                    -                1.000                1.000                1.000                1.000                1.000
 hbb_norm lnN                        -                    -                    -                    -                    -                1.200                    -
 id_mu2018 lnN                       -                    -                1.020                1.020                1.020                1.020                1.020
 iso_mu2018 lnN                      -                    -                1.020                1.020                1.020                1.020                1.020

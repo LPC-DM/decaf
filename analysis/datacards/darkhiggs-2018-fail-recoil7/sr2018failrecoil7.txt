@@ -1,4 +1,4 @@
-# Datacard for <Channel (sr2018failrecoil7) instance at 0x2b51fff09310> generated on 2020-08-27 05:40:43.956337
+# Datacard for <Channel (sr2018failrecoil7) instance at 0x2aeba44c8490> generated on 2020-08-29 05:57:59.727172
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 8 # number of samples minus 1
 kmax 13 # number of nuisance parameters
@@ -9,7 +9,7 @@ bin               sr2018failrecoil7  sr2018failrecoil7  sr2018failrecoil7  sr201
 process                      Mhs_50              zjets              wjets                 tt               stMC           dyjetsMC               vvMC              hbbMC              qcdMC
 process                           0                  1                  2                  3                  4                  5                  6                  7                  8
 rate                          0.116              1.000              1.000              1.000              0.290              0.001              2.007              0.002              0.000
-btag2018 shape                1.000                  -                  -                  -              1.000              1.000              1.000              1.000                  -
+btag2018 shape                1.000                  -                  -                  -              1.000              1.000              1.000              1.000              1.000
 hbb_norm lnN                      -                  -                  -                  -                  -                  -                  -              1.200                  -
 jec2018 lnN                   1.050                  -                  -                  -              1.050              1.050              1.050              1.050              1.050
 lumi2018 lnN                  1.027                  -                  -                  -              1.027              1.027              1.027              1.027              1.027
