@@ -115,6 +115,12 @@ def model(year,recoil,category):
             print('Remiving zeros from',systematic,'histogram of',process,'in region',region)
             output[output<=0]=1e-7
         binning=dictionary[region].integrate('process', process).integrate('systematic',systematic).axis('fjmass').edges()
+        print('Region:',region)
+        print('Process:',process)
+        print('Systematic',systematic)
+        print('Recoil:',recoil)
+        print('Mass',output)
+        print('-----')
         return (output, binning, 'fjmass')
 
     model_id=year+category+'recoil'+str(recoil)
