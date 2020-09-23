@@ -1,4 +1,4 @@
-# Datacard for <Channel (zmcr2018passrecoil4) instance at 0x2b3406b59a90> generated on 2020-09-22 13:17:16.947000
+# Datacard for <Channel (zmcr2018passrecoil4) instance at 0x2b93f530a790> generated on 2020-09-24 01:51:48.792662
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 4 # number of samples minus 1
 kmax 13 # number of nuisance parameters
@@ -8,7 +8,7 @@ observation 0.000
 bin               zmcr2018passrecoil4  zmcr2018passrecoil4  zmcr2018passrecoil4  zmcr2018passrecoil4  zmcr2018passrecoil4
 process                        dyjets                 ttMC                 stMC                 vvMC                hbbMC
 process                             1                    2                    3                    4                    5
-rate                            1.000                0.000                0.000                0.769                0.020
+rate                            1.000                0.000                0.000                0.769                0.021
 hbb_norm lnN                        -                    -                    -                    -                1.200
 id_mu2018 lnN                       -                1.020                1.020                1.020                1.020
 iso_mu2018 lnN                      -                1.020                1.020                1.020                1.020
@@ -22,23 +22,24 @@ vv_norm lnN                         -                    -                    - 
 btag2018 param 0 1
 zhf_fraction param 0 1
 zjets_norm param 0 1
-sr2018_zjets_recoil4_mass0 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass1 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass10 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass11 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass12 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass13 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass14 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass15 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass16 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass2 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass3 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass4 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass5 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass6 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass7 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass8 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
-sr2018_zjets_recoil4_mass9 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass0 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass1 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass10 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass11 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass12 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass13 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass14 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass15 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass16 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass2 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass3 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass4 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass5 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass6 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass7 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass8 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_vjshape_fail_mass9 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
+sr2018_zj_fail_recoil4 extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
 sr2018passrecoil4_zjetsMC_bin0_nominal extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
 sr2018passrecoil4_zjetsMC_bin10_nominal extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4
 sr2018passrecoil4_zjetsMC_bin11_nominal extArg zmcr2018passrecoil4.root:zmcr2018passrecoil4

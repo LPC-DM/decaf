@@ -1,14 +1,14 @@
-# Datacard for <Channel (gcr2018failrecoil4) instance at 0x2ba66d60c050> generated on 2020-09-22 13:16:50.242187
+# Datacard for <Channel (gcr2018failrecoil4) instance at 0x2b9adb490990> generated on 2020-09-24 01:43:58.079805
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 1 # number of samples minus 1
 kmax 12 # number of nuisance parameters
 shapes * gcr2018failrecoil4 gcr2018failrecoil4.root gcr2018failrecoil4:gcr2018failrecoil4_$PROCESS gcr2018failrecoil4:gcr2018failrecoil4_$PROCESS_$SYSTEMATIC
 bin gcr2018failrecoil4
-observation 12288.000
+observation 14312.000
 bin               gcr2018failrecoil4  gcr2018failrecoil4
 process                        gjets               qcdMC
 process                            1                   2
-rate                           1.000             174.096
+rate                           1.000             204.569
 id_pho2018 lnN                     -               1.020
 jec2018 lnN                        -               1.050
 lumi2018 lnN                       -               1.027
@@ -38,23 +38,24 @@ gcr2018failrecoil4_gjetsMC_bin6_nominal extArg gcr2018failrecoil4.root:gcr2018fa
 gcr2018failrecoil4_gjetsMC_bin7_nominal extArg gcr2018failrecoil4.root:gcr2018failrecoil4
 gcr2018failrecoil4_gjetsMC_bin8_nominal extArg gcr2018failrecoil4.root:gcr2018failrecoil4
 gcr2018failrecoil4_gjetsMC_bin9_nominal extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass0 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass1 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass10 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass11 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass12 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass13 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass14 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass15 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass16 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass2 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass3 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass4 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass5 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass6 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass7 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass8 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
-sr2018_zjets_recoil4_mass9 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass0 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass1 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass10 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass11 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass12 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass13 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass14 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass15 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass16 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass2 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass3 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass4 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass5 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass6 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass7 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass8 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_vjshape_fail_mass9 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
+sr2018_zj_fail_recoil4 extArg gcr2018failrecoil4.root:gcr2018failrecoil4
 sr2018failrecoil4_zjetsMC_bin0_nominal extArg gcr2018failrecoil4.root:gcr2018failrecoil4
 sr2018failrecoil4_zjetsMC_bin10_nominal extArg gcr2018failrecoil4.root:gcr2018failrecoil4
 sr2018failrecoil4_zjetsMC_bin11_nominal extArg gcr2018failrecoil4.root:gcr2018failrecoil4

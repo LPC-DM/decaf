@@ -1,14 +1,14 @@
-# Datacard for <Channel (wmcr2018passrecoil4) instance at 0x2b3406b597d0> generated on 2020-09-22 13:23:36.178261
+# Datacard for <Channel (wmcr2018passrecoil4) instance at 0x2b93f530a550> generated on 2020-09-24 01:55:26.159089
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
 kmax 16 # number of nuisance parameters
 shapes * wmcr2018passrecoil4 wmcr2018passrecoil4.root wmcr2018passrecoil4:wmcr2018passrecoil4_$PROCESS wmcr2018passrecoil4:wmcr2018passrecoil4_$PROCESS_$SYSTEMATIC
 bin wmcr2018passrecoil4
-observation 471.000
+observation 525.000
 bin               wmcr2018passrecoil4  wmcr2018passrecoil4  wmcr2018passrecoil4  wmcr2018passrecoil4  wmcr2018passrecoil4  wmcr2018passrecoil4  wmcr2018passrecoil4
 process                         wjets                   tt                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
 process                             1                    2                    3                    4                    5                    6                    7
-rate                            1.000                1.000               58.789                2.708               24.388                2.227               12.844
+rate                            1.000                1.000               65.989                3.177               30.935                2.616               17.368
 btag2018 shape                      -                    -                1.000                1.000                1.000                1.000                1.000
 hbb_norm lnN                        -                    -                    -                    -                    -                1.200                    -
 id_mu2018 lnN                       -                    -                1.020                1.020                1.020                1.020                1.020
@@ -44,23 +44,24 @@ sr2018_ttshape_pass_mass6 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
 sr2018_ttshape_pass_mass7 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
 sr2018_ttshape_pass_mass8 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
 sr2018_ttshape_pass_mass9 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass0 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass1 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass10 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass11 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass12 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass13 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass14 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass15 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass16 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass2 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass3 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass4 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass5 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass6 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass7 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass8 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-sr2018_zjets_recoil4_mass9 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass0 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass1 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass10 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass11 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass12 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass13 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass14 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass15 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass16 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass2 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass3 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass4 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass5 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass6 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass7 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass8 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_vjshape_fail_mass9 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
+sr2018_zj_fail_recoil4 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
 sr2018passrecoil4_ttMC_bin0_nominal extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
 sr2018passrecoil4_ttMC_bin10_nominal extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
 sr2018passrecoil4_ttMC_bin11_nominal extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
