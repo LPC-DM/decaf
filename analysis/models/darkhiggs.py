@@ -116,7 +116,7 @@ def initialize_nuisances(hists, year):
     ###
 
     sr_ttRecoil = sr_tt.sum('gentype','fjmass','ZHbbvsQCD').values()[()][:]
-    sr_ttRate   = np.array([rl.IndependentParameter('sr'+year+'_tt_recoil%d' % i, b, 0, sr_ttRecoil*2) for i,b in enumerate(sr_ttRecoil)])
+    sr_ttRate   = np.array([rl.IndependentParameter('sr'+year+'_tt_recoil%d' % i, b, 0, sr_ttRecoil.max()*2) for i,b in enumerate(sr_ttRecoil)])
     print(sr_ttRate)
 
     ###
