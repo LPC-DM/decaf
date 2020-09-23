@@ -17,6 +17,131 @@ import ROOT
 rl.util.install_roofit_helpers()
 rl.ParametericSample.PreferRooParametricHist = False
 
+mass_binning=[0,40,50,60,70,80,90,100,110,120,130,150,160,180,200,220,240,300]
+recoil_binning=[250,310,370,470,590,840,1020,1250,3000]
+
+def remap_histograms(hists):
+    data_hists   = {}
+    bkg_hists    = {}
+    signal_hists = {}
+
+    process = hist.Cat("process", "Process", sorting='placement')
+    cats = ("process",)
+    sig_map = OrderedDict()
+    bkg_map = OrderedDict()
+    data_map = OrderedDict()
+    bkg_map["Hbb"] = ("Hbb*",)
+    bkg_map["DY+jets"] = ("DY+*",)
+    bkg_map["VV"] = (["WW","WZ","ZZ"],)
+    bkg_map["ST"] = ("ST*",)
+    bkg_map["TT"] = ("TT*",)
+    bkg_map["W+jets"] = ("W+*",)
+    bkg_map["Z+jets"] = ("Z+*",)
+    bkg_map["G+jets"] = ("G+*",)
+    bkg_map["QCD"] = ("QCD*",)
+    sig_map["Mhs_50"] = ("*Mhs_50*",)  ## signals
+    sig_map["Mhs_70"] = ("*Mhs_70*",)
+    sig_map["Mhs_90"] = ("*Mhs_90*",)
+    sig_map["MonoJet"] = ("MonoJet*",)  ## signals
+    sig_map["MonoW"] = ("MonoW*",)    ## signals
+    sig_map["MonoZ"] = ("MonoZ*",)    ## signals
+    data_map["MET"] = ("MET*", )
+    data_map["SingleElectron"] = ("SingleElectron*", )
+    data_map["SinglePhoton"] = ("SinglePhoton*", )
+    data_map["EGamma"] = ("EGamma*", )
+    
+    for key in hists['data'].keys():
+        bkg_hists[key] = hists['bkg'][key].group(cats, process, bkg_map)
+        signal_hists[key] = hists['sig'][key].group(cats, process, sig_map)
+        data_hists[key] = hists['data'][key].group(cats, process, data_map)
+
+    bkg_hists['template']=bkg_hists['template'].rebin('fjmass',hist.Bin('fjmass','Mass', mass_binning))
+    signal_hists['template']=signal_hists['template'].rebin('fjmass',hist.Bin('fjmass','Mass',mass_binning))
+    data_hists['template']=data_hists['template'].rebin('fjmass',hist.Bin('fjmass','Mass',mass_binning))
+
+    bkg_hists['template']=bkg_hists['template'].rebin('recoil',hist.Bin('recoil','Recoil',recoil_binning))
+    signal_hists['template']=signal_hists['template'].rebin('recoil',hist.Bin('recoil','Recoil',recoil_binning))
+    data_hists['template']=data_hists['template'].rebin('recoil',hist.Bin('recoil','Recoil',recoil_binning))
+
+    hists={
+        'bkg': bkg_hists,
+        'sig': signal_hists,
+        'data': data_hists
+    }
+
+    return hists
+
+def initialize_nuisances(hists, year):
+    
+    ###
+    # Let's start from TT
+    ###
+
+    ###
+    # First, tagging efficiency and SF
+    ###
+
+    tt_efficiency={
+        '2018': 0.5,
+    }
+    sf_tt = rl.IndependentParameter('sf_tt'+year, 1., 0.01, 1./tt_efficiency[year])
+
+    tt_weight={
+        'pass': sf_tt*tt_efficiency[year],
+        'fail': 1-(sf_tt*tt_efficiency[year])
+    }
+
+    sr_tt = hists['bkg']['template'].integrate('region','sr').integrate('process','TT').integrate('systematic','nominal')
+
+    ###
+    # Then, shapes in pass/fail
+    ###
+
+    sr_ttMass=sr_tt.sum('gentype','recoil')
+    sr_ttMassPass = sr_ttMass.values()[()][:,1] #get the pass histogram, inclusive in recoil
+    sr_ttMassPass = sr_ttMassPass/sr_ttMassPass.sum() #normalize to the integral to get the shape in pass
+    sr_ttMassFail = sr_ttMass.values()[()][:,0] #get the fail histogram, inclusive in recoil
+    sr_ttMassFail = sr_ttMassFail/sr_ttMassFail.sum() #normalize to the integral to get the shape in fail
+    sr_ttShape = {
+        'pass': #one nuisance per mass shape bin in pass
+        np.array([rl.IndependentParameter('sr'+year+'_ttshape_pass_mass%d' % i, b, 0, sr_ttMassPass.max()*2) for i,b in enumerate(sr_ttMassPass)]),
+        'fail': #one nuisance per mass shape bin in fail
+        np.array([rl.IndependentParameter('sr'+year+'_ttshape_fail_mass%d' % i, b, 0, sr_ttMassFail.max()*2) for i,b in enumerate(sr_ttMassFail)])
+    }
+
+    ###
+    # Lastly, let's initialize nuisances per recoil bin
+    ###
+
+    sr_ttRecoil = sr_tt.sum('gentype','fjmass','ZHbbvsQCD').values()[()][:]
+    sr_ttRate   = np.array([rl.IndependentParameter('sr'+year+'_tt_recoil%d' % i, b, 0, sr_ttRecoil*2) for i,b in enumerate(sr_ttRecoil)])
+
+    ###
+    # Let's move to V+jets
+    ###
+
+    sr_zjets = hists['bkg']['template'].integrate('region','sr').integrate('process','Z+jets').integrate('systematic','nominal')
+    sr_wjets = hists['bkg']['template'].integrate('region','sr').integrate('process','W+jets').integrate('systematic','nominal')
+    sr_vjets = sr_zjets + sr_wjets
+
+    ###
+    # First, the mass shape
+    ###
+
+    sr_vjetsMass = sr_vjets.sum('gentype','recoil')
+    sr_vjetsMassFail = sr_vjetsMass.values()[()][:,0] #get the fail histogram, inclusive in recoil                                                                       
+    sr_vjetsMassFail = sr_vjetsMassFail/sr_vjetsMassFail.sum() #normalize to the integral to get the shape in fail        
+    sr_vjetsShape = np.array([rl.IndependentParameter('sr'+year+'_vjshape_fail_mass%d' % i, b, 0, sr_vjetsMassFail.max()*2) for i,b in enumerate(sr_vjetsMassFail)])
+
+    ###
+    # Then, recoil rate
+    ###
+
+    sr_zjetsRecoil = sr_tt.sum('gentype','fjmass','ZHbbvsQCD').values()[()][:]
+    sr_zjetsRate   = np.array([rl.IndependentParameter('sr'+year+'_zj_fail_recoil%d' % i, b, 0, sr_zjetsRecoil*2) for i,b in enumerate(sr_zjetsRecoil)])
+    
+    return sr_vjetsShape, sr_zjetsRate, sr_ttShape, sr_ttRate, tt_weight
+
 def rhalphabeth(msdbins):
 
     process = hist.Cat("process", "Process", sorting='placement')
@@ -109,19 +234,16 @@ def model(year,recoil,category):
         nominal=histogram.integrate('systematic','nominal').values()[()][recoil,:,category_map[category]]
         output=nominal
         if 'nominal' not in systematic and 'data' not in systematic:
-            print('Normalizing',systematic,'histogram of',process,'in region',region)
-            output=np.nan_to_num(histogram.integrate('systematic',systematic).values()[()][recoil,:,category_map[category]]/nominal)
+            #print('Normalizing',systematic,'histogram of',process,'in region',region)
+            output=np.nan_to_num(histogram.integrate('systematic',systematic).values()[()][recoil,:,category_map[category]]/nominal.sum())
         if 'data' not in systematic:
-            print('Remiving zeros from',systematic,'histogram of',process,'in region',region)
+            #print('Remiving zeros from',systematic,'histogram of',process,'in region',region)
             output[output<=0]=1e-7
         binning=dictionary[region].integrate('process', process).integrate('systematic',systematic).axis('fjmass').edges()
-        print('Region:',region)
-        print('Process:',process)
-        print('Systematic',systematic)
-        print('Recoil:',recoil)
-        print('Mass',output)
-        print('-----')
         return (output, binning, 'fjmass')
+
+    def TFtemplate(template):
+        return (np.full(template[0].shape, template[0].sum()), template[1], template[2])
 
     model_id=year+category+'recoil'+str(recoil)
     print(model_id)
@@ -169,7 +291,7 @@ def model(year,recoil,category):
     ###
     # Z(->nunu)+jets data-driven model
     ###
-    sr_zjetsTemplate = template(background,'Z+jets','nominal','sr')
+    sr_zjetsTemplate = TFtemplate(template(background,'Z+jets','nominal','sr'))
     sr_zjetsMC =  rl.TemplateSample(ch_name+'_zjetsMC', rl.Sample.BACKGROUND, sr_zjetsTemplate)
     sr_zjetsMC.setParamEffect(lumi, 1.027)
     sr_zjetsMC.setParamEffect(zjets_norm, 1.4)
@@ -177,8 +299,8 @@ def model(year,recoil,category):
     sr_zjetsMC.setParamEffect(veto_tau, 1.03)
     sr_zjetsMC.setParamEffect(jec, 1.05)
     sr_zjetsMC.setParamEffect(zhf_fraction, hf_systematic['Z+jets']['sr'][category])
-    btagUp=template(background,'Z+jets','btagUp','sr')[0]
-    btagDown=template(background,'Z+jets','btagDown','sr')[0]
+    btagUp=TFtemplate(template(background,'Z+jets','btagUp','sr'))[0]
+    btagDown=TFtemplate(template(background,'Z+jets','btagDown','sr'))[0]
     sr_zjetsMC.setParamEffect(btag, btagUp, btagDown)
     sr_zjetsObservable = rl.Observable('fjmass', sr_zjetsTemplate[1])
     if category == 'pass':
@@ -191,7 +313,7 @@ def model(year,recoil,category):
     # W(->lnu)+jets data-driven model                
     ### 
 
-    sr_wjetsTemplate = template(background,'W+jets','nominal','sr')
+    sr_wjetsTemplate = TFtemplate(template(background,'W+jets','nominal','sr'))
     sr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, sr_wjetsTemplate)
     sr_wjetsMC.setParamEffect(lumi, 1.027)
     sr_wjetsMC.setParamEffect(wjets_norm, 1.4)
@@ -199,11 +321,11 @@ def model(year,recoil,category):
     sr_wjetsMC.setParamEffect(veto_tau, 1.03)
     sr_wjetsMC.setParamEffect(jec, 1.05)
     sr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['sr'][category])
-    btagUp=template(background,'W+jets','btagUp','sr')[0]
-    btagDown=template(background,'W+jets','btagDown','sr')[0]
+    btagUp=TFtemplate(template(background,'W+jets','btagUp','sr'))[0]
+    btagDown=TFtemplate(template(background,'W+jets','btagDown','sr'))[0]
     sr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     #Adding W-Z link
-    sr_wjetsTransferFactor = np.nan_to_num(sr_wjetsMC.getExpectation() / sr_zjetsMC.getExpectation(), nan=1e-7)
+    sr_wjetsTransferFactor = sr_wjetsMC.getExpectation() / sr_zjetsMC.getExpectation()
     sr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, sr_wjetsTransferFactor, sr_zjets)
     sr.addSample(sr_wjets)
 
@@ -211,15 +333,15 @@ def model(year,recoil,category):
     # top-antitop data-driven model                                                                                                                                                                  
     ### 
 
-    sr_ttTemplate = template(background,'TT','nominal','sr')
+    sr_ttTemplate = TFtemplate(template(background,'TT','nominal','sr'))
     sr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, sr_ttTemplate)
     sr_ttMC.setParamEffect(lumi, 1.027)
     sr_ttMC.setParamEffect(tt_norm, 1.2)
     sr_ttMC.setParamEffect(trig_met, 1.01)
     sr_ttMC.setParamEffect(veto_tau, 1.03)
     sr_ttMC.setParamEffect(jec, 1.05)
-    btagUp=template(background,'TT','btagUp','sr')[0]
-    btagDown=template(background,'TT','btagDown','sr')[0]
+    btagUp=TFtemplate(template(background,'TT','btagUp','sr'))[0]
+    btagDown=TFtemplate(template(background,'TT','btagDown','sr'))[0]
     sr_ttMC.setParamEffect(btag, btagUp, btagDown)
     sr_ttObservable = rl.Observable('fjmass', sr_ttTemplate[1])
     sr_tt = rl.ParametericSample(ch_name+'_tt', rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields)
@@ -332,7 +454,7 @@ def model(year,recoil,category):
     # W(->lnu)+jets data-driven model                
     ### 
 
-    wmcr_wjetsTemplate = template(background,'W+jets','nominal','wmcr')
+    wmcr_wjetsTemplate = TFtemplate(template(background,'W+jets','nominal','wmcr'))
     wmcr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, wmcr_wjetsTemplate)
     wmcr_wjetsMC.setParamEffect(lumi, 1.027)
     wmcr_wjetsMC.setParamEffect(trig_met, 1.01)
@@ -342,8 +464,8 @@ def model(year,recoil,category):
     wmcr_wjetsMC.setParamEffect(id_mu, 1.02)
     wmcr_wjetsMC.setParamEffect(iso_mu, 1.02)
     wmcr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['wmcr'][category])
-    btagUp=template(background,'W+jets','btagUp','wmcr')[0]
-    btagDown=template(background,'W+jets','btagDown','wmcr')[0]
+    btagUp=TFtemplate(template(background,'W+jets','btagUp','wmcr'))[0]
+    btagDown=TFtemplate(template(background,'W+jets','btagDown','wmcr'))[0]
     wmcr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     wmcr_wjetsTransferFactor = np.nan_to_num(wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation(), nan=1e-7)
     wmcr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
@@ -353,7 +475,7 @@ def model(year,recoil,category):
     # top-antitop data-driven model                                                                                                                                                                  
     ### 
 
-    wmcr_ttTemplate = template(background,'TT','nominal','wmcr')
+    wmcr_ttTemplate = TFtemplate(template(background,'TT','nominal','wmcr'))
     wmcr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, wmcr_ttTemplate)
     wmcr_ttMC.setParamEffect(lumi, 1.027)
     wmcr_ttMC.setParamEffect(trig_met, 1.01)
@@ -362,8 +484,8 @@ def model(year,recoil,category):
     wmcr_ttMC.setParamEffect(jec, 1.05)
     wmcr_ttMC.setParamEffect(id_mu, 1.02)
     wmcr_ttMC.setParamEffect(iso_mu, 1.02)
-    btagUp=template(background,'TT','btagUp','wmcr')[0]
-    btagDown=template(background,'TT','btagDown','wmcr')[0]
+    btagUp=TFtemplate(template(background,'TT','btagUp','wmcr'))[0]
+    btagDown=TFtemplate(template(background,'TT','btagDown','wmcr'))[0]
     wmcr_ttMC.setParamEffect(btag, btagUp, btagDown)
     wmcr_ttTransferFactor = np.nan_to_num(wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation(), nan=1e-7)
     wmcr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt)
@@ -467,7 +589,7 @@ def model(year,recoil,category):
     # W(->lnu)+jets data-driven model                
     ### 
 
-    tmcr_wjetsTemplate = template(background,'W+jets','nominal','tmcr')
+    tmcr_wjetsTemplate = TFtemplate(template(background,'W+jets','nominal','tmcr'))
     tmcr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, tmcr_wjetsTemplate)
     tmcr_wjetsMC.setParamEffect(lumi, 1.027)
     tmcr_wjetsMC.setParamEffect(trig_met, 1.01)
@@ -477,8 +599,8 @@ def model(year,recoil,category):
     tmcr_wjetsMC.setParamEffect(id_mu, 1.02)
     tmcr_wjetsMC.setParamEffect(iso_mu, 1.02)
     tmcr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['tmcr'][category])
-    btagUp=template(background,'W+jets','btagUp','tmcr')[0]
-    btagDown=template(background,'W+jets','btagDown','tmcr')[0]
+    btagUp=TFtemplate(template(background,'W+jets','btagUp','tmcr'))[0]
+    btagDown=TFtemplate(template(background,'W+jets','btagDown','tmcr'))[0]
     tmcr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     tmcr_wjetsTransferFactor = np.nan_to_num(tmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation(), nan=1e-7)
     tmcr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, tmcr_wjetsTransferFactor, sr_wjets)
@@ -488,7 +610,7 @@ def model(year,recoil,category):
     # top-antitop data-driven model                                                                                                                                                                  
     ### 
 
-    tmcr_ttTemplate = template(background,'TT','nominal','tmcr')
+    tmcr_ttTemplate = TFtemplate(template(background,'TT','nominal','tmcr'))
     tmcr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, tmcr_ttTemplate)
     tmcr_ttMC.setParamEffect(lumi, 1.027)
     tmcr_ttMC.setParamEffect(trig_met, 1.01)
@@ -497,8 +619,8 @@ def model(year,recoil,category):
     tmcr_ttMC.setParamEffect(jec, 1.05)
     tmcr_ttMC.setParamEffect(id_mu, 1.02)
     tmcr_ttMC.setParamEffect(iso_mu, 1.02)
-    btagUp=template(background,'TT','btagUp','tmcr')[0]
-    btagDown=template(background,'TT','btagDown','tmcr')[0]
+    btagUp=TFtemplate(template(background,'TT','btagUp','tmcr'))[0]
+    btagDown=TFtemplate(template(background,'TT','btagDown','tmcr'))[0]
     tmcr_ttMC.setParamEffect(btag, btagUp, btagDown)
     tmcr_ttTransferFactor = np.nan_to_num(tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation(), nan=1e-7)
     tmcr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt)
@@ -605,7 +727,7 @@ def model(year,recoil,category):
     # W(->lnu)+jets data-driven model                
     ### 
 
-    wecr_wjetsTemplate = template(background,'W+jets','nominal','wecr')
+    wecr_wjetsTemplate = TFtemplate(template(background,'W+jets','nominal','wecr'))
     wecr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, wecr_wjetsTemplate)
     wecr_wjetsMC.setParamEffect(lumi, 1.027)
     wecr_wjetsMC.setParamEffect(trig_e, 1.01)
@@ -615,8 +737,8 @@ def model(year,recoil,category):
     wecr_wjetsMC.setParamEffect(id_e, 1.02)
     wecr_wjetsMC.setParamEffect(reco_e, 1.02)
     wecr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['wecr'][category])
-    btagUp=np.nan_to_num(template(background,'W+jets','btagUp','wecr')[0]/wecr_wjetsTemplate[0])
-    btagDown=np.nan_to_num(template(background,'W+jets','btagDown','wecr')[0]/wecr_wjetsTemplate[0])
+    btagUp=TFtemplate(template(background,'W+jets','btagUp','wecr'))[0]
+    btagDown=TFtemplate(template(background,'W+jets','btagDown','wecr'))[0]
     wecr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     wecr_wjetsTransferFactor = np.nan_to_num(wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation(), nan=1e-7)
     wecr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets)
@@ -626,7 +748,7 @@ def model(year,recoil,category):
     # top-antitop data-driven model                                                                                                                                                                  
     ### 
 
-    wecr_ttTemplate = template(background,'TT','nominal','wecr')
+    wecr_ttTemplate = TFtemplate(template(background,'TT','nominal','wecr'))
     wecr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, wecr_ttTemplate)
     wecr_ttMC.setParamEffect(lumi, 1.027)
     wecr_ttMC.setParamEffect(trig_e, 1.01)
@@ -635,8 +757,8 @@ def model(year,recoil,category):
     wecr_ttMC.setParamEffect(jec, 1.05)
     wecr_ttMC.setParamEffect(id_e, 1.02)
     wecr_ttMC.setParamEffect(reco_e, 1.02)
-    btagUp=template(background,'TT','btagUp','wecr')[0]
-    btagDown=template(background,'TT','btagDown','wecr')[0]
+    btagUp=TFtemplate(template(background,'TT','btagUp','wecr'))[0]
+    btagDown=TFtemplate(template(background,'TT','btagDown','wecr'))[0]
     wecr_ttMC.setParamEffect(btag, btagUp, btagDown)
     wecr_ttTransferFactor = np.nan_to_num(wecr_ttMC.getExpectation() / sr_ttMC.getExpectation(), nan=1e-7)
     wecr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt)
@@ -743,7 +865,7 @@ def model(year,recoil,category):
     # W(->lnu)+jets data-driven model                
     ### 
 
-    tecr_wjetsTemplate = template(background,'W+jets','nominal','tecr')
+    tecr_wjetsTemplate = TFtemplate(template(background,'W+jets','nominal','tecr'))
     tecr_wjetsMC =  rl.TemplateSample(ch_name+'_wjetsMC', rl.Sample.BACKGROUND, tecr_wjetsTemplate)
     tecr_wjetsMC.setParamEffect(lumi, 1.027)
     tecr_wjetsMC.setParamEffect(trig_e, 1.01)
@@ -753,8 +875,8 @@ def model(year,recoil,category):
     tecr_wjetsMC.setParamEffect(id_e, 1.02)
     tecr_wjetsMC.setParamEffect(reco_e, 1.02)
     tecr_wjetsMC.setParamEffect(whf_fraction, hf_systematic['W+jets']['tecr'][category])
-    btagUp=template(background,'W+jets','btagUp','tecr')[0]
-    btagDown=template(background,'W+jets','btagDown','tecr')[0]
+    btagUp=TFtemplate(template(background,'W+jets','btagUp','tecr'))[0]
+    btagDown=TFtemplate(template(background,'W+jets','btagDown','tecr'))[0]
     tecr_wjetsMC.setParamEffect(btag, btagUp, btagDown)
     tecr_wjetsTransferFactor = np.nan_to_num(tecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation(), nan=1e-7)
     tecr_wjets = rl.TransferFactorSample(ch_name+'_wjets', rl.Sample.BACKGROUND, tecr_wjetsTransferFactor, sr_wjets)
@@ -764,7 +886,7 @@ def model(year,recoil,category):
     # top-antitop data-driven model                                                                                                                                                                  
     ### 
 
-    tecr_ttTemplate = template(background,'TT','nominal','tecr')
+    tecr_ttTemplate = TFtemplate(template(background,'TT','nominal','tecr'))
     tecr_ttMC =  rl.TemplateSample(ch_name+'_ttMC', rl.Sample.BACKGROUND, tecr_ttTemplate)
     tecr_ttMC.setParamEffect(lumi, 1.027)
     tecr_ttMC.setParamEffect(trig_e, 1.01)
@@ -773,8 +895,8 @@ def model(year,recoil,category):
     tecr_ttMC.setParamEffect(jec, 1.05)
     tecr_ttMC.setParamEffect(id_e, 1.02)
     tecr_ttMC.setParamEffect(reco_e, 1.02)
-    btagUp=template(background,'TT','btagUp','tecr')[0]
-    btagDown=template(background,'TT','btagDown','tecr')[0]
+    btagUp=TFtemplate(template(background,'TT','btagUp','tecr'))[0]
+    btagDown=TFtemplate(template(background,'TT','btagDown','tecr'))[0]
     tecr_ttMC.setParamEffect(btag, btagUp, btagDown)
     tecr_ttTransferFactor = np.nan_to_num(tecr_ttMC.getExpectation() / sr_ttMC.getExpectation(), nan=1e-7)
     tecr_tt = rl.TransferFactorSample(ch_name+'_tt', rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt)
@@ -874,7 +996,7 @@ def model(year,recoil,category):
 
     zmcr.setObservation(template(data,'MET','data','zmcr'))
 
-    zmcr_dyjetsTemplate = template(background,'DY+jets','nominal','zmcr')
+    zmcr_dyjetsTemplate = TFtemplate(template(background,'DY+jets','nominal','zmcr'))
     zmcr_dyjetsMC =  rl.TemplateSample(ch_name+'_dyjetsMC', rl.Sample.BACKGROUND, zmcr_dyjetsTemplate)
     zmcr_dyjetsMC.setParamEffect(lumi, 1.027)
     zmcr_dyjetsMC.setParamEffect(trig_met, 1.01)
@@ -959,7 +1081,7 @@ def model(year,recoil,category):
     else:
         zecr.setObservation(template(data,'SingleElectron','data','zecr'))
 
-    zecr_dyjetsTemplate = template(background,'DY+jets','nominal','zecr')
+    zecr_dyjetsTemplate = TFtemplate(template(background,'DY+jets','nominal','zecr'))
     zecr_dyjetsMC =  rl.TemplateSample(ch_name+'_dyjetsMC', rl.Sample.BACKGROUND, zecr_dyjetsTemplate)
     zecr_dyjetsMC.setParamEffect(lumi, 1.027)
     zecr_dyjetsMC.setParamEffect(trig_e, 1.01)
@@ -1044,7 +1166,7 @@ def model(year,recoil,category):
     else: 
         gcr.setObservation(template(data,'SinglePhoton','data','gcr'))
 
-    gcr_gjetsTemplate = template(background,'G+jets','nominal','gcr')
+    gcr_gjetsTemplate = TFtemplate(template(background,'G+jets','nominal','gcr'))
     gcr_gjetsMC =  rl.TemplateSample(ch_name+'_gjetsMC', rl.Sample.BACKGROUND, gcr_gjetsTemplate)
     gcr_gjetsMC.setParamEffect(lumi, 1.027)
     gcr_gjetsMC.setParamEffect(trig_pho, 1.01)
@@ -1082,86 +1204,18 @@ if __name__ == '__main__':
 
     print('Grouping histograms')
     hists = load('hists/darkhiggs'+options.year+'.scaled')
-    
-    data_hists   = {}
-    bkg_hists    = {}
-    signal_hists = {}
-
-    process = hist.Cat("process", "Process", sorting='placement')
-    cats = ("process",)
-    sig_map = OrderedDict()
-    bkg_map = OrderedDict()
-    data_map = OrderedDict()
-    bkg_map["Hbb"] = ("Hbb*",)
-    bkg_map["DY+jets"] = ("DY+*",)
-    bkg_map["VV"] = (["WW","WZ","ZZ"],)
-    bkg_map["ST"] = ("ST*",)
-    bkg_map["TT"] = ("TT*",)
-    bkg_map["W+jets"] = ("W+*",)
-    bkg_map["Z+jets"] = ("Z+*",)
-    bkg_map["G+jets"] = ("G+*",)
-    bkg_map["QCD"] = ("QCD*",)
-    sig_map["Mhs_50"] = ("*Mhs_50*",)  ## signals
-    sig_map["Mhs_70"] = ("*Mhs_70*",)
-    sig_map["Mhs_90"] = ("*Mhs_90*",)
-    sig_map["MonoJet"] = ("MonoJet*",)  ## signals
-    sig_map["MonoW"] = ("MonoW*",)    ## signals
-    sig_map["MonoZ"] = ("MonoZ*",)    ## signals
-    data_map["MET"] = ("MET*", )
-    data_map["SingleElectron"] = ("SingleElectron*", )
-    data_map["SinglePhoton"] = ("SinglePhoton*", )
-    data_map["EGamma"] = ("EGamma*", )
-    
-    for key in hists['data'].keys():
-        bkg_hists[key] = hists['bkg'][key].group(cats, process, bkg_map)
-        signal_hists[key] = hists['sig'][key].group(cats, process, sig_map)
-        data_hists[key] = hists['data'][key].group(cats, process, data_map)
-
-    hists={
-        'bkg': bkg_hists,
-        'sig': signal_hists,
-        'data': data_hists
-    }
-
-    mass_binning=[0,40,50,60,70,80,90,100,110,120,130,150,160,180,200,220,240,300]
-    bkg_hists['template']=bkg_hists['template'].rebin('fjmass',hist.Bin('fjmass','Mass', mass_binning))
-    signal_hists['template']=signal_hists['template'].rebin('fjmass',hist.Bin('fjmass','Mass',mass_binning))
-    data_hists['template']=data_hists['template'].rebin('fjmass',hist.Bin('fjmass','Mass',mass_binning))
-
-    recoil_binning=[250,310,370,470,590,840,1020,1250,3000]
-    bkg_hists['template']=bkg_hists['template'].rebin('recoil',hist.Bin('recoil','Recoil',recoil_binning))
-    signal_hists['template']=signal_hists['template'].rebin('recoil',hist.Bin('recoil','Recoil',recoil_binning))
-    data_hists['template']=data_hists['template'].rebin('recoil',hist.Bin('recoil','Recoil',recoil_binning))
-
+    hists = remap_histograms(hists)
+    sr_vjetsShape, sr_zjetsRate, sr_ttShape, sr_ttRate, tt_weight=initialize_nuisances(hists, options.year)
     #tf_params = rhalphabeth(mass_binning)
     tf_params=0.05
-
-    tt_efficiency={
-        '2018': 0.5,
-    }
-    sf_tt = rl.IndependentParameter('sf_tt'+options.year, 1., 0.01, 1./tt_efficiency[options.year])
-    tt_weight={
-        'pass': sf_tt*tt_efficiency[options.year],
-        'fail': 1-(sf_tt*tt_efficiency[options.year])
-    }
-    sr_ttHistPass = hists['bkg']['template'].integrate('region','sr').sum('gentype','recoil').integrate('process','TT').integrate('systematic','nominal').values()[()][:,1]
-    sr_ttHistPass[sr_ttHistPass<=0]=1e-7
-    sr_ttHistPass = sr_ttHistPass/sr_ttHistPass.sum()
-    sr_ttHistFail = hists['bkg']['template'].integrate('region','sr').sum('gentype','recoil').integrate('process','TT').integrate('systematic','nominal').values()[()][:,0]
-    sr_ttHistFail[sr_ttHistFail<=0]=1e-7
-    sr_ttHistFail = sr_ttHistFail/sr_ttHistFail.sum()
-    sr_ttShape = {
-        'pass': np.array([rl.IndependentParameter('sr'+options.year+'_ttshape_pass_mass%d' % i, b, 0, sr_ttHistPass.max()*2) for i,b in enumerate(sr_ttHistPass)]),
-        'fail': np.array([rl.IndependentParameter('sr'+options.year+'_ttshape_fail_mass%d' % i, b, 0, sr_ttHistFail.max()*2) for i,b in enumerate(sr_ttHistFail)])
-    }
 
     ###
     ###
     # Setting up systematics
     ###
     ###
-
-    lumi = rl.NuisanceParameter('lumi'+options.year, 'lnN')
+    year=options.year
+    lumi = rl.NuisanceParameter('lumi'+year, 'lnN')
     qcdpho_norm = rl.NuisanceParameter('qcdpho_norm', 'lnN')
     qcde_norm = rl.NuisanceParameter('qcde_norm', 'lnN')
     qcdmu_norm = rl.NuisanceParameter('qcdmu_norm', 'lnN')
@@ -1176,30 +1230,26 @@ if __name__ == '__main__':
     whf_fraction = rl.NuisanceParameter('whf_fraction', 'lnN')
     zhf_fraction = rl.NuisanceParameter('zhf_fraction', 'lnN')
     ghf_fraction = rl.NuisanceParameter('ghf_fraction', 'lnN')
-    id_e = rl.NuisanceParameter('id_e'+options.year, 'lnN')
-    id_mu = rl.NuisanceParameter('id_mu'+options.year, 'lnN')
-    id_pho = rl.NuisanceParameter('id_pho'+options.year, 'lnN')
-    reco_e = rl.NuisanceParameter('reco_e'+options.year, 'lnN')
-    iso_mu = rl.NuisanceParameter('iso_mu'+options.year, 'lnN')
-    trig_e = rl.NuisanceParameter('trig_e'+options.year, 'lnN')
-    trig_met = rl.NuisanceParameter('trig_met'+options.year, 'lnN')
-    trig_pho = rl.NuisanceParameter('trig_pho'+options.year, 'lnN')
-    veto_tau = rl.NuisanceParameter('veto_tau'+options.year, 'lnN')
-    jec = rl.NuisanceParameter('jec'+options.year, 'lnN')
-    btag = rl.NuisanceParameter('btag'+options.year, 'shape') #AK4 btag
+    id_e = rl.NuisanceParameter('id_e'+year, 'lnN')
+    id_mu = rl.NuisanceParameter('id_mu'+year, 'lnN')
+    id_pho = rl.NuisanceParameter('id_pho'+year, 'lnN')
+    reco_e = rl.NuisanceParameter('reco_e'+year, 'lnN')
+    iso_mu = rl.NuisanceParameter('iso_mu'+year, 'lnN')
+    trig_e = rl.NuisanceParameter('trig_e'+year, 'lnN')
+    trig_met = rl.NuisanceParameter('trig_met'+year, 'lnN')
+    trig_pho = rl.NuisanceParameter('trig_pho'+year, 'lnN')
+    veto_tau = rl.NuisanceParameter('veto_tau'+year, 'lnN')
+    jec = rl.NuisanceParameter('jec'+year, 'lnN')
+    btag = rl.NuisanceParameter('btag'+year, 'shape') #AK4 btag
+
 
     model_dict={}
     recoilbins = np.array(recoil_binning)
     nrecoil = len(recoilbins) - 1
     for recoilbin in range(nrecoil):
-        sr_zjetsHist = hists['bkg']['template'].integrate('region','sr').sum('gentype').integrate('process','Z+jets').integrate('systematic','nominal').values()[()][recoilbin,:,0]
-        sr_zjetsHist[sr_zjetsHist<=0]=1e-7
-        sr_zjetsBinYields = np.array([rl.IndependentParameter('sr'+options.year+'_zjets_recoil'+str(recoilbin)+'_mass%d' % i, b, 0, sr_zjetsHist.max()*2) for i,b in enumerate(sr_zjetsHist)])
-        sr_ttRecoil = hists['bkg']['template'].integrate('region','sr').sum('gentype','fjmass','ZHbbvsQCD').integrate('process','TT').integrate('systematic','nominal').values()[()][recoilbin]
-        if sr_ttRecoil<=0: sr_ttRecoil=1e-7
-        sr_ttRate = rl.IndependentParameter('sr'+options.year+'_tt_recoil'+str(recoilbin), sr_ttRecoil, 0, sr_ttRecoil*2)
+        sr_zjetsBinYields = sr_vjetsShape*sr_zjetsRate[recoilbin]
         for category in ['pass','fail']:
-            sr_ttBinYields = sr_ttShape[category]*sr_ttRate*tt_weight[category]
+            sr_ttBinYields = sr_ttShape[category]*sr_ttRate[recoilbin]*tt_weight[category]
             with open('data/darkhiggs-'+options.year+'-'+category+'-recoil'+str(recoilbin)+'.model', "wb") as fout:
                 pickle.dump(model(options.year,recoilbin,category), fout, protocol=2)
 
