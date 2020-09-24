@@ -156,17 +156,17 @@ def computeTFs(hists, year, recoil, category):
         histogram=histogram.sum('recoil')
         nominal=histogram.integrate('systematic','nominal').values()[()][:,category_map[category]]
         output=nominal
-        if 'nominal' not in systematic and 'data' not in systematic:
-            output=np.nan_to_num(histogram.integrate('systematic',systematic).values()[()][:,category_map[category]]/nominal.sum())
+        if 'nominal' not in systematic:
+            output=histogram.integrate('systematic',systematic).values()[()][:,category_map[category]]
         binning=histogram.integrate('systematic',systematic).axis('fjmass').edges()
-        return (output, binning, 'fjmass')
+        return (np.nan_to_num(output/nominal.sum()), binning, 'fjmass')
 
     def templateRecoil(histogram, systematic):
         template=templateMass(histogram, systematic)
         histogram=histogram.sum('fjmass')
         nominal=histogram.integrate('systematic','nominal').values()[()][recoil,category_map[category]]
         output=nominal
-        if 'nominal' not in systematic and 'data' not in systematic:
+        if 'nominal' not in systematic:
             output=np.nan_to_num(histogram.integrate('systematic',systematic).values()[()][recoil,category_map[category]]/nominal.sum())
         return (np.full(template[0].shape, output), template[1], template[2])
 
@@ -519,26 +519,26 @@ def computeTFs(hists, year, recoil, category):
     # Compute TFs
     ###
 
-    #sr_wjetsTransferFactor = (sr_wjetsMass.getExpectation()*sr_wjetsRecoil.getExpectation()) / (sr_zjetsMass.getExpectation()*sr_zjetsRecoil.getExpectation())
-    sr_wjetsTransferFactor = sr_wjetsRecoil.getExpectation() / sr_zjetsRecoil.getExpectation()
-    #wmcr_wjetsTransferFactor = (wmcr_wjetsMass.getExpectation()*wmcr_wjetsRecoil.getExpectation()) / (sr_wjetsMass.getExpectation()*sr_wjetsRecoil.getExpectation())
-    wmcr_wjetsTransferFactor = wmcr_wjetsRecoil.getExpectation() / sr_wjetsRecoil.getExpectation()
+    sr_wjetsTransferFactor = (sr_wjetsMass.getExpectation()*sr_wjetsRecoil.getExpectation()) / (sr_zjetsMass.getExpectation()*sr_zjetsRecoil.getExpectation())
+    #sr_wjetsTransferFactor = sr_wjetsRecoil.getExpectation() / sr_zjetsRecoil.getExpectation()
+    wmcr_wjetsTransferFactor = (wmcr_wjetsMass.getExpectation()*wmcr_wjetsRecoil.getExpectation()) / (sr_wjetsMass.getExpectation()*sr_wjetsRecoil.getExpectation())
+    #wmcr_wjetsTransferFactor = wmcr_wjetsRecoil.getExpectation() / sr_wjetsRecoil.getExpectation()
     wmcr_ttTransferFactor = (wmcr_ttMass.getExpectation()*wmcr_ttRecoil.getExpectation()) / (sr_ttMass.getExpectation()*sr_ttRecoil.getExpectation())
-    #tmcr_wjetsTransferFactor = (tmcr_wjetsMass.getExpectation()*tmcr_wjetsRecoil.getExpectation()) / (sr_wjetsMass.getExpectation()*sr_wjetsRecoil.getExpectation())
-    tmcr_wjetsTransferFactor = tmcr_wjetsRecoil.getExpectation() / sr_wjetsRecoil.getExpectation()
+    tmcr_wjetsTransferFactor = (tmcr_wjetsMass.getExpectation()*tmcr_wjetsRecoil.getExpectation()) / (sr_wjetsMass.getExpectation()*sr_wjetsRecoil.getExpectation())
+    #tmcr_wjetsTransferFactor = tmcr_wjetsRecoil.getExpectation() / sr_wjetsRecoil.getExpectation()
     tmcr_ttTransferFactor = (tmcr_ttMass.getExpectation()*tmcr_ttRecoil.getExpectation()) / (sr_ttMass.getExpectation()*sr_ttRecoil.getExpectation())
-    #wecr_wjetsTransferFactor = (wecr_wjetsMass.getExpectation()*wecr_wjetsRecoil.getExpectation()) / (sr_wjetsMass.getExpectation()*sr_wjetsRecoil.getExpectation())
-    wecr_wjetsTransferFactor = wecr_wjetsRecoil.getExpectation() / sr_wjetsRecoil.getExpectation()
+    wecr_wjetsTransferFactor = (wecr_wjetsMass.getExpectation()*wecr_wjetsRecoil.getExpectation()) / (sr_wjetsMass.getExpectation()*sr_wjetsRecoil.getExpectation())
+    #wecr_wjetsTransferFactor = wecr_wjetsRecoil.getExpectation() / sr_wjetsRecoil.getExpectation()
     wecr_ttTransferFactor = (wecr_ttMass.getExpectation()*wecr_ttRecoil.getExpectation()) / (sr_ttMass.getExpectation()*sr_ttRecoil.getExpectation())
-    #tecr_wjetsTransferFactor = (tecr_wjetsMass.getExpectation()*tecr_wjetsRecoil.getExpectation()) / (sr_wjetsMass.getExpectation()*sr_wjetsRecoil.getExpectation())
-    tecr_wjetsTransferFactor = tecr_wjetsRecoil.getExpectation() / sr_wjetsRecoil.getExpectation()
+    tecr_wjetsTransferFactor = (tecr_wjetsMass.getExpectation()*tecr_wjetsRecoil.getExpectation()) / (sr_wjetsMass.getExpectation()*sr_wjetsRecoil.getExpectation())
+    #tecr_wjetsTransferFactor = tecr_wjetsRecoil.getExpectation() / sr_wjetsRecoil.getExpectation()
     tecr_ttTransferFactor = (tecr_ttMass.getExpectation()*tecr_ttRecoil.getExpectation()) / (sr_ttMass.getExpectation()*sr_ttRecoil.getExpectation())
-    #zmcr_dyjetsTransferFactor = (zmcr_dyjetsMass.getExpectation()*zmcr_dyjetsRecoil.getExpectation()) / (sr_zjetsMass.getExpectation()*sr_zjetsRecoil.getExpectation())
-    zmcr_dyjetsTransferFactor = zmcr_dyjetsRecoil.getExpectation() / sr_zjetsRecoil.getExpectation()
-    #zecr_dyjetsTransferFactor = (zecr_dyjetsMass.getExpectation()*zecr_dyjetsRecoil.getExpectation()) / (sr_zjetsMass.getExpectation()*sr_zjetsRecoil.getExpectation())
-    zecr_dyjetsTransferFactor = zecr_dyjetsRecoil.getExpectation() / sr_zjetsRecoil.getExpectation()
-    #gcr_gjetsTransferFactor = (gcr_gjetsMass.getExpectation()*gcr_gjetsRecoil.getExpectation()) / (sr_zjetsMass.getExpectation()*sr_zjetsRecoil.getExpectation())
-    gcr_gjetsTransferFactor = gcr_gjetsRecoil.getExpectation() / sr_zjetsRecoil.getExpectation()
+    zmcr_dyjetsTransferFactor = (zmcr_dyjetsMass.getExpectation()*zmcr_dyjetsRecoil.getExpectation()) / (sr_zjetsMass.getExpectation()*sr_zjetsRecoil.getExpectation())
+    #zmcr_dyjetsTransferFactor = zmcr_dyjetsRecoil.getExpectation() / sr_zjetsRecoil.getExpectation()
+    zecr_dyjetsTransferFactor = (zecr_dyjetsMass.getExpectation()*zecr_dyjetsRecoil.getExpectation()) / (sr_zjetsMass.getExpectation()*sr_zjetsRecoil.getExpectation())
+    #zecr_dyjetsTransferFactor = zecr_dyjetsRecoil.getExpectation() / sr_zjetsRecoil.getExpectation()
+    gcr_gjetsTransferFactor = (gcr_gjetsMass.getExpectation()*gcr_gjetsRecoil.getExpectation()) / (sr_zjetsMass.getExpectation()*sr_zjetsRecoil.getExpectation())
+    #gcr_gjetsTransferFactor = gcr_gjetsRecoil.getExpectation() / sr_zjetsRecoil.getExpectation()
 
     return sr_wjetsTransferFactor, wmcr_wjetsTransferFactor, wmcr_ttTransferFactor, tmcr_wjetsTransferFactor, tmcr_ttTransferFactor, wecr_wjetsTransferFactor, wecr_ttTransferFactor, tecr_wjetsTransferFactor, tecr_ttTransferFactor, zmcr_dyjetsTransferFactor, zecr_dyjetsTransferFactor, gcr_gjetsTransferFactor
     
