@@ -145,7 +145,7 @@ def initialize_nuisances(hists, year):
     # Then, recoil rate
     ###
 
-    sr_zjetsRecoil = sr_tt.sum('gentype','fjmass','ZHbbvsQCD').values()[()][:]
+    sr_zjetsRecoil = sr_zjets.sum('gentype','fjmass','ZHbbvsQCD').values()[()][:]
     sr_zjetsRate   = np.array([rl.IndependentParameter('sr'+year+'_zj_fail_recoil%d' % i, b, 0, sr_zjetsRecoil.max()*2) for i,b in enumerate(sr_zjetsRecoil)])
     return sr_zjetsShape, sr_zjetsRate, sr_ttShape, sr_ttRate, tt_weight
 
