@@ -286,3 +286,14 @@ text2workspace.py darkhiggs.txt
 
 The result of this step will be a ```darkhiggs.root``` file to be used for the combine fit.
 where ```darkhiggs.txt``` is the name of the combined datacard generated at the previous step.
+
+## Macros
+
+### Usage examples
+
+```
+python macros/dump_templates.py -w datacards/darkhiggs/darkhiggs.root:w --observable fjmass -o plots/darkhiggs2018/model
+```
+```
+python macros/hessian.py -w datacards/darkhiggs/higgsCombineTest.FitDiagnostics.mH120.root:w -f datacards/darkhiggs/fitDiagnostics.root:fit_b
+```
