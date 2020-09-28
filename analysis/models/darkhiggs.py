@@ -141,12 +141,14 @@ def initialize_nuisances(hists, year):
     sr_zjetsMassFail = sr_zjetsMass.values()[()][:,0] #get the fail histogram, inclusive in recoil                                                                       
     sr_zjetsMassFail = sr_zjetsMassFail/sr_zjetsMassFail.sum() #normalize to the integral to get the shape in fail        
     sr_zjetsShape = np.array([rl.IndependentParameter('sr'+year+'_zjshape_fail_mass%d' % i, b, 0, sr_zjetsMassFail.max()*2) for i,b in enumerate(sr_zjetsMassFail)])
+
     ###
     # Then, recoil rate
     ###
 
-    sr_zjetsRecoil = sr_zjets.sum('gentype','fjmass','ZHbbvsQCD').values()[()][:]
-    sr_zjetsRate   = np.array([rl.IndependentParameter('sr'+year+'_zj_fail_recoil%d' % i, b, 0, sr_zjetsRecoil.max()*2) for i,b in enumerate(sr_zjetsRecoil)])
+    sr_zjetsRecoil = sr_zjets.sum('gentype','fjmass')
+    sr_zjetsRecoilFail = sr_zjetsRecoil.values()[()][:,0]
+    sr_zjetsRate   = np.array([rl.IndependentParameter('sr'+year+'_zj_fail_recoil%d' % i, b, 0, sr_zjetsRecoilFail.max()*2) for i,b in enumerate(sr_zjetsRecoilFail)])
     return sr_zjetsShape, sr_zjetsRate, sr_ttShape, sr_ttRate, tt_weight
 
 def computeTFs(hists, year, recoil, category):
