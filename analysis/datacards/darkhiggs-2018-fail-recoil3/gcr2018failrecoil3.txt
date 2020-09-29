@@ -1,10 +1,10 @@
-# Datacard for <Channel (gcr2018failrecoil3) instance at 0x2b5f44d9e3d0> generated on 2020-09-25 07:24:24.553785
+# Datacard for <Channel (gcr2018failrecoil3) instance at 0x2b74d6e59390> generated on 2020-09-29 08:10:43.533838
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 1 # number of samples minus 1
 kmax 12 # number of nuisance parameters
 shapes * gcr2018failrecoil3 gcr2018failrecoil3.root gcr2018failrecoil3:gcr2018failrecoil3_$PROCESS gcr2018failrecoil3:gcr2018failrecoil3_$PROCESS_$SYSTEMATIC
 bin gcr2018failrecoil3
-observation 29681.000
+observation 29629.000
 bin               gcr2018failrecoil3  gcr2018failrecoil3
 process                        gjets               qcdMC
 process                            1                   2

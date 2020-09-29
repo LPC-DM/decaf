@@ -1,4 +1,4 @@
-# Datacard for <Channel (zmcr2018failrecoil0) instance at 0x2ae33714f2d0> generated on 2020-09-25 07:23:05.518772
+# Datacard for <Channel (zmcr2018failrecoil0) instance at 0x2b67572f8250> generated on 2020-09-29 08:09:52.391015
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 4 # number of samples minus 1
 kmax 13 # number of nuisance parameters
@@ -8,7 +8,7 @@ observation 22612.000
 bin               zmcr2018failrecoil0  zmcr2018failrecoil0  zmcr2018failrecoil0  zmcr2018failrecoil0  zmcr2018failrecoil0
 process                        dyjets                 ttMC                 stMC                 vvMC                hbbMC
 process                             1                    2                    3                    4                    5
-rate                            1.000               85.353                9.814              323.147               10.537
+rate                            1.000               73.053               10.054              323.147               10.532
 hbb_norm lnN                        -                    -                    -                    -                1.200
 id_mu2018 lnN                       -                1.020                1.020                1.020                1.020
 iso_mu2018 lnN                      -                1.020                1.020                1.020                1.020

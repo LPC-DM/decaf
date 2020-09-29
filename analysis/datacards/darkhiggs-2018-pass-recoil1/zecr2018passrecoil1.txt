@@ -1,4 +1,4 @@
-# Datacard for <Channel (zecr2018passrecoil1) instance at 0x2b82fb3f2290> generated on 2020-09-25 07:22:58.690150
+# Datacard for <Channel (zecr2018passrecoil1) instance at 0x2b14f2bf5290> generated on 2020-09-29 08:10:26.942304
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 4 # number of samples minus 1
 kmax 14 # number of nuisance parameters
@@ -8,7 +8,7 @@ observation 41.000
 bin               zecr2018passrecoil1  zecr2018passrecoil1  zecr2018passrecoil1  zecr2018passrecoil1  zecr2018passrecoil1
 process                        dyjets                 ttMC                 stMC                 vvMC                hbbMC
 process                             1                    2                    3                    4                    5
-rate                            1.000                1.728                0.000                1.840                0.276
+rate                            1.000                1.184                0.000                1.840                0.277
 hbb_norm lnN                        -                    -                    -                    -                1.200
 id_e2018 lnN                        -                1.020                1.020                1.020                1.020
 jec2018 lnN                         -                1.050                1.050                1.050                1.050
