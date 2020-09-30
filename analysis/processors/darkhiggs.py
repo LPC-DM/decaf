@@ -680,6 +680,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj['sd'] = fj.subjets.sum()
         fj['isclean'] =~match(fj.sd,pho_loose,1.5)&~match(fj.sd,mu_loose,1.5)&~match(fj.sd,e_loose,1.5)
         fj['isgood'] = isGoodFatJet(fj.sd.pt, fj.sd.eta, fj.jetId)
+        fj['T'] = TVector2Array.from_polar(fj.pt, fj.phi)
         fj['msd_raw'] = (fj.subjets * (1 - fj.subjets.rawFactor)).sum().mass
         fj['msd_corr'] = fj.msd_raw * awkward.JaggedArray.fromoffsets(fj.array.offsets, np.maximum(1e-5, get_msd_weight(fj.sd.pt.flatten(),fj.sd.eta.flatten())))
         fj['rho'] = 2 * np.log(fj.msd_corr / fj.sd.pt)
@@ -1270,10 +1271,14 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
 
             selection.add('recoil_'+region, (u[region].mag>250))
-            selection.add('mindphi_'+region, (abs(u[region].delta_phi(j_clean.T)).min()>0.8))
+            selection.add('mindphi_'+region, (abs(u[region].delta_phi(j_clean.T)).min()>0.5))
+            selection.add('minDphi_'+region, (abs(u[region].delta_phi(fj_clean.T)).min()>1.5))
+            selection.add('calo_'+region, ( (abs(calomet.pt - met.pt) / u[region].mag) < 0.5))
             #regions[region].update({'recoil_'+region,'mindphi_'+region})
             regions[region].insert(0, 'recoil_'+region)
             regions[region].insert(3, 'mindphi_'+region)
+            regions[region].insert(4, 'minDphi_'+region)
+            regions[region].insert(5, 'calo_'+region)
             print('Selection:',regions[region])
             variables = {
                 'recoil':                 u[region].mag,
