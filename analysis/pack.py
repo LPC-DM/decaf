@@ -18,6 +18,7 @@ parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 parser.add_option('-y', '--year', help='year', dest='year')
 parser.add_option('-p', '--pack', help='pack', dest='pack')
 parser.add_option('-k', '--keep', action="store_true", dest="keep")
+parser.add_option('-s', '--special', help='special', dest='special')
 (options, args) = parser.parse_args()
 fnaleos = "root://cmseos.fnal.gov/"
 
@@ -110,7 +111,14 @@ for folder in beans[options.year]:
             eospath = path.strip()
             if (not ('failed' in eospath)): urllist.append(eospath)
         print('list lenght:',len(urllist))
-        urllists = split(urllist, int(options.pack))
+        if options.special:
+             sdataset, spack = options.special.split(':')
+             if sdataset in dataset:
+                  urllists = split(urllist, int(spack))
+             else:
+                  urllists = split(urllist, int(options.pack))
+        else:
+             urllists = split(urllist, int(options.pack))
         print(len(urllists))
         if urllist:
             for i in range(0,len(urllists)) :
