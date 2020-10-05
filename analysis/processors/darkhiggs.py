@@ -335,19 +335,19 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('recoil','Hadronic Recoil',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0, 3000])
             ),
-            'recoilphiWRF': hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Cat('region', 'Region'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('recoilphiWRF','Recoil Phi WRF',30,0,3.5)
-            ),
             'mindphirecoil': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('mindphirecoil','Min dPhi(Recoil,AK4s)',30,0,3.5)
+            ),
+            'minDphirecoil': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('minDphirecoil','Min dPhi(Recoil,AK15s)',30,0,3.5)
             ),
             'fjmass': hist.Hist(
                 'Events', 
@@ -384,6 +384,13 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('mindphimet','Min dPhi(MET,AK4s)',30,0,3.5)
             ),
+            'minDphimet': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('minDphimet','Min dPhi(MET,AK15s)',30,0,3.5)
+            ),
             'j1pt': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
@@ -411,13 +418,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('region', 'Region'), 
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('fj1pt','AK15 Leading SoftDrop Jet Pt',[160.0, 200.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
-            ),
-            'fj1rho': hist.Hist(
-                'Events', 
-                hist.Cat('dataset', 'Dataset'), 
-                hist.Cat('region', 'Region'), 
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('fj1rho','AK15 Leading SoftDrop Jet Rho',30,-7,-1)
             ),
             'fj1eta': hist.Hist(
                 'Events', 
@@ -461,13 +461,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('mT','Transverse Mass',20,0,600)
             ),
-            'dphilep': hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Cat('region', 'Region'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('dphilep','dPhi(MET, Leading Lepton/Photon)',30,0,3.5)
-            ),
             'l1pt': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
@@ -503,13 +496,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('dileppt','Dilepton Pt',150,0,800)
             ),
-            'drlep': hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Cat('region', 'Region'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('drlep','dR(Lepton1, Lepton2)',30,0,3.5)
-            ),
             'ZHbbvsQCD': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
@@ -523,13 +509,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('region', 'Region'), 
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('TvsQCD','TvsQCD',15,0,1)
-            ),
-            'XvsQCD': hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Cat('region', 'Region'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('XvsQCD','XvsQCD',15,0,1)
             ),
         })
 
@@ -1240,22 +1219,21 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('noextrab', (j_ndflvL==0))
         selection.add('extrab', (j_ndflvL>0))
         selection.add('fatjet', (fj_nclean>0))
-        selection.add('rho', (leading_fj.rho.sum()>-6.)&(leading_fj.rho.sum()<0.86))
         selection.add('noHEMj', noHEMj)
         selection.add('noHEMmet', noHEMmet)
-        selection.add('met80',(met.pt<80))
+        selection.add('met120',(met.pt<120))
         selection.add('met100',(met.pt>100))
-        selection.add('mindphimet',(abs(met.T.delta_phi(j_clean.T)).min())>0.7)
+        #selection.add('mindphimet',(abs(met.T.delta_phi(j_clean.T)).min())>0.7)
 
         regions = {
             #'sr': ['iszeroL','fatjet','noextrab','noHEMmet','met_filters','met_triggers','noHEMj'],
             'sr': ['fatjet', 'noHEMj', 'iszeroL', 'noextrab','met_filters','met_triggers','noHEMmet'],
             'wmcr': ['isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers'],
             'tmcr': ['isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'],
-            'wecr': ['isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'],
-            'tecr': ['isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'],
-            'zmcr': ['istwoM','fatjet','noHEMj','met_filters','met_triggers', 'dimu_mass','met80'],
-            'zecr': ['istwoE','fatjet','noHEMj','met_filters','singleelectron_triggers', 'diele_mass','met80','leading_e_pt'],
+            'wecr': ['isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100'],
+            'tecr': ['isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100'],
+            'zmcr': ['istwoM','fatjet','noHEMj','met_filters','met_triggers', 'dimu_mass','met120'],
+            'zecr': ['istwoE','fatjet','noHEMj','met_filters','singleelectron_triggers', 'diele_mass','met120','leading_e_pt'],
             'gcr': ['isoneA','fatjet','noHEMj','met_filters','singlephoton_triggers']
         }
 
@@ -1283,15 +1261,16 @@ class AnalysisProcessor(processor.ProcessorABC):
             variables = {
                 'recoil':                 u[region].mag,
                 'mindphirecoil':          abs(u[region].delta_phi(j_clean.T)).min(),
+                'minDphirecoil':          abs(u[region].delta_phi(fj_clean.T)).min(),
                 'CaloMinusPfOverRecoil':  abs(calomet.pt - met.pt) / u[region].mag,
                 'met':                    met.pt,
                 'metphi':                 met.phi,
                 'mindphimet':             abs(met.T.delta_phi(j_clean.T)).min(),
+                'minDphimet':             abs(met.T.delta_phi(fj_clean.T)).min(),
                 'j1pt':                   leading_j.pt,
                 'j1eta':                  leading_j.eta,
                 'j1phi':                  leading_j.phi,
                 'fj1pt':                  leading_fj.sd.pt,
-                'fj1rho':                 leading_fj.rho,
                 'fj1eta':                 leading_fj.sd.eta,
                 'fj1phi':                 leading_fj.sd.phi,
                 'fjmass':                 leading_fj.msd_corr,
@@ -1300,35 +1279,24 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'nfjclean':               fj_nclean,
                 'ZHbbvsQCD':              leading_fj.ZHbbvsQCD,
                 'TvsQCD':                 leading_fj.TvsQCD,
-                'XvsQCD':                 leading_fj.XvsQCD,
             }
             if region in mT:
                 variables['mT']           = mT[region]
-                if 'e' in region:
-                    WRF = leading_e.T.sum()-met.T
-                else:
-                    WRF = leading_mu.T.sum()-met.T
-                variables['recoilphiWRF'] = abs(u[region].delta_phi(WRF))
             if 'e' in region:
-                variables['dphilep']   = abs(met.T.delta_phi(leading_e.T).sum())
                 variables['l1pt']      = leading_e.pt
                 variables['l1phi']     = leading_e.phi
                 variables['l1eta']     = leading_e.eta
                 if 'z' in region:
                     variables['dilepmass']  = leading_diele.mass
                     variables['dileppt']    = leading_diele.pt
-                    variables['drlep']      = abs(leading_ele_pair.i0.delta_r(leading_ele_pair.i1).sum())
             if 'm' in region:
-                variables['dphilep']   = abs(met.T.delta_phi(leading_mu.T).sum())
                 variables['l1pt']      = leading_mu.pt
                 variables['l1phi']     = leading_mu.phi
                 variables['l1eta']     = leading_mu.eta
                 if 'z' in region:
                     variables['dilepmass']  = leading_dimu.mass
                     variables['dileppt']    = leading_dimu.pt
-                    variables['drlep']      = abs(leading_mu_pair.i0.delta_r(leading_mu_pair.i1).sum())
             if 'g' in region:
-                variables['dphilep']   = abs(met.T.delta_phi(leading_pho.T).sum())
                 variables['l1pt']      = leading_pho.pt
                 variables['l1phi']     = leading_pho.phi
                 variables['l1eta']     = leading_pho.eta
