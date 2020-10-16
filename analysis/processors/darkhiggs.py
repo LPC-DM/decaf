@@ -157,7 +157,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             'tecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','SingleElectron','EGamma'),
             'zmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET'),
             'zecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','SingleElectron','EGamma'),
-            'gcr':('GJets_1j','QCD','SinglePhoton','EGamma')
+            'gcr':('GJets','QCD','SinglePhoton','EGamma')
         }
 
         self._gentype_map = {
@@ -1007,8 +1007,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             nlo_qcd = np.ones(events.size)
             nlo_ewk = np.ones(events.size)
             if('GJets' in dataset): 
-                #nlo_qcd = get_nlo_qcd_weight['a'](genIsoAs.pt.max())
-                #nlo_ewk = get_nlo_ewk_weight['a'](genIsoAs.pt.max())
+                if self._year=='2016':
+                    nlo_qcd = get_nlo_qcd_weight['a'](genIsoAs.pt.max())
+                    nlo_ewk = get_nlo_ewk_weight['a'](genIsoAs.pt.max())
                 for systematic in get_nnlo_nlo_weight['a']:
                     nnlo_nlo[systematic] = get_nnlo_nlo_weight['a'][systematic](genIsoAs.pt.max())*((genIsoAs.counts>0)&(genIsoAs.pt.max()>=290)) + \
                                            get_nnlo_nlo_weight['a'][systematic](290)*((genIsoAs.counts>0)&~(genIsoAs.pt.max()>=290)&(genIsoAs.pt.max()>=100)) + \
