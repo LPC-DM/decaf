@@ -40,14 +40,14 @@ processes =    {
     ('ZJetsToNuNu_HT-800To1200_13TeV-madgraph',2017):('ZtoNuNu_ht800to1200','MC',1.499),
     ('ZJetsToNuNu_HT-1200To2500_13TeV-madgraph',2017):('ZtoNuNu_ht1200to2500','MC',0.3427),
     ('ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph',2017):('ZtoNuNu_ht2500toinf','MC',0.005146),
-    #2019
-    ('ZJetsToNuNu_HT-100To200_13TeV-madgraph',2016):('ZtoNuNu_ht100to200','MC',93.57),
-    ('ZJetsToNuNu_HT-200To400_13TeV-madgraph',2016):('ZtoNuNu_ht200to400','MC',25.90),
-    ('ZJetsToNuNu_HT-400To600_13TeV-madgraph',2016):('ZtoNuNu_ht400to600','MC',3.585),
-    ('ZJetsToNuNu_HT-600To800_13TeV-madgraph',2016):('ZtoNuNu_ht600to800','MC',0.8568),
-    ('ZJetsToNuNu_HT-800To1200_13TeV-madgraph',2016):('ZtoNuNu_ht800to1200','MC',0.3934),
-    ('ZJetsToNuNu_HT-1200To2500_13TeV-madgraph',2016):('ZtoNuNu_ht1200to2500','MC',0.09553),
-    ('ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph',2016):('ZtoNuNu_ht2500toinf','MC',0.002304),
+    #2016
+    ('ZJetsToNuNu_HT-100To200_13TeV-madgraph',2016):('ZtoNuNu_ht100to200','MC',3*93.57),
+    ('ZJetsToNuNu_HT-200To400_13TeV-madgraph',2016):('ZtoNuNu_ht200to400','MC',3*25.90),
+    ('ZJetsToNuNu_HT-400To600_13TeV-madgraph',2016):('ZtoNuNu_ht400to600','MC',3*3.585),
+    ('ZJetsToNuNu_HT-600To800_13TeV-madgraph',2016):('ZtoNuNu_ht600to800','MC',3*0.8568),
+    ('ZJetsToNuNu_HT-800To1200_13TeV-madgraph',2016):('ZtoNuNu_ht800to1200','MC',3*0.3934),
+    ('ZJetsToNuNu_HT-1200To2500_13TeV-madgraph',2016):('ZtoNuNu_ht1200to2500','MC',3*0.09553),
+    ('ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph',2016):('ZtoNuNu_ht2500toinf','MC',3*0.002304),
     # LO Z->ll
     #2018
     'DYJetsToLL_M-50_HT-100to200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8':('ZJets_ht100to200_CP5','MC',160.8),
@@ -139,10 +139,14 @@ processes =    {
     ('GJets_1j_Gpt-400To650_5f_NLO_Autumn18',2018):('GJets_pt400to650','MC',3.149),
     ('GJets_1j_Gpt-650ToInf_5f_NLO_Autumn18',2018):('GJets_pt650toInf','MC',0.2887),
     #2017
-    ('GJets_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8',2017):('GJets_ht100to200','MC',8627,2017),
-    ('GJets_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8',2017):('GJets_ht200to400','MC',2197,2017),
-    ('GJets_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8',2017):('GJets_ht400to600','MC',258.5,2017),
-    ('GJets_HT-600ToInf_TuneCP5_13TeV-madgraphMLM-pythia8',2017):('GJets_ht600toinf','MC',85.21,2017),
+    #('GJets_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8',2017):('GJets_ht100to200','MC',8627,2017),
+    #('GJets_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8',2017):('GJets_ht200to400','MC',2197,2017),
+    #('GJets_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8',2017):('GJets_ht400to600','MC',258.5,2017),
+    #('GJets_HT-600ToInf_TuneCP5_13TeV-madgraphMLM-pythia8',2017):('GJets_ht600toinf','MC',85.21,2017),
+    ('GJets_1j_Gpt-100To250_5f_NLO_Fall17',2017):('GJets_pt100to250','MC',1183),
+    ('GJets_1j_Gpt-250To400_5f_NLO_Fall17',2017):('GJets_pt250to400','MC',25.83),
+    ('GJets_1j_Gpt-400To650_5f_NLO_Fall17',2017):('GJets_pt400to650','MC',3.149),
+    ('GJets_1j_Gpt-650ToInf_5f_NLO_Fall17',2017):('GJets_pt650toInf','MC',0.2887),
     #2016
     #'GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8':('GJets_ht40to100','MC',23080.0),
     ('GJets_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8',2016):('GJets_ht100to200','MC',9239),
