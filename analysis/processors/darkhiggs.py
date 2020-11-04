@@ -18,7 +18,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
     lumis = { #Values from https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable                                                      
         '2016': 35.92,
-        '2017': 40.66,
+        '2017': 41.53,
         '2018': 59.74
     }
 
@@ -335,19 +335,19 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('recoil','Hadronic Recoil',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0, 3000])
             ),
-            'recoilphiWRF': hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Cat('region', 'Region'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('recoilphiWRF','Recoil Phi WRF',30,0,3.5)
-            ),
             'mindphirecoil': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('mindphirecoil','Min dPhi(Recoil,AK4s)',30,0,3.5)
+            ),
+            'minDphirecoil': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('minDphirecoil','Min dPhi(Recoil,AK15s)',30,0,3.5)
             ),
             'fjmass': hist.Hist(
                 'Events', 
@@ -384,6 +384,13 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('mindphimet','Min dPhi(MET,AK4s)',30,0,3.5)
             ),
+            'minDphimet': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('region', 'Region'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('minDphimet','Min dPhi(MET,AK15s)',30,0,3.5)
+            ),
             'j1pt': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
@@ -411,13 +418,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('region', 'Region'), 
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('fj1pt','AK15 Leading SoftDrop Jet Pt',[160.0, 200.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
-            ),
-            'fj1rho': hist.Hist(
-                'Events', 
-                hist.Cat('dataset', 'Dataset'), 
-                hist.Cat('region', 'Region'), 
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('fj1rho','AK15 Leading SoftDrop Jet Rho',30,-7,-1)
             ),
             'fj1eta': hist.Hist(
                 'Events', 
@@ -461,13 +461,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('mT','Transverse Mass',20,0,600)
             ),
-            'dphilep': hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Cat('region', 'Region'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('dphilep','dPhi(MET, Leading Lepton/Photon)',30,0,3.5)
-            ),
             'l1pt': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
@@ -503,13 +496,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('dileppt','Dilepton Pt',150,0,800)
             ),
-            'drlep': hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Cat('region', 'Region'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('drlep','dR(Lepton1, Lepton2)',30,0,3.5)
-            ),
             'ZHbbvsQCD': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
@@ -523,13 +509,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('region', 'Region'), 
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('TvsQCD','TvsQCD',15,0,1)
-            ),
-            'XvsQCD': hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Cat('region', 'Region'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('XvsQCD','XvsQCD',15,0,1)
             ),
         })
 
@@ -562,6 +541,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         get_msd_weight          = self._corrections['get_msd_weight']
         get_ttbar_weight        = self._corrections['get_ttbar_weight']
         get_nnlo_nlo_weight     = self._corrections['get_nnlo_nlo_weight'][self._year]
+        get_nlo_qcd_weight      = self._corrections['get_nlo_qcd_weight'][self._year]
+        get_nlo_ewk_weight      = self._corrections['get_nlo_ewk_weight'][self._year]
         get_pu_weight           = self._corrections['get_pu_weight'][self._year]          
         get_met_trig_weight     = self._corrections['get_met_trig_weight'][self._year]    
         get_met_zmm_trig_weight = self._corrections['get_met_zmm_trig_weight'][self._year]
@@ -678,6 +659,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj['sd'] = fj.subjets.sum()
         fj['isclean'] =~match(fj.sd,pho_loose,1.5)&~match(fj.sd,mu_loose,1.5)&~match(fj.sd,e_loose,1.5)
         fj['isgood'] = isGoodFatJet(fj.sd.pt, fj.sd.eta, fj.jetId)
+        fj['T'] = TVector2Array.from_polar(fj.pt, fj.phi)
         fj['msd_raw'] = (fj.subjets * (1 - fj.subjets.rawFactor)).sum().mass
         fj['msd_corr'] = fj.msd_raw * awkward.JaggedArray.fromoffsets(fj.array.offsets, np.maximum(1e-5, get_msd_weight(fj.sd.pt.flatten(),fj.sd.eta.flatten())))
         fj['rho'] = 2 * np.log(fj.msd_corr / fj.sd.pt)
@@ -987,7 +969,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             if('TTJets' in dataset): 
                 nlo = np.sqrt(get_ttbar_weight(genTops[:,0].pt.sum()) * get_ttbar_weight(genTops[:,1].pt.sum()))
                 
-
             gen['isW'] = (abs(gen.pdgId)==24)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isZ'] = (abs(gen.pdgId)==23)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isA'] = (abs(gen.pdgId)==22)&gen.hasFlags(['isPrompt', 'fromHardProcess', 'isLastCopy'])&(gen.status==1)
@@ -1016,23 +997,41 @@ class AnalysisProcessor(processor.ProcessorABC):
                 isIsoA=isIsoA&isolation(gen.R_0_dyn*i/iterations)
             gen['isIsoA']=isIsoA
 
-            genWs = gen[gen.isW&(gen.pt>100)]
-            genZs = gen[gen.isZ&(gen.pt>100)]
-            genIsoAs = gen[gen.isIsoA&(gen.pt>290)] #Based on photon weight distribution
+            #genWs = gen[gen.isW&(gen.pt>=100)]
+            genWs = gen[gen.isW] 
+            genZs = gen[gen.isZ]
+            genDYs = gen[gen.isZ&(gen.mass>30)]
+            genIsoAs = gen[gen.isIsoA] 
 
             nnlo_nlo = {}
+            nlo_qcd = np.ones(events.size)
+            nlo_ewk = np.ones(events.size)
             if('GJets' in dataset): 
+                if self._year=='2016':
+                    nlo_qcd = get_nlo_qcd_weight['a'](genIsoAs.pt.max())
+                    nlo_ewk = get_nlo_ewk_weight['a'](genIsoAs.pt.max())
                 for systematic in get_nnlo_nlo_weight['a']:
-                    nnlo_nlo[systematic]=get_nnlo_nlo_weight['a'][systematic](genIsoAs.pt.max())*(genIsoAs.counts>0).astype(np.int) + (~(genIsoAs.counts>0)).astype(np.int)
+                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['a'][systematic](genIsoAs.pt.max())*((genIsoAs.counts>0)&(genIsoAs.pt.max()>=290)) + \
+                                           get_nnlo_nlo_weight['a'][systematic](290)*((genIsoAs.counts>0)&~(genIsoAs.pt.max()>=290)&(genIsoAs.pt.max()>=100)) + \
+                                           (~((genIsoAs.counts>0)&(genIsoAs.pt.max()>=100))).astype(np.int)
             elif('WJets' in dataset): 
+                nlo_qcd = get_nlo_qcd_weight['w'](genWs.pt.max())
+                nlo_ewk = get_nlo_ewk_weight['w'](genWs.pt.max())
                 for systematic in get_nnlo_nlo_weight['w']:
-                    nnlo_nlo[systematic]= get_nnlo_nlo_weight['w'][systematic](genWs.pt.max())*(genWs.counts>0).astype(np.int) + (~(genWs.counts>0)).astype(np.int)
+                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['w'][systematic](genWs.pt.max())*((genWs.counts>0)&(genWs.pt.max()>=100)) + \
+                                           (~((genWs.counts>0)&(genWs.pt.max()>=100))).astype(np.int)
             elif('DY' in dataset): 
+                nlo_qcd = get_nlo_qcd_weight['dy'](genDYs.pt.max())
+                nlo_ewk = get_nlo_ewk_weight['dy'](genDYs.pt.max())
                 for systematic in get_nnlo_nlo_weight['dy']:
-                    nnlo_nlo[systematic]=get_nnlo_nlo_weight['dy'][systematic](genZs.pt.max())*(genZs.counts>0).astype(np.int) + (~(genZs.counts>0)).astype(np.int)
+                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['dy'][systematic](genDYs.pt.max())*((genDYs.counts>0)&(genDYs.pt.max()>=100)) + \
+                                           (~((genDYs.counts>0)&(genDYs.pt.max()>=100))).astype(np.int)
             elif('ZJets' in dataset): 
+                nlo_qcd = get_nlo_qcd_weight['z'](genZs.pt.max())
+                nlo_ewk = get_nlo_ewk_weight['z'](genZs.pt.max())
                 for systematic in get_nnlo_nlo_weight['z']:
-                    nnlo_nlo[systematic]=get_nnlo_nlo_weight['z'][systematic](genZs.pt.max())*(genZs.counts>0).astype(np.int) + (~(genZs.counts>0)).astype(np.int)
+                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['z'][systematic](genZs.pt.max())*((genZs.counts>0)&(genZs.pt.max()>=100)) + \
+                                           (~((genZs.counts>0)&(genZs.pt.max()>=100))).astype(np.int)
 
             ###
             # Calculate PU weight and systematic variations
@@ -1221,22 +1220,21 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('noextrab', (j_ndflvL==0))
         selection.add('extrab', (j_ndflvL>0))
         selection.add('fatjet', (fj_nclean>0))
-        selection.add('rho', (leading_fj.rho.sum()>-6.)&(leading_fj.rho.sum()<0.86))
         selection.add('noHEMj', noHEMj)
         selection.add('noHEMmet', noHEMmet)
-        selection.add('met80',(met.pt<80))
+        selection.add('met120',(met.pt<120))
         selection.add('met100',(met.pt>100))
-        selection.add('mindphimet',(abs(met.T.delta_phi(j_clean.T)).min())>0.7)
+        #selection.add('mindphimet',(abs(met.T.delta_phi(j_clean.T)).min())>0.7)
 
         regions = {
             #'sr': ['iszeroL','fatjet','noextrab','noHEMmet','met_filters','met_triggers','noHEMj'],
             'sr': ['fatjet', 'noHEMj', 'iszeroL', 'noextrab','met_filters','met_triggers','noHEMmet'],
             'wmcr': ['isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers'],
             'tmcr': ['isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'],
-            'wecr': ['isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'],
-            'tecr': ['isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100','mindphimet'],
-            'zmcr': ['istwoM','fatjet','noHEMj','met_filters','met_triggers', 'dimu_mass','met80'],
-            'zecr': ['istwoE','fatjet','noHEMj','met_filters','singleelectron_triggers', 'diele_mass','met80','leading_e_pt'],
+            'wecr': ['isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100'],
+            'tecr': ['isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100'],
+            'zmcr': ['istwoM','fatjet','noHEMj','met_filters','met_triggers', 'dimu_mass','met120'],
+            'zecr': ['istwoE','fatjet','noHEMj','met_filters','singleelectron_triggers', 'diele_mass','met120','leading_e_pt'],
             'gcr': ['isoneA','fatjet','noHEMj','met_filters','singlephoton_triggers']
         }
 
@@ -1252,23 +1250,28 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
 
             selection.add('recoil_'+region, (u[region].mag>250))
-            selection.add('mindphi_'+region, (abs(u[region].delta_phi(j_clean.T)).min()>0.8))
+            selection.add('mindphi_'+region, (abs(u[region].delta_phi(j_clean.T)).min()>0.5))
+            selection.add('minDphi_'+region, (abs(u[region].delta_phi(fj_clean.T)).min()>1.5))
+            selection.add('calo_'+region, ( (abs(calomet.pt - met.pt) / u[region].mag) < 0.5))
             #regions[region].update({'recoil_'+region,'mindphi_'+region})
             regions[region].insert(0, 'recoil_'+region)
             regions[region].insert(3, 'mindphi_'+region)
+            regions[region].insert(4, 'minDphi_'+region)
+            regions[region].insert(5, 'calo_'+region)
             print('Selection:',regions[region])
             variables = {
                 'recoil':                 u[region].mag,
                 'mindphirecoil':          abs(u[region].delta_phi(j_clean.T)).min(),
+                'minDphirecoil':          abs(u[region].delta_phi(fj_clean.T)).min(),
                 'CaloMinusPfOverRecoil':  abs(calomet.pt - met.pt) / u[region].mag,
                 'met':                    met.pt,
                 'metphi':                 met.phi,
                 'mindphimet':             abs(met.T.delta_phi(j_clean.T)).min(),
+                'minDphimet':             abs(met.T.delta_phi(fj_clean.T)).min(),
                 'j1pt':                   leading_j.pt,
                 'j1eta':                  leading_j.eta,
                 'j1phi':                  leading_j.phi,
                 'fj1pt':                  leading_fj.sd.pt,
-                'fj1rho':                 leading_fj.rho,
                 'fj1eta':                 leading_fj.sd.eta,
                 'fj1phi':                 leading_fj.sd.phi,
                 'fjmass':                 leading_fj.msd_corr,
@@ -1277,35 +1280,24 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'nfjclean':               fj_nclean,
                 'ZHbbvsQCD':              leading_fj.ZHbbvsQCD,
                 'TvsQCD':                 leading_fj.TvsQCD,
-                'XvsQCD':                 leading_fj.XvsQCD,
             }
             if region in mT:
                 variables['mT']           = mT[region]
-                if 'e' in region:
-                    WRF = leading_e.T.sum()-met.T
-                else:
-                    WRF = leading_mu.T.sum()-met.T
-                variables['recoilphiWRF'] = abs(u[region].delta_phi(WRF))
             if 'e' in region:
-                variables['dphilep']   = abs(met.T.delta_phi(leading_e.T).sum())
                 variables['l1pt']      = leading_e.pt
                 variables['l1phi']     = leading_e.phi
                 variables['l1eta']     = leading_e.eta
                 if 'z' in region:
                     variables['dilepmass']  = leading_diele.mass
                     variables['dileppt']    = leading_diele.pt
-                    variables['drlep']      = abs(leading_ele_pair.i0.delta_r(leading_ele_pair.i1).sum())
             if 'm' in region:
-                variables['dphilep']   = abs(met.T.delta_phi(leading_mu.T).sum())
                 variables['l1pt']      = leading_mu.pt
                 variables['l1phi']     = leading_mu.phi
                 variables['l1eta']     = leading_mu.eta
                 if 'z' in region:
                     variables['dilepmass']  = leading_dimu.mass
                     variables['dileppt']    = leading_dimu.pt
-                    variables['drlep']      = abs(leading_mu_pair.i0.delta_r(leading_mu_pair.i1).sum())
             if 'g' in region:
-                variables['dphilep']   = abs(met.T.delta_phi(leading_pho.T).sum())
                 variables['l1pt']      = leading_pho.pt
                 variables['l1phi']     = leading_pho.phi
                 variables['l1eta']     = leading_pho.eta
@@ -1352,9 +1344,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights = processor.Weights(len(events))
                 if 'L1PreFiringWeight' in events.columns: weights.add('prefiring',events.L1PreFiringWeight.Nom)
                 weights.add('genw',events.genWeight)
-                weights.add('nlo',nlo)
+                weights.add('nlo_qcd',nlo_qcd)
+                weights.add('nlo_ewk',nlo_ewk)
                 if 'cen' in nnlo_nlo:
-                    weights.add('nnlo_nlo',nnlo_nlo['cen'])
+                    #weights.add('nnlo_nlo',nnlo_nlo['cen'])
                     weights.add('qcd1',np.ones(events.size), nnlo_nlo['qcd1up']/nnlo_nlo['cen'], nnlo_nlo['qcd1do']/nnlo_nlo['cen'])
                     weights.add('qcd2',np.ones(events.size), nnlo_nlo['qcd2up']/nnlo_nlo['cen'], nnlo_nlo['qcd2do']/nnlo_nlo['cen'])
                     weights.add('qcd3',np.ones(events.size), nnlo_nlo['qcd3up']/nnlo_nlo['cen'], nnlo_nlo['qcd3do']/nnlo_nlo['cen'])

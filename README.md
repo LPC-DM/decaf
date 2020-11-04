@@ -94,7 +94,7 @@ python processors/darkhiggs.py --year 2018
 
 The module will generate a .coffea file, stored in the ```processors``` folder, that contains the processor instance to be used in the following steps. The ```--year``` option will allow for the generation of the processor corresponding to a specific year.
 
-### Running with Phyton futures
+### Running with Python futures
 
 Phyton futures allows for running on multiple processor on a single node. To run the local histogram generation:
 
@@ -227,7 +227,29 @@ python render_condor.py -m model_name
 ```
 
 this time, all the models stored into ```.model``` files whose name contains the sting passed via the  ```-m``` options are going to be rendered.
-In order for the rendering step to be completed successfully and for the resulting datacards and workspaces to be used in later steps, both the python version and the ROOT version should correspond to the ones that are going to be set when running ```combine```. It is therefore suggested to clone the ```decaf``` repository inside the ```src``` folder of ```CMSSSW``` release that will be used to perform the combine fit and run the rendering from there, without running the ```env_lcg.sh```. At the time of writing, the recommended version is ```CMSSW_10_2_13``` (https://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/#cc7-release-cmssw_10_2_x-recommended-version). This version uses python 2.7 and ROOT 6.12.
+In order for the rendering step to be completed successfully and for the resulting datacards and workspaces to be used in later steps, both the python version and the ROOT version should correspond to the ones that are going to be set when running ```combine```. It is therefore suggested to clone the ```decaf``` repository inside the ```src``` folder of ```CMSSSW``` release that will be used to perform the combine fit and run the rendering from there, without running the ```env_lcg.sh```. You should, instead, do the regular ```cmsenv``` command.
+At the time of writing, the recommended version is ```CMSSW_10_2_13``` (https://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/#cc7-release-cmssw_10_2_x-recommended-version). This version uses python 2.7 and ROOT 6.12.
+In addition, you should install the following packages (to be done *after* ```cmsenv```):
+
+```
+pip install --user flake8
+pip install --user cloudpickle
+pip install --user https://github.com/nsmith-/rhalphalib/archive/master.zip
+```
+
+Finally, since we are using Python2.7, you should edit the file
+```
+$HOME/.local/lib/python2.7/site-packages/rhalphalib/model.py
+```
+and change line 94 from
+```
+obsmap.insert(ROOT.std.pair('const string, RooDataHist*')(channel.name, obs))
+```
+to
+```
+obsmap.insert(ROOT.std.pair('const string, RooDataHist*')(channel.name.encode("ascii"), obs))
+```
+
 The ```render.py``` module saves datacards and workspaces into folders that show the following naming:
 
 ```
@@ -264,3 +286,14 @@ text2workspace.py darkhiggs.txt
 
 The result of this step will be a ```darkhiggs.root``` file to be used for the combine fit.
 where ```darkhiggs.txt``` is the name of the combined datacard generated at the previous step.
+
+## Macros
+
+### Usage examples
+
+```
+python macros/dump_templates.py -w datacards/darkhiggs/darkhiggs.root:w --observable fjmass -o plots/darkhiggs2018/model
+```
+```
+python macros/hessian.py -w datacards/darkhiggs/higgsCombineTest.FitDiagnostics.mH120.root:w -f datacards/darkhiggs/fitDiagnostics.root:fit_b
+```

@@ -19,6 +19,7 @@ parser.add_option('-f', '--folder', help='folder', dest='folder')
 parser.add_option('-v', '--variable', help='variable', dest='variable', default='')
 parser.add_option('-c', '--cluster', help='cluster', dest='cluster', default='lpc')
 parser.add_option('-t', '--tar', action='store_true', dest='tar')
+parser.add_option('-x', '--copy', action='store_true', dest='copy')
 (options, args) = parser.parse_args()
 
 os.system('mkdir -p '+options.folder+'/merge_condor/out '+options.folder+'/merge_condor/err '+options.folder+'/merge_condor/log')
@@ -31,8 +32,12 @@ if options.tar:
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../pylocal.tgz -C ~/.local/lib/python3.6/ site-packages')
 
 if options.cluster == 'kisti':
-    if options.tar:
+    if options.copy:
+        os.system('xrdfs root://cms-xrdr.private.lo:2094/ rm /xrd/store/user/'+os.environ['USER']+'/decaf.tgz')
+        print('decaf removed')
         os.system('xrdcp -f ../../decaf.tgz root://cms-xrdr.private.lo:2094//xrd/store/user/'+os.environ['USER']+'/decaf.tgz')
+        os.system('xrdfs root://cms-xrdr.private.lo:2094/ rm /xrd/store/user/'+os.environ['USER']+'/pylocal.tgz')
+        print('pylocal removed')
         os.system('xrdcp -f ../../pylocal.tgz root://cms-xrdr.private.lo:2094//xrd/store/user/'+os.environ['USER']+'/pylocal.tgz')
     jdl = """universe = vanilla
 Executable = merge.sh
@@ -50,7 +55,7 @@ request_cpus = 16
 Queue 1"""
 
 if options.cluster == 'lpc':
-    if options.tar:
+    if options.copy:
         os.system('xrdcp -f ../../decaf.tgz root://cmseos.fnal.gov//store/user/'+os.environ['USER']+'/decaf.tgz')
         os.system('xrdcp -f ../../pylocal.tgz root://cmseos.fnal.gov//store/user/'+os.environ['USER']+'/pylocal.tgz')
     jdl = """universe = vanilla

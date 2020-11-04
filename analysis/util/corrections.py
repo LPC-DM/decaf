@@ -18,7 +18,7 @@ pu_files = {
 }
 get_pu_weight = {}
 for year in ['2016','2017','2018']:
-    pu_hist=pu_files[year]['puWeights']
+    pu_hist=pu_files[year]['pu_weights_central']
     get_pu_weight[year] = lookup_tools.dense_lookup.dense_lookup(pu_hist.values, pu_hist.edges)
 
 ###
@@ -193,6 +193,44 @@ get_mu_loose_iso_sf = {}
 for year in ['2016','2017','2018']:
     get_mu_tight_iso_sf[year] = lookup_tools.dense_lookup.dense_lookup(mu_iso_tight_hist[year].values, mu_iso_tight_hist[year].edges)
     get_mu_loose_iso_sf[year] = lookup_tools.dense_lookup.dense_lookup(mu_iso_loose_hist[year].values, mu_iso_loose_hist[year].edges)
+###
+# V+jets NLO k-factors
+###
+
+nlo_qcd_hists = {
+    '2016':{
+        'dy': uproot.open("data/vjets_SFs/merged_kfactors_zjets.root")["kfactor_monojet_qcd"],
+        'w': uproot.open("data/vjets_SFs/merged_kfactors_wjets.root")["kfactor_monojet_qcd"],
+        'z': uproot.open("data/vjets_SFs/merged_kfactors_zjets.root")["kfactor_monojet_qcd"],
+        'a': uproot.open("data/vjets_SFs/merged_kfactors_gjets.root")["kfactor_monojet_qcd"]
+    },
+    '2017':{
+        'dy': uproot.open("data/vjets_SFs/SF_QCD_NLO_ZJetsToNuNu.root")["kfac_znn_filter"],
+        'w': uproot.open("data/vjets_SFs/SF_QCD_NLO_WJetsToLNu.root")["wjet_dress_monojet"],
+        'z': uproot.open("data/vjets_SFs/SF_QCD_NLO_DYJetsToLL.root")["kfac_dy_filter"],
+        'a': uproot.open("data/vjets_SFs/SF_QCD_NLO_GJets.root")["gjets_stat1_monojet"]
+    },
+    '2018':{
+        'dy': uproot.open("data/vjets_SFs/SF_QCD_NLO_ZJetsToNuNu.root")["kfac_znn_filter"],
+        'w': uproot.open("data/vjets_SFs/SF_QCD_NLO_WJetsToLNu.root")["wjet_dress_monojet"],
+        'z': uproot.open("data/vjets_SFs/SF_QCD_NLO_DYJetsToLL.root")["kfac_dy_filter"],
+        'a': uproot.open("data/vjets_SFs/SF_QCD_NLO_GJets.root")["gjets_stat1_monojet"]
+    }
+}
+nlo_ewk_hists = {
+    'dy': uproot.open("data/vjets_SFs/merged_kfactors_zjets.root")["kfactor_monojet_ewk"],
+    'w': uproot.open("data/vjets_SFs/merged_kfactors_wjets.root")["kfactor_monojet_ewk"],
+    'z': uproot.open("data/vjets_SFs/merged_kfactors_zjets.root")["kfactor_monojet_ewk"],
+    'a': uproot.open("data/vjets_SFs/merged_kfactors_gjets.root")["kfactor_monojet_ewk"]
+}    
+get_nlo_qcd_weight = {}
+get_nlo_ewk_weight = {}
+for year in ['2016','2017','2018']:
+    get_nlo_qcd_weight[year] = {}
+    get_nlo_ewk_weight[year] = {}
+    for p in ['dy','w','z','a']:
+        get_nlo_qcd_weight[year][p] = lookup_tools.dense_lookup.dense_lookup(nlo_qcd_hists[year][p].values, nlo_qcd_hists[year][p].edges)
+        get_nlo_ewk_weight[year][p] = lookup_tools.dense_lookup.dense_lookup(nlo_ewk_hists[p].values, nlo_ewk_hists[p].edges)
 
 ###
 # V+jets NNLO weights
@@ -453,6 +491,8 @@ corrections = {
     'get_msd_weight':           get_msd_weight,
     'get_ttbar_weight':         get_ttbar_weight,
     'get_nnlo_nlo_weight':      get_nnlo_nlo_weight,
+    'get_nlo_qcd_weight':       get_nlo_qcd_weight,
+    'get_nlo_ewk_weight':       get_nlo_ewk_weight,
     'get_pu_weight':            get_pu_weight,
     'get_met_trig_weight':      get_met_trig_weight,
     'get_met_zmm_trig_weight':  get_met_zmm_trig_weight,

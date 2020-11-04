@@ -32,6 +32,9 @@ def render(modelname):
     print(model_arr)
     print('Rendering')
 
+    #for i in range(0,len(model_arr)):
+    #    futurerender(model_arr[i], modelname)
+
     with concurrent.futures.ProcessPoolExecutor(max_workers=16) as executor:
         futures = set()
         futures.update(executor.submit(futurerender,model_arr[i], modelname) for i in range(0,len(model_arr)))

@@ -18,8 +18,10 @@ parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 parser.add_option('-y', '--year', help='year', dest='year')
 parser.add_option('-p', '--pack', help='pack', dest='pack')
 parser.add_option('-k', '--keep', action="store_true", dest="keep")
+parser.add_option('-s', '--special', help='special', dest='special')
 (options, args) = parser.parse_args()
-fnaleos = "root://cmsxrootd.fnal.gov/"
+fnaleos = "root://cmseos.fnal.gov/"
+#fnaleos = "root://cmsxrootd.fnal.gov/"
 
 beans={}
 beans['2016'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2016"]
@@ -73,11 +75,17 @@ def parse_xsec(cfgfile):
 #xsections = parse_xsec("data/xsec.conf")
 xsections={}
 for k,v in processes.items():
-    if v[1]=='MC':
-        xsections[k] = v[2]
-    else:
-        xsections[k] = -1
-
+     if v[1]=='MC':
+          if not isinstance(k, str):
+               print(k)
+               print(options.year,k[1])
+               if options.year!=str(k[1]): continue
+               xsections[k[0]] = v[2]
+          else: 
+               xsections[k] = v[2]
+     else:
+          xsections[k] = -1
+print(xsections)
 datadef = {}
 for folder in beans[options.year]:
     print("Opening",folder)
@@ -85,7 +93,12 @@ for folder in beans[options.year]:
         if options.dataset and options.dataset not in dataset: continue
         print("Looking into",folder+"/"+dataset)
         filenames = folder+"/"+dataset+" -name \'nano_*.root\'"
-        os.system("find "+filenames+" > metadata/"+dataset+".txt")
+        exist=False
+        for filename in os.listdir('metadata'):
+             if dataset+".txt" not in filename: continue
+             exist=True
+        if not exist:
+             os.system("find "+filenames+" > metadata/"+dataset+".txt")
         with open("metadata/"+dataset+".txt") as flist:
              new_content=flist.read().replace('/eos/uscms',fnaleos)
         with open("metadata/"+dataset+".txt", 'w') as flist:
@@ -99,7 +112,14 @@ for folder in beans[options.year]:
             eospath = path.strip()
             if (not ('failed' in eospath)): urllist.append(eospath)
         print('list lenght:',len(urllist))
-        urllists = split(urllist, int(options.pack))
+        if options.special:
+             sdataset, spack = options.special.split(':')
+             if sdataset in dataset:
+                  urllists = split(urllist, int(spack))
+             else:
+                  urllists = split(urllist, int(options.pack))
+        else:
+             urllists = split(urllist, int(options.pack))
         print(len(urllists))
         if urllist:
             for i in range(0,len(urllists)) :

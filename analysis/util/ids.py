@@ -85,8 +85,8 @@ def isTightPhoton(pt,tight_id,year):
         mask = (pt>230)&((tight_id&2)==2) # Trigger threshold is at 200
     return mask
 
-def isGoodFatJet(pt,eta, jet_id):
-    mask = (pt > 160)&(abs(eta)<2.4)&((jet_id&2)==2)
+def isGoodFatJet(pt, eta, jet_id):
+    mask = (pt > 160) & (abs(eta)<2.4) & ((jet_id&2)==2) 
     return mask
 
 #Jet ID flags bit1 is loose (always false in 2017 since it does not exist), bit2 is tight, bit3 is tightLepVeto

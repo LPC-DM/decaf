@@ -21,20 +21,22 @@ parser.add_option('-p', '--processor', help='processor', dest='processor', defau
 parser.add_option('-m', '--metadata', help='metadata', dest='metadata', default='')
 parser.add_option('-c', '--cluster', help='cluster', dest='cluster', default='lpc')
 parser.add_option('-t', '--tar', action='store_true', dest='tar')
+parser.add_option('-x', '--copy', action='store_true', dest='copy')
 (options, args) = parser.parse_args()
 
 os.system('mkdir -p hists/'+options.processor+'/run_condor/out hists/'+options.processor+'/run_condor/err hists/'+options.processor+'/run_condor/log')
-os.system('rm -rf hists/'+options.processor+'/run_condor/err/'+options.dataset+'*')
-os.system('rm -rf hists/'+options.processor+'/run_condor/log/'+options.dataset+'*')
-os.system('rm -rf hists/'+options.processor+'/run_condor/out/'+options.dataset+'*')
 
 if options.tar:
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*____*\' --exclude=\'analysis/hists/*/*condor/*/*\' ../../decaf')
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../pylocal.tgz -C ~/.local/lib/python3.6/ site-packages')
 
 if options.cluster == 'kisti':
-    if options.tar:
+    if options.copy:
+        os.system('xrdfs root://cms-xrdr.private.lo:2094/ rm /xrd/store/user/'+os.environ['USER']+'/decaf.tgz')
+        print('decaf removed')
         os.system('xrdcp -f ../../decaf.tgz root://cms-xrdr.private.lo:2094//xrd/store/user/'+os.environ['USER']+'/decaf.tgz')
+        os.system('xrdfs root://cms-xrdr.private.lo:2094/ rm /xrd/store/user/'+os.environ['USER']+'/pylocal.tgz') 
+        print('pylocal removed')
         os.system('xrdcp -f ../../pylocal.tgz root://cms-xrdr.private.lo:2094//xrd/store/user/'+os.environ['USER']+'/pylocal.tgz')
     jdl = """universe = vanilla
 Executable = run.sh
@@ -49,11 +51,11 @@ Arguments = $ENV(METADATA) $ENV(SAMPLE) $ENV(PROCESSOR) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
 JobBatchName = $ENV(BTCN)
 request_cpus = 8
-request_memory = 6000
+request_memory = 7000
 Queue 1"""
 
 if options.cluster == 'lpc':
-    if options.tar:
+    if options.copy:
         os.system('xrdcp -f ../../decaf.tgz root://cmseos.fnal.gov//store/user/'+os.environ['USER']+'/decaf.tgz')
         os.system('xrdcp -f ../../pylocal.tgz root://cmseos.fnal.gov//store/user/'+os.environ['USER']+'/pylocal.tgz')
     jdl = """universe = vanilla
@@ -80,6 +82,9 @@ with open('metadata/'+options.metadata+'.json') as fin:
 for dataset, info in datadef.items():
     if options.dataset and options.dataset not in dataset: continue
     if options.exclude and options.exclude in dataset: continue
+    os.system('rm -rf hists/'+options.processor+'/run_condor/err/'+dataset+'*')
+    os.system('rm -rf hists/'+options.processor+'/run_condor/log/'+dataset+'*')
+    os.system('rm -rf hists/'+options.processor+'/run_condor/out/'+dataset+'*')
     os.environ['SAMPLE'] = dataset
     os.environ['BTCN'] = dataset.split('____')[0]
     os.environ['PROCESSOR']   = options.processor
