@@ -14,6 +14,8 @@ from coffea import hist, processor
 from coffea.util import load, save
 import ROOT
 
+### Four regions: Signal, WMuon, TopMuon, DoubleMuon
+
 rl.util.install_roofit_helpers()
 rl.ParametericSample.PreferRooParametricHist = False
 
@@ -1034,7 +1036,7 @@ def model(year, recoil, category):
                 / nominal.sum()
             )
         if "data" not in systematic:
-            # print('Remiving zeros from',systematic,'histogram of',process,'in region',region)
+            # print('Removing zeros from',systematic,'histogram of',process,'in region',region)
             output[output <= 0] = 1e-7
         binning = (
             dictionary[region]
@@ -1070,9 +1072,7 @@ def model(year, recoil, category):
         signal[str(r)] = signal_hists["template"].integrate("region", r).sum("gentype")
 
     ###
-    ###
-    # Signal region
-    ###
+    # R0: Signal region
     ###
 
     ch_name = "sr" + model_id
@@ -1106,6 +1106,22 @@ def model(year, recoil, category):
         )
     sr.addSample(sr_zjets)
 
+    for s in signal["sr"].identifiers("process"):
+        # print(str(s))
+        if "Mhs_50" not in str(s):
+            continue
+        sr_signalTemplate = template(signal, s, "nominal", "sr")
+        sr_signal = rl.TemplateSample(
+            ch_name + "_" + str(s), rl.Sample.SIGNAL, sr_signalTemplate
+        )
+        sr_signal.setParamEffect(lumi, 1.027)
+        sr_signal.setParamEffect(trig_met, 1.01)
+        sr_signal.setParamEffect(veto_tau, 1.03)
+        sr_signal.setParamEffect(jec, 1.05)
+        btagUp = template(signal, s, "btagUp", "sr")[0]
+        btagDown = template(signal, s, "btagDown", "sr")[0]
+        sr_signal.setParamEffect(btag, btagUp, btagDown)
+        sr.addSample(sr_signal)
     ###
     # W(->lnu)+jets data-driven model
     ###
@@ -1128,97 +1144,7 @@ def model(year, recoil, category):
     sr.addSample(sr_tt)
 
     ###
-    # Other MC-driven processes
-    ###
-
-    sr_stTemplate = template(background, "ST", "nominal", "sr")
-    sr_st = rl.TemplateSample(ch_name + "_stMC", rl.Sample.BACKGROUND, sr_stTemplate)
-    sr_st.setParamEffect(lumi, 1.027)
-    sr_st.setParamEffect(trig_met, 1.01)
-    sr_st.setParamEffect(veto_tau, 1.03)
-    sr_st.setParamEffect(st_norm, 1.2)
-    sr_st.setParamEffect(jec, 1.05)
-    btagUp = template(background, "ST", "btagUp", "sr")[0]
-    btagDown = template(background, "ST", "btagDown", "sr")[0]
-    sr_st.setParamEffect(btag, btagUp, btagDown)
-    sr.addSample(sr_st)
-
-    sr_dyjetsTemplate = template(background, "DY+jets", "nominal", "sr")
-    sr_dyjets = rl.TemplateSample(
-        ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, sr_dyjetsTemplate
-    )
-    sr_dyjets.setParamEffect(lumi, 1.027)
-    sr_dyjets.setParamEffect(trig_met, 1.01)
-    sr_dyjets.setParamEffect(veto_tau, 1.03)
-    sr_dyjets.setParamEffect(zjets_norm, 1.4)
-    sr_dyjets.setParamEffect(jec, 1.05)
-    btagUp = template(background, "DY+jets", "btagUp", "sr")[0]
-    btagDown = template(background, "DY+jets", "btagDown", "sr")[0]
-    btagDown[btagDown <= 0] = 1e-7
-    sr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    sr.addSample(sr_dyjets)
-
-    sr_vvTemplate = template(background, "VV", "nominal", "sr")
-    sr_vv = rl.TemplateSample(ch_name + "_vvMC", rl.Sample.BACKGROUND, sr_vvTemplate)
-    sr_vv.setParamEffect(lumi, 1.027)
-    sr_vv.setParamEffect(trig_met, 1.01)
-    sr_vv.setParamEffect(veto_tau, 1.03)
-    sr_vv.setParamEffect(vv_norm, 1.2)
-    sr_vv.setParamEffect(jec, 1.05)
-    btagUp = template(background, "VV", "btagUp", "sr")[0]
-    btagDown = template(background, "VV", "btagDown", "sr")[0]
-    btagDown[btagDown <= 0] = 1e-7
-    sr_vv.setParamEffect(btag, btagUp, btagDown)
-    sr.addSample(sr_vv)
-
-    sr_hbbTemplate = template(background, "Hbb", "nominal", "sr")
-    sr_hbb = rl.TemplateSample(ch_name + "_hbbMC", rl.Sample.BACKGROUND, sr_hbbTemplate)
-    sr_hbb.setParamEffect(lumi, 1.027)
-    sr_hbb.setParamEffect(trig_met, 1.01)
-    sr_hbb.setParamEffect(veto_tau, 1.03)
-    sr_hbb.setParamEffect(hbb_norm, 1.2)
-    sr_hbb.setParamEffect(jec, 1.05)
-    btagUp = template(background, "Hbb", "btagUp", "sr")[0]
-    btagDown = template(background, "Hbb", "btagDown", "sr")[0]
-    sr_hbb.setParamEffect(btag, btagUp, btagDown)
-    sr.addSample(sr_hbb)
-
-    sr_qcdTemplate = template(background, "QCD", "nominal", "sr")
-    sr_qcd = rl.TemplateSample(ch_name + "_qcdMC", rl.Sample.BACKGROUND, sr_qcdTemplate)
-    sr_qcd.setParamEffect(lumi, 1.027)
-    sr_qcd.setParamEffect(trig_met, 1.01)
-    sr_qcd.setParamEffect(veto_tau, 1.03)
-    sr_qcd.setParamEffect(qcdsig_norm, 2.0)
-    sr_qcd.setParamEffect(jec, 1.05)
-    btagUp = template(background, "QCD", "btagUp", "sr")[0]
-    btagDown = template(background, "QCD", "btagDown", "sr")[0]
-    sr_qcd.setParamEffect(btag, btagUp, btagDown)
-    sr.addSample(sr_qcd)
-
-    for s in signal["sr"].identifiers("process"):
-        if "Mhs_50" not in str(s):
-            continue
-        sr_signalTemplate = template(signal, s, "nominal", "sr")
-        sr_signal = rl.TemplateSample(
-            ch_name + "_" + str(s), rl.Sample.SIGNAL, sr_signalTemplate
-        )
-        sr_signal.setParamEffect(lumi, 1.027)
-        sr_signal.setParamEffect(trig_met, 1.01)
-        sr_signal.setParamEffect(veto_tau, 1.03)
-        sr_signal.setParamEffect(jec, 1.05)
-        btagUp = template(signal, s, "btagUp", "sr")[0]
-        btagDown = template(signal, s, "btagDown", "sr")[0]
-        sr_signal.setParamEffect(btag, btagUp, btagDown)
-        sr.addSample(sr_signal)
-
-    ###
-    # End of SR
-    ###
-
-    ###
-    ###
-    # Single muon W control region
-    ###
+    # R1: Single muon W control region
     ###
 
     ch_name = "wmcr" + model_id
@@ -1250,97 +1176,7 @@ def model(year, recoil, category):
     wmcr.addSample(wmcr_tt)
 
     ###
-    # Other MC-driven processes
-    ###
-
-    wmcr_stTemplate = template(background, "ST", "nominal", "wmcr")
-    wmcr_st = rl.TemplateSample(
-        ch_name + "_stMC", rl.Sample.BACKGROUND, wmcr_stTemplate
-    )
-    wmcr_st.setParamEffect(lumi, 1.027)
-    wmcr_st.setParamEffect(trig_met, 1.01)
-    wmcr_st.setParamEffect(veto_tau, 1.03)
-    wmcr_st.setParamEffect(st_norm, 1.2)
-    wmcr_st.setParamEffect(jec, 1.05)
-    wmcr_st.setParamEffect(id_mu, 1.02)
-    wmcr_st.setParamEffect(iso_mu, 1.02)
-    btagUp = template(background, "ST", "btagUp", "wmcr")[0]
-    btagDown = template(background, "ST", "btagDown", "wmcr")[0]
-    wmcr_st.setParamEffect(btag, btagUp, btagDown)
-    wmcr.addSample(wmcr_st)
-
-    wmcr_dyjetsTemplate = template(background, "DY+jets", "nominal", "wmcr")
-    wmcr_dyjets = rl.TemplateSample(
-        ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, wmcr_dyjetsTemplate
-    )
-    wmcr_dyjets.setParamEffect(lumi, 1.027)
-    wmcr_dyjets.setParamEffect(trig_met, 1.01)
-    wmcr_dyjets.setParamEffect(veto_tau, 1.03)
-    wmcr_dyjets.setParamEffect(zjets_norm, 1.4)
-    wmcr_dyjets.setParamEffect(jec, 1.05)
-    wmcr_dyjets.setParamEffect(id_mu, 1.02)
-    wmcr_dyjets.setParamEffect(iso_mu, 1.02)
-    btagUp = template(background, "DY+jets", "btagUp", "wmcr")[0]
-    btagDown = template(background, "DY+jets", "btagDown", "wmcr")[0]
-    wmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    wmcr.addSample(wmcr_dyjets)
-
-    wmcr_vvTemplate = template(background, "VV", "nominal", "wmcr")
-    wmcr_vv = rl.TemplateSample(
-        ch_name + "_vvMC", rl.Sample.BACKGROUND, wmcr_vvTemplate
-    )
-    wmcr_vv.setParamEffect(lumi, 1.027)
-    wmcr_vv.setParamEffect(trig_met, 1.01)
-    wmcr_vv.setParamEffect(veto_tau, 1.03)
-    wmcr_vv.setParamEffect(vv_norm, 1.2)
-    wmcr_vv.setParamEffect(jec, 1.05)
-    wmcr_vv.setParamEffect(id_mu, 1.02)
-    wmcr_vv.setParamEffect(iso_mu, 1.02)
-    btagUp = template(background, "VV", "btagUp", "wmcr")[0]
-    btagDown = template(background, "VV", "btagDown", "wmcr")[0]
-    wmcr_vv.setParamEffect(btag, btagUp, btagDown)
-    wmcr.addSample(wmcr_vv)
-
-    wmcr_hbbTemplate = template(background, "Hbb", "nominal", "wmcr")
-    wmcr_hbb = rl.TemplateSample(
-        ch_name + "_hbbMC", rl.Sample.BACKGROUND, wmcr_hbbTemplate
-    )
-    wmcr_hbb.setParamEffect(lumi, 1.027)
-    wmcr_hbb.setParamEffect(trig_met, 1.01)
-    wmcr_hbb.setParamEffect(veto_tau, 1.03)
-    wmcr_hbb.setParamEffect(hbb_norm, 1.2)
-    wmcr_hbb.setParamEffect(jec, 1.05)
-    wmcr_hbb.setParamEffect(id_mu, 1.02)
-    wmcr_hbb.setParamEffect(iso_mu, 1.02)
-    btagUp = template(background, "Hbb", "btagUp", "wmcr")[0]
-    btagDown = template(background, "Hbb", "btagDown", "wmcr")[0]
-    wmcr_hbb.setParamEffect(btag, btagUp, btagDown)
-    wmcr.addSample(wmcr_hbb)
-
-    wmcr_qcdTemplate = template(background, "QCD", "nominal", "wmcr")
-    wmcr_qcd = rl.TemplateSample(
-        ch_name + "_qcdMC", rl.Sample.BACKGROUND, wmcr_qcdTemplate
-    )
-    wmcr_qcd.setParamEffect(lumi, 1.027)
-    wmcr_qcd.setParamEffect(trig_met, 1.01)
-    wmcr_qcd.setParamEffect(veto_tau, 1.03)
-    wmcr_qcd.setParamEffect(qcdmu_norm, 2.0)
-    wmcr_qcd.setParamEffect(jec, 1.05)
-    wmcr_qcd.setParamEffect(id_mu, 1.02)
-    wmcr_qcd.setParamEffect(iso_mu, 1.02)
-    btagUp = template(background, "QCD", "btagUp", "wmcr")[0]
-    btagDown = template(background, "QCD", "btagDown", "wmcr")[0]
-    wmcr_qcd.setParamEffect(btag, btagUp, btagDown)
-    wmcr.addSample(wmcr_qcd)
-
-    ###
-    # End of single muon W control region
-    ###
-
-    ###
-    ###
-    # Single muon top control region
-    ###
+    # R2: Single muon top control region
     ###
 
     ch_name = "tmcr" + model_id
@@ -1372,347 +1208,7 @@ def model(year, recoil, category):
     tmcr.addSample(tmcr_tt)
 
     ###
-    # Other MC-driven processes
-    ###
-
-    tmcr_stTemplate = template(background, "ST", "nominal", "tmcr")
-    tmcr_st = rl.TemplateSample(
-        ch_name + "_stMC", rl.Sample.BACKGROUND, tmcr_stTemplate
-    )
-    tmcr_st.setParamEffect(lumi, 1.027)
-    tmcr_st.setParamEffect(trig_met, 1.01)
-    tmcr_st.setParamEffect(veto_tau, 1.03)
-    tmcr_st.setParamEffect(st_norm, 1.2)
-    tmcr_st.setParamEffect(jec, 1.05)
-    tmcr_st.setParamEffect(id_mu, 1.02)
-    tmcr_st.setParamEffect(iso_mu, 1.02)
-    btagUp = template(background, "ST", "btagUp", "tmcr")[0]
-    btagDown = template(background, "ST", "btagDown", "tmcr")[0]
-    tmcr_st.setParamEffect(btag, btagUp, btagDown)
-    tmcr.addSample(tmcr_st)
-
-    tmcr_dyjetsTemplate = template(background, "DY+jets", "nominal", "tmcr")
-    tmcr_dyjets = rl.TemplateSample(
-        ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, tmcr_dyjetsTemplate
-    )
-    tmcr_dyjets.setParamEffect(lumi, 1.027)
-    tmcr_dyjets.setParamEffect(trig_met, 1.01)
-    tmcr_dyjets.setParamEffect(veto_tau, 1.03)
-    tmcr_dyjets.setParamEffect(zjets_norm, 1.4)
-    tmcr_dyjets.setParamEffect(jec, 1.05)
-    tmcr_dyjets.setParamEffect(id_mu, 1.02)
-    tmcr_dyjets.setParamEffect(iso_mu, 1.02)
-    btagUp = template(background, "DY+jets", "btagUp", "tmcr")[0]
-    btagDown = template(background, "DY+jets", "btagDown", "tmcr")[0]
-    tmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    tmcr.addSample(tmcr_dyjets)
-
-    tmcr_vvTemplate = template(background, "VV", "nominal", "tmcr")
-    tmcr_vv = rl.TemplateSample(
-        ch_name + "_vvMC", rl.Sample.BACKGROUND, tmcr_vvTemplate
-    )
-    tmcr_vv.setParamEffect(lumi, 1.027)
-    tmcr_vv.setParamEffect(trig_met, 1.01)
-    tmcr_vv.setParamEffect(veto_tau, 1.03)
-    tmcr_vv.setParamEffect(vv_norm, 1.2)
-    tmcr_vv.setParamEffect(jec, 1.05)
-    tmcr_vv.setParamEffect(id_mu, 1.02)
-    tmcr_vv.setParamEffect(iso_mu, 1.02)
-    btagUp = template(background, "VV", "btagUp", "tmcr")[0]
-    btagDown = template(background, "VV", "btagDown", "tmcr")[0]
-    tmcr_vv.setParamEffect(btag, btagUp, btagDown)
-    tmcr.addSample(tmcr_vv)
-
-    tmcr_hbbTemplate = template(background, "Hbb", "nominal", "tmcr")
-    tmcr_hbb = rl.TemplateSample(
-        ch_name + "_hbbMC", rl.Sample.BACKGROUND, tmcr_hbbTemplate
-    )
-    tmcr_hbb.setParamEffect(lumi, 1.027)
-    tmcr_hbb.setParamEffect(trig_met, 1.01)
-    tmcr_hbb.setParamEffect(veto_tau, 1.03)
-    tmcr_hbb.setParamEffect(hbb_norm, 1.2)
-    tmcr_hbb.setParamEffect(jec, 1.05)
-    tmcr_hbb.setParamEffect(id_mu, 1.02)
-    tmcr_hbb.setParamEffect(iso_mu, 1.02)
-    btagUp = template(background, "Hbb", "btagUp", "tmcr")[0]
-    btagDown = template(background, "Hbb", "btagDown", "tmcr")[0]
-    tmcr_hbb.setParamEffect(btag, btagUp, btagDown)
-    tmcr.addSample(tmcr_hbb)
-
-    tmcr_qcdTemplate = template(background, "QCD", "nominal", "tmcr")
-    tmcr_qcd = rl.TemplateSample(
-        ch_name + "_qcdMC", rl.Sample.BACKGROUND, tmcr_qcdTemplate
-    )
-    tmcr_qcd.setParamEffect(lumi, 1.027)
-    tmcr_qcd.setParamEffect(trig_met, 1.01)
-    tmcr_qcd.setParamEffect(veto_tau, 1.03)
-    tmcr_qcd.setParamEffect(qcdmu_norm, 2.0)
-    tmcr_qcd.setParamEffect(jec, 1.05)
-    tmcr_qcd.setParamEffect(id_mu, 1.02)
-    tmcr_qcd.setParamEffect(iso_mu, 1.02)
-    btagUp = template(background, "QCD", "btagUp", "tmcr")[0]
-    btagDown = template(background, "QCD", "btagDown", "tmcr")[0]
-    tmcr_qcd.setParamEffect(btag, btagUp, btagDown)
-    tmcr.addSample(tmcr_qcd)
-
-    ###
-    # End of single muon top control region
-    ###
-
-    ###
-    ###
-    # Single electron W control region
-    ###
-    ###
-
-    ch_name = "wecr" + model_id
-    wecr = rl.Channel(ch_name)
-    model.addChannel(wecr)
-
-    ###
-    # Add data distribution to the channel
-    ###
-
-    if year == "2018":
-        wecr.setObservation(template(data, "EGamma", "data", "wecr"))
-    else:
-        wecr.setObservation(template(data, "SingleElectron", "data", "wecr"))
-
-    ###
-    # W(->lnu)+jets data-driven model
-    ###
-
-    wecr_wjets = rl.TransferFactorSample(
-        ch_name + "_wjets", rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets
-    )
-    wecr.addSample(wecr_wjets)
-
-    ###
-    # top-antitop data-driven model
-    ###
-
-    wecr_tt = rl.TransferFactorSample(
-        ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
-    )
-    wecr.addSample(wecr_tt)
-
-    ###
-    # Other MC-driven processes
-    ###
-
-    wecr_stTemplate = template(background, "ST", "nominal", "wecr")
-    wecr_st = rl.TemplateSample(
-        ch_name + "_stMC", rl.Sample.BACKGROUND, wecr_stTemplate
-    )
-    wecr_st.setParamEffect(lumi, 1.027)
-    wecr_st.setParamEffect(trig_e, 1.01)
-    wecr_st.setParamEffect(veto_tau, 1.03)
-    wecr_st.setParamEffect(st_norm, 1.2)
-    wecr_st.setParamEffect(jec, 1.05)
-    wecr_st.setParamEffect(id_e, 1.02)
-    wecr_st.setParamEffect(reco_e, 1.02)
-    btagUp = template(background, "ST", "btagUp", "wecr")[0]
-    btagDown = template(background, "ST", "btagDown", "wecr")[0]
-    wecr_st.setParamEffect(btag, btagUp, btagDown)
-    wecr.addSample(wecr_st)
-
-    wecr_dyjetsTemplate = template(background, "DY+jets", "nominal", "wecr")
-    wecr_dyjets = rl.TemplateSample(
-        ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, wecr_dyjetsTemplate
-    )
-    wecr_dyjets.setParamEffect(lumi, 1.027)
-    wecr_dyjets.setParamEffect(trig_e, 1.01)
-    wecr_dyjets.setParamEffect(veto_tau, 1.03)
-    wecr_dyjets.setParamEffect(zjets_norm, 1.4)
-    wecr_dyjets.setParamEffect(jec, 1.05)
-    wecr_dyjets.setParamEffect(id_e, 1.02)
-    wecr_dyjets.setParamEffect(reco_e, 1.02)
-    btagUp = template(background, "DY+jets", "btagUp", "wecr")[0]
-    btagDown = template(background, "DY+jets", "btagDown", "wecr")[0]
-    wecr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    wecr.addSample(wecr_dyjets)
-
-    wecr_vvTemplate = template(background, "VV", "nominal", "wecr")
-    wecr_vv = rl.TemplateSample(
-        ch_name + "_vvMC", rl.Sample.BACKGROUND, wecr_vvTemplate
-    )
-    wecr_vv.setParamEffect(lumi, 1.027)
-    wecr_vv.setParamEffect(trig_e, 1.01)
-    wecr_vv.setParamEffect(veto_tau, 1.03)
-    wecr_vv.setParamEffect(vv_norm, 1.2)
-    wecr_vv.setParamEffect(jec, 1.05)
-    wecr_vv.setParamEffect(id_e, 1.02)
-    wecr_vv.setParamEffect(reco_e, 1.02)
-    btagUp = template(background, "VV", "btagUp", "wecr")[0]
-    btagDown = template(background, "VV", "btagDown", "wecr")[0]
-    wecr_vv.setParamEffect(btag, btagUp, btagDown)
-    wecr.addSample(wecr_vv)
-
-    wecr_hbbTemplate = template(background, "Hbb", "nominal", "wecr")
-    wecr_hbb = rl.TemplateSample(
-        ch_name + "_hbbMC", rl.Sample.BACKGROUND, wecr_hbbTemplate
-    )
-    wecr_hbb.setParamEffect(lumi, 1.027)
-    wecr_hbb.setParamEffect(trig_e, 1.01)
-    wecr_hbb.setParamEffect(veto_tau, 1.03)
-    wecr_hbb.setParamEffect(hbb_norm, 1.2)
-    wecr_hbb.setParamEffect(jec, 1.05)
-    wecr_hbb.setParamEffect(id_e, 1.02)
-    wecr_hbb.setParamEffect(reco_e, 1.02)
-    btagUp = template(background, "Hbb", "btagUp", "wecr")[0]
-    btagDown = template(background, "Hbb", "btagDown", "wecr")[0]
-    wecr_hbb.setParamEffect(btag, btagUp, btagDown)
-    wecr.addSample(wecr_hbb)
-
-    wecr_qcdTemplate = template(background, "QCD", "nominal", "wecr")
-    wecr_qcd = rl.TemplateSample(
-        ch_name + "_qcdMC", rl.Sample.BACKGROUND, wecr_qcdTemplate
-    )
-    wecr_qcd.setParamEffect(lumi, 1.027)
-    wecr_qcd.setParamEffect(trig_e, 1.01)
-    wecr_qcd.setParamEffect(veto_tau, 1.03)
-    wecr_qcd.setParamEffect(qcde_norm, 2.0)
-    wecr_qcd.setParamEffect(jec, 1.05)
-    wecr_qcd.setParamEffect(id_e, 1.02)
-    wecr_qcd.setParamEffect(reco_e, 1.02)
-    btagUp = template(background, "QCD", "btagUp", "wecr")[0]
-    btagDown = template(background, "QCD", "btagDown", "wecr")[0]
-    wecr_qcd.setParamEffect(btag, btagUp, btagDown)
-    wecr.addSample(wecr_qcd)
-
-    ###
-    # End of single electron W control region
-    ###
-
-    ###
-    ###
-    # Single electron top control region
-    ###
-    ###
-
-    ch_name = "tecr" + model_id
-    tecr = rl.Channel(ch_name)
-    model.addChannel(tecr)
-
-    ###
-    # Add data distribution to the channel
-    ###
-
-    if year == "2018":
-        tecr.setObservation(template(data, "EGamma", "data", "tecr"))
-    else:
-        tecr.setObservation(template(data, "SingleElectron", "data", "tecr"))
-
-    ###
-    # W(->lnu)+jets data-driven model
-    ###
-
-    tecr_wjets = rl.TransferFactorSample(
-        ch_name + "_wjets", rl.Sample.BACKGROUND, tecr_wjetsTransferFactor, sr_wjets
-    )
-    tecr.addSample(tecr_wjets)
-
-    ###
-    # top-antitop data-driven model
-    ###
-
-    tecr_tt = rl.TransferFactorSample(
-        ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt
-    )
-    tecr.addSample(tecr_tt)
-
-    ###
-    # Other MC-driven processes
-    ###
-
-    tecr_stTemplate = template(background, "ST", "nominal", "tecr")
-    tecr_st = rl.TemplateSample(
-        ch_name + "_stMC", rl.Sample.BACKGROUND, tecr_stTemplate
-    )
-    tecr_st.setParamEffect(lumi, 1.027)
-    tecr_st.setParamEffect(trig_e, 1.01)
-    tecr_st.setParamEffect(veto_tau, 1.03)
-    tecr_st.setParamEffect(st_norm, 1.2)
-    tecr_st.setParamEffect(jec, 1.05)
-    tecr_st.setParamEffect(id_e, 1.02)
-    tecr_st.setParamEffect(reco_e, 1.02)
-    btagUp = template(background, "ST", "btagUp", "tecr")[0]
-    btagDown = template(background, "ST", "btagDown", "tecr")[0]
-    tecr_st.setParamEffect(btag, btagUp, btagDown)
-    tecr.addSample(tecr_st)
-
-    tecr_dyjetsTemplate = template(background, "DY+jets", "nominal", "tecr")
-    tecr_dyjets = rl.TemplateSample(
-        ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, tecr_dyjetsTemplate
-    )
-    tecr_dyjets.setParamEffect(lumi, 1.027)
-    tecr_dyjets.setParamEffect(trig_e, 1.01)
-    tecr_dyjets.setParamEffect(veto_tau, 1.03)
-    tecr_dyjets.setParamEffect(zjets_norm, 1.4)
-    tecr_dyjets.setParamEffect(jec, 1.05)
-    tecr_dyjets.setParamEffect(id_e, 1.02)
-    tecr_dyjets.setParamEffect(reco_e, 1.02)
-    btagUp = template(background, "DY+jets", "btagUp", "tecr")[0]
-    btagDown = template(background, "DY+jets", "btagDown", "tecr")[0]
-    tecr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    tecr.addSample(tecr_dyjets)
-
-    tecr_vvTemplate = template(background, "VV", "nominal", "tecr")
-    tecr_vv = rl.TemplateSample(
-        ch_name + "_vvMC", rl.Sample.BACKGROUND, tecr_vvTemplate
-    )
-    tecr_vv.setParamEffect(lumi, 1.027)
-    tecr_vv.setParamEffect(trig_e, 1.01)
-    tecr_vv.setParamEffect(veto_tau, 1.03)
-    tecr_vv.setParamEffect(vv_norm, 1.2)
-    tecr_vv.setParamEffect(jec, 1.05)
-    tecr_vv.setParamEffect(id_e, 1.02)
-    tecr_vv.setParamEffect(reco_e, 1.02)
-    btagUp = template(background, "VV", "btagUp", "tecr")[0]
-    btagDown = template(background, "VV", "btagDown", "tecr")[0]
-    tecr_vv.setParamEffect(btag, btagUp, btagDown)
-    tecr.addSample(tecr_vv)
-
-    tecr_hbbTemplate = template(background, "Hbb", "nominal", "tecr")
-    tecr_hbb = rl.TemplateSample(
-        ch_name + "_hbbMC", rl.Sample.BACKGROUND, tecr_hbbTemplate
-    )
-    tecr_hbb.setParamEffect(lumi, 1.027)
-    tecr_hbb.setParamEffect(trig_e, 1.01)
-    tecr_hbb.setParamEffect(veto_tau, 1.03)
-    tecr_hbb.setParamEffect(hbb_norm, 1.2)
-    tecr_hbb.setParamEffect(jec, 1.05)
-    tecr_hbb.setParamEffect(id_e, 1.02)
-    tecr_hbb.setParamEffect(reco_e, 1.02)
-    btagUp = template(background, "Hbb", "btagUp", "tecr")[0]
-    btagDown = template(background, "Hbb", "btagDown", "tecr")[0]
-    tecr_hbb.setParamEffect(btag, btagUp, btagDown)
-    tecr.addSample(tecr_hbb)
-
-    tecr_qcdTemplate = template(background, "QCD", "nominal", "tecr")
-    tecr_qcd = rl.TemplateSample(
-        ch_name + "_qcdMC", rl.Sample.BACKGROUND, tecr_qcdTemplate
-    )
-    tecr_qcd.setParamEffect(lumi, 1.027)
-    tecr_qcd.setParamEffect(trig_e, 1.01)
-    tecr_qcd.setParamEffect(veto_tau, 1.03)
-    tecr_qcd.setParamEffect(qcde_norm, 2.0)
-    tecr_qcd.setParamEffect(jec, 1.05)
-    tecr_qcd.setParamEffect(id_e, 1.02)
-    tecr_qcd.setParamEffect(reco_e, 1.02)
-    btagUp = template(background, "QCD", "btagUp", "tecr")[0]
-    btagDown = template(background, "QCD", "btagDown", "tecr")[0]
-    tecr_qcd.setParamEffect(btag, btagUp, btagDown)
-    tecr.addSample(tecr_qcd)
-
-    ###
-    # End of single electron top control region
-    ###
-
-    ###
-    ###
-    # Double muon control region
-    ###
+    # R3: Double muon control region
     ###
 
     ch_name = "zmcr" + model_id
@@ -1730,186 +1226,7 @@ def model(year, recoil, category):
     )
     zmcr.addSample(zmcr_dyjets)
 
-    ###
-    # Other MC-driven processes
-    ###
-
-    zmcr_ttTemplate = template(background, "TT", "nominal", "zmcr")
-    zmcr_tt = rl.TemplateSample(
-        ch_name + "_ttMC", rl.Sample.BACKGROUND, zmcr_ttTemplate
-    )
-    zmcr_tt.setParamEffect(lumi, 1.027)
-    zmcr_tt.setParamEffect(trig_met, 1.01)
-    zmcr_tt.setParamEffect(veto_tau, 1.03)
-    zmcr_tt.setParamEffect(tt_norm, 1.2)
-    zmcr_tt.setParamEffect(jec, 1.05)
-    zmcr_tt.setParamEffect(id_mu, 1.02)
-    zmcr_tt.setParamEffect(iso_mu, 1.02)
-    zmcr.addSample(zmcr_tt)
-
-    zmcr_stTemplate = template(background, "ST", "nominal", "zmcr")
-    zmcr_st = rl.TemplateSample(
-        ch_name + "_stMC", rl.Sample.BACKGROUND, zmcr_stTemplate
-    )
-    zmcr_st.setParamEffect(lumi, 1.027)
-    zmcr_st.setParamEffect(trig_met, 1.01)
-    zmcr_st.setParamEffect(veto_tau, 1.03)
-    zmcr_st.setParamEffect(st_norm, 1.2)
-    zmcr_st.setParamEffect(jec, 1.05)
-    zmcr_st.setParamEffect(id_mu, 1.02)
-    zmcr_st.setParamEffect(iso_mu, 1.02)
-    zmcr.addSample(zmcr_st)
-
-    zmcr_vvTemplate = template(background, "VV", "nominal", "zmcr")
-    zmcr_vv = rl.TemplateSample(
-        ch_name + "_vvMC", rl.Sample.BACKGROUND, zmcr_vvTemplate
-    )
-    zmcr_vv.setParamEffect(lumi, 1.027)
-    zmcr_vv.setParamEffect(trig_met, 1.01)
-    zmcr_vv.setParamEffect(veto_tau, 1.03)
-    zmcr_vv.setParamEffect(vv_norm, 1.2)
-    zmcr_vv.setParamEffect(jec, 1.05)
-    zmcr_vv.setParamEffect(id_mu, 1.02)
-    zmcr_vv.setParamEffect(iso_mu, 1.02)
-    zmcr.addSample(zmcr_vv)
-
-    zmcr_hbbTemplate = template(background, "Hbb", "nominal", "zmcr")
-    zmcr_hbb = rl.TemplateSample(
-        ch_name + "_hbbMC", rl.Sample.BACKGROUND, zmcr_hbbTemplate
-    )
-    zmcr_hbb.setParamEffect(lumi, 1.027)
-    zmcr_hbb.setParamEffect(trig_met, 1.01)
-    zmcr_hbb.setParamEffect(veto_tau, 1.03)
-    zmcr_hbb.setParamEffect(hbb_norm, 1.2)
-    zmcr_hbb.setParamEffect(jec, 1.05)
-    zmcr_hbb.setParamEffect(id_mu, 1.02)
-    zmcr_hbb.setParamEffect(iso_mu, 1.02)
-    zmcr.addSample(zmcr_hbb)
-
-    ###
-    # End of double muon control region
-    ###
-
-    ###
-    ###
-    # Double electron control region
-    ###
-    ###
-
-    ch_name = "zecr" + model_id
-    zecr = rl.Channel(ch_name)
-    model.addChannel(zecr)
-
-    ###
-    # Add data distribution to the channel
-    ###
-
-    if year == "2018":
-        zecr.setObservation(template(data, "EGamma", "data", "zecr"))
-    else:
-        zecr.setObservation(template(data, "SingleElectron", "data", "zecr"))
-
-    zecr_dyjets = rl.TransferFactorSample(
-        ch_name + "_dyjets", rl.Sample.BACKGROUND, zecr_dyjetsTransferFactor, sr_zjets
-    )
-    zecr.addSample(zecr_dyjets)
-
-    ###
-    # Other MC-driven processes
-    ###
-
-    zecr_ttTemplate = template(background, "TT", "nominal", "zecr")
-    zecr_tt = rl.TemplateSample(
-        ch_name + "_ttMC", rl.Sample.BACKGROUND, zecr_ttTemplate
-    )
-    zecr_tt.setParamEffect(lumi, 1.027)
-    zecr_tt.setParamEffect(trig_e, 1.01)
-    zecr_tt.setParamEffect(veto_tau, 1.03)
-    zecr_tt.setParamEffect(tt_norm, 1.2)
-    zecr_tt.setParamEffect(jec, 1.05)
-    zecr_tt.setParamEffect(id_e, 1.02)
-    zecr_tt.setParamEffect(reco_e, 1.02)
-    zecr.addSample(zecr_tt)
-
-    zecr_stTemplate = template(background, "ST", "nominal", "zecr")
-    zecr_st = rl.TemplateSample(
-        ch_name + "_stMC", rl.Sample.BACKGROUND, zecr_stTemplate
-    )
-    zecr_st.setParamEffect(lumi, 1.027)
-    zecr_st.setParamEffect(trig_e, 1.01)
-    zecr_st.setParamEffect(veto_tau, 1.03)
-    zecr_st.setParamEffect(st_norm, 1.2)
-    zecr_st.setParamEffect(jec, 1.05)
-    zecr_st.setParamEffect(id_e, 1.02)
-    zecr_st.setParamEffect(reco_e, 1.02)
-    zecr.addSample(zecr_st)
-
-    zecr_vvTemplate = template(background, "VV", "nominal", "zecr")
-    zecr_vv = rl.TemplateSample(
-        ch_name + "_vvMC", rl.Sample.BACKGROUND, zecr_vvTemplate
-    )
-    zecr_vv.setParamEffect(lumi, 1.027)
-    zecr_vv.setParamEffect(trig_e, 1.01)
-    zecr_vv.setParamEffect(veto_tau, 1.03)
-    zecr_vv.setParamEffect(vv_norm, 1.2)
-    zecr_vv.setParamEffect(jec, 1.05)
-    zecr_vv.setParamEffect(id_e, 1.02)
-    zecr_vv.setParamEffect(reco_e, 1.02)
-    zecr.addSample(zecr_vv)
-
-    zecr_hbbTemplate = template(background, "Hbb", "nominal", "zecr")
-    zecr_hbb = rl.TemplateSample(
-        ch_name + "_hbbMC", rl.Sample.BACKGROUND, zecr_hbbTemplate
-    )
-    zecr_hbb.setParamEffect(lumi, 1.027)
-    zecr_hbb.setParamEffect(trig_e, 1.01)
-    zecr_hbb.setParamEffect(veto_tau, 1.03)
-    zecr_hbb.setParamEffect(hbb_norm, 1.2)
-    zecr_hbb.setParamEffect(jec, 1.05)
-    zecr_hbb.setParamEffect(id_e, 1.02)
-    zecr_hbb.setParamEffect(reco_e, 1.02)
-    zecr.addSample(zecr_hbb)
-
-    ###
-    # End of double electron control region
-    ###
-
-    ###
-    ###
-    # Single photon control region
-    ###
-    ###
-
-    ch_name = "gcr" + model_id
-    gcr = rl.Channel(ch_name)
-    model.addChannel(gcr)
-
-    ###
-    # Add data distribution to the channel
-    ###
-
-    if year == "2018":
-        gcr.setObservation(template(data, "EGamma", "data", "gcr"))
-    else:
-        gcr.setObservation(template(data, "SinglePhoton", "data", "gcr"))
-
-    gcr_gjets = rl.TransferFactorSample(
-        ch_name + "_gjets", rl.Sample.BACKGROUND, gcr_gjetsTransferFactor, sr_zjets
-    )
-    gcr.addSample(gcr_gjets)
-
-    gcr_qcdTemplate = template(background, "QCD", "nominal", "gcr")
-    gcr_qcd = rl.TemplateSample(
-        ch_name + "_qcdMC", rl.Sample.BACKGROUND, gcr_qcdTemplate
-    )
-    gcr_qcd.setParamEffect(lumi, 1.027)
-    gcr_qcd.setParamEffect(trig_pho, 1.01)
-    gcr_qcd.setParamEffect(veto_tau, 1.03)
-    gcr_qcd.setParamEffect(qcdpho_norm, 2.0)
-    gcr_qcd.setParamEffect(jec, 1.05)
-    gcr_qcd.setParamEffect(id_pho, 1.02)
-    gcr.addSample(gcr_qcd)
-
+    # Done, return model
     return model
 
 
