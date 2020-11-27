@@ -287,6 +287,39 @@ text2workspace.py darkhiggs.txt
 The result of this step will be a ```darkhiggs.root``` file to be used for the combine fit.
 where ```darkhiggs.txt``` is the name of the combined datacard generated at the previous step.
 
+#### Running special datacards
+
+When you render the model, you can use the alternative datacards:
+```
+analysis/models/darkhiggs_fourregions.py
+analysis/models/darkhiggs_fiveregions.py
+analysis/models/darkhiggs_eightregions.py
+```
+
+that try the fit with "Signal, WMuon, TopMuon, DoubleMuon" (four);
+with all those plus "Gamma" (five);
+with all those plus "WEle, TopEle, DoubleEle" (eight).
+In all of those the minor MCs are not added at all to the fit.
+The usual `darkhiggs.py` has all eight regions + minor MCs.
+
+Alternative fits:
+
+Minuit:
+```
+combine -M FitDiagnostics -d darkhiggs.root \
+--expectSignal 1 --forceRecreateNLL --cminDefaultMinimizerType Minuit \
+--ignoreCovWarning --saveShapes --saveWithUncertainties --saveWorkspace --plots \
+&> out_FitDiagnostics_Minuit.log
+```
+
+Robust fit:
+```
+combine -M FitDiagnostics -d darkhiggs.root \
+--expectSignal 1 --forceRecreateNLL  --robustFit=1 \
+--ignoreCovWarning --saveShapes --saveWithUncertainties --saveWorkspace --plots \
+&> out_FitDiagnostics_robustFit.log
+```
+
 ## Macros
 
 ### Usage examples
