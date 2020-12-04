@@ -289,6 +289,8 @@ where ```darkhiggs.txt``` is the name of the combined datacard generated at the 
 
 #### Running special datacards
 
+Before running the combie tools, you have to put ```ulimit -s unlimited``` command.
+
 When you render the model, you can use the alternative datacards:
 ```
 analysis/models/darkhiggs_fourregions.py
