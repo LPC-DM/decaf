@@ -332,3 +332,8 @@ python macros/dump_templates.py -w datacards/darkhiggs/darkhiggs.root:w --observ
 ```
 python macros/hessian.py -w datacards/darkhiggs/higgsCombineTest.FitDiagnostics.mH120.root:w -f datacards/darkhiggs/fitDiagnostics.root:fit_b
 ```
+#### Pulls plotting 
+Change the path to store outputs in `plotConfig.py`    
+```
+python macros/diffNuisances.py -g pulls.root ../fitDiagnostics.root
+```
