@@ -301,6 +301,46 @@ def computeTFs(hists, year, recoil, category):
     btagUp = templateMass(sr_zjets, "btagUp")[0]
     btagDown = templateMass(sr_zjets, "btagDown")[0]
     sr_zjetsMass.setParamEffect(btag, btagUp, btagDown)
+    ew1Up = templateMass(sr_zjets, "ew1Up")[0]
+    ew1Down = templateMass(sr_zjets, "ew1Down")[0]
+    sr_zjetsMass.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateMass(sr_zjets, "ew2GUp")[0]
+    ew2GDown = templateMass(sr_zjets, "ew2GDown")[0]
+    sr_zjetsMass.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateMass(sr_zjets, "ew2WUp")[0]
+    ew2WDown = templateMass(sr_zjets, "ew2WDown")[0]
+    sr_zjetsMass.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateMass(sr_zjets, "ew2ZUp")[0]
+    ew2ZDown = templateMass(sr_zjets, "ew2ZDown")[0]
+    sr_zjetsMass.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateMass(sr_zjets, "ew3GUp")[0]
+    ew3GDown = templateMass(sr_zjets, "ew3GDown")[0]
+    sr_zjetsMass.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateMass(sr_zjets, "ew3WUp")[0]
+    ew3WDown = templateMass(sr_zjets, "ew3WDown")[0]
+    sr_zjetsMass.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateMass(sr_zjets, "ew3ZUp")[0]
+    ew3ZDown = templateMass(sr_zjets, "ew3ZDown")[0]
+    sr_zjetsMass.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateMass(sr_zjets, "mixUp")[0]
+    mixDown = templateMass(sr_zjets, "mixDown")[0]
+    sr_zjetsMass.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateMass(sr_zjets, "muFUp")[0]
+    muFDown = templateMass(sr_zjets, "muFDown")[0]
+    sr_zjetsMass.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateMass(sr_zjets, "muRUp")[0]
+    muRDown = templateMass(sr_zjets, "muRDown")[0]
+    sr_zjetsMass.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateMass(sr_zjets, "qcd1Up")[0]
+    qcd1Down = templateMass(sr_zjets, "qcd1Down")[0]
+    sr_zjetsMass.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateMass(sr_zjets, "qcd2Up")[0]
+    qcd2Down = templateMass(sr_zjets, "qcd2Down")[0]
+    sr_zjetsMass.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateMass(sr_zjets, "qcd3Up")[0]
+    qcd3Down = templateMass(sr_zjets, "qcd3Down")[0]
+    sr_zjetsMass.setParamEffect(qcd3, qcd3Up, qcd3Down)
+
 
     sr_zjetsRecoil = rl.TemplateSample(
         "sr" + model_id + "_zjetsRecoil",
@@ -316,6 +356,45 @@ def computeTFs(hists, year, recoil, category):
     btagUp = templateRecoil(sr_zjets, "btagUp")[0]
     btagDown = templateRecoil(sr_zjets, "btagDown")[0]
     sr_zjetsRecoil.setParamEffect(btag, btagUp, btagDown)
+    ew1Up = templateRecoil(sr_zjets, "ew1Up")[0]
+    ew1Down = templateRecoil(sr_zjets, "ew1Down")[0]
+    sr_zjetsRecoil.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateRecoil(sr_zjets, "ew2GUp")[0]
+    ew2GDown = templateRecoil(sr_zjets, "ew2GDown")[0]
+    sr_zjetsRecoil.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateRecoil(sr_zjets, "ew2WUp")[0]
+    ew2WDown = templateRecoil(sr_zjets, "ew2WDown")[0]
+    sr_zjetsRecoil.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateRecoil(sr_zjets, "ew2ZUp")[0]
+    ew2ZDown = templateRecoil(sr_zjets, "ew2ZDown")[0]
+    sr_zjetsRecoil.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateRecoil(sr_zjets, "ew3GUp")[0]
+    ew3GDown = templateRecoil(sr_zjets, "ew3GDown")[0]
+    sr_zjetsRecoil.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateRecoil(sr_zjets, "ew3WUp")[0]
+    ew3WDown = templateRecoil(sr_zjets, "ew3WDown")[0]
+    sr_zjetsRecoil.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateRecoil(sr_zjets, "ew3ZUp")[0]
+    ew3ZDown = templateRecoil(sr_zjets, "ew3ZDown")[0]
+    sr_zjetsRecoil.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateRecoil(sr_zjets, "mixUp")[0]
+    mixDown = templateRecoil(sr_zjets, "mixDown")[0]
+    sr_zjetsRecoil.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateRecoil(sr_zjets, "muFUp")[0]
+    muFDown = templateRecoil(sr_zjets, "muFDown")[0]
+    sr_zjetsRecoil.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateRecoil(sr_zjets, "muRUp")[0]
+    muRDown = templateRecoil(sr_zjets, "muRDown")[0]
+    sr_zjetsRecoil.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateRecoil(sr_zjets, "qcd1Up")[0]
+    qcd1Down = templateRecoil(sr_zjets, "qcd1Down")[0]
+    sr_zjetsRecoil.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateRecoil(sr_zjets, "qcd2Up")[0]
+    qcd2Down = templateRecoil(sr_zjets, "qcd2Down")[0]
+    sr_zjetsRecoil.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateRecoil(sr_zjets, "qcd3Up")[0]
+    qcd3Down = templateRecoil(sr_zjets, "qcd3Down")[0]
+    sr_zjetsRecoil.setParamEffect(qcd3, qcd3Up, qcd3Down)
 
     ###
     # W+jets templates
@@ -341,6 +420,46 @@ def computeTFs(hists, year, recoil, category):
     btagUp = templateMass(sr_wjets, "btagUp")[0]
     btagDown = templateMass(sr_wjets, "btagDown")[0]
     sr_wjetsMass.setParamEffect(btag, btagUp, btagDown)
+    ew1Up = templateMass(sr_wjets, "ew1Up")[0]
+    ew1Down = templateMass(sr_wjets, "ew1Down")[0]
+    sr_wjetsMass.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateMass(sr_wjets, "ew2GUp")[0]
+    ew2GDown = templateMass(sr_wjets, "ew2GDown")[0]
+    sr_wjetsMass.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateMass(sr_wjets, "ew2WUp")[0]
+    ew2WDown = templateMass(sr_wjets, "ew2WDown")[0]
+    sr_wjetsMass.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateMass(sr_wjets, "ew2ZUp")[0]
+    ew2ZDown = templateMass(sr_wjets, "ew2ZDown")[0]
+    sr_wjetsMass.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateMass(sr_wjets, "ew3GUp")[0]
+    ew3GDown = templateMass(sr_wjets, "ew3GDown")[0]
+    sr_wjetsMass.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateMass(sr_wjets, "ew3WUp")[0]
+    ew3WDown = templateMass(sr_wjets, "ew3WDown")[0]
+    sr_wjetsMass.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateMass(sr_wjets, "ew3ZUp")[0]
+    ew3ZDown = templateMass(sr_wjets, "ew3ZDown")[0]
+    sr_wjetsMass.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateMass(sr_wjets, "mixUp")[0]
+    mixDown = templateMass(sr_wjets, "mixDown")[0]
+    sr_wjetsMass.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateMass(sr_wjets, "muFUp")[0]
+    muFDown = templateMass(sr_wjets, "muFDown")[0]
+    sr_wjetsMass.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateMass(sr_wjets, "muRUp")[0]
+    muRDown = templateMass(sr_wjets, "muRDown")[0]
+    sr_wjetsMass.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateMass(sr_wjets, "qcd1Up")[0]
+    qcd1Down = templateMass(sr_wjets, "qcd1Down")[0]
+    sr_wjetsMass.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateMass(sr_wjets, "qcd2Up")[0]
+    qcd2Down = templateMass(sr_wjets, "qcd2Down")[0]
+    sr_wjetsMass.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateMass(sr_wjets, "qcd3Up")[0]
+    qcd3Down = templateMass(sr_wjets, "qcd3Down")[0]
+    sr_wjetsMass.setParamEffect(qcd3, qcd3Up, qcd3Down)
+
     sr_wjetsRecoil = rl.TemplateSample(
         "sr" + model_id + "_wjetsRecoil",
         rl.Sample.BACKGROUND,
@@ -355,6 +474,45 @@ def computeTFs(hists, year, recoil, category):
     btagUp = templateRecoil(sr_wjets, "btagUp")[0]
     btagDown = templateRecoil(sr_wjets, "btagDown")[0]
     sr_wjetsRecoil.setParamEffect(btag, btagUp, btagDown)
+    ew1Up = templateRecoil(sr_wjets, "ew1Up")[0]
+    ew1Down = templateRecoil(sr_wjets, "ew1Down")[0]
+    sr_wjetsRecoil.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateRecoil(sr_wjets, "ew2GUp")[0]
+    ew2GDown = templateRecoil(sr_wjets, "ew2GDown")[0]
+    sr_wjetsRecoil.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateRecoil(sr_wjets, "ew2WUp")[0]
+    ew2WDown = templateRecoil(sr_wjets, "ew2WDown")[0]
+    sr_wjetsRecoil.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateRecoil(sr_wjets, "ew2ZUp")[0]
+    ew2ZDown = templateRecoil(sr_wjets, "ew2ZDown")[0]
+    sr_wjetsRecoil.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateRecoil(sr_wjets, "ew3GUp")[0]
+    ew3GDown = templateRecoil(sr_wjets, "ew3GDown")[0]
+    sr_wjetsRecoil.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateRecoil(sr_wjets, "ew3WUp")[0]
+    ew3WDown = templateRecoil(sr_wjets, "ew3WDown")[0]
+    sr_wjetsRecoil.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateRecoil(sr_wjets, "ew3ZUp")[0]
+    ew3ZDown = templateRecoil(sr_wjets, "ew3ZDown")[0]
+    sr_wjetsRecoil.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateRecoil(sr_wjets, "mixUp")[0]
+    mixDown = templateRecoil(sr_wjets, "mixDown")[0]
+    sr_wjetsRecoil.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateRecoil(sr_wjets, "muFUp")[0]
+    muFDown = templateRecoil(sr_wjets, "muFDown")[0]
+    sr_wjetsRecoil.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateRecoil(sr_wjets, "muRUp")[0]
+    muRDown = templateRecoil(sr_wjets, "muRDown")[0]
+    sr_wjetsRecoil.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateRecoil(sr_wjets, "qcd1Up")[0]
+    qcd1Down = templateRecoil(sr_wjets, "qcd1Down")[0]
+    sr_wjetsRecoil.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateRecoil(sr_wjets, "qcd2Up")[0]
+    qcd2Down = templateRecoil(sr_wjets, "qcd2Down")[0]
+    sr_wjetsRecoil.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateRecoil(sr_wjets, "qcd3Up")[0]
+    qcd3Down = templateRecoil(sr_wjets, "qcd3Down")[0]
+    sr_wjetsRecoil.setParamEffect(qcd3, qcd3Up, qcd3Down)
 
     wmcr_wjets = (
         hists["bkg"]["template"]
@@ -380,6 +538,46 @@ def computeTFs(hists, year, recoil, category):
     btagUp = templateMass(wmcr_wjets, "btagUp")[0]
     btagDown = templateMass(wmcr_wjets, "btagDown")[0]
     wmcr_wjetsMass.setParamEffect(btag, btagUp, btagDown)
+    ew1Up = templateMass(wmcr_wjets, "ew1Up")[0]
+    ew1Down = templateMass(wmcr_wjets, "ew1Down")[0]
+    wmcr_wjetsMass.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateMass(wmcr_wjets, "ew2GUp")[0]
+    ew2GDown = templateMass(wmcr_wjets, "ew2GDown")[0]
+    wmcr_wjetsMass.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateMass(wmcr_wjets, "ew2WUp")[0]
+    ew2WDown = templateMass(wmcr_wjets, "ew2WDown")[0]
+    wmcr_wjetsMass.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateMass(wmcr_wjets, "ew2ZUp")[0]
+    ew2ZDown = templateMass(wmcr_wjets, "ew2ZDown")[0]
+    wmcr_wjetsMass.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateMass(wmcr_wjets, "ew3GUp")[0]
+    ew3GDown = templateMass(wmcr_wjets, "ew3GDown")[0]
+    wmcr_wjetsMass.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateMass(wmcr_wjets, "ew3WUp")[0]
+    ew3WDown = templateMass(wmcr_wjets, "ew3WDown")[0]
+    wmcr_wjetsMass.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateMass(wmcr_wjets, "ew3ZUp")[0]
+    ew3ZDown = templateMass(wmcr_wjets, "ew3ZDown")[0]
+    wmcr_wjetsMass.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateMass(wmcr_wjets, "mixUp")[0]
+    mixDown = templateMass(wmcr_wjets, "mixDown")[0]
+    wmcr_wjetsMass.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateMass(wmcr_wjets, "muFUp")[0]
+    muFDown = templateMass(wmcr_wjets, "muFDown")[0]
+    wmcr_wjetsMass.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateMass(wmcr_wjets, "muRUp")[0]
+    muRDown = templateMass(wmcr_wjets, "muRDown")[0]
+    wmcr_wjetsMass.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateMass(wmcr_wjets, "qcd1Up")[0]
+    qcd1Down = templateMass(wmcr_wjets, "qcd1Down")[0]
+    wmcr_wjetsMass.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateMass(wmcr_wjets, "qcd2Up")[0]
+    qcd2Down = templateMass(wmcr_wjets, "qcd2Down")[0]
+    wmcr_wjetsMass.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateMass(wmcr_wjets, "qcd3Up")[0]
+    qcd3Down = templateMass(wmcr_wjets, "qcd3Down")[0]
+    wmcr_wjetsMass.setParamEffect(qcd3, qcd3Up, qcd3Down)
+
     wmcr_wjetsRecoil = rl.TemplateSample(
         "wmcr" + model_id + "_wjetsRecoil",
         rl.Sample.BACKGROUND,
@@ -398,6 +596,45 @@ def computeTFs(hists, year, recoil, category):
     btagUp = templateRecoil(wmcr_wjets, "btagUp")[0]
     btagDown = templateRecoil(wmcr_wjets, "btagDown")[0]
     wmcr_wjetsRecoil.setParamEffect(btag, btagUp, btagDown)
+    ew1Up = templateRecoil(wmcr_wjets, "ew1Up")[0]
+    ew1Down = templateRecoil(wmcr_wjets, "ew1Down")[0]
+    wmcr_wjetsRecoil.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateRecoil(wmcr_wjets, "ew2GUp")[0]
+    ew2GDown = templateRecoil(wmcr_wjets, "ew2GDown")[0]
+    wmcr_wjetsRecoil.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateRecoil(wmcr_wjets, "ew2WUp")[0]
+    ew2WDown = templateRecoil(wmcr_wjets, "ew2WDown")[0]
+    wmcr_wjetsRecoil.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateRecoil(wmcr_wjets, "ew2ZUp")[0]
+    ew2ZDown = templateRecoil(wmcr_wjets, "ew2ZDown")[0]
+    wmcr_wjetsRecoil.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateRecoil(wmcr_wjets, "ew3GUp")[0]
+    ew3GDown = templateRecoil(wmcr_wjets, "ew3GDown")[0]
+    wmcr_wjetsRecoil.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateRecoil(wmcr_wjets, "ew3WUp")[0]
+    ew3WDown = templateRecoil(wmcr_wjets, "ew3WDown")[0]
+    wmcr_wjetsRecoil.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateRecoil(wmcr_wjets, "ew3ZUp")[0]
+    ew3ZDown = templateRecoil(wmcr_wjets, "ew3ZDown")[0]
+    wmcr_wjetsRecoil.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateRecoil(wmcr_wjets, "mixUp")[0]
+    mixDown = templateRecoil(wmcr_wjets, "mixDown")[0]
+    wmcr_wjetsRecoil.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateRecoil(wmcr_wjets, "muFUp")[0]
+    muFDown = templateRecoil(wmcr_wjets, "muFDown")[0]
+    wmcr_wjetsRecoil.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateRecoil(wmcr_wjets, "muRUp")[0]
+    muRDown = templateRecoil(wmcr_wjets, "muRDown")[0]
+    wmcr_wjetsRecoil.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateRecoil(wmcr_wjets, "qcd1Up")[0]
+    qcd1Down = templateRecoil(wmcr_wjets, "qcd1Down")[0]
+    wmcr_wjetsRecoil.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateRecoil(wmcr_wjets, "qcd2Up")[0]
+    qcd2Down = templateRecoil(wmcr_wjets, "qcd2Down")[0]
+    wmcr_wjetsRecoil.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateRecoil(wmcr_wjets, "qcd3Up")[0]
+    qcd3Down = templateRecoil(wmcr_wjets, "qcd3Down")[0]
+    wmcr_wjetsRecoil.setParamEffect(qcd3, qcd3Up, qcd3Down)
 
     wecr_wjets = (
         hists["bkg"]["template"]
@@ -423,6 +660,46 @@ def computeTFs(hists, year, recoil, category):
     btagUp = templateMass(wecr_wjets, "btagUp")[0]
     btagDown = templateMass(wecr_wjets, "btagDown")[0]
     wecr_wjetsMass.setParamEffect(btag, btagUp, btagDown)
+    ew1Up = templateMass(wecr_wjets, "ew1Up")[0]
+    ew1Down = templateMass(wecr_wjets, "ew1Down")[0]
+    wecr_wjetsMass.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateMass(wecr_wjets, "ew2GUp")[0]
+    ew2GDown = templateMass(wecr_wjets, "ew2GDown")[0]
+    wecr_wjetsMass.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateMass(wecr_wjets, "ew2WUp")[0]
+    ew2WDown = templateMass(wecr_wjets, "ew2WDown")[0]
+    wecr_wjetsMass.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateMass(wecr_wjets, "ew2ZUp")[0]
+    ew2ZDown = templateMass(wecr_wjets, "ew2ZDown")[0]
+    wecr_wjetsMass.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateMass(wecr_wjets, "ew3GUp")[0]
+    ew3GDown = templateMass(wecr_wjets, "ew3GDown")[0]
+    wecr_wjetsMass.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateMass(wecr_wjets, "ew3WUp")[0]
+    ew3WDown = templateMass(wecr_wjets, "ew3WDown")[0]
+    wecr_wjetsMass.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateMass(wecr_wjets, "ew3ZUp")[0]
+    ew3ZDown = templateMass(wecr_wjets, "ew3ZDown")[0]
+    wecr_wjetsMass.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateMass(wecr_wjets, "mixUp")[0]
+    mixDown = templateMass(wecr_wjets, "mixDown")[0]
+    wecr_wjetsMass.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateMass(wecr_wjets, "muFUp")[0]
+    muFDown = templateMass(wecr_wjets, "muFDown")[0]
+    wecr_wjetsMass.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateMass(wecr_wjets, "muRUp")[0]
+    muRDown = templateMass(wecr_wjets, "muRDown")[0]
+    wecr_wjetsMass.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateMass(wecr_wjets, "qcd1Up")[0]
+    qcd1Down = templateMass(wecr_wjets, "qcd1Down")[0]
+    wecr_wjetsMass.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateMass(wecr_wjets, "qcd2Up")[0]
+    qcd2Down = templateMass(wecr_wjets, "qcd2Down")[0]
+    wecr_wjetsMass.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateMass(wecr_wjets, "qcd3Up")[0]
+    qcd3Down = templateMass(wecr_wjets, "qcd3Down")[0]
+    wecr_wjetsMass.setParamEffect(qcd3, qcd3Up, qcd3Down)
+
     wecr_wjetsRecoil = rl.TemplateSample(
         "wecr" + model_id + "_wjetsRecoil",
         rl.Sample.BACKGROUND,
@@ -441,6 +718,45 @@ def computeTFs(hists, year, recoil, category):
     btagUp = templateRecoil(wecr_wjets, "btagUp")[0]
     btagDown = templateRecoil(wecr_wjets, "btagDown")[0]
     wecr_wjetsRecoil.setParamEffect(btag, btagUp, btagDown)
+    ew1Up = templateRecoil(wecr_wjets, "ew1Up")[0]
+    ew1Down = templateRecoil(wecr_wjets, "ew1Down")[0]
+    wecr_wjetsRecoil.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateRecoil(wecr_wjets, "ew2GUp")[0]
+    ew2GDown = templateRecoil(wecr_wjets, "ew2GDown")[0]
+    wecr_wjetsRecoil.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateRecoil(wecr_wjets, "ew2WUp")[0]
+    ew2WDown = templateRecoil(wecr_wjets, "ew2WDown")[0]
+    wecr_wjetsRecoil.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateRecoil(wecr_wjets, "ew2ZUp")[0]
+    ew2ZDown = templateRecoil(wecr_wjets, "ew2ZDown")[0]
+    wecr_wjetsRecoil.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateRecoil(wecr_wjets, "ew3GUp")[0]
+    ew3GDown = templateRecoil(wecr_wjets, "ew3GDown")[0]
+    wecr_wjetsRecoil.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateRecoil(wecr_wjets, "ew3WUp")[0]
+    ew3WDown = templateRecoil(wecr_wjets, "ew3WDown")[0]
+    wecr_wjetsRecoil.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateRecoil(wecr_wjets, "ew3ZUp")[0]
+    ew3ZDown = templateRecoil(wecr_wjets, "ew3ZDown")[0]
+    wecr_wjetsRecoil.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateRecoil(wecr_wjets, "mixUp")[0]
+    mixDown = templateRecoil(wecr_wjets, "mixDown")[0]
+    wecr_wjetsRecoil.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateRecoil(wecr_wjets, "muFUp")[0]
+    muFDown = templateRecoil(wecr_wjets, "muFDown")[0]
+    wecr_wjetsRecoil.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateRecoil(wecr_wjets, "muRUp")[0]
+    muRDown = templateRecoil(wecr_wjets, "muRDown")[0]
+    wecr_wjetsRecoil.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateRecoil(wecr_wjets, "qcd1Up")[0]
+    qcd1Down = templateRecoil(wecr_wjets, "qcd1Down")[0]
+    wecr_wjetsRecoil.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateRecoil(wecr_wjets, "qcd2Up")[0]
+    qcd2Down = templateRecoil(wecr_wjets, "qcd2Down")[0]
+    wecr_wjetsRecoil.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateRecoil(wecr_wjets, "qcd3Up")[0]
+    qcd3Down = templateRecoil(wecr_wjets, "qcd3Down")[0]
+    wecr_wjetsRecoil.setParamEffect(qcd3, qcd3Up, qcd3Down)
 
     tmcr_wjets = (
         hists["bkg"]["template"]
@@ -451,7 +767,7 @@ def computeTFs(hists, year, recoil, category):
     tmcr_wjetsMass = rl.TemplateSample(
         "tmcr" + model_id + "_wjetsMass",
         rl.Sample.BACKGROUND,
-        templateMass(tmcr_wjets, "nominal"),
+        templateRecoil(tmcr_wjets, "nominal"),
     )
     tmcr_wjetsMass.setParamEffect(lumi, 1.027)
     tmcr_wjetsMass.setParamEffect(trig_met, 1.01)
@@ -466,6 +782,46 @@ def computeTFs(hists, year, recoil, category):
     btagUp = templateMass(tmcr_wjets, "btagUp")[0]
     btagDown = templateMass(tmcr_wjets, "btagDown")[0]
     tmcr_wjetsMass.setParamEffect(btag, btagUp, btagDown)
+    ew1Up = templateMass(tmcr_wjets, "ew1Up")[0]
+    ew1Down = templateMass(tmcr_wjets, "ew1Down")[0]
+    tmcr_wjetsMass.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateMass(tmcr_wjets, "ew2GUp")[0]
+    ew2GDown = templateMass(tmcr_wjets, "ew2GDown")[0]
+    tmcr_wjetsMass.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateMass(tmcr_wjets, "ew2WUp")[0]
+    ew2WDown = templateMass(tmcr_wjets, "ew2WDown")[0]
+    tmcr_wjetsMass.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateMass(tmcr_wjets, "ew2ZUp")[0]
+    ew2ZDown = templateMass(tmcr_wjets, "ew2ZDown")[0]
+    tmcr_wjetsMass.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateMass(tmcr_wjets, "ew3GUp")[0]
+    ew3GDown = templateMass(tmcr_wjets, "ew3GDown")[0]
+    tmcr_wjetsMass.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateMass(tmcr_wjets, "ew3WUp")[0]
+    ew3WDown = templateMass(tmcr_wjets, "ew3WDown")[0]
+    tmcr_wjetsMass.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateMass(tmcr_wjets, "ew3ZUp")[0]
+    ew3ZDown = templateMass(tmcr_wjets, "ew3ZDown")[0]
+    tmcr_wjetsMass.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateMass(tmcr_wjets, "mixUp")[0]
+    mixDown = templateMass(tmcr_wjets, "mixDown")[0]
+    tmcr_wjetsMass.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateMass(tmcr_wjets, "muFUp")[0]
+    muFDown = templateMass(tmcr_wjets, "muFDown")[0]
+    tmcr_wjetsMass.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateMass(tmcr_wjets, "muRUp")[0]
+    muRDown = templateMass(tmcr_wjets, "muRDown")[0]
+    tmcr_wjetsMass.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateMass(tmcr_wjets, "qcd1Up")[0]
+    qcd1Down = templateMass(tmcr_wjets, "qcd1Down")[0]
+    tmcr_wjetsMass.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateMass(tmcr_wjets, "qcd2Up")[0]
+    qcd2Down = templateMass(tmcr_wjets, "qcd2Down")[0]
+    tmcr_wjetsMass.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateMass(tmcr_wjets, "qcd3Up")[0]
+    qcd3Down = templateMass(tmcr_wjets, "qcd3Down")[0]
+    tmcr_wjetsMass.setParamEffect(qcd3, qcd3Up, qcd3Down)
+
     tmcr_wjetsRecoil = rl.TemplateSample(
         "tmcr" + model_id + "_wjetsRecoil",
         rl.Sample.BACKGROUND,
@@ -484,6 +840,45 @@ def computeTFs(hists, year, recoil, category):
     btagUp = templateRecoil(tmcr_wjets, "btagUp")[0]
     btagDown = templateRecoil(tmcr_wjets, "btagDown")[0]
     tmcr_wjetsRecoil.setParamEffect(btag, btagUp, btagDown)
+    ew1Up = templateRecoil(tmcr_wjets, "ew1Up")[0]
+    ew1Down = templateRecoil(tmcr_wjets, "ew1Down")[0]
+    tmcr_wjetsRecoil.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateRecoil(tmcr_wjets, "ew2GUp")[0]
+    ew2GDown = templateRecoil(tmcr_wjets, "ew2GDown")[0]
+    tmcr_wjetsRecoil.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateRecoil(tmcr_wjets, "ew2WUp")[0]
+    ew2WDown = templateRecoil(tmcr_wjets, "ew2WDown")[0]
+    tmcr_wjetsRecoil.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateRecoil(tmcr_wjets, "ew2ZUp")[0]
+    ew2ZDown = templateRecoil(tmcr_wjets, "ew2ZDown")[0]
+    tmcr_wjetsRecoil.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateRecoil(tmcr_wjets, "ew3GUp")[0]
+    ew3GDown = templateRecoil(tmcr_wjets, "ew3GDown")[0]
+    tmcr_wjetsRecoil.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateRecoil(tmcr_wjets, "ew3WUp")[0]
+    ew3WDown = templateRecoil(tmcr_wjets, "ew3WDown")[0]
+    tmcr_wjetsRecoil.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateRecoil(tmcr_wjets, "ew3ZUp")[0]
+    ew3ZDown = templateRecoil(tmcr_wjets, "ew3ZDown")[0]
+    tmcr_wjetsRecoil.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateRecoil(tmcr_wjets, "mixUp")[0]
+    mixDown = templateRecoil(tmcr_wjets, "mixDown")[0]
+    tmcr_wjetsRecoil.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateRecoil(tmcr_wjets, "muFUp")[0]
+    muFDown = templateRecoil(tmcr_wjets, "muFDown")[0]
+    tmcr_wjetsRecoil.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateRecoil(tmcr_wjets, "muRUp")[0]
+    muRDown = templateRecoil(tmcr_wjets, "muRDown")[0]
+    tmcr_wjetsRecoil.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateRecoil(tmcr_wjets, "qcd1Up")[0]
+    qcd1Down = templateRecoil(tmcr_wjets, "qcd1Down")[0]
+    tmcr_wjetsRecoil.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateRecoil(tmcr_wjets, "qcd2Up")[0]
+    qcd2Down = templateRecoil(tmcr_wjets, "qcd2Down")[0]
+    tmcr_wjetsRecoil.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateRecoil(tmcr_wjets, "qcd3Up")[0]
+    qcd3Down = templateRecoil(tmcr_wjets, "qcd3Down")[0]
+    tmcr_wjetsRecoil.setParamEffect(qcd3, qcd3Up, qcd3Down)
 
     tecr_wjets = (
         hists["bkg"]["template"]
@@ -509,6 +904,46 @@ def computeTFs(hists, year, recoil, category):
     btagUp = templateMass(tecr_wjets, "btagUp")[0]
     btagDown = templateMass(tecr_wjets, "btagDown")[0]
     tecr_wjetsMass.setParamEffect(btag, btagUp, btagDown)
+    ew1Up = templateMass(tecr_wjets, "ew1Up")[0]
+    ew1Down = templateMass(tecr_wjets, "ew1Down")[0]
+    tecr_wjetsMass.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateMass(tecr_wjets, "ew2GUp")[0]
+    ew2GDown = templateMass(tecr_wjets, "ew2GDown")[0]
+    tecr_wjetsMass.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateMass(tecr_wjets, "ew2WUp")[0]
+    ew2WDown = templateMass(tecr_wjets, "ew2WDown")[0]
+    tecr_wjetsMass.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateMass(tecr_wjets, "ew2ZUp")[0]
+    ew2ZDown = templateMass(tecr_wjets, "ew2ZDown")[0]
+    tecr_wjetsMass.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateMass(tecr_wjets, "ew3GUp")[0]
+    ew3GDown = templateMass(tecr_wjets, "ew3GDown")[0]
+    tecr_wjetsMass.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateMass(tecr_wjets, "ew3WUp")[0]
+    ew3WDown = templateMass(tecr_wjets, "ew3WDown")[0]
+    tecr_wjetsMass.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateMass(tecr_wjets, "ew3ZUp")[0]
+    ew3ZDown = templateMass(tecr_wjets, "ew3ZDown")[0]
+    tecr_wjetsMass.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateMass(tecr_wjets, "mixUp")[0]
+    mixDown = templateMass(tecr_wjets, "mixDown")[0]
+    tecr_wjetsMass.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateMass(tecr_wjets, "muFUp")[0]
+    muFDown = templateMass(tecr_wjets, "muFDown")[0]
+    tecr_wjetsMass.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateMass(tecr_wjets, "muRUp")[0]
+    muRDown = templateMass(tecr_wjets, "muRDown")[0]
+    tecr_wjetsMass.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateMass(tecr_wjets, "qcd1Up")[0]
+    qcd1Down = templateMass(tecr_wjets, "qcd1Down")[0]
+    tecr_wjetsMass.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateMass(tecr_wjets, "qcd2Up")[0]
+    qcd2Down = templateMass(tecr_wjets, "qcd2Down")[0]
+    tecr_wjetsMass.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateMass(tecr_wjets, "qcd3Up")[0]
+    qcd3Down = templateMass(tecr_wjets, "qcd3Down")[0]
+    tecr_wjetsMass.setParamEffect(qcd3, qcd3Up, qcd3Down)
+
     tecr_wjetsRecoil = rl.TemplateSample(
         "tecr" + model_id + "_wjetsRecoil",
         rl.Sample.BACKGROUND,
@@ -527,6 +962,45 @@ def computeTFs(hists, year, recoil, category):
     btagUp = templateRecoil(tecr_wjets, "btagUp")[0]
     btagDown = templateRecoil(tecr_wjets, "btagDown")[0]
     tecr_wjetsRecoil.setParamEffect(btag, btagUp, btagDown)
+    ew1Up = templateRecoil(tecr_wjets, "ew1Up")[0]
+    ew1Down = templateRecoil(tecr_wjets, "ew1Down")[0]
+    tecr_wjetsRecoil.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateRecoil(tecr_wjets, "ew2GUp")[0]
+    ew2GDown = templateRecoil(tecr_wjets, "ew2GDown")[0]
+    tecr_wjetsRecoil.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateRecoil(tecr_wjets, "ew2WUp")[0]
+    ew2WDown = templateRecoil(tecr_wjets, "ew2WDown")[0]
+    tecr_wjetsRecoil.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateRecoil(tecr_wjets, "ew2ZUp")[0]
+    ew2ZDown = templateRecoil(tecr_wjets, "ew2ZDown")[0]
+    tecr_wjetsRecoil.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateRecoil(tecr_wjets, "ew3GUp")[0]
+    ew3GDown = templateRecoil(tecr_wjets, "ew3GDown")[0]
+    tecr_wjetsRecoil.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateRecoil(tecr_wjets, "ew3WUp")[0]
+    ew3WDown = templateRecoil(tecr_wjets, "ew3WDown")[0]
+    tecr_wjetsRecoil.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateRecoil(tecr_wjets, "ew3ZUp")[0]
+    ew3ZDown = templateRecoil(tecr_wjets, "ew3ZDown")[0]
+    tecr_wjetsRecoil.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateRecoil(tecr_wjets, "mixUp")[0]
+    mixDown = templateRecoil(tecr_wjets, "mixDown")[0]
+    tecr_wjetsRecoil.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateRecoil(tecr_wjets, "muFUp")[0]
+    muFDown = templateRecoil(tecr_wjets, "muFDown")[0]
+    tecr_wjetsRecoil.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateRecoil(tecr_wjets, "muRUp")[0]
+    muRDown = templateRecoil(tecr_wjets, "muRDown")[0]
+    tecr_wjetsRecoil.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateRecoil(tecr_wjets, "qcd1Up")[0]
+    qcd1Down = templateRecoil(tecr_wjets, "qcd1Down")[0]
+    tecr_wjetsRecoil.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateRecoil(tecr_wjets, "qcd2Up")[0]
+    qcd2Down = templateRecoil(tecr_wjets, "qcd2Down")[0]
+    tecr_wjetsRecoil.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateRecoil(tecr_wjets, "qcd3Up")[0]
+    qcd3Down = templateRecoil(tecr_wjets, "qcd3Down")[0]
+    tecr_wjetsRecoil.setParamEffect(qcd3, qcd3Up, qcd3Down)
 
     ###
     # TT templates
@@ -738,6 +1212,46 @@ def computeTFs(hists, year, recoil, category):
     zmcr_dyjetsMass.setParamEffect(
         zhf_fraction, hf_systematic["DY+jets"]["zmcr"][category]
     )
+    ew1Up = templateMass(zmcr_dyjets, "ew1Up")[0]
+    ew1Down = templateMass(zmcr_dyjets, "ew1Down")[0]
+    zmcr_dyjetsMass.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateMass(zmcr_dyjets, "ew2GUp")[0]
+    ew2GDown = templateMass(zmcr_dyjets, "ew2GDown")[0]
+    zmcr_dyjetsMass.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateMass(zmcr_dyjets, "ew2WUp")[0]
+    ew2WDown = templateMass(zmcr_dyjets, "ew2WDown")[0]
+    zmcr_dyjetsMass.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateMass(zmcr_dyjets, "ew2ZUp")[0]
+    ew2ZDown = templateMass(zmcr_dyjets, "ew2ZDown")[0]
+    zmcr_dyjetsMass.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateMass(zmcr_dyjets, "ew3GUp")[0]
+    ew3GDown = templateMass(zmcr_dyjets, "ew3GDown")[0]
+    zmcr_dyjetsMass.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateMass(zmcr_dyjets, "ew3WUp")[0]
+    ew3WDown = templateMass(zmcr_dyjets, "ew3WDown")[0]
+    zmcr_dyjetsMass.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateMass(zmcr_dyjets, "ew3ZUp")[0]
+    ew3ZDown = templateMass(zmcr_dyjets, "ew3ZDown")[0]
+    zmcr_dyjetsMass.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateMass(zmcr_dyjets, "mixUp")[0]
+    mixDown = templateMass(zmcr_dyjets, "mixDown")[0]
+    zmcr_dyjetsMass.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateMass(zmcr_dyjets, "muFUp")[0]
+    muFDown = templateMass(zmcr_dyjets, "muFDown")[0]
+    zmcr_dyjetsMass.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateMass(zmcr_dyjets, "muRUp")[0]
+    muRDown = templateMass(zmcr_dyjets, "muRDown")[0]
+    zmcr_dyjetsMass.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateMass(zmcr_dyjets, "qcd1Up")[0]
+    qcd1Down = templateMass(zmcr_dyjets, "qcd1Down")[0]
+    zmcr_dyjetsMass.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateMass(zmcr_dyjets, "qcd2Up")[0]
+    qcd2Down = templateMass(zmcr_dyjets, "qcd2Down")[0]
+    zmcr_dyjetsMass.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateMass(zmcr_dyjets, "qcd3Up")[0]
+    qcd3Down = templateMass(zmcr_dyjets, "qcd3Down")[0]
+    zmcr_dyjetsMass.setParamEffect(qcd3, qcd3Up, qcd3Down)
+
     zmcr_dyjetsRecoil = rl.TemplateSample(
         "zmcr" + model_id + "_dyjetsRecoil",
         rl.Sample.BACKGROUND,
@@ -753,6 +1267,45 @@ def computeTFs(hists, year, recoil, category):
     zmcr_dyjetsRecoil.setParamEffect(
         zhf_fraction, hf_systematic["DY+jets"]["zmcr"][category]
     )
+    ew1Up = templateRecoil(zmcr_dyjets, "ew1Up")[0]
+    ew1Down = templateRecoil(zmcr_dyjets, "ew1Down")[0]
+    zmcr_dyjetsRecoil.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateRecoil(zmcr_dyjets, "ew2GUp")[0]
+    ew2GDown = templateRecoil(zmcr_dyjets, "ew2GDown")[0]
+    zmcr_dyjetsRecoil.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateRecoil(zmcr_dyjets, "ew2WUp")[0]
+    ew2WDown = templateRecoil(zmcr_dyjets, "ew2WDown")[0]
+    zmcr_dyjetsRecoil.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateRecoil(zmcr_dyjets, "ew2ZUp")[0]
+    ew2ZDown = templateRecoil(zmcr_dyjets, "ew2ZDown")[0]
+    zmcr_dyjetsRecoil.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateRecoil(zmcr_dyjets, "ew3GUp")[0]
+    ew3GDown = templateRecoil(zmcr_dyjets, "ew3GDown")[0]
+    zmcr_dyjetsRecoil.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateRecoil(zmcr_dyjets, "ew3WUp")[0]
+    ew3WDown = templateRecoil(zmcr_dyjets, "ew3WDown")[0]
+    zmcr_dyjetsRecoil.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateRecoil(zmcr_dyjets, "ew3ZUp")[0]
+    ew3ZDown = templateRecoil(zmcr_dyjets, "ew3ZDown")[0]
+    zmcr_dyjetsRecoil.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateRecoil(zmcr_dyjets, "mixUp")[0]
+    mixDown = templateRecoil(zmcr_dyjets, "mixDown")[0]
+    zmcr_dyjetsRecoil.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateRecoil(zmcr_dyjets, "muFUp")[0]
+    muFDown = templateRecoil(zmcr_dyjets, "muFDown")[0]
+    zmcr_dyjetsRecoil.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateRecoil(zmcr_dyjets, "muRUp")[0]
+    muRDown = templateRecoil(zmcr_dyjets, "muRDown")[0]
+    zmcr_dyjetsRecoil.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateRecoil(zmcr_dyjets, "qcd1Up")[0]
+    qcd1Down = templateRecoil(zmcr_dyjets, "qcd1Down")[0]
+    zmcr_dyjetsRecoil.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateRecoil(zmcr_dyjets, "qcd2Up")[0]
+    qcd2Down = templateRecoil(zmcr_dyjets, "qcd2Down")[0]
+    zmcr_dyjetsRecoil.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateRecoil(zmcr_dyjets, "qcd3Up")[0]
+    qcd3Down = templateRecoil(zmcr_dyjets, "qcd3Down")[0]
+    zmcr_dyjetsRecoil.setParamEffect(qcd3, qcd3Up, qcd3Down)
 
     zecr_dyjets = (
         hists["bkg"]["template"]
@@ -775,6 +1328,46 @@ def computeTFs(hists, year, recoil, category):
     zecr_dyjetsMass.setParamEffect(
         zhf_fraction, hf_systematic["DY+jets"]["zecr"][category]
     )
+    ew1Up = templateMass(zecr_dyjets, "ew1Up")[0]
+    ew1Down = templateMass(zecr_dyjets, "ew1Down")[0]
+    zecr_dyjetsMass.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateMass(zecr_dyjets, "ew2GUp")[0]
+    ew2GDown = templateMass(zecr_dyjets, "ew2GDown")[0]
+    zecr_dyjetsMass.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateMass(zecr_dyjets, "ew2WUp")[0]
+    ew2WDown = templateMass(zecr_dyjets, "ew2WDown")[0]
+    zecr_dyjetsMass.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateMass(zecr_dyjets, "ew2ZUp")[0]
+    ew2ZDown = templateMass(zecr_dyjets, "ew2ZDown")[0]
+    zecr_dyjetsMass.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateMass(zecr_dyjets, "ew3GUp")[0]
+    ew3GDown = templateMass(zecr_dyjets, "ew3GDown")[0]
+    zecr_dyjetsMass.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateMass(zecr_dyjets, "ew3WUp")[0]
+    ew3WDown = templateMass(zecr_dyjets, "ew3WDown")[0]
+    zecr_dyjetsMass.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateMass(zecr_dyjets, "ew3ZUp")[0]
+    ew3ZDown = templateMass(zecr_dyjets, "ew3ZDown")[0]
+    zecr_dyjetsMass.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateMass(zecr_dyjets, "mixUp")[0]
+    mixDown = templateMass(zecr_dyjets, "mixDown")[0]
+    zecr_dyjetsMass.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateMass(zecr_dyjets, "muFUp")[0]
+    muFDown = templateMass(zecr_dyjets, "muFDown")[0]
+    zecr_dyjetsMass.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateMass(zecr_dyjets, "muRUp")[0]
+    muRDown = templateMass(zecr_dyjets, "muRDown")[0]
+    zecr_dyjetsMass.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateMass(zecr_dyjets, "qcd1Up")[0]
+    qcd1Down = templateMass(zecr_dyjets, "qcd1Down")[0]
+    zecr_dyjetsMass.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateMass(zecr_dyjets, "qcd2Up")[0]
+    qcd2Down = templateMass(zecr_dyjets, "qcd2Down")[0]
+    zecr_dyjetsMass.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateMass(zecr_dyjets, "qcd3Up")[0]
+    qcd3Down = templateMass(zecr_dyjets, "qcd3Down")[0]
+    zecr_dyjetsMass.setParamEffect(qcd3, qcd3Up, qcd3Down)
+
     zecr_dyjetsRecoil = rl.TemplateSample(
         "zecr" + model_id + "_dyjetsRecoil",
         rl.Sample.BACKGROUND,
@@ -790,6 +1383,45 @@ def computeTFs(hists, year, recoil, category):
     zecr_dyjetsRecoil.setParamEffect(
         zhf_fraction, hf_systematic["DY+jets"]["zecr"][category]
     )
+    ew1Up = templateRecoil(zecr_dyjets, "ew1Up")[0]
+    ew1Down = templateRecoil(zecr_dyjets, "ew1Down")[0]
+    zecr_dyjetsRecoil.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateRecoil(zecr_dyjets, "ew2GUp")[0]
+    ew2GDown = templateRecoil(zecr_dyjets, "ew2GDown")[0]
+    zecr_dyjetsRecoil.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateRecoil(zecr_dyjets, "ew2WUp")[0]
+    ew2WDown = templateRecoil(zecr_dyjets, "ew2WDown")[0]
+    zecr_dyjetsRecoil.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateRecoil(zecr_dyjets, "ew2ZUp")[0]
+    ew2ZDown = templateRecoil(zecr_dyjets, "ew2ZDown")[0]
+    zecr_dyjetsRecoil.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateRecoil(zecr_dyjets, "ew3GUp")[0]
+    ew3GDown = templateRecoil(zecr_dyjets, "ew3GDown")[0]
+    zecr_dyjetsRecoil.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateRecoil(zecr_dyjets, "ew3WUp")[0]
+    ew3WDown = templateRecoil(zecr_dyjets, "ew3WDown")[0]
+    zecr_dyjetsRecoil.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateRecoil(zecr_dyjets, "ew3ZUp")[0]
+    ew3ZDown = templateRecoil(zecr_dyjets, "ew3ZDown")[0]
+    zecr_dyjetsRecoil.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateRecoil(zecr_dyjets, "mixUp")[0]
+    mixDown = templateRecoil(zecr_dyjets, "mixDown")[0]
+    zecr_dyjetsRecoil.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateRecoil(zecr_dyjets, "muFUp")[0]
+    muFDown = templateRecoil(zecr_dyjets, "muFDown")[0]
+    zecr_dyjetsRecoil.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateRecoil(zecr_dyjets, "muRUp")[0]
+    muRDown = templateRecoil(zecr_dyjets, "muRDown")[0]
+    zecr_dyjetsRecoil.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateRecoil(zecr_dyjets, "qcd1Up")[0]
+    qcd1Down = templateRecoil(zecr_dyjets, "qcd1Down")[0]
+    zecr_dyjetsRecoil.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateRecoil(zecr_dyjets, "qcd2Up")[0]
+    qcd2Down = templateRecoil(zecr_dyjets, "qcd2Down")[0]
+    zecr_dyjetsRecoil.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateRecoil(zecr_dyjets, "qcd3Up")[0]
+    qcd3Down = templateRecoil(zecr_dyjets, "qcd3Down")[0]
+    zecr_dyjetsRecoil.setParamEffect(qcd3, qcd3Up, qcd3Down)
 
     ###
     # G+jets templates
@@ -813,6 +1445,46 @@ def computeTFs(hists, year, recoil, category):
     gcr_gjetsMass.setParamEffect(jec, 1.05)
     gcr_gjetsMass.setParamEffect(id_pho, 1.02)
     gcr_gjetsMass.setParamEffect(ghf_fraction, hf_systematic["G+jets"]["gcr"][category])
+    ew1Up = templateMass(gcr_gjets, "ew1Up")[0]
+    ew1Down = templateMass(gcr_gjets, "ew1Down")[0]
+    gcr_gjetsMass.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateMass(gcr_gjets, "ew2GUp")[0]
+    ew2GDown = templateMass(gcr_gjets, "ew2GDown")[0]
+    gcr_gjetsMass.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateMass(gcr_gjets, "ew2WUp")[0]
+    ew2WDown = templateMass(gcr_gjets, "ew2WDown")[0]
+    gcr_gjetsMass.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateMass(gcr_gjets, "ew2ZUp")[0]
+    ew2ZDown = templateMass(gcr_gjets, "ew2ZDown")[0]
+    gcr_gjetsMass.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateMass(gcr_gjets, "ew3GUp")[0]
+    ew3GDown = templateMass(gcr_gjets, "ew3GDown")[0]
+    gcr_gjetsMass.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateMass(gcr_gjets, "ew3WUp")[0]
+    ew3WDown = templateMass(gcr_gjets, "ew3WDown")[0]
+    gcr_gjetsMass.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateMass(gcr_gjets, "ew3ZUp")[0]
+    ew3ZDown = templateMass(gcr_gjets, "ew3ZDown")[0]
+    gcr_gjetsMass.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateMass(gcr_gjets, "mixUp")[0]
+    mixDown = templateMass(gcr_gjets, "mixDown")[0]
+    gcr_gjetsMass.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateMass(gcr_gjets, "muFUp")[0]
+    muFDown = templateMass(gcr_gjets, "muFDown")[0]
+    gcr_gjetsMass.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateMass(gcr_gjets, "muRUp")[0]
+    muRDown = templateMass(gcr_gjets, "muRDown")[0]
+    gcr_gjetsMass.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateMass(gcr_gjets, "qcd1Up")[0]
+    qcd1Down = templateMass(gcr_gjets, "qcd1Down")[0]
+    gcr_gjetsMass.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateMass(gcr_gjets, "qcd2Up")[0]
+    qcd2Down = templateMass(gcr_gjets, "qcd2Down")[0]
+    gcr_gjetsMass.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateMass(gcr_gjets, "qcd3Up")[0]
+    qcd3Down = templateMass(gcr_gjets, "qcd3Down")[0]
+    gcr_gjetsMass.setParamEffect(qcd3, qcd3Up, qcd3Down)
+
     gcr_gjetsRecoil = rl.TemplateSample(
         "gcr" + model_id + "_gjetsRecoil",
         rl.Sample.BACKGROUND,
@@ -827,6 +1499,45 @@ def computeTFs(hists, year, recoil, category):
     gcr_gjetsRecoil.setParamEffect(
         ghf_fraction, hf_systematic["G+jets"]["gcr"][category]
     )
+    ew1Up = templateRecoil(gcr_gjets, "ew1Up")[0]
+    ew1Down = templateRecoil(gcr_gjets, "ew1Down")[0]
+    gcr_gjetsRecoil.setParamEffect(ew1, ew1Up, ew1Down)
+    ew2GUp = templateRecoil(gcr_gjets, "ew2GUp")[0]
+    ew2GDown = templateRecoil(gcr_gjets, "ew2GDown")[0]
+    gcr_gjetsRecoil.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    ew2WUp = templateRecoil(gcr_gjets, "ew2WUp")[0]
+    ew2WDown = templateRecoil(gcr_gjets, "ew2WDown")[0]
+    gcr_gjetsRecoil.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    ew2ZUp = templateRecoil(gcr_gjets, "ew2ZUp")[0]
+    ew2ZDown = templateRecoil(gcr_gjets, "ew2ZDown")[0]
+    gcr_gjetsRecoil.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    ew3GUp = templateRecoil(gcr_gjets, "ew3GUp")[0]
+    ew3GDown = templateRecoil(gcr_gjets, "ew3GDown")[0]
+    gcr_gjetsRecoil.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    ew3WUp = templateRecoil(gcr_gjets, "ew3WUp")[0]
+    ew3WDown = templateRecoil(gcr_gjets, "ew3WDown")[0]
+    gcr_gjetsRecoil.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    ew3ZUp = templateRecoil(gcr_gjets, "ew3ZUp")[0]
+    ew3ZDown = templateRecoil(gcr_gjets, "ew3ZDown")[0]
+    gcr_gjetsRecoil.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    mixUp = templateRecoil(gcr_gjets, "mixUp")[0]
+    mixDown = templateRecoil(gcr_gjets, "mixDown")[0]
+    gcr_gjetsRecoil.setParamEffect(mix, mixUp, mixDown)
+    muFUp = templateRecoil(gcr_gjets, "muFUp")[0]
+    muFDown = templateRecoil(gcr_gjets, "muFDown")[0]
+    gcr_gjetsRecoil.setParamEffect(muF, muFUp, muFDown)
+    muRUp = templateRecoil(gcr_gjets, "muRUp")[0]
+    muRDown = templateRecoil(gcr_gjets, "muRDown")[0]
+    gcr_gjetsRecoil.setParamEffect(muR, muRUp, muRDown)
+    qcd1Up = templateRecoil(gcr_gjets, "qcd1Up")[0]
+    qcd1Down = templateRecoil(gcr_gjets, "qcd1Down")[0]
+    gcr_gjetsRecoil.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    qcd2Up = templateRecoil(gcr_gjets, "qcd2Up")[0]
+    qcd2Down = templateRecoil(gcr_gjets, "qcd2Down")[0]
+    gcr_gjetsRecoil.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    qcd3Up = templateRecoil(gcr_gjets, "qcd3Up")[0]
+    qcd3Down = templateRecoil(gcr_gjets, "qcd3Down")[0]
+    gcr_gjetsRecoil.setParamEffect(qcd3, qcd3Up, qcd3Down)
 
     ###
     # Compute TFs
@@ -1935,8 +2646,8 @@ if __name__ == "__main__":
         sr_ttRate,
         tt_weight,
     ) = initialize_nuisances(hists, year)
-    # tf_params = rhalphabeth(mass_binning)
-    tf_params = 0.05
+    tf_params = rhalphabeth(mass_binning)
+    #tf_params = 0.05
 
     ###
     ###
@@ -1969,6 +2680,19 @@ if __name__ == "__main__":
     veto_tau = rl.NuisanceParameter("veto_tau" + year, "lnN")
     jec = rl.NuisanceParameter("jec" + year, "lnN")
     btag = rl.NuisanceParameter("btag" + year, "shape")  # AK4 btag
+    ew1 = rl.NuisanceParameter("ew1", "shape")
+    ew2G = rl.NuisanceParameter("ew2G", "shape")
+    ew2W = rl.NuisanceParameter("ew2W", "shape")
+    ew2Z = rl.NuisanceParameter("ew2Z", "shape")
+    ew3G = rl.NuisanceParameter("ew3G", "shape")
+    ew3W = rl.NuisanceParameter("ew3W", "shape")
+    ew3Z = rl.NuisanceParameter("ew3Z", "shape")
+    mix = rl.NuisanceParameter("mix", "shape")
+    muF = rl.NuisanceParameter("muF", "shape")
+    muR = rl.NuisanceParameter("muR", "shape")
+    qcd1 = rl.NuisanceParameter("qcd1", "shape")
+    qcd2 = rl.NuisanceParameter("qcd2", "shape")
+    qcd3 = rl.NuisanceParameter("qcd3", "shape")
 
     model_dict = {}
     recoilbins = np.array(recoil_binning)
