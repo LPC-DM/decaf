@@ -337,3 +337,8 @@ Change the path to store outputs in `plotConfig.py`
 ```
 python macros/diffNuisances.py -g pulls.root ../fitDiagnostics.root
 ```
+
+#### Postfit plotting 
+```
+python macros/plotStackedPostFit_darkhiggs.py 
+```
