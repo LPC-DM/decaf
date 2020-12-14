@@ -82,8 +82,7 @@ def plotPreFitPostFit(region, year, signalflag, recoil, blind=False):
     }
 
     ### Open fit result file ###
-    basedir = getenv('PWD')
-    f_mlfit = TFile(basedir+'/fitDiagnostics.root','READ')
+    f_mlfit = TFile('../datacards/darkhiggs/fitDiagnostics.root','READ')
 
     ### Make printing which region, year, signal, and recoil are considered ###
     print('You are considering region:', darkhiggs_regions[region])
