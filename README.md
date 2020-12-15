@@ -289,6 +289,8 @@ where ```darkhiggs.txt``` is the name of the combined datacard generated at the 
 
 #### Running special datacards
 
+Before running the combie tools, you have to put ```ulimit -s unlimited``` command.
+
 When you render the model, you can use the alternative datacards:
 ```
 analysis/models/darkhiggs_fourregions.py
@@ -329,4 +331,14 @@ python macros/dump_templates.py -w datacards/darkhiggs/darkhiggs.root:w --observ
 ```
 ```
 python macros/hessian.py -w datacards/darkhiggs/higgsCombineTest.FitDiagnostics.mH120.root:w -f datacards/darkhiggs/fitDiagnostics.root:fit_b
+```
+#### Pulls plotting 
+Change the path to store outputs in `plotConfig.py`    
+```
+python macros/diffNuisances.py -g pulls.root ../fitDiagnostics.root
+```
+
+#### Postfit plotting 
+```
+python macros/plotStackedPostFit_darkhiggs.py 
 ```
