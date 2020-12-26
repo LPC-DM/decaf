@@ -314,7 +314,7 @@ combine -M FitDiagnostics -d darkhiggs.root \
 &> out_FitDiagnostics_Minuit.log
 ```
 
-Minuit (fast):
+Minuit (fast):   
 Drop the options: `--saveShapes`, `--saveWorkspace`, `--plots`   
 ```
 combine -M FitDiagnostics -d darkhiggs.root \
