@@ -314,6 +314,14 @@ combine -M FitDiagnostics -d darkhiggs.root \
 &> out_FitDiagnostics_Minuit.log
 ```
 
+Minuit (fast):
+Drop the options: `--saveShapes`, `--saveWorkspace`, `--plots`   
+```
+combine -M FitDiagnostics -d darkhiggs.root \
+--expectSignal 1 --forceRecreateNLL --cminDefaultMinimizerType Minuit \
+--ignoreCovWarning --saveWithUncertainties &> out_FitDiagnostics_Minuit.log
+```
+
 Robust fit:
 ```
 combine -M FitDiagnostics -d darkhiggs.root \
