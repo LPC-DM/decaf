@@ -214,19 +214,6 @@ The ```models/darkhiggs.py``` module extracts coffea histgrams from the ```hists
 
 ### Rendering the model
 
-The models saved in the ```.model``` files at the previous step can be rendered into datacards by running the following command:
-
-```
-python render.py -m model_name
-```
-
-the ```-m``` or ```--model``` options provide in input the name of the model to render, that corresponds to the name of the ```.model``` file where the model is stored. The ```render.py``` module launches python futures jobs to process in parallel the different control/signal regions that belongs to a single model. Different models can also be rendered in parallel, by using condor. In order to run rendering condor job, the following command should be ran:
-
-```
-python render_condor.py -m model_name
-```
-
-this time, all the models stored into ```.model``` files whose name contains the sting passed via the  ```-m``` options are going to be rendered.
 In order for the rendering step to be completed successfully and for the resulting datacards and workspaces to be used in later steps, both the python version and the ROOT version should correspond to the ones that are going to be set when running ```combine```. It is therefore suggested to clone the ```decaf``` repository inside the ```src``` folder of ```CMSSSW``` release that will be used to perform the combine fit and run the rendering from there, without running the ```env_lcg.sh```. You should, instead, do the regular ```cmsenv``` command.
 At the time of writing, the recommended version is ```CMSSW_10_2_13``` (https://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/#cc7-release-cmssw_10_2_x-recommended-version). This version uses python 2.7 and ROOT 6.12.
 In addition, you should install the following packages (to be done *after* ```cmsenv```):
@@ -249,6 +236,28 @@ to
 ```
 obsmap.insert(ROOT.std.pair('const string, RooDataHist*')(channel.name.encode("ascii"), obs))
 ```
+
+and also make the following modification:
+
+```
+import ROOT
+#add this line
+ROOT.v5.TFormula.SetMaxima(5000000)
+```
+
+The models saved in the ```.model``` files at the previous step can be rendered into datacards by running the following command:
+
+```
+python render.py -m model_name
+```
+
+the ```-m``` or ```--model``` options provide in input the name of the model to render, that corresponds to the name of the ```.model``` file where the model is stored. The ```render.py``` module launches python futures jobs to process in parallel the different control/signal regions that belongs to a single model. Different models can also be rendered in parallel, by using condor. In order to run rendering condor job, the following command should be ran:
+
+```
+python render_condor.py -m model_name
+```
+
+this time, all the models stored into ```.model``` files whose name contains the sting passed via the  ```-m``` options are going to be rendered. 
 
 The ```render.py``` module saves datacards and workspaces into folders that show the following naming:
 
@@ -284,14 +293,29 @@ From here, to convert the datacard into the workspace you will use to run the fi
 text2workspace.py darkhiggs.txt
 ```
 
+make sure you edit your ```$CMSSW/src/HiggsAnalysis/CombinedLimit/bin/python/text2workspace.py``` module as suggested below:
+
+```
+import ROOT
+#add this line
+ROOT.v5.TFormula.SetMaxima(5000000)
+```
+
 The result of this step will be a ```darkhiggs.root``` file to be used for the combine fit.
 where ```darkhiggs.txt``` is the name of the combined datacard generated at the previous step.
 
 #### Running special datacards
 
-Before running the combie tools, you have to put ```ulimit -s unlimited``` command.
+Before running the combibe tools, you have to run ```ulimit -s unlimited``` command. Feel free to add it to your ```.bashrc```. Also, modify your ```$CMSSW/src/HiggsAnalysis/CombinedLimit/bin/combine.cpp```:
 
-When you render the model, you can use the alternative datacards:
+```
+using namespace boost;
+namespace po = boost::program_options;
+#add the line below
+ROOT::v5::TFormula::SetMaxima(5000000);
+```
+Make sure you compile after making this modification. When you render the model, you can use the alternative datacards:
+
 ```
 analysis/models/darkhiggs_fourregions.py
 analysis/models/darkhiggs_fiveregions.py
@@ -312,6 +336,14 @@ combine -M FitDiagnostics -d darkhiggs.root \
 --expectSignal 1 --forceRecreateNLL --cminDefaultMinimizerType Minuit \
 --ignoreCovWarning --saveShapes --saveWithUncertainties --saveWorkspace --plots \
 &> out_FitDiagnostics_Minuit.log
+```
+
+Minuit (fast):   
+Drop the options: `--saveShapes`, `--saveWorkspace`, `--plots`   
+```
+combine -M FitDiagnostics -d darkhiggs.root \
+--expectSignal 1 --forceRecreateNLL --cminDefaultMinimizerType Minuit \
+--ignoreCovWarning --saveWithUncertainties &> out_FitDiagnostics_Minuit.log
 ```
 
 Robust fit:
