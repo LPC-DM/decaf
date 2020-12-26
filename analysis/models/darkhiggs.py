@@ -40,6 +40,31 @@ category_map = {"pass": 1, "fail": 0}
 with open("data/hf_systematic.json") as fin:
     hf_systematic = json.load(fin)
 
+def template(dictionary, process, systematic, region, category):
+    histogram = dictionary[region].integrate("process", process)
+    nominal = histogram.integrate("systematic", "nominal").values()[()][
+        recoil, :, category_map[category]
+    ]
+    output = nominal
+    if "nominal" not in systematic and "data" not in systematic:
+        # print('Normalizing',systematic,'histogram of',process,'in region',region)
+        output = np.nan_to_num(
+            histogram.integrate("systematic", systematic).values()[()][
+                recoil, :, category_map[category]
+            ]
+            / nominal.sum()
+        )
+    if "data" not in systematic:
+        # print('Remiving zeros from',systematic,'histogram of',process,'in region',region)
+        output[output <= 0] = 1e-7
+    binning = (
+        dictionary[region]
+        .integrate("process", process)
+        .integrate("systematic", systematic)
+        .axis("fjmass")
+        .edges()
+    )
+    return (output, binning, "fjmass")
 
 def remap_histograms(hists):
     data_hists = {}
@@ -242,154 +267,77 @@ def computeTFs(hists, year, recoil, category):
 
     model_id = year + category + "recoil" + str(recoil)
 
-    def templateMass(histogram, systematic):
-        histogram = histogram.sum("recoil")
-        nominal = histogram.integrate("systematic", "nominal").values()[()][
-            :, category_map[category]
-        ]
-        output = nominal
-        if "nominal" not in systematic:
-            output = histogram.integrate("systematic", systematic).values()[()][
-                :, category_map[category]
-            ]
-        binning = histogram.integrate("systematic", systematic).axis("fjmass").edges()
-        return (np.nan_to_num(output / nominal.sum()), binning, "fjmass")
+    background = {}
+    for r in bkg_hists["template"].identifiers("region"):
+        background[str(r)] = bkg_hists["template"].integrate("region", r).sum("gentype")
 
-    def templateRecoil(histogram, systematic):
-        template = templateMass(histogram, systematic)
-        histogram = histogram.sum("fjmass")
-        nominal = histogram.integrate("systematic", "nominal").values()[()][
-            recoil, category_map[category]
-        ]
-        output = nominal
-        if "nominal" not in systematic:
-            output = np.nan_to_num(
-                histogram.integrate("systematic", systematic).values()[()][
-                    recoil, category_map[category]
-                ]
-                / nominal.sum()
-            )
-        return (np.full(template[0].shape, output), template[1], template[2])
+    def addBtagSyst(process, region, templ):
+        btagUp = template(background, process, "btagUp", region, category)[0]
+        btagDown = template(background, process, "btagDown", region, category)[0]
+        templ.setParamEffect(btag, btagUp, btagDown)
 
-    ###
-    # Z+jets templates
-    ###
-
-    sr_zjets = (
-        hists["bkg"]["template"]
-        .integrate("region", "sr")
-        .integrate("process", "Z+jets")
-        .sum("gentype")
-    )
-
-    sr_zjetsMass = rl.TemplateSample(
-        "sr" + model_id + "_zjetsMass",
-        rl.Sample.BACKGROUND,
-        templateMass(sr_zjets, "nominal"),
-    )
-    sr_zjetsMass.setParamEffect(lumi, 1.027)
-    sr_zjetsMass.setParamEffect(zjets_norm, 1.4)
-    sr_zjetsMass.setParamEffect(trig_met, 1.01)
-    sr_zjetsMass.setParamEffect(veto_tau, 1.03)
-    sr_zjetsMass.setParamEffect(jec, 1.05)
-    sr_zjetsMass.setParamEffect(zhf_fraction, hf_systematic["Z+jets"]["sr"][category])
-    btagUp = templateMass(sr_zjets, "btagUp")[0]
-    btagDown = templateMass(sr_zjets, "btagDown")[0]
-    sr_zjetsMass.setParamEffect(btag, btagUp, btagDown)
-    ew1Up = templateMass(sr_zjets, "ew1Up")[0]
-    ew1Down = templateMass(sr_zjets, "ew1Down")[0]
-    sr_zjetsMass.setParamEffect(ew1, ew1Up, ew1Down)
+    def addVJetsSyst(process, region, templ):
+        ew1Up = template(background, process, "ew1Up", region, category)[0]
+        ew1Down = template(background, process, "ew1Down", region, category)[0]
+        templ.setParamEffect(ew1, ew1Up, ew1Down)
+        ew2GUp = template(background, process, "ew2GUp", region, category)[0]
+        ew2GDown = template(background, process, "ew2GDown", region, category)[0]
+        templ.setParamEffect(ew2G, ew2GUp, ew2GDown)
     ew2GUp = templateMass(sr_zjets, "ew2GUp")[0]
     ew2GDown = templateMass(sr_zjets, "ew2GDown")[0]
-    sr_zjetsMass.setParamEffect(ew2G, ew2GUp, ew2GDown)
+    sr_zjets.setParamEffect(ew2G, ew2GUp, ew2GDown)
     ew2WUp = templateMass(sr_zjets, "ew2WUp")[0]
     ew2WDown = templateMass(sr_zjets, "ew2WDown")[0]
-    sr_zjetsMass.setParamEffect(ew2W, ew2WUp, ew2WDown)
+    sr_zjets.setParamEffect(ew2W, ew2WUp, ew2WDown)
     ew2ZUp = templateMass(sr_zjets, "ew2ZUp")[0]
     ew2ZDown = templateMass(sr_zjets, "ew2ZDown")[0]
-    sr_zjetsMass.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
+    sr_zjets.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
     ew3GUp = templateMass(sr_zjets, "ew3GUp")[0]
     ew3GDown = templateMass(sr_zjets, "ew3GDown")[0]
-    sr_zjetsMass.setParamEffect(ew3G, ew3GUp, ew3GDown)
+    sr_zjets.setParamEffect(ew3G, ew3GUp, ew3GDown)
     ew3WUp = templateMass(sr_zjets, "ew3WUp")[0]
     ew3WDown = templateMass(sr_zjets, "ew3WDown")[0]
-    sr_zjetsMass.setParamEffect(ew3W, ew3WUp, ew3WDown)
+    sr_zjets.setParamEffect(ew3W, ew3WUp, ew3WDown)
     ew3ZUp = templateMass(sr_zjets, "ew3ZUp")[0]
     ew3ZDown = templateMass(sr_zjets, "ew3ZDown")[0]
-    sr_zjetsMass.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
+    sr_zjets.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
     mixUp = templateMass(sr_zjets, "mixUp")[0]
     mixDown = templateMass(sr_zjets, "mixDown")[0]
-    sr_zjetsMass.setParamEffect(mix, mixUp, mixDown)
+    sr_zjets.setParamEffect(mix, mixUp, mixDown)
     muFUp = templateMass(sr_zjets, "muFUp")[0]
     muFDown = templateMass(sr_zjets, "muFDown")[0]
-    sr_zjetsMass.setParamEffect(muF, muFUp, muFDown)
+    sr_zjets.setParamEffect(muF, muFUp, muFDown)
     muRUp = templateMass(sr_zjets, "muRUp")[0]
     muRDown = templateMass(sr_zjets, "muRDown")[0]
-    sr_zjetsMass.setParamEffect(muR, muRUp, muRDown)
+    sr_zjets.setParamEffect(muR, muRUp, muRDown)
     qcd1Up = templateMass(sr_zjets, "qcd1Up")[0]
     qcd1Down = templateMass(sr_zjets, "qcd1Down")[0]
-    sr_zjetsMass.setParamEffect(qcd1, qcd1Up, qcd1Down)
+    sr_zjets.setParamEffect(qcd1, qcd1Up, qcd1Down)
     qcd2Up = templateMass(sr_zjets, "qcd2Up")[0]
     qcd2Down = templateMass(sr_zjets, "qcd2Down")[0]
-    sr_zjetsMass.setParamEffect(qcd2, qcd2Up, qcd2Down)
+    sr_zjets.setParamEffect(qcd2, qcd2Up, qcd2Down)
     qcd3Up = templateMass(sr_zjets, "qcd3Up")[0]
     qcd3Down = templateMass(sr_zjets, "qcd3Down")[0]
-    sr_zjetsMass.setParamEffect(qcd3, qcd3Up, qcd3Down)
+    sr_zjets.setParamEffect(qcd3, qcd3Up, qcd3Down)
 
 
-    sr_zjetsRecoil = rl.TemplateSample(
-        "sr" + model_id + "_zjetsRecoil",
+    ###
+    # Z+jets template
+    ###
+
+    sr_zjets = rl.TemplateSample(
+        "sr" + model_id + "_zjets",
         rl.Sample.BACKGROUND,
-        templateRecoil(sr_zjets, "nominal"),
+        template(background, "Z+jets", "nominal", "sr", category),
     )
-    sr_zjetsRecoil.setParamEffect(lumi, 1.027)
-    sr_zjetsRecoil.setParamEffect(zjets_norm, 1.4)
-    sr_zjetsRecoil.setParamEffect(trig_met, 1.01)
-    sr_zjetsRecoil.setParamEffect(veto_tau, 1.03)
-    sr_zjetsRecoil.setParamEffect(jec, 1.05)
-    sr_zjetsRecoil.setParamEffect(zhf_fraction, hf_systematic["Z+jets"]["sr"][category])
-    btagUp = templateRecoil(sr_zjets, "btagUp")[0]
-    btagDown = templateRecoil(sr_zjets, "btagDown")[0]
-    sr_zjetsRecoil.setParamEffect(btag, btagUp, btagDown)
-    ew1Up = templateRecoil(sr_zjets, "ew1Up")[0]
-    ew1Down = templateRecoil(sr_zjets, "ew1Down")[0]
-    sr_zjetsRecoil.setParamEffect(ew1, ew1Up, ew1Down)
-    ew2GUp = templateRecoil(sr_zjets, "ew2GUp")[0]
-    ew2GDown = templateRecoil(sr_zjets, "ew2GDown")[0]
-    sr_zjetsRecoil.setParamEffect(ew2G, ew2GUp, ew2GDown)
-    ew2WUp = templateRecoil(sr_zjets, "ew2WUp")[0]
-    ew2WDown = templateRecoil(sr_zjets, "ew2WDown")[0]
-    sr_zjetsRecoil.setParamEffect(ew2W, ew2WUp, ew2WDown)
-    ew2ZUp = templateRecoil(sr_zjets, "ew2ZUp")[0]
-    ew2ZDown = templateRecoil(sr_zjets, "ew2ZDown")[0]
-    sr_zjetsRecoil.setParamEffect(ew2Z, ew2ZUp, ew2ZDown)
-    ew3GUp = templateRecoil(sr_zjets, "ew3GUp")[0]
-    ew3GDown = templateRecoil(sr_zjets, "ew3GDown")[0]
-    sr_zjetsRecoil.setParamEffect(ew3G, ew3GUp, ew3GDown)
-    ew3WUp = templateRecoil(sr_zjets, "ew3WUp")[0]
-    ew3WDown = templateRecoil(sr_zjets, "ew3WDown")[0]
-    sr_zjetsRecoil.setParamEffect(ew3W, ew3WUp, ew3WDown)
-    ew3ZUp = templateRecoil(sr_zjets, "ew3ZUp")[0]
-    ew3ZDown = templateRecoil(sr_zjets, "ew3ZDown")[0]
-    sr_zjetsRecoil.setParamEffect(ew3Z, ew3ZUp, ew3ZDown)
-    mixUp = templateRecoil(sr_zjets, "mixUp")[0]
-    mixDown = templateRecoil(sr_zjets, "mixDown")[0]
-    sr_zjetsRecoil.setParamEffect(mix, mixUp, mixDown)
-    muFUp = templateRecoil(sr_zjets, "muFUp")[0]
-    muFDown = templateRecoil(sr_zjets, "muFDown")[0]
-    sr_zjetsRecoil.setParamEffect(muF, muFUp, muFDown)
-    muRUp = templateRecoil(sr_zjets, "muRUp")[0]
-    muRDown = templateRecoil(sr_zjets, "muRDown")[0]
-    sr_zjetsRecoil.setParamEffect(muR, muRUp, muRDown)
-    qcd1Up = templateRecoil(sr_zjets, "qcd1Up")[0]
-    qcd1Down = templateRecoil(sr_zjets, "qcd1Down")[0]
-    sr_zjetsRecoil.setParamEffect(qcd1, qcd1Up, qcd1Down)
-    qcd2Up = templateRecoil(sr_zjets, "qcd2Up")[0]
-    qcd2Down = templateRecoil(sr_zjets, "qcd2Down")[0]
-    sr_zjetsRecoil.setParamEffect(qcd2, qcd2Up, qcd2Down)
-    qcd3Up = templateRecoil(sr_zjets, "qcd3Up")[0]
-    qcd3Down = templateRecoil(sr_zjets, "qcd3Down")[0]
-    sr_zjetsRecoil.setParamEffect(qcd3, qcd3Up, qcd3Down)
+    sr_zjets.setParamEffect(lumi, 1.027)
+    sr_zjets.setParamEffect(zjets_norm, 1.4)
+    sr_zjets.setParamEffect(trig_met, 1.01)
+    sr_zjets.setParamEffect(veto_tau, 1.03)
+    sr_zjets.setParamEffect(jec, 1.05)
+    sr_zjets.setParamEffect(zhf_fraction, hf_systematic["Z+jets"]["sr"][category])
+    addBtagSyst("Z+jets", "sr", sr_zjets)
+    addVjetsSyst("Z+jets", "sr", sr_zjets)
 
     ###
     # W+jets templates
@@ -1725,31 +1673,6 @@ def rhalphabeth(msdbins):
 
 
 def model(year, recoil, category):
-    def template(dictionary, process, systematic, region):
-        histogram = dictionary[region].integrate("process", process)
-        nominal = histogram.integrate("systematic", "nominal").values()[()][
-            recoil, :, category_map[category]
-        ]
-        output = nominal
-        if "nominal" not in systematic and "data" not in systematic:
-            # print('Normalizing',systematic,'histogram of',process,'in region',region)
-            output = np.nan_to_num(
-                histogram.integrate("systematic", systematic).values()[()][
-                    recoil, :, category_map[category]
-                ]
-                / nominal.sum()
-            )
-        if "data" not in systematic:
-            # print('Remiving zeros from',systematic,'histogram of',process,'in region',region)
-            output[output <= 0] = 1e-7
-        binning = (
-            dictionary[region]
-            .integrate("process", process)
-            .integrate("systematic", systematic)
-            .axis("fjmass")
-            .edges()
-        )
-        return (output, binning, "fjmass")
 
     model_id = year + category + "recoil" + str(recoil)
     print(model_id)
