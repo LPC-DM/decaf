@@ -1696,7 +1696,7 @@ if __name__ == "__main__":
         sr_zjetsBinYields = sr_zjetsShape * sr_zjetsRate[recoilbin]
         for category in ["pass", "fail"]:
             sr_ttBinYields = sr_ttNuisances[recoilbin]
-c            (
+            (
                 sr_wjetsTransferFactor,
                 wmcr_wjetsTransferFactor,
                 wmcr_ttTransferFactor,
