@@ -1699,7 +1699,7 @@ if __name__ == "__main__":
     for recoilbin in range(nrecoil):
         sr_zjetsBinYields = sr_zjetsShape * sr_zjetsRate[recoilbin]
         for category in ["pass", "fail"]:
-            sr_ttBinYields = sr_ttNuisances[recoilbin]
+            sr_ttBinYields = sr_ttNuisances[recoilbin][0]
             (
                 sr_wjetsTransferFactor,
                 wmcr_wjetsTransferFactor,
