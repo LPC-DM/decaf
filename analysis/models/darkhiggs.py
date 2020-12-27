@@ -225,7 +225,7 @@ def initialize_nuisances(hists, year):
             for i, b in enumerate(sr_zjetsRecoilFail)
         ]
     )
-    return sr_zjetsShape, sr_zjetsRate, sr_ttShape, sr_ttRate, tt_weight
+    return sr_zjetsShape, sr_zjetsRate, sr_ttNuisances
 
 
 def computeTFs(hists, year, recoil, category):
@@ -1639,9 +1639,7 @@ if __name__ == "__main__":
     (
         sr_zjetsShape,
         sr_zjetsRate,
-        sr_ttShape,
-        sr_ttRate,
-        tt_weight,
+        sr_ttNuisances,
     ) = initialize_nuisances(hists, year)
     tf_params = rhalphabeth(mass_binning)
     #tf_params = 0.05
