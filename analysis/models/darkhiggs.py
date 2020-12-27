@@ -154,13 +154,14 @@ def initialize_nuisances(hists, year):
         .integrate("systematic", "nominal")
     )
 
+    sr_ttNuisances={}
     recoilbins = np.array(recoil_binning)
     nrecoil = len(recoilbins) - 1
     for recoilbin in range(nrecoil):
         sr_ttPass = sr_tt.sum("gentype").values()[()][
             recoilbin, :, 1
                   ]
-        sr_tt[recoilbin] = np.array(  # one nuisance per mass shape bin in pass
+        sr_ttNuisances[recoilbin] = np.array(  # one nuisance per mass shape bin in pass
             [
                 rl.IndependentParameter(
                     "sr" + year + "_tt_pass_recoil"+str(recoilbin)+"_mass%d" % i,
