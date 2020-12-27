@@ -172,28 +172,29 @@ def initialize_nuisances(hists, year):
                 "sr" + year + "_tt_recoil" + str(recoilbin), sr_ttRate, 0, sr_ttRate * 2
             )
         sr_ttNuisances[recoilbin] = {
-            "pass": tt_weight["pass"] * sr_ttRateNuisance * np.array(  # one nuisance per mass shape bin in pass
-                [
-                    rl.IndependentParameter(
-                        "sr" + year + "_tt_shape_pass_recoil"+str(recoilbin)+"_mass%d" % i,
-                        b,
-                        0,
-                        sr_ttPass.max() * 2,
-                        )
-                    for i, b in enumerate(sr_ttPass)
-                    ]
-                ),
-            "fail": tt_weight["fail"] * sr_ttRateNuisance * np.array(  # one nuisance per mass shape bin in pass
-                [
-                    rl.IndependentParameter(
-                        "sr" + year + "_tt_shape_fail_recoil"+str(recoilbin)+"_mass%d" % i,
-                        b,
-                        0,
-                        sr_ttFail.max() * 2,
-                        )
-                    for i, b in enumerate(sr_ttFail)
-                    ]
-                ),
+            "pass": ( tt_weight["pass"] * sr_ttRateNuisance * np.array(  # one nuisance per mass shape bin in pass
+                    [
+                        rl.IndependentParameter(
+                            "sr" + year + "_tt_shape_pass_recoil"+str(recoilbin)+"_mass%d" % i,
+                            b,
+                            0,
+                            sr_ttPass.max() * 2,
+                            )
+                        for i, b in enumerate(sr_ttPass)
+                        ]
+                    )),
+                    
+            "fail": ( tt_weight["fail"] * sr_ttRateNuisance * np.array(  # one nuisance per mass shape bin in pass
+                    [
+                        rl.IndependentParameter(
+                            "sr" + year + "_tt_shape_fail_recoil"+str(recoilbin)+"_mass%d" % i,
+                            b,
+                            0,
+                            sr_ttFail.max() * 2,
+                            )
+                        for i, b in enumerate(sr_ttFail)
+                        ]
+                    )),
             }
 
     ###
