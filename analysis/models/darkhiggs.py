@@ -175,6 +175,7 @@ def initialize_nuisances(hists, year):
             ),
             
 
+    print(sr_ttNuisances)
     ###
     # Let's move to V+jets
     ###
