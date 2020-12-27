@@ -757,6 +757,7 @@ def model(year, recoil, category):
     if category == "pass":
         sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
         print(sr_ttTemplate[1])
+        print(sr_ttBinYields)
         sr_tt = rl.ParametericSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields
             )
