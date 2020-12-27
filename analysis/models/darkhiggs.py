@@ -133,10 +133,11 @@ def initialize_nuisances(hists, year):
     ###
 
     ###
-    # First, tagging efficiency and SF
+    # First, tagging efficiency and SF, DEPRECATED
     ###
 
-    tt_efficiency = {"2018": 0.5}
+    '''
+    tt_efficiency = {"2018": 0.5}A
     sf_tt = rl.IndependentParameter(
         "sf_tt" + year, 1.0, 0.01, 1.0 / tt_efficiency[year]
     )
@@ -152,62 +153,27 @@ def initialize_nuisances(hists, year):
         .integrate("process", "TT")
         .integrate("systematic", "nominal")
     )
+    '''
 
-    ###
-    # Then, shapes in pass/fail
-    ###
-
-    sr_ttMass = sr_tt.sum("gentype", "recoil")
-    sr_ttMassPass = sr_ttMass.values()[()][
-        :, 1
-    ]  # get the pass histogram, inclusive in recoil
-    sr_ttMassPass = (
-        sr_ttMassPass / sr_ttMassPass.sum()
-    )  # normalize to the integral to get the shape in pass
-    sr_ttMassFail = sr_ttMass.values()[()][
-        :, 0
-    ]  # get the fail histogram, inclusive in recoil
-    sr_ttMassFail = (
-        sr_ttMassFail / sr_ttMassFail.sum()
-    )  # normalize to the integral to get the shape in fail
-    sr_ttShape = {
-        "pass": np.array(  # one nuisance per mass shape bin in pass
+    recoilbins = np.array(recoil_binning)
+    nrecoil = len(recoilbins) - 1
+    for recoilbin in range(nrecoil):
+        sr_tt = sr_tt.sum("gentype")
+        sr_ttPass = sr_ttMass.values()[()][
+            recoilbin, :, 1
+                  ]
+        sr_tt[recoilbin] = np.array(  # one nuisance per mass shape bin in pass
             [
                 rl.IndependentParameter(
-                    "sr" + year + "_ttshape_pass_mass%d" % i,
+                    "sr" + year + "_tt_pass_recoil"+str(recoilbin)+"_mass%d" % i,
                     b,
                     0,
-                    sr_ttMassPass.max() * 2,
-                )
-                for i, b in enumerate(sr_ttMassPass)
-            ]
-        ),
-        "fail": np.array(  # one nuisance per mass shape bin in fail
-            [
-                rl.IndependentParameter(
-                    "sr" + year + "_ttshape_fail_mass%d" % i,
-                    b,
-                    0,
-                    sr_ttMassFail.max() * 2,
-                )
-                for i, b in enumerate(sr_ttMassFail)
-            ]
-        ),
-    }
-
-    ###
-    # Lastly, let's initialize nuisances per recoil bin
-    ###
-
-    sr_ttRecoil = sr_tt.sum("gentype", "fjmass", "ZHbbvsQCD").values()[()][:]
-    sr_ttRate = np.array(
-        [
-            rl.IndependentParameter(
-                "sr" + year + "_tt_recoil%d" % i, b, 0, sr_ttRecoil.max() * 2
-            )
-            for i, b in enumerate(sr_ttRecoil)
-        ]
-    )
+                    sr_ttPass.max() * 2,
+                    )
+                for i, b in enumerate(sr_ttPass)
+                ]
+            ),
+            
 
     ###
     # Let's move to V+jets
@@ -783,15 +749,27 @@ def model(year, recoil, category):
     sr.addSample(sr_wjets)
 
     ###
-    # top-antitop data-driven model
+    # top-antitop model
     ###
 
     sr_ttTemplate = template(background, "TT", "nominal", recoil, "sr", category)
-    sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
-    sr_tt = rl.ParametericSample(
-        ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields
-    )
+    if category == "pass":
+        sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
+        sr_tt = rl.ParametericSample(
+            ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields
+            )
+    else:
+        sr_tt = rl.TemplateSample(ch_name + "_ttMC", rl.Sample.BACKGROUND, sr_ttTemplate)
+        sr_tt.setParamEffect(lumi, 1.027)
+        sr_tt.setParamEffect(trig_met, 1.01)
+        sr_tt.setParamEffect(veto_tau, 1.03)
+        sr_tt.setParamEffect(st_norm, 1.2)
+        sr_tt.setParamEffect(jec, 1.05)
+        btagUp = template(background, "TT", "btagUp", recoil, "sr", category)[0]
+        btagDown = template(background, "TT", "btagDown", recoil, "sr", category)[0]
+        sr_tt.setParamEffect(btag, btagUp, btagDown)
     sr.addSample(sr_tt)
+        
 
     ###
     # Other MC-driven processes
@@ -907,12 +885,29 @@ def model(year, recoil, category):
     wmcr.addSample(wmcr_wjets)
 
     ###
-    # top-antitop data-driven model
+    # top-antitop model
     ###
 
-    wmcr_tt = rl.TransferFactorSample(
-        ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
-    )
+    if category == "pass":
+        wmcr_tt = rl.TransferFactorSample(
+            ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
+            )
+    else:
+        wmcr_ttTemplate = template(background, "TT", "nominal", recoil, "wmcr", category)
+        wmcr_tt = rl.TemplateSample(
+            ch_name + "_ttMC", rl.Sample.BACKGROUND, wmcr_ttTemplate
+            )
+        wmcr_tt.setParamEffect(lumi, 1.027)
+        wmcr_tt.setParamEffect(trig_met, 1.01)
+        wmcr_tt.setParamEffect(veto_tau, 1.03)
+        wmcr_tt.setParamEffect(tt_norm, 1.2)
+        wmcr_tt.setParamEffect(jec, 1.05)
+        wmcr_tt.setParamEffect(id_mu, 1.02)
+        wmcr_tt.setParamEffect(iso_mu, 1.02)
+        btagUp = template(background, "TT", "btagUp", recoil, "wmcr", category)[0]
+        btagDown = template(background, "TT", "btagDown", recoil, "wmcr", category)[0]
+    wmcr_tt.setParamEffect(btag, btagUp, btagDown)
+        
     wmcr.addSample(wmcr_tt)
 
     ###
@@ -1029,12 +1024,28 @@ def model(year, recoil, category):
     tmcr.addSample(tmcr_wjets)
 
     ###
-    # top-antitop data-driven model
+    # top-antitop model
     ###
 
-    tmcr_tt = rl.TransferFactorSample(
-        ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt
-    )
+    if category == "pass":
+        tmcr_tt = rl.TransferFactorSample(
+            ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt
+            )
+    else:
+        tmcr_ttTemplate = template(background, "TT", "nominal", recoil, "tmcr", category)
+        tmcr_tt = rl.TemplateSample(
+            ch_name + "_ttMC", rl.Sample.BACKGROUND, tmcr_ttTemplate
+            )
+        tmcr_tt.setParamEffect(lumi, 1.027)
+        tmcr_tt.setParamEffect(trig_met, 1.01)
+        tmcr_tt.setParamEffect(veto_tau, 1.03)
+        tmcr_tt.setParamEffect(tt_norm, 1.2)
+        tmcr_tt.setParamEffect(jec, 1.05)
+        tmcr_tt.setParamEffect(id_mu, 1.02)
+        tmcr_tt.setParamEffect(iso_mu, 1.02)
+        btagUp = template(background, "TT", "btagUp", recoil, "tmcr", category)[0]
+        btagDown = template(background, "TT", "btagDown", recoil, "tmcr", category)[0]
+        tmcr_tt.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_tt)
 
     ###
@@ -1154,12 +1165,28 @@ def model(year, recoil, category):
     wecr.addSample(wecr_wjets)
 
     ###
-    # top-antitop data-driven model
+    # top-antitop model
     ###
 
-    wecr_tt = rl.TransferFactorSample(
-        ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
-    )
+    if category == "pass":
+        wecr_tt = rl.TransferFactorSample(
+            ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
+            )
+    else:
+        wecr_ttTemplate = template(background, "TT", "nominal", recoil, "wecr", category)
+        wecr_tt = rl.TemplateSample(
+            ch_name + "_ttMC", rl.Sample.BACKGROUND, wecr_ttTemplate
+            )
+        wecr_tt.setParamEffect(lumi, 1.027)
+        wecr_tt.setParamEffect(trig_e, 1.01)
+        wecr_tt.setParamEffect(veto_tau, 1.03)
+        wecr_tt.setParamEffect(tt_norm, 1.2)
+        wecr_tt.setParamEffect(jec, 1.05)
+        wecr_tt.setParamEffect(id_e, 1.02)
+        wecr_tt.setParamEffect(reco_e, 1.02)
+        btagUp = template(background, "TT", "btagUp", recoil, "wecr", category)[0]
+        btagDown = template(background, "TT", "btagDown", recoil, "wecr", category)[0]
+        wecr_tt.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_tt)
 
     ###
@@ -1279,12 +1306,28 @@ def model(year, recoil, category):
     tecr.addSample(tecr_wjets)
 
     ###
-    # top-antitop data-driven model
+    # top-antitop model
     ###
 
-    tecr_tt = rl.TransferFactorSample(
-        ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt
-    )
+    if category == "pass":
+        tecr_tt = rl.TransferFactorSample(
+            ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt
+            )
+    else:
+        tecr_ttTemplate = template(background, "TT", "nominal", recoil, "tecr", category)
+        tecr_tt = rl.TemplateSample(
+            ch_name + "_ttMC", rl.Sample.BACKGROUND, tecr_ttTemplate
+            )
+        tecr_tt.setParamEffect(lumi, 1.027)
+        tecr_tt.setParamEffect(trig_e, 1.01)
+        tecr_tt.setParamEffect(veto_tau, 1.03)
+        tecr_tt.setParamEffect(tt_norm, 1.2)
+        tecr_tt.setParamEffect(jec, 1.05)
+        tecr_tt.setParamEffect(id_e, 1.02)
+        tecr_tt.setParamEffect(reco_e, 1.02)
+        btagUp = template(background, "TT", "btagUp", recoil, "tecr", category)[0]
+        btagDown = template(background, "TT", "btagDown", recoil, "tecr", category)[0]
+        tecr_tt.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_tt)
 
     ###
@@ -1656,7 +1699,7 @@ if __name__ == "__main__":
         sr_zjetsBinYields = sr_zjetsShape * sr_zjetsRate[recoilbin]
         for category in ["pass", "fail"]:
             sr_ttBinYields = (
-                sr_ttShape[category] * sr_ttRate[recoilbin] * tt_weight[category]
+                sr_tt[recoilbin][category]
             )
             (
                 sr_wjetsTransferFactor,
@@ -1676,7 +1719,7 @@ if __name__ == "__main__":
                 "data/darkhiggs-"
                 + year
                 + "-"
-                + category
+c                + category
                 + "-recoil"
                 + str(recoilbin)
                 + ".model",
