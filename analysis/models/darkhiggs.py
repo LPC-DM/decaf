@@ -1616,7 +1616,7 @@ if __name__ == "__main__":
     hists = load("hists/darkhiggs" + year + ".scaled")
     hists = remap_histograms(hists)
     (
-        sr_zjetsNuisances
+        sr_zjetsNuisances,
         sr_ttNuisances,
     ) = initialize_nuisances(hists, year)
     tf_params = rhalphabeth(mass_binning)
