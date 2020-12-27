@@ -1719,7 +1719,7 @@ if __name__ == "__main__":
                 "data/darkhiggs-"
                 + year
                 + "-"
-c                + category
+                + category
                 + "-recoil"
                 + str(recoilbin)
                 + ".model",
