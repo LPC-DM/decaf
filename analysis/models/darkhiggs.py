@@ -161,6 +161,7 @@ def initialize_nuisances(hists, year):
         sr_ttPass = sr_tt.sum("gentype").values()[()][
             recoilbin, :, 1
                   ]
+        print(sr_ttPass)
         sr_ttNuisances[recoilbin] = np.array(  # one nuisance per mass shape bin in pass
             [
                 rl.IndependentParameter(
@@ -754,6 +755,7 @@ def model(year, recoil, category):
     sr_ttTemplate = template(background, "TT", "nominal", recoil, "sr", category)
     if category == "pass":
         sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
+        print(sr_ttTemplate[1])
         sr_tt = rl.ParametericSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields
             )
