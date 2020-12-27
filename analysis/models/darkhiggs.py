@@ -128,6 +128,9 @@ def remap_histograms(hists):
 
 def initialize_nuisances(hists, year):
 
+    recoilbins = np.array(recoil_binning)
+    nrecoil = len(recoilbins) - 1
+
     ###
     # Let's start from TT
     ###
@@ -155,13 +158,10 @@ def initialize_nuisances(hists, year):
     )
 
     sr_ttNuisances={}
-    recoilbins = np.array(recoil_binning)
-    nrecoil = len(recoilbins) - 1
     for recoilbin in range(nrecoil):
         sr_ttPass = sr_tt.sum("gentype").values()[()][
             recoilbin, :, 1
                   ]
-        print(sr_ttPass)
         sr_ttNuisances[recoilbin] = np.array(  # one nuisance per mass shape bin in pass
             [
                 rl.IndependentParameter(
@@ -173,9 +173,7 @@ def initialize_nuisances(hists, year):
                 for i, b in enumerate(sr_ttPass)
                 ]
             ),
-            
 
-    print(sr_ttNuisances)
     ###
     # Let's move to V+jets
     ###
@@ -187,47 +185,24 @@ def initialize_nuisances(hists, year):
         .integrate("systematic", "nominal")
     )
 
-    ###
-    # First, the mass shape
-    ###
+    sr_zjetsNuisances={}
+    for recoilbin in range(nrecoil):
+        sr_zjetsFail = sr_zjets.sum("gentype").values()[()][
+            recoilbin, :, 0
+                  ]
+        sr_zjetsNuisances[recoilbin] = np.array(  # one nuisance per mass shape bin in pass
+            [
+                rl.IndependentParameter(
+                    "sr" + year + "_zjets_fail_recoil"+str(recoilbin)+"_mass%d" % i,
+                    b,
+                    0,
+                    sr_zjetsFail.max() * 2,
+                    )
+                for i, b in enumerate(sr_zjetsFail)
+                ]
+            ),
 
-    sr_zjetsMass = sr_zjets.sum("gentype", "recoil")
-    sr_zjetsMassFail = sr_zjetsMass.values()[()][
-        :, 0
-    ]  # get the fail histogram, inclusive in recoil
-    sr_zjetsMassFail = (
-        sr_zjetsMassFail / sr_zjetsMassFail.sum()
-    )  # normalize to the integral to get the shape in fail
-    sr_zjetsShape = np.array(
-        [
-            rl.IndependentParameter(
-                "sr" + year + "_zjshape_fail_mass%d" % i,
-                b,
-                0,
-                sr_zjetsMassFail.max() * 2,
-            )
-            for i, b in enumerate(sr_zjetsMassFail)
-        ]
-    )
-
-    ###
-    # Then, recoil rate
-    ###
-
-    sr_zjetsRecoil = sr_zjets.sum("gentype", "fjmass")
-    sr_zjetsRecoilFail = sr_zjetsRecoil.values()[()][:, 0]
-    sr_zjetsRate = np.array(
-        [
-            rl.IndependentParameter(
-                "sr" + year + "_zj_fail_recoil%d" % i,
-                b,
-                0,
-                sr_zjetsRecoilFail.max() * 2,
-            )
-            for i, b in enumerate(sr_zjetsRecoilFail)
-        ]
-    )
-    return sr_zjetsShape, sr_zjetsRate, sr_ttNuisances
+    return sr_zjetsNuisances, sr_ttNuisances
 
 
 def computeTFs(hists, year, recoil, category):
@@ -1641,8 +1616,7 @@ if __name__ == "__main__":
     hists = load("hists/darkhiggs" + year + ".scaled")
     hists = remap_histograms(hists)
     (
-        sr_zjetsShape,
-        sr_zjetsRate,
+        sr_zjetsNuisances
         sr_ttNuisances,
     ) = initialize_nuisances(hists, year)
     tf_params = rhalphabeth(mass_binning)
@@ -1697,9 +1671,9 @@ if __name__ == "__main__":
     recoilbins = np.array(recoil_binning)
     nrecoil = len(recoilbins) - 1
     for recoilbin in range(nrecoil):
-        sr_zjetsBinYields = sr_zjetsShape * sr_zjetsRate[recoilbin]
+        sr_zjetsBinYields = sr_zjetsNuisances[recoilbin][0]
+        sr_ttBinYields = sr_ttNuisances[recoilbin][0]
         for category in ["pass", "fail"]:
-            sr_ttBinYields = sr_ttNuisances[recoilbin][0]
             (
                 sr_wjetsTransferFactor,
                 wmcr_wjetsTransferFactor,
