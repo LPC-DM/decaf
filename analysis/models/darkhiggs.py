@@ -146,20 +146,18 @@ def initialize_nuisances(hists, year):
         "pass": sf_tt * tt_efficiency[year],
         "fail": 1 - (sf_tt * tt_efficiency[year]),
     }
-
+    '''
     sr_tt = (
         hists["bkg"]["template"]
         .integrate("region", "sr")
         .integrate("process", "TT")
         .integrate("systematic", "nominal")
     )
-    '''
 
     recoilbins = np.array(recoil_binning)
     nrecoil = len(recoilbins) - 1
     for recoilbin in range(nrecoil):
-        sr_tt = sr_tt.sum("gentype")
-        sr_ttPass = sr_ttMass.values()[()][
+        sr_ttPass = sr_tt.sum("gentype").values()[()][
             recoilbin, :, 1
                   ]
         sr_tt[recoilbin] = np.array(  # one nuisance per mass shape bin in pass
