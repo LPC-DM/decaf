@@ -293,7 +293,7 @@ From here, to convert the datacard into the workspace you will use to run the fi
 text2workspace.py darkhiggs.txt
 ```
 
-make sure you edit your ```$CMSSW/src/HiggsAnalysis/CombinedLimit/bin/python/text2workspace.py``` module as suggested below:
+make sure you edit your ```$CMSSW/src/HiggsAnalysis/CombinedLimit/scripts/text2workspace.py``` module as suggested below:
 
 ```
 import ROOT
