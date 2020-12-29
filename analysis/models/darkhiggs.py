@@ -45,18 +45,15 @@ def template(dictionary, process, systematic, recoil, region, category):
     nominal = histogram.integrate("systematic", "nominal").values()[()][
         recoil, :, category_map[category]
     ]
+    zerobins = nominal <= 0.
     output = nominal
+    if "data" not in systematic:
+        output[zerobins] = 1.
     if "nominal" not in systematic and "data" not in systematic:
         # print('Normalizing',systematic,'histogram of',process,'in region',region)
-        output = np.nan_to_num(
-            histogram.integrate("systematic", systematic).values()[()][
-                recoil, :, category_map[category]
-            ]
-            / nominal.sum()
-        )
-    if "data" not in systematic:
-        # print('Remiving zeros from',systematic,'histogram of',process,'in region',region)
-        output[output <= 0] = 1e-7
+        output = histogram.integrate("systematic", systematic).values()[()][recoil, :, category_map[category]]
+        output[zerobins] = 1.
+        output[~zerobins] /= nominal[~zerobins] 
     binning = (
         dictionary[region]
         .integrate("process", process)
@@ -496,6 +493,7 @@ def computeTFs(hists, year, recoil, category):
     gcr_gjets.setParamEffect(id_pho, 1.02)
     gcr_gjets.setParamEffect(ghf_fraction, hf_systematic["G+jets"]["gcr"][category])
     addVJetsSyst("G+jets", "gcr", gcr_gjets)
+
     ###
     # Compute TFs
     ###
