@@ -286,7 +286,7 @@ def computeTFs(hists, year, recoil, category):
     sr_zjets.setParamEffect(trig_met, 1.01)
     sr_zjets.setParamEffect(veto_tau, 1.03)
     sr_zjets.setParamEffect(jec, 1.05)
-    sr_zjets.setParamEffect(zhf_fraction, hf_systematic["Z+jets"]["sr"][category][recoil])
+    sr_zjets.setParamEffect(zhf_fraction, np.array(hf_systematic["Z+jets"]["sr"][category][recoil]))
     addBtagSyst("Z+jets", "sr", sr_zjets)
     addVJetsSyst("Z+jets", "sr", sr_zjets)
 
@@ -303,7 +303,7 @@ def computeTFs(hists, year, recoil, category):
     sr_wjets.setParamEffect(trig_met, 1.01)
     sr_wjets.setParamEffect(veto_tau, 1.03)
     sr_wjets.setParamEffect(jec, 1.05)
-    sr_wjets.setParamEffect(whf_fraction, hf_systematic["W+jets"]["sr"][category][recoil])
+    sr_wjets.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["sr"][category][recoil]))
     addBtagSyst("W+jets", "sr", sr_wjets)
     addVJetsSyst("W+jets", "sr", sr_wjets)
 
@@ -320,7 +320,7 @@ def computeTFs(hists, year, recoil, category):
     wmcr_wjets.setParamEffect(id_mu, 1.02)
     wmcr_wjets.setParamEffect(iso_mu, 1.02)
     wmcr_wjets.setParamEffect(
-        whf_fraction, hf_systematic["W+jets"]["wmcr"][category][recoil]
+        whf_fraction, np.array(hf_systematic["W+jets"]["wmcr"][category][recoil])
     )
     addBtagSyst("W+jets", "wmcr", wmcr_wjets)
     addVJetsSyst("W+jets", "wmcr", wmcr_wjets)
@@ -338,7 +338,7 @@ def computeTFs(hists, year, recoil, category):
     wecr_wjets.setParamEffect(id_e, 1.02)
     wecr_wjets.setParamEffect(reco_e, 1.02)
     wecr_wjets.setParamEffect(
-        whf_fraction, hf_systematic["W+jets"]["wecr"][category][recoil]
+        whf_fraction, np.array(hf_systematic["W+jets"]["wecr"][category][recoil])
     )
     addBtagSyst("W+jets", "wecr", wecr_wjets)
     addVJetsSyst("W+jets", "wecr", wecr_wjets)
@@ -356,7 +356,7 @@ def computeTFs(hists, year, recoil, category):
     tmcr_wjets.setParamEffect(id_mu, 1.02)
     tmcr_wjets.setParamEffect(iso_mu, 1.02)
     tmcr_wjets.setParamEffect(
-        whf_fraction, hf_systematic["W+jets"]["tmcr"][category][recoil]
+        whf_fraction, np.array(hf_systematic["W+jets"]["tmcr"][category][recoil])
     )
     addBtagSyst("W+jets", "tmcr", tmcr_wjets)
     addVJetsSyst("W+jets", "tmcr", tmcr_wjets)
@@ -374,7 +374,7 @@ def computeTFs(hists, year, recoil, category):
     tecr_wjets.setParamEffect(id_e, 1.02)
     tecr_wjets.setParamEffect(reco_e, 1.02)
     tecr_wjets.setParamEffect(
-        whf_fraction, hf_systematic["W+jets"]["tecr"][category][recoil]
+        whf_fraction, np.array(hf_systematic["W+jets"]["tecr"][category][recoil])
     )
     addBtagSyst("W+jets", "tecr", tecr_wjets)
     addVJetsSyst("W+jets", "tecr", tecr_wjets)
@@ -468,7 +468,7 @@ def computeTFs(hists, year, recoil, category):
     zmcr_dyjets.setParamEffect(id_mu, 1.02)
     zmcr_dyjets.setParamEffect(iso_mu, 1.02)
     zmcr_dyjets.setParamEffect(
-        zhf_fraction, hf_systematic["DY+jets"]["zmcr"][category]
+        zhf_fraction, np.array(hf_systematic["DY+jets"]["zmcr"][category][recoil])
     )
     addVJetsSyst("DY+jets", "zmcr", zmcr_dyjets)
 
@@ -485,7 +485,7 @@ def computeTFs(hists, year, recoil, category):
     zecr_dyjets.setParamEffect(id_e, 1.02)
     zecr_dyjets.setParamEffect(reco_e, 1.02)
     zecr_dyjets.setParamEffect(
-        zhf_fraction, hf_systematic["DY+jets"]["zecr"][category]
+        zhf_fraction, np.array(hf_systematic["DY+jets"]["zecr"][category][recoil])
     )
     addVJetsSyst("DY+jets", "zecr", zecr_dyjets)
     ###
@@ -503,7 +503,7 @@ def computeTFs(hists, year, recoil, category):
     gcr_gjets.setParamEffect(gjets_norm, 1.4)
     gcr_gjets.setParamEffect(jec, 1.05)
     gcr_gjets.setParamEffect(id_pho, 1.02)
-    gcr_gjets.setParamEffect(ghf_fraction, hf_systematic["G+jets"]["gcr"][category])
+    gcr_gjets.setParamEffect(ghf_fraction, np.array(hf_systematic["G+jets"]["gcr"][category]))
     addVJetsSyst("G+jets", "gcr", gcr_gjets)
 
     ###
