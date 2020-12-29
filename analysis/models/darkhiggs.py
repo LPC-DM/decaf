@@ -700,7 +700,7 @@ def rhalphabeth2D():
         qcdpass += passCh.getObservation().sum()
 
     qcdeff = qcdpass / qcdfail
-    tf_MCtempl = rl.BernsteinPoly("tf_MCtempl", (2, 2), ['recoil', 'fjmass'], limits=(0, 10))
+    tf_MCtempl = rl.BernsteinPoly("tf_MCtempl", (1, 2), ['recoil', 'fjmass'], limits=(0, 10))
     tf_MCtempl_params = qcdeff * tf_MCtempl(recoilscaled, msdscaled)
     for recoilbin in range(nrecoil):
         failCh = qcdmodel['recoil%dfail' % recoilbin]
