@@ -1,14 +1,14 @@
-# Datacard for <Channel (sr2018failrecoil2) instance at 0x2b7898431d50> generated on 2020-09-29 08:13:52.103960
+# Datacard for <Channel (sr2018failrecoil2) instance at 0x2b645d86f1d0> generated on 2020-12-29 11:06:50.107288
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 8 # number of samples minus 1
-kmax 13 # number of nuisance parameters
+kmax 26 # number of nuisance parameters
 shapes * sr2018failrecoil2 sr2018failrecoil2.root sr2018failrecoil2:sr2018failrecoil2_$PROCESS sr2018failrecoil2:sr2018failrecoil2_$PROCESS_$SYSTEMATIC
 bin sr2018failrecoil2
-observation 48774.000
+observation 49459.000
 bin               sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2
 process                      Mhs_50              zjets              wjets                 tt               stMC           dyjetsMC               vvMC              hbbMC              qcdMC
 process                           0                  1                  2                  3                  4                  5                  6                  7                  8
-rate                        201.137              1.000              1.000              1.000             86.325            116.440            785.663              2.003            143.608
+rate                        203.729              1.000              1.000              1.000             89.014            117.665            813.234              2.030             73.624
 btag2018 shape                1.000                  -                  -                  -              1.000              1.000              1.000              1.000              1.000
 hbb_norm lnN                      -                  -                  -                  -                  -                  -                  -              1.200                  -
 jec2018 lnN                   1.050                  -                  -                  -              1.050              1.050              1.050              1.050              1.050
@@ -19,111 +19,67 @@ trig_met2018 lnN              1.010                  -                  -       
 veto_tau2018 lnN              1.030                  -                  -                  -              1.030              1.030              1.030              1.030              1.030
 vv_norm lnN                       -                  -                  -                  -                  -                  -              1.200                  -                  -
 zjets_norm lnN                    -                  -                  -                  -                  -              1.400                  -                  -                  -
+ew1 param 0 1
+ew2G param 0 1
+ew2W param 0 1
+ew2Z param 0 1
+ew3G param 0 1
+ew3W param 0 1
+ew3Z param 0 1
+mix param 0 1
+muF param 0 1
+muR param 0 1
+qcd1 param 0 1
+qcd2 param 0 1
+qcd3 param 0 1
 whf_fraction param 0 1
 wjets_norm param 0 1
 zhf_fraction param 0 1
-sf_tt2018 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_tt_recoil2 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass0 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass1 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass10 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass11 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass12 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass13 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass14 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass15 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass16 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass2 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass3 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass4 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass5 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass6 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass7 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass8 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_ttshape_fail_mass9 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zj_fail_recoil2 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass0 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass1 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass10 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass11 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass12 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass13 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass14 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass15 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass16 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass2 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass3 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass4 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass5 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass6 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass7 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass8 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018_zjshape_fail_mass9 extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin0_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin10_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin11_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin12_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin13_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin14_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin15_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin16_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin1_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin2_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin3_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin4_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin5_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin6_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin7_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin8_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsMass_bin9_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin0_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin10_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin11_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin12_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin13_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin14_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin15_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin16_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin1_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin2_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin3_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin4_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin5_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin6_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin7_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin8_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_wjetsRecoil_bin9_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin0_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin10_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin11_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin12_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin13_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin14_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin15_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin16_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin1_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin2_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin3_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin4_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin5_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin6_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin7_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin8_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsMass_bin9_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin0_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin10_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin11_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin12_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin13_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin14_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin15_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin16_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin1_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin2_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin3_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin4_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin5_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin6_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin7_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin8_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
-sr2018failrecoil2_zjetsRecoil_bin9_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass0 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass1 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass10 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass11 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass2 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass3 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass4 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass5 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass6 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass7 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass8 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass9 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_tt_bin0 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_tt_bin1 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_tt_bin10 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_tt_bin11 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_tt_bin2 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_tt_bin3 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_tt_bin4 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_tt_bin5 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_tt_bin6 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_tt_bin7 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_tt_bin8 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_tt_bin9 extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_wjets_bin0_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_wjets_bin10_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_wjets_bin11_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_wjets_bin1_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_wjets_bin2_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_wjets_bin3_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_wjets_bin4_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_wjets_bin5_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_wjets_bin6_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_wjets_bin7_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_wjets_bin8_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_wjets_bin9_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_zjets_bin0_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_zjets_bin10_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_zjets_bin11_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_zjets_bin1_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_zjets_bin2_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_zjets_bin3_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_zjets_bin4_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_zjets_bin5_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_zjets_bin6_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_zjets_bin7_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_zjets_bin8_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
+sr2018failrecoil2_zjets_bin9_nominal extArg sr2018failrecoil2.root:sr2018failrecoil2
