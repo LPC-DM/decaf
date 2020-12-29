@@ -709,10 +709,10 @@ def rhalphabeth2D():
         qcdparams = np.array([rl.IndependentParameter('qcdparam_recoilbin%d_msdbin%d' % (recoilbin, i), 0) for i in range(msd.nbins)])
         sigmascale = 10.
         scaledparams = failObs * (1 + sigmascale/np.maximum(1., np.sqrt(failObs)))**qcdparams
-        fail_qcd = rl.ParametericSample('recoilbin%dfail_qcd' % recoilbin, rl.Sample.BACKGROUND, msd, scaledparams)
+        fail_qcd = rl.ParametericSample('recoil%dfail' % recoilbin, rl.Sample.BACKGROUND, msd, scaledparams)
         failCh.addSample(fail_qcd)
         print(tf_MCtempl_params[recoilbin, :])
-        pass_qcd = rl.TransferFactorSample('recoilbin%dpass_qcd' % recoilbin, rl.Sample.BACKGROUND, tf_MCtempl_params[recoilbin, :], fail_qcd)
+        pass_qcd = rl.TransferFactorSample('recoil%dpass' % recoilbin, rl.Sample.BACKGROUND, tf_MCtempl_params[recoilbin, :], fail_qcd)
         passCh.addSample(pass_qcd)
 
         #failCh.mask = validbins[recoilbin]
