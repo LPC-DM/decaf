@@ -148,6 +148,7 @@ def initialize_nuisances(hists, year):
 
     sr_ttNuisances={}
     for recoilbin in range(nrecoil):
+        sr_ttNuisances[recoilbin]={}
         sr_ttFail = sr_tt.sum("gentype").values()[()][
             recoilbin, :, 0
                   ]
