@@ -171,16 +171,16 @@ def initialize_nuisances(hists, year):
         sr_ttPass = template(background, "TT", "nominal", recoilbin, "sr", "pass")[0]
         R = sr_ttPass / sr_ttFail
         eff_tt = np.array(  # one nuisance per mass shape bin in pass                                                              
-        [
-            rl.IndependentParameter(
-                "R_tt_recoil"+str(recoilbin)+"_mass%d" % i,
-                b,
-                0.,
-                1e+9,
-                )
-            for i, b in enumerate(R))
-            ]
-        )
+            [
+                rl.IndependentParameter(
+                    "R_tt_recoil"+str(recoilbin)+"_mass%d" % i,
+                    b,
+                    0.,
+                    1e+9,
+                    )
+                for i, b in enumerate(R)
+                ]
+            )
         sr_ttNuisances[recoilbin]["pass"] = eff_tt * sr_ttNuisances[recoilbin]["fail"]
 
     ###
