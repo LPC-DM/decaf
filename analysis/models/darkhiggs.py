@@ -163,7 +163,7 @@ def initialize_nuisances(hists, year):
                         "sr" + year + "_tt_fail_recoil"+str(recoilbin)+"_mass%d" % i,
                         b,
                         0,
-                        max(sr_ttFail) * 2,
+                        sr_ttFail.max() * 2,
                         )
                   for i, b in enumerate(sr_ttFail)
                   ]
@@ -200,7 +200,7 @@ def initialize_nuisances(hists, year):
         #sr_zjetsFail = sr_zjets.sum("gentype").values()[()][
         #    recoilbin, :, 0
         #          ]
-        sr_zjetsFail = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail")
+        sr_zjetsFail = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail")[0]
         sr_zjetsNuisances[recoilbin] = np.array(  # one nuisance per mass shape bin in pass
             [
                 rl.IndependentParameter(
