@@ -503,7 +503,7 @@ def computeTFs(hists, year, recoil, category):
     gcr_gjets.setParamEffect(gjets_norm, 1.4)
     gcr_gjets.setParamEffect(jec, 1.05)
     gcr_gjets.setParamEffect(id_pho, 1.02)
-    gcr_gjets.setParamEffect(ghf_fraction, np.array(hf_systematic["G+jets"]["gcr"][category]))
+    gcr_gjets.setParamEffect(ghf_fraction, np.array(hf_systematic["G+jets"]["gcr"][category][recoil]))
     addVJetsSyst("G+jets", "gcr", gcr_gjets)
 
     ###
