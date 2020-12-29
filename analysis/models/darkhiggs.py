@@ -662,6 +662,86 @@ def rhalphabeth(msdbins):
     tf_params = qcdeff * tf_MCtempl_params_final * tf_dataResidual_params
     return tf_params
 
+def rhalphabeth2D():
+
+    recoilbins = np.array(recoil_binning)
+    nrecoil = len(recoilbins) - 1
+    msdbins = np.array(mass_binning)
+
+    bkg_hists = hists["bkg"]
+    background = {}
+    for r in bkg_hists["template"].identifiers("region"):
+        background[str(r)] = bkg_hists["template"].integrate("region", r).sum("gentype")
+
+    msd = rl.Observable('fjmass', msdbins)
+
+    # here we derive these all at once with 2D array
+    ptpts, msdpts = np.meshgrid(recoilbins[:-1] + 0.3 * np.diff(recoilbins), msdbins[:-1] + 0.5 * np.diff(msdbins), indexing='ij')
+    recoilscaled = (ptpts - 250.) / (3000. - 250.)
+    msdpts = np.sqrt(msds) * np.sqrt(msds)
+    msdscaled = msds / 300.0
+
+    # Build qcd MC pass+fail model and fit to polynomial
+    qcdmodel = rl.Model("qcdmodel")
+    qcdpass, qcdfail = 0., 0.
+    for recoilbin in range(nrecoil):
+        failCh = rl.Channel("recoil%d%s" % (recoilbin, 'fail'))
+        passCh = rl.Channel("recoil%d%s" % (recoilbin, 'pass'))
+        qcdmodel.addChannel(failCh)
+        qcdmodel.addChannel(passCh)
+        # mock template
+        ptnorm = 1
+        #add templates
+        failTempl = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail")
+        passTempl = template(background, "Z+jets", "nominal", recoilbin, "sr", "pass")
+        failCh.setObservation(failTempl)
+        passCh.setObservation(passTempl)
+        qcdfail += failCh.getObservation().sum()
+        qcdpass += passCh.getObservation().sum()
+
+    qcdeff = qcdpass / qcdfail
+    tf_MCtempl = rl.BernsteinPoly("tf_MCtempl", (2, 2), ['recoil', 'fjmass'], limits=(0, 10))
+    tf_MCtempl_params = qcdeff * tf_MCtempl(recoilscaled, msdscaled)
+    for recoilbin in range(nrecoil):
+        failCh = qcdmodel['recoilbin%dfail' % recoilbin]
+        passCh = qcdmodel['recoilbin%dpass' % recoilbin]
+        failObs = failCh.getObservation()
+        qcdparams = np.array([rl.IndependentParameter('qcdparam_recoilbin%d_msdbin%d' % (recoilbin, i), 0) for i in range(msd.nbins)])
+        sigmascale = 10.
+        scaledparams = failObs * (1 + sigmascale/np.maximum(1., np.sqrt(failObs)))**qcdparams
+        fail_qcd = rl.ParametericSample('recoilbin%dfail_qcd' % recoilbin, rl.Sample.BACKGROUND, msd, scaledparams)
+        failCh.addSample(fail_qcd)
+        print(tf_MCtempl_params[recoilbin, :])
+        pass_qcd = rl.TransferFactorSample('recoilbin%dpass_qcd' % recoilbin, rl.Sample.BACKGROUND, tf_MCtempl_params[recoilbin, :], fail_qcd)
+        passCh.addSample(pass_qcd)
+
+        #failCh.mask = validbins[recoilbin]
+        #passCh.mask = validbins[recoilbin]
+
+    qcdfit_ws = ROOT.RooWorkspace('qcdfit_ws')
+    simpdf, obs = qcdmodel.renderRoofit(qcdfit_ws)
+    qcdfit = simpdf.fitTo(obs,
+                          ROOT.RooFit.Extended(True),
+                          ROOT.RooFit.SumW2Error(True),
+                          ROOT.RooFit.Strategy(2),
+                          ROOT.RooFit.Save(),
+                          ROOT.RooFit.Minimizer('Minuit2', 'migrad'),
+                          ROOT.RooFit.PrintLevel(-1),
+                          )
+    qcdfit_ws.add(qcdfit)
+    if "pytest" not in sys.modules:
+         qcdfit_ws.writeToFile(os.path.join(str(tmpdir), 'testModel_qcdfit.root'))
+    if qcdfit.status() != 0:
+        raise RuntimeError('Could not fit qcd')
+
+    param_names = [p.name for p in tf_MCtempl.parameters.reshape(-1)]
+    decoVector = rl.DecorrelatedNuisanceVector.fromRooFitResult(tf_MCtempl.name + '_deco', qcdfit, param_names)
+    tf_MCtempl.parameters = decoVector.correlated_params.reshape(tf_MCtempl.parameters.shape)
+    tf_MCtempl_params_final = tf_MCtempl(recoilscaled, msdscaled)
+    tf_dataResidual = rl.BernsteinPoly("tf_dataResidual", (2, 2), ['recoil', 'fjmass'], limits=(0, 10))
+    tf_dataResidual_params = tf_dataResidual(recoilscaled, msdscaled)
+    tf_params = qcdeff * tf_MCtempl_params_final * tf_dataResidual_params
+    return tf_params
 
 def model(year, recoil, category):
 
@@ -1632,8 +1712,9 @@ if __name__ == "__main__":
         sr_zjetsNuisances,
         sr_ttNuisances,
     ) = initialize_nuisances(hists, year)
-    tf_params = rhalphabeth(mass_binning)
+    #tf_params = rhalphabeth(mass_binning)
     #tf_params = 0.05
+    tf_params = rhalphabeth2D()
 
     ###
     ###
