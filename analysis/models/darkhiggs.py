@@ -128,6 +128,11 @@ def initialize_nuisances(hists, year):
     recoilbins = np.array(recoil_binning)
     nrecoil = len(recoilbins) - 1
 
+    bkg_hists = hists["bkg"]
+    background = {}
+    for r in bkg_hists["template"].identifiers("region"):
+        background[str(r)] = bkg_hists["template"].integrate("region", r).sum("gentype")
+
     ###
     # Let's start from TT
     ###
@@ -136,19 +141,22 @@ def initialize_nuisances(hists, year):
     # First, tagging efficiency and SF
     ###
 
+    '''
     sr_tt = (
         hists["bkg"]["template"]
         .integrate("region", "sr")
         .integrate("process", "TT")
         .integrate("systematic", "nominal")
     )
+    '''
 
     sr_ttNuisances={}
     for recoilbin in range(nrecoil):
         sr_ttNuisances[recoilbin]={}
-        sr_ttFail = sr_tt.sum("gentype").values()[()][
-            recoilbin, :, 0
-                  ]
+        #sr_ttFail = sr_tt.sum("gentype").values()[()][
+        #    recoilbin, :, 0
+        #          ]
+        sr_ttFail = template(background, "TT", "nominal", recoilbin, "sr", "fail")[0]
         sr_ttNuisances[recoilbin]["fail"] = np.array(  # one nuisance per mass shape bin in pass                                              
                 [
                   rl.IndependentParameter(
@@ -160,15 +168,17 @@ def initialize_nuisances(hists, year):
                   for i, b in enumerate(sr_ttFail)
                   ]
                 )
+        sr_ttPass = template(background, "TT", "nominal", recoilbin, "sr", "pass")[0]
+        R = sr_ttPass / sr_ttFail
         eff_tt = np.array(  # one nuisance per mass shape bin in pass                                                              
         [
             rl.IndependentParameter(
                 "R_tt_recoil"+str(recoilbin)+"_mass%d" % i,
-                0.5,
-                0.0001,
-                0.9999,
+                b,
+                0.,
+                1e+9,
                 )
-            for i in range(len(sr_ttFail))
+            for i, b in enumerate(R))
             ]
         )
         sr_ttNuisances[recoilbin]["pass"] = eff_tt * sr_ttNuisances[recoilbin]["fail"]
@@ -177,18 +187,20 @@ def initialize_nuisances(hists, year):
     # Let's move to V+jets
     ###
 
+    '''
     sr_zjets = (
         hists["bkg"]["template"]
         .integrate("region", "sr")
         .integrate("process", "Z+jets")
         .integrate("systematic", "nominal")
     )
-
+    '''
     sr_zjetsNuisances={}
     for recoilbin in range(nrecoil):
-        sr_zjetsFail = sr_zjets.sum("gentype").values()[()][
-            recoilbin, :, 0
-                  ]
+        #sr_zjetsFail = sr_zjets.sum("gentype").values()[()][
+        #    recoilbin, :, 0
+        #          ]
+        sr_zjetsFail = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail")
         sr_zjetsNuisances[recoilbin] = np.array(  # one nuisance per mass shape bin in pass
             [
                 rl.IndependentParameter(
@@ -274,7 +286,7 @@ def computeTFs(hists, year, recoil, category):
     sr_zjets.setParamEffect(trig_met, 1.01)
     sr_zjets.setParamEffect(veto_tau, 1.03)
     sr_zjets.setParamEffect(jec, 1.05)
-    sr_zjets.setParamEffect(zhf_fraction, hf_systematic["Z+jets"]["sr"][category])
+    sr_zjets.setParamEffect(zhf_fraction, hf_systematic["Z+jets"]["sr"][category][recoil])
     addBtagSyst("Z+jets", "sr", sr_zjets)
     addVJetsSyst("Z+jets", "sr", sr_zjets)
 
@@ -291,7 +303,7 @@ def computeTFs(hists, year, recoil, category):
     sr_wjets.setParamEffect(trig_met, 1.01)
     sr_wjets.setParamEffect(veto_tau, 1.03)
     sr_wjets.setParamEffect(jec, 1.05)
-    sr_wjets.setParamEffect(whf_fraction, hf_systematic["W+jets"]["sr"][category])
+    sr_wjets.setParamEffect(whf_fraction, hf_systematic["W+jets"]["sr"][category][recoil])
     addBtagSyst("W+jets", "sr", sr_wjets)
     addVJetsSyst("W+jets", "sr", sr_wjets)
 
@@ -308,7 +320,7 @@ def computeTFs(hists, year, recoil, category):
     wmcr_wjets.setParamEffect(id_mu, 1.02)
     wmcr_wjets.setParamEffect(iso_mu, 1.02)
     wmcr_wjets.setParamEffect(
-        whf_fraction, hf_systematic["W+jets"]["wmcr"][category]
+        whf_fraction, hf_systematic["W+jets"]["wmcr"][category][recoil]
     )
     addBtagSyst("W+jets", "wmcr", wmcr_wjets)
     addVJetsSyst("W+jets", "wmcr", wmcr_wjets)
@@ -326,7 +338,7 @@ def computeTFs(hists, year, recoil, category):
     wecr_wjets.setParamEffect(id_e, 1.02)
     wecr_wjets.setParamEffect(reco_e, 1.02)
     wecr_wjets.setParamEffect(
-        whf_fraction, hf_systematic["W+jets"]["wecr"][category]
+        whf_fraction, hf_systematic["W+jets"]["wecr"][category][recoil]
     )
     addBtagSyst("W+jets", "wecr", wecr_wjets)
     addVJetsSyst("W+jets", "wecr", wecr_wjets)
@@ -344,7 +356,7 @@ def computeTFs(hists, year, recoil, category):
     tmcr_wjets.setParamEffect(id_mu, 1.02)
     tmcr_wjets.setParamEffect(iso_mu, 1.02)
     tmcr_wjets.setParamEffect(
-        whf_fraction, hf_systematic["W+jets"]["tmcr"][category]
+        whf_fraction, hf_systematic["W+jets"]["tmcr"][category][recoil]
     )
     addBtagSyst("W+jets", "tmcr", tmcr_wjets)
     addVJetsSyst("W+jets", "tmcr", tmcr_wjets)
@@ -362,7 +374,7 @@ def computeTFs(hists, year, recoil, category):
     tecr_wjets.setParamEffect(id_e, 1.02)
     tecr_wjets.setParamEffect(reco_e, 1.02)
     tecr_wjets.setParamEffect(
-        whf_fraction, hf_systematic["W+jets"]["tecr"][category]
+        whf_fraction, hf_systematic["W+jets"]["tecr"][category][recoil]
     )
     addBtagSyst("W+jets", "tecr", tecr_wjets)
     addVJetsSyst("W+jets", "tecr", tecr_wjets)
@@ -560,7 +572,7 @@ def rhalphabeth(msdbins):
         .integrate("systematic", "nominal")
         .values()[()][:, 0]
     )
-    vjetsHistFail[vjetsHistFail <= 0] = 1e-7
+    vjetsHistFail[vjetsHistFail <= 0] = 1.
     failTempl = (
         vjetsHistFail,
         vjets_hists["template"]
@@ -580,7 +592,7 @@ def rhalphabeth(msdbins):
         .integrate("systematic", "nominal")
         .values()[()][:, 1]
     )
-    vjetsHistPass[vjetsHistPass <= 0] = 1e-7
+    vjetsHistPass[vjetsHistPass <= 0] = 1.
     passTempl = (
         vjetsHistPass,
         vjets_hists["template"]
@@ -1640,9 +1652,6 @@ if __name__ == "__main__":
     zjets_norm = rl.NuisanceParameter("zjets_norm", "lnN")
     wjets_norm = rl.NuisanceParameter("wjets_norm", "lnN")
     gjets_norm = rl.NuisanceParameter("gjets_norm", "lnN")
-    whf_fraction = rl.NuisanceParameter("whf_fraction", "lnN")
-    zhf_fraction = rl.NuisanceParameter("zhf_fraction", "lnN")
-    ghf_fraction = rl.NuisanceParameter("ghf_fraction", "lnN")
     id_e = rl.NuisanceParameter("id_e" + year, "lnN")
     id_mu = rl.NuisanceParameter("id_mu" + year, "lnN")
     id_pho = rl.NuisanceParameter("id_pho" + year, "lnN")
@@ -1667,6 +1676,9 @@ if __name__ == "__main__":
     qcd1 = rl.NuisanceParameter("qcd1", "shape")
     qcd2 = rl.NuisanceParameter("qcd2", "shape")
     qcd3 = rl.NuisanceParameter("qcd3", "shape")
+    whf_fraction = rl.NuisanceParameter("whf_fraction", "shape")
+    zhf_fraction = rl.NuisanceParameter("zhf_fraction", "shape")
+    ghf_fraction = rl.NuisanceParameter("ghf_fraction", "shape")
 
     model_dict = {}
     recoilbins = np.array(recoil_binning)
