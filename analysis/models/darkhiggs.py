@@ -703,8 +703,8 @@ def rhalphabeth2D():
     tf_MCtempl = rl.BernsteinPoly("tf_MCtempl", (2, 2), ['recoil', 'fjmass'], limits=(0, 10))
     tf_MCtempl_params = qcdeff * tf_MCtempl(recoilscaled, msdscaled)
     for recoilbin in range(nrecoil):
-        failCh = qcdmodel['recoilbin%dfail' % recoilbin]
-        passCh = qcdmodel['recoilbin%dpass' % recoilbin]
+        failCh = qcdmodel['recoil%dfail' % recoilbin]
+        passCh = qcdmodel['recoil%dpass' % recoilbin]
         failObs = failCh.getObservation()
         qcdparams = np.array([rl.IndependentParameter('qcdparam_recoilbin%d_msdbin%d' % (recoilbin, i), 0) for i in range(msd.nbins)])
         sigmascale = 10.
