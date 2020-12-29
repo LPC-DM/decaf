@@ -678,8 +678,8 @@ def rhalphabeth2D():
     # here we derive these all at once with 2D array
     ptpts, msdpts = np.meshgrid(recoilbins[:-1] + 0.3 * np.diff(recoilbins), msdbins[:-1] + 0.5 * np.diff(msdbins), indexing='ij')
     recoilscaled = (ptpts - 250.) / (3000. - 250.)
-    msdpts = np.sqrt(msds) * np.sqrt(msds)
-    msdscaled = msds / 300.0
+    msdpts = np.sqrt(msdpts) * np.sqrt(msdpts)
+    msdscaled = msdpts / 300.0
 
     # Build qcd MC pass+fail model and fit to polynomial
     qcdmodel = rl.Model("qcdmodel")
