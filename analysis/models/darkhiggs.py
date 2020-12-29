@@ -730,7 +730,8 @@ def rhalphabeth2D():
                           )
     qcdfit_ws.add(qcdfit)
     if "pytest" not in sys.modules:
-         qcdfit_ws.writeToFile(os.path.join(str(tmpdir), 'testModel_qcdfit.root'))
+         #qcdfit_ws.writeToFile(os.path.join(str(tmpdir), 'testModel_qcdfit.root'))
+        qcdfit_ws.writeToFile(os.path.join(str("models"), "testModel_qcdfit.root"))
     if qcdfit.status() != 0:
         raise RuntimeError('Could not fit qcd')
 
