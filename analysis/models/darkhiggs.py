@@ -163,7 +163,7 @@ def initialize_nuisances(hists, year):
                         "sr" + year + "_tt_fail_recoil"+str(recoilbin)+"_mass%d" % i,
                         b,
                         0,
-                        sr_ttFail.max() * 2,
+                        max(sr_ttFail) * 2,
                         )
                   for i, b in enumerate(sr_ttFail)
                   ]
