@@ -789,7 +789,7 @@ def model(year, recoil, category):
     ###
     # Z(->nunu)+jets data-driven model
     ###
-    print(tf_params[recoil])
+    #print(tf_params[recoil])
     sr_zjetsTemplate = template(background, "Z+jets", "nominal", recoil, "sr", category)
     sr_zjetsObservable = rl.Observable("fjmass", sr_zjetsTemplate[1])
     if category == "pass":
@@ -797,7 +797,7 @@ def model(year, recoil, category):
             ch_name + "_zjets",
             rl.Sample.BACKGROUND,
             sr_zjetsObservable,
-            sr_zjetsBinYields * tf_params,
+            sr_zjetsBinYields * tf_params[recoil],
         )
     else:
         sr_zjets = rl.ParametericSample(
