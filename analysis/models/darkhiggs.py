@@ -171,7 +171,7 @@ def initialize_nuisances(hists, year):
                 0.0001,
                 0.9999,
                 )
-            for i in enumerate(sr_ttFail)
+            for i in range(sr_ttFail.size())
             ]
         )
         sr_ttNuisances[recoilbin]["pass"] = eff_tt * sr_ttNuisances[recoilbin]["fail"]
