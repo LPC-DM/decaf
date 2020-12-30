@@ -741,7 +741,7 @@ def rhalphabeth2D():
     decoVector = rl.DecorrelatedNuisanceVector.fromRooFitResult(tf_MCtempl.name + '_deco', qcdfit, param_names)
     tf_MCtempl.parameters = decoVector.correlated_params.reshape(tf_MCtempl.parameters.shape)
     tf_MCtempl_params_final = tf_MCtempl(recoilscaled, msdscaled)
-    tf_dataResidual = rl.BernsteinPoly("tf_dataResidual", (2, 2), ['recoil', 'fjmass'], limits=(0, 10))
+    tf_dataResidual = rl.BernsteinPoly("tf_dataResidual", (1, 2), ['recoil', 'fjmass'], limits=(0, 10))
     tf_dataResidual_params = tf_dataResidual(recoilscaled, msdscaled)
     tf_params = qcdeff * tf_MCtempl_params_final * tf_dataResidual_params
     return tf_params
@@ -1716,9 +1716,9 @@ if __name__ == "__main__":
         sr_zjetsNuisances,
         sr_ttNuisances,
     ) = initialize_nuisances(hists, year)
-    tf_params = rhalphabeth(mass_binning)
+    #tf_params = rhalphabeth(mass_binning)
     #tf_params = 0.05
-    #tf_params = rhalphabeth2D()
+    tf_params = rhalphabeth2D()
 
     ###
     ###
