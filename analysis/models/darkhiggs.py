@@ -52,15 +52,9 @@ def template(dictionary, process, systematic, recoil, region, category):
     if "nominal" not in systematic and "data" not in systematic:
         # print('Normalizing',systematic,'histogram of',process,'in region',region)
         output = histogram.integrate("systematic", systematic).values()[()][recoil, :, category_map[category]]
-        print("output",output)
-        print("nominal",nominal)
         output[zerobins] = 1.
-        print("output post zerobins requirement",output)
-        print("output nonzero",output[~zerobins])
-        print("nominal nonzero",nominal[~zerobins])
         output[~zerobins] /= nominal[~zerobins]
         output[np.isnan(output)] = 1.
-        print(output)
     binning = (
         dictionary[region]
         .integrate("process", process)
