@@ -53,7 +53,8 @@ def template(dictionary, process, systematic, recoil, region, category):
         # print('Normalizing',systematic,'histogram of',process,'in region',region)
         output = histogram.integrate("systematic", systematic).values()[()][recoil, :, category_map[category]]
         output[zerobins] = 1.
-        output[~zerobins] /= nominal[~zerobins] 
+        output[~zerobins] /= nominal[~zerobins]
+        output[np.isnan(output)] = 1.
     binning = (
         dictionary[region]
         .integrate("process", process)
@@ -61,6 +62,7 @@ def template(dictionary, process, systematic, recoil, region, category):
         .axis("fjmass")
         .edges()
     )
+    #print(process, systematic, "recoil"+str(recoil), region, category, output)
     return (output, binning, "fjmass")
 
 def remap_histograms(hists):
@@ -128,6 +130,11 @@ def initialize_nuisances(hists, year):
     recoilbins = np.array(recoil_binning)
     nrecoil = len(recoilbins) - 1
 
+    bkg_hists = hists["bkg"]
+    background = {}
+    for r in bkg_hists["template"].identifiers("region"):
+        background[str(r)] = bkg_hists["template"].integrate("region", r).sum("gentype")
+
     ###
     # Let's start from TT
     ###
@@ -136,19 +143,22 @@ def initialize_nuisances(hists, year):
     # First, tagging efficiency and SF
     ###
 
+    '''
     sr_tt = (
         hists["bkg"]["template"]
         .integrate("region", "sr")
         .integrate("process", "TT")
         .integrate("systematic", "nominal")
     )
+    '''
 
     sr_ttNuisances={}
     for recoilbin in range(nrecoil):
         sr_ttNuisances[recoilbin]={}
-        sr_ttFail = sr_tt.sum("gentype").values()[()][
-            recoilbin, :, 0
-                  ]
+        #sr_ttFail = sr_tt.sum("gentype").values()[()][
+        #    recoilbin, :, 0
+        #          ]
+        sr_ttFail = template(background, "TT", "nominal", recoilbin, "sr", "fail")[0]
         sr_ttNuisances[recoilbin]["fail"] = np.array(  # one nuisance per mass shape bin in pass                                              
                 [
                   rl.IndependentParameter(
@@ -160,35 +170,39 @@ def initialize_nuisances(hists, year):
                   for i, b in enumerate(sr_ttFail)
                   ]
                 )
+        sr_ttPass = template(background, "TT", "nominal", recoilbin, "sr", "pass")[0]
+        R = sr_ttPass / sr_ttFail
         eff_tt = np.array(  # one nuisance per mass shape bin in pass                                                              
-        [
-            rl.IndependentParameter(
-                "R_tt_recoil"+str(recoilbin)+"_mass%d" % i,
-                0.5,
-                0.0001,
-                0.9999,
-                )
-            for i in range(len(sr_ttFail))
-            ]
-        )
+            [
+                rl.IndependentParameter(
+                    "R_tt_recoil"+str(recoilbin)+"_mass%d" % i,
+                    b,
+                    0.,
+                    1e+9,
+                    )
+                for i, b in enumerate(R)
+                ]
+            )
         sr_ttNuisances[recoilbin]["pass"] = eff_tt * sr_ttNuisances[recoilbin]["fail"]
 
     ###
     # Let's move to V+jets
     ###
 
+    '''
     sr_zjets = (
         hists["bkg"]["template"]
         .integrate("region", "sr")
         .integrate("process", "Z+jets")
         .integrate("systematic", "nominal")
     )
-
+    '''
     sr_zjetsNuisances={}
     for recoilbin in range(nrecoil):
-        sr_zjetsFail = sr_zjets.sum("gentype").values()[()][
-            recoilbin, :, 0
-                  ]
+        #sr_zjetsFail = sr_zjets.sum("gentype").values()[()][
+        #    recoilbin, :, 0
+        #          ]
+        sr_zjetsFail = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail")[0]
         sr_zjetsNuisances[recoilbin] = np.array(  # one nuisance per mass shape bin in pass
             [
                 rl.IndependentParameter(
@@ -274,7 +288,7 @@ def computeTFs(hists, year, recoil, category):
     sr_zjets.setParamEffect(trig_met, 1.01)
     sr_zjets.setParamEffect(veto_tau, 1.03)
     sr_zjets.setParamEffect(jec, 1.05)
-    sr_zjets.setParamEffect(zhf_fraction, hf_systematic["Z+jets"]["sr"][category])
+    sr_zjets.setParamEffect(zhf_fraction, np.array(hf_systematic["Z+jets"]["sr"][category][recoil]))
     addBtagSyst("Z+jets", "sr", sr_zjets)
     addVJetsSyst("Z+jets", "sr", sr_zjets)
 
@@ -291,7 +305,7 @@ def computeTFs(hists, year, recoil, category):
     sr_wjets.setParamEffect(trig_met, 1.01)
     sr_wjets.setParamEffect(veto_tau, 1.03)
     sr_wjets.setParamEffect(jec, 1.05)
-    sr_wjets.setParamEffect(whf_fraction, hf_systematic["W+jets"]["sr"][category])
+    sr_wjets.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["sr"][category][recoil]))
     addBtagSyst("W+jets", "sr", sr_wjets)
     addVJetsSyst("W+jets", "sr", sr_wjets)
 
@@ -308,7 +322,7 @@ def computeTFs(hists, year, recoil, category):
     wmcr_wjets.setParamEffect(id_mu, 1.02)
     wmcr_wjets.setParamEffect(iso_mu, 1.02)
     wmcr_wjets.setParamEffect(
-        whf_fraction, hf_systematic["W+jets"]["wmcr"][category]
+        whf_fraction, np.array(hf_systematic["W+jets"]["wmcr"][category][recoil])
     )
     addBtagSyst("W+jets", "wmcr", wmcr_wjets)
     addVJetsSyst("W+jets", "wmcr", wmcr_wjets)
@@ -326,7 +340,7 @@ def computeTFs(hists, year, recoil, category):
     wecr_wjets.setParamEffect(id_e, 1.02)
     wecr_wjets.setParamEffect(reco_e, 1.02)
     wecr_wjets.setParamEffect(
-        whf_fraction, hf_systematic["W+jets"]["wecr"][category]
+        whf_fraction, np.array(hf_systematic["W+jets"]["wecr"][category][recoil])
     )
     addBtagSyst("W+jets", "wecr", wecr_wjets)
     addVJetsSyst("W+jets", "wecr", wecr_wjets)
@@ -344,7 +358,7 @@ def computeTFs(hists, year, recoil, category):
     tmcr_wjets.setParamEffect(id_mu, 1.02)
     tmcr_wjets.setParamEffect(iso_mu, 1.02)
     tmcr_wjets.setParamEffect(
-        whf_fraction, hf_systematic["W+jets"]["tmcr"][category]
+        whf_fraction, np.array(hf_systematic["W+jets"]["tmcr"][category][recoil])
     )
     addBtagSyst("W+jets", "tmcr", tmcr_wjets)
     addVJetsSyst("W+jets", "tmcr", tmcr_wjets)
@@ -362,7 +376,7 @@ def computeTFs(hists, year, recoil, category):
     tecr_wjets.setParamEffect(id_e, 1.02)
     tecr_wjets.setParamEffect(reco_e, 1.02)
     tecr_wjets.setParamEffect(
-        whf_fraction, hf_systematic["W+jets"]["tecr"][category]
+        whf_fraction, np.array(hf_systematic["W+jets"]["tecr"][category][recoil])
     )
     addBtagSyst("W+jets", "tecr", tecr_wjets)
     addVJetsSyst("W+jets", "tecr", tecr_wjets)
@@ -456,7 +470,7 @@ def computeTFs(hists, year, recoil, category):
     zmcr_dyjets.setParamEffect(id_mu, 1.02)
     zmcr_dyjets.setParamEffect(iso_mu, 1.02)
     zmcr_dyjets.setParamEffect(
-        zhf_fraction, hf_systematic["DY+jets"]["zmcr"][category]
+        zhf_fraction, np.array(hf_systematic["DY+jets"]["zmcr"][category][recoil])
     )
     addVJetsSyst("DY+jets", "zmcr", zmcr_dyjets)
 
@@ -473,7 +487,7 @@ def computeTFs(hists, year, recoil, category):
     zecr_dyjets.setParamEffect(id_e, 1.02)
     zecr_dyjets.setParamEffect(reco_e, 1.02)
     zecr_dyjets.setParamEffect(
-        zhf_fraction, hf_systematic["DY+jets"]["zecr"][category]
+        zhf_fraction, np.array(hf_systematic["DY+jets"]["zecr"][category][recoil])
     )
     addVJetsSyst("DY+jets", "zecr", zecr_dyjets)
     ###
@@ -491,7 +505,7 @@ def computeTFs(hists, year, recoil, category):
     gcr_gjets.setParamEffect(gjets_norm, 1.4)
     gcr_gjets.setParamEffect(jec, 1.05)
     gcr_gjets.setParamEffect(id_pho, 1.02)
-    gcr_gjets.setParamEffect(ghf_fraction, hf_systematic["G+jets"]["gcr"][category])
+    gcr_gjets.setParamEffect(ghf_fraction, np.array(hf_systematic["G+jets"]["gcr"][category][recoil]))
     addVJetsSyst("G+jets", "gcr", gcr_gjets)
 
     ###
@@ -560,7 +574,7 @@ def rhalphabeth(msdbins):
         .integrate("systematic", "nominal")
         .values()[()][:, 0]
     )
-    vjetsHistFail[vjetsHistFail <= 0] = 1e-7
+    vjetsHistFail[vjetsHistFail <= 0] = 1.
     failTempl = (
         vjetsHistFail,
         vjets_hists["template"]
@@ -580,7 +594,7 @@ def rhalphabeth(msdbins):
         .integrate("systematic", "nominal")
         .values()[()][:, 1]
     )
-    vjetsHistPass[vjetsHistPass <= 0] = 1e-7
+    vjetsHistPass[vjetsHistPass <= 0] = 1.
     passTempl = (
         vjetsHistPass,
         vjets_hists["template"]
@@ -650,6 +664,87 @@ def rhalphabeth(msdbins):
     tf_params = qcdeff * tf_MCtempl_params_final * tf_dataResidual_params
     return tf_params
 
+def rhalphabeth2D():
+
+    recoilbins = np.array(recoil_binning)
+    nrecoil = len(recoilbins) - 1
+    msdbins = np.array(mass_binning)
+
+    bkg_hists = hists["bkg"]
+    background = {}
+    for r in bkg_hists["template"].identifiers("region"):
+        background[str(r)] = bkg_hists["template"].integrate("region", r).sum("gentype")
+
+    msd = rl.Observable('fjmass', msdbins)
+
+    # here we derive these all at once with 2D array
+    ptpts, msdpts = np.meshgrid(recoilbins[:-1] + 0.3 * np.diff(recoilbins), msdbins[:-1] + 0.5 * np.diff(msdbins), indexing='ij')
+    recoilscaled = (ptpts - 250.) / (3000. - 250.)
+    msdpts = np.sqrt(msdpts) * np.sqrt(msdpts)
+    msdscaled = msdpts / 300.0
+
+    # Build qcd MC pass+fail model and fit to polynomial
+    qcdmodel = rl.Model("qcdmodel")
+    qcdpass, qcdfail = 0., 0.
+    for recoilbin in range(nrecoil):
+        failCh = rl.Channel("recoil%d%s" % (recoilbin, 'fail'))
+        passCh = rl.Channel("recoil%d%s" % (recoilbin, 'pass'))
+        qcdmodel.addChannel(failCh)
+        qcdmodel.addChannel(passCh)
+        # mock template
+        ptnorm = 1
+        #add templates
+        failTempl = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail")
+        passTempl = template(background, "Z+jets", "nominal", recoilbin, "sr", "pass")
+        failCh.setObservation(failTempl)
+        passCh.setObservation(passTempl)
+        qcdfail += failCh.getObservation().sum()
+        qcdpass += passCh.getObservation().sum()
+
+    qcdeff = qcdpass / qcdfail
+    tf_MCtempl = rl.BernsteinPoly("tf_MCtempl", (1, 2), ['recoil', 'fjmass'], limits=(0, 10))
+    tf_MCtempl_params = qcdeff * tf_MCtempl(recoilscaled, msdscaled)
+    for recoilbin in range(nrecoil):
+        failCh = qcdmodel['recoil%dfail' % recoilbin]
+        passCh = qcdmodel['recoil%dpass' % recoilbin]
+        failObs = failCh.getObservation()
+        qcdparams = np.array([rl.IndependentParameter('qcdparam_recoilbin%d_msdbin%d' % (recoilbin, i), 0) for i in range(msd.nbins)])
+        sigmascale = 10.
+        scaledparams = failObs * (1 + sigmascale/np.maximum(1., np.sqrt(failObs)))**qcdparams
+        fail_qcd = rl.ParametericSample('recoil%dfail_qcd' % recoilbin, rl.Sample.BACKGROUND, msd, scaledparams)
+        failCh.addSample(fail_qcd)
+        print(tf_MCtempl_params[recoilbin, :])
+        pass_qcd = rl.TransferFactorSample('recoil%dpass_qcd' % recoilbin, rl.Sample.BACKGROUND, tf_MCtempl_params[recoilbin, :], fail_qcd)
+        passCh.addSample(pass_qcd)
+
+        #failCh.mask = validbins[recoilbin]
+        #passCh.mask = validbins[recoilbin]
+
+    qcdfit_ws = ROOT.RooWorkspace('qcdfit_ws')
+    simpdf, obs = qcdmodel.renderRoofit(qcdfit_ws)
+    qcdfit = simpdf.fitTo(obs,
+                          ROOT.RooFit.Extended(True),
+                          ROOT.RooFit.SumW2Error(True),
+                          ROOT.RooFit.Strategy(2),
+                          ROOT.RooFit.Save(),
+                          ROOT.RooFit.Minimizer('Minuit2', 'migrad'),
+                          ROOT.RooFit.PrintLevel(-1),
+                          )
+    qcdfit_ws.add(qcdfit)
+    if "pytest" not in sys.modules:
+         #qcdfit_ws.writeToFile(os.path.join(str(tmpdir), 'testModel_qcdfit.root'))
+        qcdfit_ws.writeToFile(os.path.join(str("models"), "testModel_qcdfit.root"))
+    if qcdfit.status() != 0:
+        raise RuntimeError('Could not fit qcd')
+
+    param_names = [p.name for p in tf_MCtempl.parameters.reshape(-1)]
+    decoVector = rl.DecorrelatedNuisanceVector.fromRooFitResult(tf_MCtempl.name + '_deco', qcdfit, param_names)
+    tf_MCtempl.parameters = decoVector.correlated_params.reshape(tf_MCtempl.parameters.shape)
+    tf_MCtempl_params_final = tf_MCtempl(recoilscaled, msdscaled)
+    tf_dataResidual = rl.BernsteinPoly("tf_dataResidual", (2, 2), ['recoil', 'fjmass'], limits=(0, 10))
+    tf_dataResidual_params = tf_dataResidual(recoilscaled, msdscaled)
+    tf_params = qcdeff * tf_MCtempl_params_final * tf_dataResidual_params
+    return tf_params
 
 def model(year, recoil, category):
 
@@ -696,6 +791,7 @@ def model(year, recoil, category):
     ###
     # Z(->nunu)+jets data-driven model
     ###
+    #print(tf_params[recoil])
     sr_zjetsTemplate = template(background, "Z+jets", "nominal", recoil, "sr", category)
     sr_zjetsObservable = rl.Observable("fjmass", sr_zjetsTemplate[1])
     if category == "pass":
@@ -703,7 +799,7 @@ def model(year, recoil, category):
             ch_name + "_zjets",
             rl.Sample.BACKGROUND,
             sr_zjetsObservable,
-            sr_zjetsBinYields * tf_params,
+            sr_zjetsBinYields * tf_params[recoil],
         )
     else:
         sr_zjets = rl.ParametericSample(
@@ -1620,8 +1716,9 @@ if __name__ == "__main__":
         sr_zjetsNuisances,
         sr_ttNuisances,
     ) = initialize_nuisances(hists, year)
-    tf_params = rhalphabeth(mass_binning)
+    #tf_params = rhalphabeth(mass_binning)
     #tf_params = 0.05
+    tf_params = rhalphabeth2D()
 
     ###
     ###
@@ -1640,9 +1737,6 @@ if __name__ == "__main__":
     zjets_norm = rl.NuisanceParameter("zjets_norm", "lnN")
     wjets_norm = rl.NuisanceParameter("wjets_norm", "lnN")
     gjets_norm = rl.NuisanceParameter("gjets_norm", "lnN")
-    whf_fraction = rl.NuisanceParameter("whf_fraction", "lnN")
-    zhf_fraction = rl.NuisanceParameter("zhf_fraction", "lnN")
-    ghf_fraction = rl.NuisanceParameter("ghf_fraction", "lnN")
     id_e = rl.NuisanceParameter("id_e" + year, "lnN")
     id_mu = rl.NuisanceParameter("id_mu" + year, "lnN")
     id_pho = rl.NuisanceParameter("id_pho" + year, "lnN")
@@ -1667,6 +1761,9 @@ if __name__ == "__main__":
     qcd1 = rl.NuisanceParameter("qcd1", "shape")
     qcd2 = rl.NuisanceParameter("qcd2", "shape")
     qcd3 = rl.NuisanceParameter("qcd3", "shape")
+    whf_fraction = rl.NuisanceParameter("whf_fraction", "shape")
+    zhf_fraction = rl.NuisanceParameter("zhf_fraction", "shape")
+    ghf_fraction = rl.NuisanceParameter("ghf_fraction", "shape")
 
     model_dict = {}
     recoilbins = np.array(recoil_binning)
