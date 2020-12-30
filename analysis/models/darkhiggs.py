@@ -61,7 +61,7 @@ def template(dictionary, process, systematic, recoil, region, category):
         .axis("fjmass")
         .edges()
     )
-    print(process, systematic, "recoil"+recoil, region, category, output)
+    print(process, systematic, "recoil"+str(recoil), region, category, output)
     return (output, binning, "fjmass")
 
 def remap_histograms(hists):
