@@ -58,7 +58,8 @@ def template(dictionary, process, systematic, recoil, region, category):
         print("output post zerobins requirement",output)
         print("output nonzero",output[~zerobins])
         print("nominal nonzero",nominal[~zerobins])
-        output[~zerobins] = np.nan_to_num(output[~zerobins]/nominal[~zerobins], nan=1.)
+        output[~zerobins] /= nominal[~zerobins]
+        output[np.isnan(output)] = 1.
         print(output)
     binning = (
         dictionary[region]
