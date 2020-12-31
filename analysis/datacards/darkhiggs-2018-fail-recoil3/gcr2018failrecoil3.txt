@@ -1,0 +1,70 @@
+# Datacard for <Channel (gcr2018failrecoil3) instance at 0x7f9439eddd50> generated on 2020-12-31 10:31:23.319183
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 1 # number of samples minus 1
+kmax 23 # number of nuisance parameters
+shapes * gcr2018failrecoil3 gcr2018failrecoil3.root gcr2018failrecoil3:gcr2018failrecoil3_$PROCESS gcr2018failrecoil3:gcr2018failrecoil3_$PROCESS_$SYSTEMATIC
+bin gcr2018failrecoil3
+observation 31244.000
+bin               gcr2018failrecoil3  gcr2018failrecoil3
+process                        gjets               qcdMC
+process                            1                   2
+rate                           1.000             902.498
+id_pho2018 lnN                     -               1.020
+jec2018 lnN                        -               1.050
+lumi2018 lnN                       -               1.027
+qcdpho_norm lnN                    -               2.000
+trig_pho2018 lnN                   -               1.010
+veto_tau2018 lnN                   -               1.030
+btag2018 param 0 1
+ew1 param 0 1
+ew2G param 0 1
+ew2Z param 0 1
+ew3G param 0 1
+ew3Z param 0 1
+ghf_fraction param 0 1
+gjets_norm param 0 1
+mix param 0 1
+muF param 0 1
+muR param 0 1
+qcd1 param 0 1
+qcd2 param 0 1
+qcd3 param 0 1
+trig_met2018 param 0 1
+zhf_fraction param 0 1
+zjets_norm param 0 1
+gcr2018failrecoil3_gjets_bin0_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+gcr2018failrecoil3_gjets_bin10_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+gcr2018failrecoil3_gjets_bin11_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+gcr2018failrecoil3_gjets_bin1_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+gcr2018failrecoil3_gjets_bin2_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+gcr2018failrecoil3_gjets_bin3_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+gcr2018failrecoil3_gjets_bin4_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+gcr2018failrecoil3_gjets_bin5_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+gcr2018failrecoil3_gjets_bin6_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+gcr2018failrecoil3_gjets_bin7_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+gcr2018failrecoil3_gjets_bin8_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+gcr2018failrecoil3_gjets_bin9_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018_zjets_fail_recoil3_mass0 extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018_zjets_fail_recoil3_mass1 extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018_zjets_fail_recoil3_mass10 extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018_zjets_fail_recoil3_mass11 extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018_zjets_fail_recoil3_mass2 extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018_zjets_fail_recoil3_mass3 extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018_zjets_fail_recoil3_mass4 extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018_zjets_fail_recoil3_mass5 extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018_zjets_fail_recoil3_mass6 extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018_zjets_fail_recoil3_mass7 extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018_zjets_fail_recoil3_mass8 extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018_zjets_fail_recoil3_mass9 extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018failrecoil3_zjets_bin0_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018failrecoil3_zjets_bin10_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018failrecoil3_zjets_bin11_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018failrecoil3_zjets_bin1_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018failrecoil3_zjets_bin2_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018failrecoil3_zjets_bin3_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018failrecoil3_zjets_bin4_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018failrecoil3_zjets_bin5_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018failrecoil3_zjets_bin6_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018failrecoil3_zjets_bin7_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018failrecoil3_zjets_bin8_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
+sr2018failrecoil3_zjets_bin9_nominal extArg gcr2018failrecoil3.root:gcr2018failrecoil3
