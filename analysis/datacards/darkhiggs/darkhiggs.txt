@@ -1,7 +1,7 @@
 Combination of wmcr2018failrecoil0=wmcr2018failrecoil0.txt  zecr2018failrecoil0=zecr2018failrecoil0.txt  gcr2018failrecoil0=gcr2018failrecoil0.txt  zmcr2018failrecoil0=zmcr2018failrecoil0.txt  tmcr2018failrecoil0=tmcr2018failrecoil0.txt  wecr2018failrecoil0=wecr2018failrecoil0.txt  sr2018failrecoil0=sr2018failrecoil0.txt  tecr2018failrecoil0=tecr2018failrecoil0.txt  wecr2018failrecoil1=wecr2018failrecoil1.txt  tmcr2018failrecoil1=tmcr2018failrecoil1.txt  sr2018failrecoil1=sr2018failrecoil1.txt  zmcr2018failrecoil1=zmcr2018failrecoil1.txt  gcr2018failrecoil1=gcr2018failrecoil1.txt  tecr2018failrecoil1=tecr2018failrecoil1.txt  wmcr2018failrecoil1=wmcr2018failrecoil1.txt  zecr2018failrecoil1=zecr2018failrecoil1.txt  zecr2018failrecoil2=zecr2018failrecoil2.txt  sr2018failrecoil2=sr2018failrecoil2.txt  wmcr2018failrecoil2=wmcr2018failrecoil2.txt  wecr2018failrecoil2=wecr2018failrecoil2.txt  zmcr2018failrecoil2=zmcr2018failrecoil2.txt  gcr2018failrecoil2=gcr2018failrecoil2.txt  tecr2018failrecoil2=tecr2018failrecoil2.txt  tmcr2018failrecoil2=tmcr2018failrecoil2.txt  wecr2018failrecoil3=wecr2018failrecoil3.txt  gcr2018failrecoil3=gcr2018failrecoil3.txt  zecr2018failrecoil3=zecr2018failrecoil3.txt  wmcr2018failrecoil3=wmcr2018failrecoil3.txt  sr2018failrecoil3=sr2018failrecoil3.txt  tmcr2018failrecoil3=tmcr2018failrecoil3.txt  zmcr2018failrecoil3=zmcr2018failrecoil3.txt  tecr2018failrecoil3=tecr2018failrecoil3.txt  tecr2018failrecoil4=tecr2018failrecoil4.txt  wmcr2018failrecoil4=wmcr2018failrecoil4.txt  sr2018failrecoil4=sr2018failrecoil4.txt  zmcr2018failrecoil4=zmcr2018failrecoil4.txt  zecr2018failrecoil4=zecr2018failrecoil4.txt  gcr2018failrecoil4=gcr2018failrecoil4.txt  tmcr2018failrecoil4=tmcr2018failrecoil4.txt  wecr2018failrecoil4=wecr2018failrecoil4.txt  zmcr2018passrecoil0=zmcr2018passrecoil0.txt  zecr2018passrecoil0=zecr2018passrecoil0.txt  gcr2018passrecoil0=gcr2018passrecoil0.txt  sr2018passrecoil0=sr2018passrecoil0.txt  tmcr2018passrecoil0=tmcr2018passrecoil0.txt  wmcr2018passrecoil0=wmcr2018passrecoil0.txt  wecr2018passrecoil0=wecr2018passrecoil0.txt  tecr2018passrecoil0=tecr2018passrecoil0.txt  gcr2018passrecoil1=gcr2018passrecoil1.txt  wecr2018passrecoil1=wecr2018passrecoil1.txt  tecr2018passrecoil1=tecr2018passrecoil1.txt  tmcr2018passrecoil1=tmcr2018passrecoil1.txt  zecr2018passrecoil1=zecr2018passrecoil1.txt  sr2018passrecoil1=sr2018passrecoil1.txt  zmcr2018passrecoil1=zmcr2018passrecoil1.txt  wmcr2018passrecoil1=wmcr2018passrecoil1.txt  gcr2018passrecoil2=gcr2018passrecoil2.txt  wecr2018passrecoil2=wecr2018passrecoil2.txt  zmcr2018passrecoil2=zmcr2018passrecoil2.txt  sr2018passrecoil2=sr2018passrecoil2.txt  tecr2018passrecoil2=tecr2018passrecoil2.txt  zecr2018passrecoil2=zecr2018passrecoil2.txt  tmcr2018passrecoil2=tmcr2018passrecoil2.txt  wmcr2018passrecoil2=wmcr2018passrecoil2.txt  gcr2018passrecoil3=gcr2018passrecoil3.txt  zecr2018passrecoil3=zecr2018passrecoil3.txt  wmcr2018passrecoil3=wmcr2018passrecoil3.txt  zmcr2018passrecoil3=zmcr2018passrecoil3.txt  sr2018passrecoil3=sr2018passrecoil3.txt  tecr2018passrecoil3=tecr2018passrecoil3.txt  tmcr2018passrecoil3=tmcr2018passrecoil3.txt  wecr2018passrecoil3=wecr2018passrecoil3.txt  wecr2018passrecoil4=wecr2018passrecoil4.txt  zmcr2018passrecoil4=zmcr2018passrecoil4.txt  zecr2018passrecoil4=zecr2018passrecoil4.txt  wmcr2018passrecoil4=wmcr2018passrecoil4.txt  tecr2018passrecoil4=tecr2018passrecoil4.txt  gcr2018passrecoil4=gcr2018passrecoil4.txt  sr2018passrecoil4=sr2018passrecoil4.txt  tmcr2018passrecoil4=tmcr2018passrecoil4.txt
 imax 80 number of bins
 jmax 11 number of processes minus 1
-kmax 49 number of nuisance parameters
+kmax 47 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
 shapes *                    gcr2018failrecoil0   gcr2018failrecoil0.root gcr2018failrecoil0:gcr2018failrecoil0_$PROCESS gcr2018failrecoil0:gcr2018failrecoil0_$PROCESS_$SYSTEMATIC
 shapes *                    gcr2018failrecoil1   gcr2018failrecoil1.root gcr2018failrecoil1:gcr2018failrecoil1_$PROCESS gcr2018failrecoil1:gcr2018failrecoil1_$PROCESS_$SYSTEMATIC
@@ -129,8 +129,6 @@ trig_met2018  param  0 1
 zhf_fraction  param  0 1
 tf_MCtempl_deco3  param  0 1
 tf_MCtempl_deco2  param  0 1
-tf_MCtempl_deco5  param  0 1
-tf_MCtempl_deco4  param  0 1
 btag2018      param  0 1
 ghf_fraction  param  0 1
 wjets_norm    param  0 1
@@ -301,7 +299,6 @@ wmcr2018failrecoil1_tt_bin6_nominal extArg wmcr2018failrecoil1.root:wmcr2018fail
 tmcr2018failrecoil4_wjets_bin9_nominal extArg tmcr2018failrecoil4.root:tmcr2018failrecoil4
 tf_dataResidual_recoil_par0_fjmass_par1 extArg tmcr2018passrecoil4.root:tmcr2018passrecoil4
 tf_dataResidual_recoil_par0_fjmass_par0 extArg tmcr2018passrecoil4.root:tmcr2018passrecoil4
-tf_dataResidual_recoil_par0_fjmass_par2 extArg tmcr2018passrecoil4.root:tmcr2018passrecoil4
 wecr2018failrecoil2_wjets_bin8_nominal extArg wecr2018failrecoil2.root:wecr2018failrecoil2
 zmcr2018failrecoil1_dyjets_bin2_nominal extArg zmcr2018failrecoil1.root:zmcr2018failrecoil1
 tmcr2018passrecoil0_wjets_bin5_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
@@ -500,7 +497,7 @@ tecr2018failrecoil3_wjets_bin9_nominal extArg tecr2018failrecoil3.root:tecr2018f
 tmcr2018failrecoil3_wjets_bin5_nominal extArg tmcr2018failrecoil3.root:tmcr2018failrecoil3
 wmcr2018failrecoil3_wjets_bin1_nominal extArg wmcr2018failrecoil3.root:wmcr2018failrecoil3
 gcr2018passrecoil4_gjets_bin3_nominal extArg gcr2018passrecoil4.root:gcr2018passrecoil4
-sr2018passrecoil2_wjets_bin0_nominal extArg wmcr2018passrecoil2.root:wmcr2018passrecoil2
+wecr2018failrecoil3_tt_bin6_nominal extArg wecr2018failrecoil3.root:wecr2018failrecoil3
 tmcr2018failrecoil4_wjets_bin6_nominal extArg tmcr2018failrecoil4.root:tmcr2018failrecoil4
 tmcr2018passrecoil1_tt_bin3_nominal extArg tmcr2018passrecoil1.root:tmcr2018passrecoil1
 wmcr2018passrecoil1_wjets_bin11_nominal extArg wmcr2018passrecoil1.root:wmcr2018passrecoil1
@@ -780,7 +777,7 @@ sr2018passrecoil1_tt_bin6_nominal extArg wmcr2018passrecoil1.root:wmcr2018passre
 zecr2018passrecoil0_dyjets_bin8_nominal extArg zecr2018passrecoil0.root:zecr2018passrecoil0
 zecr2018passrecoil4_dyjets_bin8_nominal extArg zecr2018passrecoil4.root:zecr2018passrecoil4
 tmcr2018failrecoil1_wjets_bin2_nominal extArg tmcr2018failrecoil1.root:tmcr2018failrecoil1
-wecr2018failrecoil3_tt_bin6_nominal extArg wecr2018failrecoil3.root:wecr2018failrecoil3
+sr2018passrecoil2_wjets_bin0_nominal extArg wmcr2018passrecoil2.root:wmcr2018passrecoil2
 sr2018passrecoil0_wjets_bin7_nominal extArg tecr2018passrecoil0.root:tecr2018passrecoil0
 tecr2018failrecoil1_wjets_bin5_nominal extArg tecr2018failrecoil1.root:tecr2018failrecoil1
 sr2018passrecoil2_zjets_bin11_nominal extArg wmcr2018passrecoil2.root:wmcr2018passrecoil2
@@ -1702,7 +1699,6 @@ tecr2018passrecoil1_tt_bin0_nominal extArg tecr2018passrecoil1.root:tecr2018pass
 wmcr2018failrecoil2_tt_bin5_nominal extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
 tf_dataResidual_recoil_par1_fjmass_par0 extArg tmcr2018passrecoil4.root:tmcr2018passrecoil4
 tf_dataResidual_recoil_par1_fjmass_par1 extArg tmcr2018passrecoil4.root:tmcr2018passrecoil4
-tf_dataResidual_recoil_par1_fjmass_par2 extArg tmcr2018passrecoil4.root:tmcr2018passrecoil4
 tmcr2018passrecoil4_wjets_bin5_nominal extArg tmcr2018passrecoil4.root:tmcr2018passrecoil4
 tecr2018failrecoil0_tt_bin8_nominal extArg tecr2018failrecoil0.root:tecr2018failrecoil0
 zmcr2018passrecoil3_dyjets_bin11_nominal extArg zmcr2018passrecoil3.root:zmcr2018passrecoil3

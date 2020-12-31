@@ -1,7 +1,7 @@
-# Datacard for <Channel (wmcr2018passrecoil4) instance at 0x7f9439d44b50> generated on 2020-12-31 11:10:21.505315
+# Datacard for <Channel (wmcr2018passrecoil4) instance at 0x2b9fb5f8c050> generated on 2021-01-01 03:03:23.282427
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
-kmax 33 # number of nuisance parameters
+kmax 31 # number of nuisance parameters
 shapes * wmcr2018passrecoil4 wmcr2018passrecoil4.root wmcr2018passrecoil4:wmcr2018passrecoil4_$PROCESS wmcr2018passrecoil4:wmcr2018passrecoil4_$PROCESS_$SYSTEMATIC
 bin wmcr2018passrecoil4
 observation 550.000
@@ -37,8 +37,6 @@ tf_MCtempl_deco0 param 0 1
 tf_MCtempl_deco1 param 0 1
 tf_MCtempl_deco2 param 0 1
 tf_MCtempl_deco3 param 0 1
-tf_MCtempl_deco4 param 0 1
-tf_MCtempl_deco5 param 0 1
 whf_fraction param 0 1
 wjets_norm param 0 1
 zhf_fraction param 0 1
@@ -92,10 +90,8 @@ sr2018passrecoil4_zjets_bin8_nominal extArg wmcr2018passrecoil4.root:wmcr2018pas
 sr2018passrecoil4_zjets_bin9_nominal extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
 tf_dataResidual_recoil_par0_fjmass_par0 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
 tf_dataResidual_recoil_par0_fjmass_par1 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-tf_dataResidual_recoil_par0_fjmass_par2 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
 tf_dataResidual_recoil_par1_fjmass_par0 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
 tf_dataResidual_recoil_par1_fjmass_par1 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
-tf_dataResidual_recoil_par1_fjmass_par2 extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
 wmcr2018passrecoil4_wjets_bin0_nominal extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
 wmcr2018passrecoil4_wjets_bin10_nominal extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
 wmcr2018passrecoil4_wjets_bin11_nominal extArg wmcr2018passrecoil4.root:wmcr2018passrecoil4
