@@ -1716,9 +1716,9 @@ if __name__ == "__main__":
         sr_zjetsNuisances,
         sr_ttNuisances,
     ) = initialize_nuisances(hists, year)
-    tf_params = rhalphabeth(mass_binning)
+    #tf_params = rhalphabeth(mass_binning)
     #tf_params = 0.05
-    #tf_params = rhalphabeth2D()
+    tf_params = rhalphabeth2D()
 
     ###
     ###
