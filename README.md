@@ -279,10 +279,10 @@ python macros/combine_datacards.py -a darkhiggs
 ```
 Where the ```-a``` or ```--analysis``` options correspond to the analysis name. The ```combine_datacards.py``` script will combine all the datacards whose name contains the string that is passed through the ```-a``` option. The script will create a folder inside ```datacards``` whose name corresponds to the string that is passed through the ```-a``` option, will move all the workspaces that correspond to the datacards it combined inside it, and will save in it the combined datacard, whose name will be set to the string that is passed through the ```-a``` option.
 
-You can also plot the inputs from a **single** workspace with the `makeWorkspacePlots.C` macro. It stacks all the inputs in a single histogram. Copy it to wherever the ROOT files are (usually they will be in the `darkhiggs` folder you created just above) and do, for example:
+You can also plot the inputs from a **single** workspace with the `makeWorkspacePlots.C` macro. It stacks all the inputs in a single histogram. From the folder you have just created at the previous step, do, for example:
 
 ```
-root -b -q makeWorkspacePlots.C\('"zecr2018passrecoil4"',5000,2000\)
+root -b -q ../../makeWorkspacePlots.C\('"zecr2018passrecoil4"',5000,2000\)
 ```
 where the first argument (`zecr2018passrecoil4`) is the name of the workspace; the ROOT file name must be the same, but with the `.root` extension; the second argument (`5000`) is the limit of the y-axis of the stack; the third argument (`2000`) is the y-position of an explanatory label; that label will simply be the same as the first argument again.
 
