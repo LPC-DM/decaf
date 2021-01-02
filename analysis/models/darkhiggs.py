@@ -583,11 +583,11 @@ def model(year, recoil, category):
         sr_zjetsBinYields,
     )
     
-    sr_zjets_pass = rl.TransferFactorSample(
+    sr_zjets_pass = rl.ParametericSample(
         ch_name + "_zjets",
         rl.Sample.BACKGROUND,
-        tf_paramsZ[recoil],
-        sr_zjets_fail,
+        sr_zjetsObservable,
+        sr_zjetsBinYields * tf_paramsZ[recoil],
     )
         
     if category == "pass":
@@ -603,18 +603,18 @@ def model(year, recoil, category):
 
     # Adding W-Z link
 
-    sr_wjets_fail = rl.TransferFactorSample(
+    sr_wjets_fail = rl.ParametericSample(
         ch_name + "_wjets", 
-        rl.Sample.BACKGROUND, 
-        sr_wjetsTransferFactor, 
-        sr_zjets_fail
+        rl.Sample.BACKGROUND,
+        sr_zjetsObservable,
+        sr_zjetsBinYields * sr_wjetsTransferFactor
     )
 
-    sr_wjets_pass = rl.TransferFactorSample(
+    sr_wjets_pass = rl.ParametericSample(
         ch_name + "_wjets", 
-        rl.Sample.BACKGROUND, 
-        tf_paramsW[recoil], 
-        sr_wjets_fail
+        rl.Sample.BACKGROUND,
+        sr_zjetsObservable,
+        sr_zjetsBinYields * sr_wjetsTransferFactor * tf_paramsW[recoil]
     )
 
     if category == "pass":
