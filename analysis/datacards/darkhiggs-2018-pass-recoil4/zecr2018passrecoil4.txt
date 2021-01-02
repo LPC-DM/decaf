@@ -1,4 +1,4 @@
-# Datacard for <Channel (zecr2018passrecoil4) instance at 0x2b38f518f590> generated on 2020-12-30 11:16:17.806172
+# Datacard for <Channel (zecr2018passrecoil4) instance at 0x2b9c448e7a90> generated on 2021-01-02 09:36:52.491728
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 4 # number of samples minus 1
 kmax 29 # number of nuisance parameters
@@ -68,9 +68,6 @@ tf_dataResidual_recoil_par0_fjmass_par2 extArg zecr2018passrecoil4.root:zecr2018
 tf_dataResidual_recoil_par1_fjmass_par0 extArg zecr2018passrecoil4.root:zecr2018passrecoil4
 tf_dataResidual_recoil_par1_fjmass_par1 extArg zecr2018passrecoil4.root:zecr2018passrecoil4
 tf_dataResidual_recoil_par1_fjmass_par2 extArg zecr2018passrecoil4.root:zecr2018passrecoil4
-tf_dataResidual_recoil_par2_fjmass_par0 extArg zecr2018passrecoil4.root:zecr2018passrecoil4
-tf_dataResidual_recoil_par2_fjmass_par1 extArg zecr2018passrecoil4.root:zecr2018passrecoil4
-tf_dataResidual_recoil_par2_fjmass_par2 extArg zecr2018passrecoil4.root:zecr2018passrecoil4
 zecr2018passrecoil4_dyjets_bin0_nominal extArg zecr2018passrecoil4.root:zecr2018passrecoil4
 zecr2018passrecoil4_dyjets_bin10_nominal extArg zecr2018passrecoil4.root:zecr2018passrecoil4
 zecr2018passrecoil4_dyjets_bin11_nominal extArg zecr2018passrecoil4.root:zecr2018passrecoil4

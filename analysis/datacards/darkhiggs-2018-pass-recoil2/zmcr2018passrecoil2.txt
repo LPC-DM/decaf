@@ -1,4 +1,4 @@
-# Datacard for <Channel (zmcr2018passrecoil2) instance at 0x2b407b5192d0> generated on 2020-12-30 11:17:09.057011
+# Datacard for <Channel (zmcr2018passrecoil2) instance at 0x2ab42c4e7850> generated on 2021-01-02 09:39:20.028252
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 4 # number of samples minus 1
 kmax 28 # number of nuisance parameters
@@ -67,9 +67,6 @@ tf_dataResidual_recoil_par0_fjmass_par2 extArg zmcr2018passrecoil2.root:zmcr2018
 tf_dataResidual_recoil_par1_fjmass_par0 extArg zmcr2018passrecoil2.root:zmcr2018passrecoil2
 tf_dataResidual_recoil_par1_fjmass_par1 extArg zmcr2018passrecoil2.root:zmcr2018passrecoil2
 tf_dataResidual_recoil_par1_fjmass_par2 extArg zmcr2018passrecoil2.root:zmcr2018passrecoil2
-tf_dataResidual_recoil_par2_fjmass_par0 extArg zmcr2018passrecoil2.root:zmcr2018passrecoil2
-tf_dataResidual_recoil_par2_fjmass_par1 extArg zmcr2018passrecoil2.root:zmcr2018passrecoil2
-tf_dataResidual_recoil_par2_fjmass_par2 extArg zmcr2018passrecoil2.root:zmcr2018passrecoil2
 zmcr2018passrecoil2_dyjets_bin0_nominal extArg zmcr2018passrecoil2.root:zmcr2018passrecoil2
 zmcr2018passrecoil2_dyjets_bin10_nominal extArg zmcr2018passrecoil2.root:zmcr2018passrecoil2
 zmcr2018passrecoil2_dyjets_bin11_nominal extArg zmcr2018passrecoil2.root:zmcr2018passrecoil2

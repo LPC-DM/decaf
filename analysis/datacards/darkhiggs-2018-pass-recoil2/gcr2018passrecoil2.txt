@@ -1,4 +1,4 @@
-# Datacard for <Channel (gcr2018passrecoil2) instance at 0x2b407b519490> generated on 2020-12-30 11:17:18.390164
+# Datacard for <Channel (gcr2018passrecoil2) instance at 0x2ab42c4e7950> generated on 2021-01-02 09:39:39.931016
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 1 # number of samples minus 1
 kmax 29 # number of nuisance parameters
@@ -80,6 +80,3 @@ tf_dataResidual_recoil_par0_fjmass_par2 extArg gcr2018passrecoil2.root:gcr2018pa
 tf_dataResidual_recoil_par1_fjmass_par0 extArg gcr2018passrecoil2.root:gcr2018passrecoil2
 tf_dataResidual_recoil_par1_fjmass_par1 extArg gcr2018passrecoil2.root:gcr2018passrecoil2
 tf_dataResidual_recoil_par1_fjmass_par2 extArg gcr2018passrecoil2.root:gcr2018passrecoil2
-tf_dataResidual_recoil_par2_fjmass_par0 extArg gcr2018passrecoil2.root:gcr2018passrecoil2
-tf_dataResidual_recoil_par2_fjmass_par1 extArg gcr2018passrecoil2.root:gcr2018passrecoil2
-tf_dataResidual_recoil_par2_fjmass_par2 extArg gcr2018passrecoil2.root:gcr2018passrecoil2
