@@ -303,42 +303,6 @@ def computeTFs(hists, year, recoil, category):
     addBtagSyst(background, recoil, "W+jets", "wecr", wecr_wjets)
     addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjets)
 
-    tmcr_wjets = rl.TemplateSample(
-        "tmcr" + model_id + "_wjets",
-        rl.Sample.BACKGROUND,
-        template(background, "W+jets", "nominal", recoil, "tmcr", category),
-    )
-    tmcr_wjets.setParamEffect(lumi, 1.027)
-    tmcr_wjets.setParamEffect(trig_met, 1.01)
-    tmcr_wjets.setParamEffect(veto_tau, 1.03)
-    tmcr_wjets.setParamEffect(wjets_norm, 1.4)
-    tmcr_wjets.setParamEffect(jec, 1.05)
-    tmcr_wjets.setParamEffect(id_mu, 1.02)
-    tmcr_wjets.setParamEffect(iso_mu, 1.02)
-    tmcr_wjets.setParamEffect(
-        whf_fraction, np.array(hf_systematic["W+jets"]["tmcr"][category][recoil])
-    )
-    addBtagSyst(background, recoil, "W+jets", "tmcr", tmcr_wjets)
-    addVJetsSyst(background, recoil, "W+jets", "tmcr", tmcr_wjets)
-
-    tecr_wjets = rl.TemplateSample(
-        "tecr" + model_id + "_wjets",
-        rl.Sample.BACKGROUND,
-        template(background, "W+jets", "nominal", recoil, "tecr", category),
-    )
-    tecr_wjets.setParamEffect(lumi, 1.027)
-    tecr_wjets.setParamEffect(trig_e, 1.01)
-    tecr_wjets.setParamEffect(veto_tau, 1.03)
-    tecr_wjets.setParamEffect(wjets_norm, 1.4)
-    tecr_wjets.setParamEffect(jec, 1.05)
-    tecr_wjets.setParamEffect(id_e, 1.02)
-    tecr_wjets.setParamEffect(reco_e, 1.02)
-    tecr_wjets.setParamEffect(
-        whf_fraction, np.array(hf_systematic["W+jets"]["tecr"][category][recoil])
-    )
-    addBtagSyst(background, recoil, "W+jets", "tecr", tecr_wjets)
-    addVJetsSyst(background, recoil, "W+jets", "tecr", tecr_wjets)
-
     ###
     # TT templates
     ###
@@ -419,22 +383,18 @@ def computeTFs(hists, year, recoil, category):
     sr_wjetsTransferFactor = sr_wjets.getExpectation() / sr_zjets.getExpectation()
     wmcr_wjetsTransferFactor = wmcr_wjets.getExpectation() / sr_wjets.getExpectation()
     wmcr_ttTransferFactor = wmcr_tt.getExpectation() / sr_tt.getExpectation()
-    tmcr_wjetsTransferFactor = tmcr_wjets.getExpectation() / sr_wjets.getExpectation()
     tmcr_ttTransferFactor = tmcr_tt.getExpectation() / sr_tt.getExpectation()
     wecr_wjetsTransferFactor = wecr_wjets.getExpectation() / sr_wjets.getExpectation()
     wecr_ttTransferFactor = wecr_tt.getExpectation() / sr_tt.getExpectation()
-    tecr_wjetsTransferFactor = tecr_wjets.getExpectation() / sr_wjets.getExpectation()
     tecr_ttTransferFactor = tecr_tt.getExpectation() / sr_tt.getExpectation()
 
     return (
         sr_wjetsTransferFactor,
         wmcr_wjetsTransferFactor,
         wmcr_ttTransferFactor,
-        tmcr_wjetsTransferFactor,
         tmcr_ttTransferFactor,
         wecr_wjetsTransferFactor,
         wecr_ttTransferFactor,
-        tecr_wjetsTransferFactor,
         tecr_ttTransferFactor,
     )
 
@@ -1155,15 +1115,6 @@ def model(year, recoil, category):
         tecr.setObservation(template(data, "SingleElectron", "data", recoil, "tecr", category))
 
     ###
-    # W(->lnu)+jets data-driven model
-    ###
-
-    tecr_wjets = rl.TransferFactorSample(
-        ch_name + "_wjets", rl.Sample.BACKGROUND, tecr_wjetsTransferFactor, sr_wjets
-    )
-    tecr.addSample(tecr_wjets)
-
-    ###
     # top-antitop model
     ###
 
@@ -1358,11 +1309,9 @@ if __name__ == "__main__":
                 sr_wjetsTransferFactor,
                 wmcr_wjetsTransferFactor,
                 wmcr_ttTransferFactor,
-                tmcr_wjetsTransferFactor,
                 tmcr_ttTransferFactor,
                 wecr_wjetsTransferFactor,
                 wecr_ttTransferFactor,
-                tecr_wjetsTransferFactor,
                 tecr_ttTransferFactor,
             ) = computeTFs(hists, year, recoilbin, category)
             with open(
