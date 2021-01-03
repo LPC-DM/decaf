@@ -124,12 +124,12 @@ def remap_histograms(hists):
 
     return hists
 
-def addBtagSyst(dictionary, recoil, process, region, templ):
+def addBtagSyst(dictionary, recoil, process, region, templ, category):
     btagUp = template(dictionary, process, "btagUp", recoil, region, category)[0]
     btagDown = template(dictionary, process, "btagDown", recoil, region, category)[0]
     templ.setParamEffect(btag, btagUp, btagDown)
 
-def addVJetsSyst(dictionary, recoil, process, region, templ):
+def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     ew1Up = template(dictionary, process, "ew1Up", recoil, region, category)[0]
     ew1Down = template(dictionary, process, "ew1Down", recoil, region, category)[0]
     templ.setParamEffect(ew1, ew1Up, ew1Down)
@@ -276,78 +276,25 @@ def model(year, recoil, category):
     # Z(->nunu)+jets data-driven model
     ###
 
-    sr_zjetsTemplate = template(background, "Z+jets", "nominal", recoil, "sr", category)
-    sr_zjetsMC = rl.TemplateSample(
-        "sr" + model_id + "_zjetsMC",
-        rl.Sample.BACKGROUND,
-        sr_zjetsTemplate
-    )
-    sr_zjetsMC.setParamEffect(lumi, 1.027)
-    sr_zjetsMC.setParamEffect(zjets_norm, 1.4)
-    sr_zjetsMC.setParamEffect(trig_met, 1.01)
-    sr_zjetsMC.setParamEffect(veto_tau, 1.03)
-    sr_zjetsMC.setParamEffect(jec, 1.05)
-    sr_zjetsMC.setParamEffect(zhf_fraction, np.array(hf_systematic["Z+jets"]["sr"][category][recoil]))
-    addBtagSyst(background, recoil, "Z+jets", "sr", sr_zjetsMC)
-    addVJetsSyst(background, recoil, "Z+jets", "sr", sr_zjetsMC)
-
-    sr_zjetsObservable = rl.Observable("fjmass", sr_zjetsTemplate[1])
     if category == "pass":
-        sr_zjets = rl.ParametericSample(
-            ch_name + "_zjets",
-            rl.Sample.BACKGROUND,
-            sr_zjetsObservable,
-            sr_zjetsBinYields * tf_paramsZ[recoil]
-        )
-        sr.addSample(sr_zjets)
+        sr_zjetsMC = sr_zjetsMCPass
+        sr_zjets = sr_zjetsPass
     else:
-        sr_zjets = rl.ParametericSample(
-            ch_name + "_zjets",
-            rl.Sample.BACKGROUND,
-            sr_zjetsObservable,
-            sr_zjetsBinYields
-        )
-        sr.addSample(sr_zjets)
+        sr_zjetsMC = sr_zjetsMCFail
+        sr_zjets = sr_zjetsFail
+    sr.addSample(sr_zjets)
 
     ###
     # W(->lnu)+jets data-driven model
     ###
 
-
-    sr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "sr", category)
-    sr_wjetsMC = rl.TemplateSample(
-        "sr" + model_id + "_wjetsMC",
-        rl.Sample.BACKGROUND,
-        sr_wjetsTemplate
-    )
-    sr_wjetsMC.setParamEffect(lumi, 1.027)
-    sr_wjetsMC.setParamEffect(wjets_norm, 1.4)
-    sr_wjetsMC.setParamEffect(trig_met, 1.01)
-    sr_wjetsMC.setParamEffect(veto_tau, 1.03)
-    sr_wjetsMC.setParamEffect(jec, 1.05)
-    sr_wjetsMC.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["sr"][category][recoil]))
-    addBtagSyst(background, recoil, "W+jets", "sr", sr_wjetsMC)
-    addVJetsSyst(background, recoil, "W+jets", "sr", sr_wjetsMC)
-
-    # Adding W-Z link
-    sr_wjetsTransferFactor = sr_wjetsMC.getExpectation() / sr_zjetsMC.getExpectation()
-    
     if category == "pass":
-        sr_wjets = rl.ParametericSample(
-            ch_name + "_wjets", 
-            rl.Sample.BACKGROUND,
-            sr_zjetsObservable,
-            sr_zjetsBinYields * sr_wjetsTransferFactor * tf_paramsW[recoil]
-        )
-        sr.addSample(sr_wjets)
+        sr_wjetsMC = sr_wjetsMCPass
+        sr_wjets = sr_wjetsPass
     else:
-        sr_wjets = rl.ParametericSample(
-            ch_name + "_wjets", 
-            rl.Sample.BACKGROUND,
-            sr_zjetsObservable,
-            sr_zjetsBinYields * sr_wjetsTransferFactor
-        )
-        sr.addSample(sr_wjets)
+        sr_wjetsMC = sr_wjetsMCFail
+        sr_wjets = sr_wjetsFail
+    sr.addSample(sr_wjets)
 
     ###
     # top-antitop model
@@ -364,16 +311,29 @@ def model(year, recoil, category):
     sr_ttMC.setParamEffect(trig_met, 1.01)
     sr_ttMC.setParamEffect(veto_tau, 1.03)
     sr_ttMC.setParamEffect(jec, 1.05)
-    addBtagSyst(background, recoil, "TT", "sr", sr_ttMC)
+    addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
 
     sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
     if category == "pass":
+        sr_ttMCPass = template(background, "TT", "nominal", recoilbin, "sr", category)[0]
+        sr_ttBinYields = np.array(  # one nuisance per mass shape bin in pass                                              
+            [
+                rl.IndependentParameter(
+                    "sr" + year + "_tt_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i,
+                    b,
+                    0,
+                    sr_ttMCPass.max() * 2,
+                )
+                for i, b in enumerate(sr_ttMCPass)
+            ]
+        )
+    
         sr_tt = rl.ParametericSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields
         )
-        sr.addSample(sr_tt)
     else:
-        sr.addSample(sr_ttMC)
+        sr_tt=sr_ttMC
+    sr.addSample(sr_tt)
 
     ###
     # Other MC-driven processes
@@ -386,7 +346,7 @@ def model(year, recoil, category):
     sr_st.setParamEffect(veto_tau, 1.03)
     sr_st.setParamEffect(st_norm, 1.2)
     sr_st.setParamEffect(jec, 1.05)
-    addBtagSyst(background, recoil, "ST", "sr", sr_st)
+    addBtagSyst(background, recoil, "ST", "sr", sr_st, category)
     sr.addSample(sr_st)
 
     sr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "sr", category)
@@ -398,8 +358,8 @@ def model(year, recoil, category):
     sr_dyjets.setParamEffect(veto_tau, 1.03)
     sr_dyjets.setParamEffect(zjets_norm, 1.4)
     sr_dyjets.setParamEffect(jec, 1.05)
-    addBtagSyst(background, recoil, "DY+jets", "sr", sr_dyjets)
-    addVJetsSyst(background, recoil, "DY+jets", "sr", sr_dyjets)
+    addBtagSyst(background, recoil, "DY+jets", "sr", sr_dyjets, category)
+    addVJetsSyst(background, recoil, "DY+jets", "sr", sr_dyjets, category)
     sr.addSample(sr_dyjets)
 
     sr_vvTemplate = template(background, "VV", "nominal", recoil, "sr", category)
@@ -409,7 +369,7 @@ def model(year, recoil, category):
     sr_vv.setParamEffect(veto_tau, 1.03)
     sr_vv.setParamEffect(vv_norm, 1.2)
     sr_vv.setParamEffect(jec, 1.05)
-    addBtagSyst(background, recoil, "VV", "sr", sr_vv)
+    addBtagSyst(background, recoil, "VV", "sr", sr_vv, category)
     sr.addSample(sr_vv)
 
     sr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "sr", category)
@@ -419,7 +379,7 @@ def model(year, recoil, category):
     sr_hbb.setParamEffect(veto_tau, 1.03)
     sr_hbb.setParamEffect(hbb_norm, 1.2)
     sr_hbb.setParamEffect(jec, 1.05)
-    addBtagSyst(background, recoil, "Hbb", "sr", sr_hbb)
+    addBtagSyst(background, recoil, "Hbb", "sr", sr_hbb, category)
     sr.addSample(sr_hbb)
 
     sr_qcdTemplate = template(background, "QCD", "nominal", recoil, "sr", category)
@@ -429,7 +389,7 @@ def model(year, recoil, category):
     sr_qcd.setParamEffect(veto_tau, 1.03)
     sr_qcd.setParamEffect(qcdsig_norm, 2.0)
     sr_qcd.setParamEffect(jec, 1.05)
-    addBtagSyst(background, recoil, "QCD", "sr", sr_qcd)
+    addBtagSyst(background, recoil, "QCD", "sr", sr_qcd, category)
     sr.addSample(sr_qcd)
 
     for s in signal["sr"].identifiers("process"):
@@ -443,7 +403,7 @@ def model(year, recoil, category):
         sr_signal.setParamEffect(trig_met, 1.01)
         sr_signal.setParamEffect(veto_tau, 1.03)
         sr_signal.setParamEffect(jec, 1.05)
-        addBtagSyst(signal, recoil, str(s), "sr", sr_signal)
+        addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category)
         sr.addSample(sr_signal)
 
     ###
@@ -486,8 +446,8 @@ def model(year, recoil, category):
     wmcr_wjetsMC.setParamEffect(
         whf_fraction, np.array(hf_systematic["W+jets"]["wmcr"][category][recoil])
     )
-    addBtagSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC)
-    addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC)
+    addBtagSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
+    addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
 
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     wmcr_wjets = rl.TransferFactorSample(
@@ -512,17 +472,17 @@ def model(year, recoil, category):
     wmcr_ttMC.setParamEffect(jec, 1.05)
     wmcr_ttMC.setParamEffect(id_mu, 1.02)
     wmcr_ttMC.setParamEffect(iso_mu, 1.02)
-    addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC)
+    addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
 
     wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     if category == "pass":
         wmcr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
         )
-        wmcr.addSample(wmcr_tt)
     else:
-        wmcr.addSample(wmcr_ttMC)
-
+        wmcr_tt=wmcr_ttMC
+    wmcr.addSample(wmcr_tt)
+        
     ###
     # Other MC-driven processes
     ###
@@ -557,7 +517,7 @@ def model(year, recoil, category):
     btagUp = template(background, "DY+jets", "btagUp", recoil, "wmcr", category)[0]
     btagDown = template(background, "DY+jets", "btagDown", recoil, "wmcr", category)[0]
     wmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    addVJetsSyst(background, recoil, "DY+jets", "wmcr", wmcr_dyjets)
+    addVJetsSyst(background, recoil, "DY+jets", "wmcr", wmcr_dyjets, category)
     wmcr.addSample(wmcr_dyjets)
 
     wmcr_vvTemplate = template(background, "VV", "nominal", recoil, "wmcr", category)
@@ -651,8 +611,8 @@ def model(year, recoil, category):
     wecr_wjetsMC.setParamEffect(
         whf_fraction, np.array(hf_systematic["W+jets"]["wecr"][category][recoil])
     )
-    addBtagSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC)
-    addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC)
+    addBtagSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
+    addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
 
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     wecr_wjets = rl.TransferFactorSample(
@@ -677,16 +637,16 @@ def model(year, recoil, category):
     wecr_ttMC.setParamEffect(jec, 1.05)
     wecr_ttMC.setParamEffect(id_e, 1.02)
     wecr_ttMC.setParamEffect(reco_e, 1.02)
-    addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC)
+    addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category)
     
     wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     if category == "pass":
         wecr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
             )
-        wecr.addSample(wecr_tt)
     else:
-        wecr.addSample(wecr_ttMC)
+        wecr_tt = wecr_ttMC
+    wecr.addSample(wecr_tt)
 
     ###
     # Other MC-driven processes
@@ -722,7 +682,7 @@ def model(year, recoil, category):
     btagUp = template(background, "DY+jets", "btagUp", recoil, "wecr", category)[0]
     btagDown = template(background, "DY+jets", "btagDown", recoil, "wecr", category)[0]
     wecr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    addVJetsSyst(background, recoil, "DY+jets", "wecr", wecr_dyjets)
+    addVJetsSyst(background, recoil, "DY+jets", "wecr", wecr_dyjets, category)
     wecr.addSample(wecr_dyjets)
 
     wecr_vvTemplate = template(background, "VV", "nominal", recoil, "wecr", category)
@@ -812,7 +772,7 @@ def model(year, recoil, category):
         tmcr_ttMC.setParamEffect(jec, 1.05)
         tmcr_ttMC.setParamEffect(id_mu, 1.02)
         tmcr_ttMC.setParamEffect(iso_mu, 1.02)
-        addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC)
+        addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category)
 
         tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() 
         tmcr_tt = rl.TransferFactorSample(
@@ -838,7 +798,7 @@ def model(year, recoil, category):
         btagUp = template(background, "W+jets", "btagUp", recoil, "tmcr", category)[0]
         btagDown = template(background, "W+jets", "btagDown", recoil, "tmcr", category)[0]
         tmcr_wjets.setParamEffect(btag, btagUp, btagDown)
-        addVJetsSyst(background, recoil, "W+jets", "tmcr", tmcr_wjets)
+        addVJetsSyst(background, recoil, "W+jets", "tmcr", tmcr_wjets, category)
         tmcr.addSample(tmcr_wjets)
 
         tmcr_stTemplate = template(background, "ST", "nominal", recoil, "tmcr", category)
@@ -871,7 +831,7 @@ def model(year, recoil, category):
         btagUp = template(background, "DY+jets", "btagUp", recoil, "tmcr", category)[0]
         btagDown = template(background, "DY+jets", "btagDown", recoil, "tmcr", category)[0]
         tmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
-        addVJetsSyst(background, recoil, "DY+jets", "tmcr", tmcr_dyjets)
+        addVJetsSyst(background, recoil, "DY+jets", "tmcr", tmcr_dyjets, category)
         tmcr.addSample(tmcr_dyjets)
 
         tmcr_vvTemplate = template(background, "VV", "nominal", recoil, "tmcr", category)
@@ -962,7 +922,7 @@ def model(year, recoil, category):
         tecr_ttMC.setParamEffect(jec, 1.05)
         tecr_ttMC.setParamEffect(id_e, 1.02)
         tecr_ttMC.setParamEffect(reco_e, 1.02)
-        addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC)
+        addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category)
 
         tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         tecr_tt = rl.TransferFactorSample(
@@ -988,7 +948,7 @@ def model(year, recoil, category):
         btagUp = template(background, "W+jets", "btagUp", recoil, "tecr", category)[0]
         btagDown = template(background, "W+jets", "btagDown", recoil, "tecr", category)[0]
         tecr_wjets.setParamEffect(btag, btagUp, btagDown)
-        addVJetsSyst(background, recoil, "W+jets", "tecr", tecr_wjets)
+        addVJetsSyst(background, recoil, "W+jets", "tecr", tecr_wjets, category)
         tecr.addSample(tecr_wjets)
 
         tecr_stTemplate = template(background, "ST", "nominal", recoil, "tecr", category)
@@ -1021,7 +981,7 @@ def model(year, recoil, category):
         btagUp = template(background, "DY+jets", "btagUp", recoil, "tecr", category)[0]
         btagDown = template(background, "DY+jets", "btagDown", recoil, "tecr", category)[0]
         tecr_dyjets.setParamEffect(btag, btagUp, btagDown)
-        addVJetsSyst(background, recoil, "DY+jets", "tecr", tecr_dyjets)
+        addVJetsSyst(background, recoil, "DY+jets", "tecr", tecr_dyjets, category)
         tecr.addSample(tecr_dyjets)
 
         tecr_vvTemplate = template(background, "VV", "nominal", recoil, "tecr", category)
@@ -1166,32 +1126,107 @@ if __name__ == "__main__":
     model_dict = {}
     for recoilbin in range(nrecoil):
 
-        sr_zjetsMCFail = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail")[0]
+        sr_zjetsMCFailTemplate = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail")
+        sr_zjetsMCFail = rl.TemplateSample(
+            "sr" + year + "fail" + "recoil" + str(recoilbin) + "_zjetsMC",
+            rl.Sample.BACKGROUND,
+            sr_zjetsMCFailTemplate
+        )
+        sr_zjetsMCFail.setParamEffect(lumi, 1.027)
+        sr_zjetsMCFail.setParamEffect(zjets_norm, 1.4)
+        sr_zjetsMCFail.setParamEffect(trig_met, 1.01)
+        sr_zjetsMCFail.setParamEffect(veto_tau, 1.03)
+        sr_zjetsMCFail.setParamEffect(jec, 1.05)
+        sr_zjetsMCFail.setParamEffect(zhf_fraction, np.array(hf_systematic["Z+jets"]["sr"]["fail"][recoilbin]))
+        addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
+        addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
+
         sr_zjetsBinYields= np.array(  # one nuisance per mass shape bin in pass
             [
                 rl.IndependentParameter(
                     "sr" + year + "_zjets_fail_recoil"+str(recoilbin)+"_mass%d" % i,
                     b,
                     0,
-                    sr_zjetsMCFail.max() * 2,
+                    sr_zjetsMCFailTemplate[0].max() * 2,
                 )
-                for i, b in enumerate(sr_zjetsMCFail)
+                for i, b in enumerate(sr_zjetsMCFailTemplate[0])
             ]
+        )
+        sr_zjetsObservable = rl.Observable("fjmass", sr_zjetsMCFailTemplate[1])
+        sr_zjetsFail = rl.ParametericSample(
+            "sr" + year + "fail" + "recoil" + str(recoilbin)+ "_zjets",
+            rl.Sample.BACKGROUND,
+            sr_zjetsObservable,
+            sr_zjetsBinYields
         )
 
-        sr_ttMCPass = template(background, "TT", "nominal", recoilbin, "sr", "pass")[0]
-        sr_ttBinYields = np.array(  # one nuisance per mass shape bin in pass                                              
-            [
-                rl.IndependentParameter(
-                    "sr" + year + "_tt_pass_recoil"+str(recoilbin)+"_mass%d" % i,
-                    b,
-                    0,
-                    sr_ttMCPass.max() * 2,
-                )
-                for i, b in enumerate(sr_ttMCPass)
-            ]
+        sr_zjetsMCPassTemplate = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail")
+        sr_zjetsMCPass = rl.TemplateSample(
+            "sr" + year + "pass" + "recoil" + str(recoilbin) + "_zjetsMC",
+            rl.Sample.BACKGROUND,
+            sr_zjetsMCPassTemplate
         )
-    
+        sr_zjetsMCPass.setParamEffect(lumi, 1.027)
+        sr_zjetsMCPass.setParamEffect(zjets_norm, 1.4)
+        sr_zjetsMCPass.setParamEffect(trig_met, 1.01)
+        sr_zjetsMCPass.setParamEffect(veto_tau, 1.03)
+        sr_zjetsMCPass.setParamEffect(jec, 1.05)
+        sr_zjetsMCPass.setParamEffect(zhf_fraction, np.array(hf_systematic["Z+jets"]["sr"]["pass"][recoilbin]))
+        addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
+        addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
+
+        sr_zjetsPass = rl.TransferFactorSample(
+            "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_zjets",
+            rl.Sample.BACKGROUND,
+            tf_paramsZ[recoilbin, :],
+            sr_zjetsFail
+        )
+
+        sr_wjetsMCFailTemplate = template(background, "W+jets", "nominal", recoilbin, "sr", "fail")
+        sr_wjetsMCFail = rl.TemplateSample(
+            "sr" + year + "fail" + "recoil" + str(recoilbin) + "_wjetsMC",
+            rl.Sample.BACKGROUND,
+            sr_wjetsMCFailTemplate
+        )
+        sr_wjetsMCFail.setParamEffect(lumi, 1.027)
+        sr_wjetsMCFail.setParamEffect(wjets_norm, 1.4)
+        sr_wjetsMCFail.setParamEffect(trig_met, 1.01)
+        sr_wjetsMCFail.setParamEffect(veto_tau, 1.03)
+        sr_wjetsMCFail.setParamEffect(jec, 1.05)
+        sr_wjetsMCFail.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["sr"]["fail"][recoilbin]))
+        addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
+        addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
+
+        sr_wjetsTransferFactor = sr_wjetsMCFail.getExpectation() / sr_zjetsMCFail.getExpectation()
+        sr_wjetsFail = rl.TransferFactorSample(
+            "sr" + year + "fail" + "recoil" + str(recoilbin)+ "_wjets",
+            rl.Sample.BACKGROUND,
+            sr_wjetsTransferFactor,
+            sr_zjetsFail
+        )
+
+        sr_wjetsMCPassTemplate = template(background, "W+jets", "nominal", recoilbin, "sr", "pass")
+        sr_wjetsMCPass = rl.TemplateSample(
+            "sr" + year + "pass" + "recoil" + str(recoilbin) + "_wjetsMC",
+            rl.Sample.BACKGROUND,
+            sr_wjetsMCPassTemplate
+        )
+        sr_wjetsMCPass.setParamEffect(lumi, 1.027)
+        sr_wjetsMCPass.setParamEffect(wjets_norm, 1.4)
+        sr_wjetsMCPass.setParamEffect(trig_met, 1.01)
+        sr_wjetsMCPass.setParamEffect(veto_tau, 1.03)
+        sr_wjetsMCPass.setParamEffect(jec, 1.05)
+        sr_wjetsMCPass.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["sr"]["pass"][recoilbin]))
+        addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
+        addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
+
+        sr_wjetsPass = rl.TransferFactorSample(
+            "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_wjets",
+            rl.Sample.BACKGROUND,
+            tf_paramsW[recoilbin, :],
+            sr_wjetsFail
+        )
+
         for category in ["pass", "fail"]:
             with open(
                 "data/darkhiggs-"
