@@ -172,6 +172,12 @@ def addVJetsSyst(dictionary, recoil, process, region, templ):
 
 def rhalphabeth2D(process):
 
+    process_map = {
+        "W+jets": 'W',
+        "Z+jets": 'Z'
+        }
+        
+
     msdbins = np.array(mass_binning)
     msd = rl.Observable('fjmass', msdbins)
 
@@ -185,8 +191,8 @@ def rhalphabeth2D(process):
     qcdmodel = rl.Model("qcdmodel")
     qcdpass, qcdfail = 0., 0.
     for recoilbin in range(nrecoil):
-        failCh = rl.Channel("recoil%d%s" % (recoilbin, 'fail'))
-        passCh = rl.Channel("recoil%d%s" % (recoilbin, 'pass'))
+        failCh = rl.Channel(process_map[process]+"recoil%d%s" % (recoilbin, 'fail'))
+        passCh = rl.Channel(process_map[process]+"recoil%d%s" % (recoilbin, 'pass'))
         qcdmodel.addChannel(failCh)
         qcdmodel.addChannel(passCh)
         # mock template
@@ -199,25 +205,20 @@ def rhalphabeth2D(process):
         qcdfail += failCh.getObservation().sum()
         qcdpass += passCh.getObservation().sum()
 
-    process_map = {
-        "W+jets": 'W',
-        "Z+jets": 'Z'
-        }
-        
     qcdeff = qcdpass / qcdfail
     tf_MCtempl = rl.BernsteinPoly("tf_MCtempl"+process_map[process], (1, 2), ['recoil', 'fjmass'], limits=(0, 10))
     tf_MCtempl_params = qcdeff * tf_MCtempl(recoilscaled, msdscaled)
     for recoilbin in range(nrecoil):
-        failCh = qcdmodel['recoil%dfail' % recoilbin]
-        passCh = qcdmodel['recoil%dpass' % recoilbin]
+        failCh = qcdmodel[process_map[process]+'recoil%dfail' % recoilbin]
+        passCh = qcdmodel[process_map[process]+'recoil%dpass' % recoilbin]
         failObs = failCh.getObservation()
         qcdparams = np.array([rl.IndependentParameter(process_map[process]+'param_recoilbin%d_msdbin%d' % (recoilbin, i), 0) for i in range(msd.nbins)])
         sigmascale = 10.
         scaledparams = failObs * (1 + sigmascale/np.maximum(1., np.sqrt(failObs)))**qcdparams
-        fail_qcd = rl.ParametericSample('recoil%dfail_qcd' % recoilbin, rl.Sample.BACKGROUND, msd, scaledparams)
+        fail_qcd = rl.ParametericSample(process_map[process]+'recoil%dfail_qcd' % recoilbin, rl.Sample.BACKGROUND, msd, scaledparams)
         failCh.addSample(fail_qcd)
         print(tf_MCtempl_params[recoilbin, :])
-        pass_qcd = rl.TransferFactorSample('recoil%dpass_qcd' % recoilbin, rl.Sample.BACKGROUND, tf_MCtempl_params[recoilbin, :], fail_qcd)
+        pass_qcd = rl.TransferFactorSample(process_map[process]+'recoil%dpass_qcd' % recoilbin, rl.Sample.BACKGROUND, tf_MCtempl_params[recoilbin, :], fail_qcd)
         passCh.addSample(pass_qcd)
 
         #failCh.mask = validbins[recoilbin]
@@ -296,7 +297,7 @@ def model(year, recoil, category):
             ch_name + "_zjets",
             rl.Sample.BACKGROUND,
             sr_zjetsObservable,
-            sr_zjetsBinYields,
+            sr_zjetsBinYields * tf_paramsZ[recoil]
         )
         sr.addSample(sr_zjets)
     else:
@@ -304,7 +305,7 @@ def model(year, recoil, category):
             ch_name + "_zjets",
             rl.Sample.BACKGROUND,
             sr_zjetsObservable,
-            sr_zjetsBinYields * tf_paramsZ[recoil],
+            sr_zjetsBinYields
         )
         sr.addSample(sr_zjets)
 
@@ -336,7 +337,7 @@ def model(year, recoil, category):
             ch_name + "_wjets", 
             rl.Sample.BACKGROUND,
             sr_zjetsObservable,
-            sr_zjetsBinYields * sr_wjetsTransferFactor
+            sr_zjetsBinYields * sr_wjetsTransferFactor * tf_paramsW[recoil]
         )
         sr.addSample(sr_wjets)
     else:
@@ -344,7 +345,7 @@ def model(year, recoil, category):
             ch_name + "_wjets", 
             rl.Sample.BACKGROUND,
             sr_zjetsObservable,
-            sr_zjetsBinYields * sr_wjetsTransferFactor * tf_paramsW[recoil]
+            sr_zjetsBinYields * sr_wjetsTransferFactor
         )
         sr.addSample(sr_wjets)
 
