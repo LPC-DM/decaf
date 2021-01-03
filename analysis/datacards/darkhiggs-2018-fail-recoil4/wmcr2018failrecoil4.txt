@@ -1,4 +1,4 @@
-# Datacard for <Channel (wmcr2018failrecoil4) instance at 0x2ad85f5c2d50> generated on 2021-01-02 09:36:07.698786
+# Datacard for <Channel (wmcr2018failrecoil4) instance at 0x2b0ca6d82850> generated on 2021-01-03 09:33:15.145072
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
 kmax 27 # number of nuisance parameters
@@ -10,11 +10,19 @@ process                         wjets                 ttMC                 stMC 
 process                             1                    2                    3                    4                    5                    6                    7
 rate                            1.000              127.509               69.789              141.140              227.104                2.617              163.516
 btag2018 shape                      -                1.000                1.000                1.000                1.000                1.000                1.000
+ew1 shape                           -                    -                    -                1.000                    -                    -                    -
+ew2Z shape                          -                    -                    -                1.000                    -                    -                    -
+ew3Z shape                          -                    -                    -                1.000                    -                    -                    -
 hbb_norm lnN                        -                    -                    -                    -                    -                1.200                    -
 id_mu2018 lnN                       -                1.020                1.020                1.020                1.020                1.020                1.020
 iso_mu2018 lnN                      -                1.020                1.020                1.020                1.020                1.020                1.020
 jec2018 lnN                         -                1.050                1.050                1.050                1.050                1.050                1.050
 lumi2018 lnN                        -                1.027                1.027                1.027                1.027                1.027                1.027
+mix shape                           -                    -                    -                1.000                    -                    -                    -
+muF shape                           -                    -                    -                1.000                    -                    -                    -
+muR shape                           -                    -                    -                1.000                    -                    -                    -
+qcd1 shape                          -                    -                    -                1.000                    -                    -                    -
+qcd2 shape                          -                    -                    -                1.000                    -                    -                    -
 qcdmu_norm lnN                      -                    -                    -                    -                    -                    -                2.000
 st_norm lnN                         -                    -                1.200                    -                    -                    -                    -
 trig_met2018 lnN                    -                1.010                1.010                1.010                1.010                1.010                1.010
@@ -22,16 +30,8 @@ tt_norm lnN                         -                1.200                    - 
 veto_tau2018 lnN                    -                1.030                1.030                1.030                1.030                1.030                1.030
 vv_norm lnN                         -                    -                    -                    -                1.200                    -                    -
 zjets_norm lnN                      -                    -                    -                1.400                    -                    -                    -
-ew1 param 0 1
 ew2W param 0 1
-ew2Z param 0 1
 ew3W param 0 1
-ew3Z param 0 1
-mix param 0 1
-muF param 0 1
-muR param 0 1
-qcd1 param 0 1
-qcd2 param 0 1
 qcd3 param 0 1
 whf_fraction param 0 1
 wjets_norm param 0 1
