@@ -1,110 +1,34 @@
-# Datacard for <Channel (tecr2018passrecoil2) instance at 0x2b482c88e910> generated on 2021-01-03 09:36:16.626790
+# Datacard for <Channel (tecr2018passrecoil2) instance at 0x2aeaf5ebd1d0> generated on 2021-01-03 11:41:17.496226
 imax 1 # number of categories ('bins' but here we are using shape templates)
-jmax 6 # number of samples minus 1
-kmax 33 # number of nuisance parameters
+jmax 5 # number of samples minus 1
+kmax 23 # number of nuisance parameters
 shapes * tecr2018passrecoil2 tecr2018passrecoil2.root tecr2018passrecoil2:tecr2018passrecoil2_$PROCESS tecr2018passrecoil2:tecr2018passrecoil2_$PROCESS_$SYSTEMATIC
 bin tecr2018passrecoil2
 observation 1122.000
-bin               tecr2018passrecoil2  tecr2018passrecoil2  tecr2018passrecoil2  tecr2018passrecoil2  tecr2018passrecoil2  tecr2018passrecoil2  tecr2018passrecoil2
-process                         wjets              wjetsMC                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
-process                             1                    2                    3                    4                    5                    6                    7
-rate                            1.000              131.851              180.527                3.531               13.827                2.239               12.000
-btag2018 shape                      -                1.000                1.000                1.000                1.000                1.000                    -
-ew1 shape                           -                1.000                    -                1.000                    -                    -                    -
-ew2W shape                          -                1.000                    -                    -                    -                    -                    -
-ew2Z shape                          -                    -                    -                1.000                    -                    -                    -
-ew3W shape                          -                1.000                    -                    -                    -                    -                    -
-ew3Z shape                          -                    -                    -                1.000                    -                    -                    -
-hbb_norm lnN                        -                    -                    -                    -                    -                1.200                    -
-id_e2018 lnN                        -                1.020                1.020                1.020                1.020                1.020                1.020
-jec2018 lnN                         -                1.050                1.050                1.050                1.050                1.050                1.050
-lumi2018 lnN                        -                1.027                1.027                1.027                1.027                1.027                1.027
-mix shape                           -                1.000                    -                1.000                    -                    -                    -
-muF shape                           -                1.000                    -                1.000                    -                    -                    -
-muR shape                           -                1.000                    -                1.000                    -                    -                    -
-qcd1 shape                          -                1.000                    -                1.000                    -                    -                    -
-qcd2 shape                          -                1.000                    -                1.000                    -                    -                    -
-qcd3 shape                          -                1.000                    -                    -                    -                    -                    -
-qcde_norm lnN                       -                    -                    -                    -                    -                    -                2.000
-reco_e2018 lnN                      -                1.020                1.020                1.020                1.020                1.020                1.020
-st_norm lnN                         -                    -                1.200                    -                    -                    -                    -
-trig_e2018 lnN                      -                1.010                1.010                1.010                1.010                1.010                1.010
-veto_tau2018 lnN                    -                1.030                1.030                1.030                1.030                1.030                1.030
-vv_norm lnN                         -                    -                    -                    -                1.200                    -                    -
-zjets_norm lnN                      -                1.400                    -                1.400                    -                    -                    -
-tf_MCtemplW_decoW0 param 0 1
-tf_MCtemplW_decoW1 param 0 1
-tf_MCtemplW_decoW2 param 0 1
-tf_MCtemplW_decoW3 param 0 1
-tf_MCtemplW_decoW4 param 0 1
-tf_MCtemplW_decoW5 param 0 1
-trig_met2018 param 0 1
-whf_fraction param 0 1
-wjets_norm param 0 1
-zhf_fraction param 0 1
-sr2018_zjets_fail_recoil2_mass0 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018_zjets_fail_recoil2_mass1 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018_zjets_fail_recoil2_mass10 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018_zjets_fail_recoil2_mass11 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018_zjets_fail_recoil2_mass2 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018_zjets_fail_recoil2_mass3 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018_zjets_fail_recoil2_mass4 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018_zjets_fail_recoil2_mass5 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018_zjets_fail_recoil2_mass6 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018_zjets_fail_recoil2_mass7 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018_zjets_fail_recoil2_mass8 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018_zjets_fail_recoil2_mass9 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin0_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin0_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin10_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin10_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin11_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin11_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin1_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin1_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin2_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin2_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin3_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin3_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin4_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin4_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin5_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin5_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin6_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin6_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin7_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin7_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin8_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin8_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin9_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_wjets_bin9_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_zjets_bin0_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_zjets_bin10_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_zjets_bin11_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_zjets_bin1_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_zjets_bin2_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_zjets_bin3_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_zjets_bin4_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_zjets_bin5_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_zjets_bin6_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_zjets_bin7_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_zjets_bin8_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-sr2018passrecoil2_zjets_bin9_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tecr2018passrecoil2_wjets_bin0_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tecr2018passrecoil2_wjets_bin10_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tecr2018passrecoil2_wjets_bin11_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tecr2018passrecoil2_wjets_bin1_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tecr2018passrecoil2_wjets_bin2_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tecr2018passrecoil2_wjets_bin3_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tecr2018passrecoil2_wjets_bin4_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tecr2018passrecoil2_wjets_bin5_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tecr2018passrecoil2_wjets_bin6_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tecr2018passrecoil2_wjets_bin7_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tecr2018passrecoil2_wjets_bin8_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tecr2018passrecoil2_wjets_bin9_nominal extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tf_dataResidualW_recoil_par0_fjmass_par0 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tf_dataResidualW_recoil_par0_fjmass_par1 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tf_dataResidualW_recoil_par0_fjmass_par2 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tf_dataResidualW_recoil_par1_fjmass_par0 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tf_dataResidualW_recoil_par1_fjmass_par1 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
-tf_dataResidualW_recoil_par1_fjmass_par2 extArg tecr2018passrecoil2.root:tecr2018passrecoil2
+bin               tecr2018passrecoil2  tecr2018passrecoil2  tecr2018passrecoil2  tecr2018passrecoil2  tecr2018passrecoil2  tecr2018passrecoil2
+process                       wjetsMC                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
+process                             1                    2                    3                    4                    5                    6
+rate                          131.851              180.527                3.531               13.827                2.239               12.000
+btag2018 shape                  1.000                1.000                1.000                1.000                1.000                    -
+ew1 shape                       1.000                    -                1.000                    -                    -                    -
+ew2W shape                      1.000                    -                    -                    -                    -                    -
+ew2Z shape                          -                    -                1.000                    -                    -                    -
+ew3W shape                      1.000                    -                    -                    -                    -                    -
+ew3Z shape                          -                    -                1.000                    -                    -                    -
+hbb_norm lnN                        -                    -                    -                    -                1.200                    -
+id_e2018 lnN                    1.020                1.020                1.020                1.020                1.020                1.020
+jec2018 lnN                     1.050                1.050                1.050                1.050                1.050                1.050
+lumi2018 lnN                    1.027                1.027                1.027                1.027                1.027                1.027
+mix shape                       1.000                    -                1.000                    -                    -                    -
+muF shape                       1.000                    -                1.000                    -                    -                    -
+muR shape                       1.000                    -                1.000                    -                    -                    -
+qcd1 shape                      1.000                    -                1.000                    -                    -                    -
+qcd2 shape                      1.000                    -                1.000                    -                    -                    -
+qcd3 shape                      1.000                    -                    -                    -                    -                    -
+qcde_norm lnN                       -                    -                    -                    -                    -                2.000
+reco_e2018 lnN                  1.020                1.020                1.020                1.020                1.020                1.020
+st_norm lnN                         -                1.200                    -                    -                    -                    -
+trig_e2018 lnN                  1.010                1.010                1.010                1.010                1.010                1.010
+veto_tau2018 lnN                1.030                1.030                1.030                1.030                1.030                1.030
+vv_norm lnN                         -                    -                    -                1.200                    -                    -
+zjets_norm lnN                  1.400                    -                1.400                    -                    -                    -
