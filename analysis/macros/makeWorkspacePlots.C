@@ -55,6 +55,8 @@ void makeLegend() {
 }
 
 /// Make one single plot from the workspace
+/// Here we could optionally do a fit to data
+/// (just uncomment the options below)
 void makeOnePlot(std::string wsname, std::string name, TCanvas *cv, int extra) {
   using namespace RooFit;
   std::string fileName = wsname + ".root";
@@ -64,10 +66,10 @@ void makeOnePlot(std::string wsname, std::string name, TCanvas *cv, int extra) {
   RooAbsPdf *thePdf = nullptr;
   RooDataHist *theData = nullptr;
   thePdf = w->pdf(name.c_str());
-  theData = (RooDataHist*)w->data((name+"_observation").c_str());
+  // theData = (RooDataHist*)w->data((name+"_observation").c_str());
   // thePdf->Print();
   // theData->Print();
-  thePdf->fitTo(*theData);
+  // thePdf->fitTo(*theData);
 
   RooPlot *xframe = fjmass->frame(Title("Model and data read from workspace"));
 
@@ -80,10 +82,13 @@ void makeOnePlot(std::string wsname, std::string name, TCanvas *cv, int extra) {
   cv->Draw();
   // TLatex lt; lt.DrawLatex(100,1E5,(name).c_str());
   // cv->SaveAs((name+std::string(".pdf")).c_str());
-  // f->Close();
+  f->Close();
 }
 
-/// Stack all plots from the workspace
+/// Get all plots for a given category
+/// Notice that here we don't do a fit to data
+/// because we don't even touch it.
+/// (But see the getDataPlot() function below)
 std::vector<TH1 *> makeComponentPlot(std::string fileName, std::string wsname, std::string catName) {
   using namespace RooFit;
   TFile *f = TFile::Open(fileName.c_str());
@@ -152,6 +157,20 @@ std::vector<TH1 *> makeComponentPlot(std::string fileName, std::string wsname, s
   return allHistos;
 }
 
+/// Get the data plot from the workspace
+TH1 *getDataPlot(std::string fileName, std::string wsname, std::string catName) {
+  using namespace RooFit;
+  TFile *f = TFile::Open(fileName.c_str());
+  RooWorkspace *w = (RooWorkspace *)f->Get(wsname.c_str());
+  RooRealVar *fjmass = w->var("fjmass");
+  RooDataHist *theData = nullptr;
+
+  theData = (RooDataHist *)w->data((wsname + "_data_obs").c_str());
+  TH1 *dataPlot = theData->createHistogram((wsname + "_TH1").c_str(), *fjmass);
+
+  return dataPlot;
+}
+
 void makeWorkspacePlots(const std::string name, int histoTop, int latexY) {
   TCanvas *cv = new TCanvas("cv", "cv", 600, 600);
   TH1F *histo = new TH1F("histo", "histo", 1, 0, 300);
@@ -162,7 +181,7 @@ void makeWorkspacePlots(const std::string name, int histoTop, int latexY) {
   histo->GetYaxis()->SetRangeUser(0.1, histoTop);
   cv->SetLogy();
 
-  //std::string name = "wmcr2018failrecoil3";
+  //std::string name = "wmcr2018failrecoil0";
   std::string fileName = name + ".root";
   std::string pdfName = name + ".pdf";
 
@@ -182,7 +201,9 @@ void makeWorkspacePlots(const std::string name, int histoTop, int latexY) {
   // makeOnePlot("wmcr2018failrecoil3","wmcr2018failrecoil3_wjets",cv,3);
   // makeOnePlot("wmcr2018failrecoil4","wmcr2018failrecoil4_wjets",cv,4);
 
+  TH1 *dataPlot = getDataPlot(fileName.c_str(), name.c_str(), "");
   hs->Draw("HIST SAME");
+  dataPlot->Draw("SAME");
   cv->RedrawAxis();
   TLatex lt;
   lt.DrawLatex(100, latexY, (name).c_str());
