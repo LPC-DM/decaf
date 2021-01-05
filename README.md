@@ -378,7 +378,12 @@ Change the path to store outputs in `plotConfig.py`
 python macros/diffNuisances.py -g pulls.root ../fitDiagnostics.root
 ```
 
-#### Postfit plotting 
+#### Postfit plotting
+If you use fast fit command, then the following command will make prefit and postfit histograms  
 ```
-python macros/plotStackedPostFit_darkhiggs.py 
+PostFitShapesFromWorkspace -w path/to/darkhiggs.root -d path/to/darkhiggs.txt -f path/to/fitDiagnostics.root:fit_s --postfit --sampling --samples 300 --skip-proc-errs -o outputfile.root
+```
+To make postfit stack plots  
+```
+python macros/postFitShapesFromWorkSpace.py path/to/outputfile.root
 ```
