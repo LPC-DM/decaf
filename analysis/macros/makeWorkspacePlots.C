@@ -184,24 +184,36 @@ void makeWorkspacePlots(const std::string name, int histoTop, int latexY) {
   //std::string name = "wmcr2018failrecoil0";
   std::string fileName = name + ".root";
   std::string pdfName = name + ".pdf";
+  std::string level = "    ";
 
   std::vector<TH1 *> allHistos = makeComponentPlot(fileName.c_str(), name.c_str(), "");
   THStack *hs = new THStack("hs", "Stacked 1D histograms");
 
-  std::cout << "For this category  " << pdfName << " we have:";
+  std::cout << "For this category  " << pdfName << " we have:" << std::endl;
 
+  // This is the loop for the stack.
+  // Here we stack all the component plots to draw.
   for (auto h = allHistos.begin(); h != allHistos.end(); ++h) {
     std::cout << (*h)->GetTitle() << " with integral " << (*h)->Integral() << "; ";
     (*h)->SetLineWidth(1);
     hs->Add(*h);
   }
   std::cout << std::endl;
-  // makeOnePlot("wmcr2018failrecoil1","wmcr2018failrecoil1_wjets",cv,1);
-  // makeOnePlot("wmcr2018failrecoil2","wmcr2018failrecoil2_wjets",cv,2);
-  // makeOnePlot("wmcr2018failrecoil3","wmcr2018failrecoil3_wjets",cv,3);
-  // makeOnePlot("wmcr2018failrecoil4","wmcr2018failrecoil4_wjets",cv,4);
 
   TH1 *dataPlot = getDataPlot(fileName.c_str(), name.c_str(), "");
+
+  // This is the loop for the bins.
+  // Here we do a bin-by-bin analysis of all the component plots
+  int nBins = dataPlot->GetNbinsX();
+  for (int i = 0; i != nBins; ++i) {
+    int bin = i + 1;
+    std::cout << level << "Bin " << bin << std::endl;
+    std::cout << level << level << "DATA: " << dataPlot->GetBinContent(bin) << std::endl;
+    for (auto h = allHistos.begin(); h != allHistos.end(); ++h) {
+      std::cout << level << level << (*h)->GetTitle() << ": " << (*h)->GetBinContent(bin) << std::endl;
+    }
+  }
+
   hs->Draw("HIST SAME");
   dataPlot->Draw("SAME");
   cv->RedrawAxis();
