@@ -64,10 +64,10 @@ void makeOnePlot(std::string wsname, std::string name, TCanvas *cv, int extra) {
   RooAbsPdf *thePdf = nullptr;
   RooDataHist *theData = nullptr;
   thePdf = w->pdf(name.c_str());
-  // theData = (RooDataHist*)w->data((name+"_observation").c_str());
+  theData = (RooDataHist*)w->data((name+"_observation").c_str());
   // thePdf->Print();
   // theData->Print();
-  // thePdf->fitTo(*theData);
+  thePdf->fitTo(*theData);
 
   RooPlot *xframe = fjmass->frame(Title("Model and data read from workspace"));
 
