@@ -1,14 +1,14 @@
-# Datacard for <Channel (tecr2018passrecoil4) instance at 0x2b3d0290da50> generated on 2021-01-04 05:35:56.855563
+# Datacard for <Channel (tecr2018passrecoil4) instance at 0x2b7ba3ac3450> generated on 2021-01-05 17:35:49.956620
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
 kmax 25 # number of nuisance parameters
 shapes * tecr2018passrecoil4 tecr2018passrecoil4.root tecr2018passrecoil4:tecr2018passrecoil4_$PROCESS tecr2018passrecoil4:tecr2018passrecoil4_$PROCESS_$SYSTEMATIC
 bin tecr2018passrecoil4
-observation 108.000
+observation 87.000
 bin               tecr2018passrecoil4  tecr2018passrecoil4  tecr2018passrecoil4  tecr2018passrecoil4  tecr2018passrecoil4  tecr2018passrecoil4  tecr2018passrecoil4
 process                            tt              wjetsMC                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
 process                             1                    2                    3                    4                    5                    6                    7
-rate                            1.000               24.541               59.495                1.263               12.000                1.233               12.000
+rate                            1.000               11.313               36.525                1.143               11.000                1.216               11.000
 btag2018 shape                      -                1.000                1.000                1.000                    -                1.000                    -
 ew1 shape                           -                1.000                    -                1.000                    -                    -                    -
 ew2W shape                          -                1.000                    -                    -                    -                    -                    -
@@ -36,7 +36,6 @@ trig_met2018 param 0 1
 tt_norm param 0 1
 sr2018passrecoil4_ttMC_bin0_nominal extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 sr2018passrecoil4_ttMC_bin10_nominal extArg tecr2018passrecoil4.root:tecr2018passrecoil4
-sr2018passrecoil4_ttMC_bin11_nominal extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 sr2018passrecoil4_ttMC_bin1_nominal extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 sr2018passrecoil4_ttMC_bin2_nominal extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 sr2018passrecoil4_ttMC_bin3_nominal extArg tecr2018passrecoil4.root:tecr2018passrecoil4
@@ -49,7 +48,6 @@ sr2018passrecoil4_ttMC_bin9_nominal extArg tecr2018passrecoil4.root:tecr2018pass
 sr2018passrecoil4_tt_bin0 extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 sr2018passrecoil4_tt_bin1 extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 sr2018passrecoil4_tt_bin10 extArg tecr2018passrecoil4.root:tecr2018passrecoil4
-sr2018passrecoil4_tt_bin11 extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 sr2018passrecoil4_tt_bin2 extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 sr2018passrecoil4_tt_bin3 extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 sr2018passrecoil4_tt_bin4 extArg tecr2018passrecoil4.root:tecr2018passrecoil4
@@ -60,7 +58,6 @@ sr2018passrecoil4_tt_bin8 extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 sr2018passrecoil4_tt_bin9 extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 tecr2018passrecoil4_ttMC_bin0_nominal extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 tecr2018passrecoil4_ttMC_bin10_nominal extArg tecr2018passrecoil4.root:tecr2018passrecoil4
-tecr2018passrecoil4_ttMC_bin11_nominal extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 tecr2018passrecoil4_ttMC_bin1_nominal extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 tecr2018passrecoil4_ttMC_bin2_nominal extArg tecr2018passrecoil4.root:tecr2018passrecoil4
 tecr2018passrecoil4_ttMC_bin3_nominal extArg tecr2018passrecoil4.root:tecr2018passrecoil4

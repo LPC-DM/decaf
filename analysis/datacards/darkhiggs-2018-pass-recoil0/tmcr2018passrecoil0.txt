@@ -1,14 +1,14 @@
-# Datacard for <Channel (tmcr2018passrecoil0) instance at 0x2b1798e94e90> generated on 2021-01-04 05:36:04.158304
+# Datacard for <Channel (tmcr2018passrecoil0) instance at 0x2b99a4d188d0> generated on 2021-01-05 17:36:34.246737
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
 kmax 24 # number of nuisance parameters
 shapes * tmcr2018passrecoil0 tmcr2018passrecoil0.root tmcr2018passrecoil0:tmcr2018passrecoil0_$PROCESS tmcr2018passrecoil0:tmcr2018passrecoil0_$PROCESS_$SYSTEMATIC
 bin tmcr2018passrecoil0
-observation 9222.000
+observation 8247.000
 bin               tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0
-process                            tt                wjets                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
+process                            tt              wjetsMC                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
 process                             1                    2                    3                    4                    5                    6                    7
-rate                            1.000              594.879              813.246               32.660               21.751               15.402              224.215
+rate                            1.000              324.486              621.237               16.239               17.375               14.762               43.061
 btag2018 shape                      -                1.000                1.000                1.000                1.000                1.000                1.000
 ew1 shape                           -                1.000                    -                1.000                    -                    -                    -
 ew2W shape                          -                1.000                    -                    -                    -                    -                    -
@@ -35,7 +35,6 @@ zjets_norm lnN                      -                1.400                    - 
 tt_norm param 0 1
 sr2018passrecoil0_ttMC_bin0_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 sr2018passrecoil0_ttMC_bin10_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
-sr2018passrecoil0_ttMC_bin11_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 sr2018passrecoil0_ttMC_bin1_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 sr2018passrecoil0_ttMC_bin2_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 sr2018passrecoil0_ttMC_bin3_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
@@ -48,7 +47,6 @@ sr2018passrecoil0_ttMC_bin9_nominal extArg tmcr2018passrecoil0.root:tmcr2018pass
 sr2018passrecoil0_tt_bin0 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 sr2018passrecoil0_tt_bin1 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 sr2018passrecoil0_tt_bin10 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
-sr2018passrecoil0_tt_bin11 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 sr2018passrecoil0_tt_bin2 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 sr2018passrecoil0_tt_bin3 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 sr2018passrecoil0_tt_bin4 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
@@ -59,7 +57,6 @@ sr2018passrecoil0_tt_bin8 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 sr2018passrecoil0_tt_bin9 extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 tmcr2018passrecoil0_ttMC_bin0_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 tmcr2018passrecoil0_ttMC_bin10_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
-tmcr2018passrecoil0_ttMC_bin11_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 tmcr2018passrecoil0_ttMC_bin1_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 tmcr2018passrecoil0_ttMC_bin2_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0
 tmcr2018passrecoil0_ttMC_bin3_nominal extArg tmcr2018passrecoil0.root:tmcr2018passrecoil0

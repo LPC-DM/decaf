@@ -1,14 +1,14 @@
-# Datacard for <Channel (sr2018failrecoil4) instance at 0x2b47b656e690> generated on 2021-01-04 05:37:00.057396
+# Datacard for <Channel (sr2018failrecoil4) instance at 0x2b37c87dcd10> generated on 2021-01-05 17:36:40.281078
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 8 # number of samples minus 1
 kmax 25 # number of nuisance parameters
 shapes * sr2018failrecoil4 sr2018failrecoil4.root sr2018failrecoil4:sr2018failrecoil4_$PROCESS sr2018failrecoil4:sr2018failrecoil4_$PROCESS_$SYSTEMATIC
 bin sr2018failrecoil4
-observation 6059.000
+observation 2428.000
 bin               sr2018failrecoil4  sr2018failrecoil4  sr2018failrecoil4  sr2018failrecoil4  sr2018failrecoil4  sr2018failrecoil4  sr2018failrecoil4  sr2018failrecoil4  sr2018failrecoil4
 process                      Mhs_50              zjets              wjets               ttMC               stMC           dyjetsMC               vvMC              hbbMC              qcdMC
 process                           0                  1                  2                  3                  4                  5                  6                  7                  8
-rate                         39.907              1.000              1.000             16.200              8.228              3.599            169.544              0.239             10.644
+rate                         17.261              1.000              1.000             15.200              7.137              1.078            100.374              0.157             10.350
 btag2018 shape                1.000                  -                  -              1.000              1.000              1.000              1.000              1.000              1.000
 ew1 shape                         -                  -                  -                  -                  -              1.000                  -                  -                  -
 ew2Z shape                        -                  -                  -                  -                  -              1.000                  -                  -                  -
@@ -36,7 +36,6 @@ wjets_norm param 0 1
 zhf_fraction param 0 1
 sr2018failrecoil4_wjetsMC_bin0_nominal extArg sr2018failrecoil4.root:sr2018failrecoil4
 sr2018failrecoil4_wjetsMC_bin10_nominal extArg sr2018failrecoil4.root:sr2018failrecoil4
-sr2018failrecoil4_wjetsMC_bin11_nominal extArg sr2018failrecoil4.root:sr2018failrecoil4
 sr2018failrecoil4_wjetsMC_bin1_nominal extArg sr2018failrecoil4.root:sr2018failrecoil4
 sr2018failrecoil4_wjetsMC_bin2_nominal extArg sr2018failrecoil4.root:sr2018failrecoil4
 sr2018failrecoil4_wjetsMC_bin3_nominal extArg sr2018failrecoil4.root:sr2018failrecoil4
@@ -48,7 +47,6 @@ sr2018failrecoil4_wjetsMC_bin8_nominal extArg sr2018failrecoil4.root:sr2018failr
 sr2018failrecoil4_wjetsMC_bin9_nominal extArg sr2018failrecoil4.root:sr2018failrecoil4
 sr2018failrecoil4_zjetsMC_bin0_nominal extArg sr2018failrecoil4.root:sr2018failrecoil4
 sr2018failrecoil4_zjetsMC_bin10_nominal extArg sr2018failrecoil4.root:sr2018failrecoil4
-sr2018failrecoil4_zjetsMC_bin11_nominal extArg sr2018failrecoil4.root:sr2018failrecoil4
 sr2018failrecoil4_zjetsMC_bin1_nominal extArg sr2018failrecoil4.root:sr2018failrecoil4
 sr2018failrecoil4_zjetsMC_bin2_nominal extArg sr2018failrecoil4.root:sr2018failrecoil4
 sr2018failrecoil4_zjetsMC_bin3_nominal extArg sr2018failrecoil4.root:sr2018failrecoil4
@@ -61,7 +59,6 @@ sr2018failrecoil4_zjetsMC_bin9_nominal extArg sr2018failrecoil4.root:sr2018failr
 sr2018failrecoil4_zjets_bin0 extArg sr2018failrecoil4.root:sr2018failrecoil4
 sr2018failrecoil4_zjets_bin1 extArg sr2018failrecoil4.root:sr2018failrecoil4
 sr2018failrecoil4_zjets_bin10 extArg sr2018failrecoil4.root:sr2018failrecoil4
-sr2018failrecoil4_zjets_bin11 extArg sr2018failrecoil4.root:sr2018failrecoil4
 sr2018failrecoil4_zjets_bin2 extArg sr2018failrecoil4.root:sr2018failrecoil4
 sr2018failrecoil4_zjets_bin3 extArg sr2018failrecoil4.root:sr2018failrecoil4
 sr2018failrecoil4_zjets_bin4 extArg sr2018failrecoil4.root:sr2018failrecoil4
