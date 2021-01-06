@@ -122,8 +122,17 @@ std::vector<TH1 *> makeComponentPlot(std::string fileName, std::string wsname, s
     if (thePdf == nullptr)
       continue;
 
-    // thePdf->Print();
-    TH1 *histo = thePdf->createHistogram(s->c_str(), *fjmass);
+    // Ugly, very ugly, but whatever...
+    // Bottom line: create an artificial RooDataHist from the PDF,
+    // and use THAT to create the TH1 for plotting.
+    // We generate 1E6 events, set expectedData = true (i.e. the Asimov dataset)
+    // and extended = false (i.e. we don't fluctuate bin by bin).
+    // The 1E6 should be immaterial here, since we normalise the TH1 back to
+    // the normalisation variable.
+    RooDataHist *temp_dh = thePdf->generateBinned(*fjmass, 1E6, true, false);
+    TH1 *histo = temp_dh->createHistogram(s->c_str(), *fjmass, Scaling(kFALSE));
+    delete temp_dh;
+    histo->Scale(1.0 / histo->Integral());
     histo->Scale(theVar->getValV());
     histo->SetLineWidth(1);
     histo->SetLineColor(kBlack);
@@ -146,7 +155,12 @@ std::vector<TH1 *> makeComponentPlot(std::string fileName, std::string wsname, s
     if (thePdf == nullptr)
       continue;
 
-    TH1 *histo = thePdf->createHistogram(s->c_str(), *fjmass);
+    // Ugly, very ugly, but whatever...
+    // See explanation above
+    RooDataHist *temp_dh = thePdf->generateBinned(*fjmass, 1E6, true, false);
+    TH1 *histo = temp_dh->createHistogram(s->c_str(), *fjmass, Scaling(kFALSE));
+    delete temp_dh;
+    histo->Scale(1.0 / histo->Integral());
     histo->Scale(w->function(normName.c_str())->getValV());
     histo->SetLineWidth(1);
     histo->SetLineColor(kBlack);
