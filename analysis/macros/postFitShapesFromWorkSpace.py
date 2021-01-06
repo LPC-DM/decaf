@@ -534,6 +534,7 @@ def plotPreFitPostFit(region, year, signalflag, recoil, blind=False):
         plotextralabel_ += '_prelim'
     #for ext in ['pdf','png','C']:
     for ext in ['png']:
+        print('Directory is',plotDir)
         c.SaveAs(plotDir+"postfit/stackedPostfit%s_"%plotextralabel_+label+"."+ext)
 
     #c.SaveAs("test.pdf")
@@ -553,5 +554,5 @@ for iregion in dh_regions:
             try:
                 plotPreFitPostFit(iregion, '2018', isig, ibin)
             except:
-                print("Directory is not exist in %s file! \n" % (sys.argv[1]))
+                print("Directory do not exist in %s file! \n" % (sys.argv[1]))
                 pass
