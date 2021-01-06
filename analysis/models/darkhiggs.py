@@ -1118,8 +1118,8 @@ if __name__ == "__main__":
     whf_fraction = rl.NuisanceParameter("whf_fraction", "shape")
     zhf_fraction = rl.NuisanceParameter("zhf_fraction", "shape")
     ghf_fraction = rl.NuisanceParameter("ghf_fraction", "shape")
-    tf_paramsZ = rhalphabeth2D("Z+jets")
-    tf_paramsW = rhalphabeth2D("W+jets")
+    #tf_paramsZ = rhalphabeth2D("Z+jets")
+    #tf_paramsW = rhalphabeth2D("W+jets")
 
     model_dict = {}
     for recoilbin in range(nrecoil):
@@ -1173,10 +1173,12 @@ if __name__ == "__main__":
         addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
 
+        tf_paramsZ = sr_zjetsMCPass.getExpectation() / sr_zjetsMCFail.getExpectation()
+
         sr_zjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_zjets",
             rl.Sample.BACKGROUND,
-            tf_paramsZ[recoilbin, :],
+            tf_paramsZ,#[recoilbin, :],
             sr_zjetsFail
         )
 
@@ -1218,10 +1220,12 @@ if __name__ == "__main__":
         addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
 
+        tf_paramsW = sr_wjetsMCPass.getExpectation() / sr_wjetsMCFail.getExpectation()
+
         sr_wjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_wjets",
             rl.Sample.BACKGROUND,
-            tf_paramsW[recoilbin, :],
+            tf_paramsW,#[recoilbin, :],
             sr_wjetsFail
         )
 
