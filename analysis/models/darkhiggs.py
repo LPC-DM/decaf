@@ -62,7 +62,6 @@ def template(dictionary, process, systematic, recoil, region, category):
         .axis("fjmass")
         .edges()
     )
-    #print(process, systematic, "recoil"+str(recoil), region, category, output)
     return (output, binning, "fjmass")
 
 def remap_histograms(hists):
@@ -304,7 +303,7 @@ def model(year, recoil, category):
     sr_ttMC = rl.TemplateSample(
         "sr" + model_id + "_ttMC",
         rl.Sample.BACKGROUND,
-        template(background, "TT", "nominal", recoil, "sr", category),
+        sr_ttTemplate
     )
     sr_ttMC.setParamEffect(lumi, 1.027)
     sr_ttMC.setParamEffect(tt_norm, 1.2)
@@ -315,16 +314,15 @@ def model(year, recoil, category):
 
     sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
     if category == "pass":
-        sr_ttMCPass = template(background, "TT", "nominal", recoilbin, "sr", category)[0]
         sr_ttBinYields = np.array(  # one nuisance per mass shape bin in pass                                              
             [
                 rl.IndependentParameter(
                     "sr" + year + "_tt_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i,
                     b,
                     0,
-                    sr_ttMCPass.max() * 2,
+                    sr_ttTemplate[0].max() * 2,
                 )
-                for i, b in enumerate(sr_ttMCPass)
+                for i, b in enumerate(sr_ttTemplate[0])
             ]
         )
     
