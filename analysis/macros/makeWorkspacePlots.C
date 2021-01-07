@@ -26,7 +26,7 @@ std::vector<int> minorColors = {TColor::GetColor(150, 195, 220),
 /// Legend
 void makeLegend() {
   TCanvas *cv = new TCanvas("cv", "cv", 600, 600);
-  TH1F *histo = new TH1F("histo", "histo", 1, 0, 300);
+  TH1F *histo = new TH1F("histo", "histo", 1, 40, 300);
   histo->SetLineWidth(0);
   histo->GetXaxis()->SetTitle("fjmass [GeV]");
   histo->GetYaxis()->SetTitle("Events");
@@ -187,7 +187,7 @@ TH1 *getDataPlot(std::string fileName, std::string wsname, std::string catName) 
 
 void makeWorkspacePlots(const std::string name, int histoTop, int latexY) {
   TCanvas *cv = new TCanvas("cv", "cv", 600, 600);
-  TH1F *histo = new TH1F("histo", "histo", 1, 0, 300);
+  TH1F *histo = new TH1F("histo", "histo", 1, 40, 300);
   histo->SetLineWidth(0);
   histo->GetXaxis()->SetTitle("fjmass [GeV]");
   histo->GetYaxis()->SetTitle("Events");
