@@ -169,23 +169,13 @@ def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     qcd3Down = template(dictionary, process, "qcd3Down", recoil, region, category)[0]
     templ.setParamEffect(qcd3, qcd3Up, qcd3Down)
 
-def rhalphabeth2D(process):
+def rhalphabeth2D(process, tf_dataResidual_params, ord1, ord2):
 
     process_map = {
         "W+jets": 'W',
         "Z+jets": 'Z'
         }
         
-
-    msdbins = np.array(mass_binning)
-    msd = rl.Observable('fjmass', msdbins)
-
-    # here we derive these all at once with 2D array
-    ptpts, msdpts = np.meshgrid(recoilbins[:-1] + 0.3 * np.diff(recoilbins), msdbins[:-1] + 0.5 * np.diff(msdbins), indexing='ij')
-    recoilscaled = (ptpts - 250.) / (3000. - 250.)
-    msdpts = np.sqrt(msdpts) * np.sqrt(msdpts)
-    msdscaled = msdpts / 300.0
-
     # Build qcd MC pass+fail model and fit to polynomial
     qcdmodel = rl.Model("qcdmodel")
     qcdpass, qcdfail = 0., 0.
@@ -205,7 +195,7 @@ def rhalphabeth2D(process):
         qcdpass += passCh.getObservation().sum()
 
     qcdeff = qcdpass / qcdfail
-    tf_MCtempl = rl.BernsteinPoly("tf_MCtempl"+process_map[process], (3, 3), ['recoil', 'fjmass'], limits=(0, 10))
+    tf_MCtempl = rl.BernsteinPoly("tf_MCtempl"+process_map[process], (ord1, ord2), ['recoil', 'fjmass'], limits=(0, 10))
     tf_MCtempl_params = qcdeff * tf_MCtempl(recoilscaled, msdscaled)
     for recoilbin in range(nrecoil):
         failCh = qcdmodel[process_map[process]+'recoil%dfail' % recoilbin]
@@ -244,8 +234,6 @@ def rhalphabeth2D(process):
     decoVector = rl.DecorrelatedNuisanceVector.fromRooFitResult(tf_MCtempl.name + '_deco'+process_map[process], qcdfit, param_names)
     tf_MCtempl.parameters = decoVector.correlated_params.reshape(tf_MCtempl.parameters.shape)
     tf_MCtempl_params_final = tf_MCtempl(recoilscaled, msdscaled)
-    tf_dataResidual = rl.BernsteinPoly("tf_dataResidual"+process_map[process], (1, 1), ['recoil', 'fjmass'], limits=(0, 10))
-    tf_dataResidual_params = tf_dataResidual(recoilscaled, msdscaled)
     tf_params = qcdeff * tf_MCtempl_params_final * tf_dataResidual_params
     return tf_params
 
@@ -1124,8 +1112,23 @@ if __name__ == "__main__":
     whf_fraction = rl.NuisanceParameter("whf_fraction", "shape")
     zhf_fraction = rl.NuisanceParameter("zhf_fraction", "shape")
     ghf_fraction = rl.NuisanceParameter("ghf_fraction", "shape")
-    tf_paramsZ = rhalphabeth2D("Z+jets")
-    #tf_paramsW = rhalphabeth2D("W+jets")
+
+    ###
+    # Preparing Rhalphabet
+    ###
+
+    msdbins = np.array(mass_binning)
+    msd = rl.Observable('fjmass', msdbins)
+    # here we derive these all at once with 2D array
+    ptpts, msdpts = np.meshgrid(recoilbins[:-1] + 0.3 * np.diff(recoilbins), msdbins[:-1] + 0.5 * np.diff(msdbins), indexing='ij')
+    recoilscaled = (ptpts - 250.) / (3000. - 250.)
+    msdpts = np.sqrt(msdpts) * np.sqrt(msdpts)
+    msdscaled = msdpts / 300.0
+    
+    tf_dataResidual = rl.BernsteinPoly("tf_dataResidual", (1, 1), ['recoil', 'fjmass'], limits=(0, 10))
+    tf_dataResidual_params = tf_dataResidual(recoilscaled, msdscaled)
+    tf_paramsZ = rhalphabeth2D("Z+jets", tf_dataResidual_params, 3, 3)
+    tf_paramsW = rhalphabeth2D("W+jets", tf_dataResidual_params, 3, 2)
 
     model_dict = {}
     for recoilbin in range(nrecoil):
@@ -1230,8 +1233,8 @@ if __name__ == "__main__":
         sr_wjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_wjets",
             rl.Sample.BACKGROUND,
-            sr_wjetsPassTransferFactor,
-            sr_zjetsPass
+            tf_paramsW[recoilbin, :],
+            sr_wjetsFail
         )
 
         for category in ["pass", "fail"]:
