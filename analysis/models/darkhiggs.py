@@ -205,7 +205,7 @@ def rhalphabeth2D(process):
         qcdpass += passCh.getObservation().sum()
 
     qcdeff = qcdpass / qcdfail
-    tf_MCtempl = rl.BernsteinPoly("tf_MCtempl"+process_map[process], (4, 4), ['recoil', 'fjmass'], limits=(0, 10))
+    tf_MCtempl = rl.BernsteinPoly("tf_MCtempl"+process_map[process], (3, 3), ['recoil', 'fjmass'], limits=(0, 10))
     tf_MCtempl_params = qcdeff * tf_MCtempl(recoilscaled, msdscaled)
     for recoilbin in range(nrecoil):
         failCh = qcdmodel[process_map[process]+'recoil%dfail' % recoilbin]
@@ -1216,7 +1216,7 @@ if __name__ == "__main__":
             "sr" + year + "pass" + "recoil" + str(recoilbin) + "_wjetsMC",
             rl.Sample.BACKGROUND,
             sr_wjetsMCPassTemplate
-c        )
+        )
         sr_wjetsMCPass.setParamEffect(lumi, 1.027)
         sr_wjetsMCPass.setParamEffect(wjets_norm, 1.4)
         sr_wjetsMCPass.setParamEffect(trig_met, 1.01)
