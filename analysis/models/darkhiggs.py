@@ -919,7 +919,7 @@ def model(year, recoil, category):
             ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt
         )
         tecr.addSample(tecr_tt)
-    if category == "pass":
+    else:
         tecr.addSample(tecr_ttMC)
     
     ###
