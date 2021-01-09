@@ -1125,10 +1125,12 @@ if __name__ == "__main__":
     msdpts = np.sqrt(msdpts) * np.sqrt(msdpts)
     msdscaled = msdpts / 300.0
     
-    tf_dataResidual = rl.BernsteinPoly("tf_dataResidual", (1, 1), ['recoil', 'fjmass'], limits=(0, 10))
-    tf_dataResidual_params = tf_dataResidual(recoilscaled, msdscaled)
-    tf_paramsZ = rhalphabeth2D("Z+jets", tf_dataResidual_params, 3, 3)
-    tf_paramsW = rhalphabeth2D("W+jets", tf_dataResidual_params, 3, 2)
+    tf_dataResidualW = rl.BernsteinPoly("tf_dataResidualW", (1, 1), ['recoil', 'fjmass'], limits=(0, 10))
+    tf_dataResidualW_params = tf_dataResidualW(recoilscaled, msdscaled)
+    tf_dataResidualZ = rl.BernsteinPoly("tf_dataResidualZ", (1, 1), ['recoil', 'fjmass'], limits=(0, 10))
+    tf_dataResidualZ_params = tf_dataResidualZ(recoilscaled, msdscaled)
+    #tf_paramsZ = rhalphabeth2D("Z+jets", tf_dataResidual_params, 3, 3)
+    #tf_paramsW = rhalphabeth2D("W+jets", tf_dataResidual_params, 3, 2)
 
     model_dict = {}
     for recoilbin in range(nrecoil):
@@ -1205,10 +1207,13 @@ if __name__ == "__main__":
         addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
 
+        tf_paramsZdeco = sr_zjetsMCPass.getExpectation() / sr_zjetsMCFail.getExpectation()
+        tf_paramsZ = tf_paramsZdeco * tf_dataResidualZ_params[recoilbin, :]
+
         sr_zjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_zjets",
             rl.Sample.BACKGROUND,
-            tf_paramsZ[recoilbin, :],
+            tf_paramsZ,
             sr_zjetsFail
         )
 
@@ -1227,13 +1232,13 @@ if __name__ == "__main__":
         addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
 
-        #tf_params = (sr_wjetsMCPassTemplate[0] + sr_zjetsMCPassTemplate[0]) / (sr_wjetsMCFailTemplate[0] + sr_zjetsMCFailTemplate[0])
-        sr_wjetsPassTransferFactor = sr_wjetsMCPass.getExpectation() / sr_zjetsMCPass.getExpectation()
+        tf_paramsWdeco = sr_zjetsMCPass.getExpectation() / sr_zjetsMCFail.getExpectation()
+        tf_paramsW = tf_paramsWdeco * tf_dataResidualW_params[recoilbin, :]
     
         sr_wjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_wjets",
             rl.Sample.BACKGROUND,
-            tf_paramsW[recoilbin, :],
+            tf_paramsW,
             sr_wjetsFail
         )
 
