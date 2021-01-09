@@ -205,7 +205,7 @@ def rhalphabeth2D(process):
         qcdpass += passCh.getObservation().sum()
 
     qcdeff = qcdpass / qcdfail
-    tf_MCtempl = rl.BernsteinPoly("tf_MCtempl"+process_map[process], (1, 2), ['recoil', 'fjmass'], limits=(0, 10))
+    tf_MCtempl = rl.BernsteinPoly("tf_MCtempl"+process_map[process], (4, 4), ['recoil', 'fjmass'], limits=(0, 10))
     tf_MCtempl_params = qcdeff * tf_MCtempl(recoilscaled, msdscaled)
     for recoilbin in range(nrecoil):
         failCh = qcdmodel[process_map[process]+'recoil%dfail' % recoilbin]
@@ -244,7 +244,7 @@ def rhalphabeth2D(process):
     decoVector = rl.DecorrelatedNuisanceVector.fromRooFitResult(tf_MCtempl.name + '_deco'+process_map[process], qcdfit, param_names)
     tf_MCtempl.parameters = decoVector.correlated_params.reshape(tf_MCtempl.parameters.shape)
     tf_MCtempl_params_final = tf_MCtempl(recoilscaled, msdscaled)
-    tf_dataResidual = rl.BernsteinPoly("tf_dataResidual"+process_map[process], (1, 2), ['recoil', 'fjmass'], limits=(0, 10))
+    tf_dataResidual = rl.BernsteinPoly("tf_dataResidual"+process_map[process], (1, 1), ['recoil', 'fjmass'], limits=(0, 10))
     tf_dataResidual_params = tf_dataResidual(recoilscaled, msdscaled)
     tf_params = qcdeff * tf_MCtempl_params_final * tf_dataResidual_params
     return tf_params
@@ -320,7 +320,7 @@ def model(year, recoil, category):
                     "sr" + year + "_tt_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i,
                     b,
                     0,
-                    sr_ttTemplate[0].max() * 2,
+                    sr_ttTemplate[0].max() * 10,
                 )
                 for i, b in enumerate(sr_ttTemplate[0])
             ]
@@ -329,9 +329,9 @@ def model(year, recoil, category):
         sr_tt = rl.ParametericSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields
         )
+        sr.addSample(sr_tt)
     else:
-        sr_tt=sr_ttMC
-    sr.addSample(sr_tt)
+        sr.addSample(sr_ttMC)
 
     ###
     # Other MC-driven processes
@@ -416,9 +416,7 @@ def model(year, recoil, category):
 
     ch_name = "wmcr" + model_id
     wmcr = rl.Channel(ch_name)
-    #if category != "pass":
-    if category == "None":
-        model.addChannel(wmcr)
+    model.addChannel(wmcr)
 
     ###
     # Add data distribution to the channel
@@ -473,7 +471,15 @@ def model(year, recoil, category):
     wmcr_ttMC.setParamEffect(id_mu, 1.02)
     wmcr_ttMC.setParamEffect(iso_mu, 1.02)
     addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
-    wmcr.addSample(wmcr_ttMC)
+    
+    if category == "pass":
+        wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+        wmcr_tt = rl.TransferFactorSample(
+            ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
+        )
+        wmcr.addSample(wmcr_tt)
+    else:
+        wmcr.addSample(wmcr_ttMC)
         
     ###
     # Other MC-driven processes
@@ -632,7 +638,15 @@ def model(year, recoil, category):
     wecr_ttMC.setParamEffect(id_e, 1.02)
     wecr_ttMC.setParamEffect(reco_e, 1.02)
     addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category)
-    wecr.addSample(wecr_ttMC)
+
+    if category == "pass":
+        wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+        wecr_tt = rl.TransferFactorSample(
+            ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
+        )
+        wecr.addSample(wecr_tt)
+    else:
+        wecr.addSample(wecr_ttMC)
 
     ###
     # Other MC-driven processes
@@ -759,11 +773,14 @@ def model(year, recoil, category):
     tmcr_ttMC.setParamEffect(iso_mu, 1.02)
     addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category)
     
-    tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() 
-    tmcr_tt = rl.TransferFactorSample(
-        ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt
-    )
-    tmcr.addSample(tmcr_tt)    
+    if category == "pass":
+        tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() 
+        tmcr_tt = rl.TransferFactorSample(
+            ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt
+        )
+        tmcr.addSample(tmcr_tt)    
+    else:
+        tmcr.addSample(tmcr_ttMC)
     
     ###
     # Other MC-driven processes
@@ -910,11 +927,14 @@ def model(year, recoil, category):
     tecr_ttMC.setParamEffect(reco_e, 1.02)
     addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category)
     
-    tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
-    tecr_tt = rl.TransferFactorSample(
-        ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt
-    )
-    tecr.addSample(tecr_tt)
+    if category == "pass":
+        tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+        tecr_tt = rl.TransferFactorSample(
+            ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt
+        )
+        tecr.addSample(tecr_tt)
+    if category == "pass":
+        tecr.addSample(tecr_ttMC)
     
     ###
     # Other MC-driven processes
@@ -1106,7 +1126,7 @@ if __name__ == "__main__":
     whf_fraction = rl.NuisanceParameter("whf_fraction", "shape")
     zhf_fraction = rl.NuisanceParameter("zhf_fraction", "shape")
     ghf_fraction = rl.NuisanceParameter("ghf_fraction", "shape")
-    #tf_paramsZ = rhalphabeth2D("Z+jets")
+    tf_paramsZ = rhalphabeth2D("Z+jets")
     #tf_paramsW = rhalphabeth2D("W+jets")
 
     model_dict = {}
@@ -1133,7 +1153,7 @@ if __name__ == "__main__":
                     "sr" + year + "_zjets_fail_recoil"+str(recoilbin)+"_mass%d" % i,
                     b,
                     0,
-                    sr_zjetsMCFailTemplate[0].max() * 2,
+                    sr_zjetsMCFailTemplate[0].max() * 10,
                 )
                 for i, b in enumerate(sr_zjetsMCFailTemplate[0])
             ]
@@ -1161,11 +1181,11 @@ if __name__ == "__main__":
         addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
 
-        sr_wjetsTransferFactor = sr_wjetsMCFail.getExpectation() / sr_zjetsMCFail.getExpectation()
+        sr_wjetsFailTransferFactor = sr_wjetsMCFail.getExpectation() / sr_zjetsMCFail.getExpectation()
         sr_wjetsFail = rl.TransferFactorSample(
             "sr" + year + "fail" + "recoil" + str(recoilbin)+ "_wjets",
             rl.Sample.BACKGROUND,
-            sr_wjetsTransferFactor,
+            sr_wjetsFailTransferFactor,
             sr_zjetsFail
         )
 
@@ -1184,12 +1204,19 @@ if __name__ == "__main__":
         addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
 
+        sr_zjetsPass = rl.TransferFactorSample(
+            "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_zjets",
+            rl.Sample.BACKGROUND,
+            tf_paramsZ[recoilbin, :],
+            sr_zjetsFail
+        )
+
         sr_wjetsMCPassTemplate = template(background, "W+jets", "nominal", recoilbin, "sr", "pass")
         sr_wjetsMCPass = rl.TemplateSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin) + "_wjetsMC",
             rl.Sample.BACKGROUND,
             sr_wjetsMCPassTemplate
-        )
+c        )
         sr_wjetsMCPass.setParamEffect(lumi, 1.027)
         sr_wjetsMCPass.setParamEffect(wjets_norm, 1.4)
         sr_wjetsMCPass.setParamEffect(trig_met, 1.01)
@@ -1199,20 +1226,14 @@ if __name__ == "__main__":
         addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
 
-        tf_params = (sr_wjetsMCPassTemplate[0] + sr_zjetsMCPassTemplate[0]) / (sr_wjetsMCFailTemplate[0] + sr_zjetsMCFailTemplate[0])
-
-        sr_zjetsPass = rl.TransferFactorSample(
-            "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_zjets",
-            rl.Sample.BACKGROUND,
-            tf_params,#[recoilbin, :],
-            sr_zjetsFail
-        )
-
+        #tf_params = (sr_wjetsMCPassTemplate[0] + sr_zjetsMCPassTemplate[0]) / (sr_wjetsMCFailTemplate[0] + sr_zjetsMCFailTemplate[0])
+        sr_wjetsPassTransferFactor = sr_wjetsMCPass.getExpectation() / sr_zjetsMCPass.getExpectation()
+    
         sr_wjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_wjets",
             rl.Sample.BACKGROUND,
-            tf_params,#[recoilbin, :],
-            sr_wjetsFail
+            sr_wjetsPassTransferFactor,
+            sr_zjetsPass
         )
 
         for category in ["pass", "fail"]:
