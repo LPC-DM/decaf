@@ -578,9 +578,7 @@ def model(year, recoil, category):
 
     ch_name = "wecr" + model_id
     wecr = rl.Channel(ch_name)
-    #if category != "pass": 
-    if category == "None":
-        model.addChannel(wecr)
+    model.addChannel(wecr)
 
     ###
     # Add data distribution to the channel
