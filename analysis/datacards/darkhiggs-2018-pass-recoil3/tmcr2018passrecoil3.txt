@@ -1,4 +1,4 @@
-# Datacard for <Channel (tmcr2018passrecoil3) instance at 0x2af25c38ba50> generated on 2021-01-10 03:23:43.536275
+# Datacard for <Channel (tmcr2018passrecoil3) instance at 0x2af5e9e63310> generated on 2021-01-10 06:59:28.031697
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
 kmax 24 # number of nuisance parameters
