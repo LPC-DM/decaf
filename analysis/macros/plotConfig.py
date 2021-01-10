@@ -4,7 +4,7 @@
 #scansDir = '/data/t3home000/snarayan/store/panda/v_8026_0_5_slim/fitting/scans/' # resonant
 #scansDir = '/data/t3home000/snarayan/store/panda/v_003_0/fitting/scans2_couplings2/' # coupling scans
 #scansDir = '/data/t3home000/snarayan/store/panda/v_003_0/fitting/scans2/' # mass-mass and mass-g-g and resonant
-plotDir = '/cms/scratch/matteoc/CMSSW_10_2_13/src/decaf/analysis/plots/darkhiggs2018/'
+plotDir = '/cms/scratch/matteoc/CMSSW_10_2_13/src/decaf/analysis/plots/darkhiggs2018/pulls'
 lumi = 36
 
 from os import system
