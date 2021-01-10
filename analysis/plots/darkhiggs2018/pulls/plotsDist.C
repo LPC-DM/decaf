@@ -1,7 +1,7 @@
-void pullsplotsDist()
+void plotsDist()
 {
 //=========Macro generated from canvas: asdf/asdf
-//=========  (Sun Jan 10 10:03:53 2021) by ROOT version 6.12/07
+//=========  (Sun Jan 10 10:06:56 2021) by ROOT version 6.12/07
    TCanvas *asdf = new TCanvas("asdf", "asdf",0,0,800,800);
    gStyle->SetOptFit(1);
    asdf->SetHighLightColor(2);

@@ -1,7 +1,7 @@
-void pullspulls()
+void pulls()
 {
 //=========Macro generated from canvas: nuisances/nuisances
-//=========  (Sun Jan 10 10:03:54 2021) by ROOT version 6.12/07
+//=========  (Sun Jan 10 10:06:57 2021) by ROOT version 6.12/07
    TCanvas *nuisances = new TCanvas("nuisances", "nuisances",0,0,2500,750);
    gStyle->SetOptFit(1);
    nuisances->SetHighLightColor(2);
