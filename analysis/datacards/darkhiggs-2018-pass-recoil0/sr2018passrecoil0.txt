@@ -1,4 +1,4 @@
-# Datacard for <Channel (sr2018passrecoil0) instance at 0x2b9b29eccb10> generated on 2021-01-11 15:41:31.086964
+# Datacard for <Channel (sr2018passrecoil0) instance at 0x2b81f72d2350> generated on 2021-01-11 17:33:49.607742
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 8 # number of samples minus 1
 kmax 24 # number of nuisance parameters
@@ -77,3 +77,11 @@ sr2018passrecoil0_tt_bin6 extArg sr2018passrecoil0.root:sr2018passrecoil0
 sr2018passrecoil0_tt_bin7 extArg sr2018passrecoil0.root:sr2018passrecoil0
 sr2018passrecoil0_tt_bin8 extArg sr2018passrecoil0.root:sr2018passrecoil0
 sr2018passrecoil0_tt_bin9 extArg sr2018passrecoil0.root:sr2018passrecoil0
+tf_dataResidualW_recoil_par0_fjmass_par0 extArg sr2018passrecoil0.root:sr2018passrecoil0
+tf_dataResidualW_recoil_par0_fjmass_par1 extArg sr2018passrecoil0.root:sr2018passrecoil0
+tf_dataResidualW_recoil_par1_fjmass_par0 extArg sr2018passrecoil0.root:sr2018passrecoil0
+tf_dataResidualW_recoil_par1_fjmass_par1 extArg sr2018passrecoil0.root:sr2018passrecoil0
+tf_dataResidualZ_recoil_par0_fjmass_par0 extArg sr2018passrecoil0.root:sr2018passrecoil0
+tf_dataResidualZ_recoil_par0_fjmass_par1 extArg sr2018passrecoil0.root:sr2018passrecoil0
+tf_dataResidualZ_recoil_par1_fjmass_par0 extArg sr2018passrecoil0.root:sr2018passrecoil0
+tf_dataResidualZ_recoil_par1_fjmass_par1 extArg sr2018passrecoil0.root:sr2018passrecoil0
