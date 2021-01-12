@@ -67,8 +67,24 @@ def dump_templates(args):
             if shape_pdf.dependsOn(observable) and isinstance(shape_pdf, ROOT.RooAddPdf):
                 for norm, shape in zip(shape_pdf.coefList(), shape_pdf.pdfList()):
                     if args.filter is None or args.filter.match(shape.GetName()):
-                        hist = shape.createHistogram("hist_"+shape.GetName(), observable)
-                        hist.Scale(norm.getVal())
+                        # Who needs comments, right? Anyway...
+                        # Shape here has to be some kind of PDF.
+                        # Notice that createHistogram() is *NOT* a method of RooAbsPdf...
+                        # What we can do instead is generatedBinned() a RooDataHist and 
+                        # and createHistogram() from that instead
+                        #hist = shape.createHistogram("hist_"+shape.GetName(), observable)
+
+                        # We generate 1E6 events, set expectedData = true (i.e. the Asimov dataset)
+                        # and extended = false (i.e. we don't fluctuate bin by bin).
+                        # The 1E6 should be immaterial here, since we normalise the TH1 back to
+                        # the normalisation variable.
+                        ras = ROOT.RooArgSet(observable)
+                        rdh = shape.generateBinned(ras, 1E6, True, False);
+                        hist = rdh.createHistogram("hist_"+shape.GetName(), observable)
+                        hist.Scale(1.0/hist.Integral()) # scale back to unit area
+                        hist.Scale(norm.getVal()) # and normalise to whatever we want
+                        # Great, now continue as it was before
+                        
                         c = ROOT.TCanvas(shape.GetName())
                         hist.Draw("hist")
                         c.Print("%s/%s.pdf" % (args.output, shape.GetName()))
