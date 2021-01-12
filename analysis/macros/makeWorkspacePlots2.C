@@ -194,7 +194,7 @@ TH1 *getDataPlot(std::string fileName, std::string wsname, std::string catName) 
   return dataPlot;
 }
 
-void makeWorkspacePlots(const std::string name, int histoTop, int latexY) {
+void makeWorkspacePlots2(const std::string name, int histoTop, int latexY) {
   TCanvas *cv = new TCanvas("cv", "cv", 600, 600);
   TH1F *histo = new TH1F("histo", "histo", 1, 40, 300);
   histo->SetLineWidth(0);
