@@ -15,13 +15,14 @@ std::vector<int> majorColors = {TColor::GetColor(43, 147, 34),
                                 TColor::GetColor(164, 219, 120),
                                 TColor::GetColor(37, 14, 210),
                                 TColor::GetColor(251, 178, 93)};
-std::vector<std::string> minorNames = {"qcdMC", "gjets", "hbbMC", "dyjetsMC", "vvMC", "stMC"};
+std::vector<std::string> minorNames = {"qcdMC", "gjets", "hbbMC", "dyjetsMC", "vvMC", "stMC", "ttMC"};
 std::vector<int> minorColors = {TColor::GetColor(150, 195, 220),
                                 TColor::GetColor(193, 193, 193),
                                 TColor::GetColor(190, 160, 204),
                                 TColor::GetColor(251, 178, 93),
                                 TColor::GetColor(218, 0, 24),
-                                TColor::GetColor(63, 237, 30)};
+                                TColor::GetColor(63, 237, 30),
+				TColor::GetColor(43, 147, 34)};
 
 /// Legend
 void makeLegend() {
