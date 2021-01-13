@@ -18,7 +18,7 @@ def getInt(h):
         total += h.GetBinContent(iB)*h.GetBinWidth(iB)
     return total
 
-def plotPreFitPostFit(region, year, signalflag, recoil, blind=True):
+def plotPreFitPostFit(region, year, signalflag, recoil, blind=False):
 
     #### Define region, year, signal, and recoil bin ####
     darkhiggs_regions = {
@@ -264,6 +264,10 @@ def plotPreFitPostFit(region, year, signalflag, recoil, blind=True):
         if not process == mainbkg[region]:
             h_other_postfit.Add(h_postfit[process])
         h_stack_postfit.Add(h_postfit[process])
+
+    # Data
+    print(darkhiggs_regions[region]+years[year]+signalprocess[signalflag]+recoilbin[recoil]+"_data/data")
+    h_data = f_mlfit.Get(darkhiggs_regions[region]+years[year]+signalprocess[signalflag]+recoilbin[recoil]+"_data/data")
 
     gStyle.SetOptStat(0)
 
@@ -568,5 +572,5 @@ for iregion in dh_regions:
             try:
                 plotPreFitPostFit(iregion, '2018', isig, ibin)
             except:
-                print("Directory is not exist in %s file! \n" % (sys.argv[1]))
+                print("Directory does not exist in %s file! \n" % (sys.argv[1]))
                 pass

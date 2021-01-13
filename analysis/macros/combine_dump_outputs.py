@@ -4,10 +4,12 @@ import sys
 
 ##### example: plots/darkhiggs2018/dump_postfit ####
 dirname = sys.argv[1]
+print(dirname.split('/')[2].split('_')[1])
 flag = dirname.split('/')[2].split('_')[1]
 
 def makeinputs(wsname):
     filelist = glob.glob(dirname+'/*'+wsname+'*.root')
+    print(filelist)
     return filelist
 
 def histcombine(region, year, signalflag, recoil):
@@ -59,6 +61,8 @@ def histcombine(region, year, signalflag, recoil):
         process = ''
         if 'Mhs_50_morph' in str(ifile):
             process = 'Mhs_50'
+        elif 'data' in str(ifile):
+            process = 'data'
         elif 'morph' in str(ifile):
             process = ifile.split('_')[-2]
         else:
@@ -67,7 +71,12 @@ def histcombine(region, year, signalflag, recoil):
         fin = rt.TFile.Open(ifile)
         if fin == None:
             print('Cannot open the file!')
-        hist = fin.Get('hist_'+ifile.split('/')[-1].split('.')[0]+'__fjmass')
+
+        if process != 'data':
+            hist = fin.Get('hist_'+ifile.split('/')[-1].split('.')[0]+'__fjmass')
+        else:
+            print('hist_shapeBkg__data_'+workspace+'Pdf__fjmass')
+            hist = fin.Get('hist_shapeBkg__data_'+workspace+'Pdf__fjmass')
         foutput.cd(workspace+'_'+flag)
         hist.Write(process)
         fin.Close()
