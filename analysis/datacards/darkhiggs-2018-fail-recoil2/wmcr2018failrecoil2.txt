@@ -1,14 +1,14 @@
-# Datacard for <Channel (wmcr2018failrecoil2) instance at 0x2b9025aa2f90> generated on 2021-01-11 17:32:36.918755
+# Datacard for <Channel (wmcr2018failrecoil2) instance at 0x2b5520d3acd0> generated on 2021-01-14 16:39:50.688380
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
-kmax 27 # number of nuisance parameters
+kmax 60 # number of nuisance parameters
 shapes * wmcr2018failrecoil2 wmcr2018failrecoil2.root wmcr2018failrecoil2:wmcr2018failrecoil2_$PROCESS wmcr2018failrecoil2:wmcr2018failrecoil2_$PROCESS_$SYSTEMATIC
 bin wmcr2018failrecoil2
 observation 18552.000
 bin               wmcr2018failrecoil2  wmcr2018failrecoil2  wmcr2018failrecoil2  wmcr2018failrecoil2  wmcr2018failrecoil2  wmcr2018failrecoil2  wmcr2018failrecoil2
 process                         wjets                 ttMC                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
 process                             1                    2                    3                    4                    5                    6                    7
-rate                            1.000             1854.850              363.126              288.345              667.141                1.192              488.801
+rate                            1.000             1854.850              363.126              280.791              667.141                1.192              488.801
 btag2018 shape                      -                1.000                1.000                1.000                1.000                1.000                1.000
 ew1 shape                           -                    -                    -                1.000                    -                    -                    -
 ew2Z shape                          -                    -                    -                1.000                    -                    -                    -
@@ -25,7 +25,7 @@ qcd1 shape                          -                    -                    - 
 qcd2 shape                          -                    -                    -                1.000                    -                    -                    -
 qcdmu_norm lnN                      -                    -                    -                    -                    -                    -                2.000
 st_norm lnN                         -                    -                1.200                    -                    -                    -                    -
-trig_met2018 lnN                    -                1.010                1.010                1.010                1.010                1.010                1.010
+trig_met2018 lnN                    -                1.020                1.020                1.020                1.020                1.020                1.020
 tt_norm lnN                         -                1.200                    -                    -                    -                    -                    -
 veto_tau2018 lnN                    -                1.030                1.030                1.030                1.030                1.030                1.030
 vv_norm lnN                         -                    -                    -                    -                1.200                    -                    -
@@ -33,9 +33,53 @@ zjets_norm lnN                      -                    -                    - 
 ew2W param 0 1
 ew3W param 0 1
 qcd3 param 0 1
+sr2018failrecoil2_wjetsMC_mcstat_bin0 param 0 1
+sr2018failrecoil2_wjetsMC_mcstat_bin1 param 0 1
+sr2018failrecoil2_wjetsMC_mcstat_bin10 param 0 1
+sr2018failrecoil2_wjetsMC_mcstat_bin2 param 0 1
+sr2018failrecoil2_wjetsMC_mcstat_bin3 param 0 1
+sr2018failrecoil2_wjetsMC_mcstat_bin4 param 0 1
+sr2018failrecoil2_wjetsMC_mcstat_bin5 param 0 1
+sr2018failrecoil2_wjetsMC_mcstat_bin6 param 0 1
+sr2018failrecoil2_wjetsMC_mcstat_bin7 param 0 1
+sr2018failrecoil2_wjetsMC_mcstat_bin8 param 0 1
+sr2018failrecoil2_wjetsMC_mcstat_bin9 param 0 1
+sr2018failrecoil2_zjetsMC_mcstat_bin0 param 0 1
+sr2018failrecoil2_zjetsMC_mcstat_bin1 param 0 1
+sr2018failrecoil2_zjetsMC_mcstat_bin10 param 0 1
+sr2018failrecoil2_zjetsMC_mcstat_bin2 param 0 1
+sr2018failrecoil2_zjetsMC_mcstat_bin3 param 0 1
+sr2018failrecoil2_zjetsMC_mcstat_bin4 param 0 1
+sr2018failrecoil2_zjetsMC_mcstat_bin5 param 0 1
+sr2018failrecoil2_zjetsMC_mcstat_bin6 param 0 1
+sr2018failrecoil2_zjetsMC_mcstat_bin7 param 0 1
+sr2018failrecoil2_zjetsMC_mcstat_bin8 param 0 1
+sr2018failrecoil2_zjetsMC_mcstat_bin9 param 0 1
 whf_fraction param 0 1
 wjets_norm param 0 1
+wmcr2018failrecoil2_wjetsMC_mcstat_bin0 param 0 1
+wmcr2018failrecoil2_wjetsMC_mcstat_bin1 param 0 1
+wmcr2018failrecoil2_wjetsMC_mcstat_bin10 param 0 1
+wmcr2018failrecoil2_wjetsMC_mcstat_bin2 param 0 1
+wmcr2018failrecoil2_wjetsMC_mcstat_bin3 param 0 1
+wmcr2018failrecoil2_wjetsMC_mcstat_bin4 param 0 1
+wmcr2018failrecoil2_wjetsMC_mcstat_bin5 param 0 1
+wmcr2018failrecoil2_wjetsMC_mcstat_bin6 param 0 1
+wmcr2018failrecoil2_wjetsMC_mcstat_bin7 param 0 1
+wmcr2018failrecoil2_wjetsMC_mcstat_bin8 param 0 1
+wmcr2018failrecoil2_wjetsMC_mcstat_bin9 param 0 1
 zhf_fraction param 0 1
+sr2018_zjets_fail_recoil2_mass0 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass1 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass10 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass2 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass3 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass4 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass5 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass6 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass7 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass8 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
+sr2018_zjets_fail_recoil2_mass9 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
 sr2018failrecoil2_wjetsMC_bin0_nominal extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
 sr2018failrecoil2_wjetsMC_bin0_nominal extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
 sr2018failrecoil2_wjetsMC_bin10_nominal extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
@@ -69,17 +113,6 @@ sr2018failrecoil2_zjetsMC_bin6_nominal extArg wmcr2018failrecoil2.root:wmcr2018f
 sr2018failrecoil2_zjetsMC_bin7_nominal extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
 sr2018failrecoil2_zjetsMC_bin8_nominal extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
 sr2018failrecoil2_zjetsMC_bin9_nominal extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
-sr2018failrecoil2_zjets_bin0 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
-sr2018failrecoil2_zjets_bin1 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
-sr2018failrecoil2_zjets_bin10 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
-sr2018failrecoil2_zjets_bin2 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
-sr2018failrecoil2_zjets_bin3 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
-sr2018failrecoil2_zjets_bin4 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
-sr2018failrecoil2_zjets_bin5 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
-sr2018failrecoil2_zjets_bin6 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
-sr2018failrecoil2_zjets_bin7 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
-sr2018failrecoil2_zjets_bin8 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
-sr2018failrecoil2_zjets_bin9 extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
 wmcr2018failrecoil2_wjetsMC_bin0_nominal extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
 wmcr2018failrecoil2_wjetsMC_bin10_nominal extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
 wmcr2018failrecoil2_wjetsMC_bin1_nominal extArg wmcr2018failrecoil2.root:wmcr2018failrecoil2
