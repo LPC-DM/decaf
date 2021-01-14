@@ -1246,7 +1246,7 @@ if __name__ == "__main__":
 
         #tf_paramsZdeco = sr_zjetsMCPassTemplate[0] / sr_zjetsMCFailTemplate[0]
         tf_paramsZdeco = sr_zjetsMCPass.getExpectation() / sr_zjetsMCFail.getExpectation()
-        tf_paramsZ = tf_paramsZdeco * tf_dataResidualZ_params[recoilbin, :]
+        tf_paramsZ = tf_paramsZdeco #* tf_dataResidualZ_params[recoilbin, :]
 
         sr_zjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_zjets",
@@ -1273,7 +1273,7 @@ if __name__ == "__main__":
 
         #tf_paramsWdeco = sr_wjetsMCPassTemplate[0] / sr_wjetsMCFailTemplate[0]
         tf_paramsWdeco = sr_wjetsMCPass.getExpectation() / sr_wjetsMCFail.getExpectation()
-        tf_paramsW = tf_paramsWdeco * tf_dataResidualW_params[recoilbin, :]
+        tf_paramsW = tf_paramsWdeco #* tf_dataResidualW_params[recoilbin, :]
     
         sr_wjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_wjets",
