@@ -289,7 +289,7 @@ def model(year, recoil, category):
     # top-antitop model
     ###
 
-    sr_ttTemplate = template(background, "TT", "nominal", recoil, "sr", category)
+    sr_ttTemplate = template(background, "TT", "nominal", recoil, "sr", category, read_sumw2=True)
     sr_ttMC = rl.TemplateSample(
         "sr" + model_id + "_ttMC",
         rl.Sample.BACKGROUND,
@@ -302,8 +302,21 @@ def model(year, recoil, category):
     sr_ttMC.setParamEffect(jec, 1.05)
     addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
 
-    sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
     if category == "pass":
+        sr_ttMC.autoMCStats()
+        sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
+        sr_ttParameters = np.array(
+            [
+                rl.IndependentParameter(                                                                                                                                     
+                    "sr" + year + "_tt_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i,
+                    0
+                )
+                for i in range(sr_ttObservable.nbins)
+            ]
+        )
+        sr_ttBinYields = sr_ttTemplate[0] * (1 + (10./np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
+
+        '''
         sr_ttBinYields = np.array(  # one nuisance per mass shape bin in pass                                              
             [
                 rl.IndependentParameter(
@@ -315,7 +328,7 @@ def model(year, recoil, category):
                 for i, b in enumerate(sr_ttTemplate[0])
             ]
         )
-    
+        '''
         sr_tt = rl.ParametericSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields
         )
@@ -1159,6 +1172,7 @@ if __name__ == "__main__":
         addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
 
+        '''
         sr_zjetsBinYields= np.array(  # one nuisance per mass shape bin in pass
             [
                 rl.IndependentParameter(
@@ -1170,7 +1184,19 @@ if __name__ == "__main__":
                 for i, b in enumerate(sr_zjetsMCFailTemplate[0])
             ]
         )
+        '''
         sr_zjetsObservable = rl.Observable("fjmass", sr_zjetsMCFailTemplate[1])
+        sr_zjetsParameters = np.array(
+            [
+                rl.IndependentParameter(                                                                                                                                     
+                    "sr" + year + "_zjets_fail_recoil"+str(recoilbin)+"_mass%d" % i,
+                    0
+                )
+                for i in range(sr_zjetsObservable.nbins)
+            ]
+        )
+        sr_zjetsBinYields = sr_zjetsMCFailTemplate[0] * (1 + (10./np.maximum(1., np.sqrt(sr_zjetsMCFailTemplate[0]))))**sr_zjetsParameters
+
         sr_zjetsFail = rl.ParametericSample(
             "sr" + year + "fail" + "recoil" + str(recoilbin)+ "_zjets",
             rl.Sample.BACKGROUND,
