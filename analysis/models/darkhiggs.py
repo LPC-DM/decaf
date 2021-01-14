@@ -40,11 +40,13 @@ category_map = {"pass": 1, "fail": 0}
 with open("data/hf_systematic.json") as fin:
     hf_systematic = json.load(fin)
 
-def template(dictionary, process, systematic, recoil, region, category):
+def template(dictionary, process, systematic, recoil, region, category, read_sumw2=False):
     histogram = dictionary[region].integrate("process", process)
-    nominal = histogram.integrate("systematic", "nominal").values()[()][
-        recoil, :, category_map[category]
-    ]
+    nominal, sumw2 = histogram.integrate("systematic", "nominal").values(sumw2=True)[()]
+    nominal=nominal[recoil, :, category_map[category]]
+    sumw2=sumw2[recoil, :, category_map[category]]
+    print(nominal)
+    print(histogram.integrate("systematic", "nominal").values()[()][recoil, :, category_map[category]])
     zerobins = nominal <= 0.
     output = nominal
     if "data" not in systematic:
@@ -62,6 +64,8 @@ def template(dictionary, process, systematic, recoil, region, category):
         .axis("fjmass")
         .edges()
     )
+    if read_sumw2:
+        return (output, binning, "fjmass", sumw2)
     return (output, binning, "fjmass")
 
 def remap_histograms(hists):
@@ -1135,7 +1139,7 @@ if __name__ == "__main__":
     model_dict = {}
     for recoilbin in range(nrecoil):
 
-        sr_zjetsMCFailTemplate = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail")
+        sr_zjetsMCFailTemplate = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
         sr_zjetsMCFail = rl.TemplateSample(
             "sr" + year + "fail" + "recoil" + str(recoilbin) + "_zjetsMC",
             rl.Sample.BACKGROUND,
@@ -1147,6 +1151,7 @@ if __name__ == "__main__":
         sr_zjetsMCFail.setParamEffect(veto_tau, 1.03)
         sr_zjetsMCFail.setParamEffect(jec, 1.05)
         sr_zjetsMCFail.setParamEffect(zhf_fraction, np.array(hf_systematic["Z+jets"]["sr"]["fail"][recoilbin][1:]))
+        sr_zjetsMCFail.autoMCStats()
         addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
 
@@ -1169,7 +1174,7 @@ if __name__ == "__main__":
             sr_zjetsBinYields
         )
 
-        sr_wjetsMCFailTemplate = template(background, "W+jets", "nominal", recoilbin, "sr", "fail")
+        sr_wjetsMCFailTemplate = template(background, "W+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
         sr_wjetsMCFail = rl.TemplateSample(
             "sr" + year + "fail" + "recoil" + str(recoilbin) + "_wjetsMC",
             rl.Sample.BACKGROUND,
@@ -1181,6 +1186,7 @@ if __name__ == "__main__":
         sr_wjetsMCFail.setParamEffect(veto_tau, 1.03)
         sr_wjetsMCFail.setParamEffect(jec, 1.05)
         sr_wjetsMCFail.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["sr"]["fail"][recoilbin][1:]))
+        sr_wjetsMCFail.autoMCStats()
         addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
 
@@ -1192,7 +1198,7 @@ if __name__ == "__main__":
             sr_zjetsFail
         )
 
-        sr_zjetsMCPassTemplate = template(background, "Z+jets", "nominal", recoilbin, "sr", "pass")
+        sr_zjetsMCPassTemplate = template(background, "Z+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
         sr_zjetsMCPass = rl.TemplateSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin) + "_zjetsMC",
             rl.Sample.BACKGROUND,
@@ -1204,6 +1210,7 @@ if __name__ == "__main__":
         sr_zjetsMCPass.setParamEffect(veto_tau, 1.03)
         sr_zjetsMCPass.setParamEffect(jec, 1.05)
         sr_zjetsMCPass.setParamEffect(zhf_fraction, np.array(hf_systematic["Z+jets"]["sr"]["pass"][recoilbin][1:]))
+        sr_zjetsMCPass.autoMCStats()
         addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
 
@@ -1218,7 +1225,7 @@ if __name__ == "__main__":
             sr_zjetsFail
         )
 
-        sr_wjetsMCPassTemplate = template(background, "W+jets", "nominal", recoilbin, "sr", "pass")
+        sr_wjetsMCPassTemplate = template(background, "W+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
         sr_wjetsMCPass = rl.TemplateSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin) + "_wjetsMC",
             rl.Sample.BACKGROUND,
@@ -1230,6 +1237,7 @@ if __name__ == "__main__":
         sr_wjetsMCPass.setParamEffect(veto_tau, 1.03)
         sr_wjetsMCPass.setParamEffect(jec, 1.05)
         sr_wjetsMCPass.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["sr"]["pass"][recoilbin][1:]))
+        sr_wjetsMCPass.autoMCStats()
         addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
 
