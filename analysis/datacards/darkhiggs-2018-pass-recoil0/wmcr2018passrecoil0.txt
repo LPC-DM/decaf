@@ -1,7 +1,7 @@
-# Datacard for <Channel (wmcr2018passrecoil0) instance at 0x2b1fae487090> generated on 2021-01-14 16:30:01.946644
+# Datacard for <Channel (wmcr2018passrecoil0) instance at 0x2b633d14a810> generated on 2021-01-15 07:54:17.204597
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
-kmax 93 # number of nuisance parameters
+kmax 27 # number of nuisance parameters
 shapes * wmcr2018passrecoil0 wmcr2018passrecoil0.root wmcr2018passrecoil0:wmcr2018passrecoil0_$PROCESS wmcr2018passrecoil0:wmcr2018passrecoil0_$PROCESS_$SYSTEMATIC
 bin wmcr2018passrecoil0
 observation 15759.000
@@ -32,75 +32,9 @@ zjets_norm lnN                      -                    -                    - 
 ew2W param 0 1
 ew3W param 0 1
 qcd3 param 0 1
-sr2018failrecoil0_wjetsMC_mcstat_bin0 param 0 1
-sr2018failrecoil0_wjetsMC_mcstat_bin1 param 0 1
-sr2018failrecoil0_wjetsMC_mcstat_bin10 param 0 1
-sr2018failrecoil0_wjetsMC_mcstat_bin2 param 0 1
-sr2018failrecoil0_wjetsMC_mcstat_bin3 param 0 1
-sr2018failrecoil0_wjetsMC_mcstat_bin4 param 0 1
-sr2018failrecoil0_wjetsMC_mcstat_bin5 param 0 1
-sr2018failrecoil0_wjetsMC_mcstat_bin6 param 0 1
-sr2018failrecoil0_wjetsMC_mcstat_bin7 param 0 1
-sr2018failrecoil0_wjetsMC_mcstat_bin8 param 0 1
-sr2018failrecoil0_wjetsMC_mcstat_bin9 param 0 1
-sr2018failrecoil0_zjetsMC_mcstat_bin0 param 0 1
-sr2018failrecoil0_zjetsMC_mcstat_bin1 param 0 1
-sr2018failrecoil0_zjetsMC_mcstat_bin10 param 0 1
-sr2018failrecoil0_zjetsMC_mcstat_bin2 param 0 1
-sr2018failrecoil0_zjetsMC_mcstat_bin3 param 0 1
-sr2018failrecoil0_zjetsMC_mcstat_bin4 param 0 1
-sr2018failrecoil0_zjetsMC_mcstat_bin5 param 0 1
-sr2018failrecoil0_zjetsMC_mcstat_bin6 param 0 1
-sr2018failrecoil0_zjetsMC_mcstat_bin7 param 0 1
-sr2018failrecoil0_zjetsMC_mcstat_bin8 param 0 1
-sr2018failrecoil0_zjetsMC_mcstat_bin9 param 0 1
-sr2018passrecoil0_ttMC_mcstat_bin0 param 0 1
-sr2018passrecoil0_ttMC_mcstat_bin1 param 0 1
-sr2018passrecoil0_ttMC_mcstat_bin10 param 0 1
-sr2018passrecoil0_ttMC_mcstat_bin2 param 0 1
-sr2018passrecoil0_ttMC_mcstat_bin3 param 0 1
-sr2018passrecoil0_ttMC_mcstat_bin4 param 0 1
-sr2018passrecoil0_ttMC_mcstat_bin5 param 0 1
-sr2018passrecoil0_ttMC_mcstat_bin6 param 0 1
-sr2018passrecoil0_ttMC_mcstat_bin7 param 0 1
-sr2018passrecoil0_ttMC_mcstat_bin8 param 0 1
-sr2018passrecoil0_ttMC_mcstat_bin9 param 0 1
-sr2018passrecoil0_wjetsMC_mcstat_bin0 param 0 1
-sr2018passrecoil0_wjetsMC_mcstat_bin1 param 0 1
-sr2018passrecoil0_wjetsMC_mcstat_bin10 param 0 1
-sr2018passrecoil0_wjetsMC_mcstat_bin2 param 0 1
-sr2018passrecoil0_wjetsMC_mcstat_bin3 param 0 1
-sr2018passrecoil0_wjetsMC_mcstat_bin4 param 0 1
-sr2018passrecoil0_wjetsMC_mcstat_bin5 param 0 1
-sr2018passrecoil0_wjetsMC_mcstat_bin6 param 0 1
-sr2018passrecoil0_wjetsMC_mcstat_bin7 param 0 1
-sr2018passrecoil0_wjetsMC_mcstat_bin8 param 0 1
-sr2018passrecoil0_wjetsMC_mcstat_bin9 param 0 1
 tt_norm param 0 1
 whf_fraction param 0 1
 wjets_norm param 0 1
-wmcr2018passrecoil0_ttMC_mcstat_bin0 param 0 1
-wmcr2018passrecoil0_ttMC_mcstat_bin1 param 0 1
-wmcr2018passrecoil0_ttMC_mcstat_bin10 param 0 1
-wmcr2018passrecoil0_ttMC_mcstat_bin2 param 0 1
-wmcr2018passrecoil0_ttMC_mcstat_bin3 param 0 1
-wmcr2018passrecoil0_ttMC_mcstat_bin4 param 0 1
-wmcr2018passrecoil0_ttMC_mcstat_bin5 param 0 1
-wmcr2018passrecoil0_ttMC_mcstat_bin6 param 0 1
-wmcr2018passrecoil0_ttMC_mcstat_bin7 param 0 1
-wmcr2018passrecoil0_ttMC_mcstat_bin8 param 0 1
-wmcr2018passrecoil0_ttMC_mcstat_bin9 param 0 1
-wmcr2018passrecoil0_wjetsMC_mcstat_bin0 param 0 1
-wmcr2018passrecoil0_wjetsMC_mcstat_bin1 param 0 1
-wmcr2018passrecoil0_wjetsMC_mcstat_bin10 param 0 1
-wmcr2018passrecoil0_wjetsMC_mcstat_bin2 param 0 1
-wmcr2018passrecoil0_wjetsMC_mcstat_bin3 param 0 1
-wmcr2018passrecoil0_wjetsMC_mcstat_bin4 param 0 1
-wmcr2018passrecoil0_wjetsMC_mcstat_bin5 param 0 1
-wmcr2018passrecoil0_wjetsMC_mcstat_bin6 param 0 1
-wmcr2018passrecoil0_wjetsMC_mcstat_bin7 param 0 1
-wmcr2018passrecoil0_wjetsMC_mcstat_bin8 param 0 1
-wmcr2018passrecoil0_wjetsMC_mcstat_bin9 param 0 1
 zhf_fraction param 0 1
 sr2018_tt_pass_recoil0_mass0 extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
 sr2018_tt_pass_recoil0_mass1 extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
@@ -190,10 +124,6 @@ sr2018passrecoil0_wjetsMC_bin8_nominal extArg wmcr2018passrecoil0.root:wmcr2018p
 sr2018passrecoil0_wjetsMC_bin8_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
 sr2018passrecoil0_wjetsMC_bin9_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
 sr2018passrecoil0_wjetsMC_bin9_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
-tf_dataResidualW_recoil_par0_fjmass_par0 extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
-tf_dataResidualW_recoil_par0_fjmass_par1 extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
-tf_dataResidualW_recoil_par1_fjmass_par0 extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
-tf_dataResidualW_recoil_par1_fjmass_par1 extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
 wmcr2018passrecoil0_ttMC_bin0_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
 wmcr2018passrecoil0_ttMC_bin10_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0
 wmcr2018passrecoil0_ttMC_bin1_nominal extArg wmcr2018passrecoil0.root:wmcr2018passrecoil0

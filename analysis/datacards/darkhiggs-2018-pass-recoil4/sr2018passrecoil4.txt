@@ -1,7 +1,7 @@
-# Datacard for <Channel (sr2018passrecoil4) instance at 0x2b560b307610> generated on 2021-01-14 16:39:48.731933
+# Datacard for <Channel (sr2018passrecoil4) instance at 0x2b09fff36310> generated on 2021-01-15 07:54:35.433063
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 8 # number of samples minus 1
-kmax 68 # number of nuisance parameters
+kmax 24 # number of nuisance parameters
 shapes * sr2018passrecoil4 sr2018passrecoil4.root sr2018passrecoil4:sr2018passrecoil4_$PROCESS sr2018passrecoil4:sr2018passrecoil4_$PROCESS_$SYSTEMATIC
 bin sr2018passrecoil4
 observation 258.000
@@ -30,50 +30,6 @@ zjets_norm lnN                    -                  -                  -       
 ew2W param 0 1
 ew3W param 0 1
 qcd3 param 0 1
-sr2018failrecoil4_wjetsMC_mcstat_bin0 param 0 1
-sr2018failrecoil4_wjetsMC_mcstat_bin1 param 0 1
-sr2018failrecoil4_wjetsMC_mcstat_bin10 param 0 1
-sr2018failrecoil4_wjetsMC_mcstat_bin2 param 0 1
-sr2018failrecoil4_wjetsMC_mcstat_bin3 param 0 1
-sr2018failrecoil4_wjetsMC_mcstat_bin4 param 0 1
-sr2018failrecoil4_wjetsMC_mcstat_bin5 param 0 1
-sr2018failrecoil4_wjetsMC_mcstat_bin6 param 0 1
-sr2018failrecoil4_wjetsMC_mcstat_bin7 param 0 1
-sr2018failrecoil4_wjetsMC_mcstat_bin8 param 0 1
-sr2018failrecoil4_wjetsMC_mcstat_bin9 param 0 1
-sr2018failrecoil4_zjetsMC_mcstat_bin0 param 0 1
-sr2018failrecoil4_zjetsMC_mcstat_bin1 param 0 1
-sr2018failrecoil4_zjetsMC_mcstat_bin10 param 0 1
-sr2018failrecoil4_zjetsMC_mcstat_bin2 param 0 1
-sr2018failrecoil4_zjetsMC_mcstat_bin3 param 0 1
-sr2018failrecoil4_zjetsMC_mcstat_bin4 param 0 1
-sr2018failrecoil4_zjetsMC_mcstat_bin5 param 0 1
-sr2018failrecoil4_zjetsMC_mcstat_bin6 param 0 1
-sr2018failrecoil4_zjetsMC_mcstat_bin7 param 0 1
-sr2018failrecoil4_zjetsMC_mcstat_bin8 param 0 1
-sr2018failrecoil4_zjetsMC_mcstat_bin9 param 0 1
-sr2018passrecoil4_wjetsMC_mcstat_bin0 param 0 1
-sr2018passrecoil4_wjetsMC_mcstat_bin1 param 0 1
-sr2018passrecoil4_wjetsMC_mcstat_bin10 param 0 1
-sr2018passrecoil4_wjetsMC_mcstat_bin2 param 0 1
-sr2018passrecoil4_wjetsMC_mcstat_bin3 param 0 1
-sr2018passrecoil4_wjetsMC_mcstat_bin4 param 0 1
-sr2018passrecoil4_wjetsMC_mcstat_bin5 param 0 1
-sr2018passrecoil4_wjetsMC_mcstat_bin6 param 0 1
-sr2018passrecoil4_wjetsMC_mcstat_bin7 param 0 1
-sr2018passrecoil4_wjetsMC_mcstat_bin8 param 0 1
-sr2018passrecoil4_wjetsMC_mcstat_bin9 param 0 1
-sr2018passrecoil4_zjetsMC_mcstat_bin0 param 0 1
-sr2018passrecoil4_zjetsMC_mcstat_bin1 param 0 1
-sr2018passrecoil4_zjetsMC_mcstat_bin10 param 0 1
-sr2018passrecoil4_zjetsMC_mcstat_bin2 param 0 1
-sr2018passrecoil4_zjetsMC_mcstat_bin3 param 0 1
-sr2018passrecoil4_zjetsMC_mcstat_bin4 param 0 1
-sr2018passrecoil4_zjetsMC_mcstat_bin5 param 0 1
-sr2018passrecoil4_zjetsMC_mcstat_bin6 param 0 1
-sr2018passrecoil4_zjetsMC_mcstat_bin7 param 0 1
-sr2018passrecoil4_zjetsMC_mcstat_bin8 param 0 1
-sr2018passrecoil4_zjetsMC_mcstat_bin9 param 0 1
 whf_fraction param 0 1
 wjets_norm param 0 1
 zhf_fraction param 0 1
@@ -165,11 +121,3 @@ sr2018passrecoil4_zjetsMC_bin6_nominal extArg sr2018passrecoil4.root:sr2018passr
 sr2018passrecoil4_zjetsMC_bin7_nominal extArg sr2018passrecoil4.root:sr2018passrecoil4
 sr2018passrecoil4_zjetsMC_bin8_nominal extArg sr2018passrecoil4.root:sr2018passrecoil4
 sr2018passrecoil4_zjetsMC_bin9_nominal extArg sr2018passrecoil4.root:sr2018passrecoil4
-tf_dataResidualW_recoil_par0_fjmass_par0 extArg sr2018passrecoil4.root:sr2018passrecoil4
-tf_dataResidualW_recoil_par0_fjmass_par1 extArg sr2018passrecoil4.root:sr2018passrecoil4
-tf_dataResidualW_recoil_par1_fjmass_par0 extArg sr2018passrecoil4.root:sr2018passrecoil4
-tf_dataResidualW_recoil_par1_fjmass_par1 extArg sr2018passrecoil4.root:sr2018passrecoil4
-tf_dataResidualZ_recoil_par0_fjmass_par0 extArg sr2018passrecoil4.root:sr2018passrecoil4
-tf_dataResidualZ_recoil_par0_fjmass_par1 extArg sr2018passrecoil4.root:sr2018passrecoil4
-tf_dataResidualZ_recoil_par1_fjmass_par0 extArg sr2018passrecoil4.root:sr2018passrecoil4
-tf_dataResidualZ_recoil_par1_fjmass_par1 extArg sr2018passrecoil4.root:sr2018passrecoil4
