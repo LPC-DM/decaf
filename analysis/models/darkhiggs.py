@@ -128,7 +128,7 @@ def remap_histograms(hists):
 def addBtagSyst(dictionary, recoil, process, region, templ, category):
     btagUp = template(dictionary, process, "btagUp", recoil, region, category)[0]
     btagDown = template(dictionary, process, "btagDown", recoil, region, category)[0]
-    templ.setParamEffect(btag, btagUp, btagDown)
+    #templ.setParamEffect(btag, btagUp, btagDown)
 
 def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     ew1Up = template(dictionary, process, "ew1Up", recoil, region, category)[0]
@@ -157,10 +157,10 @@ def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     templ.setParamEffect(mix, mixUp, mixDown)
     muFUp = template(dictionary, process, "muFUp", recoil, region, category)[0]
     muFDown = template(dictionary, process, "muFDown", recoil, region, category)[0]
-    templ.setParamEffect(muF, muFUp, muFDown)
+    #templ.setParamEffect(muF, muFUp, muFDown)
     muRUp = template(dictionary, process, "muRUp", recoil, region, category)[0]
     muRDown = template(dictionary, process, "muRDown", recoil, region, category)[0]
-    templ.setParamEffect(muR, muRUp, muRDown)
+    #templ.setParamEffect(muR, muRUp, muRDown)
     qcd1Up = template(dictionary, process, "qcd1Up", recoil, region, category)[0]
     qcd1Down = template(dictionary, process, "qcd1Down", recoil, region, category)[0]
     templ.setParamEffect(qcd1, qcd1Up, qcd1Down)
