@@ -503,7 +503,7 @@ def model(year, recoil, category):
     wmcr_st.setParamEffect(iso_mu, 1.02)
     btagUp = template(background, "ST", "btagUp", recoil, "wmcr", category)[0]
     btagDown = template(background, "ST", "btagDown", recoil, "wmcr", category)[0]
-    wmcr_st.setParamEffect(btag, btagUp, btagDown)
+    #wmcr_st.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_st)
 
     wmcr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "wmcr", category)
@@ -519,7 +519,7 @@ def model(year, recoil, category):
     wmcr_dyjets.setParamEffect(iso_mu, 1.02)
     btagUp = template(background, "DY+jets", "btagUp", recoil, "wmcr", category)[0]
     btagDown = template(background, "DY+jets", "btagDown", recoil, "wmcr", category)[0]
-    wmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
+    #wmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
     addVJetsSyst(background, recoil, "DY+jets", "wmcr", wmcr_dyjets, category)
     wmcr.addSample(wmcr_dyjets)
 
@@ -536,7 +536,7 @@ def model(year, recoil, category):
     wmcr_vv.setParamEffect(iso_mu, 1.02)
     btagUp = template(background, "VV", "btagUp", recoil, "wmcr", category)[0]
     btagDown = template(background, "VV", "btagDown", recoil, "wmcr", category)[0]
-    wmcr_vv.setParamEffect(btag, btagUp, btagDown)
+    #wmcr_vv.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_vv)
 
     wmcr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "wmcr", category)
@@ -552,7 +552,7 @@ def model(year, recoil, category):
     wmcr_hbb.setParamEffect(iso_mu, 1.02)
     btagUp = template(background, "Hbb", "btagUp", recoil, "wmcr", category)[0]
     btagDown = template(background, "Hbb", "btagDown", recoil, "wmcr", category)[0]
-    wmcr_hbb.setParamEffect(btag, btagUp, btagDown)
+    #wmcr_hbb.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_hbb)
 
     wmcr_qcdTemplate = template(background, "QCD", "nominal", recoil, "wmcr", category)
@@ -568,7 +568,7 @@ def model(year, recoil, category):
     wmcr_qcd.setParamEffect(iso_mu, 1.02)
     btagUp = template(background, "QCD", "btagUp", recoil, "wmcr", category)[0]
     btagDown = template(background, "QCD", "btagDown", recoil, "wmcr", category)[0]
-    wmcr_qcd.setParamEffect(btag, btagUp, btagDown)
+    #wmcr_qcd.setParamEffect(btag, btagUp, btagDown)
     wmcr.addSample(wmcr_qcd)
 
     ###
@@ -670,7 +670,7 @@ def model(year, recoil, category):
     wecr_st.setParamEffect(reco_e, 1.02)
     btagUp = template(background, "ST", "btagUp", recoil, "wecr", category)[0]
     btagDown = template(background, "ST", "btagDown", recoil, "wecr", category)[0]
-    wecr_st.setParamEffect(btag, btagUp, btagDown)
+    #wecr_st.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_st)
 
     wecr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "wecr", category)
@@ -686,7 +686,7 @@ def model(year, recoil, category):
     wecr_dyjets.setParamEffect(reco_e, 1.02)
     btagUp = template(background, "DY+jets", "btagUp", recoil, "wecr", category)[0]
     btagDown = template(background, "DY+jets", "btagDown", recoil, "wecr", category)[0]
-    wecr_dyjets.setParamEffect(btag, btagUp, btagDown)
+    #wecr_dyjets.setParamEffect(btag, btagUp, btagDown)
     addVJetsSyst(background, recoil, "DY+jets", "wecr", wecr_dyjets, category)
     wecr.addSample(wecr_dyjets)
 
@@ -703,7 +703,7 @@ def model(year, recoil, category):
     wecr_vv.setParamEffect(reco_e, 1.02)
     btagUp = template(background, "VV", "btagUp", recoil, "wecr", category)[0]
     btagDown = template(background, "VV", "btagDown", recoil, "wecr", category)[0]
-    wecr_vv.setParamEffect(btag, btagUp, btagDown)
+    #wecr_vv.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_vv)
 
     wecr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "wecr", category)
@@ -719,7 +719,7 @@ def model(year, recoil, category):
     wecr_hbb.setParamEffect(reco_e, 1.02)
     btagUp = template(background, "Hbb", "btagUp", recoil, "wecr", category)[0]
     btagDown = template(background, "Hbb", "btagDown", recoil, "wecr", category)[0]
-    wecr_hbb.setParamEffect(btag, btagUp, btagDown)
+    #wecr_hbb.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_hbb)
 
     wecr_qcdTemplate = template(background, "QCD", "nominal", recoil, "wecr", category)
@@ -735,7 +735,7 @@ def model(year, recoil, category):
     wecr_qcd.setParamEffect(reco_e, 1.02)
     btagUp = template(background, "QCD", "btagUp", recoil, "wecr", category)[0]
     btagDown = template(background, "QCD", "btagDown", recoil, "wecr", category)[0]
-    wecr_qcd.setParamEffect(btag, btagUp, btagDown)
+    #wecr_qcd.setParamEffect(btag, btagUp, btagDown)
     wecr.addSample(wecr_qcd)
 
     ###
@@ -805,7 +805,7 @@ def model(year, recoil, category):
     tmcr_wjets.setParamEffect(iso_mu, 1.02)
     btagUp = template(background, "W+jets", "btagUp", recoil, "tmcr", category)[0]
     btagDown = template(background, "W+jets", "btagDown", recoil, "tmcr", category)[0]
-    tmcr_wjets.setParamEffect(btag, btagUp, btagDown)
+    #tmcr_wjets.setParamEffect(btag, btagUp, btagDown)
     addVJetsSyst(background, recoil, "W+jets", "tmcr", tmcr_wjets, category)
     tmcr.addSample(tmcr_wjets)
     
@@ -822,7 +822,7 @@ def model(year, recoil, category):
     tmcr_st.setParamEffect(iso_mu, 1.02)
     btagUp = template(background, "ST", "btagUp", recoil, "tmcr", category)[0]
     btagDown = template(background, "ST", "btagDown", recoil, "tmcr", category)[0]
-    tmcr_st.setParamEffect(btag, btagUp, btagDown)
+    #tmcr_st.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_st)
 
     tmcr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "tmcr", category)
@@ -838,7 +838,7 @@ def model(year, recoil, category):
     tmcr_dyjets.setParamEffect(iso_mu, 1.02)
     btagUp = template(background, "DY+jets", "btagUp", recoil, "tmcr", category)[0]
     btagDown = template(background, "DY+jets", "btagDown", recoil, "tmcr", category)[0]
-    tmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
+    #tmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
     addVJetsSyst(background, recoil, "DY+jets", "tmcr", tmcr_dyjets, category)
     tmcr.addSample(tmcr_dyjets)
 
@@ -855,7 +855,7 @@ def model(year, recoil, category):
     tmcr_vv.setParamEffect(iso_mu, 1.02)
     btagUp = template(background, "VV", "btagUp", recoil, "tmcr", category)[0]
     btagDown = template(background, "VV", "btagDown", recoil, "tmcr", category)[0]
-    tmcr_vv.setParamEffect(btag, btagUp, btagDown)
+    #tmcr_vv.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_vv)
     
     tmcr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "tmcr", category)
@@ -871,7 +871,7 @@ def model(year, recoil, category):
     tmcr_hbb.setParamEffect(iso_mu, 1.02)
     btagUp = template(background, "Hbb", "btagUp", recoil, "tmcr", category)[0]
     btagDown = template(background, "Hbb", "btagDown", recoil, "tmcr", category)[0]
-    tmcr_hbb.setParamEffect(btag, btagUp, btagDown)
+    #tmcr_hbb.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_hbb)
 
     tmcr_qcdTemplate = template(background, "QCD", "nominal", recoil, "tmcr", category)
@@ -887,7 +887,7 @@ def model(year, recoil, category):
     tmcr_qcd.setParamEffect(iso_mu, 1.02)
     btagUp = template(background, "QCD", "btagUp", recoil, "tmcr", category)[0]
     btagDown = template(background, "QCD", "btagDown", recoil, "tmcr", category)[0]
-    tmcr_qcd.setParamEffect(btag, btagUp, btagDown)
+    #tmcr_qcd.setParamEffect(btag, btagUp, btagDown)
     tmcr.addSample(tmcr_qcd)
 
     ###
@@ -960,7 +960,7 @@ def model(year, recoil, category):
     tecr_wjets.setParamEffect(reco_e, 1.02)
     btagUp = template(background, "W+jets", "btagUp", recoil, "tecr", category)[0]
     btagDown = template(background, "W+jets", "btagDown", recoil, "tecr", category)[0]
-    tecr_wjets.setParamEffect(btag, btagUp, btagDown)
+    #tecr_wjets.setParamEffect(btag, btagUp, btagDown)
     addVJetsSyst(background, recoil, "W+jets", "tecr", tecr_wjets, category)
     tecr.addSample(tecr_wjets)
 
@@ -977,7 +977,7 @@ def model(year, recoil, category):
     tecr_st.setParamEffect(reco_e, 1.02)
     btagUp = template(background, "ST", "btagUp", recoil, "tecr", category)[0]
     btagDown = template(background, "ST", "btagDown", recoil, "tecr", category)[0]
-    tecr_st.setParamEffect(btag, btagUp, btagDown)
+    #tecr_st.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_st)
 
     tecr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "tecr", category)
@@ -993,7 +993,7 @@ def model(year, recoil, category):
     tecr_dyjets.setParamEffect(reco_e, 1.02)
     btagUp = template(background, "DY+jets", "btagUp", recoil, "tecr", category)[0]
     btagDown = template(background, "DY+jets", "btagDown", recoil, "tecr", category)[0]
-    tecr_dyjets.setParamEffect(btag, btagUp, btagDown)
+    #tecr_dyjets.setParamEffect(btag, btagUp, btagDown)
     addVJetsSyst(background, recoil, "DY+jets", "tecr", tecr_dyjets, category)
     tecr.addSample(tecr_dyjets)
         
@@ -1010,7 +1010,7 @@ def model(year, recoil, category):
     tecr_vv.setParamEffect(reco_e, 1.02)
     btagUp = template(background, "VV", "btagUp", recoil, "tecr", category)[0]
     btagDown = template(background, "VV", "btagDown", recoil, "tecr", category)[0]
-    tecr_vv.setParamEffect(btag, btagUp, btagDown)
+    #tecr_vv.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_vv)
 
     tecr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "tecr", category)
@@ -1026,7 +1026,7 @@ def model(year, recoil, category):
     tecr_hbb.setParamEffect(reco_e, 1.02)
     btagUp = template(background, "Hbb", "btagUp", recoil, "tecr", category)[0]
     btagDown = template(background, "Hbb", "btagDown", recoil, "tecr", category)[0]
-    tecr_hbb.setParamEffect(btag, btagUp, btagDown)
+    #tecr_hbb.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_hbb)
 
     tecr_qcdTemplate = template(background, "QCD", "nominal", recoil, "tecr", category)
@@ -1042,7 +1042,7 @@ def model(year, recoil, category):
     tecr_qcd.setParamEffect(reco_e, 1.02)
     btagUp = template(background, "QCD", "btagUp", recoil, "tecr", category)[0]
     btagDown = template(background, "QCD", "btagDown", recoil, "tecr", category)[0]
-    tecr_qcd.setParamEffect(btag, btagUp, btagDown)
+    #tecr_qcd.setParamEffect(btag, btagUp, btagDown)
     tecr.addSample(tecr_qcd)
 
     ###
