@@ -1,7 +1,7 @@
-# Datacard for <Channel (wmcr2018failrecoil1) instance at 0x2ba34115d810> generated on 2021-01-20 03:52:33.329298
+# Datacard for <Channel (wmcr2018failrecoil1) instance at 0x2b2075256890> generated on 2021-01-20 09:56:53.085822
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
-kmax 18 # number of nuisance parameters
+kmax 17 # number of nuisance parameters
 shapes * wmcr2018failrecoil1 wmcr2018failrecoil1.root wmcr2018failrecoil1:wmcr2018failrecoil1_$PROCESS wmcr2018failrecoil1:wmcr2018failrecoil1_$PROCESS_$SYSTEMATIC
 bin wmcr2018failrecoil1
 observation 33675.000
@@ -9,22 +9,21 @@ bin               wmcr2018failrecoil1  wmcr2018failrecoil1  wmcr2018failrecoil1 
 process                         wjets                 ttMC                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
 process                             1                    2                    3                    4                    5                    6                    7
 rate                            1.000             4177.791              751.139              656.468              987.790                2.468              933.505
-ew1 shape                           -                    -                    -                1.000                    -                    -                    -
-ew2Z shape                          -                    -                    -                1.000                    -                    -                    -
-ew3Z shape                          -                    -                    -                1.000                    -                    -                    -
+ew1 shapeN                          -                    -                    -                1.000                    -                    -                    -
+ew2Z shapeN                         -                    -                    -                1.000                    -                    -                    -
+ew3Z shapeN                         -                    -                    -                1.000                    -                    -                    -
 hbb_norm lnN                        -                    -                    -                    -                    -                1.200                    -
-id_mu2018 lnN                       -                1.020                1.020                1.020                1.020                1.020                1.020
-iso_mu2018 lnN                      -                1.020                1.020                1.020                1.020                1.020                1.020
-jec2018 lnN                         -                1.050                1.050                1.050                1.050                1.050                1.050
-lumi2018 lnN                        -                1.027                1.027                1.027                1.027                1.027                1.027
-mix shape                           -                    -                    -                1.000                    -                    -                    -
-qcd1 shape                          -                    -                    -                1.000                    -                    -                    -
-qcd2 shape                          -                    -                    -                1.000                    -                    -                    -
+id_mu2018 lnN                       -                    -                1.020                1.020                1.020                1.020                1.020
+iso_mu2018 lnN                      -                    -                1.020                1.020                1.020                1.020                1.020
+jec2018 lnN                         -                    -                1.050                1.050                1.050                1.050                1.050
+lumi2018 lnN                        -                    -                1.027                1.027                1.027                1.027                1.027
+mix shapeN                          -                    -                    -                1.000                    -                    -                    -
+qcd1 shapeN                         -                    -                    -                1.000                    -                    -                    -
+qcd2 shapeN                         -                    -                    -                1.000                    -                    -                    -
 qcdmu_norm lnN                      -                    -                    -                    -                    -                    -                2.000
 st_norm lnN                         -                    -                1.200                    -                    -                    -                    -
-trig_met2018 lnN                    -                1.020                1.020                1.020                1.020                1.020                1.020
-tt_norm lnN                         -                1.200                    -                    -                    -                    -                    -
-veto_tau2018 lnN                    -                1.030                1.030                1.030                1.030                1.030                1.030
+trig_met2018 lnN                    -                    -                1.020                1.020                1.020                1.020                1.020
+veto_tau2018 lnN                    -                    -                1.030                1.030                1.030                1.030                1.030
 vv_norm lnN                         -                    -                    -                    -                1.200                    -                    -
 zjets_norm lnN                      -                    -                    -                1.400                    -                    -                    -
 sr2018_zjets_fail_recoil1_mass0 extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
@@ -38,3 +37,47 @@ sr2018_zjets_fail_recoil1_mass6 extArg wmcr2018failrecoil1.root:wmcr2018failreco
 sr2018_zjets_fail_recoil1_mass7 extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
 sr2018_zjets_fail_recoil1_mass8 extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
 sr2018_zjets_fail_recoil1_mass9 extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin0_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin0_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin10_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin10_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin1_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin1_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin2_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin2_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin3_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin3_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin4_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin4_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin5_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin5_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin6_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin6_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin7_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin7_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin8_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin8_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin9_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_wjetsMC_bin9_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_zjetsMC_bin0_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_zjetsMC_bin10_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_zjetsMC_bin1_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_zjetsMC_bin2_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_zjetsMC_bin3_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_zjetsMC_bin4_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_zjetsMC_bin5_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_zjetsMC_bin6_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_zjetsMC_bin7_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_zjetsMC_bin8_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+sr2018failrecoil1_zjetsMC_bin9_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+wmcr2018failrecoil1_wjetsMC_bin0_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+wmcr2018failrecoil1_wjetsMC_bin10_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+wmcr2018failrecoil1_wjetsMC_bin1_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+wmcr2018failrecoil1_wjetsMC_bin2_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+wmcr2018failrecoil1_wjetsMC_bin3_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+wmcr2018failrecoil1_wjetsMC_bin4_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+wmcr2018failrecoil1_wjetsMC_bin5_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+wmcr2018failrecoil1_wjetsMC_bin6_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+wmcr2018failrecoil1_wjetsMC_bin7_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+wmcr2018failrecoil1_wjetsMC_bin8_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
+wmcr2018failrecoil1_wjetsMC_bin9_nominal extArg wmcr2018failrecoil1.root:wmcr2018failrecoil1
