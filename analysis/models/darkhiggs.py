@@ -1143,10 +1143,14 @@ if __name__ == "__main__":
     msdbins = np.array(mass_binning)
     msd = rl.Observable('fjmass', msdbins)
     # here we derive these all at once with 2D array
-    ptpts, msdpts = np.meshgrid(recoilbins[:-1] + 0.3 * np.diff(recoilbins), msdbins[:-1] + 0.5 * np.diff(msdbins), indexing='ij')
+    ptpts, msdpts = np.meshgrid(recoilbins[:-1] + 0.5 * np.diff(recoilbins), msdbins[:-1] + 0.5 * np.diff(msdbins), indexing='ij')
+    print(recoilbins)
+    print(ptpts)
+    print(msdbins)
+    print(msdpts)
     recoilscaled = (ptpts - 250.) / (3000. - 250.)
-    msdpts = np.sqrt(msdpts) * np.sqrt(msdpts)
-    msdscaled = msdpts / 300.0
+#    msdpts = np.sqrt(msdpts) * np.sqrt(msdpts)
+    msdscaled = (msdpts - 40.) / (300.0 - 40.)
     
     tf_dataResidualW = rl.BernsteinPoly("tf_dataResidualW", (1, 1), ['recoil', 'fjmass'], limits=(0, 10))
     tf_dataResidualW_params = tf_dataResidualW(recoilscaled, msdscaled)
@@ -1249,7 +1253,7 @@ if __name__ == "__main__":
 
         #tf_paramsZdeco = sr_zjetsMCPassTemplate[0] / sr_zjetsMCFailTemplate[0]
         tf_paramsZdeco = sr_zjetsMCPass.getExpectation() / sr_zjetsMCFail.getExpectation()
-        tf_paramsZ = tf_paramsZdeco #* tf_dataResidualZ_params[recoilbin, :]
+        tf_paramsZ = tf_paramsZdeco * tf_dataResidualZ_params[recoilbin, :]
 
         sr_zjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_zjets",
@@ -1276,7 +1280,7 @@ if __name__ == "__main__":
 
         #tf_paramsWdeco = sr_wjetsMCPassTemplate[0] / sr_wjetsMCFailTemplate[0]
         tf_paramsWdeco = sr_wjetsMCPass.getExpectation() / sr_wjetsMCFail.getExpectation()
-        tf_paramsW = tf_paramsWdeco #* tf_dataResidualW_params[recoilbin, :]
+        tf_paramsW = tf_paramsWdeco * tf_dataResidualW_params[recoilbin, :]
     
         sr_wjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_wjets",
