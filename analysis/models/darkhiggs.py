@@ -362,7 +362,7 @@ def model(year, recoil, category):
     sr_dyjets.setParamEffect(zjets_norm, 1.4)
     sr_dyjets.setParamEffect(jec, 1.05)
     #addBtagSyst(background, recoil, "DY+jets", "sr", sr_dyjets, category)
-    #addVJetsSyst(background, recoil, "DY+jets", "sr", sr_dyjets, category)
+    addVJetsSyst(background, recoil, "DY+jets", "sr", sr_dyjets, category)
     sr.addSample(sr_dyjets)
 
     sr_vvTemplate = template(background, "VV", "nominal", recoil, "sr", category)
@@ -449,7 +449,7 @@ def model(year, recoil, category):
     #wmcr_wjetsMC.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["wmcr"][category][recoil][1:]))
     #wmcr_wjetsMC.autoMCStats()
     #addBtagSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
-    #addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
+    addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
 
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     #wmcr_wjetsTransferFactor = wmcr_wjetsTemplate[0] / sr_wjetsTemplate[0]
@@ -520,7 +520,7 @@ def model(year, recoil, category):
     btagUp = template(background, "DY+jets", "btagUp", recoil, "wmcr", category)[0]
     btagDown = template(background, "DY+jets", "btagDown", recoil, "wmcr", category)[0]
     #wmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    #addVJetsSyst(background, recoil, "DY+jets", "wmcr", wmcr_dyjets, category)
+    addVJetsSyst(background, recoil, "DY+jets", "wmcr", wmcr_dyjets, category)
     wmcr.addSample(wmcr_dyjets)
 
     wmcr_vvTemplate = template(background, "VV", "nominal", recoil, "wmcr", category)
@@ -614,7 +614,7 @@ def model(year, recoil, category):
     #wecr_wjetsMC.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["wecr"][category][recoil][1:]))
     #wecr_wjetsMC.autoMCStats()
     #addBtagSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
-    #addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
+    addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
 
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     #wecr_wjetsTransferFactor = wecr_wjetsTemplate[0] / sr_wjetsTemplate[0]
@@ -687,7 +687,7 @@ def model(year, recoil, category):
     btagUp = template(background, "DY+jets", "btagUp", recoil, "wecr", category)[0]
     btagDown = template(background, "DY+jets", "btagDown", recoil, "wecr", category)[0]
     #wecr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    #addVJetsSyst(background, recoil, "DY+jets", "wecr", wecr_dyjets, category)
+    addVJetsSyst(background, recoil, "DY+jets", "wecr", wecr_dyjets, category)
     wecr.addSample(wecr_dyjets)
 
     wecr_vvTemplate = template(background, "VV", "nominal", recoil, "wecr", category)
@@ -807,7 +807,7 @@ def model(year, recoil, category):
     btagUp = template(background, "W+jets", "btagUp", recoil, "tmcr", category)[0]
     btagDown = template(background, "W+jets", "btagDown", recoil, "tmcr", category)[0]
     #tmcr_wjets.setParamEffect(btag, btagUp, btagDown)
-    #addVJetsSyst(background, recoil, "W+jets", "tmcr", tmcr_wjets, category)
+    addVJetsSyst(background, recoil, "W+jets", "tmcr", tmcr_wjets, category)
     tmcr.addSample(tmcr_wjets)
     
     tmcr_stTemplate = template(background, "ST", "nominal", recoil, "tmcr", category)
@@ -840,7 +840,7 @@ def model(year, recoil, category):
     btagUp = template(background, "DY+jets", "btagUp", recoil, "tmcr", category)[0]
     btagDown = template(background, "DY+jets", "btagDown", recoil, "tmcr", category)[0]
     #tmcr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    #addVJetsSyst(background, recoil, "DY+jets", "tmcr", tmcr_dyjets, category)
+    addVJetsSyst(background, recoil, "DY+jets", "tmcr", tmcr_dyjets, category)
     tmcr.addSample(tmcr_dyjets)
 
     tmcr_vvTemplate = template(background, "VV", "nominal", recoil, "tmcr", category)
@@ -963,7 +963,7 @@ def model(year, recoil, category):
     btagUp = template(background, "W+jets", "btagUp", recoil, "tecr", category)[0]
     btagDown = template(background, "W+jets", "btagDown", recoil, "tecr", category)[0]
     #tecr_wjets.setParamEffect(btag, btagUp, btagDown)
-    #addVJetsSyst(background, recoil, "W+jets", "tecr", tecr_wjets, category)
+    addVJetsSyst(background, recoil, "W+jets", "tecr", tecr_wjets, category)
     tecr.addSample(tecr_wjets)
 
     tecr_stTemplate = template(background, "ST", "nominal", recoil, "tecr", category)
@@ -996,7 +996,7 @@ def model(year, recoil, category):
     btagUp = template(background, "DY+jets", "btagUp", recoil, "tecr", category)[0]
     btagDown = template(background, "DY+jets", "btagDown", recoil, "tecr", category)[0]
     #tecr_dyjets.setParamEffect(btag, btagUp, btagDown)
-    #addVJetsSyst(background, recoil, "DY+jets", "tecr", tecr_dyjets, category)
+    addVJetsSyst(background, recoil, "DY+jets", "tecr", tecr_dyjets, category)
     tecr.addSample(tecr_dyjets)
         
     tecr_vvTemplate = template(background, "VV", "nominal", recoil, "tecr", category)
@@ -1118,23 +1118,23 @@ if __name__ == "__main__":
     trig_pho = rl.NuisanceParameter("trig_pho" + year, "lnN")
     veto_tau = rl.NuisanceParameter("veto_tau" + year, "lnN")
     jec = rl.NuisanceParameter("jec" + year, "lnN")
-    btag = rl.NuisanceParameter("btag" + year, "shapeN")  # AK4 btag
-    ew1 = rl.NuisanceParameter("ew1", "shapeN")
-    ew2G = rl.NuisanceParameter("ew2G", "shapeN")
-    ew2W = rl.NuisanceParameter("ew2W", "shapeN")
-    ew2Z = rl.NuisanceParameter("ew2Z", "shapeN")
-    ew3G = rl.NuisanceParameter("ew3G", "shapeN")
-    ew3W = rl.NuisanceParameter("ew3W", "shapeN")
-    ew3Z = rl.NuisanceParameter("ew3Z", "shapeN")
-    mix = rl.NuisanceParameter("mix", "shapeN")
-    muF = rl.NuisanceParameter("muF", "shapeN")
-    muR = rl.NuisanceParameter("muR", "shapeN")
-    qcd1 = rl.NuisanceParameter("qcd1", "shapeN")
-    qcd2 = rl.NuisanceParameter("qcd2", "shapeN")
-    qcd3 = rl.NuisanceParameter("qcd3", "shapeN")
-    whf_fraction = rl.NuisanceParameter("whf_fraction", "shapeN")
-    zhf_fraction = rl.NuisanceParameter("zhf_fraction", "shapeN")
-    ghf_fraction = rl.NuisanceParameter("ghf_fraction", "shapeN")
+    btag = rl.NuisanceParameter("btag" + year, "shape")  # AK4 btag
+    ew1 = rl.NuisanceParameter("ew1", "shape")
+    ew2G = rl.NuisanceParameter("ew2G", "shape")
+    ew2W = rl.NuisanceParameter("ew2W", "shape")
+    ew2Z = rl.NuisanceParameter("ew2Z", "shape")
+    ew3G = rl.NuisanceParameter("ew3G", "shape")
+    ew3W = rl.NuisanceParameter("ew3W", "shape")
+    ew3Z = rl.NuisanceParameter("ew3Z", "shape")
+    mix = rl.NuisanceParameter("mix", "shape")
+    muF = rl.NuisanceParameter("muF", "shape")
+    muR = rl.NuisanceParameter("muR", "shape")
+    qcd1 = rl.NuisanceParameter("qcd1", "shape")
+    qcd2 = rl.NuisanceParameter("qcd2", "shape")
+    qcd3 = rl.NuisanceParameter("qcd3", "shape")
+    whf_fraction = rl.NuisanceParameter("whf_fraction", "shape")
+    zhf_fraction = rl.NuisanceParameter("zhf_fraction", "shape")
+    ghf_fraction = rl.NuisanceParameter("ghf_fraction", "shape")
 
     ###
     # Preparing Rhalphabet
@@ -1178,7 +1178,7 @@ if __name__ == "__main__":
         #sr_zjetsMCFail.setParamEffect(zhf_fraction, np.array(hf_systematic["Z+jets"]["sr"]["fail"][recoilbin][1:]))
         #sr_zjetsMCFail.autoMCStats()
         #addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
-        #addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
+        addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
 
         '''
         sr_zjetsBinYields= np.array(  # one nuisance per mass shape bin in pass
@@ -1226,7 +1226,7 @@ if __name__ == "__main__":
         #sr_wjetsMCFail.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["sr"]["fail"][recoilbin][1:]))
         #sr_wjetsMCFail.autoMCStats()
         #addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
-        #addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
+        addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
 
         sr_wjetsFailTransferFactor = sr_wjetsMCFail.getExpectation() / sr_zjetsMCFail.getExpectation()
         #sr_wjetsFailTransferFactor = sr_wjetsMCFailTemplate[0] / sr_zjetsMCFailTemplate[0]
@@ -1251,7 +1251,7 @@ if __name__ == "__main__":
         #sr_zjetsMCPass.setParamEffect(zhf_fraction, np.array(hf_systematic["Z+jets"]["sr"]["pass"][recoilbin][1:]))
         #sr_zjetsMCPass.autoMCStats()
         #addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
-        #addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
+        addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
 
         #tf_paramsZdeco = sr_zjetsMCPassTemplate[0] / sr_zjetsMCFailTemplate[0]
         tf_paramsZdeco = sr_zjetsMCPass.getExpectation() / sr_zjetsMCFail.getExpectation()
@@ -1278,7 +1278,7 @@ if __name__ == "__main__":
         #sr_wjetsMCPass.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["sr"]["pass"][recoilbin][1:]))
         #sr_wjetsMCPass.autoMCStats()
         #addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
-        #addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
+        addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
 
         #tf_paramsWdeco = sr_wjetsMCPassTemplate[0] / sr_wjetsMCFailTemplate[0]
         tf_paramsWdeco = sr_wjetsMCPass.getExpectation() / sr_wjetsMCFail.getExpectation()
