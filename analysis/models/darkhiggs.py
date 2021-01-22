@@ -302,7 +302,7 @@ def model(year, recoil, category):
     sr_ttMC.setParamEffect(trig_met, 1.02)
     sr_ttMC.setParamEffect(veto_tau, 1.03)
     sr_ttMC.setParamEffect(jec, 1.05)
-    addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
+    #addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
 
     if category == "pass":
         #sr_ttMC.autoMCStats()
@@ -473,7 +473,7 @@ def model(year, recoil, category):
     wmcr_ttMC.setParamEffect(jec, 1.05)
     wmcr_ttMC.setParamEffect(id_mu, 1.02)
     wmcr_ttMC.setParamEffect(iso_mu, 1.02)
-    addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
+    #addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
     
     if category == "pass":
         #wmcr_ttMC.autoMCStats()
@@ -640,7 +640,7 @@ def model(year, recoil, category):
     wecr_ttMC.setParamEffect(jec, 1.05)
     wecr_ttMC.setParamEffect(id_e, 1.02)
     wecr_ttMC.setParamEffect(reco_e, 1.02)
-    addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category)
+    #addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category)
 
     if category == "pass":
         #wecr_ttMC.autoMCStats()
@@ -776,7 +776,7 @@ def model(year, recoil, category):
     tmcr_ttMC.setParamEffect(jec, 1.05)
     tmcr_ttMC.setParamEffect(id_mu, 1.02)
     tmcr_ttMC.setParamEffect(iso_mu, 1.02)
-    addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category)
+    #addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category)
     
     if category == "pass":
         #tmcr_ttMC.autoMCStats()
@@ -932,7 +932,7 @@ def model(year, recoil, category):
     tecr_ttMC.setParamEffect(jec, 1.05)
     tecr_ttMC.setParamEffect(id_e, 1.02)
     tecr_ttMC.setParamEffect(reco_e, 1.02)
-    addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category)
+    #addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category)
     
     if category == "pass":
         #tecr_ttMC.autoMCStats()
