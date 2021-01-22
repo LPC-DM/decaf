@@ -448,7 +448,7 @@ def model(year, recoil, category):
     wmcr_wjetsMC.setParamEffect(iso_mu, 1.02)
     #wmcr_wjetsMC.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["wmcr"][category][recoil][1:]))
     if category == "pass":
-        wmcr_wjetsMC.setParamEffect(whf_fraction, 1.09)
+        wmcr_wjetsMC.setParamEffect(whf_fraction, 1.05)
     else:
         wmcr_wjetsMC.setParamEffect(whf_fraction, 0.99)
     #wmcr_wjetsMC.autoMCStats()
@@ -617,7 +617,7 @@ def model(year, recoil, category):
     wecr_wjetsMC.setParamEffect(reco_e, 1.02)
     #wecr_wjetsMC.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["wecr"][category][recoil][1:]))
     if category == "pass":
-        wecr_wjetsMC.setParamEffect(whf_fraction, 1.09)
+        wecr_wjetsMC.setParamEffect(whf_fraction, 1.05)
     else:
         wecr_wjetsMC.setParamEffect(whf_fraction, 0.99)
 
@@ -1261,7 +1261,7 @@ if __name__ == "__main__":
         sr_zjetsMCPass.setParamEffect(veto_tau, 1.03)
         sr_zjetsMCPass.setParamEffect(jec, 1.05)
         #sr_zjetsMCPass.setParamEffect(zhf_fraction, np.array(hf_systematic["Z+jets"]["sr"]["pass"][recoilbin][1:]))
-        sr_zjetsMCPass.setParamEffect(zhf_fraction, 1.2)
+        sr_zjetsMCPass.setParamEffect(zhf_fraction, 1.1)
         #sr_zjetsMCPass.autoMCStats()
         #addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
@@ -1289,7 +1289,7 @@ if __name__ == "__main__":
         sr_wjetsMCPass.setParamEffect(veto_tau, 1.03)
         sr_wjetsMCPass.setParamEffect(jec, 1.05)
         #sr_wjetsMCPass.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["sr"]["pass"][recoilbin][1:]))
-        sr_wjetsMCPass.setParamEffect(whf_fraction, 1.09)
+        sr_wjetsMCPass.setParamEffect(whf_fraction, 1.05)
         #sr_wjetsMCPass.autoMCStats()
         #addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
