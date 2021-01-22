@@ -1132,9 +1132,9 @@ if __name__ == "__main__":
     qcd1 = rl.NuisanceParameter("qcd1", "shape")
     qcd2 = rl.NuisanceParameter("qcd2", "shape")
     qcd3 = rl.NuisanceParameter("qcd3", "shape")
-    whf_fraction = rl.NuisanceParameter("whf_fraction", "shape")
-    zhf_fraction = rl.NuisanceParameter("zhf_fraction", "shape")
-    ghf_fraction = rl.NuisanceParameter("ghf_fraction", "shape")
+    whf_fraction = rl.NuisanceParameter("whf_fraction", "shapeN")
+    zhf_fraction = rl.NuisanceParameter("zhf_fraction", "shapeN")
+    ghf_fraction = rl.NuisanceParameter("ghf_fraction", "shapeN")
 
     ###
     # Preparing Rhalphabet
