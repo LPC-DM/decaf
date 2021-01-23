@@ -315,7 +315,7 @@ def model(year, recoil, category):
     sr_ttMC.setParamEffect(jec, 1.05)
     addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
 
-    if category == "pass" and recoilbin<4:
+    if category == "pass":
         sr_ttMC.autoMCStats()
         sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
         sr_ttParameters = np.array(
@@ -323,8 +323,8 @@ def model(year, recoil, category):
                 rl.IndependentParameter(                                                                                                                                     
                     "sr" + year + "_tt_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i,
                     0,
-                    -500.,
-                    500.,
+                    -1000.,
+                    1000.,
                 )
                 for i in range(sr_ttObservable.nbins)
             ]
@@ -488,7 +488,7 @@ def model(year, recoil, category):
     wmcr_ttMC.setParamEffect(iso_mu, 1.02)
     addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
     
-    if category == "pass" and recoilbin<4:
+    if category == "pass":
         wmcr_ttMC.autoMCStats()
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         #wmcr_ttTransferFactor = wmcr_ttTemplate[0] / sr_ttTemplate[0]
@@ -645,7 +645,7 @@ def model(year, recoil, category):
     wecr_ttMC.setParamEffect(reco_e, 1.02)
     addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category)
 
-    if category == "pass" and recoilbin<4:
+    if category == "pass":
         wecr_ttMC.autoMCStats()
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         #wecr_ttTransferFactor = wecr_ttTemplate[0] / sr_ttTemplate[0]
@@ -735,7 +735,7 @@ def model(year, recoil, category):
     # End of single electron W control region
     ###
 
-    if not (category == "pass" and recoilbin<4):
+    if not (category == "pass"):
         return model
 
     ###
@@ -1116,9 +1116,9 @@ if __name__ == "__main__":
     print(recoilscaled)
     print(msdscaled)
     
-    tf_dataResidualW = rl.BernsteinPoly("tf_dataResidualW", (1, 1), ['recoil', 'fjmass'], limits=(-500, 500))
+    tf_dataResidualW = rl.BernsteinPoly("tf_dataResidualW", (1, 1), ['recoil', 'fjmass'], limits=(-1000, 1000))
     tf_dataResidualW_params = tf_dataResidualW(recoilscaled, msdscaled)
-    tf_dataResidualZ = rl.BernsteinPoly("tf_dataResidualZ", (1, 1), ['recoil', 'fjmass'], limits=(-500, 500))
+    tf_dataResidualZ = rl.BernsteinPoly("tf_dataResidualZ", (1, 1), ['recoil', 'fjmass'], limits=(-1000, 1000))
     tf_dataResidualZ_params = tf_dataResidualZ(recoilscaled, msdscaled)
     #tf_paramsZ = rhalphabeth2D("Z+jets", tf_dataResidual_params, 3, 3)
     #tf_paramsW = rhalphabeth2D("W+jets", tf_dataResidual_params, 3, 2)
