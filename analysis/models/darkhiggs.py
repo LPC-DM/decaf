@@ -312,8 +312,8 @@ def model(year, recoil, category):
                 rl.IndependentParameter(                                                                                                                                     
                     "sr" + year + "_tt_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i,
                     0,
-                    100.,
                     -100.,
+                    100.,
                 )
                 for i in range(sr_ttObservable.nbins)
             ]
