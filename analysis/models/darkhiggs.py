@@ -135,11 +135,11 @@ def addBtagSyst(dictionary, recoil, process, region, templ, category):
     btagUp = np.array( up.sum() / nominal.sum() )
     btagUp[np.isnan(btagUp)] = 1.
     btagUp = btagUp.sum()
-    btagDown = np.array( down.sum() / nominal.sum() )
-    btagDown[np.isnan(btagDown)] = 1.
-    btagDown = btagDown.sum()
-    print(process, btagUp, btagDown)
-    templ.setParamEffect(btag, btagUp, btagDown)
+    #btagDown = np.array( down.sum() / nominal.sum() )
+    #btagDown[np.isnan(btagDown)] = 1.
+    #btagDown = btagDown.sum()
+    #print(process, btagUp, btagDown)
+    templ.setParamEffect(btag, btagUp)#, btagDown)
 
 def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     ew1Up = template(dictionary, process, "ew1Up", recoil, region, category)[0]
