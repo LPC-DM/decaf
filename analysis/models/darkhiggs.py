@@ -33,8 +33,8 @@ mass_binning = [
     300,
 ]
 # recoil_binning=[250,310,370,470,590,840,1020,1250,3000]
-#recoil_binning = [250, 310, 370, 470, 590, 3000]
-recoil_binning = [250, 310, 370, 470, 590] 
+recoil_binning = [250, 310, 370, 470, 590, 3000]
+#recoil_binning = [250, 310, 370, 470, 590] 
 
 category_map = {"pass": 1, "fail": 0}
 
@@ -325,8 +325,8 @@ def model(year, recoil, category):
                 rl.IndependentParameter(                                                                                                                                     
                     "sr" + year + "_tt_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i,
                     0,
-                    -1000.,
-                    1000.,
+                    -100.,
+                    100.,
                 )
                 for i in range(sr_ttObservable.nbins)
             ]
@@ -1118,9 +1118,9 @@ if __name__ == "__main__":
     print(recoilscaled)
     print(msdscaled)
     
-    tf_dataResidualW = rl.BernsteinPoly("tf_dataResidualW", (1, 1), ['recoil', 'fjmass'], limits=(-1000, 1000))
+    tf_dataResidualW = rl.BernsteinPoly("tf_dataResidualW", (1, 1), ['recoil', 'fjmass'], limits=(-100, 100))
     tf_dataResidualW_params = tf_dataResidualW(recoilscaled, msdscaled)
-    tf_dataResidualZ = rl.BernsteinPoly("tf_dataResidualZ", (1, 1), ['recoil', 'fjmass'], limits=(-1000, 1000))
+    tf_dataResidualZ = rl.BernsteinPoly("tf_dataResidualZ", (1, 1), ['recoil', 'fjmass'], limits=(-100, 100))
     tf_dataResidualZ_params = tf_dataResidualZ(recoilscaled, msdscaled)
     #tf_paramsZ = rhalphabeth2D("Z+jets", tf_dataResidual_params, 3, 3)
     #tf_paramsW = rhalphabeth2D("W+jets", tf_dataResidual_params, 3, 2)
