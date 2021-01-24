@@ -33,7 +33,8 @@ mass_binning = [
     300,
 ]
 # recoil_binning=[250,310,370,470,590,840,1020,1250,3000]
-recoil_binning = [250, 310, 370, 470, 590, 3000]
+#recoil_binning = [250, 310, 370, 470, 590, 3000]
+recoil_binning = [250, 310, 370, 470, 3000] 
 
 category_map = {"pass": 1, "fail": 0}
 
@@ -49,7 +50,7 @@ def template(dictionary, process, systematic, recoil, region, category, read_sum
     output = nominal
     if "data" not in systematic:
         output[zerobins] = 1.
-        sumw2[zerobins] = 1.
+        sumw2[zerobins] = 0.
     if "nominal" not in systematic and "data" not in systematic:
         #print('Normalizing',systematic,'histogram of',process,'in region',region)
         output = histogram.integrate("systematic", systematic).values()[()][recoil, :, category_map[category]]
@@ -64,7 +65,6 @@ def template(dictionary, process, systematic, recoil, region, category, read_sum
         .edges()
     )
     if read_sumw2:
-        print(process, recoil, region, category, sumw2)
         return (output, binning, "fjmass", sumw2)
     return (output, binning, "fjmass")
 
