@@ -33,8 +33,8 @@ mass_binning = [
     300,
 ]
 # recoil_binning=[250,310,370,470,590,840,1020,1250,3000]
-recoil_binning = [250, 310, 370, 470, 590, 3000]
-#recoil_binning = [250, 310, 370, 470, 590] 
+#recoil_binning = [250, 310, 370, 470, 590, 3000]
+recoil_binning = [250, 310, 370, 470, 3000] 
 
 category_map = {"pass": 1, "fail": 0}
 
