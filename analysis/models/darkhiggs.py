@@ -84,7 +84,11 @@ def remap_histograms(hists):
     bkg_map["ST"] = ("ST*",)
     bkg_map["TT"] = ("TT*",)
     bkg_map["W+jets"] = ("W+*",)
+    bkg_map["W+HF"] = ("W+HF",)
+    bkg_map["W+LF"] = ("W+LF",)
     bkg_map["Z+jets"] = ("Z+*",)
+    bkg_map["Z+HF"] = ("Z+HF",)
+    bkg_map["Z+LF"] = ("Z+LF",)
     bkg_map["G+jets"] = ("G+*",)
     bkg_map["QCD"] = ("QCD*",)
     sig_map["Mhs_50"] = ("*Mhs_50*",)  ## signals
@@ -1121,8 +1125,8 @@ if __name__ == "__main__":
     qcd1 = rl.NuisanceParameter("qcd1", "lnN")
     qcd2 = rl.NuisanceParameter("qcd2", "lnN")
     qcd3 = rl.NuisanceParameter("qcd3", "lnN")
-    whf_fraction = rl.NuisanceParameter("whf_fraction", "shapeN")
-    zhf_fraction = rl.NuisanceParameter("zhf_fraction", "shapeN")
+    whf_fraction = rl.NuisanceParameter("whf_fraction", "lnN")
+    zhf_fraction = rl.NuisanceParameter("zhf_fraction", "lnN")
     #ghf_fraction = rl.NuisanceParameter("ghf_fraction", "shapeN")
 
     ###
@@ -1164,24 +1168,27 @@ if __name__ == "__main__":
         sr_zjetsMCFail.setParamEffect(trig_met, 1.02)
         sr_zjetsMCFail.setParamEffect(veto_tau, 1.03)
         sr_zjetsMCFail.setParamEffect(jec, 1.05)
-        #sr_zjetsMCFail.setParamEffect(zhf_fraction, np.array(hf_systematic["Z+jets"]["sr"]["fail"][recoilbin][:]))
         #sr_zjetsMCFail.autoMCStats()
         addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
 
-        '''
-        sr_zjetsBinYields= np.array(  # one nuisance per mass shape bin in pass
-            [
-                rl.IndependentParameter(
-                    "sr" + year + "_zjets_fail_recoil"+str(recoilbin)+"_mass%d" % i,
-                    b,
-                    0,
-                    sr_zjetsMCFailTemplate[0].max() * 10,
-                )
-                for i, b in enumerate(sr_zjetsMCFailTemplate[0])
-            ]
+        sr_zhfMCFailTemplate = template(background, "Z+HF", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
+        sr_zhfMCFail = rl.TemplateSample(
+            "sr" + year + "fail" + "recoil" + str(recoilbin) + "_zhfMC",
+            rl.Sample.BACKGROUND,
+            sr_zhfMCFailTemplate
         )
-        '''
+        sr_zhfMCFail.setParamEffect(zhf_fraction, 1.4)
+        #sr_zhfMCFail.autoMCStats()
+
+        sr_zlfMCFailTemplate = template(background, "Z+LF", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
+        sr_zlfMCFail = rl.TemplateSample(
+            "sr" + year + "fail" + "recoil" + str(recoilbin) + "_zlfMC",
+            rl.Sample.BACKGROUND,
+            sr_zlfMCFailTemplate
+        )
+        #sr_zlfMCFail.autoMCStats()
+
         sr_zjetsObservable = rl.Observable("fjmass", sr_zjetsMCFailTemplate[1])
         sr_zjetsParameters = np.array(
             [
@@ -1212,13 +1219,28 @@ if __name__ == "__main__":
         sr_wjetsMCFail.setParamEffect(trig_met, 1.02)
         sr_wjetsMCFail.setParamEffect(veto_tau, 1.03)
         sr_wjetsMCFail.setParamEffect(jec, 1.05)
-        #sr_wjetsMCFail.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["sr"]["fail"][recoilbin][:]))
         #sr_wjetsMCFail.autoMCStats()
         addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
 
+        sr_whfMCFailTemplate = template(background, "W+HF", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
+        sr_whfMCFail = rl.TemplateSample(
+            "sr" + year + "fail" + "recoil" + str(recoilbin) + "_whfMC",
+            rl.Sample.BACKGROUND,
+            sr_whfMCFailTemplate
+        )
+        sr_whfMCFail.setParamEffect(whf_fraction, 1.4)
+        #sr_whfMCFail.autoMCStats()
+
+        sr_wlfMCFailTemplate = template(background, "W+LF", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
+        sr_wlfMCFail = rl.TemplateSample(
+            "sr" + year + "fail" + "recoil" + str(recoilbin) + "_wlfMC",
+            rl.Sample.BACKGROUND,
+            sr_wlfMCFailTemplate
+        )
+        #sr_wlfMCFail.autoMCStats()
+
         sr_wjetsFailTransferFactor = sr_wjetsMCFail.getExpectation() / sr_zjetsMCFail.getExpectation()
-        #sr_wjetsFailTransferFactor = sr_wjetsMCFailTemplate[0] / sr_zjetsMCFailTemplate[0]
         sr_wjetsFail = rl.TransferFactorSample(
             "sr" + year + "fail" + "recoil" + str(recoilbin)+ "_wjets",
             rl.Sample.BACKGROUND,
@@ -1237,13 +1259,28 @@ if __name__ == "__main__":
         sr_zjetsMCPass.setParamEffect(trig_met, 1.02)
         sr_zjetsMCPass.setParamEffect(veto_tau, 1.03)
         sr_zjetsMCPass.setParamEffect(jec, 1.05)
-        #sr_zjetsMCPass.setParamEffect(zhf_fraction, np.array(hf_systematic["Z+jets"]["sr"]["pass"][recoilbin][:]))
         #sr_zjetsMCPass.autoMCStats()
         addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
 
-        #tf_paramsZdeco = sr_zjetsMCPassTemplate[0] / sr_zjetsMCFailTemplate[0]
-        tf_paramsZdeco = sr_zjetsMCPass.getExpectation() / sr_zjetsMCFail.getExpectation()
+        sr_zhfMCPassTemplate = template(background, "Z+HF", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
+        sr_zhfMCPass = rl.TemplateSample(
+            "sr" + year + "pass" + "recoil" + str(recoilbin) + "_zhfMC",
+            rl.Sample.BACKGROUND,
+            sr_zhfMCPassTemplate
+        )
+        sr_zhfMCPass.setParamEffect(zhf_fraction, 1.4)
+        #sr_zhfMCPass.autoMCStats()
+
+        sr_zlfMCPassTemplate = template(background, "Z+LF", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
+        sr_zlfMCPass = rl.TemplateSample(
+            "sr" + year + "pass" + "recoil" + str(recoilbin) + "_zlfMC",
+            rl.Sample.BACKGROUND,
+            sr_zlfMCPassTemplate
+        )
+        #sr_zlfMCPass.autoMCStats()
+
+        tf_paramsZdeco = (sr_zlfMCPass.getExpectation()+sr_zhfMCPass.getExpectation()) / (sr_zlfMCFail.getExpectation()+sr_zhfMCFail.getExpectation())
         tf_paramsZ = tf_paramsZdeco #* tf_dataResidualZ_params[recoilbin, :]
 
         sr_zjetsPass = rl.TransferFactorSample(
@@ -1264,13 +1301,28 @@ if __name__ == "__main__":
         sr_wjetsMCPass.setParamEffect(trig_met, 1.02)
         sr_wjetsMCPass.setParamEffect(veto_tau, 1.03)
         sr_wjetsMCPass.setParamEffect(jec, 1.05)
-        #sr_wjetsMCPass.setParamEffect(whf_fraction, np.array(hf_systematic["W+jets"]["sr"]["pass"][recoilbin][:]))
         #sr_wjetsMCPass.autoMCStats()
         addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
 
-        #tf_paramsWdeco = sr_wjetsMCPassTemplate[0] / sr_wjetsMCFailTemplate[0]
-        tf_paramsWdeco = sr_wjetsMCPass.getExpectation() / sr_wjetsMCFail.getExpectation()
+        sr_whfMCPassTemplate = template(background, "W+HF", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
+        sr_whfMCPass = rl.TemplateSample(
+            "sr" + year + "pass" + "recoil" + str(recoilbin) + "_whfMC",
+            rl.Sample.BACKGROUND,
+            sr_whfMCPassTemplate
+        )
+        sr_whfMCPass.setParamEffect(whf_fraction, 1.4)
+        #sr_whfMCPass.autoMCStats()
+
+        sr_wlfMCPassTemplate = template(background, "W+LF", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
+        sr_wlfMCPass = rl.TemplateSample(
+            "sr" + year + "pass" + "recoil" + str(recoilbin) + "_wlfMC",
+            rl.Sample.BACKGROUND,
+            sr_wlfMCPassTemplate
+        )
+        #sr_wlfMCPass.autoMCStats()
+
+        tf_paramsWdeco = (sr_wlfMCPass.getExpectation()+sr_whfMCPass.getExpectation()) / (sr_wlfMCFail.getExpectation()+sr_whfMCFail.getExpectation())
         tf_paramsW = tf_paramsWdeco #* tf_dataResidualW_params[recoilbin, :]
     
         sr_wjetsPass = rl.TransferFactorSample(
