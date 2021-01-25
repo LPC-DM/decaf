@@ -31,7 +31,7 @@ os.system('rm -rf '+options.folder+'/reduce_condor/log/'+options.dataset+'*')
 os.system('rm -rf '+options.folder+'/reduce_condor/out/'+options.dataset+'*')
 
 if options.tar:
-    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*condor/*/*\' ../../decaf')
+    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*condor/*/*\' --exclude=\'analysis/hists/*.reduced\' --exclude=\'analysis/hists/*.merged\' --exclude=\'analysis/plots\' ../../decaf')
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../pylocal.tgz -C ~/.local/lib/python3.6/ site-packages')
 
 if options.cluster == 'kisti':
