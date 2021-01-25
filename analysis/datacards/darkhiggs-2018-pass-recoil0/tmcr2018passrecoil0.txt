@@ -1,7 +1,7 @@
-# Datacard for <Channel (tmcr2018passrecoil0) instance at 0x2ab0f50d0610> generated on 2021-01-21 09:29:47.783469
+# Datacard for <Channel (tmcr2018passrecoil0) instance at 0x2b73715991d0> generated on 2021-01-25 09:28:58.934223
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
-kmax 21 # number of nuisance parameters
+kmax 22 # number of nuisance parameters
 shapes * tmcr2018passrecoil0 tmcr2018passrecoil0.root tmcr2018passrecoil0:tmcr2018passrecoil0_$PROCESS tmcr2018passrecoil0:tmcr2018passrecoil0_$PROCESS_$SYSTEMATIC
 bin tmcr2018passrecoil0
 observation 8247.000
@@ -9,20 +9,21 @@ bin               tmcr2018passrecoil0  tmcr2018passrecoil0  tmcr2018passrecoil0 
 process                            tt              wjetsMC                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
 process                             1                    2                    3                    4                    5                    6                    7
 rate                            1.000              324.486              621.237               15.948               17.375               14.762               43.061
-ew1 shapeN                          -                1.000                    -                1.000                    -                    -                    -
-ew2W shapeN                         -                1.000                    -                    -                    -                    -                    -
-ew2Z shapeN                         -                    -                    -                1.000                    -                    -                    -
-ew3W shapeN                         -                1.000                    -                    -                    -                    -                    -
-ew3Z shapeN                         -                    -                    -                1.000                    -                    -                    -
+btag2018 lnN                        -                1.048                1.022                1.046                1.041                1.015                1.048
+ew1 shape                           -                1.000                    -                1.000                    -                    -                    -
+ew2W shape                          -                1.000                    -                    -                    -                    -                    -
+ew2Z shape                          -                    -                    -                1.000                    -                    -                    -
+ew3W shape                          -                1.000                    -                    -                    -                    -                    -
+ew3Z shape                          -                    -                    -                1.000                    -                    -                    -
 hbb_norm lnN                        -                    -                    -                    -                    -                1.200                    -
 id_mu2018 lnN                       -                1.020                1.020                1.020                1.020                1.020                1.020
 iso_mu2018 lnN                      -                1.020                1.020                1.020                1.020                1.020                1.020
 jec2018 lnN                         -                1.050                1.050                1.050                1.050                1.050                1.050
 lumi2018 lnN                        -                1.027                1.027                1.027                1.027                1.027                1.027
-mix shapeN                          -                1.000                    -                1.000                    -                    -                    -
-qcd1 shapeN                         -                1.000                    -                1.000                    -                    -                    -
-qcd2 shapeN                         -                1.000                    -                1.000                    -                    -                    -
-qcd3 shapeN                         -                1.000                    -                    -                    -                    -                    -
+mix shape                           -                1.000                    -                1.000                    -                    -                    -
+qcd1 shape                          -                1.000                    -                1.000                    -                    -                    -
+qcd2 shape                          -                1.000                    -                1.000                    -                    -                    -
+qcd3 shape                          -                1.000                    -                    -                    -                    -                    -
 qcdmu_norm lnN                      -                    -                    -                    -                    -                    -                2.000
 st_norm lnN                         -                    -                1.200                    -                    -                    -                    -
 trig_met2018 lnN                    -                1.020                1.020                1.020                1.020                1.020                1.020
