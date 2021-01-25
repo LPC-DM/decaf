@@ -1,7 +1,7 @@
-# Datacard for <Channel (wmcr2018passrecoil1) instance at 0x2b7b02513490> generated on 2021-01-21 09:31:06.708458
+# Datacard for <Channel (wmcr2018passrecoil1) instance at 0x2ba403940e50> generated on 2021-01-25 09:30:58.190314
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
-kmax 18 # number of nuisance parameters
+kmax 25 # number of nuisance parameters
 shapes * wmcr2018passrecoil1 wmcr2018passrecoil1.root wmcr2018passrecoil1:wmcr2018passrecoil1_$PROCESS wmcr2018passrecoil1:wmcr2018passrecoil1_$PROCESS_$SYSTEMATIC
 bin wmcr2018passrecoil1
 observation 6095.000
@@ -9,24 +9,31 @@ bin               wmcr2018passrecoil1  wmcr2018passrecoil1  wmcr2018passrecoil1 
 process                         wjets                   tt                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
 process                             1                    2                    3                    4                    5                    6                    7
 rate                            1.000                1.000              827.555               36.939              110.202               17.307              134.637
-ew1 shapeN                          -                    -                    -                1.000                    -                    -                    -
-ew2Z shapeN                         -                    -                    -                1.000                    -                    -                    -
-ew3Z shapeN                         -                    -                    -                1.000                    -                    -                    -
+btag2018 lnN                        -                    -                0.993                0.995                0.997                0.995                0.986
+ew1 shape                           -                    -                    -                1.000                    -                    -                    -
+ew2Z shape                          -                    -                    -                1.000                    -                    -                    -
+ew3Z shape                          -                    -                    -                1.000                    -                    -                    -
 hbb_norm lnN                        -                    -                    -                    -                    -                1.200                    -
 id_mu2018 lnN                       -                    -                1.020                1.020                1.020                1.020                1.020
 iso_mu2018 lnN                      -                    -                1.020                1.020                1.020                1.020                1.020
 jec2018 lnN                         -                    -                1.050                1.050                1.050                1.050                1.050
 lumi2018 lnN                        -                    -                1.027                1.027                1.027                1.027                1.027
-mix shapeN                          -                    -                    -                1.000                    -                    -                    -
-qcd1 shapeN                         -                    -                    -                1.000                    -                    -                    -
-qcd2 shapeN                         -                    -                    -                1.000                    -                    -                    -
+mix shape                           -                    -                    -                1.000                    -                    -                    -
+qcd1 shape                          -                    -                    -                1.000                    -                    -                    -
+qcd2 shape                          -                    -                    -                1.000                    -                    -                    -
 qcdmu_norm lnN                      -                    -                    -                    -                    -                    -                2.000
 st_norm lnN                         -                    -                1.200                    -                    -                    -                    -
 trig_met2018 lnN                    -                    -                1.020                1.020                1.020                1.020                1.020
 veto_tau2018 lnN                    -                    -                1.030                1.030                1.030                1.030                1.030
 vv_norm lnN                         -                    -                    -                    -                1.200                    -                    -
 zjets_norm lnN                      -                    -                    -                1.400                    -                    -                    -
+ew2W param 0 1
+ew3W param 0 1
+qcd3 param 0 1
 tt_norm param 0 1
+whf_fraction param 0 1
+wjets_norm param 0 1
+zhf_fraction param 0 1
 sr2018_tt_pass_recoil1_mass0 extArg wmcr2018passrecoil1.root:wmcr2018passrecoil1
 sr2018_tt_pass_recoil1_mass1 extArg wmcr2018passrecoil1.root:wmcr2018passrecoil1
 sr2018_tt_pass_recoil1_mass10 extArg wmcr2018passrecoil1.root:wmcr2018passrecoil1
@@ -49,3 +56,7 @@ sr2018_zjets_fail_recoil1_mass6 extArg wmcr2018passrecoil1.root:wmcr2018passreco
 sr2018_zjets_fail_recoil1_mass7 extArg wmcr2018passrecoil1.root:wmcr2018passrecoil1
 sr2018_zjets_fail_recoil1_mass8 extArg wmcr2018passrecoil1.root:wmcr2018passrecoil1
 sr2018_zjets_fail_recoil1_mass9 extArg wmcr2018passrecoil1.root:wmcr2018passrecoil1
+tf_dataResidualW_recoil_par0_fjmass_par0 extArg wmcr2018passrecoil1.root:wmcr2018passrecoil1
+tf_dataResidualW_recoil_par0_fjmass_par1 extArg wmcr2018passrecoil1.root:wmcr2018passrecoil1
+tf_dataResidualW_recoil_par1_fjmass_par0 extArg wmcr2018passrecoil1.root:wmcr2018passrecoil1
+tf_dataResidualW_recoil_par1_fjmass_par1 extArg wmcr2018passrecoil1.root:wmcr2018passrecoil1
