@@ -1281,7 +1281,7 @@ if __name__ == "__main__":
         #sr_zlfMCPass.autoMCStats()
 
         tf_paramsZdeco = (sr_zlfMCPass.getExpectation()+sr_zhfMCPass.getExpectation()) / (sr_zlfMCFail.getExpectation()+sr_zhfMCFail.getExpectation())
-        tf_paramsZ = tf_paramsZdeco #* tf_dataResidualZ_params[recoilbin, :]
+        tf_paramsZ = tf_paramsZdeco * tf_dataResidualZ_params[recoilbin, :]
 
         sr_zjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_zjets",
@@ -1323,7 +1323,7 @@ if __name__ == "__main__":
         #sr_wlfMCPass.autoMCStats()
 
         tf_paramsWdeco = (sr_wlfMCPass.getExpectation()+sr_whfMCPass.getExpectation()) / (sr_wlfMCFail.getExpectation()+sr_whfMCFail.getExpectation())
-        tf_paramsW = tf_paramsWdeco #* tf_dataResidualW_params[recoilbin, :]
+        tf_paramsW = tf_paramsWdeco * tf_dataResidualW_params[recoilbin, :]
     
         sr_wjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_wjets",
