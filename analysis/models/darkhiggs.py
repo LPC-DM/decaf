@@ -1141,9 +1141,9 @@ if __name__ == "__main__":
     print(recoilscaled)
     print(msdscaled)
     
-    tf_dataResidualW = rl.BernsteinPoly("tf_dataResidualW", (1, 1), ['recoil', 'fjmass'], limits=(-100, 100))
+    tf_dataResidualW = rl.BernsteinPoly("tf_dataResidualW"+year, (1, 1), ['recoil', 'fjmass'], limits=(-100, 100))
     tf_dataResidualW_params = tf_dataResidualW(recoilscaled, msdscaled)
-    tf_dataResidualZ = rl.BernsteinPoly("tf_dataResidualZ", (1, 1), ['recoil', 'fjmass'], limits=(-100, 100))
+    tf_dataResidualZ = rl.BernsteinPoly("tf_dataResidualZ"+year, (1, 1), ['recoil', 'fjmass'], limits=(-100, 100))
     tf_dataResidualZ_params = tf_dataResidualZ(recoilscaled, msdscaled)
     #tf_paramsZ = rhalphabeth2D("Z+jets", tf_dataResidual_params, 3, 3)
     #tf_paramsW = rhalphabeth2D("W+jets", tf_dataResidual_params, 3, 2)
