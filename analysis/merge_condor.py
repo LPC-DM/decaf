@@ -28,7 +28,7 @@ os.system('rm -rf '+options.folder+'/merge_condor/log/'+options.variable+'*')
 os.system('rm -rf '+options.folder+'/merge_condor/out/'+options.variable+'*')
 
 if options.tar:
-    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*____*\' --exclude=\'analysis/hists/*/*condor/*/*\' ../../decaf')
+    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*condor/*/*\' --exclude=\'analysis/hists/*.futures\' --exclude=\'analysis/hists/*.merged\' --exclude=\'analysis/plots\' ../../decaf')
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../pylocal.tgz -C ~/.local/lib/python3.6/ site-packages')
 
 if options.cluster == 'kisti':
