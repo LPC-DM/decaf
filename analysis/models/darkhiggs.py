@@ -91,16 +91,13 @@ def remap_histograms(hists):
     bkg_map["Z+LF"] = ("Z+LF",)
     bkg_map["G+jets"] = ("G+*",)
     bkg_map["QCD"] = ("QCD*",)
-    sig_map["Mhs_50"] = ("*Mhs_50*",)  ## signals
-    sig_map["Mhs_70"] = ("*Mhs_70*",)
-    sig_map["Mhs_90"] = ("*Mhs_90*",)
-    sig_map["MonoJet"] = ("MonoJet*",)  ## signals
-    sig_map["MonoW"] = ("MonoW*",)  ## signals
-    sig_map["MonoZ"] = ("MonoZ*",)  ## signals
     data_map["MET"] = ("MET",)
     data_map["SingleElectron"] = ("SingleElectron",)
     data_map["SinglePhoton"] = ("SinglePhoton",)
     data_map["EGamma"] = ("EGamma",)
+    for signal in hists['sig']['template'].identifiers('process'):
+        if 'mhs' not in str(signal): continue
+        sig_map[str(signal)] = (str(signal),)  ## signals
 
     for key in hists["data"].keys():
         bkg_hists[key] = hists["bkg"][key].group(cats, process, bkg_map)
@@ -440,8 +437,9 @@ def model(year, recoil, category):
     sr.addSample(sr_qcd)
 
     for s in signal["sr"].identifiers("process"):
-        if "Mhs_50" not in str(s):
+        if "Mz500_mhs90_Mdm250" not in str(s):
             continue
+        print("Signal is:", str(s))
         sr_signalTemplate = template(signal, s, "nominal", recoil, "sr", category)
         sr_signal = rl.TemplateSample(
             ch_name + "_" + str(s), rl.Sample.SIGNAL, sr_signalTemplate
