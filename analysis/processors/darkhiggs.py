@@ -150,7 +150,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         self._xsec = xsec
 
         self._samples = {
-            'sr':('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET','Mhs_50','Mhs_70','Mhs_90','MonoJet','MonoW','MonoZ'),
+            'sr':('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET','Mhs_50','Mhs_70','Mhs_90','MonoJet','MonoW','MonoZ','mhs'),
             'wmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET'),
             'tmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET'),
             'wecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','SingleElectron','EGamma'),
@@ -1597,10 +1597,11 @@ class AnalysisProcessor(processor.ProcessorABC):
 if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-y', '--year', help='year', dest='year')
+    parser.add_option('-m', '--metadata', help='metadata', dest='metadata')
     (options, args) = parser.parse_args()
 
 
-    with open('metadata/'+options.year+'.json') as fin:
+    with open('metadata/'+options.metadata+'.json') as fin:
         samplefiles = json.load(fin)
         xsec = {k: v['xs'] for k,v in samplefiles.items()}
 

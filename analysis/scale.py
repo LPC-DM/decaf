@@ -97,16 +97,14 @@ def scale(hists):
     bkg_map["G+jetsLO"] = ("lo--GJets*",)
     bkg_map["G+jetsNNLO"] = ("nnlo--GJets*",)
     bkg_map["QCD"] = ("*QCD*",)
-    sig_map["Mhs_50"] = ("*Mhs_50*",)  ## signals
-    sig_map["Mhs_70"] = ("*Mhs_70*",)
-    sig_map["Mhs_90"] = ("*Mhs_90*",)
-    sig_map["MonoJet"] = ("MonoJet*",)  ## signals
-    sig_map["MonoW"] = ("MonoW*",)    ## signals
-    sig_map["MonoZ"] = ("MonoZ*",)    ## signals
     data_map["MET"] = ("MET*", )
     data_map["SingleElectron"] = ("SingleElectron*", )
     data_map["SinglePhoton"] = ("SinglePhoton*", )
     data_map["EGamma"] = ("EGamma*", )
+    for signal in hists['sumw'].identifiers('dataset'):
+        if 'mhs' not in str(signal): continue
+        print(signal)
+        sig_map[str(signal)] = (str(signal),)  ## signals
     print('Processes defined')
     
     ###
