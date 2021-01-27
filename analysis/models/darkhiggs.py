@@ -34,7 +34,11 @@ mass_binning = [
 ]
 # recoil_binning=[250,310,370,470,590,840,1020,1250,3000]
 #recoil_binning = [250, 310, 370, 470, 590, 3000]
-recoil_binning = [250, 310, 370, 470, 3000] 
+recoil_binning_dict = {
+    "2018": [250, 310, 370, 470, 3000],
+    "2017": [250, 310, 370, 3000],
+    "2016": [250, 310, 370, 3000]
+}
 
 category_map = {"pass": 1, "fail": 0}
 
@@ -103,7 +107,9 @@ def remap_histograms(hists):
         bkg_hists[key] = hists["bkg"][key].group(cats, process, bkg_map)
         signal_hists[key] = hists["sig"][key].group(cats, process, sig_map)
         data_hists[key] = hists["data"][key].group(cats, process, data_map)
-
+    
+    print('initial recoil binning',bkg_hists["template"].axis("recoil").edges())
+    
     bkg_hists["template"] = bkg_hists["template"].rebin(
         "fjmass", hist.Bin("fjmass", "Mass", mass_binning)
     )
@@ -1046,6 +1052,7 @@ if __name__ == "__main__":
     parser.add_option("-y", "--year", help="year", dest="year", default="")
     (options, args) = parser.parse_args()
     year = options.year
+    recoil_binning = recoil_binning_dict[year]
     recoilbins = np.array(recoil_binning)
     nrecoil = len(recoilbins) - 1
 
