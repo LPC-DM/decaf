@@ -12,6 +12,8 @@ def scale_file(file):
 
     print('Loading file:',file)    
     hists=load(file)
+    if '2016' in file:
+        scalez=True
 
     pd = []
     for d in hists['sumw'].identifiers('dataset'):
@@ -32,10 +34,12 @@ def scale_file(file):
         hists[key] = hists[key].group(dataset_cats, dataset, dataset_map)
     print('Datasets aggregated')
 
-    return scale(hists)
+    return scale(hists,scalez)
 
 def scale_directory(directory):
 
+    if '2016' in directory:
+        scalez=True
     hists = {}
     for filename in os.listdir(directory):
         if '.merged' not in filename: continue
@@ -43,9 +47,9 @@ def scale_directory(directory):
         hin = load(directory+'/'+filename)
         hists.update(hin)
 
-    return scale(hists)
+    return scale(hists, scalez)
 
-def scale(hists):
+def scale(hists, scalez):
 
     ###
     # Rescaling MC histograms using the xsec weight
@@ -61,6 +65,9 @@ def scale(hists):
         for d in hists[key].identifiers('dataset'):
             if 'MET' in d.name or 'SingleElectron' in d.name or 'SinglePhoton' in d.name or 'EGamma' in d.name: continue
             hists[key].scale({d:1/scale[d]},axis='dataset')
+            if scalez and 'ZJets' in d.name:
+                print('Scaling',d.name,'by a factor of 3')
+                hists[key].scale({d:3.},axis='dataset')
     print('Histograms scaled')
 
 
