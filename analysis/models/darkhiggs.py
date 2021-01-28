@@ -324,9 +324,9 @@ def model(year, recoil, category):
 
     if category == "pass":
         sr_wjetsMC = sr_wjetsMCPass
-        sr_wjets = sr_wjetsMCPass
+        sr_wjets = sr_wjetsPass
         if not (recoil<4):
-            sr_wjets = sr_wjetsPass
+            sr_wjets = sr_wjetsMCPass
     else:
         sr_wjetsMC = sr_wjetsMCFail
         sr_wjets = sr_wjetsFail
