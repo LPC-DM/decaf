@@ -1,56 +1,34 @@
-# Datacard for <Channel (sr2018failrecoil2) instance at 0x2abd32979090> generated on 2021-01-25 21:53:02.660076
+# Datacard for <Channel (sr2018failrecoil2) instance at 0x2b308430ddd0> generated on 2021-01-29 03:00:33.570841
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 8 # number of samples minus 1
-kmax 43 # number of nuisance parameters
+kmax 21 # number of nuisance parameters
 shapes * sr2018failrecoil2 sr2018failrecoil2.root sr2018failrecoil2:sr2018failrecoil2_$PROCESS sr2018failrecoil2:sr2018failrecoil2_$PROCESS_$SYSTEMATIC
 bin sr2018failrecoil2
 observation 21834.000
-bin               sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2
-process                      Mhs_50              zjets              wjets               ttMC               stMC           dyjetsMC               vvMC              hbbMC              qcdMC
-process                           0                  1                  2                  3                  4                  5                  6                  7                  8
-rate                        120.752              1.000              1.000            390.389             59.333             48.566            528.211              1.427             33.898
-btag2018 lnN                  0.993                  -                  -              0.982              0.988              0.994              0.995              0.991              0.996
-ew1 lnN                           -                  -                  -                  -                  -              1.001                  -                  -                  -
-ew2Z lnN                          -                  -                  -                  -                  -              1.006                  -                  -                  -
-ew3Z lnN                          -                  -                  -                  -                  -              1.002                  -                  -                  -
-hbb_norm lnN                      -                  -                  -                  -                  -                  -                  -              1.200                  -
-jec2018 lnN                   1.050                  -                  -              1.050              1.050              1.050              1.050              1.050              1.050
-lumi2018 lnN                  1.027                  -                  -              1.027              1.027              1.027              1.027              1.027              1.027
-mix lnN                           -                  -                  -                  -                  -              1.003                  -                  -                  -
-qcd1 lnN                          -                  -                  -                  -                  -              1.064                  -                  -                  -
-qcd2 lnN                          -                  -                  -                  -                  -              0.969                  -                  -                  -
-qcdsig_norm lnN                   -                  -                  -                  -                  -                  -                  -                  -              2.000
-st_norm lnN                       -                  -                  -                  -              1.200                  -                  -                  -                  -
-trig_met2018 lnN              1.020                  -                  -              1.020              1.020              1.020              1.020              1.020              1.020
-tt_norm lnN                       -                  -                  -              1.200                  -                  -                  -                  -                  -
-veto_tau2018 lnN              1.030                  -                  -              1.030              1.030              1.030              1.030              1.030              1.030
-vv_norm lnN                       -                  -                  -                  -                  -                  -              1.200                  -                  -
-zjets_norm lnN                    -                  -                  -                  -                  -              1.400                  -                  -                  -
+bin                sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2  sr2018failrecoil2
+process           Mz500_mhs90_Mdm250              zjets              wjets               ttMC               stMC           dyjetsMC               vvMC              hbbMC              qcdMC
+process                            0                  1                  2                  3                  4                  5                  6                  7                  8
+rate                           1.551              1.000              1.000            390.389             59.333             48.566            528.211              1.427             33.898
+btag2018 lnN                   0.989                  -                  -              0.982              0.988              0.994              0.995              0.991              0.996
+ew1 lnN                            -                  -                  -                  -                  -              1.001                  -                  -                  -
+ew2Z lnN                           -                  -                  -                  -                  -              1.006                  -                  -                  -
+ew3Z lnN                           -                  -                  -                  -                  -              1.002                  -                  -                  -
+hbb_norm lnN                       -                  -                  -                  -                  -                  -                  -              1.200                  -
+jec2018 lnN                    1.050                  -                  -              1.050              1.050              1.050              1.050              1.050              1.050
+lumi2018 lnN                   1.027                  -                  -              1.027              1.027              1.027              1.027              1.027              1.027
+mix lnN                            -                  -                  -                  -                  -              1.003                  -                  -                  -
+qcd1 lnN                           -                  -                  -                  -                  -              1.064                  -                  -                  -
+qcd2 lnN                           -                  -                  -                  -                  -              0.969                  -                  -                  -
+qcdsig_norm lnN                    -                  -                  -                  -                  -                  -                  -                  -              2.000
+st_norm lnN                        -                  -                  -                  -              1.200                  -                  -                  -                  -
+trig_met2018 lnN               1.020                  -                  -              1.020              1.020              1.020              1.020              1.020              1.020
+tt_norm lnN                        -                  -                  -              1.200                  -                  -                  -                  -                  -
+veto_tau2018 lnN               1.030                  -                  -              1.030              1.030              1.030              1.030              1.030              1.030
+vv_norm lnN                        -                  -                  -                  -                  -                  -              1.200                  -                  -
+zjets_norm lnN                     -                  -                  -                  -                  -              1.400                  -                  -                  -
 ew2W param 0 1
 ew3W param 0 1
 qcd3 param 0 1
-sr2018failrecoil2_wjetsMC_mcstat_bin0 param 0 1
-sr2018failrecoil2_wjetsMC_mcstat_bin1 param 0 1
-sr2018failrecoil2_wjetsMC_mcstat_bin10 param 0 1
-sr2018failrecoil2_wjetsMC_mcstat_bin2 param 0 1
-sr2018failrecoil2_wjetsMC_mcstat_bin3 param 0 1
-sr2018failrecoil2_wjetsMC_mcstat_bin4 param 0 1
-sr2018failrecoil2_wjetsMC_mcstat_bin5 param 0 1
-sr2018failrecoil2_wjetsMC_mcstat_bin6 param 0 1
-sr2018failrecoil2_wjetsMC_mcstat_bin7 param 0 1
-sr2018failrecoil2_wjetsMC_mcstat_bin8 param 0 1
-sr2018failrecoil2_wjetsMC_mcstat_bin9 param 0 1
-sr2018failrecoil2_zjetsMC_mcstat_bin0 param 0 1
-sr2018failrecoil2_zjetsMC_mcstat_bin1 param 0 1
-sr2018failrecoil2_zjetsMC_mcstat_bin10 param 0 1
-sr2018failrecoil2_zjetsMC_mcstat_bin2 param 0 1
-sr2018failrecoil2_zjetsMC_mcstat_bin3 param 0 1
-sr2018failrecoil2_zjetsMC_mcstat_bin4 param 0 1
-sr2018failrecoil2_zjetsMC_mcstat_bin5 param 0 1
-sr2018failrecoil2_zjetsMC_mcstat_bin6 param 0 1
-sr2018failrecoil2_zjetsMC_mcstat_bin7 param 0 1
-sr2018failrecoil2_zjetsMC_mcstat_bin8 param 0 1
-sr2018failrecoil2_zjetsMC_mcstat_bin9 param 0 1
 wjets_norm param 0 1
 sr2018_zjets_fail_recoil2_mass0 extArg sr2018failrecoil2.root:sr2018failrecoil2
 sr2018_zjets_fail_recoil2_mass1 extArg sr2018failrecoil2.root:sr2018failrecoil2
