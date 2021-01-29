@@ -1,2 +1,2 @@
-combineCards.py sr2017passrecoil2=sr2017passrecoil2.txt > sr2017passrecoil2_combined.txt
-text2workspace.py sr2017passrecoil2_combined.txt
+combineCards.py wecr2017passrecoil2=wecr2017passrecoil2.txt > wecr2017passrecoil2_combined.txt
+text2workspace.py wecr2017passrecoil2_combined.txt

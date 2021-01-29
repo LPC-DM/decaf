@@ -1,7 +1,7 @@
-# Datacard for <Channel (sr2016failrecoil2) instance at 0x2b1e1d6a7f50> generated on 2021-01-29 02:59:54.777993
+# Datacard for <Channel (sr2016failrecoil2) instance at 0x2ae9350c1f90> generated on 2021-01-29 09:41:58.239545
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 8 # number of samples minus 1
-kmax 21 # number of nuisance parameters
+kmax 43 # number of nuisance parameters
 shapes * sr2016failrecoil2 sr2016failrecoil2.root sr2016failrecoil2:sr2016failrecoil2_$PROCESS sr2016failrecoil2:sr2016failrecoil2_$PROCESS_$SYSTEMATIC
 bin sr2016failrecoil2
 observation 18131.000
@@ -29,6 +29,28 @@ zjets_norm lnN                     -                  -                  -      
 ew2W param 0 1
 ew3W param 0 1
 qcd3 param 0 1
+sr2016failrecoil2_wjetsMC_mcstat_bin0 param 0 1
+sr2016failrecoil2_wjetsMC_mcstat_bin1 param 0 1
+sr2016failrecoil2_wjetsMC_mcstat_bin10 param 0 1
+sr2016failrecoil2_wjetsMC_mcstat_bin2 param 0 1
+sr2016failrecoil2_wjetsMC_mcstat_bin3 param 0 1
+sr2016failrecoil2_wjetsMC_mcstat_bin4 param 0 1
+sr2016failrecoil2_wjetsMC_mcstat_bin5 param 0 1
+sr2016failrecoil2_wjetsMC_mcstat_bin6 param 0 1
+sr2016failrecoil2_wjetsMC_mcstat_bin7 param 0 1
+sr2016failrecoil2_wjetsMC_mcstat_bin8 param 0 1
+sr2016failrecoil2_wjetsMC_mcstat_bin9 param 0 1
+sr2016failrecoil2_zjetsMC_mcstat_bin0 param 0 1
+sr2016failrecoil2_zjetsMC_mcstat_bin1 param 0 1
+sr2016failrecoil2_zjetsMC_mcstat_bin10 param 0 1
+sr2016failrecoil2_zjetsMC_mcstat_bin2 param 0 1
+sr2016failrecoil2_zjetsMC_mcstat_bin3 param 0 1
+sr2016failrecoil2_zjetsMC_mcstat_bin4 param 0 1
+sr2016failrecoil2_zjetsMC_mcstat_bin5 param 0 1
+sr2016failrecoil2_zjetsMC_mcstat_bin6 param 0 1
+sr2016failrecoil2_zjetsMC_mcstat_bin7 param 0 1
+sr2016failrecoil2_zjetsMC_mcstat_bin8 param 0 1
+sr2016failrecoil2_zjetsMC_mcstat_bin9 param 0 1
 wjets_norm param 0 1
 sr2016_zjets_fail_recoil2_mass0 extArg sr2016failrecoil2.root:sr2016failrecoil2
 sr2016_zjets_fail_recoil2_mass1 extArg sr2016failrecoil2.root:sr2016failrecoil2

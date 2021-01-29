@@ -50,7 +50,7 @@ def histcombine(region, year, signalflag, recoil):
     if not inputlist:
         raise RuntimeError
 
-    outputdir = 'plots/darkhiggs2018/dump'
+    outputdir = 'plots/darkhiggs2017/dump'
     if not os.path.exists(outputdir):
         os.makedirs(outputdir)
 
@@ -92,7 +92,7 @@ if __name__ == '__main__':
         for isig in sigs:
             for ibin in bins:
                 try:
-                    histcombine(iregion, '2018', isig, ibin)
+                    histcombine(iregion, '2017', isig, ibin)
                 except:
                     print('There are no inputs for %s %s %s \n' %(iregion, isig, ibin))
                     pass

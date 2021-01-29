@@ -1,7 +1,7 @@
-# Datacard for <Channel (tmcr2016passrecoil3) instance at 0x2b07a2fe7b10> generated on 2021-01-29 02:59:41.741633
+# Datacard for <Channel (tmcr2016passrecoil3) instance at 0x2af64be19d10> generated on 2021-01-29 09:41:17.486739
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
-kmax 22 # number of nuisance parameters
+kmax 37 # number of nuisance parameters
 shapes * tmcr2016passrecoil3 tmcr2016passrecoil3.root tmcr2016passrecoil3:tmcr2016passrecoil3_$PROCESS tmcr2016passrecoil3:tmcr2016passrecoil3_$PROCESS_$SYSTEMATIC
 bin tmcr2016passrecoil3
 observation 287.000
@@ -30,6 +30,21 @@ trig_met2016 lnN                    -                1.020                1.020 
 veto_tau2016 lnN                    -                1.030                1.030                1.030                1.030                1.030                1.030
 vv_norm lnN                         -                    -                    -                    -                1.200                    -                    -
 zjets_norm lnN                      -                1.400                    -                1.400                    -                    -                    -
+sr2016passrecoil3_ttMC_mcstat_bin10 param 0 1
+sr2016passrecoil3_ttMC_mcstat_bin4 param 0 1
+sr2016passrecoil3_ttMC_mcstat_bin6 param 0 1
+sr2016passrecoil3_ttMC_mcstat_bin7 param 0 1
+sr2016passrecoil3_ttMC_mcstat_bin8 param 0 1
+sr2016passrecoil3_ttMC_mcstat_bin9 param 0 1
+tmcr2016passrecoil3_ttMC_mcstat_bin0 param 0 1
+tmcr2016passrecoil3_ttMC_mcstat_bin1 param 0 1
+tmcr2016passrecoil3_ttMC_mcstat_bin10 param 0 1
+tmcr2016passrecoil3_ttMC_mcstat_bin3 param 0 1
+tmcr2016passrecoil3_ttMC_mcstat_bin4 param 0 1
+tmcr2016passrecoil3_ttMC_mcstat_bin5 param 0 1
+tmcr2016passrecoil3_ttMC_mcstat_bin7 param 0 1
+tmcr2016passrecoil3_ttMC_mcstat_bin8 param 0 1
+tmcr2016passrecoil3_ttMC_mcstat_bin9 param 0 1
 tt_norm param 0 1
 sr2016_tt_pass_recoil3_mass0 extArg tmcr2016passrecoil3.root:tmcr2016passrecoil3
 sr2016_tt_pass_recoil3_mass1 extArg tmcr2016passrecoil3.root:tmcr2016passrecoil3
