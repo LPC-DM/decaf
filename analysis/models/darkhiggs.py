@@ -351,7 +351,7 @@ def model(year, recoil, category):
     addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
 
     if category == "pass" and recoil<4:
-        sr_ttMC.autoMCStats()
+        if not (year=='2016'): sr_ttMC.autoMCStats()
         sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
         sr_ttParameters = np.array(
             [
@@ -527,7 +527,7 @@ def model(year, recoil, category):
     addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
     
     if category == "pass":
-        wmcr_ttMC.autoMCStats()
+        if not (year=='2016'): wmcr_ttMC.autoMCStats()
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wmcr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
@@ -682,7 +682,7 @@ def model(year, recoil, category):
     addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category)
 
     if category == "pass":
-        wecr_ttMC.autoMCStats()
+        if not (year=='2016'): wecr_ttMC.autoMCStats()
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wecr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
@@ -807,7 +807,7 @@ def model(year, recoil, category):
     tmcr_ttMC.setParamEffect(id_mu, 1.02)
     tmcr_ttMC.setParamEffect(iso_mu, 1.02)
     addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category)
-    tmcr_ttMC.autoMCStats()
+    if not (year=='2016'): tmcr_ttMC.autoMCStats()
     tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() 
     tmcr_tt = rl.TransferFactorSample(
         ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt
@@ -945,7 +945,7 @@ def model(year, recoil, category):
     tecr_ttMC.setParamEffect(id_e, 1.02)
     tecr_ttMC.setParamEffect(reco_e, 1.02)
     addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category)
-    tecr_ttMC.autoMCStats()
+    if not (year=='2016'): tecr_ttMC.autoMCStats()
     tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     tecr_tt = rl.TransferFactorSample(
         ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt
