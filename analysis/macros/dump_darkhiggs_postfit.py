@@ -559,7 +559,7 @@ def plotPreFitPostFit(region, year, signalflag, recoil, blind=False):
 #### Call Functions ####
 
 if not os.path.exists(sys.argv[1]):
-    haddcommand='hadd -f '+sys.argv[1]+' plots/darkhiggs2018/dump/*.root'
+    haddcommand='hadd -f '+sys.argv[1]+' plots/darkhiggs2017/dump/*.root'
     os.system(haddcommand)
 
 dh_regions = ['singlemw', 'singlemtop', 'singleew', 'singleetop', 'photon', 'diele', 'dimu', 'signal']
@@ -570,7 +570,7 @@ for iregion in dh_regions:
     for isig in sigs:
         for ibin in bins:
             try:
-                plotPreFitPostFit(iregion, '2018', isig, ibin)
+                plotPreFitPostFit(iregion, '2017', isig, ibin)
             except:
                 print("Directory does not exist in %s file! \n" % (sys.argv[1]))
                 pass
