@@ -1,7 +1,7 @@
-# Datacard for <Channel (wmcr2016passrecoil0) instance at 0x2b8f01c3ff90> generated on 2021-01-29 09:51:31.223427
+# Datacard for <Channel (wmcr2016passrecoil0) instance at 0x2b55ea8fed50> generated on 2021-01-30 08:37:32.745619
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
-kmax 134 # number of nuisance parameters
+kmax 112 # number of nuisance parameters
 shapes * wmcr2016passrecoil0 wmcr2016passrecoil0.root wmcr2016passrecoil0:wmcr2016passrecoil0_$PROCESS wmcr2016passrecoil0:wmcr2016passrecoil0_$PROCESS_$SYSTEMATIC
 bin wmcr2016passrecoil0
 observation 12535.000
@@ -74,17 +74,6 @@ sr2016failrecoil0_zjetsMC_mcstat_bin6 param 0 1
 sr2016failrecoil0_zjetsMC_mcstat_bin7 param 0 1
 sr2016failrecoil0_zjetsMC_mcstat_bin8 param 0 1
 sr2016failrecoil0_zjetsMC_mcstat_bin9 param 0 1
-sr2016passrecoil0_ttMC_mcstat_bin0 param 0 1
-sr2016passrecoil0_ttMC_mcstat_bin1 param 0 1
-sr2016passrecoil0_ttMC_mcstat_bin10 param 0 1
-sr2016passrecoil0_ttMC_mcstat_bin2 param 0 1
-sr2016passrecoil0_ttMC_mcstat_bin3 param 0 1
-sr2016passrecoil0_ttMC_mcstat_bin4 param 0 1
-sr2016passrecoil0_ttMC_mcstat_bin5 param 0 1
-sr2016passrecoil0_ttMC_mcstat_bin6 param 0 1
-sr2016passrecoil0_ttMC_mcstat_bin7 param 0 1
-sr2016passrecoil0_ttMC_mcstat_bin8 param 0 1
-sr2016passrecoil0_ttMC_mcstat_bin9 param 0 1
 sr2016passrecoil0_whfMC_mcstat_bin0 param 0 1
 sr2016passrecoil0_whfMC_mcstat_bin1 param 0 1
 sr2016passrecoil0_whfMC_mcstat_bin10 param 0 1
@@ -121,17 +110,6 @@ sr2016passrecoil0_wlfMC_mcstat_bin9 param 0 1
 tt_norm param 0 1
 whf_fraction param 0 1
 wjets_norm param 0 1
-wmcr2016passrecoil0_ttMC_mcstat_bin0 param 0 1
-wmcr2016passrecoil0_ttMC_mcstat_bin1 param 0 1
-wmcr2016passrecoil0_ttMC_mcstat_bin10 param 0 1
-wmcr2016passrecoil0_ttMC_mcstat_bin2 param 0 1
-wmcr2016passrecoil0_ttMC_mcstat_bin3 param 0 1
-wmcr2016passrecoil0_ttMC_mcstat_bin4 param 0 1
-wmcr2016passrecoil0_ttMC_mcstat_bin5 param 0 1
-wmcr2016passrecoil0_ttMC_mcstat_bin6 param 0 1
-wmcr2016passrecoil0_ttMC_mcstat_bin7 param 0 1
-wmcr2016passrecoil0_ttMC_mcstat_bin8 param 0 1
-wmcr2016passrecoil0_ttMC_mcstat_bin9 param 0 1
 wmcr2016passrecoil0_wjetsMC_mcstat_bin0 param 0 1
 wmcr2016passrecoil0_wjetsMC_mcstat_bin1 param 0 1
 wmcr2016passrecoil0_wjetsMC_mcstat_bin10 param 0 1

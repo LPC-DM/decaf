@@ -1,4 +1,4 @@
-# Datacard for <Channel (wecr2016failrecoil1) instance at 0x2b7207aba250> generated on 2021-01-29 09:43:42.304994
+# Datacard for <Channel (wecr2016failrecoil1) instance at 0x2b2fd1cb2d10> generated on 2021-01-30 08:24:29.587375
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
 kmax 57 # number of nuisance parameters
