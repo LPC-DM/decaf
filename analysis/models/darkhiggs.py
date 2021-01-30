@@ -1093,10 +1093,10 @@ if __name__ == "__main__":
     ###
     ###
     lumi = rl.NuisanceParameter("lumi" + year, "lnN")
-    qcdpho_norm = rl.NuisanceParameter("qcdpho_norm", "lnN")
-    qcde_norm = rl.NuisanceParameter("qcde_norm", "lnN")
-    qcdmu_norm = rl.NuisanceParameter("qcdmu_norm", "lnN")
-    qcdsig_norm = rl.NuisanceParameter("qcdsig_norm", "lnN")
+    qcdpho_norm = rl.NuisanceParameter("qcdpho_norm" + year, "lnN")
+    qcde_norm = rl.NuisanceParameter("qcde_norm" + year, "lnN")
+    qcdmu_norm = rl.NuisanceParameter("qcdmu_norm" + year, "lnN")
+    qcdsig_norm = rl.NuisanceParameter("qcdsig_norm" + year, "lnN")
     st_norm = rl.NuisanceParameter("st_norm", "lnN")
     tt_norm = rl.NuisanceParameter("tt_norm", "lnN")
     vv_norm = rl.NuisanceParameter("vv_norm", "lnN")
