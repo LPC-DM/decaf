@@ -101,11 +101,6 @@ def plotPreFitPostFit(region, year, signalflag, recoil, blind=False):
     #h_prefit_sig = f_mlfit.Get("shapes_prefit/"+darkhiggs_regions['signal']+years[year]+signalprocess[signalflag]+recoilbin[recoil]+"/total_background")
 
     ### Define processes per region ###
-    processesG = [
-            'qcdMC',
-            'gjets'
-    ]
-
     processesT = [
             'dyjetsMC',
             'hbbMC',
@@ -121,18 +116,10 @@ def plotPreFitPostFit(region, year, signalflag, recoil, blind=False):
             'hbbMC',
             'qcdMC',
             'stMC',
-            'ttMC',
             'tt',
+            'ttMC',
             'vvMC',
             'wjets'
-    ]
-
-    processesZ = [
-            'hbbMC',
-            'stMC',
-            'ttMC',
-            'vvMC',
-            'dyjets'
     ]
 
     processesSr = [
@@ -143,7 +130,9 @@ def plotPreFitPostFit(region, year, signalflag, recoil, blind=False):
             'vvMC',
             #'Mhs_50',
             'tt',
+            'ttMC',
             'wjets',
+            'wjetsMC',
             'zjets'
     ]
 
@@ -174,20 +163,21 @@ def plotPreFitPostFit(region, year, signalflag, recoil, blind=False):
             ]
 
     processNames = {
-            'gjets':'#gamma+jets',
-            'qcdMC':'QCD multijet',
-            'tt':'t#bar{t}',
-            'ttMC':'t#bar{t}',
-            'stMC':'Single t',
-            'vvMC':'Diboson',
-            'hbbMC':'H#rightarrow b#bar{b}',
-            'dyjetsMC':'Z+jets',
-            'dyjets':'Z+jets',
-            'wjets':'W+jets',
-            'wjetsMC':'W+jets',
-            #'Mhs_50': 'Signal'
+        'gjets':'#gamma+jets',
+        'qcdMC':'QCD multijet',
+        'tt':'t#bar{t}',
+        'ttMC':'t#bar{t}',
+        'stMC':'Single t',
+        'vvMC':'Diboson',
+        'hbbMC':'H#rightarrow b#bar{b}',
+        'dyjetsMC':'DY+jets',
+        'dyjets':'DY+jets',
+        'wjets':'W+jets',
+        'wjetsMC':'W+jets',
+        'zjets':'Z+jets'
+        #'Mhs_50': 'Signal'
     }
-
+    '''
     zcolor = kAzure-9
     colors = {
           'qcdMC':kGray,
@@ -203,6 +193,22 @@ def plotPreFitPostFit(region, year, signalflag, recoil, blind=False):
           'wjets':kGreen-6,
           'wjetsMC':kGreen-6,
           #'Mhs_50':kSpring-2
+    }
+    '''
+    colors = {
+        'qcdMC':TColor.GetColor(166, 86, 40),
+        'vvMC':TColor.GetColor(152, 78, 163),
+        'hbbMC':TColor.GetColor(247, 129, 191),
+        'tt':TColor.GetColor(255, 127, 0),
+        'ttMC':TColor.GetColor(255, 127, 0),
+        'stMC':TColor.GetColor(255, 255, 51),
+        'gjets':TColor.GetColor(117, 112, 179),
+        'zjets':TColor.GetColor(141, 211, 199),
+        'dyjetsMC':TColor.GetColor(153, 153, 153),
+        'dyjets':TColor.GetColor(153, 153, 153),
+        'wjets':TColor.GetColor(77, 154, 74),
+        'wjetsMC':TColor.GetColor(77, 154, 74),
+        #'Mhs_50':kSpring-2
     }
 
     binLowE = []
@@ -535,7 +541,7 @@ def plotPreFitPostFit(region, year, signalflag, recoil, blind=False):
     #for ext in ['pdf','png','C']:
     for ext in ['png']:
         print('Directory is',plotDir)
-        c.SaveAs(plotDir+"postfit/stackedPostfit%s_"%plotextralabel_+label+"."+ext)
+        c.SaveAs(plotDir+"stackedPostfit%s_"%plotextralabel_+label+"."+ext)
 
     #c.SaveAs("test.pdf")
     #del c
@@ -552,7 +558,7 @@ for iregion in dh_regions:
     for isig in sigs:
         for ibin in bins:
             try:
-                plotPreFitPostFit(iregion, '2018', isig, ibin)
+                plotPreFitPostFit(iregion, '2016', isig, ibin)
             except:
                 print("Directory do not exist in %s file! \n" % (sys.argv[1]))
                 pass

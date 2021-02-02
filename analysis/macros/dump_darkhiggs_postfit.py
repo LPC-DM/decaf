@@ -102,11 +102,6 @@ def plotPreFitPostFit(region, year, signalflag, recoil, blind=False):
     #h_prefit_sig = f_mlfit.Get("shapes_prefit/"+darkhiggs_regions['signal']+years[year]+signalprocess[signalflag]+recoilbin[recoil]+"/total_background")
 
     ### Define processes per region ###
-    processesG = [
-            'qcdMC',
-            'gjets'
-    ]
-
     processesT = [
             'dyjetsMC',
             'hbbMC',
@@ -115,7 +110,6 @@ def plotPreFitPostFit(region, year, signalflag, recoil, blind=False):
             'tt',
             'vvMC',
             'wjetsMC',
-            'wjets'
     ]
 
     processesW = [
@@ -129,14 +123,6 @@ def plotPreFitPostFit(region, year, signalflag, recoil, blind=False):
             'wjets'
     ]
 
-    processesZ = [
-            'hbbMC',
-            'stMC',
-            'ttMC',
-            'vvMC',
-            'dyjets'
-    ]
-
     processesSr = [
             'dyjetsMC',
             'hbbMC',
@@ -146,6 +132,7 @@ def plotPreFitPostFit(region, year, signalflag, recoil, blind=False):
             #'Mhs_50',
             'ttMC',
             'tt',
+            'wjetsMC',
             'wjets',
             'zjets'
     ]

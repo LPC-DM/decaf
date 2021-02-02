@@ -4,26 +4,37 @@ import os
 parser = OptionParser()
 parser.add_option('-a', '--analysis', help='analysis', dest='analysis', default='darkhiggs')
 (options, args) = parser.parse_args()
+
+folder_list = []
+for tgz in os.listdir('datacards/'):
+    if '.tgz' not in tgz: continue
+    folder_list.append(tgz.split('.')[0])
+
+txt_list = []
+root_list = []
+for folder in folder_list:
+    for txt in os.listdir('datacards/'+folder+'/'):
+        if '.txt' not in txt: continue
+        txt_list.append('datacards/'+folder+'/'+txt)
+    for root in os.listdir('datacards/'+folder+'/'):
+            if '.root' not in root: continue
+            root_list.append('datacards/'+folder+'/'+root)
 os.system('mkdir -p datacards/'+options.analysis)
 os.system('rm datacards/'+options.analysis+'/*')
+
 command='combineCards.py '
-cards = 'datacards/*'+options.analysis+'* -name \'*.txt\''
-rootfiles = 'datacards/*'+options.analysis+'* -name \'*.root\''
-os.system('find '+cards+' > cards.txt')
-for card in open('cards.txt'):
+for card in txt_list:
     #if 'sr' not in card: continue
     #if 'monojet' not in card: continue
+    if options.analysis not in card: continue
     filename=card.strip()
+    print(filename)
     os.system('cp '+filename+' .')
     binname=filename.split(".")[0].split('/')[len(filename.split(".")[0].split('/'))-1].replace('-','')
     command=command+binname+'='+filename.split('/')[len(filename.split('/'))-1]+' '
 command=command+' > datacards/'+options.analysis+'/'+options.analysis+'.txt'  
 os.system(command)
-os.system('rm *.txt')
-#os.system('mv *.txt datacards/'+options.analysis)
-os.system('find '+rootfiles+' > rootfiles.txt')
-for rootfile in open('rootfiles.txt'):
+for rootfile in root_list:
+    if options.analysis not in rootfile: continue
     filename=rootfile.strip()
     os.system('cp '+filename+' datacards/'+options.analysis)
-os.system('rm rootfiles.txt')
-#print(command)
