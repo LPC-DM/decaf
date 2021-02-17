@@ -27,7 +27,7 @@ parser.add_option('-x', '--copy', action='store_true', dest='copy')
 os.system('mkdir -p hists/'+options.processor+'/run_condor/out hists/'+options.processor+'/run_condor/err hists/'+options.processor+'/run_condor/log')
 
 if options.tar:
-    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*____*\' --exclude=\'analysis/hists/*/*condor/*/*\' ../../decaf')
+    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*condor/*/*\' --exclude=\'analysis/hists/*/*.futures\' --exclude=\'analysis/hists/*/*.merged\' --exclude=\'analysis/hists/*/*.reduced\' --exclude=\'analysis/plots\' ../../decaf')
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../pylocal.tgz -C ~/.local/lib/python3.6/ site-packages')
 
 if options.cluster == 'kisti':
