@@ -16,6 +16,7 @@ from data.process import *
 parser = OptionParser()
 parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 parser.add_option('-y', '--year', help='year', dest='year')
+parser.add_option('-m', '--metadata', help='metadata', dest='metadata')
 parser.add_option('-p', '--pack', help='pack', dest='pack')
 parser.add_option('-k', '--keep', action="store_true", dest="keep")
 parser.add_option('-s', '--special', help='special', dest='special')
@@ -24,9 +25,9 @@ fnaleos = "root://cmseos.fnal.gov/"
 #fnaleos = "root://cmsxrootd.fnal.gov/"
 
 beans={}
-beans['2016'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2016"]
-beans['2017'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017","/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/Sandeep"]
-beans['2018'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018"]
+beans['2016'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2016","/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2016/Signals/monohs"]
+beans['2017'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017","/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/Sandeep","/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/Signals/monohs"]
+beans['2018'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018","/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018/Signals/monohs"]
                  
 
 def split(arr, size):
@@ -92,7 +93,7 @@ for folder in beans[options.year]:
     for dataset in xsections.keys():
         if options.dataset and options.dataset not in dataset: continue
         print("Looking into",folder+"/"+dataset)
-        filenames = folder+"/"+dataset+" -name \'nano_*.root\'"
+        filenames = folder+"/"+dataset+" -name \'*nano*.root\'"
         exist=False
         for filename in os.listdir('metadata'):
              if dataset+".txt" not in filename: continue
@@ -129,6 +130,6 @@ for folder in beans[options.year]:
                       }
         os.system("rm metadata/"+dataset+".txt")
 
-folder = "metadata/"+options.year+".json"
+folder = "metadata/"+options.metadata+".json"
 with open(folder, "w") as fout:
     json.dump(datadef, fout, indent=4)

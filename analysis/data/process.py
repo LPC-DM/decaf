@@ -444,27 +444,6 @@ processes =    {
     ('Mz500_mhs90_Mdm150',   2016): ('DarkHiggs_MonoHs_LO_2016_MZprime-500_Mhs-90_Mchi-150',   'MC',  1.),
     ('Mz500_mhs90_Mdm250',   2016): ('DarkHiggs_MonoHs_LO_2016_MZprime-500_Mhs-90_Mchi-250',   'MC',  1.),
     ('Mz500_mhs90_Mdm500',   2016): ('DarkHiggs_MonoHs_LO_2016_MZprime-500_Mhs-90_Mchi-500',   'MC',  1.),
-
-    ### 2016 monojet
-    '''
-    ('Mz1000_mj_Mdm1000', 2016): ('DarkHiggs_MonoJet_LO_2016_MZprime-1000_Mchi-1000', 'MC', 0.00006936),
-    ('Mz2000_mj_Mdm1000', 2016): ('DarkHiggs_MonoJet_LO_2016_MZprime-2000_Mchi-1000', 'MC', 0.0006298),
-    ('Mz2000_mj_Mdm1500', 2016): ('DarkHiggs_MonoJet_LO_2016_MZprime-2000_Mchi-1500', 'MC', 0.000006165),
-    ('Mz2500_mj_Mdm1250', 2016): ('DarkHiggs_MonoJet_LO_2016_MZprime-2500_Mchi-1250', 'MC', 0.0001736),
-    ('Mz3000_mj_Mdm1000', 2016): ('DarkHiggs_MonoJet_LO_2016_MZprime-3000_Mchi-1000', 'MC', 0.003295),
-    ('Mz3000_mj_Mdm1500', 2016): ('DarkHiggs_MonoJet_LO_2016_MZprime-3000_Mchi-1500', 'MC', 0.00005939),
-    ('Mz1000_mj_Mdm150', 2016):  ('DarkHiggs_MonoJet_LO_2016_MZprime-1000_Mchi-150', 'MC', 0.7973),
-    ('Mz1000_mj_Mdm500', 2016):  ('DarkHiggs_MonoJet_LO_2016_MZprime-1000_Mchi-500', 'MC', 0.01006),
-    ('Mz2000_mj_Mdm500', 2016):  ('DarkHiggs_MonoJet_LO_2016_MZprime-2000_Mchi-500', 'MC', 0.03801),
-    ('Mz2500_mj_Mdm750', 2016):  ('DarkHiggs_MonoJet_LO_2016_MZprime-2500_Mchi-750', 'MC', 0.01181),
-    ('Mz200_mj_Mdm100', 2016):   ('DarkHiggs_MonoJet_LO_2016_MZprime-200_Mchi-100', 'MC', 0.5417),
-    ('Mz200_mj_Mdm150', 2016):   ('DarkHiggs_MonoJet_LO_2016_MZprime-200_Mchi-150', 'MC', 0.09708),
-    ('Mz300_mj_Mdm100', 2016):   ('DarkHiggs_MonoJet_LO_2016_MZprime-300_Mchi-100', 'MC', 9.702),
-    ('Mz300_mj_Mdm150', 2016):   ('DarkHiggs_MonoJet_LO_2016_MZprime-300_Mchi-150', 'MC', 0.2556),
-    ('Mz500_mj_Mdm150', 2016):   ('DarkHiggs_MonoJet_LO_2016_MZprime-500_Mchi-150', 'MC', 3.23),
-    ('Mz500_mj_Mdm250', 2016):   ('DarkHiggs_MonoJet_LO_2016_MZprime-500_Mchi-250', 'MC', 0.08326),
-    ('Mz500_mj_Mdm500', 2016):   ('DarkHiggs_MonoJet_LO_2016_MZprime-500_Mchi-500', 'MC', 0.001792),
-    '''
     ### 2017 monohs
     ('Mz1000_mhs50_Mdm1000', 2017): ('DarkHiggs_MonoHs_LO_2017_MZprime-1000_Mhs-50_Mchi-1000', 'MC',  1.),
     ('Mz2000_mhs50_Mdm1000', 2017): ('DarkHiggs_MonoHs_LO_2017_MZprime-2000_Mhs-50_Mchi-1000', 'MC',  1.),
@@ -520,26 +499,6 @@ processes =    {
     ('Mz500_mhs90_Mdm250',   2017): ('DarkHiggs_MonoHs_LO_2017_MZprime-500_Mhs-90_Mchi-250',   'MC',  1.),
     ('Mz500_mhs90_Mdm500',   2017): ('DarkHiggs_MonoHs_LO_2017_MZprime-500_Mhs-90_Mchi-500',   'MC',  1.),
 
-    ### 2017 monojet
-    '''
-    ('Mz1000_mj_Mdm1000', 2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-1000_Mchi-1000', 'MC',  0.00004065),
-    ('Mz2000_mj_Mdm1000', 2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-2000_Mchi-1000', 'MC',  0.0004474),
-    ('Mz2000_mj_Mdm1500', 2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-2000_Mchi-1500', 'MC',  0.0000019),
-    ('Mz2500_mj_Mdm1250', 2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-2500_Mchi-1250', 'MC',  0.0001198),
-    ('Mz3000_mj_Mdm1000', 2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-3000_Mchi-1000', 'MC',  0.001751),
-    ('Mz3000_mj_Mdm1500', 2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-3000_Mchi-1500', 'MC',  0.00002603),
-    ('Mz1000_mj_Mdm150',  2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-1000_Mchi-150',  'MC',  0.6662),
-    ('Mz1000_mj_Mdm500',  2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-1000_Mchi-500',  'MC',  0.01013),
-    ('Mz2000_mj_Mdm500',  2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-2000_Mchi-500',  'MC',  0.02727),
-    ('Mz2500_mj_Mdm750',  2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-2500_Mchi-750',  'MC',  0.008568),
-    ('Mz200_mj_Mdm100',   2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-200_Mchi-100',   'MC',  0.53),
-    ('Mz200_mj_Mdm150',   2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-200_Mchi-150',   'MC',  0.09399),
-    ('Mz300_mj_Mdm100',   2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-300_Mchi-100',   'MC',  10.37),
-    ('Mz300_mj_Mdm150',   2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-300_Mchi-150',   'MC',  0.2946),
-    ('Mz500_mj_Mdm150',   2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-500_Mchi-150',   'MC',  3.34),
-    ('Mz500_mj_Mdm250',   2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-500_Mchi-250',   'MC',  0.08367),
-    ('Mz500_mj_Mdm500',   2017): ('DarkHiggs_MonoJet_LO_2017_MZprime-500_Mchi-500',   'MC',  0.001538),
-    '''
     ### 2018 monohs
     ('Mz1000_mhs50_Mdm1000', 2018): ('DarkHiggs_MonoHs_LO_2018_MZprime-1000_Mhs-50_Mchi-1000', 'MC',  1.),
     ('Mz2000_mhs50_Mdm1000', 2018): ('DarkHiggs_MonoHs_LO_2018_MZprime-2000_Mhs-50_Mchi-1000', 'MC',  1.),
@@ -598,24 +557,4 @@ processes =    {
     ('Mz500_mhs90_Mdm500',   2018): ('DarkHiggs_MonoHs_LO_2018_MZprime-500_Mhs-90_Mchi-500',   'MC',  1.),
     #'MonoHs_MZprime_500_Mhs_90_Mchi_150_2018':('MonoHs_MZprime_500_Mhs_90_Mchi_150','MC',0.3656),
 
-    ### 2018 monojet
-    '''
-    ('Mz1000_mj_Mdm1000', 2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-1000_Mchi-1000', 'MC',  0.00003827),
-    ('Mz2000_mj_Mdm1000', 2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-2000_Mchi-1000', 'MC',  0.000398),
-    ('Mz2000_mj_Mdm1500', 2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-2000_Mchi-1500', 'MC',  0.000002631),
-    ('Mz2500_mj_Mdm1250', 2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-2500_Mchi-1250', 'MC',  0.0001054),
-    ('Mz3000_mj_Mdm1000', 2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-3000_Mchi-1000', 'MC',  0.002021),
-    ('Mz3000_mj_Mdm1500', 2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-3000_Mchi-1500', 'MC',  0.00002274),
-    ('Mz1000_mj_Mdm150',  2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-1000_Mchi-150',  'MC',  0.6572),
-    ('Mz1000_mj_Mdm500',  2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-1000_Mchi-500',  'MC',  0.009216),
-    ('Mz2000_mj_Mdm500',  2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-2000_Mchi-500',  'MC',  0.03278),
-    ('Mz2500_mj_Mdm750',  2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-2500_Mchi-750',  'MC',  0.007674),
-    ('Mz200_mj_Mdm100',   2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-200_Mchi-100',   'MC',  0.553),
-    ('Mz200_mj_Mdm150',   2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-200_Mchi-150',   'MC',  0.09461),
-    ('Mz300_mj_Mdm100',   2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-300_Mchi-100',   'MC',  10.16),
-    ('Mz300_mj_Mdm150',   2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-300_Mchi-150',   'MC',  0.2917),
-    ('Mz500_mj_Mdm150',   2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-500_Mchi-150',   'MC',  3.668),
-    ('Mz500_mj_Mdm250',   2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-500_Mchi-250',   'MC',  0.08367),
-    ('Mz500_mj_Mdm500',   2018): ('DarkHiggs_MonoJet_LO_2018_MZprime-500_Mchi-500',   'MC',  0.001538),
-    '''
 }
