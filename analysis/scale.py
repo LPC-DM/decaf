@@ -12,6 +12,7 @@ def scale_file(file):
 
     print('Loading file:',file)    
     hists=load(file)
+    scalez=False
     if '2016' in file:
         scalez=True
 
@@ -38,6 +39,7 @@ def scale_file(file):
 
 def scale_directory(directory):
 
+    scalez=False
     if '2016' in directory:
         scalez=True
     hists = {}
