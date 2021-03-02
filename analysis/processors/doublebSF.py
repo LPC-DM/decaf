@@ -121,6 +121,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         probV=fj.probWcq+fj.probWqq+fj.probZbb+fj.probZcc+fj.probZqq
         probX=probZHbb+probV
         fj['XvsQCD'] = probX/(probX+probQCD)
+        fj['tau21'] = fj.tau2/fj.tau1
         fj_good = fj[fj.isgood.astype(np.bool)]
         fj_clean = fj_good[fj_good.isclean.astype(np.bool)]
         fj_ntot = fj.counts
@@ -347,8 +348,10 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
+        leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
         selection.add('fj_pt', (leading_fj.pt.max() > 350) )
         selection.add('fj_mass', (leading_fj.msd_corr < 80)) ## optionally also <130
+        selection.add('fj_tau21', (leading_fj.tau21 < 0.3) )
 
         selection.add('mu_pt', (leading_mu.pt.max() > 7) )
         selection.add('pt_ratio', (leading_mu.pt.max()/leading_fj.pt.max() < 0.7) )
