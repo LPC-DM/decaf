@@ -350,8 +350,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
         leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
         selection.add('fj_pt', (leading_fj.pt.max() > 350) )
-        selection.add('fj_mass', (leading_fj.msd_corr < 80)) ## optionally also <130
-        selection.add('fj_tau21', (leading_fj.tau21 < 0.3) )
+        selection.add('fj_mass', (leading_fj.msd_corr.sum() < 80)) ## optionally also <130
+        selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
         selection.add('mu_pt', (leading_mu.pt.max() > 7) )
         selection.add('pt_ratio', (leading_mu.pt.max()/leading_fj.pt.max() < 0.7) )
