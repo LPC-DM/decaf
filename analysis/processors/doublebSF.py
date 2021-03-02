@@ -22,7 +22,7 @@ class AnalysisProcessor(processor.ProcessorABC):
     }
 
 
-    def __init__(self, year, xsec, ids, common):
+    def __init__(self, year, xsec, corrections, ids, common):
 
         self._year = year
         self._lumi = 1000.*float(AnalysisProcessor.lumis[year])
@@ -43,6 +43,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             '2018': 0.65
         }
 
+        self._corrections = corrections
         self._ids = ids
         self._common = common
 
@@ -80,6 +81,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         #Getting ids from .coffea files
         ###
 
+        get_msd_weight  = self._corrections['get_msd_weight']
         isLooseMuon     = self._ids['isLooseMuon']
         isTightMuon     = self._ids['isTightMuon']
         isGoodFatJet    = self._ids['isGoodFatJet']
@@ -497,11 +499,13 @@ if __name__ == '__main__':
         samplefiles = json.load(fin)
         xsec = {k: v['xs'] for k,v in samplefiles.items()}
 
+    corrections = load('data/corrections.coffea')
     ids         = load('data/ids.coffea')
     common      = load('data/common.coffea')
 
     processor_instance=AnalysisProcessor(year=options.year,
                                          xsec=xsec,
+                                         corrections=corrections,
                                          ids=ids,
                                          common=common)
 
