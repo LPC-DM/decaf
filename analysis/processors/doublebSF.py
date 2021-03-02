@@ -4,13 +4,12 @@ import cloudpickle
 import json
 import pprint
 import numpy as np
-import math 
+import math
 import awkward
 np.seterr(divide='ignore', invalid='ignore', over='ignore')
 from coffea.arrays import Initialize
 from coffea import hist, processor
 from coffea.util import load, save
-from coffea.jetmet_tools import FactorizedJetCorrector, JetCorrectionUncertainty, JetTransformer, JetResolution, JetResolutionScaleFactor
 from optparse import OptionParser
 from uproot_methods import TVector2Array, TLorentzVectorArray
 
@@ -56,8 +55,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             'ZHbbvsQCD': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Cat('region', 'Region'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1)
             ),
         })
@@ -355,135 +353,119 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         selection.add('mu_pt', (leading_mu.pt.max() > 7) )
         selection.add('pt_ratio', (leading_mu.pt.max()/leading_fj.pt.max() < 0.7) )
-        #leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
-        #selection.add('leading_e_pt',(e_loose.pt.max()>40))
-        #selection.add('mindphimet',(abs(met.T.delta_phi(j_clean.T)).min())>0.7)
 
         isFilled = False
 
-        #for region in selected_regions: 
-        for region, cuts in regions.items():
-            if region not in selected_regions: continue
-            print('Considering region:', region)
+        variables = {
+            'ZHbbvsQCD':              leading_fj.ZHbbvsQCD,
+        }
+        print('Variables:',variables.keys())
 
-            ###
-            # Adding recoil and minDPhi requirements
-            ###
+        def fill(dataset, gentype, weight, cut):
+            flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
+            flat_gentype = {k: (~np.isnan(v[cut])*gentype[cut]).flatten() for k, v in variables.items()}
+            flat_weight = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
 
-            #selection.add('recoil_'+region, (u[region].mag>250))
-            variables = {
-                'ZHbbvsQCD':              leading_fj.ZHbbvsQCD,
+            for histname, h in hout.items():
+                if not isinstance(h, hist.Hist):
+                    continue
+                if histname not in variables:
+                    continue
+                elif histname == 'sumw':
+                    continue
+                else:
+                    flat_variable = {histname: flat_variables[histname]}
+                    h.fill(dataset=dataset, gentype=flat_gentype[histname], **flat_variable, weight=flat_weight[histname])
+
+        if isData:
+            if not isFilled:
+                hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
+                isFilled=True
+            cut = selection.all()
+            fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
+        else:
+            weights = processor.Weights(len(events))
+
+            wgentype = {
+                'bb' : (
+                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
+                ~leading_fj.isTbcq &
+                ~leading_fj.isTbqq &
+                ~leading_fj.isZcc &
+                ~(leading_fj.isTcq | leading_fj.isWcq) &
+                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
+                leading_fj.isbb
+                ).sum(),
+                'bc' : (
+                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
+                ~leading_fj.isTbcq &
+                ~leading_fj.isTbqq &
+                ~leading_fj.isZcc &
+                ~(leading_fj.isTcq | leading_fj.isWcq) &
+                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
+                ~leading_fj.isbb &
+                (leading_fj.isTbc | (leading_fj.isb & leading_fj.isc))
+                ).sum(),
+                'b' : (
+                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
+                ~leading_fj.isTbcq &
+                ~leading_fj.isTbqq &
+                ~leading_fj.isZcc &
+                ~(leading_fj.isTcq | leading_fj.isWcq) &
+                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
+                ~leading_fj.isbb &
+                ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
+                (leading_fj.isTbq | leading_fj.isb)
+                ).sum(),
+                'cc' : (
+                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
+                ~leading_fj.isTbcq &
+                ~leading_fj.isTbqq &
+                ~leading_fj.isZcc &
+                ~(leading_fj.isTcq | leading_fj.isWcq) &
+                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
+                ~leading_fj.isbb &
+                ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
+                ~(leading_fj.isTbq | leading_fj.isb) &
+                leading_fj.iscc
+                ).sum(),
+                'c' : (
+                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
+                ~leading_fj.isTbcq &
+                ~leading_fj.isTbqq &
+                ~leading_fj.isZcc &
+                ~(leading_fj.isTcq | leading_fj.isWcq) &
+                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
+                ~leading_fj.isbb &
+                ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
+                ~(leading_fj.isTbq | leading_fj.isb) &
+                ~leading_fj.iscc &
+                leading_fj.isc
+                ).sum(),
+                'other' : (
+                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
+                ~leading_fj.isTbcq &
+                ~leading_fj.isTbqq &
+                ~leading_fj.isZcc &
+                ~(leading_fj.isTcq | leading_fj.isWcq) &
+                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
+                ~leading_fj.isbb &
+                ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
+                ~(leading_fj.isTbq | leading_fj.isb) &
+                ~leading_fj.iscc &
+                ~leading_fj.isc
+                ).sum(),
             }
-            print('Variables:',variables.keys())
+            vgentype=np.zeros(events.size, dtype=np.int)
+            for gentype in self._gentype_map.keys():
+                vgentype += self._gentype_map[gentype]*wgentype[gentype]
 
-            def fill(dataset, gentype, weight, cut):
+            if not isFilled:
+                hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
+                isFilled=True
 
-                flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
-                flat_gentype = {k: (~np.isnan(v[cut])*gentype[cut]).flatten() for k, v in variables.items()}
-                flat_weight = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
-
-                for histname, h in hout.items():
-                    if not isinstance(h, hist.Hist):
-                        continue
-                    if histname not in variables:
-                        continue
-                    elif histname == 'sumw':
-                        continue
-                    else:
-                        flat_variable = {histname: flat_variables[histname]}
-                        h.fill(dataset=dataset,
-                               region=region,
-                               gentype=flat_gentype[histname],
-                               **flat_variable,
-                               weight=flat_weight[histname])
-
-            if isData:
-                if not isFilled:
-                    hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
-                    isFilled=True
-                fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
-            else:
-                weights = processor.Weights(len(events))
-
-                wgentype = {
-                    'bb' : (
-                        ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                        ~leading_fj.isTbcq &
-                        ~leading_fj.isTbqq &
-                        ~leading_fj.isZcc &
-                        ~(leading_fj.isTcq | leading_fj.isWcq) &
-                        ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                        leading_fj.isbb
-                    ).sum(),
-                    'bc' : (
-                        ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                        ~leading_fj.isTbcq &
-                        ~leading_fj.isTbqq &
-                        ~leading_fj.isZcc &
-                        ~(leading_fj.isTcq | leading_fj.isWcq) &
-                        ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                        ~leading_fj.isbb &
-                        (leading_fj.isTbc | (leading_fj.isb & leading_fj.isc))
-                    ).sum(),
-                    'b' : (
-                        ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                        ~leading_fj.isTbcq &
-                        ~leading_fj.isTbqq &
-                        ~leading_fj.isZcc &
-                        ~(leading_fj.isTcq | leading_fj.isWcq) &
-                        ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                        ~leading_fj.isbb &
-                        ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
-                        (leading_fj.isTbq | leading_fj.isb)
-                    ).sum(),
-                    'cc' : (
-                        ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                        ~leading_fj.isTbcq &
-                        ~leading_fj.isTbqq &
-                        ~leading_fj.isZcc &
-                        ~(leading_fj.isTcq | leading_fj.isWcq) &
-                        ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                        ~leading_fj.isbb &
-                        ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
-                        ~(leading_fj.isTbq | leading_fj.isb) &
-                        leading_fj.iscc
-                    ).sum(),
-                    'c' : (
-                        ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                        ~leading_fj.isTbcq &
-                        ~leading_fj.isTbqq &
-                        ~leading_fj.isZcc &
-                        ~(leading_fj.isTcq | leading_fj.isWcq) &
-                        ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                        ~leading_fj.isbb &
-                        ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
-                        ~(leading_fj.isTbq | leading_fj.isb) &
-                        ~leading_fj.iscc &
-                        leading_fj.isc
-                    ).sum(),
-                    'other' : (
-                        ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                        ~leading_fj.isTbcq &
-                        ~leading_fj.isTbqq &
-                        ~leading_fj.isZcc &
-                        ~(leading_fj.isTcq | leading_fj.isWcq) &
-                        ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                        ~leading_fj.isbb &
-                        ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
-                        ~(leading_fj.isTbq | leading_fj.isb) &
-                        ~leading_fj.iscc &
-                        ~leading_fj.isc
-                    ).sum(),
-                }
-                vgentype=np.zeros(events.size, dtype=np.int)
-                for gentype in self._gentype_map.keys():
-                    vgentype += self._gentype_map[gentype]*wgentype[gentype]
-
-                if not isFilled:
-                    hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
-                    isFilled=True
-
-                fill(dataset, vgentype, weights.weight(), cut)
+            cut = selection.all()
+            fill(dataset, vgentype, weights.weight(), cut)
 
         return hout
 
