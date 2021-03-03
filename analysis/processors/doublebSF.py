@@ -139,6 +139,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             # Fat-jet top matching at decay level
             ###
 
+            '''
             qFromW = gen[
                 (abs(gen.pdgId) < 4) &
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
@@ -323,6 +324,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameHs.counts>0)
                 return bbmatch
             fj['isHsbb']  = hsbbmatch(54)|hsbbmatch(-54)
+            '''
 
             gen['isb'] = (abs(gen.pdgId)==5)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             jetgenb = fj.sd.cross(gen[gen.isb], nested=True)
@@ -350,7 +352,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
         leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
         selection.add('fj_pt', (leading_fj.pt.max() > 350) )
-        selection.add('fj_mass', (leading_fj.msd_corr.sum() < 80)) ## optionally also <130
+        selection.add('fj_mass', (leading_fj.msd_corr.sum() < 80) ) ## optionally also <130
         selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
         selection.add('mu_pt', (leading_mu.pt.max() > 7) )
@@ -384,11 +386,13 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
                 isFilled=True
             cut = selection.all()
-            fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
+            #fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
+            fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), np.ones(events.size, dtype=np.int))
         else:
             weights = processor.Weights(len(events))
 
             wgentype = {
+                '''
                 'bb' : (
                 ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
                 ~leading_fj.isTbcq &
@@ -457,17 +461,19 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ~leading_fj.iscc &
                 ~leading_fj.isc
                 ).sum(),
+                '''
             }
             vgentype=np.zeros(events.size, dtype=np.int)
-            for gentype in self._gentype_map.keys():
-                vgentype += self._gentype_map[gentype]*wgentype[gentype]
+            #for gentype in self._gentype_map.keys():
+            #    vgentype += self._gentype_map[gentype]*wgentype[gentype]
 
             if not isFilled:
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
                 isFilled=True
 
             cut = selection.all()
-            fill(dataset, vgentype, weights.weight(), cut)
+            #fill(dataset, vgentype, weights.weight(), cut)
+            fill(dataset, vgentype, weights.weight(), np.ones(events.size, dtype=np.int))
 
         return hout
 
