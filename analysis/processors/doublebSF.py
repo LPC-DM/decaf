@@ -135,197 +135,6 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             gen = events.GenPart
 
-            ###
-            # Fat-jet top matching at decay level
-            ###
-
-            '''
-            qFromW = gen[
-                (abs(gen.pdgId) < 4) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 24)
-            ]
-            cFromW = gen[
-                (abs(gen.pdgId) == 4) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 24)
-            ]
-
-            def tbqqmatch(topid, dR=1.5):
-                qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
-                bFromTop = gen[
-                    (abs(gen.pdgId) == 5) &
-                    gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                    (gen.distinctParent.pdgId == topid)
-                ]
-                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
-                jetgenb = fj.sd.cross(bFromTop, nested=True)
-                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==2) & (qFromWFromTop.counts>0)
-                bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1) & (bFromTop.counts>0)
-                return qWmatch & bmatch
-            fj['isTbqq'] = tbqqmatch(6)|tbqqmatch(-6)
-
-            def tbcqmatch(topid, dR=1.5):
-                qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
-                cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
-                bFromTop = gen[
-                    (abs(gen.pdgId) == 5) &
-                    gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                    (gen.distinctParent.pdgId == topid)
-                ]
-                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
-                jetgenWc = fj.sd.cross(cFromWFromTop, nested=True)
-                jetgenb = fj.sd.cross(bFromTop, nested=True)
-                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==1) & (qFromWFromTop.counts>0)
-                cWmatch = ((jetgenWc.i0.delta_r(jetgenWc.i1) < dR).sum()==1) & (cFromWFromTop.counts>0)
-                bmatch =  ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1)   & (bFromTop.counts>0)
-                return cWmatch & qWmatch & bmatch
-            fj['isTbcq'] = tbcqmatch(6)|tbcqmatch(-6)
-
-            def tqqmatch(topid, dR=1.5):
-                qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
-                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
-                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==2) & (qFromWFromTop.counts>0)
-                return qWmatch
-            fj['isTqq'] = tqqmatch(6)|tqqmatch(-6)
-
-            def tcqmatch(topid, dR=1.5):
-                qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
-                cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
-                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
-                jetgenWc = fj.sd.cross(cFromWFromTop, nested=True)
-                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==1) & (qFromWFromTop.counts>0)
-                cWmatch = ((jetgenWc.i0.delta_r(jetgenWc.i1) < dR).sum()==1) & (cFromWFromTop.counts>0)
-                return cWmatch & qWmatch
-            fj['isTcq'] = tcqmatch(6)|tcqmatch(-6)
-
-            def tbqmatch(topid, dR=1.5):
-                qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
-                bFromTop = gen[
-                    (abs(gen.pdgId) == 5) &
-                    gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                    (gen.distinctParent.pdgId == topid)
-                ]
-                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
-                jetgenb = fj.sd.cross(bFromTop, nested=True)
-                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==1) & (qFromWFromTop.counts>0)
-                bmatch =  ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1)   & (bFromTop.counts>0)
-                return qWmatch & bmatch
-            fj['isTbq'] = tbqmatch(6)|tbqmatch(-6)
-
-            def tbcmatch(topid, dR=1.5):
-                cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
-                bFromTop = gen[
-                    (abs(gen.pdgId) == 5) &
-                    gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                    (gen.distinctParent.pdgId == topid)
-                ]
-                jetgenWc = fj.sd.cross(cFromWFromTop, nested=True)
-                jetgenb = fj.sd.cross(bFromTop, nested=True)
-                cWmatch = ((jetgenWc.i0.delta_r(jetgenWc.i1) < dR).sum()==1) & (cFromWFromTop.counts>0)
-                bmatch =  ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1)   & (bFromTop.counts>0)
-                return cWmatch & bmatch
-            fj['isTbc'] = tbcmatch(6)|tbcmatch(-6)
-
-            ###
-            # Fat-jet W->qq matching at decay level
-            ###
-            def wqqmatch(wid, dR=1.5):
-                qFromSameW = qFromW[qFromW.distinctParent.pdgId == wid]
-                jetgenq = fj.sd.cross(qFromSameW, nested=True)
-                qqmatch = ((jetgenq.i0.delta_r(jetgenq.i1) < dR).sum()==2) & (qFromSameW.counts>0)
-                return qqmatch
-            fj['isWqq']  = wqqmatch(24)|wqqmatch(-24)
-
-            ###
-            # Fat-jet W->cq matching at decay level
-            ###
-            def wcqmatch(wid, dR=1.5):
-                qFromSameW = qFromW[qFromW.distinctParent.pdgId == wid]
-                cFromSameW = cFromW[cFromW.distinctParent.pdgId == wid]
-                jetgenq = fj.sd.cross(qFromSameW, nested=True)
-                jetgenc = fj.sd.cross(cFromSameW, nested=True)
-                qmatch = ((jetgenq.i0.delta_r(jetgenq.i1) < dR).sum()==1) & (qFromSameW.counts>0)
-                cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < dR).sum()==1) & (cFromSameW.counts>0)
-                return qmatch & cmatch
-            fj['isWcq']  = wcqmatch(24)|wcqmatch(-24)
-
-            ###
-            # Fat-jet Z->bb matching at decay level
-            ###
-            bFromZ = gen[
-                (abs(gen.pdgId) == 5) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 23)
-            ]
-            def zbbmatch(zid, dR=1.5):
-                bFromSameZ = bFromZ[bFromZ.distinctParent.pdgId == zid]
-                jetgenb = fj.sd.cross(bFromSameZ, nested=True)
-                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameZ.counts>0)
-                return bbmatch
-            fj['isZbb']  = zbbmatch(23)|zbbmatch(-23)
-
-            ###
-            # Fat-jet Z->cc matching at decay level
-            ###
-            cFromZ = gen[
-                (abs(gen.pdgId) == 4) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 23)
-            ]
-            def zccmatch(zid, dR=1.5):
-                cFromSameZ = cFromZ[cFromZ.distinctParent.pdgId == zid]
-                jetgenc = fj.sd.cross(cFromSameZ, nested=True)
-                ccmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < dR).sum()==2) & (cFromSameZ.counts>0)
-                return ccmatch
-            fj['isZcc']  = zccmatch(23)|zccmatch(-23)
-
-            ###
-            # Fat-jet Z->qq matching at decay level
-            ###
-            qFromZ = gen[
-                (abs(gen.pdgId) < 4) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 23)
-            ]
-            def zqqmatch(zid, dR=1.5):
-                qFromSameZ = qFromZ[qFromZ.distinctParent.pdgId == zid]
-                jetgenq = fj.sd.cross(qFromSameZ, nested=True)
-                qqmatch = ((jetgenq.i0.delta_r(jetgenq.i1) < dR).sum()==2) & (qFromSameZ.counts>0)
-                return qqmatch
-            fj['isZqq']  = zqqmatch(23)|zqqmatch(-23)
-
-            ###
-            # Fat-jet H->bb matching at decay level
-            ###
-            bFromH = gen[
-                (abs(gen.pdgId) == 5) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 25)
-            ]
-            def hbbmatch(hid, dR=1.5):
-                bFromSameH = bFromH[bFromH.distinctParent.pdgId == hid]
-                jetgenb = fj.sd.cross(bFromSameH, nested=True)
-                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameH.counts>0)
-                return bbmatch
-            fj['isHbb']  = hbbmatch(25)|hbbmatch(-25)
-
-            ###
-            # Fat-jet dark H->bb matching at decay level
-            ###
-            bFromHs = gen[
-                (abs(gen.pdgId) == 5) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 54)
-            ]
-            def hsbbmatch(hid, dR=1.5):
-                bFromSameHs = bFromHs[bFromHs.distinctParent.pdgId == hid]
-                jetgenb = fj.sd.cross(bFromSameHs, nested=True)
-                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameHs.counts>0)
-                return bbmatch
-            fj['isHsbb']  = hsbbmatch(54)|hsbbmatch(-54)
-            '''
-
             gen['isb'] = (abs(gen.pdgId)==5)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             jetgenb = fj.sd.cross(gen[gen.isb], nested=True)
             bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==1)&(gen[gen.isb].counts>0)
@@ -350,7 +159,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
-        leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
+        #leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
         selection.add('fj_pt', (leading_fj.pt.max() > 350) )
         selection.add('fj_mass', (leading_fj.msd_corr.sum() < 80) ) ## optionally also <130
         selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
@@ -370,6 +179,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             flat_gentype = {k: (~np.isnan(v[cut])*gentype[cut]).flatten() for k, v in variables.items()}
             flat_weight = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
 
+            print('variables:', flat_variables)
+            print('gentype:', flat_gentype)
+            print('weight:', flat_weight)
+            print()
             for histname, h in hout.items():
                 if not isinstance(h, hist.Hist):
                     continue
@@ -392,80 +205,16 @@ class AnalysisProcessor(processor.ProcessorABC):
             weights = processor.Weights(len(events))
 
             wgentype = {
-                '''
-                'bb' : (
-                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                ~leading_fj.isTbcq &
-                ~leading_fj.isTbqq &
-                ~leading_fj.isZcc &
-                ~(leading_fj.isTcq | leading_fj.isWcq) &
-                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                leading_fj.isbb
-                ).sum(),
-                'bc' : (
-                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                ~leading_fj.isTbcq &
-                ~leading_fj.isTbqq &
-                ~leading_fj.isZcc &
-                ~(leading_fj.isTcq | leading_fj.isWcq) &
-                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                ~leading_fj.isbb &
-                (leading_fj.isTbc | (leading_fj.isb & leading_fj.isc))
-                ).sum(),
-                'b' : (
-                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                ~leading_fj.isTbcq &
-                ~leading_fj.isTbqq &
-                ~leading_fj.isZcc &
-                ~(leading_fj.isTcq | leading_fj.isWcq) &
-                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                ~leading_fj.isbb &
-                ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
-                (leading_fj.isTbq | leading_fj.isb)
-                ).sum(),
-                'cc' : (
-                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                ~leading_fj.isTbcq &
-                ~leading_fj.isTbqq &
-                ~leading_fj.isZcc &
-                ~(leading_fj.isTcq | leading_fj.isWcq) &
-                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                ~leading_fj.isbb &
-                ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
-                ~(leading_fj.isTbq | leading_fj.isb) &
-                leading_fj.iscc
-                ).sum(),
-                'c' : (
-                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                ~leading_fj.isTbcq &
-                ~leading_fj.isTbqq &
-                ~leading_fj.isZcc &
-                ~(leading_fj.isTcq | leading_fj.isWcq) &
-                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                ~leading_fj.isbb &
-                ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
-                ~(leading_fj.isTbq | leading_fj.isb) &
-                ~leading_fj.iscc &
-                leading_fj.isc
-                ).sum(),
-                'other' : (
-                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                ~leading_fj.isTbcq &
-                ~leading_fj.isTbqq &
-                ~leading_fj.isZcc &
-                ~(leading_fj.isTcq | leading_fj.isWcq) &
-                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                ~leading_fj.isbb &
-                ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
-                ~(leading_fj.isTbq | leading_fj.isb) &
-                ~leading_fj.iscc &
-                ~leading_fj.isc
-                ).sum(),
-                '''
+                'bb' : ( leading_fj.isbb).sum(),
+                #'bc' : ( ~leading_fj.isbb & (leading_fj.isb & leading_fj.isc) ).sum(),
+                'b'  : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & leading_fj.isb ).sum(),
+                'cc' : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & ~leading_fj.isb & leading_fj.iscc ).sum(),
+                'c'  : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & ~leading_fj.isb & ~leading_fj.iscc & leading_fj.isc ).sum(),
+                'other' : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & ~leading_fj.isb & ~leading_fj.iscc & ~leading_fj.isc ).sum(),
             }
             vgentype=np.zeros(events.size, dtype=np.int)
-            #for gentype in self._gentype_map.keys():
-            #    vgentype += self._gentype_map[gentype]*wgentype[gentype]
+            for gentype in self._gentype_map.keys():
+                vgentype += self._gentype_map[gentype]*wgentype[gentype]
 
             if not isFilled:
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
