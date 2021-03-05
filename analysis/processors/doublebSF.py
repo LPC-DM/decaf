@@ -30,7 +30,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         self._gentype_map = {
             'bb':       1,
-            'bc':       2,
+            #'bc':       2,
             'b':        3,
             'cc' :      4,
             'c':        5,
@@ -41,6 +41,21 @@ class AnalysisProcessor(processor.ProcessorABC):
             '2016': 0.53,
             '2017': 0.61,
             '2018': 0.65
+        }
+
+        self._btagmu_triggers = {
+            '2016': [
+                'BTagMu_AK4Jet300_Mu5',
+                'BTagMu_AK8Jet300_Mu5'
+                ],
+            '2017': [
+                'BTagMu_AK4Jet300_Mu5',
+                'BTagMu_AK8Jet300_Mu5'
+                ],
+            '2018': [
+                'BTagMu_AK4Jet300_Mu5',
+                'BTagMu_AK8Jet300_Mu5'
+                ]
         }
 
         self._corrections = corrections
@@ -58,6 +73,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1)
+            ),
+            'btagJP': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('btagJP','btagJP',100,0,5)
             ),
         })
 
@@ -170,7 +191,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         isFilled = False
 
         variables = {
-            'ZHbbvsQCD':              leading_fj.ZHbbvsQCD,
+            'ZHbbvsQCD': leading_fj.ZHbbvsQCD,
+            'btagJP':    leading_fj.btagJP
         }
         print('Variables:',variables.keys())
 
@@ -179,10 +201,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             flat_gentype = {k: (~np.isnan(v[cut])*gentype[cut]).flatten() for k, v in variables.items()}
             flat_weight = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
 
-            print('variables:', flat_variables)
-            print('gentype:', flat_gentype)
-            print('weight:', flat_weight)
-            print()
+            #print('variables:', flat_variables)
+            #print('gentype:', flat_gentype)
+            #print('weight:', flat_weight)
+            #print()
             for histname, h in hout.items():
                 if not isinstance(h, hist.Hist):
                     continue
