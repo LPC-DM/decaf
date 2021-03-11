@@ -29,12 +29,17 @@ class AnalysisProcessor(processor.ProcessorABC):
         self._xsec = xsec
 
         self._gentype_map = {
-            'bb':       1,
+            #'bb':       1,
             #'bc':       2,
-            'b':        3,
-            'cc' :      4,
-            'c':        5,
-            'other':    6
+            #'b':        3,
+            #'cc' :      4,
+            #'c':        5,
+            #'other':    6
+            'bb':       0,
+            'b':        1,
+            'cc' :      2,
+            'c':        3,
+            'other':    4
         }
 
         self._ZHbbvsQCDwp = {
@@ -78,7 +83,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
-                hist.Bin('btagJP','btagJP',100,0,5)
+                hist.Bin('btagJP','btagJP', 25, 0, 1)
             ),
         })
 
@@ -227,12 +232,16 @@ class AnalysisProcessor(processor.ProcessorABC):
             weights = processor.Weights(len(events))
 
             wgentype = {
-                'bb' : ( leading_fj.isbb).sum(),
+                'bb' : (leading_fj.isbb).sum(),
+                'b'  : ( ~leading_fj.isbb & leading_fj.isb ).sum(),
+                'cc' : ( ~leading_fj.isbb & ~leading_fj.isb & leading_fj.iscc ).sum(),
+                'c'  : ( ~leading_fj.isbb & ~leading_fj.isb & ~leading_fj.iscc & leading_fj.isc ).sum(),
+                'other' : ( ~leading_fj.isbb & ~leading_fj.isb & ~leading_fj.iscc & ~leading_fj.isc ).sum(),
                 #'bc' : ( ~leading_fj.isbb & (leading_fj.isb & leading_fj.isc) ).sum(),
-                'b'  : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & leading_fj.isb ).sum(),
-                'cc' : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & ~leading_fj.isb & leading_fj.iscc ).sum(),
-                'c'  : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & ~leading_fj.isb & ~leading_fj.iscc & leading_fj.isc ).sum(),
-                'other' : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & ~leading_fj.isb & ~leading_fj.iscc & ~leading_fj.isc ).sum(),
+                #'b'  : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & leading_fj.isb ).sum(),
+                #'cc' : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & ~leading_fj.isb & leading_fj.iscc ).sum(),
+                #'c'  : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & ~leading_fj.isb & ~leading_fj.iscc & leading_fj.isc ).sum(),
+                #'other' : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & ~leading_fj.isb & ~leading_fj.iscc & ~leading_fj.isc ).sum(),
             }
             vgentype=np.zeros(events.size, dtype=np.int)
             for gentype in self._gentype_map.keys():
