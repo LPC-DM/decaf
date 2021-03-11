@@ -1,2 +1,2 @@
-combineCards.py wmcr2016failrecoil1=wmcr2016failrecoil1.txt > wmcr2016failrecoil1_combined.txt
-text2workspace.py wmcr2016failrecoil1_combined.txt
+combineCards.py sr2016failrecoil1=sr2016failrecoil1.txt > sr2016failrecoil1_combined.txt
+text2workspace.py sr2016failrecoil1_combined.txt
