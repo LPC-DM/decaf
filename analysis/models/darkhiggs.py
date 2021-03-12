@@ -364,7 +364,7 @@ def model(year, recoil, category):
                 for i in range(sr_ttObservable.nbins)
             ]
         )
-        sr_ttBinYields = sr_ttTemplate[0] * (1 + (10./np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
+        sr_ttBinYields = sr_ttTemplate[0] * (1 + (100./np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
 
         '''
         sr_ttBinYields = np.array(  # one nuisance per mass shape bin in pass                                              
