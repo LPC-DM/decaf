@@ -358,13 +358,13 @@ def model(year, recoil, category):
                 rl.IndependentParameter(                                                                                                                                     
                     "sr" + year + "_tt_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i,
                     0,
-                    -100.,
-                    100.,
+                    #-100.,
+                    #100.,
                 )
                 for i in range(sr_ttObservable.nbins)
             ]
         )
-        sr_ttBinYields = sr_ttTemplate[0] * (1 + (100./np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
+        sr_ttBinYields = sr_ttTemplate[0] * (1 + (1000./np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
 
         '''
         sr_ttBinYields = np.array(  # one nuisance per mass shape bin in pass                                              
