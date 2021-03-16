@@ -352,19 +352,24 @@ def model(year, recoil, category):
 
     if category == "pass" and recoil<4:
         #if not (year=='2016'): sr_ttMC.autoMCStats()
+        sigmascale={
+            '2016': 1000,
+            '2017': 1000,
+            '2018': 10
+        }
         sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
         sr_ttParameters = np.array(
             [
                 rl.IndependentParameter(                                                                                                                                     
                     "sr" + year + "_tt_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i,
                     0,
-                    -1000.,
-                    1000.,
+                    -1*sigmascale[year],
+                    sigmascale[year],
                 )
                 for i in range(sr_ttObservable.nbins)
             ]
         )
-        sr_ttBinYields = sr_ttTemplate[0] * (1 + (1000./np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
+        sr_ttBinYields = sr_ttTemplate[0] * (1 + (sigmascale[year]/np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
 
         '''
         sr_ttBinYields = np.array(  # one nuisance per mass shape bin in pass                                              
