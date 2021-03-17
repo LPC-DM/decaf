@@ -85,6 +85,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('btagJP','btagJP', 25, 0, 1)
             ),
+            'tau21': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('tau21','tau21', 25, 0, 1)
+            ),
         })
 
     @property
@@ -190,14 +196,15 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('fj_mass', (leading_fj.msd_corr.sum() < 80) ) ## optionally also <130
         selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
-        selection.add('mu_pt', (leading_mu.pt.max() > 7) )
-        selection.add('pt_ratio', (leading_mu.pt.max()/leading_fj.pt.max() < 0.7) )
+        #selection.add('mu_pt', (leading_mu.pt.max() > 7) )
+        #selection.add('pt_ratio', (leading_mu.pt.max()/leading_fj.pt.max() < 0.7) )
 
         isFilled = False
 
         variables = {
             'ZHbbvsQCD': leading_fj.ZHbbvsQCD,
-            'btagJP':    leading_fj.btagJP
+            'btagJP':    leading_fj.btagJP,
+            'tau21':    leading_fj.tau21
         }
         print('Variables:',variables.keys())
 
@@ -226,8 +233,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
                 isFilled=True
             cut = selection.all()
-            #fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
-            fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), np.ones(events.size, dtype=np.int))
+            fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
+            #fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), np.ones(events.size, dtype=np.int))
         else:
             weights = processor.Weights(len(events))
 
@@ -252,8 +259,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 isFilled=True
 
             cut = selection.all()
-            #fill(dataset, vgentype, weights.weight(), cut)
-            fill(dataset, vgentype, weights.weight(), np.ones(events.size, dtype=np.int))
+            fill(dataset, vgentype, weights.weight(), cut)
+            #fill(dataset, vgentype, weights.weight(), np.ones(events.size, dtype=np.int))
 
         return hout
 
