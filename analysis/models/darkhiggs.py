@@ -355,7 +355,7 @@ def model(year, recoil, category):
         sigmascale={
             '2016': 1000,
             '2017': 1000,
-            '2018': 10
+            '2018': 100
         }
         sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
         sr_ttParameters = np.array(
