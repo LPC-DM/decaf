@@ -91,6 +91,18 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('tau21','tau21', 25, 0, 1)
             ),
+            'fjmass': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('fjmass','AK15 Jet Mass',30,0,300)
+            ),
+            'fj1pt': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('fj1pt','AK15 Leading SoftDrop Jet Pt',[340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
+            ),
         })
 
     @property
@@ -192,7 +204,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
         #leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
-        selection.add('fj_pt', (leading_fj.pt.max() > 350) )
+        selection.add('fj_pt', (leading_fj.sd.pt.max() > 350) )
         selection.add('fj_mass', (leading_fj.msd_corr.sum() < 80) ) ## optionally also <130
         selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
@@ -204,7 +216,9 @@ class AnalysisProcessor(processor.ProcessorABC):
         variables = {
             'ZHbbvsQCD': leading_fj.ZHbbvsQCD,
             'btagJP':    leading_fj.btagJP,
-            'tau21':    leading_fj.tau21
+            'tau21':     leading_fj.tau21,
+            'fjmass':    leading_fj.msd_corr,
+            'fj1pt':     leading_fj.sd.pt
         }
         print('Variables:',variables.keys())
 
@@ -214,9 +228,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             flat_weight = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
 
             #print('variables:', flat_variables)
-            #print('gentype:', flat_gentype)
-            #print('weight:', flat_weight)
-            #print()
             for histname, h in hout.items():
                 if not isinstance(h, hist.Hist):
                     continue
@@ -232,7 +243,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             if not isFilled:
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
                 isFilled=True
-            cut = selection.all()
+            #cut = selection.all()
+            cut = selection.all(*selection.names)
             fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
             #fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), np.ones(events.size, dtype=np.int))
         else:
@@ -244,11 +256,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'cc' : ( ~leading_fj.isbb & ~leading_fj.isb & leading_fj.iscc ).sum(),
                 'c'  : ( ~leading_fj.isbb & ~leading_fj.isb & ~leading_fj.iscc & leading_fj.isc ).sum(),
                 'other' : ( ~leading_fj.isbb & ~leading_fj.isb & ~leading_fj.iscc & ~leading_fj.isc ).sum(),
-                #'bc' : ( ~leading_fj.isbb & (leading_fj.isb & leading_fj.isc) ).sum(),
-                #'b'  : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & leading_fj.isb ).sum(),
-                #'cc' : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & ~leading_fj.isb & leading_fj.iscc ).sum(),
-                #'c'  : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & ~leading_fj.isb & ~leading_fj.iscc & leading_fj.isc ).sum(),
-                #'other' : ( ~leading_fj.isbb & ~(leading_fj.isb & leading_fj.isc) & ~leading_fj.isb & ~leading_fj.iscc & ~leading_fj.isc ).sum(),
             }
             vgentype=np.zeros(events.size, dtype=np.int)
             for gentype in self._gentype_map.keys():
@@ -258,9 +265,11 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
                 isFilled=True
 
-            cut = selection.all()
-            fill(dataset, vgentype, weights.weight(), cut)
-            #fill(dataset, vgentype, weights.weight(), np.ones(events.size, dtype=np.int))
+            cut = selection.all(*selection.names)
+            if 'QCD' in dataset:
+                fill(dataset, vgentype, weights.weight(), cut)
+            else:
+                fill(dataset, vgentype, weights.weight(), np.ones(events.size, dtype=np.int))
 
         return hout
 
