@@ -167,10 +167,10 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj['XvsQCD'] = probX/(probX+probQCD)
         fj['tau21'] = fj.tau2/fj.tau1
         fj_good = fj[fj.isgood.astype(np.bool)]
-        fj_clean = fj_good[fj_good.isclean.astype(np.bool)]
+        #fj_clean = fj_good[fj_good.isclean.astype(np.bool)]
         fj_ntot = fj.counts
         fj_ngood = fj_good.counts
-        fj_nclean = fj_clean.counts
+        #fj_nclean = fj_clean.counts
 
         ###
         #Calculating weights
@@ -195,9 +195,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==2)&(gen[gen.isc].counts>0)
             fj['iscc']  = cmatch
 
-            gen['ismu'] = (abs(gen.pdgId)==13) & gen.hasFlags(['fromHardProcess', 'isLastCopy'])
-            jetgenmu = fj.sd.cross(gen[gen.ismu], nested=True)
-            mumatch = ((jetgenmu.i0.delta_r(jetgenmu.i1) < 0.4).sum() == 2) & (gen[gen.ismu].counts == 2)
+            jetmu = fj.subjets.cross(mu, nested=True)
+            mumatch = ((jetmu.i0.delta_r(jetmu.i1) < 0.4).sum() == 2) & (mu.counts == 2)
             fj['ismu'] = mumatch
 
         ###
@@ -206,7 +205,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
-        #leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
+        leading_fj = leading_fj[leading_fj.ismu.astype(np.bool)]
 
         #### ak15 jet selection ####
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 350) )
@@ -216,7 +215,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         #### muon selection ####
         selection.add('mu_pt', (leading_mu.pt.max() > 7) )
         selection.add('mu_fj_pt_ratio', (leading_mu.pt.max()/leading_fj.sd.pt.max() < 0.7) )
-        selection.add('mu_match', (leading_fj.ismu.sum()) )
+        #selection.add('mu_match', (leading_fj.ismu.sum() > 0) )
 
         isFilled = False
 
