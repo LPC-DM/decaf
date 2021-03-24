@@ -137,21 +137,21 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
 
         mu = events.Muon
-        mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.looseId,self._year)
-        mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.tightId,self._year)
-        mu['T'] = TVector2Array.from_polar(mu.pt, mu.phi)
-        mu_loose=mu[mu.isloose.astype(np.bool)]
-        mu_tight=mu[mu.istight.astype(np.bool)]
-        mu_ntot = mu.counts
-        mu_nloose = mu_loose.counts
-        mu_ntight = mu_tight.counts
         leading_mu = mu[mu.pt.argmax()]
-        leading_mu = leading_mu[leading_mu.istight.astype(np.bool)]
+        #mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.looseId,self._year)
+        #mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.tightId,self._year)
+        #mu['T'] = TVector2Array.from_polar(mu.pt, mu.phi)
+        #mu_loose=mu[mu.isloose.astype(np.bool)]
+        #mu_tight=mu[mu.istight.astype(np.bool)]
+        #mu_ntot = mu.counts
+        #mu_nloose = mu_loose.counts
+        #mu_ntight = mu_tight.counts
+        #leading_mu = leading_mu[leading_mu.istight.astype(np.bool)]
 
         fj = events.AK15Puppi
         fj['sd'] = fj.subjets.sum()
         #fj['isclean'] =~match(fj.sd,pho_loose,1.5)&~match(fj.sd,mu_loose,1.5)&~match(fj.sd,e_loose,1.5)
-        fj['isclean'] =match(fj.sd,mu_loose,0.4)
+        #fj['isclean'] =match(fj.sd,mu_loose,0.4)
         fj['isgood'] = isGoodFatJet(fj.sd.pt, fj.sd.eta, fj.jetId)
         fj['T'] = TVector2Array.from_polar(fj.pt, fj.phi)
         fj['msd_raw'] = (fj.subjets * (1 - fj.subjets.rawFactor)).sum().mass
@@ -195,7 +195,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==2)&(gen[gen.isc].counts>0)
             fj['iscc']  = cmatch
 
-
+            gen['ismu'] = (abs(gen.pdgId)==13) & gen.hasFlags(['fromHardProcess', 'isLastCopy'])
+            jetgenmu = fj.sd.cross(gen[gen.ismu], nested=True)
+            mumatch = ((jetgenmu.i0.delta_r(jetgenmu.i1) < 0.4).sum() == 2) & (gen[gen.ismu].counts == 2)
+            fj['ismu'] = mumatch
 
         ###
         # Selections
@@ -204,12 +207,16 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
         #leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
+
+        #### ak15 jet selection ####
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 350) )
         selection.add('fj_mass', (leading_fj.msd_corr.sum() < 80) ) ## optionally also <130
         selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
-        #selection.add('mu_pt', (leading_mu.pt.max() > 7) )
-        #selection.add('pt_ratio', (leading_mu.pt.max()/leading_fj.pt.max() < 0.7) )
+        #### muon selection ####
+        selection.add('mu_pt', (leading_mu.pt.max() > 7) )
+        selection.add('mu_fj_pt_ratio', (leading_mu.pt.max()/leading_fj.sd.pt.max() < 0.7) )
+        selection.add('mu_match', (leading_fj.ismu.sum()) )
 
         isFilled = False
 
