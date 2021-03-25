@@ -138,39 +138,17 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         mu = events.Muon
         leading_mu = mu[mu.pt.argmax()]
-        #mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.looseId,self._year)
-        #mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.tightId,self._year)
-        #mu['T'] = TVector2Array.from_polar(mu.pt, mu.phi)
-        #mu_loose=mu[mu.isloose.astype(np.bool)]
-        #mu_tight=mu[mu.istight.astype(np.bool)]
-        #mu_ntot = mu.counts
-        #mu_nloose = mu_loose.counts
-        #mu_ntight = mu_tight.counts
-        #leading_mu = leading_mu[leading_mu.istight.astype(np.bool)]
 
         fj = events.AK15Puppi
         fj['sd'] = fj.subjets.sum()
-        #fj['isclean'] =~match(fj.sd,pho_loose,1.5)&~match(fj.sd,mu_loose,1.5)&~match(fj.sd,e_loose,1.5)
-        #fj['isclean'] =match(fj.sd,mu_loose,0.4)
         fj['isgood'] = isGoodFatJet(fj.sd.pt, fj.sd.eta, fj.jetId)
         fj['T'] = TVector2Array.from_polar(fj.pt, fj.phi)
         fj['msd_raw'] = (fj.subjets * (1 - fj.subjets.rawFactor)).sum().mass
         fj['msd_corr'] = fj.msd_raw * awkward.JaggedArray.fromoffsets(fj.array.offsets, np.maximum(1e-5, get_msd_weight(fj.sd.pt.flatten(),fj.sd.eta.flatten())))
-        fj['rho'] = 2 * np.log(fj.msd_corr / fj.sd.pt)
         probQCD=fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
         probZHbb=fj.probZbb+fj.probHbb
         fj['ZHbbvsQCD'] = probZHbb/(probZHbb+probQCD)
-        probT=fj.probTbcq+fj.probTbqq
-        fj['TvsQCD'] = probT/(probT+probQCD)
-        probV=fj.probWcq+fj.probWqq+fj.probZbb+fj.probZcc+fj.probZqq
-        probX=probZHbb+probV
-        fj['XvsQCD'] = probX/(probX+probQCD)
         fj['tau21'] = fj.tau2/fj.tau1
-        fj_good = fj[fj.isgood.astype(np.bool)]
-        #fj_clean = fj_good[fj_good.isclean.astype(np.bool)]
-        fj_ntot = fj.counts
-        fj_ngood = fj_good.counts
-        #fj_nclean = fj_clean.counts
 
         ###
         #Calculating weights
@@ -196,8 +174,17 @@ class AnalysisProcessor(processor.ProcessorABC):
             fj['iscc']  = cmatch
 
             jetmu = fj.subjets.cross(mu, nested=True)
-            mumatch = ((jetmu.i0.delta_r(jetmu.i1) < 0.4).sum() == 2) & (mu.counts == 2)
-            fj['ismu'] = mumatch
+            mumatch = (mu.counts>0) & (jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7)
+
+            #print('Checking shapes of mumatch and subjets arrays')
+            #print(mumatch.shape, fj.subjets.shape, '\n')
+            print('muon:', mu[:2])
+            print('mumatch:', mumatch[:2])
+            print('jetmu:', jetmu[:2])
+            print('subjets:', fj.subjets[:2])
+
+            fj.subjets['withmu']=mumatch
+
 
         ###
         # Selections
@@ -205,17 +192,16 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
-        leading_fj = leading_fj[leading_fj.ismu.astype(np.bool)]
 
         #### ak15 jet selection ####
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 350) )
         selection.add('fj_mass', (leading_fj.msd_corr.sum() < 80) ) ## optionally also <130
         selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
+        selection.add('subjets', (leading_fj.subjets.counts == 2) )
 
         #### muon selection ####
         selection.add('mu_pt', (leading_mu.pt.max() > 7) )
-        selection.add('mu_fj_pt_ratio', (leading_mu.pt.max()/leading_fj.sd.pt.max() < 0.7) )
-        #selection.add('mu_match', (leading_fj.ismu.sum() > 0) )
+        selection.add('mumatch', (leading_fj.subjets.withmu==True).all().sum() == 1)
 
         isFilled = False
 
