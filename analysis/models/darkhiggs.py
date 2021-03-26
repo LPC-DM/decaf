@@ -284,11 +284,11 @@ def rhalphabeth2D(process, tf_dataResidual_params, ord1, ord2):
     tf_params = qcdeff * tf_MCtempl_params_final * tf_dataResidual_params
     return tf_params
 
-def model(year, recoil, category):
+def model(year, recoil, category, s):
 
     model_id = year + category + "recoil" + str(recoil)
     print(model_id)
-    model = rl.Model("darkhiggs" + model_id)
+    model = rl.Model(str(s) + model_id)
 
     ###
     ###
@@ -448,20 +448,16 @@ def model(year, recoil, category):
     addBtagSyst(background, recoil, "QCD", "sr", sr_qcd, category)
     sr.addSample(sr_qcd)
 
-    for s in signal["sr"].identifiers("process"):
-        if "Mz500_mhs90_Mdm250" not in str(s):
-            continue
-        print("Signal is:", str(s))
-        sr_signalTemplate = template(signal, s, "nominal", recoil, "sr", category)
-        sr_signal = rl.TemplateSample(
-            ch_name + "_" + str(s), rl.Sample.SIGNAL, sr_signalTemplate
-        )
-        sr_signal.setParamEffect(lumi, 1.027)
-        sr_signal.setParamEffect(trig_met, 1.02)
-        sr_signal.setParamEffect(veto_tau, 1.03)
-        sr_signal.setParamEffect(jec, 1.05)
-        addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category)
-        sr.addSample(sr_signal)
+    sr_signalTemplate = template(signal, s, "nominal", recoil, "sr", category)
+    sr_signal = rl.TemplateSample(
+        ch_name + "_" + str(s), rl.Sample.SIGNAL, sr_signalTemplate
+    )
+    sr_signal.setParamEffect(lumi, 1.027)
+    sr_signal.setParamEffect(trig_met, 1.02)
+    sr_signal.setParamEffect(veto_tau, 1.03)
+    sr_signal.setParamEffect(jec, 1.05)
+    addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category)
+    sr.addSample(sr_signal)
 
     ###
     # End of SR
@@ -1339,15 +1335,21 @@ if __name__ == "__main__":
             sr_wjetsFail
         )
 
-        for category in ["pass", "fail"]:
-            with open(
-                "data/darkhiggs-"
-                + year
-                + "-"
-                + category
-                + "-recoil"
-                + str(recoilbin)
-                + ".model",
-                "wb",
-            ) as fout:
-                pickle.dump(model(year, recoilbin, category), fout, protocol=2)
+        for s in signal["sr"].identifiers("process"):
+            #if "Mz500_mhs90_Mdm250" not in str(s):
+            #    continue
+            print("Signal is:", str(s))
+            for category in ["pass", "fail"]:
+                with open(
+                        "data/"
+                        + str(s).replace('_','')
+                        + "-"
+                        + year
+                        + "-"
+                        + category
+                        + "-recoil"
+                        + str(recoilbin)
+                        + ".model",
+                        "wb",
+                ) as fout:
+                    pickle.dump(model(year, recoilbin, category, s), fout, protocol=2)
