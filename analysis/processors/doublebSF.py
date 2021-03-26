@@ -173,17 +173,12 @@ class AnalysisProcessor(processor.ProcessorABC):
             cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==2)&(gen[gen.isc].counts>0)
             fj['iscc']  = cmatch
 
-            jetmu = fj.subjets.cross(mu, nested=True)
+            ##### axis=1 option to remove boundaries between fat-jets ####
+            jetmu = fj.subjets.flatten(axis=1).cross(mu, nested=True)
             mumatch = (mu.counts>0) & (jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7)
+            print(mumatch)
 
-            #print('Checking shapes of mumatch and subjets arrays')
-            #print(mumatch.shape, fj.subjets.shape, '\n')
-            print('muon:', mu[:2])
-            print('mumatch:', mumatch[:2])
-            print('jetmu:', jetmu[:2])
-            print('subjets:', fj.subjets[:2])
-
-            fj.subjets['withmu']=mumatch
+            #fj.subjets['withmu']=mumatch
 
 
         ###
@@ -201,7 +196,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         #### muon selection ####
         selection.add('mu_pt', (leading_mu.pt.max() > 7) )
-        selection.add('mumatch', (leading_fj.subjets.withmu==True).all().sum() == 1)
+        #selection.add('mumatch', (leading_fj.subjets.withmu==True).all().sum() == 1)
 
         isFilled = False
 
@@ -212,7 +207,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             'fjmass':    leading_fj.msd_corr,
             'fj1pt':     leading_fj.sd.pt
         }
-        print('Variables:',variables.keys())
+        #print('Variables:',variables.keys())
 
         def fill(dataset, gentype, weight, cut):
             flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
