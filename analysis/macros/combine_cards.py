@@ -36,6 +36,7 @@ for card in txt_list:
     command=command+binname+'='+filename.split('/')[len(filename.split('/'))-1]+' '
 command=command+' > datacards/'+new_folder+'/'+new_folder+'.txt'  
 os.system(command)
+os.system('rm *.txt')
 for rootfile in root_list:
     if options.analysis+'-' not in rootfile: continue
     filename=rootfile.strip()
