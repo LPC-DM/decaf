@@ -173,12 +173,14 @@ class AnalysisProcessor(processor.ProcessorABC):
             cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==2)&(gen[gen.isc].counts>0)
             fj['iscc']  = cmatch
 
-            ##### axis=1 option to remove boundaries between fat-jets ####
+            ##### axis=1 option to remove boundaries between fat-jets #####
+            ##### copy (match jaggedness and shape of array) the contents of crossed array into the fat-jet subjets #####
+            #jetmu = fj.subjets.copy(content = fj.subjets.flatten(axis=1).cross(mu, nested=True).content)
             jetmu = fj.subjets.flatten(axis=1).cross(mu, nested=True)
-            mumatch = (mu.counts>0) & (jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7)
-            print(mumatch)
+            mumatch = (mu.counts>0) & (( (jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7) ).sum() == 1)
 
-            #fj.subjets['withmu']=mumatch
+            #mask = awkward.JaggedArray.fromoffsets(fj.subjets.flatten(axis=1).offsets, mumatch.flatten())
+            #print(mask)
 
 
         ###
