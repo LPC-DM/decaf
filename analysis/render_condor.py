@@ -21,7 +21,7 @@ parser.add_option('-x', '--copy', action='store_true', dest='copy')
 os.system('mkdir -p datacards/condor/out datacards/condor/err datacards/condor/log')
 
 if options.tar:
-    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../../../cmssw.tgz --exclude=\'src/decaf/analysis/hists/*\' ../../../../CMSSW_10_2_13')
+    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../../../cmssw.tgz --exclude=\'src/decaf/analysis/hists/*\' --exclude=\'src/decaf/analysis/plots/*\' ../../../../CMSSW_10_2_13')
 
 if options.cluster == 'kisti':
     if options.copy:
@@ -39,6 +39,7 @@ Log = datacards/condor/log/$ENV(MODEL)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(MODEL).tgz=$ENV(PWD)/datacards/$ENV(MODEL).tgz"
 Arguments = $ENV(MODEL) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
+JobBatchName = $ENV(MODEL)
 request_memory = 8000
 request_cpus = 16
 Queue 1"""

@@ -1,0 +1,2 @@
+combineCards.py sr2016failrecoil3=sr2016failrecoil3.txt > sr2016failrecoil3_combined.txt
+text2workspace.py sr2016failrecoil3_combined.txt

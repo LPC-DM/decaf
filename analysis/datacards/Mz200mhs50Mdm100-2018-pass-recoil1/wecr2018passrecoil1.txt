@@ -1,0 +1,62 @@
+# Datacard for <Channel (wecr2018passrecoil1) instance at 0x2b5836958310> generated on 2021-03-27 08:01:09.532149
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 6 # number of samples minus 1
+kmax 25 # number of nuisance parameters
+shapes * wecr2018passrecoil1 wecr2018passrecoil1.root wecr2018passrecoil1:wecr2018passrecoil1_$PROCESS wecr2018passrecoil1:wecr2018passrecoil1_$PROCESS_$SYSTEMATIC
+bin wecr2018passrecoil1
+observation 3678.000
+bin                 wecr2018passrecoil1  wecr2018passrecoil1  wecr2018passrecoil1  wecr2018passrecoil1  wecr2018passrecoil1  wecr2018passrecoil1  wecr2018passrecoil1
+process                           wjets                   tt                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
+process                               1                    2                    3                    4                    5                    6                    7
+rate                              1.000                1.000              490.250               11.146               73.265               10.845               11.000
+btag2018 lnN                          -                    -                0.994                0.996                0.997                0.995                    -
+ew12018 lnN                           -                    -                    -                1.001                    -                    -                    -
+ew2Z2018 lnN                          -                    -                    -                1.005                    -                    -                    -
+ew3Z2018 lnN                          -                    -                    -                1.001                    -                    -                    -
+hbb_norm2018 lnN                      -                    -                    -                    -                    -                1.200                    -
+id_e2018 lnN                          -                    -                1.020                1.020                1.020                1.020                1.020
+jec2018 lnN                           -                    -                1.050                1.050                1.050                1.050                1.050
+lumi2018 lnN                          -                    -                1.027                1.027                1.027                1.027                1.027
+mix2018 lnN                           -                    -                    -                1.003                    -                    -                    -
+qcd12018 lnN                          -                    -                    -                1.059                    -                    -                    -
+qcd22018 lnN                          -                    -                    -                0.966                    -                    -                    -
+qcde_norm2018 lnN                     -                    -                    -                    -                    -                    -                2.000
+reco_e2018 lnN                        -                    -                1.020                1.020                1.020                1.020                1.020
+st_norm2018 lnN                       -                    -                1.200                    -                    -                    -                    -
+trig_e2018 lnN                        -                    -                1.010                1.010                1.010                1.010                1.010
+veto_tau2018 lnN                      -                    -                1.030                1.030                1.030                1.030                1.030
+vv_norm2018 lnN                       -                    -                    -                    -                1.200                    -                    -
+zjets_norm2018 lnN                    -                    -                    -                1.400                    -                    -                    -
+ew2W2018 param 0 1
+ew3W2018 param 0 1
+qcd32018 param 0 1
+trig_met2018 param 0 1
+tt_norm2018 param 0 1
+whf_fraction2018 param 0 1
+wjets_norm2018 param 0 1
+sr2018_tt_pass_recoil1_mass0 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_tt_pass_recoil1_mass1 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_tt_pass_recoil1_mass10 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_tt_pass_recoil1_mass2 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_tt_pass_recoil1_mass3 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_tt_pass_recoil1_mass4 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_tt_pass_recoil1_mass5 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_tt_pass_recoil1_mass6 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_tt_pass_recoil1_mass7 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_tt_pass_recoil1_mass8 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_tt_pass_recoil1_mass9 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_zjets_fail_recoil1_mass0 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_zjets_fail_recoil1_mass1 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_zjets_fail_recoil1_mass10 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_zjets_fail_recoil1_mass2 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_zjets_fail_recoil1_mass3 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_zjets_fail_recoil1_mass4 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_zjets_fail_recoil1_mass5 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_zjets_fail_recoil1_mass6 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_zjets_fail_recoil1_mass7 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_zjets_fail_recoil1_mass8 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+sr2018_zjets_fail_recoil1_mass9 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+tf_dataResidualW2018_recoil_par0_fjmass_par0 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+tf_dataResidualW2018_recoil_par0_fjmass_par1 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+tf_dataResidualW2018_recoil_par1_fjmass_par0 extArg wecr2018passrecoil1.root:wecr2018passrecoil1
+tf_dataResidualW2018_recoil_par1_fjmass_par1 extArg wecr2018passrecoil1.root:wecr2018passrecoil1

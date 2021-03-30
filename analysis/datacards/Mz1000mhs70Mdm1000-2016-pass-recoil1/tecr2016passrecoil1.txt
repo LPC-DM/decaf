@@ -1,0 +1,45 @@
+# Datacard for <Channel (tecr2016passrecoil1) instance at 0x2acfc536da90> generated on 2021-03-27 08:09:32.562094
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 6 # number of samples minus 1
+kmax 23 # number of nuisance parameters
+shapes * tecr2016passrecoil1 tecr2016passrecoil1.root tecr2016passrecoil1:tecr2016passrecoil1_$PROCESS tecr2016passrecoil1:tecr2016passrecoil1_$PROCESS_$SYSTEMATIC
+bin tecr2016passrecoil1
+observation 1424.000
+bin                 tecr2016passrecoil1  tecr2016passrecoil1  tecr2016passrecoil1  tecr2016passrecoil1  tecr2016passrecoil1  tecr2016passrecoil1  tecr2016passrecoil1
+process                              tt              wjetsMC                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
+process                               1                    2                    3                    4                    5                    6                    7
+rate                              1.000               77.367              142.481                1.161                8.790                2.430               11.000
+btag2016 lnN                          -                1.038                1.017                1.036                1.037                1.012                    -
+ew12016 lnN                           -                1.001                    -                1.000                    -                    -                    -
+ew2W2016 lnN                          -                1.006                    -                    -                    -                    -                    -
+ew2Z2016 lnN                          -                    -                    -                1.005                    -                    -                    -
+ew3W2016 lnN                          -                1.001                    -                    -                    -                    -                    -
+ew3Z2016 lnN                          -                    -                    -                1.001                    -                    -                    -
+hbb_norm2016 lnN                      -                    -                    -                    -                    -                1.200                    -
+id_e2016 lnN                          -                1.020                1.020                1.020                1.020                1.020                1.020
+jec2016 lnN                           -                1.050                1.050                1.050                1.050                1.050                1.050
+lumi2016 lnN                          -                1.027                1.027                1.027                1.027                1.027                1.027
+mix2016 lnN                           -                1.007                    -                1.003                    -                    -                    -
+qcd12016 lnN                          -                1.072                    -                1.062                    -                    -                    -
+qcd22016 lnN                          -                0.954                    -                0.963                    -                    -                    -
+qcd32016 lnN                          -                1.010                    -                    -                    -                    -                    -
+qcde_norm2016 lnN                     -                    -                    -                    -                    -                    -                2.000
+reco_e2016 lnN                        -                1.020                1.020                1.020                1.020                1.020                1.020
+st_norm2016 lnN                       -                    -                1.200                    -                    -                    -                    -
+trig_e2016 lnN                        -                1.010                1.010                1.010                1.010                1.010                1.010
+veto_tau2016 lnN                      -                1.030                1.030                1.030                1.030                1.030                1.030
+vv_norm2016 lnN                       -                    -                    -                    -                1.200                    -                    -
+zjets_norm2016 lnN                    -                1.400                    -                1.400                    -                    -                    -
+trig_met2016 param 0 1
+tt_norm2016 param 0 1
+sr2016_tt_pass_recoil1_mass0 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass1 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass10 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass2 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass3 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass4 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass5 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass6 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass7 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass8 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass9 extArg tecr2016passrecoil1.root:tecr2016passrecoil1

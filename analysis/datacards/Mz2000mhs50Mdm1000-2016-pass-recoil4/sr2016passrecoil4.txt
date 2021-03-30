@@ -1,0 +1,48 @@
+# Datacard for <Channel (sr2016passrecoil4) instance at 0x2b77b83d0110> generated on 2021-03-27 08:58:21.848335
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 8 # number of samples minus 1
+kmax 22 # number of nuisance parameters
+shapes * sr2016passrecoil4 sr2016passrecoil4.root sr2016passrecoil4:sr2016passrecoil4_$PROCESS sr2016passrecoil4:sr2016passrecoil4_$PROCESS_$SYSTEMATIC
+bin sr2016passrecoil4
+observation 257.000
+bin                     sr2016passrecoil4  sr2016passrecoil4  sr2016passrecoil4  sr2016passrecoil4  sr2016passrecoil4  sr2016passrecoil4  sr2016passrecoil4  sr2016passrecoil4  sr2016passrecoil4
+process              Mz2000_mhs50_Mdm1000              zjets            wjetsMC               ttMC               stMC           dyjetsMC               vvMC              hbbMC              qcdMC
+process                                 0                  1                  2                  3                  4                  5                  6                  7                  8
+rate                              884.119              1.000             36.925             27.656              7.034              3.113             23.422              1.613             11.000
+btag2016 lnN                        0.996                  -              0.994              0.999              0.994              0.994              0.996              0.997                  -
+ew12016 lnN                             -                  -              1.005                  -                  -              1.002                  -                  -                  -
+ew2W2016 lnN                            -                  -              1.013                  -                  -                  -                  -                  -                  -
+ew2Z2016 lnN                            -                  -                  -                  -                  -              1.007                  -                  -                  -
+ew3W2016 lnN                            -                  -              1.004                  -                  -                  -                  -                  -                  -
+ew3Z2016 lnN                            -                  -                  -                  -                  -              1.005                  -                  -                  -
+hbb_norm2016 lnN                        -                  -                  -                  -                  -                  -                  -              1.200                  -
+jec2016 lnN                         1.050                  -              1.050              1.050              1.050              1.050              1.050              1.050              1.050
+lumi2016 lnN                        1.027                  -              1.027              1.027              1.027              1.027              1.027              1.027              1.027
+mix2016 lnN                             -                  -              1.014                  -                  -              1.004                  -                  -                  -
+qcd12016 lnN                            -                  -              1.081                  -                  -              1.054                  -                  -                  -
+qcd22016 lnN                            -                  -              1.001                  -                  -              0.997                  -                  -                  -
+qcd32016 lnN                            -                  -              1.007                  -                  -                  -                  -                  -                  -
+qcdsig_norm2016 lnN                     -                  -                  -                  -                  -                  -                  -                  -              2.000
+st_norm2016 lnN                         -                  -                  -                  -              1.200                  -                  -                  -                  -
+trig_met2016 lnN                    1.020                  -              1.020              1.020              1.020              1.020              1.020              1.020              1.020
+tt_norm2016 lnN                         -                  -                  -              1.200                  -                  -                  -                  -                  -
+veto_tau2016 lnN                    1.030                  -              1.030              1.030              1.030              1.030              1.030              1.030              1.030
+vv_norm2016 lnN                         -                  -                  -                  -                  -                  -              1.200                  -                  -
+wjets_norm2016 lnN                      -                  -              1.400                  -                  -                  -                  -                  -                  -
+zjets_norm2016 lnN                      -                  -                  -                  -                  -              1.400                  -                  -                  -
+zhf_fraction2016 param 0 1
+sr2016_zjets_fail_recoil4_mass0 extArg sr2016passrecoil4.root:sr2016passrecoil4
+sr2016_zjets_fail_recoil4_mass1 extArg sr2016passrecoil4.root:sr2016passrecoil4
+sr2016_zjets_fail_recoil4_mass10 extArg sr2016passrecoil4.root:sr2016passrecoil4
+sr2016_zjets_fail_recoil4_mass2 extArg sr2016passrecoil4.root:sr2016passrecoil4
+sr2016_zjets_fail_recoil4_mass3 extArg sr2016passrecoil4.root:sr2016passrecoil4
+sr2016_zjets_fail_recoil4_mass4 extArg sr2016passrecoil4.root:sr2016passrecoil4
+sr2016_zjets_fail_recoil4_mass5 extArg sr2016passrecoil4.root:sr2016passrecoil4
+sr2016_zjets_fail_recoil4_mass6 extArg sr2016passrecoil4.root:sr2016passrecoil4
+sr2016_zjets_fail_recoil4_mass7 extArg sr2016passrecoil4.root:sr2016passrecoil4
+sr2016_zjets_fail_recoil4_mass8 extArg sr2016passrecoil4.root:sr2016passrecoil4
+sr2016_zjets_fail_recoil4_mass9 extArg sr2016passrecoil4.root:sr2016passrecoil4
+tf_dataResidualZ2016_recoil_par0_fjmass_par0 extArg sr2016passrecoil4.root:sr2016passrecoil4
+tf_dataResidualZ2016_recoil_par0_fjmass_par1 extArg sr2016passrecoil4.root:sr2016passrecoil4
+tf_dataResidualZ2016_recoil_par1_fjmass_par0 extArg sr2016passrecoil4.root:sr2016passrecoil4
+tf_dataResidualZ2016_recoil_par1_fjmass_par1 extArg sr2016passrecoil4.root:sr2016passrecoil4

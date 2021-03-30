@@ -1,0 +1,45 @@
+# Datacard for <Channel (tecr2017passrecoil2) instance at 0x2b431f119250> generated on 2021-03-27 07:48:13.322070
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 6 # number of samples minus 1
+kmax 23 # number of nuisance parameters
+shapes * tecr2017passrecoil2 tecr2017passrecoil2.root tecr2017passrecoil2:tecr2017passrecoil2_$PROCESS tecr2017passrecoil2:tecr2017passrecoil2_$PROCESS_$SYSTEMATIC
+bin tecr2017passrecoil2
+observation 787.000
+bin                 tecr2017passrecoil2  tecr2017passrecoil2  tecr2017passrecoil2  tecr2017passrecoil2  tecr2017passrecoil2  tecr2017passrecoil2  tecr2017passrecoil2
+process                              tt              wjetsMC                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
+process                               1                    2                    3                    4                    5                    6                    7
+rate                              1.000               49.502              108.885                0.887               10.302                1.594               10.006
+btag2017 lnN                          -                1.048                1.026                1.049                1.037                1.021                1.042
+ew12017 lnN                           -                1.001                    -                1.001                    -                    -                    -
+ew2W2017 lnN                          -                1.008                    -                    -                    -                    -                    -
+ew2Z2017 lnN                          -                    -                    -                1.006                    -                    -                    -
+ew3W2017 lnN                          -                1.001                    -                    -                    -                    -                    -
+ew3Z2017 lnN                          -                    -                    -                1.003                    -                    -                    -
+hbb_norm2017 lnN                      -                    -                    -                    -                    -                1.200                    -
+id_e2017 lnN                          -                1.020                1.020                1.020                1.020                1.020                1.020
+jec2017 lnN                           -                1.050                1.050                1.050                1.050                1.050                1.050
+lumi2017 lnN                          -                1.027                1.027                1.027                1.027                1.027                1.027
+mix2017 lnN                           -                1.009                    -                1.004                    -                    -                    -
+qcd12017 lnN                          -                1.075                    -                1.067                    -                    -                    -
+qcd22017 lnN                          -                0.965                    -                0.970                    -                    -                    -
+qcd32017 lnN                          -                1.009                    -                    -                    -                    -                    -
+qcde_norm2017 lnN                     -                    -                    -                    -                    -                    -                2.000
+reco_e2017 lnN                        -                1.020                1.020                1.020                1.020                1.020                1.020
+st_norm2017 lnN                       -                    -                1.200                    -                    -                    -                    -
+trig_e2017 lnN                        -                1.010                1.010                1.010                1.010                1.010                1.010
+veto_tau2017 lnN                      -                1.030                1.030                1.030                1.030                1.030                1.030
+vv_norm2017 lnN                       -                    -                    -                    -                1.200                    -                    -
+zjets_norm2017 lnN                    -                1.400                    -                1.400                    -                    -                    -
+trig_met2017 param 0 1
+tt_norm2017 param 0 1
+sr2017_tt_pass_recoil2_mass0 extArg tecr2017passrecoil2.root:tecr2017passrecoil2
+sr2017_tt_pass_recoil2_mass1 extArg tecr2017passrecoil2.root:tecr2017passrecoil2
+sr2017_tt_pass_recoil2_mass10 extArg tecr2017passrecoil2.root:tecr2017passrecoil2
+sr2017_tt_pass_recoil2_mass2 extArg tecr2017passrecoil2.root:tecr2017passrecoil2
+sr2017_tt_pass_recoil2_mass3 extArg tecr2017passrecoil2.root:tecr2017passrecoil2
+sr2017_tt_pass_recoil2_mass4 extArg tecr2017passrecoil2.root:tecr2017passrecoil2
+sr2017_tt_pass_recoil2_mass5 extArg tecr2017passrecoil2.root:tecr2017passrecoil2
+sr2017_tt_pass_recoil2_mass6 extArg tecr2017passrecoil2.root:tecr2017passrecoil2
+sr2017_tt_pass_recoil2_mass7 extArg tecr2017passrecoil2.root:tecr2017passrecoil2
+sr2017_tt_pass_recoil2_mass8 extArg tecr2017passrecoil2.root:tecr2017passrecoil2
+sr2017_tt_pass_recoil2_mass9 extArg tecr2017passrecoil2.root:tecr2017passrecoil2

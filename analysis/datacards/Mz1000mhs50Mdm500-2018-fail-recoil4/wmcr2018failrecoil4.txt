@@ -1,0 +1,45 @@
+# Datacard for <Channel (wmcr2018failrecoil4) instance at 0x2b3ab58438d0> generated on 2021-03-27 08:17:11.171515
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 6 # number of samples minus 1
+kmax 23 # number of nuisance parameters
+shapes * wmcr2018failrecoil4 wmcr2018failrecoil4.root wmcr2018failrecoil4:wmcr2018failrecoil4_$PROCESS wmcr2018failrecoil4:wmcr2018failrecoil4_$PROCESS_$SYSTEMATIC
+bin wmcr2018failrecoil4
+observation 2051.000
+bin                 wmcr2018failrecoil4  wmcr2018failrecoil4  wmcr2018failrecoil4  wmcr2018failrecoil4  wmcr2018failrecoil4  wmcr2018failrecoil4  wmcr2018failrecoil4
+process                           wjets                 ttMC                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
+process                               1                    2                    3                    4                    5                    6                    7
+rate                              1.000              103.253               27.020               21.373              122.599                2.206               64.201
+btag2018 lnN                          -                0.989                0.972                0.993                0.994                0.990                0.996
+ew12018 lnN                           -                    -                    -                1.004                    -                    -                    -
+ew2Z2018 lnN                          -                    -                    -                1.009                    -                    -                    -
+ew3Z2018 lnN                          -                    -                    -                1.008                    -                    -                    -
+hbb_norm2018 lnN                      -                    -                    -                    -                    -                1.200                    -
+id_mu2018 lnN                         -                1.020                1.020                1.020                1.020                1.020                1.020
+iso_mu2018 lnN                        -                1.020                1.020                1.020                1.020                1.020                1.020
+jec2018 lnN                           -                1.050                1.050                1.050                1.050                1.050                1.050
+lumi2018 lnN                          -                1.027                1.027                1.027                1.027                1.027                1.027
+mix2018 lnN                           -                    -                    -                1.005                    -                    -                    -
+qcd12018 lnN                          -                    -                    -                1.068                    -                    -                    -
+qcd22018 lnN                          -                    -                    -                1.005                    -                    -                    -
+qcdmu_norm2018 lnN                    -                    -                    -                    -                    -                    -                2.000
+st_norm2018 lnN                       -                    -                1.200                    -                    -                    -                    -
+trig_met2018 lnN                      -                1.020                1.020                1.020                1.020                1.020                1.020
+tt_norm2018 lnN                       -                1.200                    -                    -                    -                    -                    -
+veto_tau2018 lnN                      -                1.030                1.030                1.030                1.030                1.030                1.030
+vv_norm2018 lnN                       -                    -                    -                    -                1.200                    -                    -
+zjets_norm2018 lnN                    -                    -                    -                1.400                    -                    -                    -
+ew2W2018 param 0 1
+ew3W2018 param 0 1
+qcd32018 param 0 1
+wjets_norm2018 param 0 1
+sr2018_zjets_fail_recoil4_mass0 extArg wmcr2018failrecoil4.root:wmcr2018failrecoil4
+sr2018_zjets_fail_recoil4_mass1 extArg wmcr2018failrecoil4.root:wmcr2018failrecoil4
+sr2018_zjets_fail_recoil4_mass10 extArg wmcr2018failrecoil4.root:wmcr2018failrecoil4
+sr2018_zjets_fail_recoil4_mass2 extArg wmcr2018failrecoil4.root:wmcr2018failrecoil4
+sr2018_zjets_fail_recoil4_mass3 extArg wmcr2018failrecoil4.root:wmcr2018failrecoil4
+sr2018_zjets_fail_recoil4_mass4 extArg wmcr2018failrecoil4.root:wmcr2018failrecoil4
+sr2018_zjets_fail_recoil4_mass5 extArg wmcr2018failrecoil4.root:wmcr2018failrecoil4
+sr2018_zjets_fail_recoil4_mass6 extArg wmcr2018failrecoil4.root:wmcr2018failrecoil4
+sr2018_zjets_fail_recoil4_mass7 extArg wmcr2018failrecoil4.root:wmcr2018failrecoil4
+sr2018_zjets_fail_recoil4_mass8 extArg wmcr2018failrecoil4.root:wmcr2018failrecoil4
+sr2018_zjets_fail_recoil4_mass9 extArg wmcr2018failrecoil4.root:wmcr2018failrecoil4
