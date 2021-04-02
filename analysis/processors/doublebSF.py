@@ -175,21 +175,21 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             ##### axis=1 option to remove boundaries between fat-jets #####
             ##### copy (match jaggedness and shape of array) the contents of crossed array into the fat-jet subjets #####
+            ##### we're not use copy since it keeps the original array type #####
+            ##### fj.subjets is a TLorentzVectorArray #####
             jetmu = fj.subjets.flatten(axis=1).cross(mu, nested=True)
             mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7)).sum() > 0
 
             ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
+            ##### Using the offset function to copy contents not the type of the array #####
             step1 = fj.subjets.flatten()
-            step2 = step1.copy(content = mask.content)
-            step3 = fj.subjets.copy(content = step2)
+            step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
+            step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
 
-            print(step3)
-            print()
-
-            #print('original:', fj.subjets)
-            #print('maksed:', fj[(step3.sum()==2)])
-            #print(step3.sum())
-            #print()
+            fj_mask = (fj.subjets.counts==2) & (step3.all())
+            print('masked:', fj[fj_mask])
+            #step2 = step1.copy(content = mask.content)
+            #step3 = fj.subjets.copy(content = step2)
 
 
 
@@ -204,11 +204,9 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 350) )
         selection.add('fj_mass', (leading_fj.msd_corr.sum() < 80) ) ## optionally also <130
         selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
-        selection.add('subjets', (leading_fj.subjets.counts == 2) )
 
         #### muon selection ####
         selection.add('mu_pt', (leading_mu.pt.max() > 7) )
-        #selection.add('mumatch', (leading_fj.subjets.withmu==True).all().sum() == 1)
 
         isFilled = False
 
