@@ -175,12 +175,22 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             ##### axis=1 option to remove boundaries between fat-jets #####
             ##### copy (match jaggedness and shape of array) the contents of crossed array into the fat-jet subjets #####
-            #jetmu = fj.subjets.copy(content = fj.subjets.flatten(axis=1).cross(mu, nested=True).content)
             jetmu = fj.subjets.flatten(axis=1).cross(mu, nested=True)
-            mumatch = (mu.counts>0) & (( (jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7) ).sum() == 1)
+            mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7)).sum() > 0
 
-            #mask = awkward.JaggedArray.fromoffsets(fj.subjets.flatten(axis=1).offsets, mumatch.flatten())
-            #print(mask)
+            ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
+            step1 = fj.subjets.flatten()
+            step2 = step1.copy(content = mask.content)
+            step3 = fj.subjets.copy(content = step2)
+
+            print(step3)
+            print()
+
+            #print('original:', fj.subjets)
+            #print('maksed:', fj[(step3.sum()==2)])
+            #print(step3.sum())
+            #print()
+
 
 
         ###
