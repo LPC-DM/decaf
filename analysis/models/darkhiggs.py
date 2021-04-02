@@ -326,7 +326,20 @@ def model(year, recoil, category, s):
         sr_wjetsMC = sr_wjetsMCPass
         sr_wjets = sr_wjetsPass
         if not (recoil<4):
-            sr_wjets = sr_wjetsMCPass
+            sr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "sr", category, read_sumw2=True)
+            sr_wjetsMC = rl.TemplateSample(
+                "sr" + model_id + "_wjetsMC",
+                rl.Sample.BACKGROUND,
+                sr_wjetsTemplate
+            )
+            sr_wjetsMC.setParamEffect(lumi, 1.027)
+            sr_wjetsMC.setParamEffect(trig_met, 1.02)
+            sr_wjetsMC.setParamEffect(veto_tau, 1.03)
+            sr_wjetsMC.setParamEffect(wjetsMC_norm, 1.4)
+            sr_wjetsMC.setParamEffect(jec, 1.05)
+            addBtagSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
+            addVJetsSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
+            sr_wjets = sr_wjetsMC
     else:
         sr_wjetsMC = sr_wjetsMCFail
         sr_wjets = sr_wjetsFail
@@ -344,13 +357,13 @@ def model(year, recoil, category, s):
         sr_ttTemplate
     )
     sr_ttMC.setParamEffect(lumi, 1.027)
-    sr_ttMC.setParamEffect(tt_norm, 1.2)
     sr_ttMC.setParamEffect(trig_met, 1.02)
     sr_ttMC.setParamEffect(veto_tau, 1.03)
     sr_ttMC.setParamEffect(jec, 1.05)
     addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
 
     if category == "pass" and recoil<4:
+        sr_ttMC.setParamEffect(tt_norm, 1.2)
         #if not (year=='2016'): sr_ttMC.autoMCStats()
         sigmascale={
             '2016': 1000,
@@ -371,24 +384,12 @@ def model(year, recoil, category, s):
         )
         sr_ttBinYields = sr_ttTemplate[0] * (1 + (sigmascale[year]/np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
 
-        '''
-        sr_ttBinYields = np.array(  # one nuisance per mass shape bin in pass                                              
-            [
-                rl.IndependentParameter(
-                    "sr" + year + "_tt_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i,
-                    b,
-                    0,
-                    sr_ttTemplate[0].max() * 10,
-                )
-                for i, b in enumerate(sr_ttTemplate[0])
-            ]
-        )
-        '''
         sr_tt = rl.ParametericSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields
         )
         sr.addSample(sr_tt)
     else:
+        sr_ttMC.setParamEffect(ttMC_norm, 1.2)
         sr.addSample(sr_ttMC)
 
     ###
@@ -412,7 +413,7 @@ def model(year, recoil, category, s):
     sr_dyjets.setParamEffect(lumi, 1.027)
     sr_dyjets.setParamEffect(trig_met, 1.02)
     sr_dyjets.setParamEffect(veto_tau, 1.03)
-    sr_dyjets.setParamEffect(zjets_norm, 1.4)
+    sr_dyjets.setParamEffect(zjetsMC_norm, 1.4)
     sr_dyjets.setParamEffect(jec, 1.05)
     addBtagSyst(background, recoil, "DY+jets", "sr", sr_dyjets, category)
     addVJetsSyst(background, recoil, "DY+jets", "sr", sr_dyjets, category)
@@ -504,7 +505,6 @@ def model(year, recoil, category, s):
     addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
 
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
-    #wmcr_wjetsTransferFactor = wmcr_wjetsTemplate[0] / sr_wjetsTemplate[0]
     wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
     wmcr.addSample(wmcr_wjets)
 
@@ -521,13 +521,13 @@ def model(year, recoil, category, s):
     wmcr_ttMC.setParamEffect(lumi, 1.027)
     wmcr_ttMC.setParamEffect(trig_met, 1.02)
     wmcr_ttMC.setParamEffect(veto_tau, 1.03)
-    wmcr_ttMC.setParamEffect(tt_norm, 1.2)
     wmcr_ttMC.setParamEffect(jec, 1.05)
     wmcr_ttMC.setParamEffect(id_mu, 1.02)
     wmcr_ttMC.setParamEffect(iso_mu, 1.02)
     addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
     
     if category == "pass":
+        wmcr_ttMC.setParamEffect(tt_norm, 1.2)
         #if not (year=='2016'): wmcr_ttMC.autoMCStats()
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wmcr_tt = rl.TransferFactorSample(
@@ -535,6 +535,7 @@ def model(year, recoil, category, s):
         )
         wmcr.addSample(wmcr_tt)
     else:
+        wmcr_ttMC.setParamEffect(ttMC_norm, 1.2)
         wmcr.addSample(wmcr_ttMC)
         
     ###
@@ -562,7 +563,7 @@ def model(year, recoil, category, s):
     wmcr_dyjets.setParamEffect(lumi, 1.027)
     wmcr_dyjets.setParamEffect(trig_met, 1.02)
     wmcr_dyjets.setParamEffect(veto_tau, 1.03)
-    wmcr_dyjets.setParamEffect(zjets_norm, 1.4)
+    wmcr_dyjets.setParamEffect(zjetsMC_norm, 1.4)
     wmcr_dyjets.setParamEffect(jec, 1.05)
     wmcr_dyjets.setParamEffect(id_mu, 1.02)
     wmcr_dyjets.setParamEffect(iso_mu, 1.02)
@@ -657,7 +658,6 @@ def model(year, recoil, category, s):
     addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
 
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
-    #wecr_wjetsTransferFactor = wecr_wjetsTemplate[0] / sr_wjetsTemplate[0]
     wecr_wjets = rl.TransferFactorSample(
         ch_name + "_wjets", rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets
     )
@@ -676,13 +676,13 @@ def model(year, recoil, category, s):
     wecr_ttMC.setParamEffect(lumi, 1.027)
     wecr_ttMC.setParamEffect(trig_e, 1.01)
     wecr_ttMC.setParamEffect(veto_tau, 1.03)
-    wecr_ttMC.setParamEffect(tt_norm, 1.2)
     wecr_ttMC.setParamEffect(jec, 1.05)
     wecr_ttMC.setParamEffect(id_e, 1.02)
     wecr_ttMC.setParamEffect(reco_e, 1.02)
     addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category)
 
     if category == "pass":
+        wecr_ttMC.setParamEffect(tt_norm, 1.2)
         #if not (year=='2016'): wecr_ttMC.autoMCStats()
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wecr_tt = rl.TransferFactorSample(
@@ -690,6 +690,7 @@ def model(year, recoil, category, s):
         )
         wecr.addSample(wecr_tt)
     else:
+        wecr_ttMC.setParamEffect(ttMC_norm, 1.2)
         wecr.addSample(wecr_ttMC)
 
     ###
@@ -717,7 +718,7 @@ def model(year, recoil, category, s):
     wecr_dyjets.setParamEffect(lumi, 1.027)
     wecr_dyjets.setParamEffect(trig_e, 1.01)
     wecr_dyjets.setParamEffect(veto_tau, 1.03)
-    wecr_dyjets.setParamEffect(zjets_norm, 1.4)
+    wecr_dyjets.setParamEffect(zjetsMC_norm, 1.4)
     wecr_dyjets.setParamEffect(jec, 1.05)
     wecr_dyjets.setParamEffect(id_e, 1.02)
     wecr_dyjets.setParamEffect(reco_e, 1.02)
@@ -826,7 +827,7 @@ def model(year, recoil, category, s):
     tmcr_wjets.setParamEffect(lumi, 1.027)
     tmcr_wjets.setParamEffect(trig_met, 1.02)
     tmcr_wjets.setParamEffect(veto_tau, 1.03)
-    tmcr_wjets.setParamEffect(zjets_norm, 1.4)
+    tmcr_wjets.setParamEffect(wjetsMC_norm, 1.4)
     tmcr_wjets.setParamEffect(jec, 1.05)
     tmcr_wjets.setParamEffect(id_mu, 1.02)
     tmcr_wjets.setParamEffect(iso_mu, 1.02)
@@ -855,7 +856,7 @@ def model(year, recoil, category, s):
     tmcr_dyjets.setParamEffect(lumi, 1.027)
     tmcr_dyjets.setParamEffect(trig_met, 1.02)
     tmcr_dyjets.setParamEffect(veto_tau, 1.03)
-    tmcr_dyjets.setParamEffect(zjets_norm, 1.4)
+    tmcr_dyjets.setParamEffect(zjetsMC_norm, 1.4)
     tmcr_dyjets.setParamEffect(jec, 1.05)
     tmcr_dyjets.setParamEffect(id_mu, 1.02)
     tmcr_dyjets.setParamEffect(iso_mu, 1.02)
@@ -964,7 +965,7 @@ def model(year, recoil, category, s):
     tecr_wjets.setParamEffect(lumi, 1.027)
     tecr_wjets.setParamEffect(trig_e, 1.01)
     tecr_wjets.setParamEffect(veto_tau, 1.03)
-    tecr_wjets.setParamEffect(zjets_norm, 1.4)
+    tecr_wjets.setParamEffect(wjetsMC_norm, 1.4)
     tecr_wjets.setParamEffect(jec, 1.05)
     tecr_wjets.setParamEffect(id_e, 1.02)
     tecr_wjets.setParamEffect(reco_e, 1.02)
@@ -993,7 +994,7 @@ def model(year, recoil, category, s):
     tecr_dyjets.setParamEffect(lumi, 1.027)
     tecr_dyjets.setParamEffect(trig_e, 1.01)
     tecr_dyjets.setParamEffect(veto_tau, 1.03)
-    tecr_dyjets.setParamEffect(zjets_norm, 1.4)
+    tecr_dyjets.setParamEffect(zjetsMC_norm, 1.4)
     tecr_dyjets.setParamEffect(jec, 1.05)
     tecr_dyjets.setParamEffect(id_e, 1.02)
     tecr_dyjets.setParamEffect(reco_e, 1.02)
@@ -1094,16 +1095,9 @@ if __name__ == "__main__":
     ###
     ###
     lumi = rl.NuisanceParameter("lumi" + year, "lnN")
-    qcdpho_norm = rl.NuisanceParameter("qcdpho_norm" + year, "lnN")
-    qcde_norm = rl.NuisanceParameter("qcde_norm" + year, "lnN")
-    qcdmu_norm = rl.NuisanceParameter("qcdmu_norm" + year, "lnN")
-    qcdsig_norm = rl.NuisanceParameter("qcdsig_norm" + year, "lnN")
-    st_norm = rl.NuisanceParameter("st_norm" + year, "lnN")
-    tt_norm = rl.NuisanceParameter("tt_norm" + year, "lnN")
-    vv_norm = rl.NuisanceParameter("vv_norm" + year, "lnN")
-    hbb_norm = rl.NuisanceParameter("hbb_norm" + year, "lnN")
-    zjets_norm = rl.NuisanceParameter("zjets_norm" + year, "lnN")
-    wjets_norm = rl.NuisanceParameter("wjets_norm" + year, "lnN")
+    zjets_norm = rl.NuisanceParameter("zjets_norm", "lnN")
+    wjets_norm = rl.NuisanceParameter("wjets_norm", "lnN")
+    tt_norm = rl.NuisanceParameter("tt_norm", "lnN")
     id_e = rl.NuisanceParameter("id_e" + year, "lnN")
     id_mu = rl.NuisanceParameter("id_mu" + year, "lnN")
     id_pho = rl.NuisanceParameter("id_pho" + year, "lnN")
@@ -1115,21 +1109,21 @@ if __name__ == "__main__":
     veto_tau = rl.NuisanceParameter("veto_tau" + year, "lnN")
     jec = rl.NuisanceParameter("jec" + year, "lnN")
     btag = rl.NuisanceParameter("btag" + year, "lnN")  # AK4 btag
-    ew1 = rl.NuisanceParameter("ew1" + year, "lnN")
+    ew1 = rl.NuisanceParameter("ew1", "lnN")
     #ew2G = rl.NuisanceParameter("ew2G", "lnN")
-    ew2W = rl.NuisanceParameter("ew2W" + year, "lnN")
-    ew2Z = rl.NuisanceParameter("ew2Z" + year, "lnN")
+    ew2W = rl.NuisanceParameter("ew2W", "lnN")
+    ew2Z = rl.NuisanceParameter("ew2Z", "lnN")
     #ew3G = rl.NuisanceParameter("ew3G", "lnN")
-    ew3W = rl.NuisanceParameter("ew3W" + year, "lnN")
-    ew3Z = rl.NuisanceParameter("ew3Z" + year, "lnN")
-    mix = rl.NuisanceParameter("mix" + year, "lnN")
+    ew3W = rl.NuisanceParameter("ew3W", "lnN")
+    ew3Z = rl.NuisanceParameter("ew3Z", "lnN")
+    mix = rl.NuisanceParameter("mix", "lnN")
     #muF = rl.NuisanceParameter("muF", "lnN")
     #muR = rl.NuisanceParameter("muR", "lnN")
-    qcd1 = rl.NuisanceParameter("qcd1" + year, "lnN")
-    qcd2 = rl.NuisanceParameter("qcd2" + year, "lnN")
-    qcd3 = rl.NuisanceParameter("qcd3" + year, "lnN")
-    whf_fraction = rl.NuisanceParameter("whf_fraction" + year, "lnN")
-    zhf_fraction = rl.NuisanceParameter("zhf_fraction" + year, "lnN")
+    qcd1 = rl.NuisanceParameter("qcd1", "lnN")
+    qcd2 = rl.NuisanceParameter("qcd2", "lnN")
+    qcd3 = rl.NuisanceParameter("qcd3", "lnN")
+    whf_fraction = rl.NuisanceParameter("whf_fraction", "lnN")
+    zhf_fraction = rl.NuisanceParameter("zhf_fraction", "lnN")
     #ghf_fraction = rl.NuisanceParameter("ghf_fraction", "shapeN")
 
     ###
@@ -1340,6 +1334,17 @@ if __name__ == "__main__":
             #    continue
             print("Signal is:", str(s))
             for category in ["pass", "fail"]:
+                qcdpho_norm = rl.NuisanceParameter("qcdpho_norm" + year + category, "lnN")
+                qcde_norm = rl.NuisanceParameter("qcde_norm" + year + category, "lnN")
+                qcdmu_norm = rl.NuisanceParameter("qcdmu_norm" + year + category, "lnN")
+                qcdsig_norm = rl.NuisanceParameter("qcdsig_norm" + year + category, "lnN")
+                st_norm = rl.NuisanceParameter("st_norm" + year + category, "lnN")
+                ttMC_norm = rl.NuisanceParameter("tt_norm" + year + category, "lnN")
+                vv_norm = rl.NuisanceParameter("vv_norm" + year + category, "lnN")
+                hbb_norm = rl.NuisanceParameter("hbb_norm" + year + category, "lnN")
+                wjetsMC_norm = rl.NuisanceParameter("wjets_norm" + year + category, "lnN")
+                zjetsMC_norm = rl.NuisanceParameter("zjets_norm" + year + category, "lnN")
+                    
                 with open(
                         "data/"
                         + str(s).replace('_','')
