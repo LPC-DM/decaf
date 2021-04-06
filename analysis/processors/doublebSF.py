@@ -186,10 +186,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
             step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
 
-            fj_mask = (fj.subjets.counts==2) & (step3.all())
-            print('masked:', fj[fj_mask])
-            #step2 = step1.copy(content = mask.content)
-            #step3 = fj.subjets.copy(content = step2)
+            fj['withmu'] = (fj.subjets.counts==2) & (step3.all())
 
 
 
@@ -200,10 +197,16 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
 
+        fj_good = fj[fj.isgood.astype(np.bool)]
+        fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
+        fj_nwithmu = fj_withmu.counts
+
+
         #### ak15 jet selection ####
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 350) )
         selection.add('fj_mass', (leading_fj.msd_corr.sum() < 80) ) ## optionally also <130
         selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
+        selection.add('fjCoupledMu', (fj_nwithmu > 0) )
 
         #### muon selection ####
         selection.add('mu_pt', (leading_mu.pt.max() > 7) )
