@@ -1175,7 +1175,7 @@ if __name__ == "__main__":
             rl.Sample.BACKGROUND,
             sr_zhfMCFailTemplate
         )
-        sr_zhfMCFail.setParamEffect(zhf_fraction, 1.4)
+        sr_zhfMCFail.setParamEffect(zhf_fraction, 2.)
         #sr_zhfMCFail.autoMCStats()
 
         sr_zlfMCFailTemplate = template(background, "Z+LF", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
@@ -1184,7 +1184,7 @@ if __name__ == "__main__":
             rl.Sample.BACKGROUND,
             sr_zlfMCFailTemplate
         )
-        sr_zlfMCFail.setParamEffect(zhf_fraction, 0.95)
+        sr_zlfMCFail.setParamEffect(zhf_fraction, 0.88)
         #sr_zlfMCFail.autoMCStats()
 
         sr_zjetsObservable = rl.Observable("fjmass", sr_zjetsMCFailTemplate[1])
@@ -1227,7 +1227,7 @@ if __name__ == "__main__":
             rl.Sample.BACKGROUND,
             sr_whfMCFailTemplate
         )
-        sr_whfMCFail.setParamEffect(whf_fraction, 1.4)
+        sr_whfMCFail.setParamEffect(whf_fraction, 2.)
         #sr_whfMCFail.autoMCStats()
 
         sr_wlfMCFailTemplate = template(background, "W+LF", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
@@ -1236,7 +1236,7 @@ if __name__ == "__main__":
             rl.Sample.BACKGROUND,
             sr_wlfMCFailTemplate
         )
-        sr_wlfMCFail.setParamEffect(whf_fraction, 0.91)
+        sr_wlfMCFail.setParamEffect(whf_fraction, 0.78)
         #sr_wlfMCFail.autoMCStats()
 
         sr_wjetsFailTransferFactor = sr_wjetsMCFail.getExpectation() / sr_zjetsMCFail.getExpectation()
@@ -1268,7 +1268,7 @@ if __name__ == "__main__":
             rl.Sample.BACKGROUND,
             sr_zhfMCPassTemplate
         )
-        sr_zhfMCPass.setParamEffect(zhf_fraction, 1.4)
+        sr_zhfMCPass.setParamEffect(zhf_fraction, 2.)
         #sr_zhfMCPass.autoMCStats()
 
         sr_zlfMCPassTemplate = template(background, "Z+LF", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
@@ -1277,7 +1277,7 @@ if __name__ == "__main__":
             rl.Sample.BACKGROUND,
             sr_zlfMCPassTemplate
         )
-        sr_zlfMCPass.setParamEffect(zhf_fraction, 0.95)
+        sr_zlfMCPass.setParamEffect(zhf_fraction, 0.88)
         #sr_zlfMCPass.autoMCStats()
 
         tf_paramsZdeco = (sr_zlfMCPass.getExpectation()+sr_zhfMCPass.getExpectation()) / (sr_zlfMCFail.getExpectation()+sr_zhfMCFail.getExpectation())
@@ -1311,7 +1311,7 @@ if __name__ == "__main__":
             rl.Sample.BACKGROUND,
             sr_whfMCPassTemplate
         )
-        sr_whfMCPass.setParamEffect(whf_fraction, 1.4)
+        sr_whfMCPass.setParamEffect(whf_fraction, 2.)
         #sr_whfMCPass.autoMCStats()
 
         sr_wlfMCPassTemplate = template(background, "W+LF", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
@@ -1320,7 +1320,7 @@ if __name__ == "__main__":
             rl.Sample.BACKGROUND,
             sr_wlfMCPassTemplate
         )
-        sr_wlfMCPass.setParamEffect(whf_fraction, 0.91)
+        sr_wlfMCPass.setParamEffect(whf_fraction, 0.78)
         #sr_wlfMCPass.autoMCStats()
 
         tf_paramsWdeco = (sr_wlfMCPass.getExpectation()+sr_whfMCPass.getExpectation()) / (sr_wlfMCFail.getExpectation()+sr_whfMCFail.getExpectation())
