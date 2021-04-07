@@ -1,2 +1,0 @@
-combineCards.py sr2017failrecoil1=sr2017failrecoil1.txt > sr2017failrecoil1_combined.txt
-text2workspace.py sr2017failrecoil1_combined.txt
