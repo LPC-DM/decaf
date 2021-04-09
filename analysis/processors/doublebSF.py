@@ -29,12 +29,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         self._xsec = xsec
 
         self._gentype_map = {
-            #'bb':       1,
-            #'bc':       2,
-            #'b':        3,
-            #'cc' :      4,
-            #'c':        5,
-            #'other':    6
             'bb':       0,
             'b':        1,
             'cc' :      2,
@@ -83,13 +77,13 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
-                hist.Bin('btagJP','btagJP', 25, 0, 1)
+                hist.Bin('btagJP','btagJP', 30, 0, 2.5)
             ),
             'tau21': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
-                hist.Bin('tau21','tau21', 25, 0, 1)
+                hist.Bin('tau21','tau21', 20, 0, 1)
             ),
             'fjmass': hist.Hist(
                 'Events',
@@ -173,20 +167,21 @@ class AnalysisProcessor(processor.ProcessorABC):
             cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==2)&(gen[gen.isc].counts>0)
             fj['iscc']  = cmatch
 
-            ##### axis=1 option to remove boundaries between fat-jets #####
-            ##### copy (match jaggedness and shape of array) the contents of crossed array into the fat-jet subjets #####
-            ##### we're not use copy since it keeps the original array type #####
-            ##### fj.subjets is a TLorentzVectorArray #####
-            jetmu = fj.subjets.flatten(axis=1).cross(mu, nested=True)
-            mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7)).sum() > 0
+        ##### axis=1 option to remove boundaries between fat-jets #####
+        ##### copy (match jaggedness and shape of array) the contents of crossed array into the fat-jet subjets #####
+        ##### we're not use copy since it keeps the original array type #####
+        ##### fj.subjets is a TLorentzVectorArray #####
+        mu = mu[mu.isGlobal] ## Use a global muon for QCD events
+        jetmu = fj.subjets.flatten(axis=1).cross(mu, nested=True)
+        mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7)).sum() > 0
 
-            ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
-            ##### Using the offset function to copy contents not the type of the array #####
-            step1 = fj.subjets.flatten()
-            step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
-            step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
+        ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
+        ##### Using the offset function to copy contents not the type of the array #####
+        step1 = fj.subjets.flatten()
+        step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
+        step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
 
-            fj['withmu'] = (fj.subjets.counts==2) & (step3.all())
+        fj['withmu'] = (fj.subjets.counts==2) & (step3.all())
 
 
 
@@ -243,10 +238,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             if not isFilled:
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
                 isFilled=True
-            #cut = selection.all()
-            cut = selection.all(*selection.names)
-            fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
-            #fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), np.ones(events.size, dtype=np.int))
+            fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), np.ones(events.size, dtype=np.int))
         else:
             weights = processor.Weights(len(events))
 
