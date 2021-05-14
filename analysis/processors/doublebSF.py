@@ -67,6 +67,19 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('sumw', 'Weight value', [0.])
             ),
+            'cutflow': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('cutname', 'Cut name'),
+                hist.Bin('cut', 'Cut index', [0, 1, 2, 3, 4, 5, 6, 7, 8]),
+            ),
+            'template': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('btagJP','btagJP', 30, 0, 2.5),
+                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
+            ),
             'ZHbbvsQCD': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
@@ -230,6 +243,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                     continue
                 elif histname == 'sumw':
                     continue
+                elif histname == 'template':
+                    continue
                 else:
                     flat_variable = {histname: flat_variables[histname]}
                     h.fill(dataset=dataset, gentype=flat_gentype[histname], **flat_variable, weight=flat_weight[histname])
@@ -238,6 +253,14 @@ class AnalysisProcessor(processor.ProcessorABC):
             if not isFilled:
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
                 isFilled=True
+
+            ##### template for bb SF #####
+            hout['template'].fill(dataset=dataset,
+                    gentype=np.zeros(events.size, dtype=np.int),
+                    btagJP=leading_fj.btagJP.sum(),
+                    ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                    weight=np.ones(events.size)
+                    )
             fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), np.ones(events.size, dtype=np.int))
         else:
             weights = processor.Weights(len(events))
@@ -259,9 +282,35 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             cut = selection.all(*selection.names)
             if 'QCD' in dataset:
+                vcut=np.zeros(events.size, dtype=np.int)
+                allcuts = set()
+                ### cutflow fill
+                for i, icut in enumerate(selection.names):
+                    allcuts.add(icut)
+                    jcut = selection.all(*allcuts)
+                    vcut = (i+1)*jcut
+                    hout['cutflow'].fill(dataset=dataset, cutname=str(icut), cut=vcut, weight=weights.weight()*jcut)
+
+                ### other variables
                 fill(dataset, vgentype, weights.weight(), cut)
+
+                ##### template for bb SF #####
+                hout['template'].fill(dataset=dataset,
+                        gentype=vgentype,
+                        btagJP=leading_fj.btagJP.sum(),
+                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                        weight=weights.weight()*cut
+                        )
             else:
                 fill(dataset, vgentype, weights.weight(), np.ones(events.size, dtype=np.int))
+
+                ##### template for bb SF #####
+                hout['template'].fill(dataset=dataset,
+                        gentype=vgentype,
+                        btagJP=leading_fj.btagJP.sum(),
+                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                        weight=weights.weight()
+                        )
 
         return hout
 
