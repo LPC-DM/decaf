@@ -41,7 +41,7 @@ def template(dictionary, process, gentype, category, read_sumw2=False):
     return (output, binning, "btagJP")
 
 ### s: process in the signal region
-def model(year, btagJP, category, s):
+def model(year, category):
 
     model_id = year + category + "btagJP"
     model = rl.Model(str(s) + model_id)
