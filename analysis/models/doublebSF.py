@@ -20,6 +20,7 @@ rl.ParametericSample.PreferRooParametricHist = False
 category_map = {"pass": 1, "fail": 0}
 gentype_map = ['bb', 'b', 'cc', 'c', 'other']
 
+### category: pass/fail flag
 def template(dictionary, process, gentype, category, read_sumw2=False):
     histogram = dictionary[gentype].integrate("process", process)
     jp, sumw2 = histogram.values(sumw2=True)[()]
@@ -38,6 +39,58 @@ def template(dictionary, process, gentype, category, read_sumw2=False):
     if read_sumw2:
         return (output, binning, "btagJP", sumw2)
     return (output, binning, "btagJP")
+
+### s: process in the signal region
+def model(year, btagJP, category, s):
+
+    model_id = year + category + "btagJP"
+    model = rl.Model(str(s) + model_id)
+
+    ###
+    ###
+    # Signal region
+    ###
+    ###
+
+    ch_name = "sr" + model_id
+    sr = rl.Channel(ch_name)
+    model.addChannel(sr)
+
+    ###
+    # Add data distribution to the channel
+    ###
+
+    sr.setObservation(template(data, "BTagMu", "bb", category))
+
+    ###
+    # QCD sig process
+    ###
+
+    sr_genbb_Template = template(signal, "QCD", "bb", category)
+    sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
+    sr.addSample(sr_genbb)
+
+    ###
+    # QCD bkg processes
+    ###
+
+    sr_genb_Template = template(background, "QCD", "b", category)
+    sr_genb = rl.TemplateSample(ch_name + "_genb", rl.Sample.BACKGROUND, sr_genb_Template)
+    sr.addSample(sr_genb)
+
+    sr_genc_Template = template(background, "QCD", "c", category)
+    sr_genc = rl.TemplateSample(ch_name + "_genc", rl.Sample.BACKGROUND, sr_genc_Template)
+    sr.addSample(sr_genc)
+
+    sr_gencc_Template = template(background, "QCD", "cc", category)
+    sr_gencc = rl.TemplateSample(ch_name + "_gencc", rl.Sample.BACKGROUND, sr_gencc_Template)
+    sr.addSample(sr_gencc)
+
+    sr_genother_Template = template(background, "QCD", "other", category)
+    sr_genother = rl.TemplateSample(ch_name + "_genother", rl.Sample.BACKGROUND, sr_genother_Template)
+    sr.addSample(sr_genother)
+
+    return model
 
 if __name__ == "__main__":
     if not os.path.exists("datacards"):
