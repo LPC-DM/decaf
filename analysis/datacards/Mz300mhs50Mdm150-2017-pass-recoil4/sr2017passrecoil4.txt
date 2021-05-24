@@ -1,7 +1,7 @@
-# Datacard for <Channel (sr2017passrecoil4) instance at 0x2b5287f787d0> generated on 2021-04-08 01:41:54.025002
+# Datacard for <Channel (sr2017passrecoil4) instance at 0x2b52757fc290> generated on 2021-04-09 03:36:28.063522
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 8 # number of samples minus 1
-kmax 22 # number of nuisance parameters
+kmax 66 # number of nuisance parameters
 shapes * sr2017passrecoil4 sr2017passrecoil4.root sr2017passrecoil4:sr2017passrecoil4_$PROCESS sr2017passrecoil4:sr2017passrecoil4_$PROCESS_$SYSTEMATIC
 bin sr2017passrecoil4
 observation 234.000
@@ -30,6 +30,50 @@ veto_tau2017 lnN                      1.030                  -              1.03
 vv_norm2017pass lnN                       -                  -                  -                  -                  -                  -              1.200                  -                  -
 wjets_norm2017pass lnN                    -                  -              1.400                  -                  -                  -                  -                  -                  -
 zjets_norm2017pass lnN                    -                  -                  -                  -                  -              1.400                  -                  -                  -
+sr2017failrecoil4_zhfMC_mcstat_bin0 param 0 1
+sr2017failrecoil4_zhfMC_mcstat_bin1 param 0 1
+sr2017failrecoil4_zhfMC_mcstat_bin10 param 0 1
+sr2017failrecoil4_zhfMC_mcstat_bin2 param 0 1
+sr2017failrecoil4_zhfMC_mcstat_bin3 param 0 1
+sr2017failrecoil4_zhfMC_mcstat_bin4 param 0 1
+sr2017failrecoil4_zhfMC_mcstat_bin5 param 0 1
+sr2017failrecoil4_zhfMC_mcstat_bin6 param 0 1
+sr2017failrecoil4_zhfMC_mcstat_bin7 param 0 1
+sr2017failrecoil4_zhfMC_mcstat_bin8 param 0 1
+sr2017failrecoil4_zhfMC_mcstat_bin9 param 0 1
+sr2017failrecoil4_zlfMC_mcstat_bin0 param 0 1
+sr2017failrecoil4_zlfMC_mcstat_bin1 param 0 1
+sr2017failrecoil4_zlfMC_mcstat_bin10 param 0 1
+sr2017failrecoil4_zlfMC_mcstat_bin2 param 0 1
+sr2017failrecoil4_zlfMC_mcstat_bin3 param 0 1
+sr2017failrecoil4_zlfMC_mcstat_bin4 param 0 1
+sr2017failrecoil4_zlfMC_mcstat_bin5 param 0 1
+sr2017failrecoil4_zlfMC_mcstat_bin6 param 0 1
+sr2017failrecoil4_zlfMC_mcstat_bin7 param 0 1
+sr2017failrecoil4_zlfMC_mcstat_bin8 param 0 1
+sr2017failrecoil4_zlfMC_mcstat_bin9 param 0 1
+sr2017passrecoil4_zhfMC_mcstat_bin0 param 0 1
+sr2017passrecoil4_zhfMC_mcstat_bin1 param 0 1
+sr2017passrecoil4_zhfMC_mcstat_bin10 param 0 1
+sr2017passrecoil4_zhfMC_mcstat_bin2 param 0 1
+sr2017passrecoil4_zhfMC_mcstat_bin3 param 0 1
+sr2017passrecoil4_zhfMC_mcstat_bin4 param 0 1
+sr2017passrecoil4_zhfMC_mcstat_bin5 param 0 1
+sr2017passrecoil4_zhfMC_mcstat_bin6 param 0 1
+sr2017passrecoil4_zhfMC_mcstat_bin7 param 0 1
+sr2017passrecoil4_zhfMC_mcstat_bin8 param 0 1
+sr2017passrecoil4_zhfMC_mcstat_bin9 param 0 1
+sr2017passrecoil4_zlfMC_mcstat_bin0 param 0 1
+sr2017passrecoil4_zlfMC_mcstat_bin1 param 0 1
+sr2017passrecoil4_zlfMC_mcstat_bin10 param 0 1
+sr2017passrecoil4_zlfMC_mcstat_bin2 param 0 1
+sr2017passrecoil4_zlfMC_mcstat_bin3 param 0 1
+sr2017passrecoil4_zlfMC_mcstat_bin4 param 0 1
+sr2017passrecoil4_zlfMC_mcstat_bin5 param 0 1
+sr2017passrecoil4_zlfMC_mcstat_bin6 param 0 1
+sr2017passrecoil4_zlfMC_mcstat_bin7 param 0 1
+sr2017passrecoil4_zlfMC_mcstat_bin8 param 0 1
+sr2017passrecoil4_zlfMC_mcstat_bin9 param 0 1
 zhf_fraction param 0 1
 sr2017_zjets_fail_recoil4_mass0 extArg sr2017passrecoil4.root:sr2017passrecoil4
 sr2017_zjets_fail_recoil4_mass1 extArg sr2017passrecoil4.root:sr2017passrecoil4

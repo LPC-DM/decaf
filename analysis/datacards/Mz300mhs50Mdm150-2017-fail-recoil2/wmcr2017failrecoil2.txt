@@ -1,7 +1,7 @@
-# Datacard for <Channel (wmcr2017failrecoil2) instance at 0x2b7c57d391d0> generated on 2021-04-08 01:41:11.243577
+# Datacard for <Channel (wmcr2017failrecoil2) instance at 0x2ba5e8a16190> generated on 2021-04-09 01:51:16.142040
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
-kmax 24 # number of nuisance parameters
+kmax 57 # number of nuisance parameters
 shapes * wmcr2017failrecoil2 wmcr2017failrecoil2.root wmcr2017failrecoil2:wmcr2017failrecoil2_$PROCESS wmcr2017failrecoil2:wmcr2017failrecoil2_$PROCESS_$SYSTEMATIC
 bin wmcr2017failrecoil2
 observation 13911.000
@@ -31,7 +31,40 @@ zjets_norm2017fail lnN                    -                    -                
 ew2W param 0 1
 ew3W param 0 1
 qcd3 param 0 1
+sr2017failrecoil2_wjetsMC_mcstat_bin0 param 0 1
+sr2017failrecoil2_wjetsMC_mcstat_bin1 param 0 1
+sr2017failrecoil2_wjetsMC_mcstat_bin10 param 0 1
+sr2017failrecoil2_wjetsMC_mcstat_bin2 param 0 1
+sr2017failrecoil2_wjetsMC_mcstat_bin3 param 0 1
+sr2017failrecoil2_wjetsMC_mcstat_bin4 param 0 1
+sr2017failrecoil2_wjetsMC_mcstat_bin5 param 0 1
+sr2017failrecoil2_wjetsMC_mcstat_bin6 param 0 1
+sr2017failrecoil2_wjetsMC_mcstat_bin7 param 0 1
+sr2017failrecoil2_wjetsMC_mcstat_bin8 param 0 1
+sr2017failrecoil2_wjetsMC_mcstat_bin9 param 0 1
+sr2017failrecoil2_zjetsMC_mcstat_bin0 param 0 1
+sr2017failrecoil2_zjetsMC_mcstat_bin1 param 0 1
+sr2017failrecoil2_zjetsMC_mcstat_bin10 param 0 1
+sr2017failrecoil2_zjetsMC_mcstat_bin2 param 0 1
+sr2017failrecoil2_zjetsMC_mcstat_bin3 param 0 1
+sr2017failrecoil2_zjetsMC_mcstat_bin4 param 0 1
+sr2017failrecoil2_zjetsMC_mcstat_bin5 param 0 1
+sr2017failrecoil2_zjetsMC_mcstat_bin6 param 0 1
+sr2017failrecoil2_zjetsMC_mcstat_bin7 param 0 1
+sr2017failrecoil2_zjetsMC_mcstat_bin8 param 0 1
+sr2017failrecoil2_zjetsMC_mcstat_bin9 param 0 1
 wjets_norm param 0 1
+wmcr2017failrecoil2_wjetsMC_mcstat_bin0 param 0 1
+wmcr2017failrecoil2_wjetsMC_mcstat_bin1 param 0 1
+wmcr2017failrecoil2_wjetsMC_mcstat_bin10 param 0 1
+wmcr2017failrecoil2_wjetsMC_mcstat_bin2 param 0 1
+wmcr2017failrecoil2_wjetsMC_mcstat_bin3 param 0 1
+wmcr2017failrecoil2_wjetsMC_mcstat_bin4 param 0 1
+wmcr2017failrecoil2_wjetsMC_mcstat_bin5 param 0 1
+wmcr2017failrecoil2_wjetsMC_mcstat_bin6 param 0 1
+wmcr2017failrecoil2_wjetsMC_mcstat_bin7 param 0 1
+wmcr2017failrecoil2_wjetsMC_mcstat_bin8 param 0 1
+wmcr2017failrecoil2_wjetsMC_mcstat_bin9 param 0 1
 zjets_norm param 0 1
 sr2017_zjets_fail_recoil2_mass0 extArg wmcr2017failrecoil2.root:wmcr2017failrecoil2
 sr2017_zjets_fail_recoil2_mass1 extArg wmcr2017failrecoil2.root:wmcr2017failrecoil2

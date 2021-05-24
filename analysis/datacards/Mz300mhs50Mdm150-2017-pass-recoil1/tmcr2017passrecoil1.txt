@@ -1,7 +1,7 @@
-# Datacard for <Channel (tmcr2017passrecoil1) instance at 0x2b844e9197d0> generated on 2021-04-08 01:40:37.459876
+# Datacard for <Channel (tmcr2017passrecoil1) instance at 0x2aeeb7579210> generated on 2021-04-09 02:08:42.205968
 imax 1 # number of categories ('bins' but here we are using shape templates)
 jmax 6 # number of samples minus 1
-kmax 23 # number of nuisance parameters
+kmax 45 # number of nuisance parameters
 shapes * tmcr2017passrecoil1 tmcr2017passrecoil1.root tmcr2017passrecoil1:tmcr2017passrecoil1_$PROCESS tmcr2017passrecoil1:tmcr2017passrecoil1_$PROCESS_$SYSTEMATIC
 bin tmcr2017passrecoil1
 observation 2646.000
@@ -31,6 +31,28 @@ veto_tau2017 lnN                          -                1.030                
 vv_norm2017pass lnN                       -                    -                    -                    -                1.200                    -                    -
 wjets_norm2017pass lnN                    -                1.400                    -                    -                    -                    -                    -
 zjets_norm2017pass lnN                    -                    -                    -                1.400                    -                    -                    -
+sr2017passrecoil1_ttMC_mcstat_bin0 param 0 1
+sr2017passrecoil1_ttMC_mcstat_bin1 param 0 1
+sr2017passrecoil1_ttMC_mcstat_bin10 param 0 1
+sr2017passrecoil1_ttMC_mcstat_bin2 param 0 1
+sr2017passrecoil1_ttMC_mcstat_bin3 param 0 1
+sr2017passrecoil1_ttMC_mcstat_bin4 param 0 1
+sr2017passrecoil1_ttMC_mcstat_bin5 param 0 1
+sr2017passrecoil1_ttMC_mcstat_bin6 param 0 1
+sr2017passrecoil1_ttMC_mcstat_bin7 param 0 1
+sr2017passrecoil1_ttMC_mcstat_bin8 param 0 1
+sr2017passrecoil1_ttMC_mcstat_bin9 param 0 1
+tmcr2017passrecoil1_ttMC_mcstat_bin0 param 0 1
+tmcr2017passrecoil1_ttMC_mcstat_bin1 param 0 1
+tmcr2017passrecoil1_ttMC_mcstat_bin10 param 0 1
+tmcr2017passrecoil1_ttMC_mcstat_bin2 param 0 1
+tmcr2017passrecoil1_ttMC_mcstat_bin3 param 0 1
+tmcr2017passrecoil1_ttMC_mcstat_bin4 param 0 1
+tmcr2017passrecoil1_ttMC_mcstat_bin5 param 0 1
+tmcr2017passrecoil1_ttMC_mcstat_bin6 param 0 1
+tmcr2017passrecoil1_ttMC_mcstat_bin7 param 0 1
+tmcr2017passrecoil1_ttMC_mcstat_bin8 param 0 1
+tmcr2017passrecoil1_ttMC_mcstat_bin9 param 0 1
 tt_norm param 0 1
 sr2017_tt_pass_recoil1_mass0 extArg tmcr2017passrecoil1.root:tmcr2017passrecoil1
 sr2017_tt_pass_recoil1_mass1 extArg tmcr2017passrecoil1.root:tmcr2017passrecoil1
