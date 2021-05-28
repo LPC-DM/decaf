@@ -24,8 +24,8 @@ gentype_map = ['bb', 'b', 'cc', 'c', 'other']
 def template(dictionary, process, gentype, category, read_sumw2=False):
     histogram = dictionary[gentype].integrate("process", process)
     jp, sumw2 = histogram.values(sumw2=True)[()]
-    jp = jp[category_map[category]]
-    sumw2 = sumw2[category_map[category]]
+    jp = jp[:, category_map[category]]
+    sumw2 = sumw2[:, category_map[category]]
     zerobins = jp <= 0.
     output = jp
 
@@ -44,7 +44,7 @@ def template(dictionary, process, gentype, category, read_sumw2=False):
 def model(year, category):
 
     model_id = year + category + "btagJP"
-    model = rl.Model(str(s) + model_id)
+    model = rl.Model(model_id)
 
     ###
     ###
@@ -52,7 +52,7 @@ def model(year, category):
     ###
     ###
 
-    ch_name = "sr" + model_id
+    ch_name = model_id
     sr = rl.Channel(ch_name)
     model.addChannel(sr)
 
@@ -128,3 +128,14 @@ if __name__ == "__main__":
     print(data)
     print(signal)
     print(background)
+
+    for category in ["pass", "fail"]:
+        with open(
+            "data/doubleSF-"
+            + year
+            + "-"
+            + category
+            + ".model",
+            "wb",
+        ) as fout:
+            pickle.dump(model(year, category), fout, protocol=2)
