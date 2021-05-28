@@ -43,7 +43,7 @@ def template(dictionary, process, gentype, category, read_sumw2=False):
 ### s: process in the signal region
 def model(year, category):
 
-    model_id = year + category + "btagJP"
+    model_id = "btagJP" + year + category
     model = rl.Model(model_id)
 
     ###
