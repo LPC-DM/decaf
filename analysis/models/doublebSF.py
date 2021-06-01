@@ -68,6 +68,8 @@ def model(year, category):
 
     sr_genbb_Template = template(signal, "QCD", "bb", category)
     sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
+    sr_genbb.setParamEffect(lumi, 1.027)
+    sr_genbb.setParamEffect(jec, 1.05)
     sr.addSample(sr_genbb)
 
     ###
@@ -76,18 +78,26 @@ def model(year, category):
 
     sr_genb_Template = template(background, "QCD", "b", category)
     sr_genb = rl.TemplateSample(ch_name + "_genb", rl.Sample.BACKGROUND, sr_genb_Template)
+    sr_genb.setParamEffect(lumi, 1.027)
+    sr_genb.setParamEffect(jec, 1.05)
     sr.addSample(sr_genb)
 
     sr_genc_Template = template(background, "QCD", "c", category)
     sr_genc = rl.TemplateSample(ch_name + "_genc", rl.Sample.BACKGROUND, sr_genc_Template)
+    sr_genc.setParamEffect(lumi, 1.027)
+    sr_genc.setParamEffect(jec, 1.05)
     sr.addSample(sr_genc)
 
     sr_gencc_Template = template(background, "QCD", "cc", category)
     sr_gencc = rl.TemplateSample(ch_name + "_gencc", rl.Sample.BACKGROUND, sr_gencc_Template)
+    sr_gencc.setParamEffect(lumi, 1.027)
+    sr_gencc.setParamEffect(jec, 1.05)
     sr.addSample(sr_gencc)
 
     sr_genother_Template = template(background, "QCD", "other", category)
     sr_genother = rl.TemplateSample(ch_name + "_genother", rl.Sample.BACKGROUND, sr_genother_Template)
+    sr_genother.setParamEffect(lumi, 1.027)
+    sr_genother.setParamEffect(jec, 1.05)
     sr.addSample(sr_genother)
 
     return model
@@ -125,9 +135,18 @@ if __name__ == "__main__":
         else:
             background[str(gentype_map[i])] = bkg_hists["template"].integrate("gentype", i)
 
-    print(data)
-    print(signal)
-    print(background)
+    #print(data)
+    #print(signal)
+    #print(background)
+
+    ###
+    ###
+    # Setting up systematics
+    ###
+    ###
+
+    lumi = rl.NuisanceParameter("lumi" + year, "lnN")
+    jec = rl.NuisanceParameter("jec" + year, "lnN")
 
     for category in ["pass", "fail"]:
         with open(
