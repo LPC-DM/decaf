@@ -70,6 +70,9 @@ def model(year, category):
     sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
     sr_genbb.setParamEffect(lumi, 1.027)
     sr_genbb.setParamEffect(jec, 1.05)
+    sr_genbb.setParamEffect(pu, 1.05)
+    sr_genbb.setParamEffect(jecs, 1.02)
+    sr_genbb.setParamEffect(frac_bb, 1.5)
     sr.addSample(sr_genbb)
 
     ###
@@ -80,24 +83,36 @@ def model(year, category):
     sr_genb = rl.TemplateSample(ch_name + "_genb", rl.Sample.BACKGROUND, sr_genb_Template)
     sr_genb.setParamEffect(lumi, 1.027)
     sr_genb.setParamEffect(jec, 1.05)
+    sr_genb.setParamEffect(pu, 1.05)
+    sr_genb.setParamEffect(jecs, 1.02)
+    sr_genb.setParamEffect(frac_b, 1.5)
     sr.addSample(sr_genb)
 
     sr_genc_Template = template(background, "QCD", "c", category)
     sr_genc = rl.TemplateSample(ch_name + "_genc", rl.Sample.BACKGROUND, sr_genc_Template)
     sr_genc.setParamEffect(lumi, 1.027)
     sr_genc.setParamEffect(jec, 1.05)
+    sr_genc.setParamEffect(pu, 1.05)
+    sr_genc.setParamEffect(jecs, 1.02)
+    sr_genc.setParamEffect(frac_c, 1.5)
     sr.addSample(sr_genc)
 
     sr_gencc_Template = template(background, "QCD", "cc", category)
     sr_gencc = rl.TemplateSample(ch_name + "_gencc", rl.Sample.BACKGROUND, sr_gencc_Template)
     sr_gencc.setParamEffect(lumi, 1.027)
     sr_gencc.setParamEffect(jec, 1.05)
+    sr_gencc.setParamEffect(pu, 1.05)
+    sr_gencc.setParamEffect(jecs, 1.02)
+    sr_gencc.setParamEffect(frac_cc, 1.5)
     sr.addSample(sr_gencc)
 
     sr_genother_Template = template(background, "QCD", "other", category)
     sr_genother = rl.TemplateSample(ch_name + "_genother", rl.Sample.BACKGROUND, sr_genother_Template)
     sr_genother.setParamEffect(lumi, 1.027)
     sr_genother.setParamEffect(jec, 1.05)
+    sr_genother.setParamEffect(pu, 1.05)
+    sr_genother.setParamEffect(jecs, 1.02)
+    sr_genother.setParamEffect(frac_other, 1.5)
     sr.addSample(sr_genother)
 
     return model
@@ -147,10 +162,18 @@ if __name__ == "__main__":
 
     lumi = rl.NuisanceParameter("lumi" + year, "lnN")
     jec = rl.NuisanceParameter("jec" + year, "lnN")
+    pu = rl.NuisanceParameter("pu" + year, "lnN")
+    jecs = rl.NuisanceParameter("jecs" + year, "lnN") ## maybe jes?
+    #### fractional systematics (assume 50%)
+    frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
+    frac_b = rl.NuisanceParameter("frac_b" + year, "lnN")
+    frac_cc = rl.NuisanceParameter("frac_cc" + year, "lnN")
+    frac_c = rl.NuisanceParameter("frac_c" + year, "lnN")
+    frac_other = rl.NuisanceParameter("frac_other" + year, "lnN")
 
     for category in ["pass", "fail"]:
         with open(
-            "data/doubleSF-"
+            "data/doublebSF-"
             + year
             + "-"
             + category
