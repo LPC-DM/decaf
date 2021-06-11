@@ -157,7 +157,7 @@ if __name__ == "__main__":
 
     lumi = rl.NuisanceParameter("lumi" + year, "lnN")
     pu = rl.NuisanceParameter("pu" + year, "lnN")
-    jecs = rl.NuisanceParameter("jes" + year, "lnN")
+    jes = rl.NuisanceParameter("jes" + year, "lnN")
     #### fractional systematics (assume 50%)
     frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
     frac_b = rl.NuisanceParameter("frac_b" + year, "lnN")
