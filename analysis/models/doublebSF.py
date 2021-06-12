@@ -17,8 +17,18 @@ import ROOT
 rl.util.install_roofit_helpers()
 rl.ParametericSample.PreferRooParametricHist = False
 
-category_map = {"pass": 1, "fail": 0}
 gentype_map = ['bb', 'b', 'cc', 'c', 'other']
+
+category_map = {
+        "pass": 1,
+        "fail": 0
+        }
+
+bbtagger_eff = {
+        "2016": 0.938,
+        "2017": 0.947,
+        "2018": 0.945
+        }
 
 ### category: pass/fail flag
 def template(dictionary, process, gentype, category, read_sumw2=False):
@@ -66,8 +76,18 @@ def model(year, category):
     # QCD sig process
     ###
 
+    #sr_genbb_Template = template(signal, "QCD", "bb", category)
+    #sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
+    #sr_genbb.setParamEffect(lumi, 1.027)
+    #sr_genbb.setParamEffect(pu, 1.05)
+    #sr_genbb.setParamEffect(jes, 1.02)
+    #sr_genbb.setParamEffect(frac_bb, 1.5)
+    #sr.addSample(sr_genbb)
+
     sr_genbb_Template = template(signal, "QCD", "bb", category)
-    sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
+    sr_genbb_Observable = rl.Observable("btagJP", sr_genbb_Template[1])
+    sr_genbb_BinYields = sr_genbb_Template[0] * weight[category]
+    sr_genbb = rl.ParametericSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Observable, sr_genbb_BinYields)
     sr_genbb.setParamEffect(lumi, 1.027)
     sr_genbb.setParamEffect(pu, 1.05)
     sr_genbb.setParamEffect(jes, 1.02)
@@ -117,8 +137,10 @@ if __name__ == "__main__":
         os.mkdir("datacards")
     parser = OptionParser()
     parser.add_option("-y", "--year", help="year", dest="year", default="")
+    parser.add_option("-n", "--name", help="name of category (pass or fail)", dest="name", default="")
     (options, args) = parser.parse_args()
     year = options.year
+    name = options.name
 
     ###
     # Extract histograms from input file
@@ -158,12 +180,20 @@ if __name__ == "__main__":
     lumi = rl.NuisanceParameter("lumi" + year, "lnN")
     pu = rl.NuisanceParameter("pu" + year, "lnN")
     jes = rl.NuisanceParameter("jes" + year, "lnN")
+
     #### fractional systematics (assume 50%)
     frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
-    frac_b = rl.NuisanceParameter("frac_b" + year, "lnN")
-    frac_cc = rl.NuisanceParameter("frac_cc" + year, "lnN")
-    frac_c = rl.NuisanceParameter("frac_c" + year, "lnN")
-    frac_other = rl.NuisanceParameter("frac_other" + year, "lnN")
+    frac_b = rl.NuisanceParameter("frac_b" + year + str(name), "lnN")
+    frac_cc = rl.NuisanceParameter("frac_cc" + year + str(name), "lnN")
+    frac_c = rl.NuisanceParameter("frac_c" + year + str(name), "lnN")
+    frac_other = rl.NuisanceParameter("frac_other" + year + str(name), "lnN")
+
+    #### SF weight
+    sf = rl.IndependentParameter("sf" + year, 1.0, 0.01, 1.0 / bbtagger_eff[year])
+    weight = {
+            "pass": sf,
+            "fail": (1 - (sf*bbtagger_eff[year])) / (1 - bbtagger_eff[year])
+            }
 
     for category in ["pass", "fail"]:
         with open(
