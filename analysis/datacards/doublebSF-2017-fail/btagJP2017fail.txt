@@ -1,0 +1,20 @@
+# Datacard for <Channel (btagJP2017fail) instance at 0x2b733fdcd410> generated on 2021-06-12 13:18:24.543672
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 4 # number of samples minus 1
+kmax 8 # number of nuisance parameters
+shapes * btagJP2017fail btagJP2017fail.root btagJP2017fail:btagJP2017fail_$PROCESS btagJP2017fail:btagJP2017fail_$PROCESS_$SYSTEMATIC
+bin btagJP2017fail
+observation 70099.529
+bin                     btagJP2017fail  btagJP2017fail  btagJP2017fail  btagJP2017fail  btagJP2017fail
+process                          genbb            genb            genc           gencc        genother
+process                              0               1               2               3               4
+rate                             1.000          94.093         433.210         268.499       12117.507
+frac_b2017fail lnN                   -           1.500               -               -               -
+frac_c2017fail lnN                   -               -           1.500               -               -
+frac_cc2017fail lnN                  -               -               -           1.500               -
+frac_other2017fail lnN               -               -               -               -           1.500
+jes2017 lnN                          -           1.020           1.020           1.020           1.020
+lumi2017 lnN                         -           1.027           1.027           1.027           1.027
+pu2017 lnN                           -           1.050           1.050           1.050           1.050
+frac_bb2017 param 0 1
+sf2017 extArg btagJP2017fail.root:btagJP2017fail

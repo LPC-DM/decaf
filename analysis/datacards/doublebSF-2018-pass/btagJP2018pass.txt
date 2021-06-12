@@ -1,0 +1,20 @@
+# Datacard for <Channel (btagJP2018pass) instance at 0x2b733fdcd5d0> generated on 2021-06-12 13:24:26.478619
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 4 # number of samples minus 1
+kmax 8 # number of nuisance parameters
+shapes * btagJP2018pass btagJP2018pass.root btagJP2018pass:btagJP2018pass_$PROCESS btagJP2018pass:btagJP2018pass_$PROCESS_$SYSTEMATIC
+bin btagJP2018pass
+observation 4800.201
+bin                     btagJP2018pass  btagJP2018pass  btagJP2018pass  btagJP2018pass  btagJP2018pass
+process                          genbb            genb            genc           gencc        genother
+process                              0               1               2               3               4
+rate                             1.000         663.264         599.563         814.208        2013.052
+frac_b2018pass lnN                   -           1.500               -               -               -
+frac_c2018pass lnN                   -               -           1.500               -               -
+frac_cc2018pass lnN                  -               -               -           1.500               -
+frac_other2018pass lnN               -               -               -               -           1.500
+jes2018 lnN                          -           1.020           1.020           1.020           1.020
+lumi2018 lnN                         -           1.027           1.027           1.027           1.027
+pu2018 lnN                           -           1.050           1.050           1.050           1.050
+frac_bb2018 param 0 1
+sf2018 extArg btagJP2018pass.root:btagJP2018pass

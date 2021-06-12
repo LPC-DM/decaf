@@ -1,0 +1,29 @@
+Combination of btagJP2016fail=btagJP2016fail.txt  btagJP2016pass=btagJP2016pass.txt
+imax 2 number of bins
+jmax 4 number of processes minus 1
+kmax 12 number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes *               btagJP2016fail  btagJP2016fail.root btagJP2016fail:btagJP2016fail_$PROCESS btagJP2016fail:btagJP2016fail_$PROCESS_$SYSTEMATIC
+shapes *               btagJP2016pass  btagJP2016pass.root btagJP2016pass:btagJP2016pass_$PROCESS btagJP2016pass:btagJP2016pass_$PROCESS_$SYSTEMATIC
+----------------------------------------------------------------------------------------------------------------------------------
+bin          btagJP2016fail  btagJP2016pass
+observation  71578.145       5609.722      
+----------------------------------------------------------------------------------------------------------------------------------
+bin                                   btagJP2016fail  btagJP2016fail  btagJP2016fail  btagJP2016fail  btagJP2016fail  btagJP2016pass  btagJP2016pass  btagJP2016pass  btagJP2016pass  btagJP2016pass
+process                               genbb           genother        genb            genc            gencc           genbb           genother        genb            genc            gencc         
+process                               0               1               2               3               4               0               1               2               3               4             
+rate                                  1               11540.035       120.031         365.064         262.039         1               2367.529        426.18          300.863         605.756       
+----------------------------------------------------------------------------------------------------------------------------------
+frac_b2016fail          lnN           -               -               1.5             -               -               -               -               -               -               -             
+frac_b2016pass          lnN           -               -               -               -               -               -               -               1.5             -               -             
+frac_c2016fail          lnN           -               -               -               1.5             -               -               -               -               -               -             
+frac_c2016pass          lnN           -               -               -               -               -               -               -               -               1.5             -             
+frac_cc2016fail         lnN           -               -               -               -               1.5             -               -               -               -               -             
+frac_cc2016pass         lnN           -               -               -               -               -               -               -               -               -               1.5           
+frac_other2016fail      lnN           -               1.5             -               -               -               -               -               -               -               -             
+frac_other2016pass      lnN           -               -               -               -               -               -               1.5             -               -               -             
+jes2016                 lnN           -               1.02            1.02            1.02            1.02            -               1.02            1.02            1.02            1.02          
+lumi2016                lnN           -               1.027           1.027           1.027           1.027           -               1.027           1.027           1.027           1.027         
+pu2016                  lnN           -               1.05            1.05            1.05            1.05            -               1.05            1.05            1.05            1.05          
+frac_bb2016   param  0 1
+sf2016 extArg btagJP2016pass.root:btagJP2016pass
