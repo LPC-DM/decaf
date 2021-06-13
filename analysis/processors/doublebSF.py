@@ -21,6 +21,31 @@ class AnalysisProcessor(processor.ProcessorABC):
         '2018': 59.74
     }
 
+    met_filter_flags = {
+        '2016': ['goodVertices',
+                 'globalSuperTightHalo2016Filter',
+                 'HBHENoiseFilter',
+                 'HBHENoiseIsoFilter',
+                 'EcalDeadCellTriggerPrimitiveFilter',
+                 'BadPFMuonFilter'
+             ],
+        '2017': ['goodVertices',
+                 'globalSuperTightHalo2016Filter',
+                 'HBHENoiseFilter',
+                 'HBHENoiseIsoFilter',
+                 'EcalDeadCellTriggerPrimitiveFilter',
+                 'BadPFMuonFilter',
+                 'ecalBadCalibFilterV2'
+             ],
+        '2018': ['goodVertices',
+                 'globalSuperTightHalo2016Filter',
+                 'HBHENoiseFilter',
+                 'HBHENoiseIsoFilter',
+                 'EcalDeadCellTriggerPrimitiveFilter',
+                 'BadPFMuonFilter',
+                 'ecalBadCalibFilterV2'
+             ]
+    }
 
     def __init__(self, year, xsec, corrections, ids, common):
 
@@ -218,6 +243,20 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         #### muon selection ####
         selection.add('mu_pt', (leading_mu.pt.max() > 7) )
+
+        #### trigger selection ####
+        triggers = np.zeros(events.size, dtype=np.bool)
+        for path in self._btagmu_triggers[self._year]:
+            if path not in events.HLT.columns: continue
+            triggers = triggers | events.HLT[path]
+        selection.add('btagmu_triggers', triggers)
+
+        #### MET filters ####
+        met_filters =  np.ones(events.size, dtype=np.bool)
+        if isData: met_filters = met_filters & events.Flag['eeBadScFilter'] #this filter is recommended for data only
+        for flag in AnalysisProcessor.met_filter_flags[self._year]:
+            met_filters = met_filters & events.Flag[flag]
+        selection.add('met_filters',met_filters)
 
         isFilled = False
 
