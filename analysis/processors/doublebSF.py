@@ -293,16 +293,15 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
                 isFilled=True
 
-            data_selections = ['btagmu_triggers', 'met_filters']
-            data_cut = selection.all(*data_selections)
+            cut = selection.all(*selection.names)
             ##### template for bb SF #####
             hout['template'].fill(dataset=dataset,
                     gentype=np.zeros(events.size, dtype=np.int),
                     btagJP=leading_fj.btagJP.sum(),
                     ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                    weight=np.ones(events.size)*data_cut
+                    weight=np.ones(events.size)*cut
                     )
-            fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), data_cut)
+            fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
         else:
             weights = processor.Weights(len(events))
 
