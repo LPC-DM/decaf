@@ -31,8 +31,9 @@ bbtagger_eff = {
         }
 
 #### New btagJP binnings for fit
-fail_binning = [0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 2.5]
-pass_binning = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.5]
+#fail_binning = [0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 2.5]
+fail_binning = [0., 0.1, 0.2, 0.3, 0.4, 2.5]
+pass_binning = [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.5]
 
 ### category: pass/fail flag
 def template(dictionary, process, gentype, category, read_sumw2=False):
@@ -43,8 +44,9 @@ def template(dictionary, process, gentype, category, read_sumw2=False):
     zerobins = jp <= 0.
     output = jp
 
-    output[zerobins] = 1e-5
-    sumw2[zerobins] = 0.
+    if 'QCD' in process:
+        output[zerobins] = 1e-5
+        sumw2[zerobins] = 0.
 
     binning = (
         dictionary[gentype].integrate("process", process).axis("btagJP").edges()
