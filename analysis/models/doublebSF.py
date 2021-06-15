@@ -154,10 +154,10 @@ if __name__ == "__main__":
     # Extract histograms from input file
     ###
 
-    print("Extracting histograms")
-    hists = load("hists/doublebSF" + year + ".scaled")
-    data_hists = hists["data"]
-    bkg_hists = hists["bkg"]
+    #print("Extracting histograms")
+    #hists = load("hists/doublebSF" + year + ".scaled")
+    #data_hists = hists["data"]
+    #bkg_hists = hists["bkg"]
 
     ###
     # Preparing histograms for fit
@@ -200,6 +200,11 @@ if __name__ == "__main__":
             }
 
     for category in ["pass", "fail"]:
+
+        print("Extracting histograms")
+        hists = load("hists/doublebSF" + year + ".scaled")
+        data_hists = hists["data"]
+        bkg_hists = hists["bkg"]
 
         #### fractional systematics (assume 50%)
         frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
