@@ -227,6 +227,22 @@ class AnalysisProcessor(processor.ProcessorABC):
         # Selections
         ###
 
+        #### trigger selection ####
+        #triggers = np.zeros(events.size, dtype=np.bool)
+        #for path in self._btagmu_triggers[self._year]:
+        #    if path not in events.HLT.columns: continue
+        #    triggers = triggers | events.HLT[path]
+        #selection.add('btagmu_triggers', triggers)
+
+        #### MET filters ####
+        met_filters =  np.ones(events.size, dtype=np.bool)
+        if isData:
+            met_filters = met_filters & events.Flag['eeBadScFilter'] #this filter is recommended for data only
+        for flag in AnalysisProcessor.met_filter_flags[self._year]:
+            met_filters = met_filters & events.Flag[flag]
+        selection.add('met_filters',met_filters)
+
+        #### ak15 jet selection ####
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
 
@@ -234,8 +250,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
         fj_nwithmu = fj_withmu.counts
 
-
-        #### ak15 jet selection ####
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 350) )
         selection.add('fj_mass', (leading_fj.msd_corr.sum() < 80) ) ## optionally also <130
         selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
@@ -243,22 +257,6 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         #### muon selection ####
         selection.add('mu_pt', (leading_mu.pt.max() > 7) )
-
-        #### trigger selection ####
-        triggers = np.zeros(events.size, dtype=np.bool)
-        for path in self._btagmu_triggers[self._year]:
-            if path not in events.HLT.columns: continue
-            triggers = triggers | events.HLT[path]
-        selection.add('btagmu_triggers', triggers)
-
-        #### MET filters ####
-        met_filters =  np.ones(events.size, dtype=np.bool)
-        if isData: met_filters = met_filters & events.Flag['eeBadScFilter'] #this filter is recommended for data only
-        for flag in AnalysisProcessor.met_filter_flags[self._year]:
-            met_filters = met_filters & events.Flag[flag]
-        selection.add('met_filters',met_filters)
-
-        isFilled = False
 
         variables = {
             'ZHbbvsQCD': leading_fj.ZHbbvsQCD,
@@ -288,12 +286,23 @@ class AnalysisProcessor(processor.ProcessorABC):
                     flat_variable = {histname: flat_variables[histname]}
                     h.fill(dataset=dataset, gentype=flat_gentype[histname], **flat_variable, weight=flat_weight[histname])
 
+        isFilled = False
         if isData:
             if not isFilled:
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
                 isFilled=True
 
             cut = selection.all(*selection.names)
+            vcut=np.zeros(events.size, dtype=np.int)
+            hout['cutflow'].fill(dataset=dataset, cutname='nocut', cut=vcut, weight=np.ones(events.size))
+            allcuts = set()
+            ### cutflow fill
+            for i, icut in enumerate(selection.names):
+                allcuts.add(icut)
+                jcut = selection.all(*allcuts)
+                vcut = (i+1)*jcut
+                hout['cutflow'].fill(dataset=dataset, cutname=str(icut), cut=vcut, weight=jcut)
+
             ##### template for bb SF #####
             hout['template'].fill(dataset=dataset,
                     gentype=np.zeros(events.size, dtype=np.int),
@@ -302,6 +311,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     weight=np.ones(events.size)*cut
                     )
             fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
+
         else:
             weights = processor.Weights(len(events))
 
@@ -323,6 +333,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             cut = selection.all(*selection.names)
             if 'QCD' in dataset:
                 vcut=np.zeros(events.size, dtype=np.int)
+                hout['cutflow'].fill(dataset=dataset, cutname='nocut', cut=vcut, weight=weights.weight())
                 allcuts = set()
                 ### cutflow fill
                 for i, icut in enumerate(selection.names):
