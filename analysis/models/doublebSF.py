@@ -30,6 +30,12 @@ bbtagger_eff = {
         "2018": 0.945
         }
 
+#### New btagJP binnings for fit
+fail_binning = [0.08333333, 0.16666667, 0.25, 0.33333333, 0.41666667, 0.5,  1.0, 2.5]
+pass_binning = [0.08333333, 0.16666667, 0.25, 0.33333333, 0.41666667, 0.5, 0.58333333,
+                0.66666667, 0.75, 0.83333333, 0.91666667, 1.0, 1.08333333, 1.16666667, 1.25,
+                1.33333333, 1.41666667, 1.5, 1.58333333, 1.66666667, 2.5]
+
 ### category: pass/fail flag
 def template(dictionary, process, gentype, category, read_sumw2=False):
     histogram = dictionary[gentype].integrate("process", process)
@@ -98,36 +104,40 @@ def model(year, category):
     # QCD bkg processes
     ###
 
-    sr_genb_Template = template(background, "QCD", "b", category)
+    sr_genb_Template = template(background, "QCD", "b", category, read_sumw2=True)
     sr_genb = rl.TemplateSample(ch_name + "_genb", rl.Sample.BACKGROUND, sr_genb_Template)
     sr_genb.setParamEffect(lumi, 1.027)
     sr_genb.setParamEffect(pu, 1.05)
     sr_genb.setParamEffect(jes, 1.02)
     sr_genb.setParamEffect(frac_b, 1.5)
+    sr_genb.autoMCStats()
     sr.addSample(sr_genb)
 
-    sr_genc_Template = template(background, "QCD", "c", category)
+    sr_genc_Template = template(background, "QCD", "c", category, read_sumw2=True)
     sr_genc = rl.TemplateSample(ch_name + "_genc", rl.Sample.BACKGROUND, sr_genc_Template)
     sr_genc.setParamEffect(lumi, 1.027)
     sr_genc.setParamEffect(pu, 1.05)
     sr_genc.setParamEffect(jes, 1.02)
     sr_genc.setParamEffect(frac_c, 1.5)
+    sr_genc.autoMCStats()
     sr.addSample(sr_genc)
 
-    sr_gencc_Template = template(background, "QCD", "cc", category)
+    sr_gencc_Template = template(background, "QCD", "cc", category, read_sumw2=True)
     sr_gencc = rl.TemplateSample(ch_name + "_gencc", rl.Sample.BACKGROUND, sr_gencc_Template)
     sr_gencc.setParamEffect(lumi, 1.027)
     sr_gencc.setParamEffect(pu, 1.05)
     sr_gencc.setParamEffect(jes, 1.02)
     sr_gencc.setParamEffect(frac_cc, 1.5)
+    sr_gencc.autoMCStats()
     sr.addSample(sr_gencc)
 
-    sr_genother_Template = template(background, "QCD", "other", category)
+    sr_genother_Template = template(background, "QCD", "other", category, read_sumw2=True)
     sr_genother = rl.TemplateSample(ch_name + "_genother", rl.Sample.BACKGROUND, sr_genother_Template)
     sr_genother.setParamEffect(lumi, 1.027)
     sr_genother.setParamEffect(pu, 1.05)
     sr_genother.setParamEffect(jes, 1.02)
     sr_genother.setParamEffect(frac_other, 1.5)
+    sr_genother.autoMCStats()
     sr.addSample(sr_genother)
 
     return model
@@ -137,16 +147,14 @@ if __name__ == "__main__":
         os.mkdir("datacards")
     parser = OptionParser()
     parser.add_option("-y", "--year", help="year", dest="year", default="")
-    #parser.add_option("-n", "--name", help="name of category (pass or fail)", dest="name", default="")
     (options, args) = parser.parse_args()
     year = options.year
-    #name = options.name
 
     ###
     # Extract histograms from input file
     ###
 
-    print("Grouping histograms")
+    print("Extracting histograms")
     hists = load("hists/doublebSF" + year + ".scaled")
     data_hists = hists["data"]
     bkg_hists = hists["bkg"]
@@ -155,21 +163,17 @@ if __name__ == "__main__":
     # Preparing histograms for fit
     ##
 
-    data = {}
-    data['bb'] = data_hists["template"].sum("gentype", overflow='all')
+    #data = {}
+    #data['bb'] = data_hists["template"].sum("gentype", overflow='all')
 
-    background = {}
-    signal = {}
+    #background = {}
+    #signal = {}
 
-    for i in range(5):
-        if gentype_map[i] == 'bb':
-            signal[str(gentype_map[i])] = bkg_hists["template"].integrate("gentype", 0)
-        else:
-            background[str(gentype_map[i])] = bkg_hists["template"].integrate("gentype", i)
-
-    #print(data)
-    #print(signal)
-    #print(background)
+    #for i in range(5):
+    #    if gentype_map[i] == 'bb':
+    #        signal[str(gentype_map[i])] = bkg_hists["template"].integrate("gentype", 0)
+    #    else:
+    #        background[str(gentype_map[i])] = bkg_hists["template"].integrate("gentype", i)
 
     ###
     ###
@@ -196,12 +200,39 @@ if __name__ == "__main__":
             }
 
     for category in ["pass", "fail"]:
+
         #### fractional systematics (assume 50%)
         frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
         frac_b = rl.NuisanceParameter("frac_b" + year + category, "lnN")
         frac_cc = rl.NuisanceParameter("frac_cc" + year + category, "lnN")
         frac_c = rl.NuisanceParameter("frac_c" + year + category, "lnN")
         frac_other = rl.NuisanceParameter("frac_other" + year + category, "lnN")
+
+        ###
+        # Rebin templates for fit 
+        ##
+        if category is "pass":
+            data_hists["template"] = data_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", pass_binning))
+            bkg_hists["template"] = bkg_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", pass_binning))
+        else:
+            data_hists["template"] = data_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", fail_binning))
+            bkg_hists["template"] = bkg_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", fail_binning))
+
+        ###
+        # Preparing histograms for fit
+        ##
+        data = {}
+        data['bb'] = data_hists["template"].sum("gentype", overflow='all')
+
+        background = {}
+        signal = {}
+
+        for i in range(5):
+            if gentype_map[i] == 'bb':
+                signal[str(gentype_map[i])] = bkg_hists["template"].integrate("gentype", 0)
+            else:
+                background[str(gentype_map[i])] = bkg_hists["template"].integrate("gentype", i)
+
         with open(
             "data/doublebSF-"
             + year
