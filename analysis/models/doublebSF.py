@@ -186,11 +186,7 @@ if __name__ == "__main__":
     jes = rl.NuisanceParameter("jes" + year, "lnN")
 
     #### fractional systematics (assume 50%)
-    #frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
-    #frac_b = rl.NuisanceParameter("frac_b" + year + str(name), "lnN")
-    #frac_cc = rl.NuisanceParameter("frac_cc" + year + str(name), "lnN")
-    #frac_c = rl.NuisanceParameter("frac_c" + year + str(name), "lnN")
-    #frac_other = rl.NuisanceParameter("frac_other" + year + str(name), "lnN")
+    frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
 
     #### SF weight
     sf = rl.IndependentParameter("sf" + year, 1.0, 0.01, 1.0 / bbtagger_eff[year])
@@ -207,7 +203,6 @@ if __name__ == "__main__":
         bkg_hists = hists["bkg"]
 
         #### fractional systematics (assume 50%)
-        frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
         frac_b = rl.NuisanceParameter("frac_b" + year + category, "lnN")
         frac_cc = rl.NuisanceParameter("frac_cc" + year + category, "lnN")
         frac_c = rl.NuisanceParameter("frac_c" + year + category, "lnN")
