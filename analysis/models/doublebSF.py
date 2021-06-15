@@ -39,7 +39,7 @@ def template(dictionary, process, gentype, category, read_sumw2=False):
     zerobins = jp <= 0.
     output = jp
 
-    output[zerobins] = 0.
+    output[zerobins] = 1e-5
     sumw2[zerobins] = 0.
 
     binning = (
