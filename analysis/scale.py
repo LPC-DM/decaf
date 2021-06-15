@@ -110,8 +110,9 @@ def scale(hists, scalez):
     data_map["SingleElectron"] = ("SingleElectron*", )
     data_map["SinglePhoton"] = ("SinglePhoton*", )
     data_map["EGamma"] = ("EGamma*", )
+    data_map["BTagMu"] = ("BTagMu*", )
     for signal in hists['sumw'].identifiers('dataset'):
-        if 'mhs' not in str(signal): continue
+        if 'Mhs' not in str(signal): continue
         print(signal)
         sig_map[str(signal)] = (str(signal),)  ## signals
     print('Processes defined')
