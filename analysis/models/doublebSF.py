@@ -84,7 +84,7 @@ def model(year, category):
     # QCD sig process
     ###
 
-    sr_genbb_Template = template(signal, "QCD", "bb", category)
+    sr_genbb_Template = template(signal, "QCD", "bb", category, read_sumw2=True)
     sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
     sr_genbb.setParamEffect(lumi, 1.027)
     sr_genbb.setParamEffect(pu, 1.05)
@@ -196,10 +196,11 @@ if __name__ == "__main__":
     sf = rl.IndependentParameter("sf" + year, 1.0, 0.01, 1.0 / bbtagger_eff[year])
     weight = {
             "pass": rl.DependentParameter("weight", "{0}", sf),
-            "fail": rl.DependentParameter("weight", "(1 - ({0}*%d)) / (1 - %d)" % (bbtagger_eff[year], bbtagger_eff[year]), sf)
+            "fail": rl.DependentParameter("weight", "(1-({0}*%f))/(1-%f)" % (bbtagger_eff[year], bbtagger_eff[year]), sf)
             }
-    print(sf)
-    sf_weight = rl.NuisanceParameter("sf_weight" + year, "lnN")
+    #sf_weight = rl.NuisanceParameter("sf_weight" + year, "lnN")
+    sf_weight = rl.IndependentParameter("sf_weight" + year, 1.0)
+
 
     for category in ["pass", "fail"]:
 
