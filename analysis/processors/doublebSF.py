@@ -180,7 +180,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         probQCD=fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
         probZHbb=fj.probZbb+fj.probHbb
         fj['ZHbbvsQCD'] = probZHbb/(probZHbb+probQCD)
-        fj['tau21'] = fj.tau2/fj.tau1
+        #fj['tau21'] = fj.tau2/fj.tau1
 
         ###
         #Calculating weights
@@ -221,8 +221,6 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         fj['withmu'] = (fj.subjets.counts==2) & (step3.all())
 
-
-
         ###
         # Selections
         ###
@@ -251,8 +249,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj_nwithmu = fj_withmu.counts
 
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 350) )
-        selection.add('fj_mass', (leading_fj.msd_corr.sum() < 80) ) ## optionally also <130
-        selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
+        selection.add('fj_mass', (leading_fj.msd_corr.sum() > 80) ) ## optionally also <130
+        #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
         selection.add('fjCoupledMu', (fj_nwithmu > 0) )
 
         #### muon selection ####
