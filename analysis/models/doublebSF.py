@@ -32,7 +32,8 @@ bbtagger_eff = {
 
 #### New btagJP binnings for fit
 #fail_binning = [0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 2.5]
-fail_binning = [0., 0.1, 0.2, 0.3, 0.4, 2.5]
+#fail_binning = [0., 0.1, 0.2, 0.3, 0.4, 2.5]
+fail_binning = [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.5]
 pass_binning = [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.5]
 
 ### category: pass/fail flag
@@ -48,6 +49,7 @@ def template(dictionary, process, gentype, category, read_sumw2=False):
         output[zerobins] = 1e-5
         sumw2[zerobins] = 0.
 
+    print(category, process, output)
     binning = (
         dictionary[gentype].integrate("process", process).axis("btagJP").edges()
     )
@@ -82,23 +84,25 @@ def model(year, category):
     # QCD sig process
     ###
 
+    sr_genbb_Template = template(signal, "QCD", "bb", category)
+    sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
+    sr_genbb.setParamEffect(lumi, 1.027)
+    sr_genbb.setParamEffect(pu, 1.05)
+    sr_genbb.setParamEffect(jes, 1.02)
+    sr_genbb.setParamEffect(frac_bb, 1.5)
+    sr_genbb.setParamEffect(sf_weight, weight[category])
+    sr_genbb.autoMCStats()
+    sr.addSample(sr_genbb)
+
     #sr_genbb_Template = template(signal, "QCD", "bb", category)
-    #sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
+    #sr_genbb_Observable = rl.Observable("btagJP", sr_genbb_Template[1])
+    #sr_genbb_BinYields = sr_genbb_Template[0] * weight[category]
+    #sr_genbb = rl.ParametericSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Observable, sr_genbb_BinYields)
     #sr_genbb.setParamEffect(lumi, 1.027)
     #sr_genbb.setParamEffect(pu, 1.05)
     #sr_genbb.setParamEffect(jes, 1.02)
     #sr_genbb.setParamEffect(frac_bb, 1.5)
     #sr.addSample(sr_genbb)
-
-    sr_genbb_Template = template(signal, "QCD", "bb", category)
-    sr_genbb_Observable = rl.Observable("btagJP", sr_genbb_Template[1])
-    sr_genbb_BinYields = sr_genbb_Template[0] * weight[category]
-    sr_genbb = rl.ParametericSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Observable, sr_genbb_BinYields)
-    sr_genbb.setParamEffect(lumi, 1.027)
-    sr_genbb.setParamEffect(pu, 1.05)
-    sr_genbb.setParamEffect(jes, 1.02)
-    sr_genbb.setParamEffect(frac_bb, 1.5)
-    sr.addSample(sr_genbb)
 
     ###
     # QCD bkg processes
@@ -191,13 +195,15 @@ if __name__ == "__main__":
     #### SF weight
     sf = rl.IndependentParameter("sf" + year, 1.0, 0.01, 1.0 / bbtagger_eff[year])
     weight = {
-            "pass": sf,
-            "fail": (1 - (sf*bbtagger_eff[year])) / (1 - bbtagger_eff[year])
+            "pass": rl.DependentParameter("weight", "{0}", sf),
+            "fail": rl.DependentParameter("weight", "(1 - ({0}*%d)) / (1 - %d)" % (bbtagger_eff[year], bbtagger_eff[year]), sf)
             }
+    print(sf)
+    sf_weight = rl.NuisanceParameter("sf_weight" + year, "lnN")
 
     for category in ["pass", "fail"]:
 
-        print("Extracting histograms")
+        print("Extracting histograms for", category)
         hists = load("hists/doublebSF" + year + ".scaled")
         data_hists = hists["data"]
         bkg_hists = hists["bkg"]
