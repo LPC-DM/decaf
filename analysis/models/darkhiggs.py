@@ -134,27 +134,21 @@ def remap_histograms(hists):
 
     return hists
 
-def addSyst(dictionary, recoil, process, region, templ, category, syst, string):
-    histogram = dictionary[region].integrate("process", process)
-    nominal=histogram.integrate("systematic", "nominal").values()[()][recoil, :, category_map[category]]
-    up=histogram.integrate("systematic", string+"Up").values()[()][recoil, :, category_map[category]]
-    down=histogram.integrate("systematic",string+"Down").values()[()][recoil, :, category_map[category]]
-    systUp = np.array( up.sum() / nominal.sum() )
-    systUp[np.isnan(systUp)] = 1.
-    systUp = systUp.sum()
-    templ.setParamEffect(syst, systUp)
     #print(string, systUp)
 def addBtagSyst(dictionary, recoil, process, region, templ, category):
-    #btagUp = template(dictionary, process, "btagUp", recoil, region, category)[0]
-    #btagDown = template(dictionary, process, "btagDown", recoil, region, category)[0]
-    #btagDown = np.array( down.sum() / nominal.sum() )
-    #btagDown[np.isnan(btagDown)] = 1.
-    #btagDown = btagDown.sum()
-    #print(process, btagUp, btagDown)
-    #templ.setParamEffect(btag, btagUp, btagDown)
-    addSyst(dictionary, recoil, process, region, templ, category, btag, "btag")
+    btagUp = template(dictionary, process, "btagUp", recoil, region, category)[0]
+    templ.setParamEffect(btag, btagUp)
 
 def addVJetsSyst(dictionary, recoil, process, region, templ, category):
+    def addSyst(dictionary, recoil, process, region, templ, category, syst, string):
+        histogram = dictionary[region].integrate("process", process)
+        nominal=histogram.integrate("systematic", "nominal").values()[()][recoil, :, category_map[category]]
+        up=histogram.integrate("systematic", string+"Up").values()[()][recoil, :, category_map[category]]
+        down=histogram.integrate("systematic",string+"Down").values()[()][recoil, :, category_map[category]]
+        systUp = np.array( up.sum() / nominal.sum() )
+        systUp[np.isnan(systUp)] = 1.
+        systUp = systUp.sum()
+        templ.setParamEffect(syst, systUp)
     addSyst(dictionary, recoil, process, region, templ, category, ew1, "ew1")
     addSyst(dictionary, recoil, process, region, templ, category, ew2W, "ew2W")
     addSyst(dictionary, recoil, process, region, templ, category, ew2Z, "ew2Z")
@@ -364,7 +358,7 @@ def model(year, recoil, category, s):
 
     if category == "pass" and recoil<4:
         sr_ttMC.setParamEffect(tt_norm, 1.2)
-        sr_ttMC.autoMCStats()
+        #sr_ttMC.autoMCStats()
         sigmascale={
             '2016': 1000,
             '2017': 1000,
@@ -500,7 +494,7 @@ def model(year, recoil, category, s):
     wmcr_wjetsMC.setParamEffect(jec, 1.05)
     wmcr_wjetsMC.setParamEffect(id_mu, 1.02)
     wmcr_wjetsMC.setParamEffect(iso_mu, 1.02)
-    wmcr_wjetsMC.autoMCStats()
+    #wmcr_wjetsMC.autoMCStats()
     addBtagSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
 
@@ -528,7 +522,7 @@ def model(year, recoil, category, s):
     
     if category == "pass":
         wmcr_ttMC.setParamEffect(tt_norm, 1.2)
-        wmcr_ttMC.autoMCStats()
+        #wmcr_ttMC.autoMCStats()
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wmcr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
@@ -653,7 +647,7 @@ def model(year, recoil, category, s):
     wecr_wjetsMC.setParamEffect(jec, 1.05)
     wecr_wjetsMC.setParamEffect(id_e, 1.02)
     wecr_wjetsMC.setParamEffect(reco_e, 1.02)
-    wecr_wjetsMC.autoMCStats()
+    #wecr_wjetsMC.autoMCStats()
     addBtagSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
 
@@ -683,7 +677,7 @@ def model(year, recoil, category, s):
 
     if category == "pass":
         wecr_ttMC.setParamEffect(tt_norm, 1.2)
-        wecr_ttMC.autoMCStats()
+        #wecr_ttMC.autoMCStats()
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wecr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
@@ -809,7 +803,7 @@ def model(year, recoil, category, s):
     tmcr_ttMC.setParamEffect(id_mu, 1.02)
     tmcr_ttMC.setParamEffect(iso_mu, 1.02)
     addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category)
-    tmcr_ttMC.autoMCStats()
+    #tmcr_ttMC.autoMCStats()
     tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() 
     tmcr_tt = rl.TransferFactorSample(
         ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt
@@ -947,7 +941,7 @@ def model(year, recoil, category, s):
     tecr_ttMC.setParamEffect(id_e, 1.02)
     tecr_ttMC.setParamEffect(reco_e, 1.02)
     addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category)
-    tecr_ttMC.autoMCStats()
+    #tecr_ttMC.autoMCStats()
     tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     tecr_tt = rl.TransferFactorSample(
         ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt
@@ -1108,7 +1102,7 @@ if __name__ == "__main__":
     trig_pho = rl.NuisanceParameter("trig_pho" + year, "lnN")
     veto_tau = rl.NuisanceParameter("veto_tau" + year, "lnN")
     jec = rl.NuisanceParameter("jec" + year, "lnN")
-    btag = rl.NuisanceParameter("btag" + year, "lnN")  # AK4 btag
+    btag = rl.NuisanceParameter("btag" + year, "shapeN")  # AK4 btag
     ew1 = rl.NuisanceParameter("ew1", "lnN")
     #ew2G = rl.NuisanceParameter("ew2G", "lnN")
     ew2W = rl.NuisanceParameter("ew2W", "lnN")
@@ -1165,7 +1159,7 @@ if __name__ == "__main__":
         sr_zjetsMCFail.setParamEffect(trig_met, 1.02)
         sr_zjetsMCFail.setParamEffect(veto_tau, 1.03)
         sr_zjetsMCFail.setParamEffect(jec, 1.05)
-        sr_zjetsMCFail.autoMCStats()
+        #sr_zjetsMCFail.autoMCStats()
         addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
 
@@ -1176,7 +1170,7 @@ if __name__ == "__main__":
             sr_zhfMCFailTemplate
         )
         sr_zhfMCFail.setParamEffect(zhf_fraction, 1.4)
-        sr_zhfMCFail.autoMCStats()
+        #sr_zhfMCFail.autoMCStats()
 
         sr_zlfMCFailTemplate = template(background, "Z+LF", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
         sr_zlfMCFail = rl.TemplateSample(
@@ -1185,7 +1179,7 @@ if __name__ == "__main__":
             sr_zlfMCFailTemplate
         )
         sr_zlfMCFail.setParamEffect(zhf_fraction, 0.95)
-        sr_zlfMCFail.autoMCStats()
+        #sr_zlfMCFail.autoMCStats()
 
         sr_zjetsObservable = rl.Observable("fjmass", sr_zjetsMCFailTemplate[1])
         sr_zjetsParameters = np.array(
@@ -1217,7 +1211,7 @@ if __name__ == "__main__":
         sr_wjetsMCFail.setParamEffect(trig_met, 1.02)
         sr_wjetsMCFail.setParamEffect(veto_tau, 1.03)
         sr_wjetsMCFail.setParamEffect(jec, 1.05)
-        sr_wjetsMCFail.autoMCStats()
+        #sr_wjetsMCFail.autoMCStats()
         addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
 
@@ -1228,7 +1222,7 @@ if __name__ == "__main__":
             sr_whfMCFailTemplate
         )
         sr_whfMCFail.setParamEffect(whf_fraction, 1.4)
-        sr_whfMCFail.autoMCStats()
+        #sr_whfMCFail.autoMCStats()
 
         sr_wlfMCFailTemplate = template(background, "W+LF", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
         sr_wlfMCFail = rl.TemplateSample(
@@ -1237,7 +1231,7 @@ if __name__ == "__main__":
             sr_wlfMCFailTemplate
         )
         sr_wlfMCFail.setParamEffect(whf_fraction, 0.9)
-        sr_wlfMCFail.autoMCStats()
+        #sr_wlfMCFail.autoMCStats()
 
         sr_wjetsFailTransferFactor = sr_wjetsMCFail.getExpectation() / sr_zjetsMCFail.getExpectation()
         sr_wjetsFail = rl.TransferFactorSample(
@@ -1258,7 +1252,7 @@ if __name__ == "__main__":
         sr_zjetsMCPass.setParamEffect(trig_met, 1.02)
         sr_zjetsMCPass.setParamEffect(veto_tau, 1.03)
         sr_zjetsMCPass.setParamEffect(jec, 1.05)
-        sr_zjetsMCPass.autoMCStats()
+        #sr_zjetsMCPass.autoMCStats()
         addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
 
@@ -1269,7 +1263,7 @@ if __name__ == "__main__":
             sr_zhfMCPassTemplate
         )
         sr_zhfMCPass.setParamEffect(zhf_fraction, 1.4)
-        sr_zhfMCPass.autoMCStats()
+        #sr_zhfMCPass.autoMCStats()
 
         sr_zlfMCPassTemplate = template(background, "Z+LF", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
         sr_zlfMCPass = rl.TemplateSample(
@@ -1278,7 +1272,7 @@ if __name__ == "__main__":
             sr_zlfMCPassTemplate
         )
         sr_zlfMCPass.setParamEffect(zhf_fraction, 0.95)
-        sr_zlfMCPass.autoMCStats()
+        #sr_zlfMCPass.autoMCStats()
 
         tf_paramsZdeco = (sr_zlfMCPass.getExpectation()+sr_zhfMCPass.getExpectation()) / (sr_zlfMCFail.getExpectation()+sr_zhfMCFail.getExpectation())
         tf_paramsZ = tf_paramsZdeco * tf_dataResidualZ_params[recoilbin, :]
@@ -1301,7 +1295,7 @@ if __name__ == "__main__":
         sr_wjetsMCPass.setParamEffect(trig_met, 1.02)
         sr_wjetsMCPass.setParamEffect(veto_tau, 1.03)
         sr_wjetsMCPass.setParamEffect(jec, 1.05)
-        sr_wjetsMCPass.autoMCStats()
+        #sr_wjetsMCPass.autoMCStats()
         addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
 
@@ -1312,7 +1306,7 @@ if __name__ == "__main__":
             sr_whfMCPassTemplate
         )
         sr_whfMCPass.setParamEffect(whf_fraction, 1.4)
-        sr_whfMCPass.autoMCStats()
+        #sr_whfMCPass.autoMCStats()
 
         sr_wlfMCPassTemplate = template(background, "W+LF", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
         sr_wlfMCPass = rl.TemplateSample(
@@ -1321,7 +1315,7 @@ if __name__ == "__main__":
             sr_wlfMCPassTemplate
         )
         sr_wlfMCPass.setParamEffect(whf_fraction, 0.9)
-        sr_wlfMCPass.autoMCStats()
+        #sr_wlfMCPass.autoMCStats()
 
         tf_paramsWdeco = (sr_wlfMCPass.getExpectation()+sr_whfMCPass.getExpectation()) / (sr_wlfMCFail.getExpectation()+sr_whfMCFail.getExpectation())
         tf_paramsW = tf_paramsWdeco * tf_dataResidualW_params[recoilbin, :]
