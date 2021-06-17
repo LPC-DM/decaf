@@ -71,17 +71,17 @@ class AnalysisProcessor(processor.ProcessorABC):
             '2016': [
                 'BTagMu_AK4Jet300_Mu5',
                 'BTagMu_AK8Jet300_Mu5',
-                'HLT_BTagMu_AK4DiJet170_Mu5'
+                'BTagMu_AK4DiJet170_Mu5'
                 ],
             '2017': [
                 'BTagMu_AK4Jet300_Mu5',
                 'BTagMu_AK8Jet300_Mu5',
-                'HLT_BTagMu_AK4DiJet170_Mu5'
+                'BTagMu_AK4DiJet170_Mu5'
                 ],
             '2018': [
                 'BTagMu_AK4Jet300_Mu5',
                 'BTagMu_AK8Jet300_Mu5',
-                'HLT_BTagMu_AK4DiJet170_Mu5'
+                'BTagMu_AK4DiJet170_Mu5'
                 ]
         }
 
@@ -214,7 +214,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         ##### fj.subjets is a TLorentzVectorArray #####
         mu = mu[mu.isGlobal] ## Use a global muon for QCD events
         jetmu = fj.subjets.flatten(axis=1).cross(mu, nested=True)
-        mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7)).sum() > 0
+        mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7)).sum() == 1
 
         ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
         ##### Using the offset function to copy contents not the type of the array #####
@@ -257,7 +257,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('fjCoupledMu', (fj_nwithmu > 0) )
 
         #### muon selection ####
-        #selection.add('mu_pt', (leading_mu.pt.max() > 7) )
+        selection.add('mu_pt', (jetmu.i1.pt > 7) )
 
         print('Selections')
         print(selection.names, '\n')
