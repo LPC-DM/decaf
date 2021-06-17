@@ -246,15 +246,16 @@ class AnalysisProcessor(processor.ProcessorABC):
         #### ak15 jet selection ####
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
+        leading_fj = leading_fj[leading_fj.withmu.astype(np.bool)]
 
-        fj_good = fj[fj.isgood.astype(np.bool)]
-        fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
-        fj_nwithmu = fj_withmu.counts
+        #fj_good = fj[fj.isgood.astype(np.bool)]
+        #fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
+        #fj_nwithmu = fj_withmu.counts
 
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 250) )
         selection.add('fj_mass', (leading_fj.msd_corr.sum() > 50) ) ## optionally also <130
         #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
-        selection.add('fjCoupledMu', (fj_nwithmu > 0) )
+        #selection.add('fjCoupledMu', (fj_nwithmu > 0) )
 
         print('Selections')
         print(selection.names, '\n')
@@ -266,7 +267,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             'fjmass':    leading_fj.msd_corr,
             'fj1pt':     leading_fj.sd.pt
         }
-        #print('Variables:',variables.keys())
 
         def fill(dataset, gentype, weight, cut):
             flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
