@@ -31,12 +31,13 @@ bbtagger_eff = {
         }
 
 #### New btagJP binnings for fit
-#new_bins = {
-#        #"2016": [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 2.5],
-#        "2016": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
-#        "2017": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
-#        "2018": [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.5]
-#        }
+new_bins = {
+        #"2016": [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 2.5],
+        "2016": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
+        "2017": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
+        #"2018": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
+        "2018": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.5],
+        }
 
 ### category: pass/fail flag
 def template(dictionary, process, gentype, category, read_sumw2=False):
@@ -51,10 +52,11 @@ def template(dictionary, process, gentype, category, read_sumw2=False):
         output[zerobins] = 1e-5
         sumw2[zerobins] = 0.
 
-    print(category, process, output)
+    #print(category, process, output)
     binning = (
         dictionary[gentype].integrate("process", process).axis("btagJP").edges()
     )
+    print('Bin edges:', binning, '\n')
 
     if read_sumw2:
         return (output, binning, "btagJP", sumw2)
@@ -87,27 +89,27 @@ def model(year, category):
     ###
 
     ##### Template to use bb stat uncertainties
-    #sr_genbb_Template = template(signal, "QCD", "bb", category, read_sumw2=True)
-    #sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
-    #sr_genbb.setParamEffect(lumi, 1.027)
-    #sr_genbb.setParamEffect(pu, 1.05)
-    #sr_genbb.setParamEffect(jes, 1.02)
-    #sr_genbb.setParamEffect(frac_bb, 1.5)
-    #sr_genbb.setParamEffect(sf_weight, weight[category])
-    #sr_genbb.autoMCStats()
-    #sr.addSample(sr_genbb)
-    ###########################################
-
-    ##### Template without bb stat uncertainties
-    sr_genbb_Template = template(signal, "QCD", "bb", category)
-    sr_genbb_Observable = rl.Observable("btagJP", sr_genbb_Template[1])
-    sr_genbb_BinYields = sr_genbb_Template[0] * weight[category]
-    sr_genbb = rl.ParametericSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Observable, sr_genbb_BinYields)
+    sr_genbb_Template = template(signal, "QCD", "bb", category, read_sumw2=True)
+    sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
     sr_genbb.setParamEffect(lumi, 1.027)
     sr_genbb.setParamEffect(pu, 1.05)
     sr_genbb.setParamEffect(jes, 1.02)
     sr_genbb.setParamEffect(frac_bb, 1.5)
+    sr_genbb.setParamEffect(sf_weight, weight[category])
+    sr_genbb.autoMCStats()
     sr.addSample(sr_genbb)
+    ###########################################
+
+    ##### Template without bb stat uncertainties
+    #sr_genbb_Template = template(signal, "QCD", "bb", category)
+    #sr_genbb_Observable = rl.Observable("btagJP", sr_genbb_Template[1])
+    #sr_genbb_BinYields = sr_genbb_Template[0] * weight[category]
+    #sr_genbb = rl.ParametericSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Observable, sr_genbb_BinYields)
+    #sr_genbb.setParamEffect(lumi, 1.027)
+    #sr_genbb.setParamEffect(pu, 1.05)
+    #sr_genbb.setParamEffect(jes, 1.02)
+    #sr_genbb.setParamEffect(frac_bb, 1.5)
+    #sr.addSample(sr_genbb)
     ###########################################
 
     ###
@@ -174,20 +176,20 @@ if __name__ == "__main__":
     frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
 
     #### SF weight (TemplateSample version) ####
-    #sf = rl.IndependentParameter("sf" + year, 1.0, 0.01, 1.0 / bbtagger_eff[year])
-    #weight = {
-    #        "pass": rl.DependentParameter("weight", "{0}", sf),
-    #        "fail": rl.DependentParameter("weight", "(1-({0}*%f))/(1-%f)" % (bbtagger_eff[year], bbtagger_eff[year]), sf)
-    #        }
-    #sf_weight = rl.IndependentParameter("sf_weight" + year, 1.0)
+    sf = rl.IndependentParameter("sf" + year, 1.0, 0.01, 1.0 / bbtagger_eff[year])
+    weight = {
+            "pass": rl.DependentParameter("weight", "{0}", sf),
+            "fail": rl.DependentParameter("weight", "(1-({0}*%f))/(1-%f)" % (bbtagger_eff[year], bbtagger_eff[year]), sf)
+            }
+    sf_weight = rl.IndependentParameter("sf_weight" + year, 1.0)
     ############################################
 
     #### SF weight (ParametericSample version) ####
-    sf = rl.IndependentParameter("sf" + year, 1.0, 0.01, 1.0 / bbtagger_eff[year])
-    weight = {
-            "pass": sf,
-            "fail": (1 - (sf*bbtagger_eff[year])) / (1 - bbtagger_eff[year])
-            }
+    #sf = rl.IndependentParameter("sf" + year, 1.0, 0.01, 1.0 / bbtagger_eff[year])
+    #weight = {
+    #        "pass": sf,
+    #        "fail": (1 - (sf*bbtagger_eff[year])) / (1 - bbtagger_eff[year])
+    #        }
     ###############################################
 
     for category in ["pass", "fail"]:
@@ -210,8 +212,8 @@ if __name__ == "__main__":
         ###
         # Rebin templates for fit 
         ##
-        #data_hists["template"] = data_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", new_bins[year]))
-        #bkg_hists["template"] = bkg_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", new_bins[year]))
+        data_hists["template"] = data_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", new_bins[year]))
+        bkg_hists["template"] = bkg_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", new_bins[year]))
 
         ###
         # Preparing histograms for fit
