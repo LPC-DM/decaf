@@ -254,7 +254,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 250) )
         selection.add('fj_mass', (leading_fj.msd_corr.sum() > 50) ) ## optionally also <130
         #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
-        #selection.add('fjCoupledMu', (fj_nwithmu > 0) )
+        selection.add('fjCoupledMu', (fj_nwithmu > 0) )
 
         #### muon selection ####
         #selection.add('mu_pt', (leading_mu.pt.max() > 7) )
