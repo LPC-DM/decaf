@@ -70,15 +70,18 @@ class AnalysisProcessor(processor.ProcessorABC):
         self._btagmu_triggers = {
             '2016': [
                 'BTagMu_AK4Jet300_Mu5',
-                'BTagMu_AK8Jet300_Mu5'
+                'BTagMu_AK8Jet300_Mu5',
+                'HLT_BTagMu_AK4DiJet170_Mu5'
                 ],
             '2017': [
                 'BTagMu_AK4Jet300_Mu5',
-                'BTagMu_AK8Jet300_Mu5'
+                'BTagMu_AK8Jet300_Mu5',
+                'HLT_BTagMu_AK4DiJet170_Mu5'
                 ],
             '2018': [
                 'BTagMu_AK4Jet300_Mu5',
-                'BTagMu_AK8Jet300_Mu5'
+                'BTagMu_AK8Jet300_Mu5',
+                'HLT_BTagMu_AK4DiJet170_Mu5'
                 ]
         }
 
@@ -180,7 +183,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         probQCD=fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
         probZHbb=fj.probZbb+fj.probHbb
         fj['ZHbbvsQCD'] = probZHbb/(probZHbb+probQCD)
-        #fj['tau21'] = fj.tau2/fj.tau1
+        fj['tau21'] = fj.tau2/fj.tau1
 
         ###
         #Calculating weights
@@ -226,11 +229,11 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
 
         #### trigger selection ####
-        #triggers = np.zeros(events.size, dtype=np.bool)
-        #for path in self._btagmu_triggers[self._year]:
-        #    if path not in events.HLT.columns: continue
-        #    triggers = triggers | events.HLT[path]
-        #selection.add('btagmu_triggers', triggers)
+        triggers = np.zeros(events.size, dtype=np.bool)
+        for path in self._btagmu_triggers[self._year]:
+            if path not in events.HLT.columns: continue
+            triggers = triggers | events.HLT[path]
+        selection.add('btagmu_triggers', triggers)
 
         #### MET filters ####
         met_filters =  np.ones(events.size, dtype=np.bool)
@@ -248,13 +251,16 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
         fj_nwithmu = fj_withmu.counts
 
-        selection.add('fj_pt', (leading_fj.sd.pt.max() > 350) )
-        selection.add('fj_mass', (leading_fj.msd_corr.sum() > 80) ) ## optionally also <130
+        selection.add('fj_pt', (leading_fj.sd.pt.max() > 250) )
+        selection.add('fj_mass', (leading_fj.msd_corr.sum() > 50) ) ## optionally also <130
         #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
-        selection.add('fjCoupledMu', (fj_nwithmu > 0) )
+        #selection.add('fjCoupledMu', (fj_nwithmu > 0) )
 
         #### muon selection ####
-        selection.add('mu_pt', (leading_mu.pt.max() > 7) )
+        #selection.add('mu_pt', (leading_mu.pt.max() > 7) )
+
+        print('Selections')
+        print(selection.names, '\n')
 
         variables = {
             'ZHbbvsQCD': leading_fj.ZHbbvsQCD,
