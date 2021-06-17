@@ -31,10 +31,12 @@ bbtagger_eff = {
         }
 
 #### New btagJP binnings for fit
-#fail_binning = [0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 2.5]
-#fail_binning = [0., 0.1, 0.2, 0.3, 0.4, 2.5]
-fail_binning = [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.5]
-pass_binning = [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.5]
+#new_bins = {
+#        #"2016": [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 2.5],
+#        "2016": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
+#        "2017": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
+#        "2018": [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.5]
+#        }
 
 ### category: pass/fail flag
 def template(dictionary, process, gentype, category, read_sumw2=False):
@@ -84,25 +86,29 @@ def model(year, category):
     # QCD sig process
     ###
 
-    sr_genbb_Template = template(signal, "QCD", "bb", category, read_sumw2=True)
-    sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
-    sr_genbb.setParamEffect(lumi, 1.027)
-    sr_genbb.setParamEffect(pu, 1.05)
-    sr_genbb.setParamEffect(jes, 1.02)
-    sr_genbb.setParamEffect(frac_bb, 1.5)
-    sr_genbb.setParamEffect(sf_weight, weight[category])
-    sr_genbb.autoMCStats()
-    sr.addSample(sr_genbb)
-
-    #sr_genbb_Template = template(signal, "QCD", "bb", category)
-    #sr_genbb_Observable = rl.Observable("btagJP", sr_genbb_Template[1])
-    #sr_genbb_BinYields = sr_genbb_Template[0] * weight[category]
-    #sr_genbb = rl.ParametericSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Observable, sr_genbb_BinYields)
+    ##### Template to use bb stat uncertainties
+    #sr_genbb_Template = template(signal, "QCD", "bb", category, read_sumw2=True)
+    #sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
     #sr_genbb.setParamEffect(lumi, 1.027)
     #sr_genbb.setParamEffect(pu, 1.05)
     #sr_genbb.setParamEffect(jes, 1.02)
     #sr_genbb.setParamEffect(frac_bb, 1.5)
+    #sr_genbb.setParamEffect(sf_weight, weight[category])
+    #sr_genbb.autoMCStats()
     #sr.addSample(sr_genbb)
+    ###########################################
+
+    ##### Template without bb stat uncertainties
+    sr_genbb_Template = template(signal, "QCD", "bb", category)
+    sr_genbb_Observable = rl.Observable("btagJP", sr_genbb_Template[1])
+    sr_genbb_BinYields = sr_genbb_Template[0] * weight[category]
+    sr_genbb = rl.ParametericSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Observable, sr_genbb_BinYields)
+    sr_genbb.setParamEffect(lumi, 1.027)
+    sr_genbb.setParamEffect(pu, 1.05)
+    sr_genbb.setParamEffect(jes, 1.02)
+    sr_genbb.setParamEffect(frac_bb, 1.5)
+    sr.addSample(sr_genbb)
+    ###########################################
 
     ###
     # QCD bkg processes
@@ -114,7 +120,7 @@ def model(year, category):
     sr_genb.setParamEffect(pu, 1.05)
     sr_genb.setParamEffect(jes, 1.02)
     sr_genb.setParamEffect(frac_b, 1.5)
-    sr_genb.autoMCStats()
+    #sr_genb.autoMCStats()
     sr.addSample(sr_genb)
 
     sr_genc_Template = template(background, "QCD", "c", category, read_sumw2=True)
@@ -123,7 +129,7 @@ def model(year, category):
     sr_genc.setParamEffect(pu, 1.05)
     sr_genc.setParamEffect(jes, 1.02)
     sr_genc.setParamEffect(frac_c, 1.5)
-    sr_genc.autoMCStats()
+    #sr_genc.autoMCStats()
     sr.addSample(sr_genc)
 
     sr_gencc_Template = template(background, "QCD", "cc", category, read_sumw2=True)
@@ -132,7 +138,7 @@ def model(year, category):
     sr_gencc.setParamEffect(pu, 1.05)
     sr_gencc.setParamEffect(jes, 1.02)
     sr_gencc.setParamEffect(frac_cc, 1.5)
-    sr_gencc.autoMCStats()
+    #sr_gencc.autoMCStats()
     sr.addSample(sr_gencc)
 
     sr_genother_Template = template(background, "QCD", "other", category, read_sumw2=True)
@@ -141,7 +147,7 @@ def model(year, category):
     sr_genother.setParamEffect(pu, 1.05)
     sr_genother.setParamEffect(jes, 1.02)
     sr_genother.setParamEffect(frac_other, 1.5)
-    sr_genother.autoMCStats()
+    #sr_genother.autoMCStats()
     sr.addSample(sr_genother)
 
     return model
@@ -155,33 +161,8 @@ if __name__ == "__main__":
     year = options.year
 
     ###
-    # Extract histograms from input file
     ###
-
-    #print("Extracting histograms")
-    #hists = load("hists/doublebSF" + year + ".scaled")
-    #data_hists = hists["data"]
-    #bkg_hists = hists["bkg"]
-
-    ###
-    # Preparing histograms for fit
-    ##
-
-    #data = {}
-    #data['bb'] = data_hists["template"].sum("gentype", overflow='all')
-
-    #background = {}
-    #signal = {}
-
-    #for i in range(5):
-    #    if gentype_map[i] == 'bb':
-    #        signal[str(gentype_map[i])] = bkg_hists["template"].integrate("gentype", 0)
-    #    else:
-    #        background[str(gentype_map[i])] = bkg_hists["template"].integrate("gentype", i)
-
-    ###
-    ###
-    # Setting up systematics
+    # Setting up common systematics
     ###
     ###
 
@@ -192,24 +173,35 @@ if __name__ == "__main__":
     #### fractional systematics (assume 50%)
     frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
 
-    #### SF weight
+    #### SF weight (TemplateSample version) ####
+    #sf = rl.IndependentParameter("sf" + year, 1.0, 0.01, 1.0 / bbtagger_eff[year])
+    #weight = {
+    #        "pass": rl.DependentParameter("weight", "{0}", sf),
+    #        "fail": rl.DependentParameter("weight", "(1-({0}*%f))/(1-%f)" % (bbtagger_eff[year], bbtagger_eff[year]), sf)
+    #        }
+    #sf_weight = rl.IndependentParameter("sf_weight" + year, 1.0)
+    ############################################
+
+    #### SF weight (ParametericSample version) ####
     sf = rl.IndependentParameter("sf" + year, 1.0, 0.01, 1.0 / bbtagger_eff[year])
     weight = {
-            "pass": rl.DependentParameter("weight", "{0}", sf),
-            "fail": rl.DependentParameter("weight", "(1-({0}*%f))/(1-%f)" % (bbtagger_eff[year], bbtagger_eff[year]), sf)
+            "pass": sf,
+            "fail": (1 - (sf*bbtagger_eff[year])) / (1 - bbtagger_eff[year])
             }
-    #sf_weight = rl.NuisanceParameter("sf_weight" + year, "lnN")
-    sf_weight = rl.IndependentParameter("sf_weight" + year, 1.0)
-
+    ###############################################
 
     for category in ["pass", "fail"]:
 
-        print("Extracting histograms for", category)
+        ###
+        # Extract histograms from input file
+        ###
+
+        print("Extracting histograms for", year, category)
         hists = load("hists/doublebSF" + year + ".scaled")
         data_hists = hists["data"]
         bkg_hists = hists["bkg"]
 
-        #### fractional systematics (assume 50%)
+        #### Setting up fractional systematics (assume 50%)
         frac_b = rl.NuisanceParameter("frac_b" + year + category, "lnN")
         frac_cc = rl.NuisanceParameter("frac_cc" + year + category, "lnN")
         frac_c = rl.NuisanceParameter("frac_c" + year + category, "lnN")
@@ -218,12 +210,8 @@ if __name__ == "__main__":
         ###
         # Rebin templates for fit 
         ##
-        if category is "pass":
-            data_hists["template"] = data_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", pass_binning))
-            bkg_hists["template"] = bkg_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", pass_binning))
-        else:
-            data_hists["template"] = data_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", fail_binning))
-            bkg_hists["template"] = bkg_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", fail_binning))
+        #data_hists["template"] = data_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", new_bins[year]))
+        #bkg_hists["template"] = bkg_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", new_bins[year]))
 
         ###
         # Preparing histograms for fit
