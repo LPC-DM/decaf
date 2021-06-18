@@ -1,0 +1,41 @@
+Combination of btagJP2017pass=btagJP2017pass.txt  btagJP2017fail=btagJP2017fail.txt
+imax 2 number of bins
+jmax 4 number of processes minus 1
+kmax 22 number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes *               btagJP2017fail  btagJP2017fail.root btagJP2017fail:btagJP2017fail_$PROCESS btagJP2017fail:btagJP2017fail_$PROCESS_$SYSTEMATIC
+shapes *               btagJP2017pass  btagJP2017pass.root btagJP2017pass:btagJP2017pass_$PROCESS btagJP2017pass:btagJP2017pass_$PROCESS_$SYSTEMATIC
+----------------------------------------------------------------------------------------------------------------------------------
+bin          btagJP2017pass  btagJP2017fail
+observation  223817          314291        
+----------------------------------------------------------------------------------------------------------------------------------
+bin                                               btagJP2017pass  btagJP2017pass  btagJP2017pass  btagJP2017pass  btagJP2017pass  btagJP2017fail  btagJP2017fail  btagJP2017fail  btagJP2017fail  btagJP2017fail
+process                                           genbb           genother        genb            genc            gencc           genbb           genother        genb            genc            gencc         
+process                                           0               1               2               3               4               0               1               2               3               4             
+rate                                              70328.837       180192.491      23314.629       11322.808       29345.753       5883.015        414300.318      5982.982        14825.35        18776.394     
+----------------------------------------------------------------------------------------------------------------------------------
+btagJP2017fail_genb_mcstat   lnN                  -               -               -               -               -               -               -               1.173           -               -             
+btagJP2017fail_genbb_mcstat   lnN                 -               -               -               -               -               1.217           -               -               -               -             
+btagJP2017fail_genc_mcstat   lnN                  -               -               -               -               -               -               -               -               1.083           -             
+btagJP2017fail_gencc_mcstat   lnN                 -               -               -               -               -               -               -               -               -               1.087         
+btagJP2017fail_genother_mcstat   lnN              -               -               -               -               -               -               1.023           -               -               -             
+btagJP2017pass_genb_mcstat   lnN                  -               -               1.105           -               -               -               -               -               -               -             
+btagJP2017pass_genbb_mcstat   lnN                 1.064           -               -               -               -               -               -               -               -               -             
+btagJP2017pass_genc_mcstat   lnN                  -               -               -               1.114           -               -               -               -               -               -             
+btagJP2017pass_gencc_mcstat   lnN                 -               -               -               -               1.079           -               -               -               -               -             
+btagJP2017pass_genother_mcstat   lnN              -               1.037           -               -               -               -               -               -               -               -             
+frac_b2017fail          lnN                       -               -               -               -               -               -               -               1.5             -               -             
+frac_b2017pass          lnN                       -               -               1.5             -               -               -               -               -               -               -             
+frac_bb2017             lnN                       1.5             -               -               -               -               1.5             -               -               -               -             
+frac_c2017fail          lnN                       -               -               -               -               -               -               -               -               1.5             -             
+frac_c2017pass          lnN                       -               -               -               1.5             -               -               -               -               -               -             
+frac_cc2017fail         lnN                       -               -               -               -               -               -               -               -               -               1.5           
+frac_cc2017pass         lnN                       -               -               -               -               1.5             -               -               -               -               -             
+frac_other2017fail      lnN                       -               -               -               -               -               -               1.5             -               -               -             
+frac_other2017pass      lnN                       -               1.5             -               -               -               -               -               -               -               -             
+jes2017                 lnN                       1.02            1.02            1.02            1.02            1.02            1.02            1.02            1.02            1.02            1.02          
+lumi2017                lnN                       1.027           1.027           1.027           1.027           1.027           1.027           1.027           1.027           1.027           1.027         
+pu2017                  lnN                       1.05            1.05            1.05            1.05            1.05            1.05            1.05            1.05            1.05            1.05          
+sf_weight2017_effect_btagJP2017pass_genbb  rateParam btagJP2017pass genbb (@0) sf2017  
+sf_weight2017_effect_btagJP2017fail_genbb  rateParam btagJP2017fail genbb ((1-(@0*0.947000))/(1-0.947000)) sf2017  
+sf2017 extArg btagJP2017fail.root:btagJP2017fail

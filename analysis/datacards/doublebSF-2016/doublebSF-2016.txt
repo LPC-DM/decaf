@@ -1,0 +1,41 @@
+Combination of btagJP2016fail=btagJP2016fail.txt  btagJP2016pass=btagJP2016pass.txt
+imax 2 number of bins
+jmax 4 number of processes minus 1
+kmax 22 number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes *               btagJP2016fail  btagJP2016fail.root btagJP2016fail:btagJP2016fail_$PROCESS btagJP2016fail:btagJP2016fail_$PROCESS_$SYSTEMATIC
+shapes *               btagJP2016pass  btagJP2016pass.root btagJP2016pass:btagJP2016pass_$PROCESS btagJP2016pass:btagJP2016pass_$PROCESS_$SYSTEMATIC
+----------------------------------------------------------------------------------------------------------------------------------
+bin          btagJP2016fail  btagJP2016pass
+observation  283286          191872        
+----------------------------------------------------------------------------------------------------------------------------------
+bin                                               btagJP2016fail  btagJP2016fail  btagJP2016fail  btagJP2016fail  btagJP2016fail  btagJP2016pass  btagJP2016pass  btagJP2016pass  btagJP2016pass  btagJP2016pass
+process                                           genbb           genother        genb            genc            gencc           genbb           genother        genb            genc            gencc         
+process                                           0               1               2               3               4               0               1               2               3               4             
+rate                                              2283.971        350444.621      4061.475        10242.75        9765.157        39807.757       178611.007      16133.949       9628.77         17965.108     
+----------------------------------------------------------------------------------------------------------------------------------
+btagJP2016fail_genb_mcstat   lnN                  -               -               1.135           -               -               -               -               -               -               -             
+btagJP2016fail_genbb_mcstat   lnN                 1.211           -               -               -               -               -               -               -               -               -             
+btagJP2016fail_genc_mcstat   lnN                  -               -               -               1.066           -               -               -               -               -               -             
+btagJP2016fail_gencc_mcstat   lnN                 -               -               -               -               1.072           -               -               -               -               -             
+btagJP2016fail_genother_mcstat   lnN              -               1.013           -               -               -               -               -               -               -               -             
+btagJP2016pass_genb_mcstat   lnN                  -               -               -               -               -               -               -               1.075           -               -             
+btagJP2016pass_genbb_mcstat   lnN                 -               -               -               -               -               1.06            -               -               -               -             
+btagJP2016pass_genc_mcstat   lnN                  -               -               -               -               -               -               -               -               1.088           -             
+btagJP2016pass_gencc_mcstat   lnN                 -               -               -               -               -               -               -               -               -               1.062         
+btagJP2016pass_genother_mcstat   lnN              -               -               -               -               -               -               1.023           -               -               -             
+frac_b2016fail          lnN                       -               -               1.5             -               -               -               -               -               -               -             
+frac_b2016pass          lnN                       -               -               -               -               -               -               -               1.5             -               -             
+frac_bb2016             lnN                       1.5             -               -               -               -               1.5             -               -               -               -             
+frac_c2016fail          lnN                       -               -               -               1.5             -               -               -               -               -               -             
+frac_c2016pass          lnN                       -               -               -               -               -               -               -               -               1.5             -             
+frac_cc2016fail         lnN                       -               -               -               -               1.5             -               -               -               -               -             
+frac_cc2016pass         lnN                       -               -               -               -               -               -               -               -               -               1.5           
+frac_other2016fail      lnN                       -               1.5             -               -               -               -               -               -               -               -             
+frac_other2016pass      lnN                       -               -               -               -               -               -               1.5             -               -               -             
+jes2016                 lnN                       1.02            1.02            1.02            1.02            1.02            1.02            1.02            1.02            1.02            1.02          
+lumi2016                lnN                       1.027           1.027           1.027           1.027           1.027           1.027           1.027           1.027           1.027           1.027         
+pu2016                  lnN                       1.05            1.05            1.05            1.05            1.05            1.05            1.05            1.05            1.05            1.05          
+sf_weight2016_effect_btagJP2016pass_genbb  rateParam btagJP2016pass genbb (@0) sf2016  
+sf_weight2016_effect_btagJP2016fail_genbb  rateParam btagJP2016fail genbb ((1-(@0*0.938000))/(1-0.938000)) sf2016  
+sf2016 extArg btagJP2016pass.root:btagJP2016pass
