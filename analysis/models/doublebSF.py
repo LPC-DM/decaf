@@ -56,7 +56,7 @@ def template(dictionary, process, gentype, category, read_sumw2=False):
     binning = (
         dictionary[gentype].integrate("process", process).axis("btagJP").edges()
     )
-    print('Bin edges:', binning, '\n')
+    #print('Bin edges:', binning, '\n')
 
     if read_sumw2:
         return (output, binning, "btagJP", sumw2)
@@ -96,7 +96,8 @@ def model(year, category):
     sr_genbb.setParamEffect(jes, 1.02)
     sr_genbb.setParamEffect(frac_bb, 1.5)
     sr_genbb.setParamEffect(sf_weight, weight[category])
-    sr_genbb.autoMCStats()
+    sr_genbb.autoMCStats(lnN=True)
+    #sr_genbb.autoMCStats()
     sr.addSample(sr_genbb)
     ###########################################
 
@@ -122,6 +123,7 @@ def model(year, category):
     sr_genb.setParamEffect(pu, 1.05)
     sr_genb.setParamEffect(jes, 1.02)
     sr_genb.setParamEffect(frac_b, 1.5)
+    sr_genb.autoMCStats(lnN=True)
     #sr_genb.autoMCStats()
     sr.addSample(sr_genb)
 
@@ -131,6 +133,7 @@ def model(year, category):
     sr_genc.setParamEffect(pu, 1.05)
     sr_genc.setParamEffect(jes, 1.02)
     sr_genc.setParamEffect(frac_c, 1.5)
+    sr_genc.autoMCStats(lnN=True)
     #sr_genc.autoMCStats()
     sr.addSample(sr_genc)
 
@@ -140,6 +143,7 @@ def model(year, category):
     sr_gencc.setParamEffect(pu, 1.05)
     sr_gencc.setParamEffect(jes, 1.02)
     sr_gencc.setParamEffect(frac_cc, 1.5)
+    sr_gencc.autoMCStats(lnN=True)
     #sr_gencc.autoMCStats()
     sr.addSample(sr_gencc)
 
@@ -149,6 +153,7 @@ def model(year, category):
     sr_genother.setParamEffect(pu, 1.05)
     sr_genother.setParamEffect(jes, 1.02)
     sr_genother.setParamEffect(frac_other, 1.5)
+    sr_genother.autoMCStats(lnN=True)
     #sr_genother.autoMCStats()
     sr.addSample(sr_genother)
 
