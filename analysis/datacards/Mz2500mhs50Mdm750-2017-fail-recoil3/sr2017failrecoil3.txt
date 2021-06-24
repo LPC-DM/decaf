@@ -1,0 +1,66 @@
+# Datacard for <Channel (sr2017failrecoil3) instance at 0x2b48a6bc8350> generated on 2021-04-09 01:44:52.420051
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 8 # number of samples minus 1
+kmax 44 # number of nuisance parameters
+shapes * sr2017failrecoil3 sr2017failrecoil3.root sr2017failrecoil3:sr2017failrecoil3_$PROCESS sr2017failrecoil3:sr2017failrecoil3_$PROCESS_$SYSTEMATIC
+bin sr2017failrecoil3
+observation 5186.000
+bin                        sr2017failrecoil3  sr2017failrecoil3  sr2017failrecoil3  sr2017failrecoil3  sr2017failrecoil3  sr2017failrecoil3  sr2017failrecoil3  sr2017failrecoil3  sr2017failrecoil3
+process                  Mz2500_mhs50_Mdm750              zjets              wjets               ttMC               stMC           dyjetsMC               vvMC              hbbMC              qcdMC
+process                                    0                  1                  2                  3                  4                  5                  6                  7                  8
+rate                                 168.554              1.000              1.000             16.555              9.253              5.397            152.669              0.258             13.862
+btag2017 lnN                           0.987                  -                  -              1.026              0.988              0.994              0.994              0.992                  -
+ew1 lnN                                    -                  -                  -                  -                  -              1.001                  -                  -                  -
+ew2Z lnN                                   -                  -                  -                  -                  -              1.007                  -                  -                  -
+ew3Z lnN                                   -                  -                  -                  -                  -              1.004                  -                  -                  -
+hbb_norm2017fail lnN                       -                  -                  -                  -                  -                  -                  -              1.200                  -
+jec2017 lnN                            1.050                  -                  -              1.050              1.050              1.050              1.050              1.050              1.050
+lumi2017 lnN                           1.027                  -                  -              1.027              1.027              1.027              1.027              1.027              1.027
+mix lnN                                    -                  -                  -                  -                  -              1.004                  -                  -                  -
+qcd1 lnN                                   -                  -                  -                  -                  -              1.065                  -                  -                  -
+qcd2 lnN                                   -                  -                  -                  -                  -              0.982                  -                  -                  -
+qcdsig_norm2017fail lnN                    -                  -                  -                  -                  -                  -                  -                  -              2.000
+st_norm2017fail lnN                        -                  -                  -                  -              1.200                  -                  -                  -                  -
+trig_met2017 lnN                       1.020                  -                  -              1.020              1.020              1.020              1.020              1.020              1.020
+tt_norm2017fail lnN                        -                  -                  -              1.200                  -                  -                  -                  -                  -
+veto_tau2017 lnN                       1.030                  -                  -              1.030              1.030              1.030              1.030              1.030              1.030
+vv_norm2017fail lnN                        -                  -                  -                  -                  -                  -              1.200                  -                  -
+zjets_norm2017fail lnN                     -                  -                  -                  -                  -              1.400                  -                  -                  -
+ew2W param 0 1
+ew3W param 0 1
+qcd3 param 0 1
+sr2017failrecoil3_wjetsMC_mcstat_bin0 param 0 1
+sr2017failrecoil3_wjetsMC_mcstat_bin1 param 0 1
+sr2017failrecoil3_wjetsMC_mcstat_bin10 param 0 1
+sr2017failrecoil3_wjetsMC_mcstat_bin2 param 0 1
+sr2017failrecoil3_wjetsMC_mcstat_bin3 param 0 1
+sr2017failrecoil3_wjetsMC_mcstat_bin4 param 0 1
+sr2017failrecoil3_wjetsMC_mcstat_bin5 param 0 1
+sr2017failrecoil3_wjetsMC_mcstat_bin6 param 0 1
+sr2017failrecoil3_wjetsMC_mcstat_bin7 param 0 1
+sr2017failrecoil3_wjetsMC_mcstat_bin8 param 0 1
+sr2017failrecoil3_wjetsMC_mcstat_bin9 param 0 1
+sr2017failrecoil3_zjetsMC_mcstat_bin0 param 0 1
+sr2017failrecoil3_zjetsMC_mcstat_bin1 param 0 1
+sr2017failrecoil3_zjetsMC_mcstat_bin10 param 0 1
+sr2017failrecoil3_zjetsMC_mcstat_bin2 param 0 1
+sr2017failrecoil3_zjetsMC_mcstat_bin3 param 0 1
+sr2017failrecoil3_zjetsMC_mcstat_bin4 param 0 1
+sr2017failrecoil3_zjetsMC_mcstat_bin5 param 0 1
+sr2017failrecoil3_zjetsMC_mcstat_bin6 param 0 1
+sr2017failrecoil3_zjetsMC_mcstat_bin7 param 0 1
+sr2017failrecoil3_zjetsMC_mcstat_bin8 param 0 1
+sr2017failrecoil3_zjetsMC_mcstat_bin9 param 0 1
+wjets_norm param 0 1
+zjets_norm param 0 1
+sr2017_zjets_fail_recoil3_mass0 extArg sr2017failrecoil3.root:sr2017failrecoil3
+sr2017_zjets_fail_recoil3_mass1 extArg sr2017failrecoil3.root:sr2017failrecoil3
+sr2017_zjets_fail_recoil3_mass10 extArg sr2017failrecoil3.root:sr2017failrecoil3
+sr2017_zjets_fail_recoil3_mass2 extArg sr2017failrecoil3.root:sr2017failrecoil3
+sr2017_zjets_fail_recoil3_mass3 extArg sr2017failrecoil3.root:sr2017failrecoil3
+sr2017_zjets_fail_recoil3_mass4 extArg sr2017failrecoil3.root:sr2017failrecoil3
+sr2017_zjets_fail_recoil3_mass5 extArg sr2017failrecoil3.root:sr2017failrecoil3
+sr2017_zjets_fail_recoil3_mass6 extArg sr2017failrecoil3.root:sr2017failrecoil3
+sr2017_zjets_fail_recoil3_mass7 extArg sr2017failrecoil3.root:sr2017failrecoil3
+sr2017_zjets_fail_recoil3_mass8 extArg sr2017failrecoil3.root:sr2017failrecoil3
+sr2017_zjets_fail_recoil3_mass9 extArg sr2017failrecoil3.root:sr2017failrecoil3
