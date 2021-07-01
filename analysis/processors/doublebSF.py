@@ -21,6 +21,31 @@ class AnalysisProcessor(processor.ProcessorABC):
         '2018': 59.74
     }
 
+    met_filter_flags = {
+        '2016': ['goodVertices',
+                 'globalSuperTightHalo2016Filter',
+                 'HBHENoiseFilter',
+                 'HBHENoiseIsoFilter',
+                 'EcalDeadCellTriggerPrimitiveFilter',
+                 'BadPFMuonFilter'
+             ],
+        '2017': ['goodVertices',
+                 'globalSuperTightHalo2016Filter',
+                 'HBHENoiseFilter',
+                 'HBHENoiseIsoFilter',
+                 'EcalDeadCellTriggerPrimitiveFilter',
+                 'BadPFMuonFilter',
+                 'ecalBadCalibFilterV2'
+             ],
+        '2018': ['goodVertices',
+                 'globalSuperTightHalo2016Filter',
+                 'HBHENoiseFilter',
+                 'HBHENoiseIsoFilter',
+                 'EcalDeadCellTriggerPrimitiveFilter',
+                 'BadPFMuonFilter',
+                 'ecalBadCalibFilterV2'
+             ]
+    }
 
     def __init__(self, year, xsec, corrections, ids, common):
 
@@ -29,18 +54,35 @@ class AnalysisProcessor(processor.ProcessorABC):
         self._xsec = xsec
 
         self._gentype_map = {
-            'bb':       1,
-            'bc':       2,
-            'b':        3,
-            'cc' :      4,
-            'c':        5,
-            'other':    6
+            'bb':       0,
+            'b':        1,
+            'cc' :      2,
+            'c':        3,
+            'other':    4
         }
 
         self._ZHbbvsQCDwp = {
             '2016': 0.53,
             '2017': 0.61,
             '2018': 0.65
+        }
+
+        self._btagmu_triggers = {
+            '2016': [
+                'BTagMu_AK4Jet300_Mu5',
+                'BTagMu_AK8Jet300_Mu5',
+                'BTagMu_AK4DiJet170_Mu5'
+                ],
+            '2017': [
+                'BTagMu_AK4Jet300_Mu5',
+                'BTagMu_AK8Jet300_Mu5',
+                'BTagMu_AK4DiJet170_Mu5'
+                ],
+            '2018': [
+                'BTagMu_AK4Jet300_Mu5',
+                'BTagMu_AK8Jet300_Mu5',
+                'BTagMu_AK4DiJet170_Mu5'
+                ]
         }
 
         self._corrections = corrections
@@ -53,11 +95,48 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('sumw', 'Weight value', [0.])
             ),
+            'cutflow': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Cat('cutname', 'Cut name'),
+                hist.Bin('cut', 'Cut index', [0, 1, 2, 3, 4, 5, 6, 7, 8]),
+            ),
+            'template': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('btagJP','btagJP', [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5]),
+                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
+            ),
             'ZHbbvsQCD': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1)
+            ),
+            'btagJP': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('btagJP','btagJP', [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5])
+            ),
+            'tau21': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('tau21','tau21', 20, 0, 1)
+            ),
+            'fjmass': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('fjmass','AK15 Jet Mass',30,0,300)
+            ),
+            'fj1pt': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('fj1pt','AK15 Leading SoftDrop Jet Pt',[340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
         })
 
@@ -93,40 +172,18 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
 
         mu = events.Muon
-        mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.looseId,self._year)
-        mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.tightId,self._year)
-        mu['T'] = TVector2Array.from_polar(mu.pt, mu.phi)
-        mu_loose=mu[mu.isloose.astype(np.bool)]
-        mu_tight=mu[mu.istight.astype(np.bool)]
-        mu_ntot = mu.counts
-        mu_nloose = mu_loose.counts
-        mu_ntight = mu_tight.counts
         leading_mu = mu[mu.pt.argmax()]
-        leading_mu = leading_mu[leading_mu.istight.astype(np.bool)]
 
         fj = events.AK15Puppi
         fj['sd'] = fj.subjets.sum()
-        #fj['isclean'] =~match(fj.sd,pho_loose,1.5)&~match(fj.sd,mu_loose,1.5)&~match(fj.sd,e_loose,1.5)
-        fj['isclean'] =match(fj.sd,mu_loose,0.4)
         fj['isgood'] = isGoodFatJet(fj.sd.pt, fj.sd.eta, fj.jetId)
         fj['T'] = TVector2Array.from_polar(fj.pt, fj.phi)
         fj['msd_raw'] = (fj.subjets * (1 - fj.subjets.rawFactor)).sum().mass
         fj['msd_corr'] = fj.msd_raw * awkward.JaggedArray.fromoffsets(fj.array.offsets, np.maximum(1e-5, get_msd_weight(fj.sd.pt.flatten(),fj.sd.eta.flatten())))
-        fj['rho'] = 2 * np.log(fj.msd_corr / fj.sd.pt)
         probQCD=fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
         probZHbb=fj.probZbb+fj.probHbb
         fj['ZHbbvsQCD'] = probZHbb/(probZHbb+probQCD)
-        probT=fj.probTbcq+fj.probTbqq
-        fj['TvsQCD'] = probT/(probT+probQCD)
-        probV=fj.probWcq+fj.probWqq+fj.probZbb+fj.probZcc+fj.probZqq
-        probX=probZHbb+probV
-        fj['XvsQCD'] = probX/(probX+probQCD)
         fj['tau21'] = fj.tau2/fj.tau1
-        fj_good = fj[fj.isgood.astype(np.bool)]
-        fj_clean = fj_good[fj_good.isclean.astype(np.bool)]
-        fj_ntot = fj.counts
-        fj_ngood = fj_good.counts
-        fj_nclean = fj_clean.counts
 
         ###
         #Calculating weights
@@ -134,195 +191,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         if not isData:
 
             gen = events.GenPart
-
-            ###
-            # Fat-jet top matching at decay level
-            ###
-
-            qFromW = gen[
-                (abs(gen.pdgId) < 4) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 24)
-            ]
-            cFromW = gen[
-                (abs(gen.pdgId) == 4) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 24)
-            ]
-
-            def tbqqmatch(topid, dR=1.5):
-                qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
-                bFromTop = gen[
-                    (abs(gen.pdgId) == 5) &
-                    gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                    (gen.distinctParent.pdgId == topid)
-                ]
-                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
-                jetgenb = fj.sd.cross(bFromTop, nested=True)
-                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==2) & (qFromWFromTop.counts>0)
-                bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1) & (bFromTop.counts>0)
-                return qWmatch & bmatch
-            fj['isTbqq'] = tbqqmatch(6)|tbqqmatch(-6)
-
-            def tbcqmatch(topid, dR=1.5):
-                qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
-                cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
-                bFromTop = gen[
-                    (abs(gen.pdgId) == 5) &
-                    gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                    (gen.distinctParent.pdgId == topid)
-                ]
-                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
-                jetgenWc = fj.sd.cross(cFromWFromTop, nested=True)
-                jetgenb = fj.sd.cross(bFromTop, nested=True)
-                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==1) & (qFromWFromTop.counts>0)
-                cWmatch = ((jetgenWc.i0.delta_r(jetgenWc.i1) < dR).sum()==1) & (cFromWFromTop.counts>0)
-                bmatch =  ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1)   & (bFromTop.counts>0)
-                return cWmatch & qWmatch & bmatch
-            fj['isTbcq'] = tbcqmatch(6)|tbcqmatch(-6)
-
-            def tqqmatch(topid, dR=1.5):
-                qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
-                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
-                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==2) & (qFromWFromTop.counts>0)
-                return qWmatch
-            fj['isTqq'] = tqqmatch(6)|tqqmatch(-6)
-
-            def tcqmatch(topid, dR=1.5):
-                qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
-                cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
-                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
-                jetgenWc = fj.sd.cross(cFromWFromTop, nested=True)
-                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==1) & (qFromWFromTop.counts>0)
-                cWmatch = ((jetgenWc.i0.delta_r(jetgenWc.i1) < dR).sum()==1) & (cFromWFromTop.counts>0)
-                return cWmatch & qWmatch
-            fj['isTcq'] = tcqmatch(6)|tcqmatch(-6)
-
-            def tbqmatch(topid, dR=1.5):
-                qFromWFromTop = qFromW[qFromW.distinctParent.distinctParent.pdgId == topid]
-                bFromTop = gen[
-                    (abs(gen.pdgId) == 5) &
-                    gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                    (gen.distinctParent.pdgId == topid)
-                ]
-                jetgenWq = fj.sd.cross(qFromWFromTop, nested=True)
-                jetgenb = fj.sd.cross(bFromTop, nested=True)
-                qWmatch = ((jetgenWq.i0.delta_r(jetgenWq.i1) < dR).sum()==1) & (qFromWFromTop.counts>0)
-                bmatch =  ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1)   & (bFromTop.counts>0)
-                return qWmatch & bmatch
-            fj['isTbq'] = tbqmatch(6)|tbqmatch(-6)
-
-            def tbcmatch(topid, dR=1.5):
-                cFromWFromTop = cFromW[cFromW.distinctParent.distinctParent.pdgId == topid]
-                bFromTop = gen[
-                    (abs(gen.pdgId) == 5) &
-                    gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                    (gen.distinctParent.pdgId == topid)
-                ]
-                jetgenWc = fj.sd.cross(cFromWFromTop, nested=True)
-                jetgenb = fj.sd.cross(bFromTop, nested=True)
-                cWmatch = ((jetgenWc.i0.delta_r(jetgenWc.i1) < dR).sum()==1) & (cFromWFromTop.counts>0)
-                bmatch =  ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==1)   & (bFromTop.counts>0)
-                return cWmatch & bmatch
-            fj['isTbc'] = tbcmatch(6)|tbcmatch(-6)
-
-            ###
-            # Fat-jet W->qq matching at decay level
-            ###
-            def wqqmatch(wid, dR=1.5):
-                qFromSameW = qFromW[qFromW.distinctParent.pdgId == wid]
-                jetgenq = fj.sd.cross(qFromSameW, nested=True)
-                qqmatch = ((jetgenq.i0.delta_r(jetgenq.i1) < dR).sum()==2) & (qFromSameW.counts>0)
-                return qqmatch
-            fj['isWqq']  = wqqmatch(24)|wqqmatch(-24)
-
-            ###
-            # Fat-jet W->cq matching at decay level
-            ###
-            def wcqmatch(wid, dR=1.5):
-                qFromSameW = qFromW[qFromW.distinctParent.pdgId == wid]
-                cFromSameW = cFromW[cFromW.distinctParent.pdgId == wid]
-                jetgenq = fj.sd.cross(qFromSameW, nested=True)
-                jetgenc = fj.sd.cross(cFromSameW, nested=True)
-                qmatch = ((jetgenq.i0.delta_r(jetgenq.i1) < dR).sum()==1) & (qFromSameW.counts>0)
-                cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < dR).sum()==1) & (cFromSameW.counts>0)
-                return qmatch & cmatch
-            fj['isWcq']  = wcqmatch(24)|wcqmatch(-24)
-
-            ###
-            # Fat-jet Z->bb matching at decay level
-            ###
-            bFromZ = gen[
-                (abs(gen.pdgId) == 5) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 23)
-            ]
-            def zbbmatch(zid, dR=1.5):
-                bFromSameZ = bFromZ[bFromZ.distinctParent.pdgId == zid]
-                jetgenb = fj.sd.cross(bFromSameZ, nested=True)
-                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameZ.counts>0)
-                return bbmatch
-            fj['isZbb']  = zbbmatch(23)|zbbmatch(-23)
-
-            ###
-            # Fat-jet Z->cc matching at decay level
-            ###
-            cFromZ = gen[
-                (abs(gen.pdgId) == 4) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 23)
-            ]
-            def zccmatch(zid, dR=1.5):
-                cFromSameZ = cFromZ[cFromZ.distinctParent.pdgId == zid]
-                jetgenc = fj.sd.cross(cFromSameZ, nested=True)
-                ccmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < dR).sum()==2) & (cFromSameZ.counts>0)
-                return ccmatch
-            fj['isZcc']  = zccmatch(23)|zccmatch(-23)
-
-            ###
-            # Fat-jet Z->qq matching at decay level
-            ###
-            qFromZ = gen[
-                (abs(gen.pdgId) < 4) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 23)
-            ]
-            def zqqmatch(zid, dR=1.5):
-                qFromSameZ = qFromZ[qFromZ.distinctParent.pdgId == zid]
-                jetgenq = fj.sd.cross(qFromSameZ, nested=True)
-                qqmatch = ((jetgenq.i0.delta_r(jetgenq.i1) < dR).sum()==2) & (qFromSameZ.counts>0)
-                return qqmatch
-            fj['isZqq']  = zqqmatch(23)|zqqmatch(-23)
-
-            ###
-            # Fat-jet H->bb matching at decay level
-            ###
-            bFromH = gen[
-                (abs(gen.pdgId) == 5) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 25)
-            ]
-            def hbbmatch(hid, dR=1.5):
-                bFromSameH = bFromH[bFromH.distinctParent.pdgId == hid]
-                jetgenb = fj.sd.cross(bFromSameH, nested=True)
-                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameH.counts>0)
-                return bbmatch
-            fj['isHbb']  = hbbmatch(25)|hbbmatch(-25)
-
-            ###
-            # Fat-jet dark H->bb matching at decay level
-            ###
-            bFromHs = gen[
-                (abs(gen.pdgId) == 5) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 54)
-            ]
-            def hsbbmatch(hid, dR=1.5):
-                bFromSameHs = bFromHs[bFromHs.distinctParent.pdgId == hid]
-                jetgenb = fj.sd.cross(bFromSameHs, nested=True)
-                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameHs.counts>0)
-                return bbmatch
-            fj['isHsbb']  = hsbbmatch(54)|hsbbmatch(-54)
 
             gen['isb'] = (abs(gen.pdgId)==5)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             jetgenb = fj.sd.cross(gen[gen.isb], nested=True)
@@ -340,34 +208,72 @@ class AnalysisProcessor(processor.ProcessorABC):
             cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==2)&(gen[gen.isc].counts>0)
             fj['iscc']  = cmatch
 
+        ##### axis=1 option to remove boundaries between fat-jets #####
+        ##### copy (match jaggedness and shape of array) the contents of crossed array into the fat-jet subjets #####
+        ##### we're not use copy since it keeps the original array type #####
+        ##### fj.subjets is a TLorentzVectorArray #####
+        mu = mu[mu.isGlobal] ## Use a global muon for QCD events
+        jetmu = fj.subjets.flatten(axis=1).cross(mu, nested=True)
+        mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7) & (jetmu.i1.pt > 7)).sum() == 1
 
+        ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
+        ##### Using the offset function to copy contents not the type of the array #####
+        step1 = fj.subjets.flatten()
+        step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
+        step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
+
+        fj['withmu'] = (fj.subjets.counts==2) & (step3.all())
 
         ###
         # Selections
         ###
 
+        #### trigger selection ####
+        triggers = np.zeros(events.size, dtype=np.bool)
+        for path in self._btagmu_triggers[self._year]:
+            if path not in events.HLT.columns: continue
+            triggers = triggers | events.HLT[path]
+        selection.add('btagmu_triggers', triggers)
+
+        #### MET filters ####
+        met_filters =  np.ones(events.size, dtype=np.bool)
+        if isData:
+            met_filters = met_filters & events.Flag['eeBadScFilter'] #this filter is recommended for data only
+        for flag in AnalysisProcessor.met_filter_flags[self._year]:
+            met_filters = met_filters & events.Flag[flag]
+        selection.add('met_filters',met_filters)
+
+        #### ak15 jet selection ####
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
-        leading_fj = leading_fj[leading_fj.isclean.astype(np.bool)]
-        selection.add('fj_pt', (leading_fj.pt.max() > 350) )
-        selection.add('fj_mass', (leading_fj.msd_corr.sum() < 80)) ## optionally also <130
-        selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
+        leading_fj = leading_fj[leading_fj.withmu.astype(np.bool)]
 
-        selection.add('mu_pt', (leading_mu.pt.max() > 7) )
-        selection.add('pt_ratio', (leading_mu.pt.max()/leading_fj.pt.max() < 0.7) )
+        #fj_good = fj[fj.isgood.astype(np.bool)]
+        #fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
+        #fj_nwithmu = fj_withmu.counts
 
-        isFilled = False
+        selection.add('fj_pt', (leading_fj.sd.pt.max() > 250) )
+        selection.add('fj_mass', (leading_fj.msd_corr.sum() > 50) ) ## optionally also <130
+        #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
+        #selection.add('fjCoupledMu', (fj_nwithmu > 0) )
+
+        print('Selections')
+        print(selection.names, '\n')
 
         variables = {
-            'ZHbbvsQCD':              leading_fj.ZHbbvsQCD,
+            'ZHbbvsQCD': leading_fj.ZHbbvsQCD,
+            'btagJP':    leading_fj.btagJP,
+            'tau21':     leading_fj.tau21,
+            'fjmass':    leading_fj.msd_corr,
+            'fj1pt':     leading_fj.sd.pt
         }
-        print('Variables:',variables.keys())
 
         def fill(dataset, gentype, weight, cut):
             flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
             flat_gentype = {k: (~np.isnan(v[cut])*gentype[cut]).flatten() for k, v in variables.items()}
             flat_weight = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
 
+            #print('variables:', flat_variables)
             for histname, h in hout.items():
                 if not isinstance(h, hist.Hist):
                     continue
@@ -375,88 +281,47 @@ class AnalysisProcessor(processor.ProcessorABC):
                     continue
                 elif histname == 'sumw':
                     continue
+                elif histname == 'template':
+                    continue
                 else:
                     flat_variable = {histname: flat_variables[histname]}
                     h.fill(dataset=dataset, gentype=flat_gentype[histname], **flat_variable, weight=flat_weight[histname])
 
+        isFilled = False
         if isData:
             if not isFilled:
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=1)
                 isFilled=True
-            cut = selection.all()
+
+            cut = selection.all(*selection.names)
+            vcut=np.zeros(events.size, dtype=np.int)
+            hout['cutflow'].fill(dataset=dataset, cutname='nocut', cut=vcut, weight=np.ones(events.size))
+            allcuts = set()
+            ### cutflow fill
+            for i, icut in enumerate(selection.names):
+                allcuts.add(icut)
+                jcut = selection.all(*allcuts)
+                vcut = (i+1)*jcut
+                hout['cutflow'].fill(dataset=dataset, cutname=str(icut), cut=vcut, weight=jcut)
+
+            ##### template for bb SF #####
+            hout['template'].fill(dataset=dataset,
+                    gentype=np.zeros(events.size, dtype=np.int),
+                    btagJP=leading_fj.btagJP.sum(),
+                    ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                    weight=np.ones(events.size)*cut
+                    )
             fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
+
         else:
             weights = processor.Weights(len(events))
 
             wgentype = {
-                'bb' : (
-                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                ~leading_fj.isTbcq &
-                ~leading_fj.isTbqq &
-                ~leading_fj.isZcc &
-                ~(leading_fj.isTcq | leading_fj.isWcq) &
-                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                leading_fj.isbb
-                ).sum(),
-                'bc' : (
-                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                ~leading_fj.isTbcq &
-                ~leading_fj.isTbqq &
-                ~leading_fj.isZcc &
-                ~(leading_fj.isTcq | leading_fj.isWcq) &
-                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                ~leading_fj.isbb &
-                (leading_fj.isTbc | (leading_fj.isb & leading_fj.isc))
-                ).sum(),
-                'b' : (
-                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                ~leading_fj.isTbcq &
-                ~leading_fj.isTbqq &
-                ~leading_fj.isZcc &
-                ~(leading_fj.isTcq | leading_fj.isWcq) &
-                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                ~leading_fj.isbb &
-                ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
-                (leading_fj.isTbq | leading_fj.isb)
-                ).sum(),
-                'cc' : (
-                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                ~leading_fj.isTbcq &
-                ~leading_fj.isTbqq &
-                ~leading_fj.isZcc &
-                ~(leading_fj.isTcq | leading_fj.isWcq) &
-                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                ~leading_fj.isbb &
-                ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
-                ~(leading_fj.isTbq | leading_fj.isb) &
-                leading_fj.iscc
-                ).sum(),
-                'c' : (
-                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                ~leading_fj.isTbcq &
-                ~leading_fj.isTbqq &
-                ~leading_fj.isZcc &
-                ~(leading_fj.isTcq | leading_fj.isWcq) &
-                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                ~leading_fj.isbb &
-                ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
-                ~(leading_fj.isTbq | leading_fj.isb) &
-                ~leading_fj.iscc &
-                leading_fj.isc
-                ).sum(),
-                'other' : (
-                ~(leading_fj.isHsbb | leading_fj.isHbb | leading_fj.isZbb)&
-                ~leading_fj.isTbcq &
-                ~leading_fj.isTbqq &
-                ~leading_fj.isZcc &
-                ~(leading_fj.isTcq | leading_fj.isWcq) &
-                ~(leading_fj.isWqq | leading_fj.isZqq | leading_fj.isTqq) &
-                ~leading_fj.isbb &
-                ~(leading_fj.isTbc | (leading_fj.isb & leading_fj.isc)) &
-                ~(leading_fj.isTbq | leading_fj.isb) &
-                ~leading_fj.iscc &
-                ~leading_fj.isc
-                ).sum(),
+                'bb' : (leading_fj.isbb).sum(),
+                'b'  : ( ~leading_fj.isbb & leading_fj.isb ).sum(),
+                'cc' : ( ~leading_fj.isbb & ~leading_fj.isb & leading_fj.iscc ).sum(),
+                'c'  : ( ~leading_fj.isbb & ~leading_fj.isb & ~leading_fj.iscc & leading_fj.isc ).sum(),
+                'other' : ( ~leading_fj.isbb & ~leading_fj.isb & ~leading_fj.iscc & ~leading_fj.isc ).sum(),
             }
             vgentype=np.zeros(events.size, dtype=np.int)
             for gentype in self._gentype_map.keys():
@@ -466,8 +331,38 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
                 isFilled=True
 
-            cut = selection.all()
-            fill(dataset, vgentype, weights.weight(), cut)
+            cut = selection.all(*selection.names)
+            if 'QCD' in dataset:
+                vcut=np.zeros(events.size, dtype=np.int)
+                hout['cutflow'].fill(dataset=dataset, cutname='nocut', cut=vcut, weight=weights.weight())
+                allcuts = set()
+                ### cutflow fill
+                for i, icut in enumerate(selection.names):
+                    allcuts.add(icut)
+                    jcut = selection.all(*allcuts)
+                    vcut = (i+1)*jcut
+                    hout['cutflow'].fill(dataset=dataset, cutname=str(icut), cut=vcut, weight=weights.weight()*jcut)
+
+                ### other variables
+                fill(dataset, vgentype, weights.weight(), cut)
+
+                ##### template for bb SF #####
+                hout['template'].fill(dataset=dataset,
+                        gentype=vgentype,
+                        btagJP=leading_fj.btagJP.sum(),
+                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                        weight=weights.weight()*cut
+                        )
+            else:
+                fill(dataset, vgentype, weights.weight(), np.ones(events.size, dtype=np.int))
+
+                ##### template for bb SF #####
+                hout['template'].fill(dataset=dataset,
+                        gentype=vgentype,
+                        btagJP=leading_fj.btagJP.sum(),
+                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                        weight=weights.weight()
+                        )
 
         return hout
 

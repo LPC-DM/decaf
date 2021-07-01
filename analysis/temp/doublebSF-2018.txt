@@ -1,0 +1,75 @@
+Combination of btagJP2018fail=btagJP2018fail.txt  btagJP2018pass=btagJP2018pass.txt
+imax 2 number of bins
+jmax 4 number of processes minus 1
+kmax 56 number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes *               btagJP2018fail  btagJP2018fail.root btagJP2018fail:btagJP2018fail_$PROCESS btagJP2018fail:btagJP2018fail_$PROCESS_$SYSTEMATIC
+shapes *               btagJP2018pass  btagJP2018pass.root btagJP2018pass:btagJP2018pass_$PROCESS btagJP2018pass:btagJP2018pass_$PROCESS_$SYSTEMATIC
+----------------------------------------------------------------------------------------------------------------------------------
+bin          btagJP2018fail  btagJP2018pass
+observation  172381          92518         
+----------------------------------------------------------------------------------------------------------------------------------
+bin                                                    btagJP2018fail  btagJP2018fail  btagJP2018fail  btagJP2018fail  btagJP2018fail  btagJP2018pass  btagJP2018pass  btagJP2018pass  btagJP2018pass  btagJP2018pass
+process                                                genbb           genother        genb            genc            gencc           genbb           genother        genb            genc            gencc         
+process                                                0               1               2               3               4               0               1               2               3               4             
+rate                                                   6094.865        435627.973      6201.573        14730.359       17584.892       55504.733       129342.681      18346.708       8916.808        19778.315     
+----------------------------------------------------------------------------------------------------------------------------------
+btagJP2018fail_genbb_mcstat_bin0   shape               1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin1   shape               1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin10   shape              1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin11   shape              1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin12   shape              1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin13   shape              1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin14   shape              1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin15   shape              1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin16   shape              1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin17   shape              1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin18   shape              1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin19   shape              1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin2   shape               1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin20   shape              1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin21   shape              1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin3   shape               1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin4   shape               1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin5   shape               1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin6   shape               1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin7   shape               1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin8   shape               1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018fail_genbb_mcstat_bin9   shape               1.0             -               -               -               -               -               -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin0   shape               -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin1   shape               -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin10   shape              -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin11   shape              -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin12   shape              -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin13   shape              -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin14   shape              -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin15   shape              -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin16   shape              -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin17   shape              -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin18   shape              -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin19   shape              -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin2   shape               -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin20   shape              -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin21   shape              -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin3   shape               -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin4   shape               -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin5   shape               -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin6   shape               -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin7   shape               -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin8   shape               -               -               -               -               -               1.0             -               -               -               -             
+btagJP2018pass_genbb_mcstat_bin9   shape               -               -               -               -               -               1.0             -               -               -               -             
+frac_b2018fail          lnN                            -               -               1.5             -               -               -               -               -               -               -             
+frac_b2018pass          lnN                            -               -               -               -               -               -               -               1.5             -               -             
+frac_bb2018             lnN                            1.5             -               -               -               -               1.5             -               -               -               -             
+frac_c2018fail          lnN                            -               -               -               1.5             -               -               -               -               -               -             
+frac_c2018pass          lnN                            -               -               -               -               -               -               -               -               1.5             -             
+frac_cc2018fail         lnN                            -               -               -               -               1.5             -               -               -               -               -             
+frac_cc2018pass         lnN                            -               -               -               -               -               -               -               -               -               1.5           
+frac_other2018fail      lnN                            -               1.5             -               -               -               -               -               -               -               -             
+frac_other2018pass      lnN                            -               -               -               -               -               -               1.5             -               -               -             
+jes2018                 lnN                            1.02            1.02            1.02            1.02            1.02            1.02            1.02            1.02            1.02            1.02          
+lumi2018                lnN                            1.027           1.027           1.027           1.027           1.027           1.027           1.027           1.027           1.027           1.027         
+pu2018                  lnN                            1.05            1.05            1.05            1.05            1.05            1.05            1.05            1.05            1.05            1.05          
+sf_weight2018_effect_btagJP2018fail_genbb  rateParam btagJP2018fail genbb ((1-(@0*0.945000))/(1-0.945000)) sf2018  
+sf_weight2018_effect_btagJP2018pass_genbb  rateParam btagJP2018pass genbb (@0) sf2018  
+sf2018 extArg btagJP2018pass.root:btagJP2018pass

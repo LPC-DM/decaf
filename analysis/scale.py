@@ -65,7 +65,7 @@ def scale(hists, scalez):
     for key in hists.keys():
         if key=='sumw': continue
         for d in hists[key].identifiers('dataset'):
-            if 'MET' in d.name or 'SingleElectron' in d.name or 'SinglePhoton' in d.name or 'EGamma' in d.name: continue
+            if 'MET' in d.name or 'SingleElectron' in d.name or 'SinglePhoton' in d.name or 'EGamma' in d.name or 'BTagMu' in d.name: continue
             hists[key].scale({d:1/scale[d]},axis='dataset')
             if scalez and 'ZJets' in d.name:
                 print('Scaling',d.name,'by a factor of 3')
@@ -110,6 +110,7 @@ def scale(hists, scalez):
     data_map["SingleElectron"] = ("SingleElectron*", )
     data_map["SinglePhoton"] = ("SinglePhoton*", )
     data_map["EGamma"] = ("EGamma*", )
+    data_map["BTagMu"] = ("BTagMu*", )
     for signal in hists['sumw'].identifiers('dataset'):
         if 'mhs' not in str(signal): continue
         print(signal)
