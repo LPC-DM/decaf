@@ -1,0 +1,81 @@
+void plotsDist()
+{
+//=========Macro generated from canvas: asdf/asdf
+//=========  (Wed Feb 10 03:27:46 2021) by ROOT version 6.12/07
+   TCanvas *asdf = new TCanvas("asdf", "asdf",0,0,800,800);
+   gStyle->SetOptFit(1);
+   asdf->SetHighLightColor(2);
+   asdf->Range(-2.5,-20.88507,2.5,187.9656);
+   asdf->SetFillColor(0);
+   asdf->SetBorderMode(0);
+   asdf->SetBorderSize(2);
+   asdf->SetFrameBorderMode(0);
+   asdf->SetFrameBorderMode(0);
+   
+   TH1F *pulls__1 = new TH1F("pulls__1","",60,-2,2);
+   pulls__1->SetBinContent(1,1);
+   pulls__1->SetBinContent(5,1);
+   pulls__1->SetBinContent(9,1);
+   pulls__1->SetBinContent(11,1);
+   pulls__1->SetBinContent(15,2);
+   pulls__1->SetBinContent(16,3);
+   pulls__1->SetBinContent(18,2);
+   pulls__1->SetBinContent(19,6);
+   pulls__1->SetBinContent(20,6);
+   pulls__1->SetBinContent(21,9);
+   pulls__1->SetBinContent(22,4);
+   pulls__1->SetBinContent(23,10);
+   pulls__1->SetBinContent(24,17);
+   pulls__1->SetBinContent(25,19);
+   pulls__1->SetBinContent(26,26);
+   pulls__1->SetBinContent(27,21);
+   pulls__1->SetBinContent(28,47);
+   pulls__1->SetBinContent(29,74);
+   pulls__1->SetBinContent(30,147);
+   pulls__1->SetBinContent(31,147);
+   pulls__1->SetBinContent(32,65);
+   pulls__1->SetBinContent(33,44);
+   pulls__1->SetBinContent(34,35);
+   pulls__1->SetBinContent(35,26);
+   pulls__1->SetBinContent(36,15);
+   pulls__1->SetBinContent(37,16);
+   pulls__1->SetBinContent(38,12);
+   pulls__1->SetBinContent(39,7);
+   pulls__1->SetBinContent(40,5);
+   pulls__1->SetBinContent(41,2);
+   pulls__1->SetBinContent(42,3);
+   pulls__1->SetBinContent(43,6);
+   pulls__1->SetBinContent(44,2);
+   pulls__1->SetBinContent(45,3);
+   pulls__1->SetBinContent(55,1);
+   pulls__1->SetBinContent(58,1);
+   pulls__1->SetBinContent(61,2);
+   pulls__1->SetEntries(789);
+   pulls__1->SetStats(0);
+   
+   TF1 *gaus1 = new TF1("gaus","gaus",-2,2, TF1::EAddToList::kNo);
+   gaus1->SetFillColor(19);
+   gaus1->SetFillStyle(0);
+   gaus1->SetLineWidth(3);
+   gaus1->SetChisquare(163.5692);
+   gaus1->SetNDF(33);
+   gaus1->SetParameter(0,75.18785);
+   gaus1->SetParError(0,6.073853);
+   gaus1->SetParLimits(0,0,0);
+   gaus1->SetParameter(1,0.008287197);
+   gaus1->SetParError(1,0.008835934);
+   gaus1->SetParLimits(1,0,0);
+   gaus1->SetParameter(2,0.220532);
+   gaus1->SetParError(2,0.01546895);
+   gaus1->SetParLimits(2,0,3.148548);
+   gaus1->SetParent(pulls__1);
+   pulls__1->GetListOfFunctions()->Add(gaus1);
+   pulls__1->SetMarkerStyle(20);
+   pulls__1->SetMarkerSize(2);
+   pulls__1->GetXaxis()->SetTitle("pull");
+   pulls__1->GetYaxis()->SetTitle("Number of nuisances");
+   pulls__1->Draw("pe");
+   asdf->Modified();
+   asdf->cd();
+   asdf->SetSelected(asdf);
+}

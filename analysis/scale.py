@@ -9,22 +9,12 @@ from coffea.util import load, save
 
 
 def scale_file(file):
-    return scale(load(file))
 
-def scale_directory(directory):
-
-    hists={}
-    for filename in os.listdir(directory):
-        if '.futures' not in filename: continue
-        fin = directory+'/'+filename
-        hin = load(fin)
-        for k in hin.keys():
-            if k in hists: hists[k]+=hin[k]
-            else: hists[k]=hin[k]
-
-    return scale(hists)
-
-def scale(hists):
+    print('Loading file:',file)    
+    hists=load(file)
+    scalez=False
+    if '2016' in file:
+        scalez=True
 
     pd = []
     for d in hists['sumw'].identifiers('dataset'):
@@ -45,6 +35,24 @@ def scale(hists):
         hists[key] = hists[key].group(dataset_cats, dataset, dataset_map)
     print('Datasets aggregated')
 
+    return scale(hists,scalez)
+
+def scale_directory(directory):
+
+    scalez=False
+    if '2016' in directory:
+        scalez=True
+    hists = {}
+    for filename in os.listdir(directory):
+        if '.merged' not in filename: continue
+        print('Opening:', filename)
+        hin = load(directory+'/'+filename)
+        hists.update(hin)
+
+    return scale(hists, scalez)
+
+def scale(hists, scalez):
+
     ###
     # Rescaling MC histograms using the xsec weight
     ###
@@ -57,49 +65,71 @@ def scale(hists):
     for key in hists.keys():
         if key=='sumw': continue
         for d in hists[key].identifiers('dataset'):
-            if 'MET' in d.name or 'SingleElectron' in d.name or 'SinglePhoton' in d.name or 'EGamma' in d.name: continue
+            if 'MET' in d.name or 'SingleElectron' in d.name or 'SinglePhoton' in d.name or 'EGamma' in d.name or 'BTagMu' in d.name: continue
             hists[key].scale({d:1/scale[d]},axis='dataset')
+            if scalez and 'ZJets' in d.name:
+                print('Scaling',d.name,'by a factor of 3')
+                hists[key].scale({d:3.},axis='dataset')
     print('Histograms scaled')
+
+
     ###
     # Defining 'process', to aggregate different samples into a single process
     ##
 
     process = hist.Cat("process", "Process", sorting='placement')
     cats = ("dataset",)
-    map = OrderedDict()
-    map["Hbb"] = ("*HTo*")
-    map["DY+HF"] = ("HF--DYJets*",)
-    map["DY+LF"] = ("LF--DYJets*",)
-    map["VV"] = ("*_TuneCP5_13TeV-pythia8*",)
-    map["ST"] = ("ST*",)
-    map["TT"] = ("TT*",)
-    map["W+HF"] = ("HF--WJets*",)
-    map["W+LF"] = ("LF--WJets*",)
-    map["Z+HF"] = ("HF--ZJetsToNuNu*",)
-    map["Z+LF"] = ("LF--ZJetsToNuNu*",)
-    map["G+HF"] = ("HF--GJets*",)
-    map["G+LF"] = ("LF--GJets*",)
-    map["QCD"] = ("QCD*",)
-    map["Mhs_50"] = ("*Mhs_50*",)  ## signals
-    map["Mhs_70"] = ("*Mhs_70*",)
-    map["Mhs_90"] = ("*Mhs_90*",)
-    map["MonoJet"] = ("MonoJet*",)  ## signals
-    map["MonoW"] = ("MonoW*",)    ## signals
-    map["MonoZ"] = ("MonoZ*",)    ## signals
-    map["MET"] = ("MET*", )
-    map["SingleElectron"] = ("EGamma*", )
-    map["SinglePhoton"] = ("EGamma*", )
+    sig_map = OrderedDict()
+    bkg_map = OrderedDict()
+    data_map = OrderedDict()
+    bkg_map["Hbb"] = ("*HTo*")
+    bkg_map["DY+HF"] = ("HF--DYJets*",)
+    bkg_map["DY+LF"] = ("LF--DYJets*",)
+    bkg_map["DY+jetsLO"] = ("lo--DYJets*",)
+    bkg_map["DY+jetsNNLO"] = ("nnlo--DYJets*",)
+    #bkg_map["VV"] = (["WW*","WZ*","ZZ*"],)
+    bkg_map["WW"] = ("WW*", )
+    bkg_map["WZ"] = ("WZ*", )
+    bkg_map["ZZ"] = ("ZZ*", )
+    bkg_map["ST"] = ("ST*",)
+    bkg_map["TT"] = ("TT*",)
+    bkg_map["W+HF"] = ("HF--WJets*",)
+    bkg_map["W+LF"] = ("LF--WJets*",)
+    bkg_map["W+jetsLO"] = ("lo--WJets*",)
+    bkg_map["W+jetsNNLO"] = ("nnlo--WJets*",)
+    bkg_map["Z+HF"] = ("HF--ZJetsToNuNu*",)
+    bkg_map["Z+LF"] = ("LF--ZJetsToNuNu*",)
+    bkg_map["Z+jetsLO"] = ("lo--ZJets*",)
+    bkg_map["Z+jetsNNLO"] = ("nnlo--ZJets*",)
+    bkg_map["G+HF"] = ("HF--GJets*",)
+    bkg_map["G+LF"] = ("LF--GJets*",)
+    bkg_map["G+jetsLO"] = ("lo--GJets*",)
+    bkg_map["G+jetsNNLO"] = ("nnlo--GJets*",)
+    bkg_map["QCD"] = ("*QCD*",)
+    data_map["MET"] = ("MET*", )
+    data_map["SingleElectron"] = ("SingleElectron*", )
+    data_map["SinglePhoton"] = ("SinglePhoton*", )
+    data_map["EGamma"] = ("EGamma*", )
+    data_map["BTagMu"] = ("BTagMu*", )
+    for signal in hists['sumw'].identifiers('dataset'):
+        if 'mhs' not in str(signal): continue
+        print(signal)
+        sig_map[str(signal)] = (str(signal),)  ## signals
     print('Processes defined')
     
     ###
     # Storing signal and background histograms
     ###
-
+    bkg_hists={}
+    sig_hists={}
+    data_hists={}
     for key in hists.keys():
-        hists[key] = hists[key].group(cats, process, map)
+        bkg_hists[key] = hists[key].group(cats, process, bkg_map)
+        sig_hists[key] = hists[key].group(cats, process, sig_map)
+        data_hists[key] = hists[key].group(cats, process, data_map)
     print('Histograms grouped')
 
-    return hists
+    return bkg_hists, sig_hists, data_hists
 
 if __name__ == '__main__':
     from optparse import OptionParser
@@ -109,10 +139,15 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
 
     if options.directory: 
-        hists = scale_directory(options.directory)
+        bkg_hists, sig_hists, data_hists = scale_directory(options.directory)
         name = options.directory
     if options.file: 
-        hists = scale_file(options.file)
+        bkg_hists, sig_hists, data_hists = scale_file(options.file)
         name = options.file.split(".")[0]
 
+    hists={
+        'bkg': bkg_hists,
+        'sig': sig_hists,
+        'data': data_hists
+    }
     save(hists,name+'.scaled')

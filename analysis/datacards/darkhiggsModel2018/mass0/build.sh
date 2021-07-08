@@ -1,2 +1,0 @@
-combineCards.py sr-mass0-monojet=sr-mass0-monojet.txt tecr-mass0-monojet=tecr-mass0-monojet.txt tmcr-mass0-monojet=tmcr-mass0-monojet.txt wecr-mass0-monojet=wecr-mass0-monojet.txt wmcr-mass0-monojet=wmcr-mass0-monojet.txt zecr-mass0-monojet=zecr-mass0-monojet.txt zmcr-mass0-monojet=zmcr-mass0-monojet.txt gcr-mass0-monojet=gcr-mass0-monojet.txt > darkhiggs_mass0_monojet_combined.txt
-text2workspace.py darkhiggs_mass0_monojet_combined.txt
