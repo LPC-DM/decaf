@@ -45,6 +45,40 @@ category_map = {"pass": 1, "fail": 0}
 with open("data/hf_systematic.json") as fin:
     hf_systematic = json.load(fin)
 
+#### Copy and paste from the coffea libraries
+#https://github.com/CoffeaTeam/coffea/blob/de8e792567d07edb1dcae654176c8aa8991d935a/coffea/hist/plot.py#L87-L118
+_coverage1sd = scipy.stats.norm.cdf(1) - scipy.stats.norm.cdf(-1)
+def normal_interval(pw, tw, pw2, tw2, coverage=_coverage1sd):
+    """Compute errors based on the expansion of pass/(pass + fail), possibly weighted
+    Parameters
+    ----------
+    pw : numpy.ndarray
+        Numerator, or number of (weighted) successes, vectorized
+    tw : numpy.ndarray
+        Denominator or number of (weighted) trials, vectorized
+    pw2 : numpy.ndarray
+        Numerator sum of weights squared, vectorized
+    tw2 : numpy.ndarray
+        Denominator sum of weights squared, vectorized
+    coverage : float, optional
+        Central coverage interval, defaults to 68%
+    c.f. https://root.cern.ch/doc/master/TEfficiency_8cxx_source.html#l02515
+    """
+
+    eff = pw / tw
+
+    variance = (pw2 * (1 - 2 * eff) + tw2 * eff ** 2) / (tw ** 2)
+    sigma = numpy.sqrt(variance)
+
+    prob = 0.5 * (1 - coverage)
+    delta = numpy.zeros_like(sigma)
+    delta[sigma != 0] = scipy.stats.norm.ppf(prob, scale=sigma[sigma != 0])
+
+    lo = eff - numpy.minimum(eff + delta, numpy.ones_like(eff))
+    hi = numpy.maximum(eff - delta, numpy.zeros_like(eff)) - eff
+
+    return numpy.array([lo, hi])
+
 def template(dictionary, process, systematic, recoil, region, category, read_sumw2=False):
     histogram = dictionary[region].integrate("process", process)
     nominal, sumw2 = histogram.integrate("systematic", "nominal").values(sumw2=True)[()]
@@ -380,7 +414,7 @@ def model(year, recoil, category, s):
         sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
         sr_ttParameters = np.array(
             [
-                rl.IndependentParameter(                                                                                                                                     
+                rl.IndependentParameter(
                     "sr" + year + "_tt_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i,
                     0,
                     -1*sigmascale[year],
@@ -471,7 +505,7 @@ def model(year, recoil, category, s):
     # End of SR
     ###
 
-    if category=="pass" and not (recoil<4): 
+    if category=="pass" and not (recoil<4):
         return model
 
     ###
@@ -511,6 +545,10 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
 
+    ### Manually calculate a single set of stat uncertainties
+    stat_uncs = normal_interval(wmcr_wjetsTemplate[0], sr_wjetsTemplate[0], wmcr_wjetsTemplate[3], sr_wjetsTemplate[3])
+    print('wmcr stat uncs:', stat_uncs)
+
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
     wmcr.addSample(wmcr_wjets)
@@ -532,7 +570,7 @@ def model(year, recoil, category, s):
     wmcr_ttMC.setParamEffect(id_mu, 1.02)
     wmcr_ttMC.setParamEffect(iso_mu, 1.02)
     addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
-    
+
     if category == "pass":
         wmcr_ttMC.setParamEffect(tt_norm, 1.2)
         #wmcr_ttMC.autoMCStats()
