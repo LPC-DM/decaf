@@ -68,16 +68,16 @@ def normal_interval(pw, tw, pw2, tw2, coverage=_coverage1sd):
     eff = pw / tw
 
     variance = (pw2 * (1 - 2 * eff) + tw2 * eff ** 2) / (tw ** 2)
-    sigma = numpy.sqrt(variance)
+    sigma = np.sqrt(variance)
 
     prob = 0.5 * (1 - coverage)
-    delta = numpy.zeros_like(sigma)
+    delta = np.zeros_like(sigma)
     delta[sigma != 0] = scipy.stats.norm.ppf(prob, scale=sigma[sigma != 0])
 
-    lo = eff - numpy.minimum(eff + delta, numpy.ones_like(eff))
-    hi = numpy.maximum(eff - delta, numpy.zeros_like(eff)) - eff
+    lo = eff - np.minimum(eff + delta, np.ones_like(eff))
+    hi = np.maximum(eff - delta, np.zeros_like(eff)) - eff
 
-    return numpy.array([lo, hi])
+    return np.array([lo, hi])
 
 def template(dictionary, process, systematic, recoil, region, category, read_sumw2=False):
     histogram = dictionary[region].integrate("process", process)
@@ -153,9 +153,9 @@ def remap_histograms(hists):
         bkg_hists[key] = hists["bkg"][key].group(cats, process, bkg_map)
         signal_hists[key] = hists["sig"][key].group(cats, process, sig_map)
         data_hists[key] = hists["data"][key].group(cats, process, data_map)
-    
+
     print('initial recoil binning',bkg_hists["template"].axis("recoil").edges())
-    
+
     bkg_hists["template"] = bkg_hists["template"].rebin(
         "fjmass", hist.Bin("fjmass", "Mass", mass_binning)
     )
@@ -263,7 +263,7 @@ def rhalphabeth2D(process, tf_dataResidual_params, ord1, ord2):
         "W+jets": 'W',
         "Z+jets": 'Z'
         }
-        
+
     # Build qcd MC pass+fail model and fit to polynomial
     qcdmodel = rl.Model("qcdmodel")
     qcdpass, qcdfail = 0., 0.
@@ -546,8 +546,14 @@ def model(year, recoil, category, s):
     addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
 
     ### Manually calculate a single set of stat uncertainties
-    stat_uncs = normal_interval(wmcr_wjetsTemplate[0], sr_wjetsTemplate[0], wmcr_wjetsTemplate[3], sr_wjetsTemplate[3])
-    print('wmcr stat uncs:', stat_uncs)
+    if category == "pass":
+        sr_wjetsTemplate = sr_wjetsMCPassTemplate
+    else:
+        sr_wjetsTemplate = sr_wjetsMCFailTemplate
+
+    print('category:', category)
+    wmcr_stat_uncs = normal_interval(sr_wjetsTemplate[0], wmcr_wjetsTemplate[0], sr_wjetsTemplate[3], wmcr_wjetsTemplate[3])
+    print('wmcr stat uncs:', wmcr_stat_uncs, '\n')
 
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
@@ -574,6 +580,8 @@ def model(year, recoil, category, s):
     if category == "pass":
         wmcr_ttMC.setParamEffect(tt_norm, 1.2)
         #wmcr_ttMC.autoMCStats()
+        wmcr_ttMC_stat_uncs = normal_interval(sr_ttTemplate[0], wmcr_ttTemplate[0], sr_ttTemplate[3], wmcr_ttTemplate[3])
+        print('wmcr ttMC stat uncs:', wmcr_ttMC_stat_uncs, '\n')
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wmcr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
@@ -582,7 +590,7 @@ def model(year, recoil, category, s):
     else:
         wmcr_ttMC.setParamEffect(ttMC_norm, 1.2)
         wmcr.addSample(wmcr_ttMC)
-        
+
     ###
     # Other MC-driven processes
     ###
@@ -702,6 +710,15 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
 
+    ### Manually calculate a single set of stat uncertainties
+    if category == "pass":
+        sr_wjetsTemplate = sr_wjetsMCPassTemplate
+    else:
+        sr_wjetsTemplate = sr_wjetsMCFailTemplate
+
+    wecr_stat_uncs = normal_interval(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
+    print('wecr stat uncs:', wecr_stat_uncs, '\n')
+
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     wecr_wjets = rl.TransferFactorSample(
         ch_name + "_wjets", rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets
@@ -729,6 +746,8 @@ def model(year, recoil, category, s):
     if category == "pass":
         wecr_ttMC.setParamEffect(tt_norm, 1.2)
         #wecr_ttMC.autoMCStats()
+        wecr_ttMC_stat_uncs = normal_interval(sr_ttTemplate[0], wecr_ttTemplate[0], sr_ttTemplate[3], wecr_ttTemplate[3])
+        print('wecr ttMC stat uncs:', wecr_ttMC_stat_uncs, '\n')
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wecr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
@@ -829,13 +848,13 @@ def model(year, recoil, category, s):
     ch_name = "tmcr" + model_id
     tmcr = rl.Channel(ch_name)
     model.addChannel(tmcr)
-        
+
     ###
     # Add data distribution to the channel
     ###
-    
+
     tmcr.setObservation(template(data, "MET", "data", recoil, "tmcr", category))
-    
+
     ###
     # top-antitop model
     ###
@@ -855,16 +874,21 @@ def model(year, recoil, category, s):
     tmcr_ttMC.setParamEffect(iso_mu, 1.02)
     addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category)
     #tmcr_ttMC.autoMCStats()
-    tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() 
+
+    ### Manually calculate a single set of stat uncertainties
+    tmcr_stat_uncs = normal_interval(sr_ttTemplate[0], tmcr_ttTemplate[0], sr_ttTemplate[3], tmcr_ttTemplate[3])
+    print('tmcr stat uncs:', tmcr_stat_uncs, '\n')
+
+    tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     tmcr_tt = rl.TransferFactorSample(
         ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt
     )
-    tmcr.addSample(tmcr_tt)    
-    
+    tmcr.addSample(tmcr_tt)
+
     ###
     # Other MC-driven processes
     ###
-    
+
     tmcr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tmcr", category)
     tmcr_wjets = rl.TemplateSample(
         ch_name + "_wjetsMC", rl.Sample.BACKGROUND, tmcr_wjetsTemplate
@@ -879,7 +903,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoilbin, "W+jets", "tmcr", tmcr_wjets, category)
     addVJetsSyst(background, recoil, "W+jets", "tmcr", tmcr_wjets, category)
     tmcr.addSample(tmcr_wjets)
-    
+
     tmcr_stTemplate = template(background, "ST", "nominal", recoil, "tmcr", category)
     tmcr_st = rl.TemplateSample(
         ch_name + "_stMC", rl.Sample.BACKGROUND, tmcr_stTemplate
@@ -922,7 +946,7 @@ def model(year, recoil, category, s):
     tmcr_vv.setParamEffect(iso_mu, 1.02)
     addBtagSyst(background, recoilbin, "VV", "tmcr", tmcr_vv, category)
     tmcr.addSample(tmcr_vv)
-    
+
     tmcr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "tmcr", category)
     tmcr_hbb = rl.TemplateSample(
         ch_name + "_hbbMC", rl.Sample.BACKGROUND, tmcr_hbbTemplate
@@ -993,12 +1017,17 @@ def model(year, recoil, category, s):
     tecr_ttMC.setParamEffect(reco_e, 1.02)
     addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category)
     #tecr_ttMC.autoMCStats()
+
+    ### Manually calculate a single set of stat uncertainties
+    tecr_stat_uncs = normal_interval(sr_ttTemplate[0], tecr_ttTemplate[0], sr_ttTemplate[3], tecr_ttTemplate[3])
+    print('tecr stat uncs:', tecr_stat_uncs, '\n')
+
     tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     tecr_tt = rl.TransferFactorSample(
         ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt
     )
     tecr.addSample(tecr_tt)
-    
+
     ###
     # Other MC-driven processes
     ###
@@ -1046,7 +1075,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoilbin, "DY+jets", "tecr", tecr_dyjets, category)
     addVJetsSyst(background, recoil, "DY+jets", "tecr", tecr_dyjets, category)
     tecr.addSample(tecr_dyjets)
-        
+
     tecr_vvTemplate = template(background, "VV", "nominal", recoil, "tecr", category)
     tecr_vv = rl.TemplateSample(
         ch_name + "_vvMC", rl.Sample.BACKGROUND, tecr_vvTemplate
@@ -1189,7 +1218,7 @@ if __name__ == "__main__":
     msdscaled = (msdpts - 40.) / (300.0 - 40.)
     print(recoilscaled)
     print(msdscaled)
-    
+
     tf_dataResidualW = rl.BernsteinPoly("tf_dataResidualW"+year, (1, 1), ['recoil', 'fjmass'], limits=(-100, 100))
     tf_dataResidualW_params = tf_dataResidualW(recoilscaled, msdscaled)
     tf_dataResidualZ = rl.BernsteinPoly("tf_dataResidualZ"+year, (1, 1), ['recoil', 'fjmass'], limits=(-100, 100))
@@ -1236,7 +1265,7 @@ if __name__ == "__main__":
         sr_zjetsObservable = rl.Observable("fjmass", sr_zjetsMCFailTemplate[1])
         sr_zjetsParameters = np.array(
             [
-                rl.IndependentParameter(                                                                                                                                     
+                rl.IndependentParameter(
                     "sr" + year + "_zjets_fail_recoil"+str(recoilbin)+"_mass%d" % i,
                     0
                 )
@@ -1371,7 +1400,7 @@ if __name__ == "__main__":
 
         tf_paramsWdeco = (sr_wlfMCPass.getExpectation()+sr_whfMCPass.getExpectation()) / (sr_wlfMCFail.getExpectation()+sr_whfMCFail.getExpectation())
         tf_paramsW = tf_paramsWdeco * tf_dataResidualW_params[recoilbin, :]
-    
+
         sr_wjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_wjets",
             rl.Sample.BACKGROUND,
@@ -1394,7 +1423,7 @@ if __name__ == "__main__":
                 hbb_norm = rl.NuisanceParameter("hbb_norm" + year + category, "lnN")
                 wjetsMC_norm = rl.NuisanceParameter("wjets_norm" + year + category, "lnN")
                 zjetsMC_norm = rl.NuisanceParameter("zjets_norm" + year + category, "lnN")
-                    
+
                 with open(
                         "data/"
                         + str(s).replace('_','')
