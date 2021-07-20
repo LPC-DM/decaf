@@ -53,8 +53,20 @@ def template(dictionary, process, systematic, recoil, region, category, read_sum
     zerobins = nominal <= 0.
     output = nominal
     if "data" not in systematic:
-        output[zerobins] = 1.
-        sumw2[zerobins] = 0.
+        #output[zerobins] = 1.
+        #sumw2[zerobins] = 0.
+        if "Z+jets" in str(process):
+            output[zerobins] = 1.
+            sumw2[zerobins] = 0.
+        elif "W+jets" in str(process) and recoil<4:
+            output[zerobins] = 1.
+            sumw2[zerobins] = 0.
+        elif "TT" in str(process) and recoil<4:
+            output[zerobins] = 1.
+            sumw2[zerobins] = 0.
+        else:
+            output[zerobins] = 1e-5
+            sumw2[zerobins] = 0.
     if "nominal" not in systematic and "data" not in systematic:
         #print('Normalizing',systematic,'histogram of',process,'in region',region)
         output = histogram.integrate("systematic", systematic).values()[()][recoil, :, category_map[category]]
@@ -137,7 +149,8 @@ def remap_histograms(hists):
     #print(string, systUp)
 def addBtagSyst(dictionary, recoil, process, region, templ, category):
     btagUp = template(dictionary, process, "btagUp", recoil, region, category)[0]
-    templ.setParamEffect(btag, btagUp)
+    btagDown = template(dictionary, process, "btagDown", recoil, region, category)[0]
+    templ.setParamEffect(btag, btagUp, btagDown)
 
 def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     def addSyst(dictionary, recoil, process, region, templ, category, syst, string):
@@ -1102,7 +1115,8 @@ if __name__ == "__main__":
     trig_pho = rl.NuisanceParameter("trig_pho" + year, "lnN")
     veto_tau = rl.NuisanceParameter("veto_tau" + year, "lnN")
     jec = rl.NuisanceParameter("jec" + year, "lnN")
-    btag = rl.NuisanceParameter("btag" + year, "shapeN")  # AK4 btag
+    #btag = rl.NuisanceParameter("btag" + year, "shapeN")  # AK4 btag
+    btag = rl.NuisanceParameter("btag" + year, "shape")  # AK4 btag
     ew1 = rl.NuisanceParameter("ew1", "lnN")
     #ew2G = rl.NuisanceParameter("ew2G", "lnN")
     ew2W = rl.NuisanceParameter("ew2W", "lnN")
