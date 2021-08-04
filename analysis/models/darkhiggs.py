@@ -6,12 +6,12 @@ import sys
 import os
 import rhalphalib as rl
 import numpy as np
-import scipy.stats
 import pickle
 import gzip
 import json
 from coffea import hist, processor
 from coffea.util import load, save
+from scipy import stats
 import ROOT
 
 rl.util.install_roofit_helpers()
@@ -45,10 +45,40 @@ category_map = {"pass": 1, "fail": 0}
 with open("data/hf_systematic.json") as fin:
     hf_systematic = json.load(fin)
 
+def clopper_pearson_interval(
+    num: np.ndarray, denom: np.ndarray, coverage: float
+    ) -> np.ndarray:
+    r"""
+    Compute the Clopper-Pearson coverage interval for a binomial distribution.
+    c.f. http://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval
+    Args:
+        num: Numerator or number of successes.
+        denom: Denominator or number of trials.
+        coverage: Central coverage interval.
+          Default is one standard deviation, which is roughly ``0.68``.
+    Returns:
+        The Clopper-Pearson central coverage interval.
+    """
+    # Parts originally contributed to coffea
+    # https://github.com/CoffeaTeam/coffea/blob/8c58807e199a7694bf15e3803dbaf706d34bbfa0/LICENSE
+    if coverage is None:
+        coverage = stats.norm.cdf(1) - stats.norm.cdf(-1)
+    # Numerator is subset of denominator
+    if np.any(num > denom):
+        raise ValueError(
+            "Found numerator larger than denominator while calculating binomial uncertainty"
+        )
+    interval_min = stats.beta.ppf((1 - coverage) / 2, num, denom - num + 1)
+    interval_max = stats.beta.ppf((1 + coverage) / 2, num + 1, denom - num)
+    interval = np.stack((interval_min, interval_max))
+    interval[:, num == 0.0] = 0.0
+    interval[1, num == denom] = 1.0
+    return interval
+
 #### Copy and paste from the coffea libraries
 #https://github.com/CoffeaTeam/coffea/blob/de8e792567d07edb1dcae654176c8aa8991d935a/coffea/hist/plot.py#L87-L118
-_coverage1sd = scipy.stats.norm.cdf(1) - scipy.stats.norm.cdf(-1)
-def normal_interval(pw, tw, pw2, tw2, coverage=_coverage1sd):
+_coverage1sd = stats.norm.cdf(1) - stats.norm.cdf(-1)
+def normal_interval(pw, tw, pw2, tw2, coverage=_coverage1sd, debug=False):
     """Compute errors based on the expansion of pass/(pass + fail), possibly weighted
     Parameters
     ----------
@@ -65,18 +95,64 @@ def normal_interval(pw, tw, pw2, tw2, coverage=_coverage1sd):
     c.f. https://root.cern.ch/doc/master/TEfficiency_8cxx_source.html#l02515
     """
 
-    eff = pw / tw
+    eff = tw / (tw+pw)
+    #if np.any(eff >= 1.0):
+    ratio_uncert = np.abs(clopper_pearson_interval(tw, pw + tw, coverage) - eff)
+    if debug:
+        print('================= During the calculation (eff >= 1.0) =================')
+        print('eff:', eff)
+        print(ratio_uncert)
+        print('========================================================== \n')
+    return ratio_uncert
+    #else:
+    #    variance = (pw2 * (1 - 2 * eff) + tw2 * eff ** 2) / (tw ** 2)
+    #    sigma = np.sqrt(variance)
 
-    variance = (pw2 * (1 - 2 * eff) + tw2 * eff ** 2) / (tw ** 2)
-    sigma = np.sqrt(variance)
+    #    prob = 0.5 * (1 - coverage)
+    #    delta = np.zeros_like(sigma)
+    #    delta[sigma != 0] = scipy.stats.norm.ppf(prob, scale=sigma[sigma != 0])
 
-    prob = 0.5 * (1 - coverage)
-    delta = np.zeros_like(sigma)
-    delta[sigma != 0] = scipy.stats.norm.ppf(prob, scale=sigma[sigma != 0])
+    #    lo = eff - np.minimum(eff + delta, np.ones_like(eff))
+    #    hi = np.maximum(eff - delta, np.zeros_like(eff)) - eff
 
-    lo = eff - np.minimum(eff + delta, np.ones_like(eff))
-    hi = np.maximum(eff - delta, np.zeros_like(eff)) - eff
+    #    if debug:
+    #        print('================= During the calculation (eff < 1.0) =================')
+    #        print('eff:', eff)
+    #        print('variance:', variance)
+    #        print('sigma:', sigma)
+    #        print('delta:', delta)
+    #        print('down unc:', lo)
+    #        print('up unc:', hi)
+    #        print('========================================================== \n')
 
+    #    return np.array([lo, hi])
+
+def simple_error_propagation(pw, tw, pw2, tw2, debug=False):
+    """Compute errors based on the propagation of uncertainty
+    Parameters
+    ----------
+    pw : numpy.ndarray
+        Numerator, or number of (weighted) successes, vectorized
+    tw : numpy.ndarray
+        Denominator or number of (weighted) trials, vectorized
+    pw2 : numpy.ndarray
+        Numerator sum of weights squared, vectorized
+    tw2 : numpy.ndarray
+        Denominator sum of weights squared, vectorized
+    """
+    dx = np.sqrt(pw2)
+    dy = np.sqrt(tw2)
+    ratio = tw / pw
+    dz = ratio * np.sqrt((dx/pw)**2 + (dy/tw)**2)
+    lo = ratio - dz
+    hi = ratio + dz
+    if debug:
+        print('================ Propation of uncertainty ================')
+        print('ratio:', ratio)
+        print('dz:', dz)
+        print('down:', lo)
+        print('up:', hi)
+        print('================ Propation of uncertainty ================ \n')
     return np.array([lo, hi])
 
 def template(dictionary, process, systematic, recoil, region, category, read_sumw2=False):
@@ -552,8 +628,10 @@ def model(year, recoil, category, s):
         sr_wjetsTemplate = sr_wjetsMCFailTemplate
 
     print('category:', category)
-    wmcr_stat_uncs = normal_interval(sr_wjetsTemplate[0], wmcr_wjetsTemplate[0], sr_wjetsTemplate[3], wmcr_wjetsTemplate[3])
-    print('wmcr stat uncs:', wmcr_stat_uncs, '\n')
+    #wmcr_stat_uncs = normal_interval(sr_wjetsTemplate[0], wmcr_wjetsTemplate[0], sr_wjetsTemplate[3], wmcr_wjetsTemplate[3])
+    wmcr_stat_uncs = simple_error_propagation(sr_wjetsTemplate[0], wmcr_wjetsTemplate[0], sr_wjetsTemplate[3], wmcr_wjetsTemplate[3])
+    print('wmcr down', wmcr_stat_uncs[0])
+    print('wmcr up', wmcr_stat_uncs[1], '\n')
 
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
@@ -580,8 +658,10 @@ def model(year, recoil, category, s):
     if category == "pass":
         wmcr_ttMC.setParamEffect(tt_norm, 1.2)
         #wmcr_ttMC.autoMCStats()
-        wmcr_ttMC_stat_uncs = normal_interval(sr_ttTemplate[0], wmcr_ttTemplate[0], sr_ttTemplate[3], wmcr_ttTemplate[3])
-        print('wmcr ttMC stat uncs:', wmcr_ttMC_stat_uncs, '\n')
+        #wmcr_ttMC_stat_uncs = normal_interval(sr_ttTemplate[0], wmcr_ttTemplate[0], sr_ttTemplate[3], wmcr_ttTemplate[3])
+        wmcr_ttMC_stat_uncs = simple_error_propagation(sr_ttTemplate[0], wmcr_ttTemplate[0], sr_ttTemplate[3], wmcr_ttTemplate[3])
+        print('wmcr ttMC down', wmcr_ttMC_stat_uncs[0])
+        print('wmcr ttMC up', wmcr_ttMC_stat_uncs[1], '\n')
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wmcr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
@@ -716,8 +796,10 @@ def model(year, recoil, category, s):
     else:
         sr_wjetsTemplate = sr_wjetsMCFailTemplate
 
-    wecr_stat_uncs = normal_interval(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
-    print('wecr stat uncs:', wecr_stat_uncs, '\n')
+    #wecr_stat_uncs = normal_interval(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
+    wecr_stat_uncs = simple_error_propagation(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
+    print('wecr down', wecr_stat_uncs[0])
+    print('wecr up', wecr_stat_uncs[1], '\n')
 
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     wecr_wjets = rl.TransferFactorSample(
@@ -746,8 +828,10 @@ def model(year, recoil, category, s):
     if category == "pass":
         wecr_ttMC.setParamEffect(tt_norm, 1.2)
         #wecr_ttMC.autoMCStats()
-        wecr_ttMC_stat_uncs = normal_interval(sr_ttTemplate[0], wecr_ttTemplate[0], sr_ttTemplate[3], wecr_ttTemplate[3])
-        print('wecr ttMC stat uncs:', wecr_ttMC_stat_uncs, '\n')
+        #wecr_ttMC_stat_uncs = normal_interval(sr_ttTemplate[0], wecr_ttTemplate[0], sr_ttTemplate[3], wecr_ttTemplate[3])
+        wecr_ttMC_stat_uncs = simple_error_propagation(sr_ttTemplate[0], wecr_ttTemplate[0], sr_ttTemplate[3], wecr_ttTemplate[3])
+        print('wecr ttMC down', wecr_ttMC_stat_uncs[0])
+        print('wecr ttMC up', wecr_ttMC_stat_uncs[1], '\n')
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wecr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
@@ -876,8 +960,10 @@ def model(year, recoil, category, s):
     #tmcr_ttMC.autoMCStats()
 
     ### Manually calculate a single set of stat uncertainties
-    tmcr_stat_uncs = normal_interval(sr_ttTemplate[0], tmcr_ttTemplate[0], sr_ttTemplate[3], tmcr_ttTemplate[3])
-    print('tmcr stat uncs:', tmcr_stat_uncs, '\n')
+    #tmcr_stat_uncs = normal_interval(sr_ttTemplate[0], tmcr_ttTemplate[0], sr_ttTemplate[3], tmcr_ttTemplate[3])
+    tmcr_stat_uncs = simple_error_propagation(sr_ttTemplate[0], tmcr_ttTemplate[0], sr_ttTemplate[3], tmcr_ttTemplate[3])
+    print('tmcr stat down:', tmcr_stat_uncs[0])
+    print('tmcr stat up:', tmcr_stat_uncs[1], '\n')
 
     tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     tmcr_tt = rl.TransferFactorSample(
@@ -1019,8 +1105,10 @@ def model(year, recoil, category, s):
     #tecr_ttMC.autoMCStats()
 
     ### Manually calculate a single set of stat uncertainties
-    tecr_stat_uncs = normal_interval(sr_ttTemplate[0], tecr_ttTemplate[0], sr_ttTemplate[3], tecr_ttTemplate[3])
-    print('tecr stat uncs:', tecr_stat_uncs, '\n')
+    #tecr_stat_uncs = normal_interval(sr_ttTemplate[0], tecr_ttTemplate[0], sr_ttTemplate[3], tecr_ttTemplate[3])
+    tecr_stat_uncs = simple_error_propagation(sr_ttTemplate[0], tecr_ttTemplate[0], sr_ttTemplate[3], tecr_ttTemplate[3])
+    print('tecr stat down:', tecr_stat_uncs[0])
+    print('tecr stat up:', tecr_stat_uncs[1], '\n')
 
     tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     tecr_tt = rl.TransferFactorSample(
