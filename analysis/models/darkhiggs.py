@@ -144,16 +144,17 @@ def simple_error_propagation(pw, tw, pw2, tw2, debug=False):
     dy = np.sqrt(tw2)
     ratio = tw / pw
     dz = ratio * np.sqrt((dx/pw)**2 + (dy/tw)**2)
-    lo = ratio - dz
-    hi = ratio + dz
+    #lo = ratio - dz
+    #hi = ratio + dz
     if debug:
         print('================ Propation of uncertainty ================')
         print('ratio:', ratio)
         print('dz:', dz)
-        print('down:', lo)
-        print('up:', hi)
+        #print('down:', lo)
+        #print('up:', hi)
         print('================ Propation of uncertainty ================ \n')
-    return np.array([lo, hi])
+    #return np.array([lo, hi])
+    return dz
 
 def template(dictionary, process, systematic, recoil, region, category, read_sumw2=False):
     histogram = dictionary[region].integrate("process", process)
@@ -628,12 +629,11 @@ def model(year, recoil, category, s):
         sr_wjetsTemplate = sr_wjetsMCFailTemplate
 
     print('category:', category)
-    #wmcr_stat_uncs = normal_interval(sr_wjetsTemplate[0], wmcr_wjetsTemplate[0], sr_wjetsTemplate[3], wmcr_wjetsTemplate[3])
-    wmcr_stat_uncs = simple_error_propagation(sr_wjetsTemplate[0], wmcr_wjetsTemplate[0], sr_wjetsTemplate[3], wmcr_wjetsTemplate[3])
-    print('wmcr down', wmcr_stat_uncs[0])
-    print('wmcr up', wmcr_stat_uncs[1], '\n')
-
+    wmcr_wjetsTFstatParameters =  np.array([rl.NuisanceParameter("wmcr_wjetsTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wmcr_wjetsTemplate[0].size)])
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
+    nominal =  wmcr_wjetsTemplate[0] / sr_wjetsTemplate[0]
+    dz = simple_error_propagation(sr_wjetsTemplate[0], wmcr_wjetsTemplate[0], sr_wjetsTemplate[3], wmcr_wjetsTemplate[3])
+    wmcr_wjetsTransferFactor = wmcr_wjetsTransferFactor * ( (nominal-dz)/nominal + 2*(dz/nominal)*wmcr_wjetsTFstatParameters )
     wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
     wmcr.addSample(wmcr_wjets)
 
@@ -659,9 +659,9 @@ def model(year, recoil, category, s):
         wmcr_ttMC.setParamEffect(tt_norm, 1.2)
         #wmcr_ttMC.autoMCStats()
         #wmcr_ttMC_stat_uncs = normal_interval(sr_ttTemplate[0], wmcr_ttTemplate[0], sr_ttTemplate[3], wmcr_ttTemplate[3])
-        wmcr_ttMC_stat_uncs = simple_error_propagation(sr_ttTemplate[0], wmcr_ttTemplate[0], sr_ttTemplate[3], wmcr_ttTemplate[3])
-        print('wmcr ttMC down', wmcr_ttMC_stat_uncs[0])
-        print('wmcr ttMC up', wmcr_ttMC_stat_uncs[1], '\n')
+        #wmcr_ttMC_stat_uncs = simple_error_propagation(sr_ttTemplate[0], wmcr_ttTemplate[0], sr_ttTemplate[3], wmcr_ttTemplate[3])
+        #print('wmcr ttMC down', wmcr_ttMC_stat_uncs[0])
+        #print('wmcr ttMC up', wmcr_ttMC_stat_uncs[1], '\n')
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wmcr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
@@ -797,9 +797,9 @@ def model(year, recoil, category, s):
         sr_wjetsTemplate = sr_wjetsMCFailTemplate
 
     #wecr_stat_uncs = normal_interval(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
-    wecr_stat_uncs = simple_error_propagation(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
-    print('wecr down', wecr_stat_uncs[0])
-    print('wecr up', wecr_stat_uncs[1], '\n')
+    #wecr_stat_uncs = simple_error_propagation(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
+    #print('wecr down', wecr_stat_uncs[0])
+    #print('wecr up', wecr_stat_uncs[1], '\n')
 
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     wecr_wjets = rl.TransferFactorSample(
@@ -829,9 +829,9 @@ def model(year, recoil, category, s):
         wecr_ttMC.setParamEffect(tt_norm, 1.2)
         #wecr_ttMC.autoMCStats()
         #wecr_ttMC_stat_uncs = normal_interval(sr_ttTemplate[0], wecr_ttTemplate[0], sr_ttTemplate[3], wecr_ttTemplate[3])
-        wecr_ttMC_stat_uncs = simple_error_propagation(sr_ttTemplate[0], wecr_ttTemplate[0], sr_ttTemplate[3], wecr_ttTemplate[3])
-        print('wecr ttMC down', wecr_ttMC_stat_uncs[0])
-        print('wecr ttMC up', wecr_ttMC_stat_uncs[1], '\n')
+        #wecr_ttMC_stat_uncs = simple_error_propagation(sr_ttTemplate[0], wecr_ttTemplate[0], sr_ttTemplate[3], wecr_ttTemplate[3])
+        #print('wecr ttMC down', wecr_ttMC_stat_uncs[0])
+        #print('wecr ttMC up', wecr_ttMC_stat_uncs[1], '\n')
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wecr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
@@ -961,9 +961,9 @@ def model(year, recoil, category, s):
 
     ### Manually calculate a single set of stat uncertainties
     #tmcr_stat_uncs = normal_interval(sr_ttTemplate[0], tmcr_ttTemplate[0], sr_ttTemplate[3], tmcr_ttTemplate[3])
-    tmcr_stat_uncs = simple_error_propagation(sr_ttTemplate[0], tmcr_ttTemplate[0], sr_ttTemplate[3], tmcr_ttTemplate[3])
-    print('tmcr stat down:', tmcr_stat_uncs[0])
-    print('tmcr stat up:', tmcr_stat_uncs[1], '\n')
+    #tmcr_stat_uncs = simple_error_propagation(sr_ttTemplate[0], tmcr_ttTemplate[0], sr_ttTemplate[3], tmcr_ttTemplate[3])
+    #print('tmcr stat down:', tmcr_stat_uncs[0])
+    #print('tmcr stat up:', tmcr_stat_uncs[1], '\n')
 
     tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     tmcr_tt = rl.TransferFactorSample(
@@ -1106,9 +1106,9 @@ def model(year, recoil, category, s):
 
     ### Manually calculate a single set of stat uncertainties
     #tecr_stat_uncs = normal_interval(sr_ttTemplate[0], tecr_ttTemplate[0], sr_ttTemplate[3], tecr_ttTemplate[3])
-    tecr_stat_uncs = simple_error_propagation(sr_ttTemplate[0], tecr_ttTemplate[0], sr_ttTemplate[3], tecr_ttTemplate[3])
-    print('tecr stat down:', tecr_stat_uncs[0])
-    print('tecr stat up:', tecr_stat_uncs[1], '\n')
+    #tecr_stat_uncs = simple_error_propagation(sr_ttTemplate[0], tecr_ttTemplate[0], sr_ttTemplate[3], tecr_ttTemplate[3])
+    #print('tecr stat down:', tecr_stat_uncs[0])
+    #print('tecr stat up:', tecr_stat_uncs[1], '\n')
 
     tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     tecr_tt = rl.TransferFactorSample(
