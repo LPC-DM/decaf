@@ -144,16 +144,12 @@ def simple_error_propagation(pw, tw, pw2, tw2, debug=False):
     dy = np.sqrt(tw2)
     ratio = tw / pw
     dz = ratio * np.sqrt((dx/pw)**2 + (dy/tw)**2)
-    #lo = ratio - dz
-    #hi = ratio + dz
     if debug:
         print('================ Propation of uncertainty ================')
         print('ratio:', ratio)
         print('dz:', dz)
-        #print('down:', lo)
-        #print('up:', hi)
         print('================ Propation of uncertainty ================ \n')
-    #return np.array([lo, hi])
+
     return dz
 
 def template(dictionary, process, systematic, recoil, region, category, read_sumw2=False):
@@ -628,7 +624,6 @@ def model(year, recoil, category, s):
     else:
         sr_wjetsTemplate = sr_wjetsMCFailTemplate
 
-    print('category:', category)
     wmcr_wjetsTFstatParameters =  np.array([rl.NuisanceParameter("wmcr_wjetsTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wmcr_wjetsTemplate[0].size)])
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     nominal =  wmcr_wjetsTemplate[0] / sr_wjetsTemplate[0]
@@ -658,11 +653,11 @@ def model(year, recoil, category, s):
     if category == "pass":
         wmcr_ttMC.setParamEffect(tt_norm, 1.2)
         #wmcr_ttMC.autoMCStats()
-        #wmcr_ttMC_stat_uncs = normal_interval(sr_ttTemplate[0], wmcr_ttTemplate[0], sr_ttTemplate[3], wmcr_ttTemplate[3])
-        #wmcr_ttMC_stat_uncs = simple_error_propagation(sr_ttTemplate[0], wmcr_ttTemplate[0], sr_ttTemplate[3], wmcr_ttTemplate[3])
-        #print('wmcr ttMC down', wmcr_ttMC_stat_uncs[0])
-        #print('wmcr ttMC up', wmcr_ttMC_stat_uncs[1], '\n')
+        wmcr_ttTFstatParameters =  np.array([rl.NuisanceParameter("wmcr_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wmcr_ttTemplate[0].size)])
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+        nominal =  wmcr_ttTemplate[0] / sr_wjetsTemplate[0]
+        dz = simple_error_propagation(sr_ttTemplate[0], wmcr_ttTemplate[0], sr_ttTemplate[3], wmcr_ttTemplate[3])
+        wmcr_ttTransferFactor = wmcr_ttTransferFactor * ( (nominal-dz)/nominal + 2*(dz/nominal)*wmcr_ttTFstatParameters )
         wmcr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
         )
@@ -797,11 +792,14 @@ def model(year, recoil, category, s):
         sr_wjetsTemplate = sr_wjetsMCFailTemplate
 
     #wecr_stat_uncs = normal_interval(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
-    #wecr_stat_uncs = simple_error_propagation(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
     #print('wecr down', wecr_stat_uncs[0])
     #print('wecr up', wecr_stat_uncs[1], '\n')
 
+    wecr_wjetsTFstatParameters =  np.array([rl.NuisanceParameter("wecr_wjetsTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wecr_wjetsTemplate[0].size)])
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
+    nominal =  wecr_wjetsTemplate[0] / sr_wjetsTemplate[0]
+    dz = simple_error_propagation(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
+    wecr_wjetsTransferFactor = wecr_wjetsTransferFactor * ( (nominal-dz)/nominal + 2*(dz/nominal)*wecr_wjetsTFstatParameters )
     wecr_wjets = rl.TransferFactorSample(
         ch_name + "_wjets", rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets
     )
@@ -828,11 +826,11 @@ def model(year, recoil, category, s):
     if category == "pass":
         wecr_ttMC.setParamEffect(tt_norm, 1.2)
         #wecr_ttMC.autoMCStats()
-        #wecr_ttMC_stat_uncs = normal_interval(sr_ttTemplate[0], wecr_ttTemplate[0], sr_ttTemplate[3], wecr_ttTemplate[3])
-        #wecr_ttMC_stat_uncs = simple_error_propagation(sr_ttTemplate[0], wecr_ttTemplate[0], sr_ttTemplate[3], wecr_ttTemplate[3])
-        #print('wecr ttMC down', wecr_ttMC_stat_uncs[0])
-        #print('wecr ttMC up', wecr_ttMC_stat_uncs[1], '\n')
+        wecr_ttTFstatParameters =  np.array([rl.NuisanceParameter("wecr_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wecr_ttTemplate[0].size)])
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+        nominal =  wecr_ttTemplate[0] / sr_ttTemplate[0]
+        dz = simple_error_propagation(sr_ttTemplate[0], wecr_ttTemplate[0], sr_ttTemplate[3], wecr_ttTemplate[3])
+        wecr_ttTransferFactor = wecr_wjetsTransferFactor * ( (nominal-dz)/nominal + 2*(dz/nominal)*wecr_ttTFstatParameters )
         wecr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
         )
@@ -959,13 +957,11 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category)
     #tmcr_ttMC.autoMCStats()
 
-    ### Manually calculate a single set of stat uncertainties
-    #tmcr_stat_uncs = normal_interval(sr_ttTemplate[0], tmcr_ttTemplate[0], sr_ttTemplate[3], tmcr_ttTemplate[3])
-    #tmcr_stat_uncs = simple_error_propagation(sr_ttTemplate[0], tmcr_ttTemplate[0], sr_ttTemplate[3], tmcr_ttTemplate[3])
-    #print('tmcr stat down:', tmcr_stat_uncs[0])
-    #print('tmcr stat up:', tmcr_stat_uncs[1], '\n')
-
+    tmcr_ttTFstatParameters =  np.array([rl.NuisanceParameter("tmcr_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(tmcr_ttTemplate[0].size)])
     tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+    nominal =  tmcr_ttTemplate[0] / sr_ttTemplate[0]
+    dz = simple_error_propagation(sr_ttTemplate[0], tmcr_ttTemplate[0], sr_ttTemplate[3], tmcr_ttTemplate[3])
+    tmcr_ttTransferFactor = tmcr_ttTransferFactor * ( (nominal-dz)/nominal + 2*(dz/nominal)*tmcr_ttTFstatParameters )
     tmcr_tt = rl.TransferFactorSample(
         ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt
     )
@@ -1104,13 +1100,11 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category)
     #tecr_ttMC.autoMCStats()
 
-    ### Manually calculate a single set of stat uncertainties
-    #tecr_stat_uncs = normal_interval(sr_ttTemplate[0], tecr_ttTemplate[0], sr_ttTemplate[3], tecr_ttTemplate[3])
-    #tecr_stat_uncs = simple_error_propagation(sr_ttTemplate[0], tecr_ttTemplate[0], sr_ttTemplate[3], tecr_ttTemplate[3])
-    #print('tecr stat down:', tecr_stat_uncs[0])
-    #print('tecr stat up:', tecr_stat_uncs[1], '\n')
-
+    tecr_ttTFstatParameters =  np.array([rl.NuisanceParameter("tecr_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(tecr_ttTemplate[0].size)])
     tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+    nominal =  tecr_ttTemplate[0] / sr_ttTemplate[0]
+    dz = simple_error_propagation(sr_ttTemplate[0], tecr_ttTemplate[0], sr_ttTemplate[3], tecr_ttTemplate[3])
+    tecr_ttTransferFactor = tecr_ttTransferFactor * ( (nominal-dz)/nominal + 2*(dz/nominal)*tecr_ttTFstatParameters )
     tecr_tt = rl.TransferFactorSample(
         ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt
     )
