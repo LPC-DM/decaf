@@ -12,6 +12,7 @@ import json
 from coffea import hist, processor
 from coffea.util import load, save
 from scipy import stats
+from stat_uncs_funcs import simple_error_propagation
 import ROOT
 
 rl.util.install_roofit_helpers()
@@ -45,87 +46,88 @@ category_map = {"pass": 1, "fail": 0}
 with open("data/hf_systematic.json") as fin:
     hf_systematic = json.load(fin)
 
-def clopper_pearson_interval(
-    num: np.ndarray, denom: np.ndarray, coverage: float
-    ) -> np.ndarray:
-    r"""
-    Compute the Clopper-Pearson coverage interval for a binomial distribution.
-    c.f. http://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval
-    Args:
-        num: Numerator or number of successes.
-        denom: Denominator or number of trials.
-        coverage: Central coverage interval.
-          Default is one standard deviation, which is roughly ``0.68``.
-    Returns:
-        The Clopper-Pearson central coverage interval.
-    """
-    # Parts originally contributed to coffea
-    # https://github.com/CoffeaTeam/coffea/blob/8c58807e199a7694bf15e3803dbaf706d34bbfa0/LICENSE
-    if coverage is None:
-        coverage = stats.norm.cdf(1) - stats.norm.cdf(-1)
-    # Numerator is subset of denominator
-    if np.any(num > denom):
-        raise ValueError(
-            "Found numerator larger than denominator while calculating binomial uncertainty"
-        )
-    interval_min = stats.beta.ppf((1 - coverage) / 2, num, denom - num + 1)
-    interval_max = stats.beta.ppf((1 + coverage) / 2, num + 1, denom - num)
-    interval = np.stack((interval_min, interval_max))
-    interval[:, num == 0.0] = 0.0
-    interval[1, num == denom] = 1.0
-    return interval
-
-#### Copy and paste from the coffea libraries
-#https://github.com/CoffeaTeam/coffea/blob/de8e792567d07edb1dcae654176c8aa8991d935a/coffea/hist/plot.py#L87-L118
-_coverage1sd = stats.norm.cdf(1) - stats.norm.cdf(-1)
-def normal_interval(pw, tw, pw2, tw2, coverage=_coverage1sd, debug=False):
-    """Compute errors based on the expansion of pass/(pass + fail), possibly weighted
-    Parameters
-    ----------
-    pw : numpy.ndarray
-        Numerator, or number of (weighted) successes, vectorized
-    tw : numpy.ndarray
-        Denominator or number of (weighted) trials, vectorized
-    pw2 : numpy.ndarray
-        Numerator sum of weights squared, vectorized
-    tw2 : numpy.ndarray
-        Denominator sum of weights squared, vectorized
-    coverage : float, optional
-        Central coverage interval, defaults to 68%
-    c.f. https://root.cern.ch/doc/master/TEfficiency_8cxx_source.html#l02515
-    """
-
-    eff = tw / (tw+pw)
-    #if np.any(eff >= 1.0):
-    ratio_uncert = np.abs(clopper_pearson_interval(tw, pw + tw, coverage) - eff)
-    if debug:
-        print('================= During the calculation (eff >= 1.0) =================')
-        print('eff:', eff)
-        print(ratio_uncert)
-        print('========================================================== \n')
-    return ratio_uncert
-    #else:
-    #    variance = (pw2 * (1 - 2 * eff) + tw2 * eff ** 2) / (tw ** 2)
-    #    sigma = np.sqrt(variance)
-
-    #    prob = 0.5 * (1 - coverage)
-    #    delta = np.zeros_like(sigma)
-    #    delta[sigma != 0] = scipy.stats.norm.ppf(prob, scale=sigma[sigma != 0])
-
-    #    lo = eff - np.minimum(eff + delta, np.ones_like(eff))
-    #    hi = np.maximum(eff - delta, np.zeros_like(eff)) - eff
-
-    #    if debug:
-    #        print('================= During the calculation (eff < 1.0) =================')
-    #        print('eff:', eff)
-    #        print('variance:', variance)
-    #        print('sigma:', sigma)
-    #        print('delta:', delta)
-    #        print('down unc:', lo)
-    #        print('up unc:', hi)
-    #        print('========================================================== \n')
-
-    #    return np.array([lo, hi])
+#def clopper_pearson_interval(
+#    num: np.ndarray, denom: np.ndarray, coverage: float
+#    ) -> np.ndarray:
+#    r"""
+#    Compute the Clopper-Pearson coverage interval for a binomial distribution.
+#    c.f. http://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval
+#    Args:
+#        num: Numerator or number of successes.
+#        denom: Denominator or number of trials.
+#        coverage: Central coverage interval.
+#          Default is one standard deviation, which is roughly ``0.68``.
+#    Returns:
+#        The Clopper-Pearson central coverage interval.
+#    """
+#    # Parts originally contributed to coffea
+#    # https://github.com/CoffeaTeam/coffea/blob/8c58807e199a7694bf15e3803dbaf706d34bbfa0/LICENSE
+#    if coverage is None:
+#        coverage = stats.norm.cdf(1) - stats.norm.cdf(-1)
+#    # Numerator is subset of denominator
+#    if np.any(num > denom):
+#        raise ValueError(
+#            "Found numerator larger than denominator while calculating binomial uncertainty"
+#        )
+#    interval_min = stats.beta.ppf((1 - coverage) / 2, num, denom - num + 1)
+#    interval_max = stats.beta.ppf((1 + coverage) / 2, num + 1, denom - num)
+#    interval = np.stack((interval_min, interval_max))
+#    interval[:, num == 0.0] = 0.0
+#    interval[1, num == denom] = 1.0
+#    return interval
+#
+##### Copy and paste from the coffea libraries
+##https://github.com/CoffeaTeam/coffea/blob/de8e792567d07edb1dcae654176c8aa8991d935a/coffea/hist/plot.py#L87-L118
+#_coverage1sd = stats.norm.cdf(1) - stats.norm.cdf(-1)
+#def normal_interval(pw, tw, pw2, tw2, coverage=_coverage1sd, debug=False):
+#    """Compute errors based on the expansion of pass/(pass + fail), possibly weighted
+#    Parameters
+#    ----------
+#    pw : numpy.ndarray
+#        Numerator, or number of (weighted) successes, vectorized
+#    tw : numpy.ndarray
+#        Denominator or number of (weighted) trials, vectorized
+#    pw2 : numpy.ndarray
+#        Numerator sum of weights squared, vectorized
+#    tw2 : numpy.ndarray
+#        Denominator sum of weights squared, vectorized
+#    coverage : float, optional
+#        Central coverage interval, defaults to 68%
+#    c.f. https://root.cern.ch/doc/master/TEfficiency_8cxx_source.html#l02515
+#    """
+#
+#    eff = tw / (tw+pw)
+#    #if np.any(eff >= 1.0):
+#    ratio_uncert = np.abs(clopper_pearson_interval(tw, pw + tw, coverage) - eff)
+#    if debug:
+#        print('================= During the calculation (eff >= 1.0) =================')
+#        print('eff:', eff)
+#        print(ratio_uncert)
+#        print('========================================================== \n')
+#    return ratio_uncert
+#    #else:
+#    #    variance = (pw2 * (1 - 2 * eff) + tw2 * eff ** 2) / (tw ** 2)
+#    #    sigma = np.sqrt(variance)
+#
+#    #    prob = 0.5 * (1 - coverage)
+#    #    delta = np.zeros_like(sigma)
+#    #    delta[sigma != 0] = scipy.stats.norm.ppf(prob, scale=sigma[sigma != 0])
+#
+#    #    lo = eff - np.minimum(eff + delta, np.ones_like(eff))
+#    #    hi = np.maximum(eff - delta, np.zeros_like(eff)) - eff
+#
+#    #    if debug:
+#    #        print('================= During the calculation (eff < 1.0) =================')
+#    #        print('eff:', eff)
+#    #        print('variance:', variance)
+#    #        print('sigma:', sigma)
+#    #        print('delta:', delta)
+#    #        print('down unc:', lo)
+#    #        print('up unc:', hi)
+#    #        print('========================================================== \n')
+#
+#    #    return np.array([lo, hi])
+#
 
 def simple_error_propagation(pw, tw, pw2, tw2, debug=False):
     """Compute errors based on the propagation of uncertainty
@@ -628,7 +630,7 @@ def model(year, recoil, category, s):
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     nominal =  wmcr_wjetsTemplate[0] / sr_wjetsTemplate[0]
     dz = simple_error_propagation(sr_wjetsTemplate[0], wmcr_wjetsTemplate[0], sr_wjetsTemplate[3], wmcr_wjetsTemplate[3])
-    wmcr_wjetsTransferFactor = wmcr_wjetsTransferFactor * ( (nominal-dz)/nominal + 2*(dz/nominal)*wmcr_wjetsTFstatParameters )
+    wmcr_wjetsTransferFactor = wmcr_wjetsTransferFactor * ( 1. + (dz/nominal)*wmcr_wjetsTFstatParameters )
     wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
     wmcr.addSample(wmcr_wjets)
 
@@ -657,7 +659,7 @@ def model(year, recoil, category, s):
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         nominal =  wmcr_ttTemplate[0] / sr_wjetsTemplate[0]
         dz = simple_error_propagation(sr_ttTemplate[0], wmcr_ttTemplate[0], sr_ttTemplate[3], wmcr_ttTemplate[3])
-        wmcr_ttTransferFactor = wmcr_ttTransferFactor * ( (nominal-dz)/nominal + 2*(dz/nominal)*wmcr_ttTFstatParameters )
+        wmcr_ttTransferFactor = wmcr_ttTransferFactor * ( 1. + (dz/nominal)*wmcr_ttTFstatParameters )
         wmcr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
         )
@@ -799,7 +801,7 @@ def model(year, recoil, category, s):
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     nominal =  wecr_wjetsTemplate[0] / sr_wjetsTemplate[0]
     dz = simple_error_propagation(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
-    wecr_wjetsTransferFactor = wecr_wjetsTransferFactor * ( (nominal-dz)/nominal + 2*(dz/nominal)*wecr_wjetsTFstatParameters )
+    wecr_wjetsTransferFactor = wecr_wjetsTransferFactor * ( 1. + (dz/nominal)*wecr_wjetsTFstatParameters )
     wecr_wjets = rl.TransferFactorSample(
         ch_name + "_wjets", rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets
     )
@@ -830,7 +832,7 @@ def model(year, recoil, category, s):
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         nominal =  wecr_ttTemplate[0] / sr_ttTemplate[0]
         dz = simple_error_propagation(sr_ttTemplate[0], wecr_ttTemplate[0], sr_ttTemplate[3], wecr_ttTemplate[3])
-        wecr_ttTransferFactor = wecr_wjetsTransferFactor * ( (nominal-dz)/nominal + 2*(dz/nominal)*wecr_ttTFstatParameters )
+        wecr_ttTransferFactor = wecr_wjetsTransferFactor * ( 1. + (dz/nominal)*wecr_ttTFstatParameters )
         wecr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
         )
@@ -961,7 +963,7 @@ def model(year, recoil, category, s):
     tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     nominal =  tmcr_ttTemplate[0] / sr_ttTemplate[0]
     dz = simple_error_propagation(sr_ttTemplate[0], tmcr_ttTemplate[0], sr_ttTemplate[3], tmcr_ttTemplate[3])
-    tmcr_ttTransferFactor = tmcr_ttTransferFactor * ( (nominal-dz)/nominal + 2*(dz/nominal)*tmcr_ttTFstatParameters )
+    tmcr_ttTransferFactor = tmcr_ttTransferFactor * ( 1. + (dz/nominal)*tmcr_ttTFstatParameters )
     tmcr_tt = rl.TransferFactorSample(
         ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt
     )
@@ -1104,7 +1106,7 @@ def model(year, recoil, category, s):
     tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     nominal =  tecr_ttTemplate[0] / sr_ttTemplate[0]
     dz = simple_error_propagation(sr_ttTemplate[0], tecr_ttTemplate[0], sr_ttTemplate[3], tecr_ttTemplate[3])
-    tecr_ttTransferFactor = tecr_ttTransferFactor * ( (nominal-dz)/nominal + 2*(dz/nominal)*tecr_ttTFstatParameters )
+    tecr_ttTransferFactor = tecr_ttTransferFactor * ( 1. + (dz/nominal)*tecr_ttTFstatParameters )
     tecr_tt = rl.TransferFactorSample(
         ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt
     )
