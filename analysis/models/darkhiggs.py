@@ -12,7 +12,6 @@ import json
 from coffea import hist, processor
 from coffea.util import load, save
 from scipy import stats
-from stat_uncs_funcs import simple_error_propagation
 import ROOT
 
 rl.util.install_roofit_helpers()
@@ -164,13 +163,16 @@ def template(dictionary, process, systematic, recoil, region, category, read_sum
     if "data" not in systematic:
         #output[zerobins] = 1.
         #sumw2[zerobins] = 0.
-        if "Z+jets" in str(process):
+        if "Z+" in str(process):
             output[zerobins] = 1.
             sumw2[zerobins] = 0.
-        elif "W+jets" in str(process) and recoil<4:
+        elif "W+" in str(process) and "fail" in category:
             output[zerobins] = 1.
             sumw2[zerobins] = 0.
-        elif "TT" in str(process) and recoil<4:
+        elif "W+" in str(process) and "pass" in category and recoil<4:
+            output[zerobins] = 1.
+            sumw2[zerobins] = 0.
+        elif "TT" in str(process) and "pass" in category  and recoil<4:
             output[zerobins] = 1.
             sumw2[zerobins] = 0.
         else:
@@ -442,7 +444,8 @@ def model(year, recoil, category, s):
         sr_wjetsMC = sr_wjetsMCPass
         sr_wjets = sr_wjetsPass
         if not (recoil<4):
-            sr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "sr", category, read_sumw2=True)
+            #sr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "sr", category, read_sumw2=True)
+            sr_wjetsTemplate = sr_wjetsMCPassTemplate
             sr_wjetsMC = rl.TemplateSample(
                 "sr" + model_id + "_wjetsMC",
                 rl.Sample.BACKGROUND,
@@ -457,6 +460,7 @@ def model(year, recoil, category, s):
             addVJetsSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
             sr_wjets = sr_wjetsMC
     else:
+        sr_wjetsTemplate = sr_wjetsMCFailTemplate
         sr_wjetsMC = sr_wjetsMCFail
         sr_wjets = sr_wjetsFail
 
