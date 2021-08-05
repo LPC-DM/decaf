@@ -442,10 +442,10 @@ def model(year, recoil, category, s):
 
     if category == "pass":
         sr_wjetsMC = sr_wjetsMCPass
+        sr_wjetsTemplate = sr_wjetsMCPassTemplate
         sr_wjets = sr_wjetsPass
         if not (recoil<4):
             #sr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "sr", category, read_sumw2=True)
-            sr_wjetsTemplate = sr_wjetsMCPassTemplate
             sr_wjetsMC = rl.TemplateSample(
                 "sr" + model_id + "_wjetsMC",
                 rl.Sample.BACKGROUND,
@@ -624,12 +624,6 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
 
-    ### Manually calculate a single set of stat uncertainties
-    if category == "pass":
-        sr_wjetsTemplate = sr_wjetsMCPassTemplate
-    else:
-        sr_wjetsTemplate = sr_wjetsMCFailTemplate
-
     wmcr_wjetsTFstatParameters =  np.array([rl.NuisanceParameter("wmcr_wjetsTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wmcr_wjetsTemplate[0].size)])
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     nominal =  wmcr_wjetsTemplate[0] / sr_wjetsTemplate[0]
@@ -790,16 +784,6 @@ def model(year, recoil, category, s):
     #wecr_wjetsMC.autoMCStats()
     addBtagSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
-
-    ### Manually calculate a single set of stat uncertainties
-    if category == "pass":
-        sr_wjetsTemplate = sr_wjetsMCPassTemplate
-    else:
-        sr_wjetsTemplate = sr_wjetsMCFailTemplate
-
-    #wecr_stat_uncs = normal_interval(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
-    #print('wecr down', wecr_stat_uncs[0])
-    #print('wecr up', wecr_stat_uncs[1], '\n')
 
     wecr_wjetsTFstatParameters =  np.array([rl.NuisanceParameter("wecr_wjetsTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wecr_wjetsTemplate[0].size)])
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
