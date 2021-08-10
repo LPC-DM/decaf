@@ -291,7 +291,7 @@ def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     ew2GUp = template(dictionary, process, "ew2GUp", recoil, region, category)[0]
     ew2GDown = template(dictionary, process, "ew2GDown", recoil, region, category)[0]
     templ.setParamEffect(ew2G, ew2GUp, ew2GDown)
-    
+
     ew2WUp = template(dictionary, process, "ew2WUp", recoil, region, category)[0]
     ew2WDown = template(dictionary, process, "ew2WDown", recoil, region, category)[0]
     templ.setParamEffect(ew2W, ew2WUp, ew2WDown)
