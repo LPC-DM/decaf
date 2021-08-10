@@ -488,7 +488,7 @@ def model(year, recoil, category, s):
         sigmascale={
             '2016': 1000,
             '2017': 1000,
-            '2018': 100
+            '2018': 1000
         }
         sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
         sr_ttParameters = np.array(
@@ -624,7 +624,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
 
-    wmcr_wjetsTFstatParameters =  np.array([rl.NuisanceParameter("wmcr_wjetsTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wmcr_wjetsTemplate[0].size)])
+    wmcr_wjetsTFstatParameters =  np.array([rl.NuisanceParameter("wmcr_"+year+"_wjetsTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wmcr_wjetsTemplate[0].size)])
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     nominal =  wmcr_wjetsTemplate[0] / sr_wjetsTemplate[0]
     dz = simple_error_propagation(sr_wjetsTemplate[0], wmcr_wjetsTemplate[0], sr_wjetsTemplate[3], wmcr_wjetsTemplate[3])
@@ -653,7 +653,7 @@ def model(year, recoil, category, s):
     if category == "pass":
         wmcr_ttMC.setParamEffect(tt_norm, 1.2)
         #wmcr_ttMC.autoMCStats()
-        wmcr_ttTFstatParameters =  np.array([rl.NuisanceParameter("wmcr_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wmcr_ttTemplate[0].size)])
+        wmcr_ttTFstatParameters =  np.array([rl.NuisanceParameter("wmcr_"+year+"_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wmcr_ttTemplate[0].size)])
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         nominal =  wmcr_ttTemplate[0] / sr_wjetsTemplate[0]
         dz = simple_error_propagation(sr_ttTemplate[0], wmcr_ttTemplate[0], sr_ttTemplate[3], wmcr_ttTemplate[3])
@@ -785,7 +785,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
 
-    wecr_wjetsTFstatParameters =  np.array([rl.NuisanceParameter("wecr_wjetsTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wecr_wjetsTemplate[0].size)])
+    wecr_wjetsTFstatParameters =  np.array([rl.NuisanceParameter("wecr_"+year+"_wjetsTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wecr_wjetsTemplate[0].size)])
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     nominal =  wecr_wjetsTemplate[0] / sr_wjetsTemplate[0]
     dz = simple_error_propagation(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
@@ -816,7 +816,7 @@ def model(year, recoil, category, s):
     if category == "pass":
         wecr_ttMC.setParamEffect(tt_norm, 1.2)
         #wecr_ttMC.autoMCStats()
-        wecr_ttTFstatParameters =  np.array([rl.NuisanceParameter("wecr_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wecr_ttTemplate[0].size)])
+        wecr_ttTFstatParameters =  np.array([rl.NuisanceParameter("wecr_"+year+"_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wecr_ttTemplate[0].size)])
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         nominal =  wecr_ttTemplate[0] / sr_ttTemplate[0]
         dz = simple_error_propagation(sr_ttTemplate[0], wecr_ttTemplate[0], sr_ttTemplate[3], wecr_ttTemplate[3])
@@ -947,7 +947,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category)
     #tmcr_ttMC.autoMCStats()
 
-    tmcr_ttTFstatParameters =  np.array([rl.NuisanceParameter("tmcr_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(tmcr_ttTemplate[0].size)])
+    tmcr_ttTFstatParameters =  np.array([rl.NuisanceParameter("tmcr_"+year+"_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(tmcr_ttTemplate[0].size)])
     tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     nominal =  tmcr_ttTemplate[0] / sr_ttTemplate[0]
     dz = simple_error_propagation(sr_ttTemplate[0], tmcr_ttTemplate[0], sr_ttTemplate[3], tmcr_ttTemplate[3])
@@ -1090,7 +1090,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category)
     #tecr_ttMC.autoMCStats()
 
-    tecr_ttTFstatParameters =  np.array([rl.NuisanceParameter("tecr_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(tecr_ttTemplate[0].size)])
+    tecr_ttTFstatParameters =  np.array([rl.NuisanceParameter("tecr_"+year+"_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(tecr_ttTemplate[0].size)])
     tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     nominal =  tecr_ttTemplate[0] / sr_ttTemplate[0]
     dz = simple_error_propagation(sr_ttTemplate[0], tecr_ttTemplate[0], sr_ttTemplate[3], tecr_ttTemplate[3])
