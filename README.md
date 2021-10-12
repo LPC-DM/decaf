@@ -114,7 +114,7 @@ python submit_condor.py --year 2018 --processor darkhiggs2018 -t
 
 This way jobs to generate the full set of 2018 histograms will be submitted to condor. the ```-t``` will allow for tarring the working environment and the necessary dependences to run on condor nodes. The module has a ```--dataset``` option that works like described before for ```run.py```. Will allow you to run on a single batch, dataset, or batches/datasets that match the input string.
 
-<!--
+<!-- COMMENT OUT
 ## Running with Spark
 
 To run with Spark, first copy your certificate to your home are on the fermicloud118 instance.
@@ -324,6 +324,7 @@ namespace po = boost::program_options;
 #add the line below
 ROOT::v5::TFormula::SetMaxima(5000000);
 ```
+<!-- COMMENT OUT
 Make sure you compile after making this modification. When you render the model, you can use the alternative datacards:
 
 ```
@@ -363,6 +364,7 @@ combine -M FitDiagnostics -d darkhiggs.root \
 --ignoreCovWarning --saveShapes --saveWithUncertainties --saveWorkspace --plots \
 &> out_FitDiagnostics_robustFit.log
 ```
+-->
 
 ## Macros
 
