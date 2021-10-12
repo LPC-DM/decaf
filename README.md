@@ -294,13 +294,13 @@ where the first argument (`zecr2018passrecoil4`) is the name of the workspace; t
 Move inside the newly generated folder:
 
 ```
-cd datacards/\<mass point\>
+cd datacards/<mass point>
 ```
 
 From here, to convert the datacard into the workspace you will use to run the fit, do:
 
 ```
-text2workspace.py darkhiggs.txt --channel-masks
+text2workspace.py <mass point>.txt --channel-masks
 ```
 
 make sure you edit your ```$CMSSW/src/HiggsAnalysis/CombinedLimit/scripts/text2workspace.py``` module as suggested below:
