@@ -316,6 +316,11 @@ To run all mass points over condor, do:
 python t2w_condor.py -a mhs -c <server name> -t -x
 ```
 Currently, \<server name\> is either `lpc` or `kisti`.
+After you get workspace, you will be able to run fit over condor by doing:
+```
+python combine_condor.py -a mhs -c <server name> -t -x
+```
+Detail fit commands can be found in the `combine.sh` file.
 
 <!-- COMMENT OUT
 make sure you edit your ```$CMSSW/src/HiggsAnalysis/CombinedLimit/scripts/text2workspace.py``` module as suggested below:
