@@ -320,7 +320,7 @@ After you get workspace, you will be able to run fit over condor by doing:
 ```
 python combine_condor.py -a mhs -c <server name> -t -x
 ```
-Detail fit commands can be found in the `combine.sh` file.
+Detail fit commands can be found from the file named `combine.sh`.
 
 <!-- COMMENT OUT
 make sure you edit your ```$CMSSW/src/HiggsAnalysis/CombinedLimit/scripts/text2workspace.py``` module as suggested below:
