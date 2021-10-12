@@ -315,7 +315,7 @@ To run all mass points over condor, do:
 ```
 python t2w_condor.py -a mhs -c <server name> -t -x
 ```
-Currently, <server name> is either `lpc` or `kisti`.
+Currently, \<server name\> is either `lpc` or `kisti`.
 
 <!-- COMMENT OUT
 make sure you edit your ```$CMSSW/src/HiggsAnalysis/CombinedLimit/scripts/text2workspace.py``` module as suggested below:
