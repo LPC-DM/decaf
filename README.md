@@ -291,6 +291,14 @@ where the first argument (`zecr2018passrecoil4`) is the name of the workspace; t
 
 ### Using Combine
 
+Make sure you edit your ```$CMSSW/src/HiggsAnalysis/CombinedLimit/scripts/text2workspace.py``` module as suggested below:
+
+```
+import ROOT
+#add this line
+ROOT.v5.TFormula.SetMaxima(5000000)
+```
+
 Move inside the newly generated folder:
 
 ```
@@ -303,6 +311,13 @@ From here, to convert the datacard into the workspace you will use to run the fi
 text2workspace.py <mass point>.txt --channel-masks
 ```
 
+To run all mass points over condor, do:
+```
+python t2w_condor.py -a mhs -c <server name> -t -x
+```
+Currently, <server name> is either `lpc` or `kisti`.
+
+<!-- COMMENT OUT
 make sure you edit your ```$CMSSW/src/HiggsAnalysis/CombinedLimit/scripts/text2workspace.py``` module as suggested below:
 
 ```
@@ -324,7 +339,6 @@ namespace po = boost::program_options;
 #add the line below
 ROOT::v5::TFormula::SetMaxima(5000000);
 ```
-<!-- COMMENT OUT
 Make sure you compile after making this modification. When you render the model, you can use the alternative datacards:
 
 ```
