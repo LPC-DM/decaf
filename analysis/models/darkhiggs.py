@@ -6,12 +6,12 @@ import sys
 import os
 import rhalphalib as rl
 import numpy as np
-import scipy.stats
 import pickle
 import gzip
 import json
 from coffea import hist, processor
 from coffea.util import load, save
+from scipy import stats
 import ROOT
 
 rl.util.install_roofit_helpers()
@@ -45,6 +45,114 @@ category_map = {"pass": 1, "fail": 0}
 with open("data/hf_systematic.json") as fin:
     hf_systematic = json.load(fin)
 
+#def clopper_pearson_interval(
+#    num: np.ndarray, denom: np.ndarray, coverage: float
+#    ) -> np.ndarray:
+#    r"""
+#    Compute the Clopper-Pearson coverage interval for a binomial distribution.
+#    c.f. http://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval
+#    Args:
+#        num: Numerator or number of successes.
+#        denom: Denominator or number of trials.
+#        coverage: Central coverage interval.
+#          Default is one standard deviation, which is roughly ``0.68``.
+#    Returns:
+#        The Clopper-Pearson central coverage interval.
+#    """
+#    # Parts originally contributed to coffea
+#    # https://github.com/CoffeaTeam/coffea/blob/8c58807e199a7694bf15e3803dbaf706d34bbfa0/LICENSE
+#    if coverage is None:
+#        coverage = stats.norm.cdf(1) - stats.norm.cdf(-1)
+#    # Numerator is subset of denominator
+#    if np.any(num > denom):
+#        raise ValueError(
+#            "Found numerator larger than denominator while calculating binomial uncertainty"
+#        )
+#    interval_min = stats.beta.ppf((1 - coverage) / 2, num, denom - num + 1)
+#    interval_max = stats.beta.ppf((1 + coverage) / 2, num + 1, denom - num)
+#    interval = np.stack((interval_min, interval_max))
+#    interval[:, num == 0.0] = 0.0
+#    interval[1, num == denom] = 1.0
+#    return interval
+#
+##### Copy and paste from the coffea libraries
+##https://github.com/CoffeaTeam/coffea/blob/de8e792567d07edb1dcae654176c8aa8991d935a/coffea/hist/plot.py#L87-L118
+#_coverage1sd = stats.norm.cdf(1) - stats.norm.cdf(-1)
+#def normal_interval(pw, tw, pw2, tw2, coverage=_coverage1sd, debug=False):
+#    """Compute errors based on the expansion of pass/(pass + fail), possibly weighted
+#    Parameters
+#    ----------
+#    pw : numpy.ndarray
+#        Numerator, or number of (weighted) successes, vectorized
+#    tw : numpy.ndarray
+#        Denominator or number of (weighted) trials, vectorized
+#    pw2 : numpy.ndarray
+#        Numerator sum of weights squared, vectorized
+#    tw2 : numpy.ndarray
+#        Denominator sum of weights squared, vectorized
+#    coverage : float, optional
+#        Central coverage interval, defaults to 68%
+#    c.f. https://root.cern.ch/doc/master/TEfficiency_8cxx_source.html#l02515
+#    """
+#
+#    eff = tw / (tw+pw)
+#    #if np.any(eff >= 1.0):
+#    ratio_uncert = np.abs(clopper_pearson_interval(tw, pw + tw, coverage) - eff)
+#    if debug:
+#        print('================= During the calculation (eff >= 1.0) =================')
+#        print('eff:', eff)
+#        print(ratio_uncert)
+#        print('========================================================== \n')
+#    return ratio_uncert
+#    #else:
+#    #    variance = (pw2 * (1 - 2 * eff) + tw2 * eff ** 2) / (tw ** 2)
+#    #    sigma = np.sqrt(variance)
+#
+#    #    prob = 0.5 * (1 - coverage)
+#    #    delta = np.zeros_like(sigma)
+#    #    delta[sigma != 0] = scipy.stats.norm.ppf(prob, scale=sigma[sigma != 0])
+#
+#    #    lo = eff - np.minimum(eff + delta, np.ones_like(eff))
+#    #    hi = np.maximum(eff - delta, np.zeros_like(eff)) - eff
+#
+#    #    if debug:
+#    #        print('================= During the calculation (eff < 1.0) =================')
+#    #        print('eff:', eff)
+#    #        print('variance:', variance)
+#    #        print('sigma:', sigma)
+#    #        print('delta:', delta)
+#    #        print('down unc:', lo)
+#    #        print('up unc:', hi)
+#    #        print('========================================================== \n')
+#
+#    #    return np.array([lo, hi])
+#
+
+def simple_error_propagation(pw, tw, pw2, tw2, debug=False):
+    """Compute errors based on the propagation of uncertainty
+    Parameters
+    ----------
+    pw : numpy.ndarray
+        Numerator, or number of (weighted) successes, vectorized
+    tw : numpy.ndarray
+        Denominator or number of (weighted) trials, vectorized
+    pw2 : numpy.ndarray
+        Numerator sum of weights squared, vectorized
+    tw2 : numpy.ndarray
+        Denominator sum of weights squared, vectorized
+    """
+    dx = np.sqrt(pw2)
+    dy = np.sqrt(tw2)
+    ratio = tw / pw
+    dz = ratio * np.sqrt((dx/pw)**2 + (dy/tw)**2)
+    if debug:
+        print('================ Propation of uncertainty ================')
+        print('ratio:', ratio)
+        print('dz:', dz)
+        print('================ Propation of uncertainty ================ \n')
+
+    return dz
+
 def template(dictionary, process, systematic, recoil, region, category, read_sumw2=False):
     histogram = dictionary[region].integrate("process", process)
     nominal, sumw2 = histogram.integrate("systematic", "nominal").values(sumw2=True)[()]
@@ -53,8 +161,23 @@ def template(dictionary, process, systematic, recoil, region, category, read_sum
     zerobins = nominal <= 0.
     output = nominal
     if "data" not in systematic:
-        output[zerobins] = 1.
-        sumw2[zerobins] = 0.
+        #output[zerobins] = 1.
+        #sumw2[zerobins] = 0.
+        if "Z+" in str(process):
+            output[zerobins] = 1.
+            sumw2[zerobins] = 0.
+        elif "W+" in str(process) and "fail" in category:
+            output[zerobins] = 1.
+            sumw2[zerobins] = 0.
+        elif "W+" in str(process) and "pass" in category and recoil<4:
+            output[zerobins] = 1.
+            sumw2[zerobins] = 0.
+        elif "TT" in str(process) and "pass" in category  and recoil<4:
+            output[zerobins] = 1.
+            sumw2[zerobins] = 0.
+        else:
+            output[zerobins] = 1e-5
+            sumw2[zerobins] = 0.
     if "nominal" not in systematic and "data" not in systematic:
         #print('Normalizing',systematic,'histogram of',process,'in region',region)
         output = histogram.integrate("systematic", systematic).values()[()][recoil, :, category_map[category]]
@@ -107,9 +230,9 @@ def remap_histograms(hists):
         bkg_hists[key] = hists["bkg"][key].group(cats, process, bkg_map)
         signal_hists[key] = hists["sig"][key].group(cats, process, sig_map)
         data_hists[key] = hists["data"][key].group(cats, process, data_map)
-    
+
     print('initial recoil binning',bkg_hists["template"].axis("recoil").edges())
-    
+
     bkg_hists["template"] = bkg_hists["template"].rebin(
         "fjmass", hist.Bin("fjmass", "Mass", mass_binning)
     )
@@ -137,7 +260,8 @@ def remap_histograms(hists):
     #print(string, systUp)
 def addBtagSyst(dictionary, recoil, process, region, templ, category):
     btagUp = template(dictionary, process, "btagUp", recoil, region, category)[0]
-    templ.setParamEffect(btag, btagUp)
+    btagDown = template(dictionary, process, "btagDown", recoil, region, category)[0]
+    templ.setParamEffect(btag, btagUp, btagDown)
 
 def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     def addSyst(dictionary, recoil, process, region, templ, category, syst, string):
@@ -167,7 +291,7 @@ def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     ew2GUp = template(dictionary, process, "ew2GUp", recoil, region, category)[0]
     ew2GDown = template(dictionary, process, "ew2GDown", recoil, region, category)[0]
     templ.setParamEffect(ew2G, ew2GUp, ew2GDown)
-    
+
     ew2WUp = template(dictionary, process, "ew2WUp", recoil, region, category)[0]
     ew2WDown = template(dictionary, process, "ew2WDown", recoil, region, category)[0]
     templ.setParamEffect(ew2W, ew2WUp, ew2WDown)
@@ -216,7 +340,7 @@ def rhalphabeth2D(process, tf_dataResidual_params, ord1, ord2):
         "W+jets": 'W',
         "Z+jets": 'Z'
         }
-        
+
     # Build qcd MC pass+fail model and fit to polynomial
     qcdmodel = rl.Model("qcdmodel")
     qcdpass, qcdfail = 0., 0.
@@ -318,9 +442,10 @@ def model(year, recoil, category, s):
 
     if category == "pass":
         sr_wjetsMC = sr_wjetsMCPass
+        sr_wjetsTemplate = sr_wjetsMCPassTemplate
         sr_wjets = sr_wjetsPass
         if not (recoil<4):
-            sr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "sr", category, read_sumw2=True)
+            #sr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "sr", category, read_sumw2=True)
             sr_wjetsMC = rl.TemplateSample(
                 "sr" + model_id + "_wjetsMC",
                 rl.Sample.BACKGROUND,
@@ -335,6 +460,7 @@ def model(year, recoil, category, s):
             addVJetsSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
             sr_wjets = sr_wjetsMC
     else:
+        sr_wjetsTemplate = sr_wjetsMCFailTemplate
         sr_wjetsMC = sr_wjetsMCFail
         sr_wjets = sr_wjetsFail
 
@@ -362,12 +488,12 @@ def model(year, recoil, category, s):
         sigmascale={
             '2016': 1000,
             '2017': 1000,
-            '2018': 100
+            '2018': 1000
         }
         sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
         sr_ttParameters = np.array(
             [
-                rl.IndependentParameter(                                                                                                                                     
+                rl.IndependentParameter(
                     "sr" + year + "_tt_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i,
                     0,
                     -1*sigmascale[year],
@@ -377,6 +503,7 @@ def model(year, recoil, category, s):
             ]
         )
         sr_ttBinYields = sr_ttTemplate[0] * (1 + (sigmascale[year]/np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
+        #print(sr_ttBinYields)
 
         sr_tt = rl.ParametericSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields
@@ -458,7 +585,7 @@ def model(year, recoil, category, s):
     # End of SR
     ###
 
-    if category=="pass" and not (recoil<4): 
+    if category=="pass" and not (recoil<4):
         return model
 
     ###
@@ -498,7 +625,11 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
 
+    wmcr_wjetsTFstatParameters =  np.array([rl.NuisanceParameter("wmcr_"+year+"_wjetsTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wmcr_wjetsTemplate[0].size)])
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
+    nominal =  wmcr_wjetsTemplate[0] / sr_wjetsTemplate[0]
+    dz = simple_error_propagation(sr_wjetsTemplate[0], wmcr_wjetsTemplate[0], sr_wjetsTemplate[3], wmcr_wjetsTemplate[3])
+    wmcr_wjetsTransferFactor = wmcr_wjetsTransferFactor * ( 1. + (dz/nominal)*wmcr_wjetsTFstatParameters )
     wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
     wmcr.addSample(wmcr_wjets)
 
@@ -519,11 +650,15 @@ def model(year, recoil, category, s):
     wmcr_ttMC.setParamEffect(id_mu, 1.02)
     wmcr_ttMC.setParamEffect(iso_mu, 1.02)
     addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
-    
+
     if category == "pass":
         wmcr_ttMC.setParamEffect(tt_norm, 1.2)
         #wmcr_ttMC.autoMCStats()
+        wmcr_ttTFstatParameters =  np.array([rl.NuisanceParameter("wmcr_"+year+"_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wmcr_ttTemplate[0].size)])
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+        nominal =  wmcr_ttTemplate[0] / sr_wjetsTemplate[0]
+        dz = simple_error_propagation(sr_ttTemplate[0], wmcr_ttTemplate[0], sr_ttTemplate[3], wmcr_ttTemplate[3])
+        wmcr_ttTransferFactor = wmcr_ttTransferFactor * ( 1. + (dz/nominal)*wmcr_ttTFstatParameters )
         wmcr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
         )
@@ -531,7 +666,7 @@ def model(year, recoil, category, s):
     else:
         wmcr_ttMC.setParamEffect(ttMC_norm, 1.2)
         wmcr.addSample(wmcr_ttMC)
-        
+
     ###
     # Other MC-driven processes
     ###
@@ -651,7 +786,11 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
 
+    wecr_wjetsTFstatParameters =  np.array([rl.NuisanceParameter("wecr_"+year+"_wjetsTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wecr_wjetsTemplate[0].size)])
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
+    nominal =  wecr_wjetsTemplate[0] / sr_wjetsTemplate[0]
+    dz = simple_error_propagation(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
+    wecr_wjetsTransferFactor = wecr_wjetsTransferFactor * ( 1. + (dz/nominal)*wecr_wjetsTFstatParameters )
     wecr_wjets = rl.TransferFactorSample(
         ch_name + "_wjets", rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets
     )
@@ -678,7 +817,11 @@ def model(year, recoil, category, s):
     if category == "pass":
         wecr_ttMC.setParamEffect(tt_norm, 1.2)
         #wecr_ttMC.autoMCStats()
+        wecr_ttTFstatParameters =  np.array([rl.NuisanceParameter("wecr_"+year+"_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wecr_ttTemplate[0].size)])
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+        nominal =  wecr_ttTemplate[0] / sr_ttTemplate[0]
+        dz = simple_error_propagation(sr_ttTemplate[0], wecr_ttTemplate[0], sr_ttTemplate[3], wecr_ttTemplate[3])
+        wecr_ttTransferFactor = wecr_wjetsTransferFactor * ( 1. + (dz/nominal)*wecr_ttTFstatParameters )
         wecr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
         )
@@ -778,13 +921,13 @@ def model(year, recoil, category, s):
     ch_name = "tmcr" + model_id
     tmcr = rl.Channel(ch_name)
     model.addChannel(tmcr)
-        
+
     ###
     # Add data distribution to the channel
     ###
-    
+
     tmcr.setObservation(template(data, "MET", "data", recoil, "tmcr", category))
-    
+
     ###
     # top-antitop model
     ###
@@ -804,16 +947,21 @@ def model(year, recoil, category, s):
     tmcr_ttMC.setParamEffect(iso_mu, 1.02)
     addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category)
     #tmcr_ttMC.autoMCStats()
-    tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation() 
+
+    tmcr_ttTFstatParameters =  np.array([rl.NuisanceParameter("tmcr_"+year+"_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(tmcr_ttTemplate[0].size)])
+    tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+    nominal =  tmcr_ttTemplate[0] / sr_ttTemplate[0]
+    dz = simple_error_propagation(sr_ttTemplate[0], tmcr_ttTemplate[0], sr_ttTemplate[3], tmcr_ttTemplate[3])
+    tmcr_ttTransferFactor = tmcr_ttTransferFactor * ( 1. + (dz/nominal)*tmcr_ttTFstatParameters )
     tmcr_tt = rl.TransferFactorSample(
         ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt
     )
-    tmcr.addSample(tmcr_tt)    
-    
+    tmcr.addSample(tmcr_tt)
+
     ###
     # Other MC-driven processes
     ###
-    
+
     tmcr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tmcr", category)
     tmcr_wjets = rl.TemplateSample(
         ch_name + "_wjetsMC", rl.Sample.BACKGROUND, tmcr_wjetsTemplate
@@ -828,7 +976,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoilbin, "W+jets", "tmcr", tmcr_wjets, category)
     addVJetsSyst(background, recoil, "W+jets", "tmcr", tmcr_wjets, category)
     tmcr.addSample(tmcr_wjets)
-    
+
     tmcr_stTemplate = template(background, "ST", "nominal", recoil, "tmcr", category)
     tmcr_st = rl.TemplateSample(
         ch_name + "_stMC", rl.Sample.BACKGROUND, tmcr_stTemplate
@@ -871,7 +1019,7 @@ def model(year, recoil, category, s):
     tmcr_vv.setParamEffect(iso_mu, 1.02)
     addBtagSyst(background, recoilbin, "VV", "tmcr", tmcr_vv, category)
     tmcr.addSample(tmcr_vv)
-    
+
     tmcr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "tmcr", category)
     tmcr_hbb = rl.TemplateSample(
         ch_name + "_hbbMC", rl.Sample.BACKGROUND, tmcr_hbbTemplate
@@ -942,12 +1090,17 @@ def model(year, recoil, category, s):
     tecr_ttMC.setParamEffect(reco_e, 1.02)
     addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category)
     #tecr_ttMC.autoMCStats()
+
+    tecr_ttTFstatParameters =  np.array([rl.NuisanceParameter("tecr_"+year+"_ttTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(tecr_ttTemplate[0].size)])
     tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+    nominal =  tecr_ttTemplate[0] / sr_ttTemplate[0]
+    dz = simple_error_propagation(sr_ttTemplate[0], tecr_ttTemplate[0], sr_ttTemplate[3], tecr_ttTemplate[3])
+    tecr_ttTransferFactor = tecr_ttTransferFactor * ( 1. + (dz/nominal)*tecr_ttTFstatParameters )
     tecr_tt = rl.TransferFactorSample(
         ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt
     )
     tecr.addSample(tecr_tt)
-    
+
     ###
     # Other MC-driven processes
     ###
@@ -995,7 +1148,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoilbin, "DY+jets", "tecr", tecr_dyjets, category)
     addVJetsSyst(background, recoil, "DY+jets", "tecr", tecr_dyjets, category)
     tecr.addSample(tecr_dyjets)
-        
+
     tecr_vvTemplate = template(background, "VV", "nominal", recoil, "tecr", category)
     tecr_vv = rl.TemplateSample(
         ch_name + "_vvMC", rl.Sample.BACKGROUND, tecr_vvTemplate
@@ -1102,7 +1255,8 @@ if __name__ == "__main__":
     trig_pho = rl.NuisanceParameter("trig_pho" + year, "lnN")
     veto_tau = rl.NuisanceParameter("veto_tau" + year, "lnN")
     jec = rl.NuisanceParameter("jec" + year, "lnN")
-    btag = rl.NuisanceParameter("btag" + year, "shapeN")  # AK4 btag
+    #btag = rl.NuisanceParameter("btag" + year, "shapeN")  # AK4 btag
+    btag = rl.NuisanceParameter("btag" + year, "shape")  # AK4 btag
     ew1 = rl.NuisanceParameter("ew1", "lnN")
     #ew2G = rl.NuisanceParameter("ew2G", "lnN")
     ew2W = rl.NuisanceParameter("ew2W", "lnN")
@@ -1137,7 +1291,7 @@ if __name__ == "__main__":
     msdscaled = (msdpts - 40.) / (300.0 - 40.)
     print(recoilscaled)
     print(msdscaled)
-    
+
     tf_dataResidualW = rl.BernsteinPoly("tf_dataResidualW"+year, (1, 1), ['recoil', 'fjmass'], limits=(-100, 100))
     tf_dataResidualW_params = tf_dataResidualW(recoilscaled, msdscaled)
     tf_dataResidualZ = rl.BernsteinPoly("tf_dataResidualZ"+year, (1, 1), ['recoil', 'fjmass'], limits=(-100, 100))
@@ -1184,7 +1338,7 @@ if __name__ == "__main__":
         sr_zjetsObservable = rl.Observable("fjmass", sr_zjetsMCFailTemplate[1])
         sr_zjetsParameters = np.array(
             [
-                rl.IndependentParameter(                                                                                                                                     
+                rl.IndependentParameter(
                     "sr" + year + "_zjets_fail_recoil"+str(recoilbin)+"_mass%d" % i,
                     0
                 )
@@ -1319,7 +1473,7 @@ if __name__ == "__main__":
 
         tf_paramsWdeco = (sr_wlfMCPass.getExpectation()+sr_whfMCPass.getExpectation()) / (sr_wlfMCFail.getExpectation()+sr_whfMCFail.getExpectation())
         tf_paramsW = tf_paramsWdeco * tf_dataResidualW_params[recoilbin, :]
-    
+
         sr_wjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_wjets",
             rl.Sample.BACKGROUND,
@@ -1342,7 +1496,7 @@ if __name__ == "__main__":
                 hbb_norm = rl.NuisanceParameter("hbb_norm" + year + category, "lnN")
                 wjetsMC_norm = rl.NuisanceParameter("wjets_norm" + year + category, "lnN")
                 zjetsMC_norm = rl.NuisanceParameter("zjets_norm" + year + category, "lnN")
-                    
+
                 with open(
                         "data/"
                         + str(s).replace('_','')

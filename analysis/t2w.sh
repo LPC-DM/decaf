@@ -32,8 +32,8 @@ cd CMSSW_10_2_13/src
 scramv1 b ProjectRename
 eval `scramv1 runtime -sh` # cmsenv is an alias not on the workers
 cd decaf/analysis/datacards/${1}
-echo "text2workspace.py ${1}.txt"
-text2workspace.py ${1}.txt
+echo "text2workspace.py ${1}.txt --channel-masks"
+text2workspace.py ${1}.txt --channel-masks
 ls ${1}.root
 cp ${1}.root ${_CONDOR_SCRATCH_DIR}/${1}.root
 

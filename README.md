@@ -114,6 +114,7 @@ python submit_condor.py --year 2018 --processor darkhiggs2018 -t
 
 This way jobs to generate the full set of 2018 histograms will be submitted to condor. the ```-t``` will allow for tarring the working environment and the necessary dependences to run on condor nodes. The module has a ```--dataset``` option that works like described before for ```run.py```. Will allow you to run on a single batch, dataset, or batches/datasets that match the input string.
 
+<!-- COMMENT OUT
 ## Running with Spark
 
 To run with Spark, first copy your certificate to your home are on the fermicloud118 instance.
@@ -200,6 +201,7 @@ The script will print a link inside start_jupyter.log. Copy-paste it on your bro
 ```
 sh stop_jupyter.sh
 ```
+-->
 
 ## From Coffea Histograms to Fits
 
@@ -268,14 +270,14 @@ datacards/model_name
 The ```render_condor.py``` module returns ```.tgz``` tarballs that contain the different datacards/workspaces, and are stored into the ```datacards``` folder. To untar them, simply do:
 
 ```
-python macros/untar_cards.py -a darkhiggs
+python macros/untar_cards.py -a mhs 
 ```
 
 Where the ```-a``` or ```--analysis``` options correspond to the analysis name. The ```untar_cards.py``` script will untar all the tarballs that contain the string that is passed through the ```-a``` option.
 To merge the datacards, run the following script:
 
 ```
-python macros/combine_datacards.py -a darkhiggs
+python macros/combine_cards.py -a mhs
 ```
 Where the ```-a``` or ```--analysis``` options correspond to the analysis name. The ```combine_datacards.py``` script will combine all the datacards whose name contains the string that is passed through the ```-a``` option. The script will create a folder inside ```datacards``` whose name corresponds to the string that is passed through the ```-a``` option, will move all the workspaces that correspond to the datacards it combined inside it, and will save in it the combined datacard, whose name will be set to the string that is passed through the ```-a``` option.
 
@@ -289,18 +291,38 @@ where the first argument (`zecr2018passrecoil4`) is the name of the workspace; t
 
 ### Using Combine
 
+Make sure you edit your ```$CMSSW/src/HiggsAnalysis/CombinedLimit/scripts/text2workspace.py``` module as suggested below:
+
+```
+import ROOT
+#add this line
+ROOT.v5.TFormula.SetMaxima(5000000)
+```
+
 Move inside the newly generated folder:
 
 ```
-cd datacards/darkhiggs
+cd datacards/<mass point>
 ```
 
 From here, to convert the datacard into the workspace you will use to run the fit, do:
 
 ```
-text2workspace.py darkhiggs.txt
+text2workspace.py <mass point>.txt --channel-masks
 ```
 
+To run all mass points over condor, do:
+```
+python t2w_condor.py -a mhs -c <server name> -t -x
+```
+Currently, \<server name\> is either `lpc` or `kisti`.
+After you get workspace, you will be able to run fit over condor by doing:
+```
+python combine_condor.py -a mhs -c <server name> -t -x
+```
+Detail fit commands can be found from the file named `combine.sh`.
+
+<!-- COMMENT OUT
 make sure you edit your ```$CMSSW/src/HiggsAnalysis/CombinedLimit/scripts/text2workspace.py``` module as suggested below:
 
 ```
@@ -361,6 +383,7 @@ combine -M FitDiagnostics -d darkhiggs.root \
 --ignoreCovWarning --saveShapes --saveWithUncertainties --saveWorkspace --plots \
 &> out_FitDiagnostics_robustFit.log
 ```
+-->
 
 ## Macros
 
