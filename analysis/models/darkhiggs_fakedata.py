@@ -492,10 +492,11 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
 
-    wmcr_wjetsTFstatParameters =  np.array([rl.NuisanceParameter("wmcr_"+year+"_wjetsTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape") for i in range(wmcr_wjetsTemplate[0].size)])
+    wmcr_wjetsTFstatParameters =  np.array([rl.NuisanceParameter("wmcr_"+year+"_wjetsTFstat_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i, "shape", lo=-1.5, hi=1.5) for i in range(wmcr_wjetsTemplate[0].size)])
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     nominal =  wmcr_wjetsTemplate[0] / sr_wjetsTemplate[0]
     dz = simple_error_propagation(sr_wjetsTemplate[0], wmcr_wjetsTemplate[0], sr_wjetsTemplate[3], wmcr_wjetsTemplate[3])
+    print('wmcr wjets TF', dz/nominal)
     wmcr_wjetsTransferFactor = wmcr_wjetsTransferFactor * ( 1. + (dz/nominal)*wmcr_wjetsTFstatParameters )
     wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
     wmcr.addSample(wmcr_wjets)
@@ -525,6 +526,7 @@ def model(year, recoil, category, s):
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         nominal =  wmcr_ttTemplate[0] / sr_wjetsTemplate[0]
         dz = simple_error_propagation(sr_ttTemplate[0], wmcr_ttTemplate[0], sr_ttTemplate[3], wmcr_ttTemplate[3])
+        print('wmcr tt TF', dz/nominal)
         wmcr_ttTransferFactor = wmcr_ttTransferFactor * ( 1. + (dz/nominal)*wmcr_ttTFstatParameters )
         wmcr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
@@ -657,6 +659,7 @@ def model(year, recoil, category, s):
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     nominal =  wecr_wjetsTemplate[0] / sr_wjetsTemplate[0]
     dz = simple_error_propagation(sr_wjetsTemplate[0], wecr_wjetsTemplate[0], sr_wjetsTemplate[3], wecr_wjetsTemplate[3])
+    print('wecr wjets TF', dz/nominal)
     wecr_wjetsTransferFactor = wecr_wjetsTransferFactor * ( 1. + (dz/nominal)*wecr_wjetsTFstatParameters )
     wecr_wjets = rl.TransferFactorSample(
         ch_name + "_wjets", rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets
@@ -688,6 +691,7 @@ def model(year, recoil, category, s):
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         nominal =  wecr_ttTemplate[0] / sr_ttTemplate[0]
         dz = simple_error_propagation(sr_ttTemplate[0], wecr_ttTemplate[0], sr_ttTemplate[3], wecr_ttTemplate[3])
+        print('wecr tt TF', dz/nominal)
         wecr_ttTransferFactor = wecr_wjetsTransferFactor * ( 1. + (dz/nominal)*wecr_ttTFstatParameters )
         wecr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
@@ -805,7 +809,7 @@ def model(year, recoil, category, s):
         rl.Sample.BACKGROUND,
         tmcr_ttTemplate
     )
-    tmcr_ttMC.setParamEffect(lumi, 1.027)
+    _mcr_ttMC.setParamEffect(lumi, 1.027)
     tmcr_ttMC.setParamEffect(trig_met, 1.02)
     tmcr_ttMC.setParamEffect(veto_tau, 1.03)
     tmcr_ttMC.setParamEffect(tt_norm, 1.2)
@@ -819,6 +823,7 @@ def model(year, recoil, category, s):
     tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     nominal =  tmcr_ttTemplate[0] / sr_ttTemplate[0]
     dz = simple_error_propagation(sr_ttTemplate[0], tmcr_ttTemplate[0], sr_ttTemplate[3], tmcr_ttTemplate[3])
+    print('tmcr tt TF', dz/nominal)
     tmcr_ttTransferFactor = tmcr_ttTransferFactor * ( 1. + (dz/nominal)*tmcr_ttTFstatParameters )
     tmcr_tt = rl.TransferFactorSample(
         ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt
@@ -962,6 +967,7 @@ def model(year, recoil, category, s):
     tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     nominal =  tecr_ttTemplate[0] / sr_ttTemplate[0]
     dz = simple_error_propagation(sr_ttTemplate[0], tecr_ttTemplate[0], sr_ttTemplate[3], tecr_ttTemplate[3])
+    print('tecr tt TF', dz/nominal)
     tecr_ttTransferFactor = tecr_ttTransferFactor * ( 1. + (dz/nominal)*tecr_ttTFstatParameters )
     tecr_tt = rl.TransferFactorSample(
         ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt
