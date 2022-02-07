@@ -385,7 +385,7 @@ def model(year, recoil, category, s):
     # Other MC-driven processes
     ###
 
-    sr_stTemplate = template(background, "ST", "nominal", recoil, "sr", category)
+    sr_stTemplate = template(background, "ST", "nominal", recoil, "sr", category, read_sumw2=True)
     sr_st = rl.TemplateSample(ch_name + "_stMC", rl.Sample.BACKGROUND, sr_stTemplate)
     sr_st.setParamEffect(lumi, 1.027)
     sr_st.setParamEffect(trig_met, 1.02)
@@ -396,7 +396,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "ST", "sr", sr_st, category)
     sr.addSample(sr_st)
 
-    sr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "sr", category)
+    sr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "sr", category, read_sumw2=True)
     sr_dyjets = rl.TemplateSample(
         ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, sr_dyjetsTemplate
     )
@@ -410,7 +410,7 @@ def model(year, recoil, category, s):
     addVJetsSyst(background, recoil, "DY+jets", "sr", sr_dyjets, category)
     sr.addSample(sr_dyjets)
 
-    sr_vvTemplate = template(background, "VV", "nominal", recoil, "sr", category)
+    sr_vvTemplate = template(background, "VV", "nominal", recoil, "sr", category, read_sumw2=True)
     sr_vv = rl.TemplateSample(ch_name + "_vvMC", rl.Sample.BACKGROUND, sr_vvTemplate)
     sr_vv.setParamEffect(lumi, 1.027)
     sr_vv.setParamEffect(trig_met, 1.02)
@@ -421,7 +421,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "VV", "sr", sr_vv, category)
     sr.addSample(sr_vv)
 
-    sr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "sr", category)
+    sr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "sr", category, read_sumw2=True)
     sr_hbb = rl.TemplateSample(ch_name + "_hbbMC", rl.Sample.BACKGROUND, sr_hbbTemplate)
     sr_hbb.setParamEffect(lumi, 1.027)
     sr_hbb.setParamEffect(trig_met, 1.02)
@@ -432,7 +432,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "Hbb", "sr", sr_hbb, category)
     sr.addSample(sr_hbb)
 
-    sr_qcdTemplate = template(background, "QCD", "nominal", recoil, "sr", category)
+    sr_qcdTemplate = template(background, "QCD", "nominal", recoil, "sr", category, read_sumw2=True)
     sr_qcd = rl.TemplateSample(ch_name + "_qcdMC", rl.Sample.BACKGROUND, sr_qcdTemplate)
     sr_qcd.setParamEffect(lumi, 1.027)
     sr_qcd.setParamEffect(trig_met, 1.02)
@@ -546,7 +546,7 @@ def model(year, recoil, category, s):
     # Other MC-driven processes
     ###
 
-    wmcr_stTemplate = template(background, "ST", "nominal", recoil, "wmcr", category)
+    wmcr_stTemplate = template(background, "ST", "nominal", recoil, "wmcr", category, read_sumw2=True)
     wmcr_st = rl.TemplateSample(
         ch_name + "_stMC", rl.Sample.BACKGROUND, wmcr_stTemplate
         )
@@ -561,7 +561,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoilbin, "ST", "wmcr", wmcr_st, category)
     wmcr.addSample(wmcr_st)
 
-    wmcr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "wmcr", category)
+    wmcr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "wmcr", category, read_sumw2=True)
     wmcr_dyjets = rl.TemplateSample(
         ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, wmcr_dyjetsTemplate
     )
@@ -577,7 +577,7 @@ def model(year, recoil, category, s):
     addVJetsSyst(background, recoil, "DY+jets", "wmcr", wmcr_dyjets, category)
     wmcr.addSample(wmcr_dyjets)
 
-    wmcr_vvTemplate = template(background, "VV", "nominal", recoil, "wmcr", category)
+    wmcr_vvTemplate = template(background, "VV", "nominal", recoil, "wmcr", category, read_sumw2=True)
     wmcr_vv = rl.TemplateSample(
         ch_name + "_vvMC", rl.Sample.BACKGROUND, wmcr_vvTemplate
     )
@@ -592,7 +592,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoilbin, "VV", "wmcr", wmcr_vv, category)
     wmcr.addSample(wmcr_vv)
 
-    wmcr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "wmcr", category)
+    wmcr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "wmcr", category, read_sumw2=True)
     wmcr_hbb = rl.TemplateSample(
         ch_name + "_hbbMC", rl.Sample.BACKGROUND, wmcr_hbbTemplate
     )
@@ -607,7 +607,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoilbin, "Hbb", "wmcr", wmcr_hbb, category)
     wmcr.addSample(wmcr_hbb)
 
-    wmcr_qcdTemplate = template(background, "QCD", "nominal", recoil, "wmcr", category)
+    wmcr_qcdTemplate = template(background, "QCD", "nominal", recoil, "wmcr", category, read_sumw2=True)
     wmcr_qcd = rl.TemplateSample(
         ch_name + "_qcdMC", rl.Sample.BACKGROUND, wmcr_qcdTemplate
     )
@@ -716,7 +716,7 @@ def model(year, recoil, category, s):
     # Other MC-driven processes
     ###
 
-    wecr_stTemplate = template(background, "ST", "nominal", recoil, "wecr", category)
+    wecr_stTemplate = template(background, "ST", "nominal", recoil, "wecr", category, read_sumw2=True)
     wecr_st = rl.TemplateSample(
         ch_name + "_stMC", rl.Sample.BACKGROUND, wecr_stTemplate
     )
@@ -727,11 +727,11 @@ def model(year, recoil, category, s):
     wecr_st.setParamEffect(jec, 1.05)
     wecr_st.setParamEffect(id_e, 1.02)
     wecr_st.setParamEffect(reco_e, 1.02)
-    wecr_st.autoMCstats(shape=True)
+    wecr_st.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "ST", "wecr", wecr_st, category)
     wecr.addSample(wecr_st)
 
-    wecr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "wecr", category)
+    wecr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "wecr", category, read_sumw2=True)
     wecr_dyjets = rl.TemplateSample(
         ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, wecr_dyjetsTemplate
     )
@@ -742,12 +742,12 @@ def model(year, recoil, category, s):
     wecr_dyjets.setParamEffect(jec, 1.05)
     wecr_dyjets.setParamEffect(id_e, 1.02)
     wecr_dyjets.setParamEffect(reco_e, 1.02)
-    wecr_dyjets.autoMCstats(shape=True)
+    wecr_dyjets.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "DY+jets", "wecr", wecr_dyjets, category)
     addVJetsSyst(background, recoil, "DY+jets", "wecr", wecr_dyjets, category)
     wecr.addSample(wecr_dyjets)
 
-    wecr_vvTemplate = template(background, "VV", "nominal", recoil, "wecr", category)
+    wecr_vvTemplate = template(background, "VV", "nominal", recoil, "wecr", category, read_sumw2=True)
     wecr_vv = rl.TemplateSample(
         ch_name + "_vvMC", rl.Sample.BACKGROUND, wecr_vvTemplate
     )
@@ -758,11 +758,11 @@ def model(year, recoil, category, s):
     wecr_vv.setParamEffect(jec, 1.05)
     wecr_vv.setParamEffect(id_e, 1.02)
     wecr_vv.setParamEffect(reco_e, 1.02)
-    wecr_vv.autoMCstats(shape=True)
+    wecr_vv.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "VV", "wecr", wecr_vv, category)
     wecr.addSample(wecr_vv)
 
-    wecr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "wecr", category)
+    wecr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "wecr", category, read_sumw2=True)
     wecr_hbb = rl.TemplateSample(
         ch_name + "_hbbMC", rl.Sample.BACKGROUND, wecr_hbbTemplate
     )
@@ -773,11 +773,11 @@ def model(year, recoil, category, s):
     wecr_hbb.setParamEffect(jec, 1.05)
     wecr_hbb.setParamEffect(id_e, 1.02)
     wecr_hbb.setParamEffect(reco_e, 1.02)
-    wecr_hbb.autoMCstats(shape=True)
+    wecr_hbb.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "Hbb", "wecr", wecr_hbb, category)
     wecr.addSample(wecr_hbb)
 
-    wecr_qcdTemplate = template(background, "QCD", "nominal", recoil, "wecr", category)
+    wecr_qcdTemplate = template(background, "QCD", "nominal", recoil, "wecr", category, read_sumw2=True)
     wecr_qcd = rl.TemplateSample(
         ch_name + "_qcdMC", rl.Sample.BACKGROUND, wecr_qcdTemplate
     )
@@ -788,7 +788,7 @@ def model(year, recoil, category, s):
     wecr_qcd.setParamEffect(jec, 1.05)
     wecr_qcd.setParamEffect(id_e, 1.02)
     wecr_qcd.setParamEffect(reco_e, 1.02)
-    wecr_qcd.autoMCstats(shape=True)
+    wecr_qcd.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "QCD", "wecr", wecr_qcd, category)
     wecr.addSample(wecr_qcd)
 
@@ -850,7 +850,7 @@ def model(year, recoil, category, s):
     # Other MC-driven processes
     ###
 
-    tmcr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tmcr", category)
+    tmcr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tmcr", category, read_sumw2=True)
     tmcr_wjets = rl.TemplateSample(
         ch_name + "_wjetsMC", rl.Sample.BACKGROUND, tmcr_wjetsTemplate
     )
@@ -861,12 +861,12 @@ def model(year, recoil, category, s):
     tmcr_wjets.setParamEffect(jec, 1.05)
     tmcr_wjets.setParamEffect(id_mu, 1.02)
     tmcr_wjets.setParamEffect(iso_mu, 1.02)
-    tmcr_wjets.autoMCstats(shape=True)
+    tmcr_wjets.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "W+jets", "tmcr", tmcr_wjets, category)
     addVJetsSyst(background, recoil, "W+jets", "tmcr", tmcr_wjets, category)
     tmcr.addSample(tmcr_wjets)
 
-    tmcr_stTemplate = template(background, "ST", "nominal", recoil, "tmcr", category)
+    tmcr_stTemplate = template(background, "ST", "nominal", recoil, "tmcr", category, read_sumw2=True)
     tmcr_st = rl.TemplateSample(
         ch_name + "_stMC", rl.Sample.BACKGROUND, tmcr_stTemplate
     )
@@ -877,11 +877,11 @@ def model(year, recoil, category, s):
     tmcr_st.setParamEffect(jec, 1.05)
     tmcr_st.setParamEffect(id_mu, 1.02)
     tmcr_st.setParamEffect(iso_mu, 1.02)
-    tmcr_st.autoMCstats(shape=True)
+    tmcr_st.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "ST", "tmcr", tmcr_st, category)
     tmcr.addSample(tmcr_st)
 
-    tmcr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "tmcr", category)
+    tmcr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "tmcr", category, read_sumw2=True)
     tmcr_dyjets = rl.TemplateSample(
         ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, tmcr_dyjetsTemplate
     )
@@ -892,12 +892,12 @@ def model(year, recoil, category, s):
     tmcr_dyjets.setParamEffect(jec, 1.05)
     tmcr_dyjets.setParamEffect(id_mu, 1.02)
     tmcr_dyjets.setParamEffect(iso_mu, 1.02)
-    tmcr_dyjets.autoMCstats(shape=True)
+    tmcr_dyjets.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "DY+jets", "tmcr", tmcr_dyjets, category)
     addVJetsSyst(background, recoil, "DY+jets", "tmcr", tmcr_dyjets, category)
     tmcr.addSample(tmcr_dyjets)
 
-    tmcr_vvTemplate = template(background, "VV", "nominal", recoil, "tmcr", category)
+    tmcr_vvTemplate = template(background, "VV", "nominal", recoil, "tmcr", category, read_sumw2=True)
     tmcr_vv = rl.TemplateSample(
         ch_name + "_vvMC", rl.Sample.BACKGROUND, tmcr_vvTemplate
     )
@@ -908,11 +908,11 @@ def model(year, recoil, category, s):
     tmcr_vv.setParamEffect(jec, 1.05)
     tmcr_vv.setParamEffect(id_mu, 1.02)
     tmcr_vv.setParamEffect(iso_mu, 1.02)
-    tmcr_vv.autoMCstats(shape=True)
+    tmcr_vv.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "VV", "tmcr", tmcr_vv, category)
     tmcr.addSample(tmcr_vv)
 
-    tmcr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "tmcr", category)
+    tmcr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "tmcr", category, read_sumw2=True)
     tmcr_hbb = rl.TemplateSample(
         ch_name + "_hbbMC", rl.Sample.BACKGROUND, tmcr_hbbTemplate
     )
@@ -923,11 +923,11 @@ def model(year, recoil, category, s):
     tmcr_hbb.setParamEffect(jec, 1.05)
     tmcr_hbb.setParamEffect(id_mu, 1.02)
     tmcr_hbb.setParamEffect(iso_mu, 1.02)
-    tmcr_hbb.autoMCstats(shape=True)
+    tmcr_hbb.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "Hbb", "tmcr", tmcr_hbb, category)
     tmcr.addSample(tmcr_hbb)
 
-    tmcr_qcdTemplate = template(background, "QCD", "nominal", recoil, "tmcr", category)
+    tmcr_qcdTemplate = template(background, "QCD", "nominal", recoil, "tmcr", category, read_sumw2=True)
     tmcr_qcd = rl.TemplateSample(
         ch_name + "_qcdMC", rl.Sample.BACKGROUND, tmcr_qcdTemplate
     )
@@ -938,7 +938,7 @@ def model(year, recoil, category, s):
     tmcr_qcd.setParamEffect(jec, 1.05)
     tmcr_qcd.setParamEffect(id_mu, 1.02)
     tmcr_qcd.setParamEffect(iso_mu, 1.02)
-    tmcr_qcd.autoMCstats(shape=True)
+    tmcr_qcd.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "QCD", "tmcr", tmcr_qcd, category)
     tmcr.addSample(tmcr_qcd)
 
@@ -1000,7 +1000,7 @@ def model(year, recoil, category, s):
     # Other MC-driven processes
     ###
 
-    tecr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tecr", category)
+    tecr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tecr", category, read_sumw2=True)
     tecr_wjets = rl.TemplateSample(
         ch_name + "_wjetsMC", rl.Sample.BACKGROUND, tecr_wjetsTemplate
     )
@@ -1011,12 +1011,12 @@ def model(year, recoil, category, s):
     tecr_wjets.setParamEffect(jec, 1.05)
     tecr_wjets.setParamEffect(id_e, 1.02)
     tecr_wjets.setParamEffect(reco_e, 1.02)
-    tecr_wjets.autoMCstats(shape=True)
+    tecr_wjets.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "W+jets", "tecr", tecr_wjets, category)
     addVJetsSyst(background, recoil, "W+jets", "tecr", tecr_wjets, category)
     tecr.addSample(tecr_wjets)
 
-    tecr_stTemplate = template(background, "ST", "nominal", recoil, "tecr", category)
+    tecr_stTemplate = template(background, "ST", "nominal", recoil, "tecr", category, read_sumw2=True)
     tecr_st = rl.TemplateSample(
         ch_name + "_stMC", rl.Sample.BACKGROUND, tecr_stTemplate
     )
@@ -1027,11 +1027,11 @@ def model(year, recoil, category, s):
     tecr_st.setParamEffect(jec, 1.05)
     tecr_st.setParamEffect(id_e, 1.02)
     tecr_st.setParamEffect(reco_e, 1.02)
-    tecr_st.autoMCstats(shape=True)
+    tecr_st.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "ST", "tecr", tecr_st, category)
     tecr.addSample(tecr_st)
 
-    tecr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "tecr", category)
+    tecr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "tecr", category, read_sumw2=True)
     tecr_dyjets = rl.TemplateSample(
         ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, tecr_dyjetsTemplate
     )
@@ -1042,12 +1042,12 @@ def model(year, recoil, category, s):
     tecr_dyjets.setParamEffect(jec, 1.05)
     tecr_dyjets.setParamEffect(id_e, 1.02)
     tecr_dyjets.setParamEffect(reco_e, 1.02)
-    tecr_dyjets.autoMCstats(shape=True)
+    tecr_dyjets.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "DY+jets", "tecr", tecr_dyjets, category)
     addVJetsSyst(background, recoil, "DY+jets", "tecr", tecr_dyjets, category)
     tecr.addSample(tecr_dyjets)
 
-    tecr_vvTemplate = template(background, "VV", "nominal", recoil, "tecr", category)
+    tecr_vvTemplate = template(background, "VV", "nominal", recoil, "tecr", category, read_sumw2=True)
     tecr_vv = rl.TemplateSample(
         ch_name + "_vvMC", rl.Sample.BACKGROUND, tecr_vvTemplate
     )
@@ -1058,11 +1058,11 @@ def model(year, recoil, category, s):
     tecr_vv.setParamEffect(jec, 1.05)
     tecr_vv.setParamEffect(id_e, 1.02)
     tecr_vv.setParamEffect(reco_e, 1.02)
-    tecr_vv.autoMCstats(shape=True)
+    tecr_vv.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "VV", "tecr", tecr_vv, category)
     tecr.addSample(tecr_vv)
 
-    tecr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "tecr", category)
+    tecr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "tecr", category, read_sumw2=True)
     tecr_hbb = rl.TemplateSample(
         ch_name + "_hbbMC", rl.Sample.BACKGROUND, tecr_hbbTemplate
     )
@@ -1073,11 +1073,11 @@ def model(year, recoil, category, s):
     tecr_hbb.setParamEffect(jec, 1.05)
     tecr_hbb.setParamEffect(id_e, 1.02)
     tecr_hbb.setParamEffect(reco_e, 1.02)
-    tecr_hbb.autoMCstats(shape=True)
+    tecr_hbb.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "Hbb", "tecr", tecr_hbb, category)
     tecr.addSample(tecr_hbb)
 
-    tecr_qcdTemplate = template(background, "QCD", "nominal", recoil, "tecr", category)
+    tecr_qcdTemplate = template(background, "QCD", "nominal", recoil, "tecr", category, read_sumw2=True)
     tecr_qcd = rl.TemplateSample(
         ch_name + "_qcdMC", rl.Sample.BACKGROUND, tecr_qcdTemplate
     )
@@ -1088,7 +1088,7 @@ def model(year, recoil, category, s):
     tecr_qcd.setParamEffect(jec, 1.05)
     tecr_qcd.setParamEffect(id_e, 1.02)
     tecr_qcd.setParamEffect(reco_e, 1.02)
-    tecr_qcd.autoMCstats(shape=True)
+    tecr_qcd.autoMCStats(shape=True)
     addBtagSyst(background, recoilbin, "QCD", "tecr", tecr_qcd, category)
     tecr.addSample(tecr_qcd)
 
