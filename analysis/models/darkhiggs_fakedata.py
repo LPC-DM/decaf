@@ -287,7 +287,7 @@ def model(year, recoil, category, s):
     ###
 
     if category == 'pass' and options.sumbkg:
-        sr.setObservation(template(data, "", "data", recoil, "sr", category, bkg=True))
+        sr.setObservation(template(fake_data, "", "data", recoil, "sr", category, bkg=True))
     else:
         sr.setObservation(template(data, "MET", "data", recoil, "sr", category))
 
@@ -1141,17 +1141,24 @@ if __name__ == "__main__":
     ##
 
     data = {}
+    fake_data = {}
 
+    #### Use real data in CRs + SR fail while fake data in SR pass
     if options.sumbkg:
-        for r in data_hists["template"].identifiers("region"):
-            if str(r) == 'sr':
-                data[str(r)] = fake_data_hists["template"].integrate("region", r).sum("gentype")
-            else:
-                data[str(r)] = data_hists["template"].integrate("region", r).sum("gentype")
-        #### Use real data in CRs while fake data in SR
-    else:
-        for r in data_hists["template"].identifiers("region"):
-            data[str(r)] = data_hists["template"].integrate("region", r).sum("gentype")
+        fake_data['sr'] = fake_data_hists["template"].integrate("region", 'sr').sum("gentype")
+    for r in data_hists["template"].identifiers("region"):
+        data[str(r)] = data_hists["template"].integrate("region", r).sum("gentype")
+
+    #if options.sumbkg:
+    #    for r in data_hists["template"].identifiers("region"):
+    #        if str(r) == 'sr':
+    #            data[str(r)] = fake_data_hists["template"].integrate("region", r).sum("gentype")
+    #        else:
+    #            data[str(r)] = data_hists["template"].integrate("region", r).sum("gentype")
+    #    #### Use real data in CRs while fake data in SR
+    #else:
+    #    for r in data_hists["template"].identifiers("region"):
+    #        data[str(r)] = data_hists["template"].integrate("region", r).sum("gentype")
 
     background = {}
     for r in bkg_hists["template"].identifiers("region"):
