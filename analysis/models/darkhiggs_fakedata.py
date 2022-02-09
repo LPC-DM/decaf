@@ -286,7 +286,7 @@ def model(year, recoil, category, s):
     # Add data distribution to the channel
     ###
 
-    if options.sumbkg:
+    if category == 'pass' and options.sumbkg:
         sr.setObservation(template(data, "", "data", recoil, "sr", category, bkg=True))
     else:
         sr.setObservation(template(data, "MET", "data", recoil, "sr", category))
