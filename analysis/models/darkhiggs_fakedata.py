@@ -428,7 +428,7 @@ def model(year, recoil, category, s):
     sr_hbb.setParamEffect(veto_tau, 1.03)
     sr_hbb.setParamEffect(hbb_norm, 1.2)
     sr_hbb.setParamEffect(jec, 1.05)
-    sr_hbb.autoMCStats(shape=True)
+    sr_hbb.autoMCStats(shape=True, name="sr"+year+category+"_hbbMC", epsilon=1e-5)
     addBtagSyst(background, recoil, "Hbb", "sr", sr_hbb, category)
     sr.addSample(sr_hbb)
 
