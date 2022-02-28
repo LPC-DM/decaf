@@ -32,8 +32,8 @@ bbtagger_eff = {
 
 #### New btagJP binnings for fit
 new_bins = {
-        #"2016": [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 2.5],
-        "2016": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
+        #"2016": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
+        "2016": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.5],
         "2017": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
         #"2018": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
         "2018": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.5],
@@ -91,13 +91,12 @@ def model(year, category):
     ##### Template to use bb stat uncertainties
     sr_genbb_Template = template(signal, "QCD", "bb", category, read_sumw2=True)
     sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
-    sr_genbb.setParamEffect(lumi, 1.027)
-    sr_genbb.setParamEffect(pu, 1.05)
-    sr_genbb.setParamEffect(jes, 1.02)
-    sr_genbb.setParamEffect(frac_bb, 1.5)
+    sr_genbb.setParamEffect(lumi, nlumi)
+    sr_genbb.setParamEffect(pu, npu)
+    sr_genbb.setParamEffect(jes, njes)
+    sr_genbb.setParamEffect(frac_bb, nfrac)
     sr_genbb.setParamEffect(sf_weight, weight[category])
-    sr_genbb.autoMCStats(lnN=True)
-    #sr_genbb.autoMCStats()
+    sr_genbb.autoMCStats(shape=True)
     sr.addSample(sr_genbb)
     ###########################################
 
@@ -119,42 +118,38 @@ def model(year, category):
 
     sr_genb_Template = template(background, "QCD", "b", category, read_sumw2=True)
     sr_genb = rl.TemplateSample(ch_name + "_genb", rl.Sample.BACKGROUND, sr_genb_Template)
-    sr_genb.setParamEffect(lumi, 1.027)
-    sr_genb.setParamEffect(pu, 1.05)
-    sr_genb.setParamEffect(jes, 1.02)
-    sr_genb.setParamEffect(frac_b, 1.5)
-    sr_genb.autoMCStats(lnN=True)
-    #sr_genb.autoMCStats()
+    sr_genb.setParamEffect(lumi, nlumi)
+    sr_genb.setParamEffect(pu, npu)
+    sr_genb.setParamEffect(jes, njes)
+    sr_genb.setParamEffect(frac_b, nfrac)
+    sr_genb.autoMCStats(shape=True)
     sr.addSample(sr_genb)
 
     sr_genc_Template = template(background, "QCD", "c", category, read_sumw2=True)
     sr_genc = rl.TemplateSample(ch_name + "_genc", rl.Sample.BACKGROUND, sr_genc_Template)
-    sr_genc.setParamEffect(lumi, 1.027)
-    sr_genc.setParamEffect(pu, 1.05)
-    sr_genc.setParamEffect(jes, 1.02)
-    sr_genc.setParamEffect(frac_c, 1.5)
-    sr_genc.autoMCStats(lnN=True)
-    #sr_genc.autoMCStats()
+    sr_genc.setParamEffect(lumi, nlumi)
+    sr_genc.setParamEffect(pu, npu)
+    sr_genc.setParamEffect(jes, njes)
+    sr_genc.setParamEffect(frac_c, nfrac)
+    sr_genc.autoMCStats(shape=True)
     sr.addSample(sr_genc)
 
     sr_gencc_Template = template(background, "QCD", "cc", category, read_sumw2=True)
     sr_gencc = rl.TemplateSample(ch_name + "_gencc", rl.Sample.BACKGROUND, sr_gencc_Template)
-    sr_gencc.setParamEffect(lumi, 1.027)
-    sr_gencc.setParamEffect(pu, 1.05)
-    sr_gencc.setParamEffect(jes, 1.02)
-    sr_gencc.setParamEffect(frac_cc, 1.5)
-    sr_gencc.autoMCStats(lnN=True)
-    #sr_gencc.autoMCStats()
+    sr_gencc.setParamEffect(lumi, nlumi)
+    sr_gencc.setParamEffect(pu, npu)
+    sr_gencc.setParamEffect(jes, njes)
+    sr_gencc.setParamEffect(frac_cc, nfrac)
+    sr_gencc.autoMCStats(shape=True)
     sr.addSample(sr_gencc)
 
     sr_genother_Template = template(background, "QCD", "other", category, read_sumw2=True)
     sr_genother = rl.TemplateSample(ch_name + "_genother", rl.Sample.BACKGROUND, sr_genother_Template)
-    sr_genother.setParamEffect(lumi, 1.027)
-    sr_genother.setParamEffect(pu, 1.05)
-    sr_genother.setParamEffect(jes, 1.02)
-    sr_genother.setParamEffect(frac_other, 1.5)
-    sr_genother.autoMCStats(lnN=True)
-    #sr_genother.autoMCStats()
+    sr_genother.setParamEffect(lumi, nlumi)
+    sr_genother.setParamEffect(pu, npu)
+    sr_genother.setParamEffect(jes, njes)
+    sr_genother.setParamEffect(frac_other, nfrac)
+    sr_genother.autoMCStats(shape=True)
     sr.addSample(sr_genother)
 
     return model
@@ -179,6 +174,15 @@ if __name__ == "__main__":
 
     #### fractional systematics (assume 50%)
     frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
+
+    ###
+    # Set lnN or shape parameters
+    ### 
+
+    nlumi = 1.027
+    npu = 1.05
+    njes = 1.02
+    nfrac = 1.5
 
     #### SF weight (TemplateSample version) ####
     sf = rl.IndependentParameter("sf" + year, 1.0, 0.01, 1.0 / bbtagger_eff[year])
