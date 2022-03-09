@@ -220,9 +220,11 @@ class AnalysisProcessor(processor.ProcessorABC):
         ##### Using the offset function to copy contents not the type of the array #####
         step1 = fj.subjets.flatten()
         step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
+        step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
         step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
 
-        fj['withmu'] = (fj.subjets.counts==2) & (step3.all())
+        ##### fatjet with two subjets matched with muon
+        fj['withmu'] = step3.sum() == 2
 
         ###
         # Selections
@@ -247,6 +249,9 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
         leading_fj = leading_fj[leading_fj.withmu.astype(np.bool)]
+
+        print('final fj:', leading_fj[:5])
+        print('final fj:', leading_fj[5:10], '\n')
 
         #fj_good = fj[fj.isgood.astype(np.bool)]
         #fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
