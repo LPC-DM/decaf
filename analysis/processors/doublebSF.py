@@ -268,7 +268,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         #### SV selection for matched with leading ak15 jet ####
         SV['ismatched'] = match(SV, leading_fj, 1.5)
         leading_SV = SV[SV.pt.argmax()]
-        leading_SV = leading_SV[leading_fj.ismatched.astype(np.bool)]
+        leading_SV = leading_SV[leading_SV.ismatched.astype(np.bool)]
 
         #fj_good = fj[fj.isgood.astype(np.bool)]
         #fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
