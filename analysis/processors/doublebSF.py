@@ -148,7 +148,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
-                hist.Bin('svmass','Secondary Vertices (SV) mass',20,0,200)
+                hist.Bin('svmass','Secondary Vertices (SV) mass',20,0,200),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
         })
