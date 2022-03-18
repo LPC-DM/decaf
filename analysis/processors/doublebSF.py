@@ -199,10 +199,9 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj['tau21'] = fj.tau2/fj.tau1
 
         SV = events.SV
-        leading_SV = SV[SV.pt.argmax()]
 
         ###
-        #Calculating weights
+        # Calculating weights
         ###
         if not isData:
 
@@ -265,6 +264,11 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
         leading_fj = leading_fj[leading_fj.withmu.astype(np.bool)]
+
+        #### SV selection for matched with leading ak15 jet ####
+        SV['ismatched'] = match(SV, leading_fj, 1.5)
+        leading_SV = SV[SV.pt.argmax()]
+        leading_SV = leading_SV[leading_fj.ismatched.astype(np.bool)]
 
         #fj_good = fj[fj.isgood.astype(np.bool)]
         #fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
