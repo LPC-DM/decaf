@@ -142,7 +142,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
-                hist.Bin('svmass','Leading Secondary Vertices (SV) mass',20,0,100)
+                hist.Bin('svmass','Leading Secondary Vertices (SV) mass',40,-0.8,3.2)
             ),
             'svdxysig': hist.Hist(
                 'Events',
@@ -154,7 +154,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
-                hist.Bin('svmass','Leading Secondary Vertices (SV) mass',20,0,100),
+                hist.Bin('svmass','Leading Secondary Vertices (SV) mass',40,-0.8,3.2),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
         })
@@ -295,7 +295,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             'tau21':     leading_fj.tau21,
             'fjmass':    leading_fj.msd_corr,
             'fj1pt':     leading_fj.sd.pt,
-            'svmass':    leading_SV.mass,
+            #'svmass':    leading_SV.mass,
+            'svmass':    np.log(leading_SV.mass),
             'svdxysig':  leading_SV.dxySig
         }
 
@@ -346,7 +347,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             ##### sv mass template #####
             hout['svtemplate'].fill(dataset=dataset,
                     gentype=np.zeros(events.size, dtype=np.int),
-                    svmass=leading_SV.mass.sum(),
+                    #svmass=leading_SV.mass.sum(),
+                    svmass=np.log(leading_SV.mass.sum()),
                     ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                     weight=np.ones(events.size)*cut
                     )
@@ -396,7 +398,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ##### sv mass template #####
                 hout['svtemplate'].fill(dataset=dataset,
                         gentype=vgentype,
-                        svmass=leading_SV.mass.sum(),
+                        #svmass=leading_SV.mass.sum(),
+                        svmass=np.log(leading_SV.mass.sum()),
                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                         weight=np.ones(events.size)*cut
                         )
@@ -414,7 +417,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ##### sv mass template #####
                 hout['svtemplate'].fill(dataset=dataset,
                         gentype=vgentype,
-                        svmass=leading_SV.mass.sum(),
+                        #svmass=leading_SV.mass.sum(),
+                        svmass=np.log(leading_SV.mass.sum()),
                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                         weight=np.ones(events.size)*cut
                         )
