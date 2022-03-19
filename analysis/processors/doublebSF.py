@@ -142,13 +142,19 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
-                hist.Bin('svmass','Secondary Vertices (SV) mass',20,0,200)
+                hist.Bin('svmass','Leading Secondary Vertices (SV) mass',20,0,100)
+            ),
+            'svdxysig': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('svdxysig','Leading Secondary Vertices (SV) 2D decay length significance',100,0,3000)
             ),
             'svtemplate': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
-                hist.Bin('svmass','Secondary Vertices (SV) mass',20,0,200),
+                hist.Bin('svmass','Leading Secondary Vertices (SV) mass',20,0,100),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
         })
@@ -267,7 +273,8 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         #### SV selection for matched with leading ak15 jet ####
         SV['ismatched'] = match(SV, leading_fj, 1.5)
-        leading_SV = SV[SV.pt.argmax()]
+        #leading_SV = SV[SV.pt.argmax()]
+        leading_SV = SV[SV.dxySig.argmax()]
         leading_SV = leading_SV[leading_SV.ismatched.astype(np.bool)]
 
         #fj_good = fj[fj.isgood.astype(np.bool)]
@@ -288,7 +295,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             'tau21':     leading_fj.tau21,
             'fjmass':    leading_fj.msd_corr,
             'fj1pt':     leading_fj.sd.pt,
-            'svmass':    leading_SV.mass
+            'svmass':    leading_SV.mass,
+            'svdxysig':  leading_SV.dxySig
         }
 
         def fill(dataset, gentype, weight, cut):
