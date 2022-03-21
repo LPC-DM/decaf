@@ -75,7 +75,7 @@ def template(dictionary, process, gentype, category, read_sumw2=False):
 
     return (output, binning, "svmass")
 
-def addBBliteSyst(templ, epsilon=0):
+def addBBliteSyst(templ, param, epsilon=0):
     for i in range(templ.observable.nbins):
                 if templ._nominal[i] <= 0. or templ._sumw2[i] <= 0.:
                     continue
@@ -127,7 +127,7 @@ def model(year, category):
     sr_genbb.setParamEffect(sf_weight, weight[category])
     #sr_genbb.autoMCStats(shape=True)
     #sr_genbb.autoMCStats(name=ch_name)
-    addBBliteSyst(sr_genbb, epsilon=1e-5)
+    addBBliteSyst(sr_genbb, param, epsilon=1e-5)
     sr.addSample(sr_genbb)
     ###########################################
 
@@ -155,7 +155,7 @@ def model(year, category):
     sr_genb.setParamEffect(frac, nfrac)
     #sr_genb.autoMCStats(shape=True)
     #sr_genb.autoMCStats(name=ch_name)
-    addBBliteSyst(sr_genb, epsilon=1e-5)
+    addBBliteSyst(sr_genb, param, epsilon=1e-5)
     sr.addSample(sr_genb)
 
     sr_genc_Template = template(background, "QCD", "c", category, read_sumw2=True)
@@ -166,7 +166,7 @@ def model(year, category):
     sr_genc.setParamEffect(frac, nfrac)
     #sr_genc.autoMCStats(shape=True)
     #sr_genc.autoMCStats(name=ch_name)
-    addBBliteSyst(sr_genc, epsilon=1e-5)
+    addBBliteSyst(sr_genc, param, epsilon=1e-5)
     sr.addSample(sr_genc)
 
     sr_gencc_Template = template(background, "QCD", "cc", category, read_sumw2=True)
@@ -177,7 +177,7 @@ def model(year, category):
     sr_gencc.setParamEffect(frac, nfrac)
     #sr_gencc.autoMCStats(shape=True)
     #sr_gencc.autoMCStats(name=ch_name)
-    addBBliteSyst(sr_gencc, epsilon=1e-5)
+    addBBliteSyst(sr_gencc, param, epsilon=1e-5)
     sr.addSample(sr_gencc)
 
     sr_genother_Template = template(background, "QCD", "other", category, read_sumw2=True)
@@ -188,7 +188,7 @@ def model(year, category):
     sr_genother.setParamEffect(frac, nfrac)
     #sr_genother.autoMCStats(shape=True)
     #sr_genother.autoMCStats(name=ch_name)
-    addBBliteSyst(sr_genother, epsilon=1e-5)
+    addBBliteSyst(sr_genother, param, epsilon=1e-5)
     sr.addSample(sr_genother)
 
     return model
