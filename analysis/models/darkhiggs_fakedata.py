@@ -297,18 +297,14 @@ def model(year, recoil, category, s):
 
     if category == 'pass' and options.sumbkg:
         dataTemplate = template(fake_data, "", "data", recoil, "sr", category, bkg=True)
-        sr.setObservation(dataTemplate)
-        nbins = len(dataTemplate[1]) - 1
-        param = [None for _ in range(nbins)]
-        for i in range(nbins):
-            param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
     else:
         dataTemplate = template(data, "MET", "data", recoil, "sr", category)
-        sr.setObservation(dataTemplate)
-        nbins = len(dataTemplate[1]) - 1
-        param = [None for _ in range(nbins)]
-        for i in range(nbins):
-            param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
+
+    sr.setObservation(dataTemplate)
+    nbins = len(dataTemplate[1]) - 1
+    param = [None for _ in range(nbins)]
+    for i in range(nbins):
+        param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
     ###
     # Z(->nunu)+jets data-driven model
@@ -657,18 +653,14 @@ def model(year, recoil, category, s):
 
     if year == "2018":
         dataTemplate = template(data, "EGamma", "data", recoil, "wecr", category)
-        wecr.setObservation(dataTemplate)
-        nbins = len(dataTemplate[1]) - 1
-        param = [None for _ in range(nbins)]
-        for i in range(nbins):
-            param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
     else:
         dataTemplate = template(data, "SingleElectron", "data", recoil, "wecr", category)
-        wecr.setObservation(dataTemplate)
-        nbins = len(dataTemplate[1]) - 1
-        param = [None for _ in range(nbins)]
-        for i in range(nbins):
-            param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
+
+    wecr.setObservation(dataTemplate)
+    nbins = len(dataTemplate[1]) - 1
+    param = [None for _ in range(nbins)]
+    for i in range(nbins):
+        param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
     ###
     # W(->lnu)+jets data-driven model
@@ -980,18 +972,14 @@ def model(year, recoil, category, s):
 
     if year == "2018":
         dataTemplate = template(data, "EGamma", "data", recoil, "tecr", category)
-        tecr.setObservation(dataTemplate)
-        nbins = len(dataTemplate[1]) - 1
-        param = [None for _ in range(nbins)]
-        for i in range(nbins):
-            param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
     else:
         dataTemplate = template(data, "SingleElectron", "data", recoil, "tecr", category)
-        tecr.setObservation(dataTemplate)
-        nbins = len(dataTemplate[1]) - 1
-        param = [None for _ in range(nbins)]
-        for i in range(nbins):
-            param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
+
+    tecr.setObservation(dataTemplate)
+    nbins = len(dataTemplate[1]) - 1
+    param = [None for _ in range(nbins)]
+    for i in range(nbins):
+        param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
     ###
     # top-antitop model
