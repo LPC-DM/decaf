@@ -83,8 +83,8 @@ def addBBliteSyst(templ, epsilon=0):
                 effect_down = np.ones_like(templ._nominal)
                 effect_up[i] = (templ._nominal[i] + np.sqrt(templ._sumw2[i]))/templ._nominal[i]
                 effect_down[i] = max((templ._nominal[i] - np.sqrt(templ._sumw2[i]))/templ._nominal[i], epsilon)
-                self.setParamEffect(param[i], effect_up, effect_down)
-                
+                templ.setParamEffect(param[i], effect_up, effect_down)
+
 ### s: process in the signal region
 def model(year, category):
 
@@ -109,8 +109,9 @@ def model(year, category):
     dataTemplate = template(data, "BTagMu", "bb", category)
     sr.setObservation(dataTemplate)
     nbins = len(dataTemplate[1]) - 1
+    param = [None for _ in range(nbins)]
     for i in range(nbins):
-        param[i] = NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
+        param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
     ###
     # QCD sig process
@@ -122,7 +123,7 @@ def model(year, category):
     sr_genbb.setParamEffect(lumi, nlumi)
     sr_genbb.setParamEffect(pu, npu)
     sr_genbb.setParamEffect(jes, njes)
-    sr_genbb.setParamEffect(frac_bb, nfrac)
+    sr_genbb.setParamEffect(frac, nfrac)
     sr_genbb.setParamEffect(sf_weight, weight[category])
     #sr_genbb.autoMCStats(shape=True)
     #sr_genbb.autoMCStats(name=ch_name)
@@ -151,7 +152,7 @@ def model(year, category):
     sr_genb.setParamEffect(lumi, nlumi)
     sr_genb.setParamEffect(pu, npu)
     sr_genb.setParamEffect(jes, njes)
-    sr_genb.setParamEffect(frac_b, nfrac)
+    sr_genb.setParamEffect(frac, nfrac)
     #sr_genb.autoMCStats(shape=True)
     #sr_genb.autoMCStats(name=ch_name)
     addBBliteSyst(sr_genb, epsilon=1e-5)
@@ -162,7 +163,7 @@ def model(year, category):
     sr_genc.setParamEffect(lumi, nlumi)
     sr_genc.setParamEffect(pu, npu)
     sr_genc.setParamEffect(jes, njes)
-    sr_genc.setParamEffect(frac_c, nfrac)
+    sr_genc.setParamEffect(frac, nfrac)
     #sr_genc.autoMCStats(shape=True)
     #sr_genc.autoMCStats(name=ch_name)
     addBBliteSyst(sr_genc, epsilon=1e-5)
@@ -173,7 +174,7 @@ def model(year, category):
     sr_gencc.setParamEffect(lumi, nlumi)
     sr_gencc.setParamEffect(pu, npu)
     sr_gencc.setParamEffect(jes, njes)
-    sr_gencc.setParamEffect(frac_cc, nfrac)
+    sr_gencc.setParamEffect(frac, nfrac)
     #sr_gencc.autoMCStats(shape=True)
     #sr_gencc.autoMCStats(name=ch_name)
     addBBliteSyst(sr_gencc, epsilon=1e-5)
@@ -184,7 +185,7 @@ def model(year, category):
     sr_genother.setParamEffect(lumi, nlumi)
     sr_genother.setParamEffect(pu, npu)
     sr_genother.setParamEffect(jes, njes)
-    sr_genother.setParamEffect(frac_other, nfrac)
+    sr_genother.setParamEffect(frac, nfrac)
     #sr_genother.autoMCStats(shape=True)
     #sr_genother.autoMCStats(name=ch_name)
     addBBliteSyst(sr_genother, epsilon=1e-5)
@@ -211,7 +212,7 @@ if __name__ == "__main__":
     jes = rl.NuisanceParameter("jes" + year, "lnN")
 
     #### fractional systematics (assume 50%)
-    frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
+    frac = rl.NuisanceParameter("frac" + year, "lnN")
 
     ###
     # Set lnN or shape parameters
@@ -291,4 +292,3 @@ if __name__ == "__main__":
             "wb",
         ) as fout:
             pickle.dump(model(year, category), fout, protocol=2)
-        
