@@ -469,6 +469,7 @@ def model(year, recoil, category, s):
     sr_signal.setParamEffect(veto_tau, nveto_tau)
     sr_signal.setParamEffect(jec, njec)
     addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category)
+    addBBliteSyst(sr_signal, param, epsilon=1e-5) ### replace autoMCStats
     sr.addSample(sr_signal)
 
     ###
