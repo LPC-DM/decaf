@@ -31,12 +31,22 @@ bbtagger_eff = {
         }
 
 #### New btagJP binnings for fit
+#new_bins = {
+#        "2016": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
+#        #"2016": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.5],
+#        "2017": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
+#        #"2018": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
+#        "2018": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.5],
+#        }
+
+#### New sv mass binnings for fit
 new_bins = {
-        #"2016": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
-        "2016": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.5],
-        "2017": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
-        #"2018": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5],
-        "2018": [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.5],
+        #"2016": [-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1,  0.,  0.1,  0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1., 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 2.5, 3.2],
+        #"2017": [-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1,  0.,  0.1,  0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1., 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 2.5, 3.2],
+        #"2018": [-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1,  0.,  0.1,  0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1., 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 2.5, 3.2]
+        "2016": [-0.8, -0.4, 0.,  0.1,  0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1., 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 2.5, 3.2],
+        "2017": [-0.8, -0.4, 0.,  0.1,  0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1., 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 2.5, 3.2],
+        "2018": [-0.8, -0.4, 0.,  0.1,  0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1., 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 2.5, 3.2]
         }
 
 ### category: pass/fail flag
@@ -54,18 +64,22 @@ def template(dictionary, process, gentype, category, read_sumw2=False):
 
     #print(category, process, output)
     binning = (
-        dictionary[gentype].integrate("process", process).axis("btagJP").edges()
+        #dictionary[gentype].integrate("process", process).axis("btagJP").edges()
+        dictionary[gentype].integrate("process", process).axis("svmass").edges()
     )
     #print('Bin edges:', binning, '\n')
 
     if read_sumw2:
-        return (output, binning, "btagJP", sumw2)
-    return (output, binning, "btagJP")
+        #return (output, binning, "btagJP", sumw2)
+        return (output, binning, "svmass", sumw2)
+
+    return (output, binning, "svmass")
 
 ### s: process in the signal region
 def model(year, category):
 
-    model_id = "btagJP" + year + category
+    #model_id = "btagJP" + year + category
+    model_id = "svmass" + year + category
     model = rl.Model(model_id)
 
     ###
@@ -96,7 +110,8 @@ def model(year, category):
     sr_genbb.setParamEffect(jes, njes)
     sr_genbb.setParamEffect(frac_bb, nfrac)
     sr_genbb.setParamEffect(sf_weight, weight[category])
-    sr_genbb.autoMCStats(shape=True)
+    #sr_genbb.autoMCStats(shape=True)
+    sr_genbb.autoMCStats(name=ch_name)
     sr.addSample(sr_genbb)
     ###########################################
 
@@ -122,7 +137,8 @@ def model(year, category):
     sr_genb.setParamEffect(pu, npu)
     sr_genb.setParamEffect(jes, njes)
     sr_genb.setParamEffect(frac_b, nfrac)
-    sr_genb.autoMCStats(shape=True)
+    #sr_genb.autoMCStats(shape=True)
+    sr_genb.autoMCStats(name=ch_name)
     sr.addSample(sr_genb)
 
     sr_genc_Template = template(background, "QCD", "c", category, read_sumw2=True)
@@ -131,7 +147,8 @@ def model(year, category):
     sr_genc.setParamEffect(pu, npu)
     sr_genc.setParamEffect(jes, njes)
     sr_genc.setParamEffect(frac_c, nfrac)
-    sr_genc.autoMCStats(shape=True)
+    #sr_genc.autoMCStats(shape=True)
+    sr_genc.autoMCStats(name=ch_name)
     sr.addSample(sr_genc)
 
     sr_gencc_Template = template(background, "QCD", "cc", category, read_sumw2=True)
@@ -140,7 +157,8 @@ def model(year, category):
     sr_gencc.setParamEffect(pu, npu)
     sr_gencc.setParamEffect(jes, njes)
     sr_gencc.setParamEffect(frac_cc, nfrac)
-    sr_gencc.autoMCStats(shape=True)
+    #sr_gencc.autoMCStats(shape=True)
+    sr_gencc.autoMCStats(name=ch_name)
     sr.addSample(sr_gencc)
 
     sr_genother_Template = template(background, "QCD", "other", category, read_sumw2=True)
@@ -149,7 +167,8 @@ def model(year, category):
     sr_genother.setParamEffect(pu, npu)
     sr_genother.setParamEffect(jes, njes)
     sr_genother.setParamEffect(frac_other, nfrac)
-    sr_genother.autoMCStats(shape=True)
+    #sr_genother.autoMCStats(shape=True)
+    sr_genother.autoMCStats(name=ch_name)
     sr.addSample(sr_genother)
 
     return model
@@ -221,23 +240,28 @@ if __name__ == "__main__":
         ###
         # Rebin templates for fit 
         ##
-        data_hists["template"] = data_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", new_bins[year]))
-        bkg_hists["template"] = bkg_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", new_bins[year]))
+        #data_hists["template"] = data_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", new_bins[year]))
+        #bkg_hists["template"] = bkg_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", new_bins[year]))
+        data_hists["svtemplate"] = data_hists["svtemplate"].rebin("svmass", hist.Bin("svmass", "svmass", new_bins[year]))
+        bkg_hists["svtemplate"] = bkg_hists["svtemplate"].rebin("svmass", hist.Bin("svmass", "svmass", new_bins[year]))
 
         ###
         # Preparing histograms for fit
         ##
         data = {}
-        data['bb'] = data_hists["template"].sum("gentype", overflow='all')
+        #data['bb'] = data_hists["template"].sum("gentype", overflow='all')
+        data['bb'] = data_hists["svtemplate"].sum("gentype", overflow='all')
 
         background = {}
         signal = {}
 
         for i in range(5):
             if gentype_map[i] == 'bb':
-                signal[str(gentype_map[i])] = bkg_hists["template"].integrate("gentype", 0)
+                #signal[str(gentype_map[i])] = bkg_hists["template"].integrate("gentype", 0)
+                signal[str(gentype_map[i])] = bkg_hists["svtemplate"].integrate("gentype", 0)
             else:
-                background[str(gentype_map[i])] = bkg_hists["template"].integrate("gentype", i)
+                #background[str(gentype_map[i])] = bkg_hists["template"].integrate("gentype", i)
+                background[str(gentype_map[i])] = bkg_hists["svtemplate"].integrate("gentype", i)
 
         with open(
             "data/doublebSF-"
