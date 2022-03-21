@@ -75,6 +75,16 @@ def template(dictionary, process, gentype, category, read_sumw2=False):
 
     return (output, binning, "svmass")
 
+def addBBliteSyst(templ, epsilon=0):
+    for i in range(templ.observable.nbins):
+                if templ._nominal[i] <= 0. or templ._sumw2[i] <= 0.:
+                    continue
+                effect_up = np.ones_like(templ._nominal)
+                effect_down = np.ones_like(templ._nominal)
+                effect_up[i] = (templ._nominal[i] + np.sqrt(templ._sumw2[i]))/templ._nominal[i]
+                effect_down[i] = max((templ._nominal[i] - np.sqrt(templ._sumw2[i]))/templ._nominal[i], epsilon)
+                self.setParamEffect(param[i], effect_up, effect_down)
+                
 ### s: process in the signal region
 def model(year, category):
 
@@ -96,7 +106,11 @@ def model(year, category):
     # Add data distribution to the channel
     ###
 
-    sr.setObservation(template(data, "BTagMu", "bb", category))
+    dataTemplate = template(data, "BTagMu", "bb", category)
+    sr.setObservation(dataTemplate)
+    nbins = len(dataTemplate[1]) - 1
+    for i in range(nbins):
+        param[i] = NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
     ###
     # QCD sig process
@@ -111,7 +125,8 @@ def model(year, category):
     sr_genbb.setParamEffect(frac_bb, nfrac)
     sr_genbb.setParamEffect(sf_weight, weight[category])
     #sr_genbb.autoMCStats(shape=True)
-    sr_genbb.autoMCStats(name=ch_name)
+    #sr_genbb.autoMCStats(name=ch_name)
+    addBBliteSyst(sr_genbb, epsilon=1e-5)
     sr.addSample(sr_genbb)
     ###########################################
 
@@ -138,7 +153,8 @@ def model(year, category):
     sr_genb.setParamEffect(jes, njes)
     sr_genb.setParamEffect(frac_b, nfrac)
     #sr_genb.autoMCStats(shape=True)
-    sr_genb.autoMCStats(name=ch_name)
+    #sr_genb.autoMCStats(name=ch_name)
+    addBBliteSyst(sr_genb, epsilon=1e-5)
     sr.addSample(sr_genb)
 
     sr_genc_Template = template(background, "QCD", "c", category, read_sumw2=True)
@@ -148,7 +164,8 @@ def model(year, category):
     sr_genc.setParamEffect(jes, njes)
     sr_genc.setParamEffect(frac_c, nfrac)
     #sr_genc.autoMCStats(shape=True)
-    sr_genc.autoMCStats(name=ch_name)
+    #sr_genc.autoMCStats(name=ch_name)
+    addBBliteSyst(sr_genc, epsilon=1e-5)
     sr.addSample(sr_genc)
 
     sr_gencc_Template = template(background, "QCD", "cc", category, read_sumw2=True)
@@ -158,7 +175,8 @@ def model(year, category):
     sr_gencc.setParamEffect(jes, njes)
     sr_gencc.setParamEffect(frac_cc, nfrac)
     #sr_gencc.autoMCStats(shape=True)
-    sr_gencc.autoMCStats(name=ch_name)
+    #sr_gencc.autoMCStats(name=ch_name)
+    addBBliteSyst(sr_gencc, epsilon=1e-5)
     sr.addSample(sr_gencc)
 
     sr_genother_Template = template(background, "QCD", "other", category, read_sumw2=True)
@@ -168,7 +186,8 @@ def model(year, category):
     sr_genother.setParamEffect(jes, njes)
     sr_genother.setParamEffect(frac_other, nfrac)
     #sr_genother.autoMCStats(shape=True)
-    sr_genother.autoMCStats(name=ch_name)
+    #sr_genother.autoMCStats(name=ch_name)
+    addBBliteSyst(sr_genother, epsilon=1e-5)
     sr.addSample(sr_genother)
 
     return model
