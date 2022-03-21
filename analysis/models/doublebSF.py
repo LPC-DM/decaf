@@ -272,3 +272,4 @@ if __name__ == "__main__":
             "wb",
         ) as fout:
             pickle.dump(model(year, category), fout, protocol=2)
+        
