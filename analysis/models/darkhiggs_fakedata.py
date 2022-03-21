@@ -469,7 +469,7 @@ def model(year, recoil, category, s):
     sr_signal.setParamEffect(veto_tau, nveto_tau)
     sr_signal.setParamEffect(jec, njec)
     addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category)
-    addBBliteSyst(sr_signal, param, epsilon=1e-5) ### replace autoMCStats
+    #addBBliteSyst(sr_signal, param, epsilon=1e-5) ### replace autoMCStats
     sr.addSample(sr_signal)
 
     ###
@@ -1273,7 +1273,7 @@ if __name__ == "__main__":
         nbins = len(sr_zjetsMCFailTemplate[1]) - 1
         param = [None for _ in range(nbins)]
         for i in range(nbins):
-            param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
+            param[i] = rl.NuisanceParameter("sr"+ year + "fail" + "recoil" + str(recoilbin) + '_mcstat_bin%i' % i, combinePrior='shape')
         sr_zjetsMCFail = rl.TemplateSample(
             "sr" + year + "fail" + "recoil" + str(recoilbin) + "_zjetsMC",
             rl.Sample.BACKGROUND,
@@ -1289,6 +1289,8 @@ if __name__ == "__main__":
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
 
         param = [None for _ in range(nbins)]
+        for i in range(nbins):
+            param[i] = rl.NuisanceParameter("sr"+ year + "fail" + "recoil" + str(recoilbin) + '_mcstat_bin%i' % i, combinePrior='shape')
         sr_zhfMCFailTemplate = template(background, "Z+HF", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
         sr_zhfMCFail = rl.TemplateSample(
             "sr" + year + "fail" + "recoil" + str(recoilbin) + "_zhfMC",
@@ -1299,6 +1301,8 @@ if __name__ == "__main__":
         addBBliteSyst(sr_zhfMCFail, param, epsilon=1e-5) ### replace autoMCStats
 
         param = [None for _ in range(nbins)]
+        for i in range(nbins):
+            param[i] = rl.NuisanceParameter("sr"+ year + "fail" + "recoil" + str(recoilbin) + '_mcstat_bin%i' % i, combinePrior='shape')
         sr_zlfMCFailTemplate = template(background, "Z+LF", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
         sr_zlfMCFail = rl.TemplateSample(
             "sr" + year + "fail" + "recoil" + str(recoilbin) + "_zlfMC",
@@ -1328,6 +1332,8 @@ if __name__ == "__main__":
         )
 
         param = [None for _ in range(nbins)]
+        for i in range(nbins):
+            param[i] = rl.NuisanceParameter("sr"+ year + "fail" + "recoil" + str(recoilbin) + '_mcstat_bin%i' % i, combinePrior='shape')
         sr_wjetsMCFailTemplate = template(background, "W+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
         sr_wjetsMCFail = rl.TemplateSample(
             "sr" + year + "fail" + "recoil" + str(recoilbin) + "_wjetsMC",
@@ -1344,6 +1350,8 @@ if __name__ == "__main__":
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
 
         param = [None for _ in range(nbins)]
+        for i in range(nbins):
+            param[i] = rl.NuisanceParameter("sr"+ year + "fail" + "recoil" + str(recoilbin) + '_mcstat_bin%i' % i, combinePrior='shape')
         sr_whfMCFailTemplate = template(background, "W+HF", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
         sr_whfMCFail = rl.TemplateSample(
             "sr" + year + "fail" + "recoil" + str(recoilbin) + "_whfMC",
@@ -1354,6 +1362,8 @@ if __name__ == "__main__":
         addBBliteSyst(sr_whfMCFail, param, epsilon=1e-5) ### replace autoMCStats
 
         param = [None for _ in range(nbins)]
+        for i in range(nbins):
+            param[i] = rl.NuisanceParameter("sr"+ year + "fail" + "recoil" + str(recoilbin) + '_mcstat_bin%i' % i, combinePrior='shape')
         sr_wlfMCFailTemplate = template(background, "W+LF", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
         sr_wlfMCFail = rl.TemplateSample(
             "sr" + year + "fail" + "recoil" + str(recoilbin) + "_wlfMC",
@@ -1372,6 +1382,8 @@ if __name__ == "__main__":
         )
 
         param = [None for _ in range(nbins)]
+        for i in range(nbins):
+            param[i] = rl.NuisanceParameter("sr"+ year + "pass" + "recoil" + str(recoilbin) + '_mcstat_bin%i' % i, combinePrior='shape')
         sr_zjetsMCPassTemplate = template(background, "Z+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
         sr_zjetsMCPass = rl.TemplateSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin) + "_zjetsMC",
@@ -1388,6 +1400,8 @@ if __name__ == "__main__":
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
 
         param = [None for _ in range(nbins)]
+        for i in range(nbins):
+            param[i] = rl.NuisanceParameter("sr"+ year + "pass" + "recoil" + str(recoilbin) + '_mcstat_bin%i' % i, combinePrior='shape')
         sr_zhfMCPassTemplate = template(background, "Z+HF", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
         sr_zhfMCPass = rl.TemplateSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin) + "_zhfMC",
@@ -1398,6 +1412,8 @@ if __name__ == "__main__":
         addBBliteSyst(sr_zhfMCPass, param, epsilon=1e-5) ### replace autoMCStats
 
         param = [None for _ in range(nbins)]
+        for i in range(nbins):
+            param[i] = rl.NuisanceParameter("sr"+ year + "pass" + "recoil" + str(recoilbin) + '_mcstat_bin%i' % i, combinePrior='shape')
         sr_zlfMCPassTemplate = template(background, "Z+LF", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
         sr_zlfMCPass = rl.TemplateSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin) + "_zlfMC",
@@ -1418,6 +1434,8 @@ if __name__ == "__main__":
         )
 
         param = [None for _ in range(nbins)]
+        for i in range(nbins):
+            param[i] = rl.NuisanceParameter("sr"+ year + "pass" + "recoil" + str(recoilbin) + '_mcstat_bin%i' % i, combinePrior='shape')
         sr_wjetsMCPassTemplate = template(background, "W+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
         sr_wjetsMCPass = rl.TemplateSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin) + "_wjetsMC",
@@ -1434,6 +1452,8 @@ if __name__ == "__main__":
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
 
         param = [None for _ in range(nbins)]
+        for i in range(nbins):
+            param[i] = rl.NuisanceParameter("sr"+ year + "pass" + "recoil" + str(recoilbin) + '_mcstat_bin%i' % i, combinePrior='shape')
         sr_whfMCPassTemplate = template(background, "W+HF", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
         sr_whfMCPass = rl.TemplateSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin) + "_whfMC",
@@ -1444,6 +1464,8 @@ if __name__ == "__main__":
         addBBliteSyst(sr_whfMCPass, param, epsilon=1e-5) ### replace autoMCStats
 
         param = [None for _ in range(nbins)]
+        for i in range(nbins):
+            param[i] = rl.NuisanceParameter("sr"+ year + "pass" + "recoil" + str(recoilbin) + '_mcstat_bin%i' % i, combinePrior='shape')
         sr_wlfMCPassTemplate = template(background, "W+LF", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
         sr_wlfMCPass = rl.TemplateSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin) + "_wlfMC",
