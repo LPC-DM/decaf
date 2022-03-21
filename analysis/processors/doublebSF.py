@@ -101,42 +101,61 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('cutname', 'Cut name'),
                 hist.Bin('cut', 'Cut index', [0, 1, 2, 3, 4, 5, 6, 7, 8]),
             ),
-            'template': hist.Hist(
+            'jptemplate': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
                 hist.Bin('btagJP','btagJP', [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
             'ZHbbvsQCD': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1)
             ),
             'btagJP': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
                 hist.Bin('btagJP','btagJP', [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5])
             ),
             'tau21': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
                 hist.Bin('tau21','tau21', 20, 0, 1)
             ),
             'fjmass': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
                 hist.Bin('fjmass','AK15 Jet Mass',30,0,300)
             ),
             'fj1pt': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
                 hist.Bin('fj1pt','AK15 Leading SoftDrop Jet Pt',[340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
+            ),
+            'svmass': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('svmass','Leading Secondary Vertices (SV) mass',[-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1,  0.,   0.1,  0.2,  0.3,  0.4,  0.5, 0.6,  0.7,  0.8,  0.9,  1.,  1.1,  1.2,  1.3,  1.4,  1.5,  1.6,  1.7,  1.8,  1.9, 2.,  2.1,  2.2,  2.3,  2.4,  2.5,  2.6,  2.7,  2.8,  2.9,  3.,   3.1,  3.2])
+            ),
+            'svdxysig': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('svdxysig','Leading Secondary Vertices (SV) 2D decay length significance',100,0,3000)
+            ),
+            'svtemplate': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('svmass','Leading Secondary Vertices (SV) mass',[-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1,  0.,   0.1,  0.2,  0.3,  0.4,  0.5, 0.6,  0.7,  0.8,  0.9,  1.,  1.1,  1.2,  1.3,  1.4,  1.5,  1.6,  1.7,  1.8,  1.9, 2.,  2.1,  2.2,  2.3,  2.4,  2.5,  2.6,  2.7,  2.8,  2.9,  3.,   3.1,  3.2]),
+                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
         })
 
@@ -185,8 +204,10 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj['ZHbbvsQCD'] = probZHbb/(probZHbb+probQCD)
         fj['tau21'] = fj.tau2/fj.tau1
 
+        SV = events.SV
+
         ###
-        #Calculating weights
+        # Calculating weights
         ###
         if not isData:
 
@@ -220,9 +241,11 @@ class AnalysisProcessor(processor.ProcessorABC):
         ##### Using the offset function to copy contents not the type of the array #####
         step1 = fj.subjets.flatten()
         step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
+        step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
         step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
 
-        fj['withmu'] = (fj.subjets.counts==2) & (step3.all())
+        ##### fatjet with two subjets matched with muons
+        fj['withmu'] = step3.sum() == 2
 
         ###
         # Selections
@@ -248,6 +271,12 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
         leading_fj = leading_fj[leading_fj.withmu.astype(np.bool)]
 
+        #### SV selection for matched with leading ak15 jet ####
+        SV['ismatched'] = match(SV, leading_fj, 1.5)
+        #leading_SV = SV[SV.pt.argmax()]
+        leading_SV = SV[SV.dxySig.argmax()]
+        leading_SV = leading_SV[leading_SV.ismatched.astype(np.bool)]
+
         #fj_good = fj[fj.isgood.astype(np.bool)]
         #fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
         #fj_nwithmu = fj_withmu.counts
@@ -265,7 +294,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             'btagJP':    leading_fj.btagJP,
             'tau21':     leading_fj.tau21,
             'fjmass':    leading_fj.msd_corr,
-            'fj1pt':     leading_fj.sd.pt
+            'fj1pt':     leading_fj.sd.pt,
+            #'svmass':    leading_SV.mass,
+            'svmass':    np.log(leading_SV.mass),
+            'svdxysig':  leading_SV.dxySig
         }
 
         def fill(dataset, gentype, weight, cut):
@@ -281,7 +313,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                     continue
                 elif histname == 'sumw':
                     continue
-                elif histname == 'template':
+                elif histname == 'jptemplate' or histname == 'svtemplate':
                     continue
                 else:
                     flat_variable = {histname: flat_variables[histname]}
@@ -305,9 +337,18 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hout['cutflow'].fill(dataset=dataset, cutname=str(icut), cut=vcut, weight=jcut)
 
             ##### template for bb SF #####
-            hout['template'].fill(dataset=dataset,
+            ##### btagjp template #####
+            hout['jptemplate'].fill(dataset=dataset,
                     gentype=np.zeros(events.size, dtype=np.int),
                     btagJP=leading_fj.btagJP.sum(),
+                    ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                    weight=np.ones(events.size)*cut
+                    )
+            ##### sv mass template #####
+            hout['svtemplate'].fill(dataset=dataset,
+                    gentype=np.zeros(events.size, dtype=np.int),
+                    #svmass=leading_SV.mass.sum(),
+                    svmass=np.log(leading_SV.mass.sum()),
                     ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                     weight=np.ones(events.size)*cut
                     )
@@ -347,21 +388,39 @@ class AnalysisProcessor(processor.ProcessorABC):
                 fill(dataset, vgentype, weights.weight(), cut)
 
                 ##### template for bb SF #####
-                hout['template'].fill(dataset=dataset,
+                ##### btagjp template #####
+                hout['jptemplate'].fill(dataset=dataset,
                         gentype=vgentype,
                         btagJP=leading_fj.btagJP.sum(),
                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                         weight=weights.weight()*cut
                         )
+                ##### sv mass template #####
+                hout['svtemplate'].fill(dataset=dataset,
+                        gentype=vgentype,
+                        #svmass=leading_SV.mass.sum(),
+                        svmass=np.log(leading_SV.mass.sum()),
+                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                        weight=np.ones(events.size)*cut
+                        )
             else:
                 fill(dataset, vgentype, weights.weight(), np.ones(events.size, dtype=np.int))
 
                 ##### template for bb SF #####
-                hout['template'].fill(dataset=dataset,
+                ##### btagjp template #####
+                hout['jptemplate'].fill(dataset=dataset,
                         gentype=vgentype,
                         btagJP=leading_fj.btagJP.sum(),
                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                         weight=weights.weight()
+                        )
+                ##### sv mass template #####
+                hout['svtemplate'].fill(dataset=dataset,
+                        gentype=vgentype,
+                        #svmass=leading_SV.mass.sum(),
+                        svmass=np.log(leading_SV.mass.sum()),
+                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                        weight=np.ones(events.size)*cut
                         )
 
         return hout

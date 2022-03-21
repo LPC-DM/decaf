@@ -1,2 +1,0 @@
-combineCards.py wmcr2016passrecoil0=wmcr2016passrecoil0.txt > wmcr2016passrecoil0_combined.txt
-text2workspace.py wmcr2016passrecoil0_combined.txt

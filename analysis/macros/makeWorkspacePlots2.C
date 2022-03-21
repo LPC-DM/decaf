@@ -15,14 +15,16 @@ std::vector<int> majorColors = {TColor::GetColor(43, 147, 34),
                                 TColor::GetColor(164, 219, 120),
                                 TColor::GetColor(37, 14, 210),
                                 TColor::GetColor(251, 178, 93)};
-std::vector<std::string> minorNames = {"qcdMC", "gjets", "hbbMC", "dyjetsMC", "vvMC", "stMC", "ttMC"};
+std::vector<std::string> minorNames = {"qcdMC", "gjets", "hbbMC", "dyjetsMC", "vvMC", "stMC", "ttMC", "wjetsMC"};
 std::vector<int> minorColors = {TColor::GetColor(150, 195, 220),
                                 TColor::GetColor(193, 193, 193),
                                 TColor::GetColor(190, 160, 204),
                                 TColor::GetColor(251, 178, 93),
                                 TColor::GetColor(218, 0, 24),
                                 TColor::GetColor(63, 237, 30),
-				TColor::GetColor(43, 147, 34)};
+				                TColor::GetColor(43, 147, 34),
+				                TColor::GetColor(204, 0, 102)
+                                };
 
 /// Legend
 void makeLegend() {
@@ -237,11 +239,14 @@ void makeWorkspacePlots2(const std::string name, int histoTop, int latexY) {
   int nBins = dataPlot->GetNbinsX();
   for (int i = 0; i != nBins; ++i) {
     int bin = i + 1;
+    float bkgsum = 0.;
     std::cout << level << "Bin " << bin << std::endl;
     std::cout << level << level << "DATA: " << dataPlot->GetBinContent(bin) << std::endl;
     for (auto h = allHistos.begin(); h != allHistos.end(); ++h) {
       std::cout << level << level << (*h)->GetTitle() << ": " << (*h)->GetBinContent(bin) << std::endl;
+      bkgsum += (*h)->GetBinContent(bin);
     }
+    std::cout << level << level << "Sum of backgrounds: " << bkgsum << std::endl;
   }
 
   hs->Draw("HIST SAME");
