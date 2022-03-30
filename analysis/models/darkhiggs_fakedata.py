@@ -718,7 +718,7 @@ def model(year, recoil, category, s):
     if category == "pass":
         #### Transfer Factor
         wecr_ttMC.setParamEffect(tt_norm, nMinor_norm)
-        wecr_ttmc.automcstats(epsilon=1e-5) ### automcstats is used for transferfactorsample
+        wecr_ttmc.autoMCStats(epsilon=1e-5) ### autoMCStats is used for transferfactorsample
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wecr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
