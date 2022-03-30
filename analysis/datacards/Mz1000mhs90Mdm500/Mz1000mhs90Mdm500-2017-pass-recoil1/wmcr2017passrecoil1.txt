@@ -1,0 +1,249 @@
+# Datacard for <Channel (wmcr2017passrecoil1) instance at 0x2b6afbf03410> generated on 2022-03-30 15:25:09.891250
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 6 # number of samples minus 1
+kmax 102 # number of nuisance parameters
+shapes * wmcr2017passrecoil1 wmcr2017passrecoil1.root wmcr2017passrecoil1:wmcr2017passrecoil1_$PROCESS wmcr2017passrecoil1:wmcr2017passrecoil1_$PROCESS_$SYSTEMATIC
+bin wmcr2017passrecoil1
+observation 5260.000
+bin                                     wmcr2017passrecoil1  wmcr2017passrecoil1  wmcr2017passrecoil1  wmcr2017passrecoil1  wmcr2017passrecoil1  wmcr2017passrecoil1  wmcr2017passrecoil1
+process                                               wjets                   tt                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
+process                                                   1                    2                    3                    4                    5                    6                    7
+rate                                                  1.000                1.000              575.329               30.533               95.510               11.748               93.059
+btag2017 shape                                            -                    -               1.0000               1.0000               1.0000               1.0000               1.0000
+ew1 lnN                                                   -                    -                    -               1.0004                    -                    -                    -
+ew2Z lnN                                                  -                    -                    -               1.0046                    -                    -                    -
+ew3Z lnN                                                  -                    -                    -               1.0012                    -                    -                    -
+hbb_norm2017pass lnN                                      -                    -                    -                    -                    -               1.2000                    -
+id_mu2017 lnN                                             -                    -               1.0200               1.0200               1.0200               1.0200               1.0200
+iso_mu2017 lnN                                            -                    -               1.0200               1.0200               1.0200               1.0200               1.0200
+jec2017 lnN                                               -                    -               1.0500               1.0500               1.0500               1.0500               1.0500
+lumi2017 lnN                                              -                    -               1.0270               1.0270               1.0270               1.0270               1.0270
+mix lnN                                                   -                    -                    -               1.0026                    -                    -                    -
+qcd1 lnN                                                  -                    -                    -               1.0604                    -                    -                    -
+qcd2 lnN                                                  -                    -                    -               0.9612                    -                    -                    -
+qcdmu_norm2017pass lnN                                    -                    -                    -                    -                    -                    -               2.0000
+st_norm2017pass lnN                                       -                    -               1.2000                    -                    -                    -                    -
+trig_met2017 lnN                                          -                    -               1.0200               1.0200               1.0200               1.0200               1.0200
+veto_tau2017 lnN                                          -                    -               1.0300               1.0300               1.0300               1.0300               1.0300
+vv_norm2017pass lnN                                       -                    -                    -                    -               1.2000                    -                    -
+wmcr2017passrecoil1_mcstat_bin0 shape                     -                    -               1.0000               1.0000               1.0000               1.0000               1.0000
+wmcr2017passrecoil1_mcstat_bin1 shape                     -                    -               1.0000               1.0000               1.0000               1.0000               1.0000
+wmcr2017passrecoil1_mcstat_bin10 shape                    -                    -               1.0000               1.0000               1.0000               1.0000               1.0000
+wmcr2017passrecoil1_mcstat_bin2 shape                     -                    -               1.0000               1.0000               1.0000               1.0000               1.0000
+wmcr2017passrecoil1_mcstat_bin3 shape                     -                    -               1.0000               1.0000               1.0000               1.0000               1.0000
+wmcr2017passrecoil1_mcstat_bin4 shape                     -                    -               1.0000               1.0000               1.0000               1.0000               1.0000
+wmcr2017passrecoil1_mcstat_bin5 shape                     -                    -               1.0000               1.0000               1.0000               1.0000                    -
+wmcr2017passrecoil1_mcstat_bin6 shape                     -                    -               1.0000               1.0000               1.0000               1.0000               1.0000
+wmcr2017passrecoil1_mcstat_bin7 shape                     -                    -               1.0000               1.0000               1.0000               1.0000               1.0000
+wmcr2017passrecoil1_mcstat_bin8 shape                     -                    -               1.0000               1.0000               1.0000               1.0000               1.0000
+wmcr2017passrecoil1_mcstat_bin9 shape                     -                    -               1.0000               1.0000               1.0000               1.0000               1.0000
+zjets_norm2017pass lnN                                    -                    -                    -               1.4000                    -                    -                    -
+ew2W param 0 1
+ew3W param 0 1
+qcd3 param 0 1
+sr2017failrecoil1_wjetsMC_mcstat_bin0 param 0 1
+sr2017failrecoil1_wjetsMC_mcstat_bin1 param 0 1
+sr2017failrecoil1_wjetsMC_mcstat_bin10 param 0 1
+sr2017failrecoil1_wjetsMC_mcstat_bin2 param 0 1
+sr2017failrecoil1_wjetsMC_mcstat_bin3 param 0 1
+sr2017failrecoil1_wjetsMC_mcstat_bin4 param 0 1
+sr2017failrecoil1_wjetsMC_mcstat_bin5 param 0 1
+sr2017failrecoil1_wjetsMC_mcstat_bin6 param 0 1
+sr2017failrecoil1_wjetsMC_mcstat_bin7 param 0 1
+sr2017failrecoil1_wjetsMC_mcstat_bin8 param 0 1
+sr2017failrecoil1_wjetsMC_mcstat_bin9 param 0 1
+sr2017failrecoil1_zjetsMC_mcstat_bin0 param 0 1
+sr2017failrecoil1_zjetsMC_mcstat_bin1 param 0 1
+sr2017failrecoil1_zjetsMC_mcstat_bin10 param 0 1
+sr2017failrecoil1_zjetsMC_mcstat_bin2 param 0 1
+sr2017failrecoil1_zjetsMC_mcstat_bin3 param 0 1
+sr2017failrecoil1_zjetsMC_mcstat_bin4 param 0 1
+sr2017failrecoil1_zjetsMC_mcstat_bin5 param 0 1
+sr2017failrecoil1_zjetsMC_mcstat_bin6 param 0 1
+sr2017failrecoil1_zjetsMC_mcstat_bin7 param 0 1
+sr2017failrecoil1_zjetsMC_mcstat_bin8 param 0 1
+sr2017failrecoil1_zjetsMC_mcstat_bin9 param 0 1
+sr2017passrecoil1_mcstat_bin0 param 0 1
+sr2017passrecoil1_mcstat_bin1 param 0 1
+sr2017passrecoil1_mcstat_bin10 param 0 1
+sr2017passrecoil1_mcstat_bin2 param 0 1
+sr2017passrecoil1_mcstat_bin3 param 0 1
+sr2017passrecoil1_mcstat_bin4 param 0 1
+sr2017passrecoil1_mcstat_bin5 param 0 1
+sr2017passrecoil1_mcstat_bin6 param 0 1
+sr2017passrecoil1_mcstat_bin7 param 0 1
+sr2017passrecoil1_mcstat_bin8 param 0 1
+sr2017passrecoil1_mcstat_bin9 param 0 1
+sr2017passrecoil1_wjetsMC_mcstat_bin0 param 0 1
+sr2017passrecoil1_wjetsMC_mcstat_bin1 param 0 1
+sr2017passrecoil1_wjetsMC_mcstat_bin10 param 0 1
+sr2017passrecoil1_wjetsMC_mcstat_bin2 param 0 1
+sr2017passrecoil1_wjetsMC_mcstat_bin3 param 0 1
+sr2017passrecoil1_wjetsMC_mcstat_bin4 param 0 1
+sr2017passrecoil1_wjetsMC_mcstat_bin5 param 0 1
+sr2017passrecoil1_wjetsMC_mcstat_bin6 param 0 1
+sr2017passrecoil1_wjetsMC_mcstat_bin7 param 0 1
+sr2017passrecoil1_wjetsMC_mcstat_bin8 param 0 1
+sr2017passrecoil1_wjetsMC_mcstat_bin9 param 0 1
+tt_norm param 0 1
+whf_fraction param 0 1
+wjets_norm param 0 1
+wmcr2017passrecoil1_ttMC_mcstat_bin0 param 0 1
+wmcr2017passrecoil1_ttMC_mcstat_bin1 param 0 1
+wmcr2017passrecoil1_ttMC_mcstat_bin10 param 0 1
+wmcr2017passrecoil1_ttMC_mcstat_bin2 param 0 1
+wmcr2017passrecoil1_ttMC_mcstat_bin3 param 0 1
+wmcr2017passrecoil1_ttMC_mcstat_bin4 param 0 1
+wmcr2017passrecoil1_ttMC_mcstat_bin5 param 0 1
+wmcr2017passrecoil1_ttMC_mcstat_bin6 param 0 1
+wmcr2017passrecoil1_ttMC_mcstat_bin7 param 0 1
+wmcr2017passrecoil1_ttMC_mcstat_bin8 param 0 1
+wmcr2017passrecoil1_ttMC_mcstat_bin9 param 0 1
+wmcr2017passrecoil1_wjetsMC_mcstat_bin0 param 0 1
+wmcr2017passrecoil1_wjetsMC_mcstat_bin1 param 0 1
+wmcr2017passrecoil1_wjetsMC_mcstat_bin10 param 0 1
+wmcr2017passrecoil1_wjetsMC_mcstat_bin2 param 0 1
+wmcr2017passrecoil1_wjetsMC_mcstat_bin3 param 0 1
+wmcr2017passrecoil1_wjetsMC_mcstat_bin4 param 0 1
+wmcr2017passrecoil1_wjetsMC_mcstat_bin5 param 0 1
+wmcr2017passrecoil1_wjetsMC_mcstat_bin6 param 0 1
+wmcr2017passrecoil1_wjetsMC_mcstat_bin7 param 0 1
+wmcr2017passrecoil1_wjetsMC_mcstat_bin8 param 0 1
+wmcr2017passrecoil1_wjetsMC_mcstat_bin9 param 0 1
+zjets_norm param 0 1
+sr2017_tt_pass_recoil1_mass0 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_tt_pass_recoil1_mass1 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_tt_pass_recoil1_mass10 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_tt_pass_recoil1_mass2 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_tt_pass_recoil1_mass3 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_tt_pass_recoil1_mass4 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_tt_pass_recoil1_mass5 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_tt_pass_recoil1_mass6 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_tt_pass_recoil1_mass7 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_tt_pass_recoil1_mass8 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_tt_pass_recoil1_mass9 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_zjets_fail_recoil1_mass0 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_zjets_fail_recoil1_mass1 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_zjets_fail_recoil1_mass10 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_zjets_fail_recoil1_mass2 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_zjets_fail_recoil1_mass3 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_zjets_fail_recoil1_mass4 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_zjets_fail_recoil1_mass5 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_zjets_fail_recoil1_mass6 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_zjets_fail_recoil1_mass7 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_zjets_fail_recoil1_mass8 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017_zjets_fail_recoil1_mass9 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_whfMC_bin0_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_whfMC_bin10_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_whfMC_bin1_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_whfMC_bin2_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_whfMC_bin3_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_whfMC_bin4_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_whfMC_bin5_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_whfMC_bin6_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_whfMC_bin7_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_whfMC_bin8_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_whfMC_bin9_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wjetsMC_bin0_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wjetsMC_bin10_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wjetsMC_bin1_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wjetsMC_bin2_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wjetsMC_bin3_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wjetsMC_bin4_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wjetsMC_bin5_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wjetsMC_bin6_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wjetsMC_bin7_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wjetsMC_bin8_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wjetsMC_bin9_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wlfMC_bin0_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wlfMC_bin10_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wlfMC_bin1_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wlfMC_bin2_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wlfMC_bin3_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wlfMC_bin4_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wlfMC_bin5_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wlfMC_bin6_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wlfMC_bin7_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wlfMC_bin8_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_wlfMC_bin9_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_zjetsMC_bin0_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_zjetsMC_bin10_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_zjetsMC_bin1_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_zjetsMC_bin2_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_zjetsMC_bin3_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_zjetsMC_bin4_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_zjetsMC_bin5_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_zjetsMC_bin6_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_zjetsMC_bin7_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_zjetsMC_bin8_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017failrecoil1_zjetsMC_bin9_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_ttMC_bin0_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_ttMC_bin10_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_ttMC_bin1_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_ttMC_bin2_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_ttMC_bin3_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_ttMC_bin4_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_ttMC_bin5_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_ttMC_bin6_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_ttMC_bin7_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_ttMC_bin8_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_ttMC_bin9_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_whfMC_bin0_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_whfMC_bin10_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_whfMC_bin1_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_whfMC_bin2_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_whfMC_bin3_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_whfMC_bin4_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_whfMC_bin5_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_whfMC_bin6_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_whfMC_bin7_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_whfMC_bin8_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_whfMC_bin9_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wjetsMC_bin0_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wjetsMC_bin10_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wjetsMC_bin1_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wjetsMC_bin2_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wjetsMC_bin3_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wjetsMC_bin4_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wjetsMC_bin5_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wjetsMC_bin6_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wjetsMC_bin7_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wjetsMC_bin8_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wjetsMC_bin9_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wlfMC_bin0_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wlfMC_bin10_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wlfMC_bin1_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wlfMC_bin2_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wlfMC_bin3_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wlfMC_bin4_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wlfMC_bin5_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wlfMC_bin6_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wlfMC_bin7_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wlfMC_bin8_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+sr2017passrecoil1_wlfMC_bin9_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+tf_dataResidualW2017_recoil_par0_fjmass_par0 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+tf_dataResidualW2017_recoil_par0_fjmass_par1 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+tf_dataResidualW2017_recoil_par1_fjmass_par0 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+tf_dataResidualW2017_recoil_par1_fjmass_par1 extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_ttMC_bin0_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_ttMC_bin10_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_ttMC_bin1_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_ttMC_bin2_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_ttMC_bin3_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_ttMC_bin4_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_ttMC_bin5_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_ttMC_bin6_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_ttMC_bin7_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_ttMC_bin8_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_ttMC_bin9_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_wjetsMC_bin0_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_wjetsMC_bin10_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_wjetsMC_bin1_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_wjetsMC_bin2_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_wjetsMC_bin3_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_wjetsMC_bin4_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_wjetsMC_bin5_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_wjetsMC_bin6_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_wjetsMC_bin7_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_wjetsMC_bin8_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1
+wmcr2017passrecoil1_wjetsMC_bin9_nominal extArg wmcr2017passrecoil1.root:wmcr2017passrecoil1

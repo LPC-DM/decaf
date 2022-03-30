@@ -1,0 +1,99 @@
+# Datacard for <Channel (tecr2017passrecoil3) instance at 0x2b941e8f0490> generated on 2022-03-30 15:00:34.961146
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 6 # number of samples minus 1
+kmax 55 # number of nuisance parameters
+shapes * tecr2017passrecoil3 tecr2017passrecoil3.root tecr2017passrecoil3:tecr2017passrecoil3_$PROCESS tecr2017passrecoil3:tecr2017passrecoil3_$PROCESS_$SYSTEMATIC
+bin tecr2017passrecoil3
+observation 215.000
+bin                                     tecr2017passrecoil3  tecr2017passrecoil3  tecr2017passrecoil3  tecr2017passrecoil3  tecr2017passrecoil3  tecr2017passrecoil3  tecr2017passrecoil3
+process                                                  tt              wjetsMC                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
+process                                                   1                    2                    3                    4                    5                    6                    7
+rate                                                  1.000               19.807               41.434                0.230                1.653                0.453                0.000
+btag2017 shape                                            -               1.0000               1.0000               1.0000               1.0000               1.0000               1.0000
+ew1 lnN                                                   -               1.0021                    -               1.0018                    -                    -                    -
+ew2W lnN                                                  -               1.0097                    -                    -                    -                    -                    -
+ew2Z lnN                                                  -                    -                    -               1.0081                    -                    -                    -
+ew3W lnN                                                  -               1.0021                    -                    -                    -                    -                    -
+ew3Z lnN                                                  -                    -                    -               1.0047                    -                    -                    -
+hbb_norm2017pass lnN                                      -                    -                    -                    -                    -               1.2000                    -
+id_e2017 lnN                                              -               1.0200               1.0200               1.0200               1.0200               1.0200               1.0200
+jec2017 lnN                                               -               1.0500               1.0500               1.0500               1.0500               1.0500               1.0500
+lumi2017 lnN                                              -               1.0270               1.0270               1.0270               1.0270               1.0270               1.0270
+mix lnN                                                   -               1.0112                    -               1.0045                    -                    -                    -
+qcd1 lnN                                                  -               1.0777                    -               1.0705                    -                    -                    -
+qcd2 lnN                                                  -               0.9787                    -               0.9856                    -                    -                    -
+qcd3 lnN                                                  -               1.0085                    -                    -                    -                    -                    -
+qcde_norm2017pass lnN                                     -                    -                    -                    -                    -                    -               2.0000
+reco_e2017 lnN                                            -               1.0200               1.0200               1.0200               1.0200               1.0200               1.0200
+st_norm2017pass lnN                                       -                    -               1.2000                    -                    -                    -                    -
+tecr2017passrecoil3_mcstat_bin0 shape                     -               1.0000               1.0000               1.0000                    -                    -                    -
+tecr2017passrecoil3_mcstat_bin1 shape                     -               1.0000               1.0000               1.0000                    -                    -                    -
+tecr2017passrecoil3_mcstat_bin10 shape                    -               1.0000               1.0000               1.0000                    -               1.0000                    -
+tecr2017passrecoil3_mcstat_bin2 shape                     -               1.0000               1.0000               1.0000                    -               1.0000                    -
+tecr2017passrecoil3_mcstat_bin3 shape                     -               1.0000               1.0000               1.0000               1.0000               1.0000                    -
+tecr2017passrecoil3_mcstat_bin4 shape                     -               1.0000               1.0000               1.0000               1.0000               1.0000                    -
+tecr2017passrecoil3_mcstat_bin5 shape                     -               1.0000               1.0000               1.0000                    -               1.0000                    -
+tecr2017passrecoil3_mcstat_bin6 shape                     -               1.0000               1.0000               1.0000                    -               1.0000                    -
+tecr2017passrecoil3_mcstat_bin7 shape                     -               1.0000               1.0000               1.0000                    -               1.0000                    -
+tecr2017passrecoil3_mcstat_bin8 shape                     -               1.0000               1.0000               1.0000                    -               1.0000                    -
+tecr2017passrecoil3_mcstat_bin9 shape                     -               1.0000               1.0000               1.0000                    -               1.0000                    -
+trig_e2017 lnN                                            -               1.0100               1.0100               1.0100               1.0100               1.0100               1.0100
+veto_tau2017 lnN                                          -               1.0300               1.0300               1.0300               1.0300               1.0300               1.0300
+vv_norm2017pass lnN                                       -                    -                    -                    -               1.2000                    -                    -
+wjets_norm2017pass lnN                                    -               1.4000                    -                    -                    -                    -                    -
+zjets_norm2017pass lnN                                    -                    -                    -               1.4000                    -                    -                    -
+sr2017passrecoil3_mcstat_bin1 param 0 1
+sr2017passrecoil3_mcstat_bin10 param 0 1
+sr2017passrecoil3_mcstat_bin3 param 0 1
+sr2017passrecoil3_mcstat_bin4 param 0 1
+sr2017passrecoil3_mcstat_bin5 param 0 1
+sr2017passrecoil3_mcstat_bin6 param 0 1
+sr2017passrecoil3_mcstat_bin7 param 0 1
+sr2017passrecoil3_mcstat_bin8 param 0 1
+sr2017passrecoil3_mcstat_bin9 param 0 1
+tecr2017passrecoil3_ttMC_mcstat_bin0 param 0 1
+tecr2017passrecoil3_ttMC_mcstat_bin1 param 0 1
+tecr2017passrecoil3_ttMC_mcstat_bin10 param 0 1
+tecr2017passrecoil3_ttMC_mcstat_bin2 param 0 1
+tecr2017passrecoil3_ttMC_mcstat_bin3 param 0 1
+tecr2017passrecoil3_ttMC_mcstat_bin4 param 0 1
+tecr2017passrecoil3_ttMC_mcstat_bin5 param 0 1
+tecr2017passrecoil3_ttMC_mcstat_bin6 param 0 1
+tecr2017passrecoil3_ttMC_mcstat_bin7 param 0 1
+tecr2017passrecoil3_ttMC_mcstat_bin8 param 0 1
+tecr2017passrecoil3_ttMC_mcstat_bin9 param 0 1
+trig_met2017 param 0 1
+tt_norm param 0 1
+sr2017_tt_pass_recoil3_mass0 extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017_tt_pass_recoil3_mass1 extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017_tt_pass_recoil3_mass10 extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017_tt_pass_recoil3_mass2 extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017_tt_pass_recoil3_mass3 extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017_tt_pass_recoil3_mass4 extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017_tt_pass_recoil3_mass5 extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017_tt_pass_recoil3_mass6 extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017_tt_pass_recoil3_mass7 extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017_tt_pass_recoil3_mass8 extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017_tt_pass_recoil3_mass9 extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017passrecoil3_ttMC_bin0_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017passrecoil3_ttMC_bin10_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017passrecoil3_ttMC_bin1_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017passrecoil3_ttMC_bin2_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017passrecoil3_ttMC_bin3_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017passrecoil3_ttMC_bin4_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017passrecoil3_ttMC_bin5_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017passrecoil3_ttMC_bin6_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017passrecoil3_ttMC_bin7_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017passrecoil3_ttMC_bin8_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+sr2017passrecoil3_ttMC_bin9_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+tecr2017passrecoil3_ttMC_bin0_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+tecr2017passrecoil3_ttMC_bin10_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+tecr2017passrecoil3_ttMC_bin1_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+tecr2017passrecoil3_ttMC_bin2_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+tecr2017passrecoil3_ttMC_bin3_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+tecr2017passrecoil3_ttMC_bin4_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+tecr2017passrecoil3_ttMC_bin5_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+tecr2017passrecoil3_ttMC_bin6_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+tecr2017passrecoil3_ttMC_bin7_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+tecr2017passrecoil3_ttMC_bin8_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3
+tecr2017passrecoil3_ttMC_bin9_nominal extArg tecr2017passrecoil3.root:tecr2017passrecoil3

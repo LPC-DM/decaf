@@ -1,0 +1,103 @@
+# Datacard for <Channel (sr2017passrecoil4) instance at 0x2b2790f5afd0> generated on 2022-03-30 14:17:42.386861
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 8 # number of samples minus 1
+kmax 33 # number of nuisance parameters
+shapes * sr2017passrecoil4 sr2017passrecoil4.root sr2017passrecoil4:sr2017passrecoil4_$PROCESS sr2017passrecoil4:sr2017passrecoil4_$PROCESS_$SYSTEMATIC
+bin sr2017passrecoil4
+observation 234.000
+bin                                     sr2017passrecoil4  sr2017passrecoil4  sr2017passrecoil4  sr2017passrecoil4  sr2017passrecoil4  sr2017passrecoil4  sr2017passrecoil4  sr2017passrecoil4  sr2017passrecoil4
+process                               Mz1000_mhs90_Mdm500              zjets            wjetsMC               ttMC               stMC           dyjetsMC               vvMC              hbbMC              qcdMC
+process                                                 0                  1                  2                  3                  4                  5                  6                  7                  8
+rate                                              721.962              1.000             26.090             13.452              2.422              0.252             16.385              1.635              0.014
+btag2017 shape                                     1.0000                  -             1.0000             1.0000             1.0000             1.0000             1.0000             1.0000             1.0000
+ew1 lnN                                                 -                  -             1.0046                  -                  -             1.0012                  -                  -                  -
+ew2W lnN                                                -                  -             1.0127                  -                  -                  -                  -                  -                  -
+ew2Z lnN                                                -                  -                  -                  -                  -             1.0038                  -                  -                  -
+ew3W lnN                                                -                  -             1.0037                  -                  -                  -                  -                  -                  -
+ew3Z lnN                                                -                  -                  -                  -                  -             1.0027                  -                  -                  -
+hbb_norm2017pass lnN                                    -                  -                  -                  -                  -                  -                  -             1.2000                  -
+jec2017 lnN                                        1.0500                  -             1.0500             1.0500             1.0500             1.0500             1.0500             1.0500             1.0500
+lumi2017 lnN                                       1.0270                  -             1.0270             1.0270             1.0270             1.0270             1.0270             1.0270             1.0270
+mix lnN                                                 -                  -             1.0144                  -                  -             1.0021                  -                  -                  -
+qcd1 lnN                                                -                  -             1.0808                  -                  -             1.0288                  -                  -                  -
+qcd2 lnN                                                -                  -             1.0011                  -                  -             0.9996                  -                  -                  -
+qcd3 lnN                                                -                  -             1.0072                  -                  -                  -                  -                  -                  -
+qcdsig_norm2017pass lnN                                 -                  -                  -                  -                  -                  -                  -                  -             2.0000
+sr2017passrecoil4_mcstat_bin0 shape                     -                  -             1.0000                  -                  -                  -                  -             1.0000             1.0000
+sr2017passrecoil4_mcstat_bin1 shape                     -                  -             1.0000                  -                  -             1.0000                  -             1.0000                  -
+sr2017passrecoil4_mcstat_bin10 shape                    -                  -             1.0000             1.0000             1.0000             1.0000             1.0000             1.0000                  -
+sr2017passrecoil4_mcstat_bin2 shape                     -                  -             1.0000                  -             1.0000             1.0000             1.0000             1.0000                  -
+sr2017passrecoil4_mcstat_bin3 shape                     -                  -             1.0000             1.0000                  -             1.0000             1.0000             1.0000                  -
+sr2017passrecoil4_mcstat_bin4 shape                     -                  -             1.0000             1.0000             1.0000             1.0000             1.0000             1.0000                  -
+sr2017passrecoil4_mcstat_bin5 shape                     -                  -             1.0000             1.0000             1.0000             1.0000             1.0000             1.0000                  -
+sr2017passrecoil4_mcstat_bin6 shape                     -                  -             1.0000             1.0000             1.0000             1.0000             1.0000             1.0000                  -
+sr2017passrecoil4_mcstat_bin7 shape                     -                  -             1.0000             1.0000                  -             1.0000                  -             1.0000                  -
+sr2017passrecoil4_mcstat_bin8 shape                     -                  -             1.0000             1.0000             1.0000             1.0000                  -             1.0000                  -
+sr2017passrecoil4_mcstat_bin9 shape                     -                  -             1.0000             1.0000             1.0000             1.0000             1.0000             1.0000                  -
+st_norm2017pass lnN                                     -                  -                  -                  -             1.2000                  -                  -                  -                  -
+trig_met2017 lnN                                   1.0200                  -             1.0200             1.0200             1.0200             1.0200             1.0200             1.0200             1.0200
+tt_norm2017pass lnN                                     -                  -                  -             1.2000                  -                  -                  -                  -                  -
+veto_tau2017 lnN                                   1.0300                  -             1.0300             1.0300             1.0300             1.0300             1.0300             1.0300             1.0300
+vv_norm2017pass lnN                                     -                  -                  -                  -                  -                  -             1.2000                  -                  -
+wjets_norm2017pass lnN                                  -                  -             1.4000                  -                  -                  -                  -                  -                  -
+zjets_norm2017pass lnN                                  -                  -                  -                  -                  -             1.4000                  -                  -                  -
+zhf_fraction param 0 1
+sr2017_zjets_fail_recoil4_mass0 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass1 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass10 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass2 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass3 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass4 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass5 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass6 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass7 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass8 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass9 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin0_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin10_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin1_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin2_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin3_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin4_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin5_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin6_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin7_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin8_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin9_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin0_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin10_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin1_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin2_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin3_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin4_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin5_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin6_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin7_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin8_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin9_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin0_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin10_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin1_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin2_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin3_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin4_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin5_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin6_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin7_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin8_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin9_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin0_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin10_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin1_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin2_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin3_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin4_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin5_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin6_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin7_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin8_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin9_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+tf_dataResidualZ2017_recoil_par0_fjmass_par0 extArg sr2017passrecoil4.root:sr2017passrecoil4
+tf_dataResidualZ2017_recoil_par0_fjmass_par1 extArg sr2017passrecoil4.root:sr2017passrecoil4
+tf_dataResidualZ2017_recoil_par1_fjmass_par0 extArg sr2017passrecoil4.root:sr2017passrecoil4
+tf_dataResidualZ2017_recoil_par1_fjmass_par1 extArg sr2017passrecoil4.root:sr2017passrecoil4
