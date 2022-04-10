@@ -366,7 +366,7 @@ def model(year, recoil, category, s):
     #addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
 
     if category == "pass" and recoil<4:
-        sr_ttMC.setParamEffect(tt_norm, nMinor_norm)
+        #sr_ttMC.setParamEffect(tt_norm, nMinor_norm)
         sigmascale={
             '2016': 1000,
             '2017': 1000,
