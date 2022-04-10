@@ -1,0 +1,44 @@
+# Datacard for <Channel (tecr2016passrecoil1) instance at 0x2ad1b2f63410> generated on 2022-04-10 11:49:39.220795
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 6 # number of samples minus 1
+kmax 0 # number of nuisance parameters
+shapes * tecr2016passrecoil1 tecr2016passrecoil1.root tecr2016passrecoil1:tecr2016passrecoil1_$PROCESS tecr2016passrecoil1:tecr2016passrecoil1_$PROCESS_$SYSTEMATIC
+bin tecr2016passrecoil1
+observation 1424.000
+bin      tecr2016passrecoil1  tecr2016passrecoil1  tecr2016passrecoil1  tecr2016passrecoil1  tecr2016passrecoil1  tecr2016passrecoil1  tecr2016passrecoil1
+process                   tt              wjetsMC                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
+process                    1                    2                    3                    4                    5                    6                    7
+rate                   1.000               77.367              142.481                1.161                3.790                2.430                0.000
+sr2016_tt_pass_recoil1_mass0 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass1 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass10 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass2 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass3 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass4 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass5 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass6 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass7 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass8 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016_tt_pass_recoil1_mass9 extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016passrecoil1_ttMC_bin0_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016passrecoil1_ttMC_bin10_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016passrecoil1_ttMC_bin1_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016passrecoil1_ttMC_bin2_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016passrecoil1_ttMC_bin3_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016passrecoil1_ttMC_bin4_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016passrecoil1_ttMC_bin5_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016passrecoil1_ttMC_bin6_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016passrecoil1_ttMC_bin7_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016passrecoil1_ttMC_bin8_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+sr2016passrecoil1_ttMC_bin9_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+tecr2016passrecoil1_ttMC_bin0_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+tecr2016passrecoil1_ttMC_bin10_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+tecr2016passrecoil1_ttMC_bin1_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+tecr2016passrecoil1_ttMC_bin2_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+tecr2016passrecoil1_ttMC_bin3_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+tecr2016passrecoil1_ttMC_bin4_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+tecr2016passrecoil1_ttMC_bin5_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+tecr2016passrecoil1_ttMC_bin6_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+tecr2016passrecoil1_ttMC_bin7_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+tecr2016passrecoil1_ttMC_bin8_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1
+tecr2016passrecoil1_ttMC_bin9_nominal extArg tecr2016passrecoil1.root:tecr2016passrecoil1

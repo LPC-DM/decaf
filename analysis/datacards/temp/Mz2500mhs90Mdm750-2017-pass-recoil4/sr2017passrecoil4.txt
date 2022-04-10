@@ -1,0 +1,70 @@
+# Datacard for <Channel (sr2017passrecoil4) instance at 0x2b33c461ee90> generated on 2022-04-10 11:50:19.737248
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 8 # number of samples minus 1
+kmax 0 # number of nuisance parameters
+shapes * sr2017passrecoil4 sr2017passrecoil4.root sr2017passrecoil4:sr2017passrecoil4_$PROCESS sr2017passrecoil4:sr2017passrecoil4_$PROCESS_$SYSTEMATIC
+bin sr2017passrecoil4
+observation 176.960
+bin        sr2017passrecoil4  sr2017passrecoil4  sr2017passrecoil4  sr2017passrecoil4  sr2017passrecoil4  sr2017passrecoil4  sr2017passrecoil4  sr2017passrecoil4  sr2017passrecoil4
+process  Mz2500_mhs90_Mdm750              zjets            wjetsMC               ttMC               stMC           dyjetsMC               vvMC              hbbMC              qcdMC
+process                    0                  1                  2                  3                  4                  5                  6                  7                  8
+rate                1232.707              1.000             26.090             13.452              2.422              0.252             16.385              1.635              0.014
+sr2017_zjets_fail_recoil4_mass0 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass1 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass10 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass2 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass3 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass4 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass5 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass6 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass7 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass8 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017_zjets_fail_recoil4_mass9 extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin0_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin10_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin1_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin2_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin3_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin4_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin5_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin6_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin7_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin8_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zhfMC_bin9_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin0_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin10_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin1_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin2_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin3_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin4_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin5_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin6_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin7_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin8_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017failrecoil4_zlfMC_bin9_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin0_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin10_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin1_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin2_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin3_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin4_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin5_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin6_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin7_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin8_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zhfMC_bin9_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin0_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin10_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin1_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin2_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin3_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin4_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin5_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin6_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin7_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin8_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+sr2017passrecoil4_zlfMC_bin9_nominal extArg sr2017passrecoil4.root:sr2017passrecoil4
+tf_dataResidualZ2017_recoil_par0_fjmass_par0 extArg sr2017passrecoil4.root:sr2017passrecoil4
+tf_dataResidualZ2017_recoil_par0_fjmass_par1 extArg sr2017passrecoil4.root:sr2017passrecoil4
+tf_dataResidualZ2017_recoil_par1_fjmass_par0 extArg sr2017passrecoil4.root:sr2017passrecoil4
+tf_dataResidualZ2017_recoil_par1_fjmass_par1 extArg sr2017passrecoil4.root:sr2017passrecoil4

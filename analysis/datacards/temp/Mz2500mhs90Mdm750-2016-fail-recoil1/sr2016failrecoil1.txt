@@ -1,0 +1,44 @@
+# Datacard for <Channel (sr2016failrecoil1) instance at 0x2b3bc284fdd0> generated on 2022-04-10 11:50:06.393957
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 8 # number of samples minus 1
+kmax 0 # number of nuisance parameters
+shapes * sr2016failrecoil1 sr2016failrecoil1.root sr2016failrecoil1:sr2016failrecoil1_$PROCESS sr2016failrecoil1:sr2016failrecoil1_$PROCESS_$SYSTEMATIC
+bin sr2016failrecoil1
+observation 36802.000
+bin        sr2016failrecoil1  sr2016failrecoil1  sr2016failrecoil1  sr2016failrecoil1  sr2016failrecoil1  sr2016failrecoil1  sr2016failrecoil1  sr2016failrecoil1  sr2016failrecoil1
+process  Mz2500_mhs90_Mdm750              zjets              wjets               ttMC               stMC           dyjetsMC               vvMC              hbbMC              qcdMC
+process                    0                  1                  2                  3                  4                  5                  6                  7                  8
+rate                 234.829              1.000              1.000            825.345            129.918            136.212            773.217              1.730             74.904
+sr2016_zjets_fail_recoil1_mass0 extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016_zjets_fail_recoil1_mass1 extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016_zjets_fail_recoil1_mass10 extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016_zjets_fail_recoil1_mass2 extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016_zjets_fail_recoil1_mass3 extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016_zjets_fail_recoil1_mass4 extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016_zjets_fail_recoil1_mass5 extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016_zjets_fail_recoil1_mass6 extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016_zjets_fail_recoil1_mass7 extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016_zjets_fail_recoil1_mass8 extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016_zjets_fail_recoil1_mass9 extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_wjetsMC_bin0_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_wjetsMC_bin10_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_wjetsMC_bin1_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_wjetsMC_bin2_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_wjetsMC_bin3_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_wjetsMC_bin4_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_wjetsMC_bin5_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_wjetsMC_bin6_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_wjetsMC_bin7_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_wjetsMC_bin8_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_wjetsMC_bin9_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_zjetsMC_bin0_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_zjetsMC_bin10_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_zjetsMC_bin1_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_zjetsMC_bin2_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_zjetsMC_bin3_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_zjetsMC_bin4_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_zjetsMC_bin5_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_zjetsMC_bin6_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_zjetsMC_bin7_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_zjetsMC_bin8_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1
+sr2016failrecoil1_zjetsMC_bin9_nominal extArg sr2016failrecoil1.root:sr2016failrecoil1

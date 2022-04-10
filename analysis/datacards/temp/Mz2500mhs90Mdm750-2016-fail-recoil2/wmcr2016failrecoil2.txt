@@ -1,0 +1,66 @@
+# Datacard for <Channel (wmcr2016failrecoil2) instance at 0x2ab56f510c90> generated on 2022-04-10 11:46:20.512246
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 6 # number of samples minus 1
+kmax 0 # number of nuisance parameters
+shapes * wmcr2016failrecoil2 wmcr2016failrecoil2.root wmcr2016failrecoil2:wmcr2016failrecoil2_$PROCESS wmcr2016failrecoil2:wmcr2016failrecoil2_$PROCESS_$SYSTEMATIC
+bin wmcr2016failrecoil2
+observation 12714.000
+bin      wmcr2016failrecoil2  wmcr2016failrecoil2  wmcr2016failrecoil2  wmcr2016failrecoil2  wmcr2016failrecoil2  wmcr2016failrecoil2  wmcr2016failrecoil2
+process                wjets                 ttMC                 stMC             dyjetsMC                 vvMC                hbbMC                qcdMC
+process                    1                    2                    3                    4                    5                    6                    7
+rate                   1.000              901.352              235.031              180.438              400.306                0.633              212.438
+sr2016_zjets_fail_recoil2_mass0 extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016_zjets_fail_recoil2_mass1 extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016_zjets_fail_recoil2_mass10 extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016_zjets_fail_recoil2_mass2 extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016_zjets_fail_recoil2_mass3 extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016_zjets_fail_recoil2_mass4 extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016_zjets_fail_recoil2_mass5 extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016_zjets_fail_recoil2_mass6 extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016_zjets_fail_recoil2_mass7 extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016_zjets_fail_recoil2_mass8 extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016_zjets_fail_recoil2_mass9 extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin0_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin0_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin10_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin10_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin1_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin1_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin2_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin2_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin3_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin3_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin4_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin4_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin5_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin5_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin6_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin6_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin7_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin7_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin8_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin8_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin9_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_wjetsMC_bin9_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_zjetsMC_bin0_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_zjetsMC_bin10_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_zjetsMC_bin1_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_zjetsMC_bin2_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_zjetsMC_bin3_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_zjetsMC_bin4_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_zjetsMC_bin5_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_zjetsMC_bin6_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_zjetsMC_bin7_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_zjetsMC_bin8_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+sr2016failrecoil2_zjetsMC_bin9_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+wmcr2016failrecoil2_wjetsMC_bin0_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+wmcr2016failrecoil2_wjetsMC_bin10_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+wmcr2016failrecoil2_wjetsMC_bin1_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+wmcr2016failrecoil2_wjetsMC_bin2_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+wmcr2016failrecoil2_wjetsMC_bin3_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+wmcr2016failrecoil2_wjetsMC_bin4_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+wmcr2016failrecoil2_wjetsMC_bin5_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+wmcr2016failrecoil2_wjetsMC_bin6_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+wmcr2016failrecoil2_wjetsMC_bin7_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+wmcr2016failrecoil2_wjetsMC_bin8_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
+wmcr2016failrecoil2_wjetsMC_bin9_nominal extArg wmcr2016failrecoil2.root:wmcr2016failrecoil2
