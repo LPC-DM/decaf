@@ -362,11 +362,11 @@ def model(year, recoil, category, s):
     #sr_ttMC.setParamEffect(trig_met, ntrig_met)
     #sr_ttMC.setParamEffect(veto_tau, nveto_tau)
     #sr_ttMC.setParamEffect(jec, njec)
+    #sr_ttMC.setParamEffect(tt_norm, nMinor_norm)
     #addBBliteSyst(sr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
     #addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
 
     if category == "pass" and recoil<4:
-        #sr_ttMC.setParamEffect(tt_norm, nMinor_norm)
         sigmascale={
             '2016': 1000,
             '2017': 1000,
@@ -378,20 +378,22 @@ def model(year, recoil, category, s):
                 rl.IndependentParameter(
                     "sr" + year + "_tt_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i,
                     0,
-                    -1*sigmascale[year],
-                    sigmascale[year],
+                    -200,
+                    50,
                 )
                 for i in range(sr_ttObservable.nbins)
             ]
         )
-        sr_ttBinYields = sr_ttTemplate[0] * (1 + (sigmascale[year]/np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
+        sr_ttBinYields = sr_ttTemplate[0] * (1 + (0.1/np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
+        #sr_ttBinYields = sr_ttTemplate[0] * (1 + (100./np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
+        #sr_ttBinYields = sr_ttTemplate[0] * (1 + (sigmascale[year]/np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
+        #sr_ttBinYields = np.array([rl.IndependentParameter('tmp', b, 1e-5, sr_ttTemplate[0].max()*2) for b in sr_ttTemplate[0]])
 
         sr_tt = rl.ParametericSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields
         )
         sr.addSample(sr_tt)
     else:
-        #sr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
         sr.addSample(sr_ttMC)
 
     ###
@@ -539,13 +541,13 @@ def model(year, recoil, category, s):
     #wmcr_ttMC.setParamEffect(jec, njec)
     #wmcr_ttMC.setParamEffect(id_mu, nlepton)
     #wmcr_ttMC.setParamEffect(iso_mu, nlepton)
+    #wmcr_ttMC.setParamEffect(tt_norm, nMinor_norm)
     #addBBliteSyst(wmcr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
     #wmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
     #addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
 
     if category == "pass":
         #### Transfer Factor
-        #wmcr_ttMC.setParamEffect(tt_norm, nMinor_norm)
         #wmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wmcr_tt = rl.TransferFactorSample(
@@ -553,7 +555,6 @@ def model(year, recoil, category, s):
         )
         wmcr.addSample(wmcr_tt)
     else:
-        #wmcr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
         #addBBliteSyst(wmcr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
         wmcr.addSample(wmcr_ttMC)
 
@@ -711,13 +712,13 @@ def model(year, recoil, category, s):
     #wecr_ttMC.setParamEffect(jec, njec)
     #wecr_ttMC.setParamEffect(id_e, nlepton)
     #wecr_ttMC.setParamEffect(reco_e, nlepton)
+    #wecr_ttMC.setParamEffect(tt_norm, nMinor_norm)
     #addBBliteSyst(wecr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
     #wecr_ttmc.automcstats(epsilon=1e-5) ### automcstats is used for transferfactorsample
     #addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category)
 
     if category == "pass":
         #### Transfer Factor
-        #wecr_ttMC.setParamEffect(tt_norm, nMinor_norm)
         #wecr_ttmc.autoMCStats(epsilon=1e-5) ### autoMCStats is used for transferfactorsample
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wecr_tt = rl.TransferFactorSample(
@@ -725,7 +726,6 @@ def model(year, recoil, category, s):
         )
         wecr.addSample(wecr_tt)
     else:
-        #wecr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
         #addBBliteSyst(wecr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
         wecr.addSample(wecr_ttMC)
 
@@ -1000,13 +1000,13 @@ def model(year, recoil, category, s):
         rl.Sample.BACKGROUND,
         tecr_ttTemplate
     )
-    #tecr_ttMC.setParamEffect(lumi, nlumi, )
-    #tecr_ttMC.setParamEffect(trig_e, ntrig_e, )
-    #tecr_ttMC.setParamEffect(veto_tau, nveto_tau, )
-    #tecr_ttMC.setParamEffect(tt_norm, nMinor_norm, )
-    #tecr_ttMC.setParamEffect(jec, njec, )
-    #tecr_ttMC.setParamEffect(id_e, nlepton, )
-    #tecr_ttMC.setParamEffect(reco_e, nlepton, )
+    #tecr_ttMC.setParamEffect(lumi, nlumi)
+    #tecr_ttMC.setParamEffect(trig_e, ntrig_e)
+    #tecr_ttMC.setParamEffect(veto_tau, nveto_tau)
+    #tecr_ttMC.setParamEffect(tt_norm, nMinor_norm)
+    #tecr_ttMC.setParamEffect(jec, njec)
+    #tecr_ttMC.setParamEffect(id_e, nlepton)
+    #tecr_ttMC.setParamEffect(reco_e, nlepton)
     #addBBliteSyst(tecr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
     #tecr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
     #addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category)
@@ -1290,8 +1290,6 @@ if __name__ == "__main__":
             sr_zhfMCFailTemplate
         )
         #sr_zhfMCFail.setParamEffect(zhf_fraction, nVjets_norm, )
-        #addBBliteSyst(sr_zhfMCFail, param, epsilon=1e-5) ### replace autoMCStats
-        #sr_zhfMCFail.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
 
         sr_zlfMCFailTemplate = template(background, "Z+LF", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
         sr_zlfMCFail = rl.TemplateSample(
@@ -1300,20 +1298,22 @@ if __name__ == "__main__":
             sr_zlfMCFailTemplate
         )
         #sr_zlfMCFail.setParamEffect(zhf_fraction, 0.95)
-        #addBBliteSyst(sr_zlfMCFail, param, epsilon=1e-5) ### replace autoMCStats
-        #sr_zlfMCFail.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
 
         sr_zjetsObservable = rl.Observable("fjmass", sr_zjetsMCFailTemplate[1])
         sr_zjetsParameters = np.array(
             [
                 rl.IndependentParameter(
                     "sr" + year + "_zjets_fail_recoil"+str(recoilbin)+"_mass%d" % i,
-                    0
+                    0,
+                    -20,
+                    20,
                 )
                 for i in range(sr_zjetsObservable.nbins)
             ]
         )
-        sr_zjetsBinYields = sr_zjetsMCFailTemplate[0] * (1 + (10./np.maximum(1., np.sqrt(sr_zjetsMCFailTemplate[0]))))**sr_zjetsParameters
+        sr_zjetsBinYields = sr_zjetsMCFailTemplate[0] * (1 + (5./np.maximum(1., np.sqrt(sr_zjetsMCFailTemplate[0]))))**sr_zjetsParameters
+        #sr_zjetsBinYields = sr_zjetsMCFailTemplate[0] * (1 + (10./np.maximum(1., np.sqrt(sr_zjetsMCFailTemplate[0]))))**sr_zjetsParameters
+        #sr_zjetsBinYields = np.array([rl.IndependentParameter('tmp', b, 1e-5, sr_zjetsMCFailTemplate[0].max()*2) for b in sr_zjetsMCFailTemplate[0]])
 
         sr_zjetsFail = rl.ParametericSample(
             "sr" + year + "fail" + "recoil" + str(recoilbin)+ "_zjets",
@@ -1345,8 +1345,6 @@ if __name__ == "__main__":
             sr_whfMCFailTemplate
         )
         #sr_whfMCFail.setParamEffect(whf_fraction, nVjets_norm, )
-        #addBBliteSyst(sr_whfMCFail, param, epsilon=1e-5) ### replace autoMCStats
-        #sr_whfMCFail.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
 
         sr_wlfMCFailTemplate = template(background, "W+LF", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
         sr_wlfMCFail = rl.TemplateSample(
@@ -1355,8 +1353,6 @@ if __name__ == "__main__":
             sr_wlfMCFailTemplate
         )
         #sr_wlfMCFail.setParamEffect(whf_fraction, 0.9)
-        #addBBliteSyst(sr_wlfMCFail, param, epsilon=1e-5) ### replace autoMCStats
-        #sr_wlfMCFail.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
 
         sr_wjetsFailTransferFactor = sr_wjetsMCFail.getExpectation() / sr_zjetsMCFail.getExpectation()
         sr_wjetsFail = rl.TransferFactorSample(
@@ -1389,8 +1385,6 @@ if __name__ == "__main__":
             sr_zhfMCPassTemplate
         )
         #sr_zhfMCPass.setParamEffect(zhf_fraction, nVjets_norm, )
-        #sr_zhfMCPass.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
-        #addBBliteSyst(sr_zhfMCPass, param, epsilon=1e-5) ### replace autoMCStats
 
         sr_zlfMCPassTemplate = template(background, "Z+LF", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
         sr_zlfMCPass = rl.TemplateSample(
@@ -1399,11 +1393,9 @@ if __name__ == "__main__":
             sr_zlfMCPassTemplate
         )
         #sr_zlfMCPass.setParamEffect(zhf_fraction, 0.95)
-        #addBBliteSyst(sr_zlfMCPass, param, epsilon=1e-5) ### replace autoMCStats
-        #sr_zlfMCPass.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
 
         tf_paramsZdeco = (sr_zlfMCPass.getExpectation()+sr_zhfMCPass.getExpectation()) / (sr_zlfMCFail.getExpectation()+sr_zhfMCFail.getExpectation())
-        tf_paramsZ = tf_paramsZdeco * tf_dataResidualZ_params[recoilbin, :]
+        tf_paramsZ = tf_paramsZdeco #* tf_dataResidualZ_params[recoilbin, :]
 
         sr_zjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_zjets",
@@ -1435,8 +1427,6 @@ if __name__ == "__main__":
             sr_whfMCPassTemplate
         )
         #sr_whfMCPass.setParamEffect(whf_fraction, nVjets_norm)
-        #sr_whfMCPass.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
-        #addBBliteSyst(sr_whfMCPass, param, epsilon=1e-5) ### replace autoMCStats
 
         sr_wlfMCPassTemplate = template(background, "W+LF", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
         sr_wlfMCPass = rl.TemplateSample(
@@ -1445,11 +1435,9 @@ if __name__ == "__main__":
             sr_wlfMCPassTemplate
         )
         #sr_wlfMCPass.setParamEffect(whf_fraction, 0.9)
-        #addBBliteSyst(sr_wlfMCPass, param, epsilon=1e-5) ### replace autoMCStats
-        #sr_wlfMCPass.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
 
         tf_paramsWdeco = (sr_wlfMCPass.getExpectation()+sr_whfMCPass.getExpectation()) / (sr_wlfMCFail.getExpectation()+sr_whfMCFail.getExpectation())
-        tf_paramsW = tf_paramsWdeco * tf_dataResidualW_params[recoilbin, :]
+        tf_paramsW = tf_paramsWdeco #* tf_dataResidualW_params[recoilbin, :]
 
         sr_wjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "recoil" + str(recoilbin)+ "_wjets",
