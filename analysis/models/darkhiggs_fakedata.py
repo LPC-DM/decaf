@@ -326,17 +326,17 @@ def model(year, recoil, category, s):
         sr_wjetsMC = sr_wjetsMCPass
         sr_wjetsTemplate = sr_wjetsMCPassTemplate
         sr_wjets = sr_wjetsPass
-        if not (recoil<4):
+        if not (recoil<4): ### W+jets modeled by MC instead of data-driven in the last recoil bin
             sr_wjetsMC = rl.TemplateSample(
                 "sr" + model_id + "_wjetsMC",
                 rl.Sample.BACKGROUND,
                 sr_wjetsTemplate
             )
-            #sr_wjetsMC.setParamEffect(lumi, nlumi)
-            #sr_wjetsMC.setParamEffect(trig_met, ntrig_met)
-            #sr_wjetsMC.setParamEffect(veto_tau, nveto_tau)
-            #sr_wjetsMC.setParamEffect(wjetsMC_norm, nVjets_norm)
-            #sr_wjetsMC.setParamEffect(jec, njec)
+            sr_wjetsMC.setParamEffect(lumi, nlumi)
+            sr_wjetsMC.setParamEffect(trig_met, ntrig_met)
+            sr_wjetsMC.setParamEffect(veto_tau, nveto_tau)
+            sr_wjetsMC.setParamEffect(wjetsMC_norm, nVjets_norm)
+            sr_wjetsMC.setParamEffect(jec, njec)
             #addBBliteSyst(sr_wjetsMC, param, epsilon=1e-5) ### replace autoMCStats
             #addBtagSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
             #addVJetsSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
@@ -362,11 +362,11 @@ def model(year, recoil, category, s):
     #sr_ttMC.setParamEffect(trig_met, ntrig_met)
     #sr_ttMC.setParamEffect(veto_tau, nveto_tau)
     #sr_ttMC.setParamEffect(jec, njec)
-    #sr_ttMC.setParamEffect(tt_norm, nMinor_norm)
     #addBBliteSyst(sr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
     #addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
 
     if category == "pass" and recoil<4:
+        #sr_ttMC.setParamEffect(tt_norm, nMinor_norm)
         sigmascale={
             '2016': 1000,
             '2017': 1000,
@@ -393,7 +393,12 @@ def model(year, recoil, category, s):
             ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields
         )
         sr.addSample(sr_tt)
-    else:
+    else: ### TT process modeled by MC
+        sr_ttMC.setParamEffect(lumi, nlumi)
+        sr_ttMC.setParamEffect(trig_met, ntrig_met)
+        sr_ttMC.setParamEffect(veto_tau, nveto_tau)
+        sr_ttMC.setParamEffect(jec, njec)
+        sr_ttMC.setParamEffect(ttMC_norm, nMinor_norm) ### ttMC should be applied for SR fail
         sr.addSample(sr_ttMC)
 
     ###
@@ -462,10 +467,10 @@ def model(year, recoil, category, s):
     sr_signal = rl.TemplateSample(
         ch_name + "_" + str(s), rl.Sample.SIGNAL, sr_signalTemplate
     )
-    #sr_signal.setParamEffect(lumi, nlumi)
-    #sr_signal.setParamEffect(trig_met, ntrig_met)
-    #sr_signal.setParamEffect(veto_tau, nveto_tau)
-    #sr_signal.setParamEffect(jec, njec)
+    sr_signal.setParamEffect(lumi, nlumi)
+    sr_signal.setParamEffect(trig_met, ntrig_met)
+    sr_signal.setParamEffect(veto_tau, nveto_tau)
+    sr_signal.setParamEffect(jec, njec)
     #addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category)
     #addBBliteSyst(sr_signal, param, epsilon=1e-5) ### replace autoMCStats
     sr.addSample(sr_signal)
@@ -541,21 +546,28 @@ def model(year, recoil, category, s):
     #wmcr_ttMC.setParamEffect(jec, njec)
     #wmcr_ttMC.setParamEffect(id_mu, nlepton)
     #wmcr_ttMC.setParamEffect(iso_mu, nlepton)
-    #wmcr_ttMC.setParamEffect(tt_norm, nMinor_norm)
     #addBBliteSyst(wmcr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
     #wmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
     #addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
 
     if category == "pass":
         #### Transfer Factor
+        #wmcr_ttMC.setParamEffect(tt_norm, nMinor_norm)
         #wmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wmcr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
         )
         wmcr.addSample(wmcr_tt)
-    else:
+    else: ### TT process modeled by MC
         #addBBliteSyst(wmcr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
+        wmcr_ttMC.setParamEffect(lumi, nlumi)
+        wmcr_ttMC.setParamEffect(trig_met, ntrig_met)
+        wmcr_ttMC.setParamEffect(veto_tau, nveto_tau)
+        wmcr_ttMC.setParamEffect(jec, njec)
+        wmcr_ttMC.setParamEffect(id_mu, nlepton)
+        wmcr_ttMC.setParamEffect(iso_mu, nlepton)
+        wmcr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
         wmcr.addSample(wmcr_ttMC)
 
     ###
@@ -712,21 +724,28 @@ def model(year, recoil, category, s):
     #wecr_ttMC.setParamEffect(jec, njec)
     #wecr_ttMC.setParamEffect(id_e, nlepton)
     #wecr_ttMC.setParamEffect(reco_e, nlepton)
-    #wecr_ttMC.setParamEffect(tt_norm, nMinor_norm)
     #addBBliteSyst(wecr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
     #wecr_ttmc.automcstats(epsilon=1e-5) ### automcstats is used for transferfactorsample
     #addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category)
 
     if category == "pass":
         #### Transfer Factor
+        #wecr_ttMC.setParamEffect(tt_norm, nMinor_norm)
         #wecr_ttmc.autoMCStats(epsilon=1e-5) ### autoMCStats is used for transferfactorsample
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wecr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
         )
         wecr.addSample(wecr_tt)
-    else:
+    else: ### TT process modeled by MC
         #addBBliteSyst(wecr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
+        wecr_ttMC.setParamEffect(lumi, nlumi)
+        wecr_ttMC.setParamEffect(trig_e, ntrig_e)
+        wecr_ttMC.setParamEffect(veto_tau, nveto_tau)
+        wecr_ttMC.setParamEffect(jec, njec)
+        wecr_ttMC.setParamEffect(id_e, nlepton)
+        wecr_ttMC.setParamEffect(reco_e, nlepton)
+        wecr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
         wecr.addSample(wecr_ttMC)
 
     ###
