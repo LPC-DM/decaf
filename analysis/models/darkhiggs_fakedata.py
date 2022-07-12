@@ -70,184 +70,73 @@ def simple_error_propagation(pw, tw, pw2, tw2, debug=False):
 
 def signal_xsecScale(signal, year, s):
 
-    xsec = {
-        "2018": {
-            ### 2018 signal, mhs = 50 GeV
-            "Mz200_mhs50_Mdm100": 0.00237,
-            "Mz200_mhs50_Mdm150": 0.014,
-            "Mz300_mhs50_Mdm100": 0.00259,
-            "Mz300_mhs50_Mdm150": 0.0228,
-            "Mz500_mhs50_Mdm150": 0.5302,
-            "Mz500_mhs50_Mdm250": 0.01114,
-            "Mz500_mhs50_Mdm500": 0.0028,
-            "Mz1000_mhs50_Mdm150": 0.262,
-            "Mz1000_mhs50_Mdm500": 0.00259,
-            "Mz1000_mhs50_Mdm1000": 0.0000299,
-            "Mz2000_mhs50_Mdm500": 0.00285,
-            "Mz2000_mhs50_Mdm1000": 0.00011,
-            "Mz2000_mhs50_Mdm1500": 0.0000015,
-            "Mz2500_mhs50_Mdm750": 0.00288,
-            "Mz2500_mhs50_Mdm1250": 0.0000285,
-            "Mz3000_mhs50_Mdm1000": 0.000568,
-            "Mz3000_mhs50_Mdm1500": 0.00000825,
-
-            ### 2018 signal, mhs = 70 GeV
-            "Mz200_mhs70_Mdm100": 0.00297,
-            "Mz200_mhs70_Mdm150": 0.0106,
-            "Mz300_mhs70_Mdm100": 0.00282,
-            "Mz300_mhs70_Mdm150": 0.0207,
-            "Mz500_mhs70_Mdm150": 0.4331,
-            "Mz500_mhs70_Mdm250": 0.01006,
-            "Mz500_mhs70_Mdm500": 0.0027,
-            "Mz1000_mhs70_Mdm150": 0.248,
-            "Mz1000_mhs70_Mdm500": 0.00267,
-            "Mz1000_mhs70_Mdm1000": 0.0000322,
-            "Mz2000_mhs70_Mdm500": 0.002870,
-            "Mz2000_mhs70_Mdm1000": 0.0000823,
-            "Mz2000_mhs70_Mdm1500": 0.00000121,
-            "Mz2500_mhs70_Mdm750": 0.00231,
-            "Mz2500_mhs70_Mdm1250": 0.0000297,
-            "Mz3000_mhs70_Mdm1000": 0.000625,
-            "Mz3000_mhs70_Mdm1500": 0.00000754,
-
-            ### 2018 signal, mhs = 90 GeV
-            "Mz200_mhs90_Mdm100": 0.00266,
-            "Mz200_mhs90_Mdm150": 0.00746,
-            "Mz300_mhs90_Mdm100": 0.00285,
-            "Mz300_mhs90_Mdm150": 0.017,
-            "Mz500_mhs90_Mdm150": 0.3656,
-            "Mz500_mhs90_Mdm250": 0.007744,
-            "Mz500_mhs90_Mdm500": 0.00305,
-            "Mz1000_mhs90_Mdm150": 0.229,
-            "Mz1000_mhs90_Mdm500": 0.00235,
-            "Mz1000_mhs90_Mdm1000": 0.0000213,
-            "Mz2000_mhs90_Mdm500": 0.00275,
-            "Mz2000_mhs90_Mdm1000": 0.0000852,
-            "Mz2000_mhs90_Mdm1500": 0.000000776,
-            "Mz2500_mhs90_Mdm750": 0.0023,
-            "Mz2500_mhs90_Mdm1250": 0.0000214,
-            "Mz3000_mhs90_Mdm1000": 0.000494,
-            "Mz3000_mhs90_Mdm1500": 0.00000631,
-        },
-        "2017": {
-            ### 2017 signal, mhs = 50 GeV
-            "Mz200_mhs50_Mdm100": 0.03731,
-            "Mz200_mhs50_Mdm150": 0.01403,
-            "Mz300_mhs50_Mdm100": 0.9416,
-            "Mz300_mhs50_Mdm150": 0.02491,
-            "Mz500_mhs50_Mdm150": 0.5463,
-            "Mz500_mhs50_Mdm250": 0.01126,
-            "Mz500_mhs50_Mdm500": 0.0007742,
-            "Mz1000_mhs50_Mdm150": 0.2673,
-            "Mz1000_mhs50_Mdm500": 0.001819,
-            "Mz1000_mhs50_Mdm1000": 0.00002765,
-            "Mz2000_mhs50_Mdm500": 0.01298,
-            "Mz2000_mhs50_Mdm1000": 0.00009923,
-            "Mz2000_mhs50_Mdm1500": 0.00000127,
-            "Mz2500_mhs50_Mdm750": 0.002531,
-            "Mz2500_mhs50_Mdm1250": 0.0000273,
-            "Mz3000_mhs50_Mdm1000": 0.000682,
-            "Mz3000_mhs50_Mdm1500": 0.000006627,
-
-            ### 2017 signal, mhs = 70 GeV
-            "Mz200_mhs70_Mdm100": 0.03291,
-            "Mz200_mhs70_Mdm150": 0.01005,
-            "Mz300_mhs70_Mdm100": 0.692,
-            "Mz300_mhs70_Mdm150": 0.02064,
-            "Mz500_mhs70_Mdm150": 0.4272,
-            "Mz500_mhs70_Mdm250": 0.008691,
-            "Mz500_mhs70_Mdm500": 0.000521,
-            "Mz1000_mhs70_Mdm150": 0.2696,
-            "Mz1000_mhs70_Mdm500": 0.001771,
-            "Mz1000_mhs70_Mdm1000": 0.00002518,
-            "Mz2000_mhs70_Mdm500": 0.01219,
-            "Mz2000_mhs70_Mdm1000": 0.00008829,
-            "Mz2000_mhs70_Mdm1500": 0.00000095,
-            "Mz2500_mhs70_Mdm750": 0.002413,
-            "Mz2500_mhs70_Mdm1250": 0.00002339,
-            "Mz3000_mhs70_Mdm1000": 0.0005859,
-            "Mz3000_mhs70_Mdm1500": 0.000005378,
-
-            ### 2017 signal, mhs = 90 GeV
-            "Mz200_mhs90_Mdm100": 0.02033,
-            "Mz200_mhs90_Mdm150": 0.006983,
-            "Mz300_mhs90_Mdm100": 0.6273,
-            "Mz300_mhs90_Mdm150": 0.01709,
-            "Mz500_mhs90_Mdm150": 0.3866,
-            "Mz500_mhs90_Mdm250": 0.008201,
-            "Mz500_mhs90_Mdm500": 0.0004782,
-            "Mz1000_mhs90_Mdm150": 0.2046,
-            "Mz1000_mhs90_Mdm500": 0.001338,
-            "Mz1000_mhs90_Mdm1000": 0.00002335,
-            "Mz2000_mhs90_Mdm500": 0.01064,
-            "Mz2000_mhs90_Mdm1000": 0.00009395,
-            "Mz2000_mhs90_Mdm1500": 0.00000083,
-            "Mz2500_mhs90_Mdm750": 0.002537,
-            "Mz2500_mhs90_Mdm1250": 0.00002279,
-            "Mz3000_mhs90_Mdm1000": 0.0005637,
-            "Mz3000_mhs90_Mdm1500": 0.000006229,
-        },
-        "2016": {
-            ### 2016 signal, mhs = 50 GeV
-            "Mz200_mhs50_Mdm100": 0.03795,
-            "Mz200_mhs50_Mdm150": 0.013,
-            "Mz300_mhs50_Mdm100": 0.936,
-            "Mz300_mhs50_Mdm150": 0.02518,
-            "Mz500_mhs50_Mdm150": 0.533,
-            "Mz500_mhs50_Mdm250": 0.0114,
-            "Mz500_mhs50_Mdm500": 0.000995,
-            "Mz1000_mhs50_Mdm150": 0.338,
-            "Mz1000_mhs50_Mdm500": 0.00226,
-            "Mz1000_mhs50_Mdm1000": 0.0000547,
-            "Mz2000_mhs50_Mdm500": 0.0178,
-            "Mz2000_mhs50_Mdm1000": 0.000156,
-            "Mz2000_mhs50_Mdm1500": 0.00000352,
-            "Mz2500_mhs50_Mdm750": 0.00426,
-            "Mz2500_mhs50_Mdm1250": 0.0000488,
-            "Mz3000_mhs50_Mdm1000": 0.00114,
-            "Mz3000_mhs50_Mdm1500": 0.000017,
-
-            ### 2016 signal, mhs = 70 GeV
-            "Mz200_mhs70_Mdm100": 0.03334,
-            "Mz200_mhs70_Mdm150": 0.0107,
-            "Mz300_mhs70_Mdm100": 0.7,
-            "Mz300_mhs70_Mdm150": 0.02106,
-            "Mz500_mhs70_Mdm150": 0.479,
-            "Mz500_mhs70_Mdm250": 0.009564,
-            "Mz500_mhs70_Mdm500": 0.000773,
-            "Mz1000_mhs70_Mdm150": 0.273,
-            "Mz1000_mhs70_Mdm500": 0.00182,
-            "Mz1000_mhs70_Mdm1000": 0.0000396,
-            "Mz2000_mhs70_Mdm500": 0.0158,
-            "Mz2000_mhs70_Mdm1000": 0.000142,
-            "Mz2000_mhs70_Mdm1500": 0.00000332,
-            "Mz2500_mhs70_Mdm750": 0.00332,
-            "Mz2500_mhs70_Mdm1250": 0.0000468,
-            "Mz3000_mhs70_Mdm1000": 0.00122,
-            "Mz3000_mhs70_Mdm1500": 0.0000155,
-
-            ### 2016 signal, mhs = 90 GeV
-            "Mz200_mhs90_Mdm100": 0.01902,
-            "Mz200_mhs90_Mdm150": 0.00791,
-            "Mz300_mhs90_Mdm100": 0.649,
-            "Mz300_mhs90_Mdm150": 0.01694,
-            "Mz500_mhs90_Mdm150": 0.392,
-            "Mz500_mhs90_Mdm250": 0.008018,
-            "Mz500_mhs90_Mdm500": 0.00073,
-            "Mz1000_mhs90_Mdm150": 0.238,
-            "Mz1000_mhs90_Mdm500": 0.00184,
-            "Mz1000_mhs90_Mdm1000": 0.0000415,
-            "Mz2000_mhs90_Mdm500": 0.013,
-            "Mz2000_mhs90_Mdm1000": 0.000114,
-            "Mz2000_mhs90_Mdm1500": 0.00000297,
-            "Mz2500_mhs90_Mdm750": 0.00343,
-            "Mz2500_mhs90_Mdm1250": 0.0000411,
-            "Mz3000_mhs90_Mdm1000": 0.00103,
-            "Mz3000_mhs90_Mdm1500": 0.0000134,
-        }
+    lumis = { #Values from https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable                                                      
+        '2016': 35.92,
+        '2017': 41.53,
+        '2018': 59.74
     }
 
-    signal["sr"].scale({s:xsec[year][str(s)]},axis='process')
+    ### Take xsec values from 2017/18 gridpacks
+    xsec = {
+        ### 2018 signal, mhs = 50 GeV
+        "Mz200_mhs50_Mdm100": 0.06606,
+        "Mz200_mhs50_Mdm150": 0.02532,
+        "Mz300_mhs50_Mdm100": 1.59,
+        "Mz300_mhs50_Mdm150": 0.04397,
+        "Mz500_mhs50_Mdm150": 0.9072,
+        "Mz500_mhs50_Mdm250": 0.02005,
+        "Mz500_mhs50_Mdm500": 0.001501,
+        "Mz1000_mhs50_Mdm150": 0.5303,
+        "Mz1000_mhs50_Mdm500": 0.003643,
+        "Mz1000_mhs50_Mdm1000": 0.00005978,
+        "Mz2000_mhs50_Mdm500": 0.02582,
+        "Mz2000_mhs50_Mdm1000": 0.0002166,
+        "Mz2000_mhs50_Mdm1500": 0.000002193,
+        "Mz2500_mhs50_Mdm750": 0.005708,
+        "Mz2500_mhs50_Mdm1250": 0.00005828,
+        "Mz3000_mhs50_Mdm1000": 0.00135,
+        "Mz3000_mhs50_Mdm1500": 0.00001537,
+
+        ### 2018 signal, mhs = 70 GeV
+        "Mz200_mhs70_Mdm100": 0.05611,
+        "Mz200_mhs70_Mdm150": 0.02137,
+        "Mz300_mhs70_Mdm100": 1.35,
+        "Mz300_mhs70_Mdm150": 0.03773,
+        "Mz500_mhs70_Mdm150": 0.7866,
+        "Mz500_mhs70_Mdm250": 0.0176,
+        "Mz500_mhs70_Mdm500": 0.001304,
+        "Mz1000_mhs70_Mdm150": 0.4872,
+        "Mz1000_mhs70_Mdm500": 0.003273,
+        "Mz1000_mhs70_Mdm1000": 0.00005328,
+        "Mz2000_mhs70_Mdm500": 0.02432,
+        "Mz2000_mhs70_Mdm1000": 0.0001971,
+        "Mz2000_mhs70_Mdm1500": 0.00000193,
+        "Mz2500_mhs70_Mdm750": 0.005344,
+        "Mz2500_mhs70_Mdm1250": 0.00005322,
+        "Mz3000_mhs70_Mdm1000": 0.001265,
+        "Mz3000_mhs70_Mdm1500": 0.00001412,
+
+        ### 2018 signal, mhs = 90 GeV
+        "Mz200_mhs90_Mdm100": 0.03795,
+        "Mz200_mhs90_Mdm150": 0.01497,
+        "Mz300_mhs90_Mdm100": 1.151,
+        "Mz300_mhs90_Mdm150": 0.03218,
+        "Mz500_mhs90_Mdm150": 0.6832,
+        "Mz500_mhs90_Mdm250": 0.01529,
+        "Mz500_mhs90_Mdm500": 0.001117,
+        "Mz1000_mhs90_Mdm150": 0.4376,
+        "Mz1000_mhs90_Mdm500": 0.002921,
+        "Mz1000_mhs90_Mdm1000": 0.00004682,
+        "Mz2000_mhs90_Mdm500": 0.02272,
+        "Mz2000_mhs90_Mdm1000": 0.0001796,
+        "Mz2000_mhs90_Mdm1500": 0.000001722,
+        "Mz2500_mhs90_Mdm750": 0.005043,
+        "Mz2500_mhs90_Mdm1250": 0.00004879,
+        "Mz3000_mhs90_Mdm1000": 0.001193,
+        "Mz3000_mhs90_Mdm1500": 0.00001292,
+    }
+
+    signal["sr"].scale({s:xsec[str(s)]},axis='process')
 
 
 def template(dictionary, process, systematic, recoil, region, category, read_sumw2=False, bkg=False):
@@ -1649,7 +1538,8 @@ if __name__ == "__main__":
 
         for s in signal["sr"].identifiers("process"):
             print("Signal is:", str(s))
-            signal_xsecScale(signal, year, s) ## scale signal yields by its cross section
+            #signal_xsecScale(signal, year, s) ## scale signal yields by its cross section
+            signal_xsecScale(signal, "2018", s) ## scale signal yields by its cross section
             for category in ["pass", "fail"]:
                 qcdpho_norm = rl.NuisanceParameter("qcdpho_norm" + year + category, "lnN")
                 qcde_norm = rl.NuisanceParameter("qcde_norm" + year + category, "lnN")
