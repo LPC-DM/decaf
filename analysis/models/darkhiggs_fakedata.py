@@ -403,6 +403,7 @@ def model(year, recoil, category, s):
             sr_wjetsMC.setParamEffect(veto_tau, nveto_tau)
             sr_wjetsMC.setParamEffect(wjetsMC_norm, nVjets_norm)
             sr_wjetsMC.setParamEffect(jec, njec)
+            #sr_wjetsMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
             addBBliteSyst(sr_wjetsMC, param, epsilon=1e-5) ### replace autoMCStats
             addBtagSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
             addVJetsSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
@@ -428,11 +429,11 @@ def model(year, recoil, category, s):
     sr_ttMC.setParamEffect(trig_met, ntrig_met)
     sr_ttMC.setParamEffect(veto_tau, nveto_tau)
     sr_ttMC.setParamEffect(jec, njec)
-    addBBliteSyst(sr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
 
     if category == "pass" and recoil<4:
         sr_ttMC.setParamEffect(tt_norm, nMinor_norm)
+        sr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         sigmascale={
             '2016': 1000,
             '2017': 1000,
@@ -465,6 +466,7 @@ def model(year, recoil, category, s):
         #sr_ttMC.setParamEffect(veto_tau, nveto_tau)
         #sr_ttMC.setParamEffect(jec, njec)
         sr_ttMC.setParamEffect(ttMC_norm, nMinor_norm) ### ttMC should be applied for SR fail
+        addBBliteSyst(sr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
         sr.addSample(sr_ttMC)
 
     ###
@@ -586,8 +588,7 @@ def model(year, recoil, category, s):
     wmcr_wjetsMC.setParamEffect(jec, njec)
     wmcr_wjetsMC.setParamEffect(id_mu, nlepton)
     wmcr_wjetsMC.setParamEffect(iso_mu, nlepton)
-    addBBliteSyst(wmcr_wjetsMC, param, epsilon=1e-5) ### replace autoMCStats
-    #wmcr_wjetsMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+    wmcr_wjetsMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
     addBtagSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
 
@@ -612,21 +613,19 @@ def model(year, recoil, category, s):
     wmcr_ttMC.setParamEffect(jec, njec)
     wmcr_ttMC.setParamEffect(id_mu, nlepton)
     wmcr_ttMC.setParamEffect(iso_mu, nlepton)
-    addBBliteSyst(wmcr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
     #wmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
     addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
 
     if category == "pass":
         #### Transfer Factor
         wmcr_ttMC.setParamEffect(tt_norm, nMinor_norm)
-        #wmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+        wmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wmcr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
         )
         wmcr.addSample(wmcr_tt)
     else: ### TT process modeled by MC
-        #addBBliteSyst(wmcr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
         #wmcr_ttMC.setParamEffect(lumi, nlumi)
         #wmcr_ttMC.setParamEffect(trig_met, ntrig_met)
         #wmcr_ttMC.setParamEffect(veto_tau, nveto_tau)
@@ -634,6 +633,7 @@ def model(year, recoil, category, s):
         #wmcr_ttMC.setParamEffect(id_mu, nlepton)
         #wmcr_ttMC.setParamEffect(iso_mu, nlepton)
         wmcr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
+        addBBliteSyst(wmcr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
         wmcr.addSample(wmcr_ttMC)
 
     ###
@@ -762,8 +762,8 @@ def model(year, recoil, category, s):
     wecr_wjetsMC.setParamEffect(jec, njec)
     wecr_wjetsMC.setParamEffect(id_e, nlepton)
     wecr_wjetsMC.setParamEffect(reco_e, nlepton)
-    addBBliteSyst(wecr_wjetsMC, param, epsilon=1e-5) ### replace autoMCStats
-    #wecr_wjetsMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+    #addBBliteSyst(wecr_wjetsMC, param, epsilon=1e-5) ### replace autoMCStats
+    wecr_wjetsMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
     addBtagSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
 
@@ -790,21 +790,20 @@ def model(year, recoil, category, s):
     wecr_ttMC.setParamEffect(jec, njec)
     wecr_ttMC.setParamEffect(id_e, nlepton)
     wecr_ttMC.setParamEffect(reco_e, nlepton)
-    addBBliteSyst(wecr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
+    #addBBliteSyst(wecr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
     #wecr_ttmc.automcstats(epsilon=1e-5) ### automcstats is used for transferfactorsample
     addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category)
 
     if category == "pass":
         #### Transfer Factor
         wecr_ttMC.setParamEffect(tt_norm, nMinor_norm)
-        #wecr_ttmc.autoMCStats(epsilon=1e-5) ### autoMCStats is used for transferfactorsample
+        wecr_ttmc.autoMCStats(epsilon=1e-5) ### autoMCStats is used for transferfactorsample
         wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
         wecr_tt = rl.TransferFactorSample(
             ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt
         )
         wecr.addSample(wecr_tt)
     else: ### TT process modeled by MC
-        #addBBliteSyst(wecr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
         #wecr_ttMC.setParamEffect(lumi, nlumi)
         #wecr_ttMC.setParamEffect(trig_e, ntrig_e)
         #wecr_ttMC.setParamEffect(veto_tau, nveto_tau)
@@ -812,6 +811,7 @@ def model(year, recoil, category, s):
         #wecr_ttMC.setParamEffect(id_e, nlepton)
         #wecr_ttMC.setParamEffect(reco_e, nlepton)
         wecr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
+        addBBliteSyst(wecr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
         wecr.addSample(wecr_ttMC)
 
     ###
@@ -939,8 +939,8 @@ def model(year, recoil, category, s):
     tmcr_ttMC.setParamEffect(jec, njec)
     tmcr_ttMC.setParamEffect(id_mu, nlepton)
     tmcr_ttMC.setParamEffect(iso_mu, nlepton)
-    addBBliteSyst(tmcr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
-    #tmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+    #addBBliteSyst(tmcr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
+    tmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
     addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category)
 
     #### Transfer Factor
@@ -1092,8 +1092,8 @@ def model(year, recoil, category, s):
     tecr_ttMC.setParamEffect(jec, njec)
     tecr_ttMC.setParamEffect(id_e, nlepton)
     tecr_ttMC.setParamEffect(reco_e, nlepton)
-    addBBliteSyst(tecr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
-    #tecr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+    #addBBliteSyst(tecr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
+    tecr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
     addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category)
 
     #### Transfer Factor
@@ -1362,8 +1362,8 @@ if __name__ == "__main__":
         sr_zjetsMCFail.setParamEffect(trig_met, ntrig_met)
         sr_zjetsMCFail.setParamEffect(veto_tau, nveto_tau)
         sr_zjetsMCFail.setParamEffect(jec, njec)
-        addBBliteSyst(sr_zjetsMCFail, param, epsilon=1e-5) ### replace autoMCStats
-        #sr_zjetsMCFail.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+        #addBBliteSyst(sr_zjetsMCFail, param, epsilon=1e-5) ### replace autoMCStats
+        sr_zjetsMCFail.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
 
@@ -1417,8 +1417,8 @@ if __name__ == "__main__":
         sr_wjetsMCFail.setParamEffect(trig_met, ntrig_met)
         sr_wjetsMCFail.setParamEffect(veto_tau, nveto_tau)
         sr_wjetsMCFail.setParamEffect(jec, njec)
-        addBBliteSyst(sr_wjetsMCFail, param, epsilon=1e-5) ### replace autoMCStats
-        #sr_wjetsMCFail.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+        #addBBliteSyst(sr_wjetsMCFail, param, epsilon=1e-5) ### replace autoMCStats
+        sr_wjetsMCFail.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
 
@@ -1457,8 +1457,8 @@ if __name__ == "__main__":
         sr_zjetsMCPass.setParamEffect(trig_met, ntrig_met)
         sr_zjetsMCPass.setParamEffect(veto_tau, nveto_tau)
         sr_zjetsMCPass.setParamEffect(jec, njec)
-        addBBliteSyst(sr_zjetsMCPass, param, epsilon=1e-5) ### replace autoMCStats
-        #sr_zjetsMCPass.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+        #addBBliteSyst(sr_zjetsMCPass, param, epsilon=1e-5) ### replace autoMCStats
+        sr_zjetsMCPass.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
 
@@ -1499,8 +1499,8 @@ if __name__ == "__main__":
         sr_wjetsMCPass.setParamEffect(trig_met, ntrig_met)
         sr_wjetsMCPass.setParamEffect(veto_tau, nveto_tau)
         sr_wjetsMCPass.setParamEffect(jec, njec)
-        addBBliteSyst(sr_wjetsMCPass, param, epsilon=1e-5) ### replace autoMCStats
-        #sr_wjetsMCPass.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+        #addBBliteSyst(sr_wjetsMCPass, param, epsilon=1e-5) ### replace autoMCStats
+        sr_wjetsMCPass.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
 
