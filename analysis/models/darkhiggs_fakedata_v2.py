@@ -238,6 +238,16 @@ def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     addSyst(dictionary, recoil, process, region, templ, category, qcd2, "qcd2")
     addSyst(dictionary, recoil, process, region, templ, category, qcd3, "qcd3")
 
+def addBBliteSyst(templ, param, epsilon=0):
+    for i in range(templ.observable.nbins):
+        if templ._nominal[i] <= 0. or templ._sumw2[i] <= 0.:
+            continue
+        effect_up = np.ones_like(templ._nominal)
+        effect_down = np.ones_like(templ._nominal)
+        effect_up[i] = (templ._nominal[i] + np.sqrt(templ._sumw2[i]))/templ._nominal[i]
+        effect_down[i] = max((templ._nominal[i] - np.sqrt(templ._sumw2[i]))/templ._nominal[i], epsilon)
+        templ.setParamEffect(param[i], effect_up, effect_down)
+
 def model(year, recoil, category, s):
 
     model_id = year + category + "recoil" + str(recoil)
