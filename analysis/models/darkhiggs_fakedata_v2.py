@@ -1296,7 +1296,7 @@ if __name__ == "__main__":
         addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
 
-        tf_paramsZdeco = sr_zjetsMCPass.getExpectation()/ sr_zjetsMCFail.getExpectation()
+        tf_paramsZdeco = sr_zjetsMCPassTemplate[0] / sr_zjetsMCFailTemplate[0]
         tf_paramsZ = tf_paramsZdeco * tf_dataResidualZ_params[recoilbin, :]
 
         sr_zjetsPass = rl.TransferFactorSample(
@@ -1321,7 +1321,7 @@ if __name__ == "__main__":
         addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
 
-        tf_paramsWdeco = sr_wjetsMCPass.getExpectation() / sr_wjetsMCFail.getExpectation()
+        tf_paramsWdeco = sr_wjetsMCPassTemplate[0] / sr_wjetsMCFailTemplate[0]
         tf_paramsW = tf_paramsWdeco * tf_dataResidualW_params[recoilbin, :]
 
         sr_wjetsPass = rl.TransferFactorSample(
