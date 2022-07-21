@@ -1248,6 +1248,7 @@ if __name__ == "__main__":
     recoilscaled = (ptpts - 250.) / (3000. - 250.)
     msdscaled = (msdpts - 40.) / (300.0 - 40.)
     
+    zjetspass_templ = []
     for recoilbin in range(nrecoil):
         zjetspass_templ[recoilbin] = template(background, "Z+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
         zjetsfail_templ[recoilbin] = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
@@ -1255,6 +1256,7 @@ if __name__ == "__main__":
     tf_MCtemplZ = rl.BernsteinPoly("tf_MCtemplZ", (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_MCtemplZ_params = zjetseff * tf_MCtemplZ(recoilscaled, msdscaled)
     
+    wjetspass_templ = []
     for recoilbin in range(nrecoil):
         wjetspass_templ[recoilbin] = template(background, "W+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
         wjetsfail_templ[recoilbin] = template(background, "W+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
