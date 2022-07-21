@@ -1265,8 +1265,8 @@ if __name__ == "__main__":
     zjetspass_templ = []
     zjetsfail_templ = []
     for recoilbin in range(nrecoil):
-        zjetspass_templ.append(template(background, "Z+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True))
-        zjetsfail_templ.append(template(background, "Z+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True))
+        zjetspass_templ.append(template(background, "Z+jets", "nominal", recoilbin, "sr", "pass"))
+        zjetsfail_templ.append(template(background, "Z+jets", "nominal", recoilbin, "sr", "fail"))
     
     zjetsmodel = rl.Model("zjetsmodel")
     zjetseff = efficiency(zjetspass_templ, zjetsfail_templ, zjetsmodel)
@@ -1276,8 +1276,8 @@ if __name__ == "__main__":
     wjetspass_templ = []
     wjetsfail_templ = []
     for recoilbin in range(nrecoil):
-        wjetspass_templ.append(template(background, "W+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True))
-        wjetsfail_templ.append(template(background, "W+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True))
+        wjetspass_templ.append(template(background, "W+jets", "nominal", recoilbin, "sr", "pass"))
+        wjetsfail_templ.append(template(background, "W+jets", "nominal", recoilbin, "sr", "fail"))
         
     wjetsmodel = rl.Model("wjetsmodel")
     wjetseff = efficiency(wjetspass_templ, wjetsfail_templ, wjetsmodel)
