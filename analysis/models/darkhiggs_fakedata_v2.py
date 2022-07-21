@@ -1248,15 +1248,17 @@ if __name__ == "__main__":
     recoilscaled = (ptpts - 250.) / (3000. - 250.)
     msdscaled = (msdpts - 40.) / (300.0 - 40.)
     
-    zjetspass_templ = template(background, "Z+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
-    zjetsfail_templ = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
-    zjetseff = zjetspass / zjetsfail
+    for recoilbin in range(nrecoil):
+        zjetspass_templ[recoilbin] = template(background, "Z+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
+        zjetsfail_templ[recoilbin] = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
+    zjetseff = zjetspass[0].sum() / zjetsfail[0].sum()
     tf_MCtemplZ = rl.BernsteinPoly("tf_MCtemplZ", (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_MCtemplZ_params = zjetseff * tf_MCtemplZ(recoilscaled, msdscaled)
     
-    wjetspass_templ = template(background, "W+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
-    wjetsfail_templ = template(background, "W+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
-    wjetseff = wjetspass / wjetsfail
+    for recoilbin in range(nrecoil):
+        wjetspass_templ[recoilbin] = template(background, "W+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
+        wjetsfail_templ[recoilbin] = template(background, "W+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
+    wjetseff = wjetspass[0].sum() / wjetsfail[0].sum()
     tf_MCtemplW = rl.BernsteinPoly("tf_MCtemplW", (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_MCtemplW_params = wjetseff * tf_MCtemplW(recoilscaled, msdscaled)
     
@@ -1269,8 +1271,8 @@ if __name__ == "__main__":
             passCh = rl.Channel("recoilbin%d%s" % (recoilbin, 'pass'))
             qcdmodel.addChannel(failCh)
             qcdmodel.addChannel(passCh)
-            failCh.setObservation(fail_templ)
-            passCh.setObservation(pass_templ)
+            failCh.setObservation(fail_templ[recoilbin])
+            passCh.setObservation(pass_templ[recoilbin])
             failObs = failCh.getObservation()
             qcdparams = np.array([rl.IndependentParameter('qcdparam_ptbin%d_msdbin%d' % (recoilbin, i), 0) for i in range(msd.nbins)])
             sigmascale = 10.
