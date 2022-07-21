@@ -446,7 +446,7 @@ def model(year, recoil, category, s):
     addBtagSyst(background, recoil, "QCD", "sr", sr_qcd, category)
     sr.addSample(sr_qcd)
 
-    sr_signalTemplate = template(signal, s, "nominal", recoil, "sr", category)
+    sr_signalTemplate = template(signal, s, "nominal", recoil, "sr", category, read_sumw2=True)
     sr_signal = rl.TemplateSample(
         ch_name + "_" + str(s), rl.Sample.SIGNAL, sr_signalTemplate
     )
