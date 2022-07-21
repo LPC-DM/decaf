@@ -1248,7 +1248,7 @@ if __name__ == "__main__":
     recoilscaled = (ptpts - 250.) / (3000. - 250.)
     msdscaled = (msdpts - 40.) / (300.0 - 40.)
     
-    def efficiency(qcdmodel):
+    def efficiency(pass_templ, fail_templ, qcdmodel):
         qcdpass, qcdfail = 0., 0.
         for recoilbin in range(nrecoil):
             failCh = rl.Channel("recoilbin%d%s" % (recoilbin, 'fail'))
@@ -1269,7 +1269,7 @@ if __name__ == "__main__":
         zjetsfail_templ.append(template(background, "Z+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True))
     
     zjetsmodel = rl.Model("zjetsmodel")
-    zjetseff = efficiency(zjetsmodel)
+    zjetseff = efficiency(zjetspass_templ, zjetsfail_templ, zjetsmodel)
     tf_MCtemplZ = rl.BernsteinPoly("tf_MCtemplZ", (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_MCtemplZ_params = zjetseff * tf_MCtemplZ(recoilscaled, msdscaled)
     
@@ -1280,7 +1280,7 @@ if __name__ == "__main__":
         wjetsfail_templ.append(template(background, "W+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True))
         
     wjetsmodel = rl.Model("wjetsmodel")
-    wjetseff = efficiency(wjetsmodel)
+    wjetseff = efficiency(wjetspass_templ, wjetsfail_templ, wjetsmodel)
     tf_MCtemplW = rl.BernsteinPoly("tf_MCtemplW", (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_MCtemplW_params = wjetseff * tf_MCtemplW(recoilscaled, msdscaled)
     
