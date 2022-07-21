@@ -1329,7 +1329,7 @@ if __name__ == "__main__":
         param_names = [p.name for p in tf_MCtempl.parameters.reshape(-1)]
         decoVector = rl.DecorrelatedNuisanceVector.fromRooFitResult(tf_MCtempl.name + '_deco', fit, param_names)
         tf_MCtempl.parameters = decoVector.correlated_params.reshape(tf_MCtempl.parameters.shape)
-        tf_MCtempl_params_final = tf_MCtempl(ptscaled, rhoscaled)
+        tf_MCtempl_params_final = tf_MCtempl(recoilscaled, msdscaled)
         
         return tf_MCtempl_params_final
     
