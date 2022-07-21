@@ -1248,26 +1248,8 @@ if __name__ == "__main__":
     recoilscaled = (ptpts - 250.) / (3000. - 250.)
     msdscaled = (msdpts - 40.) / (300.0 - 40.)
     
-    zjetspass_templ = []
-    for recoilbin in range(nrecoil):
-        zjetspass_templ[recoilbin] = template(background, "Z+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
-        zjetsfail_templ[recoilbin] = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
-    zjetseff = zjetspass[0].sum() / zjetsfail[0].sum()
-    tf_MCtemplZ = rl.BernsteinPoly("tf_MCtemplZ", (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
-    tf_MCtemplZ_params = zjetseff * tf_MCtemplZ(recoilscaled, msdscaled)
-    
-    wjetspass_templ = []
-    for recoilbin in range(nrecoil):
-        wjetspass_templ[recoilbin] = template(background, "W+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True)
-        wjetsfail_templ[recoilbin] = template(background, "W+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True)
-    wjetseff = wjetspass[0].sum() / wjetsfail[0].sum()
-    tf_MCtemplW = rl.BernsteinPoly("tf_MCtemplW", (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
-    tf_MCtemplW_params = wjetseff * tf_MCtemplW(recoilscaled, msdscaled)
-    
-    def rhalphabeth(pass_templ, fail_templ, model_name, tf_MCtempl_params):
-        
-        qcdmodel = rl.Model(model_name+"model")
-    
+    def efficiency(qcdmodel):
+        qcdpass, qcdfail = 0., 0.
         for recoilbin in range(nrecoil):
             failCh = rl.Channel("recoilbin%d%s" % (recoilbin, 'fail'))
             passCh = rl.Channel("recoilbin%d%s" % (recoilbin, 'pass'))
@@ -1275,6 +1257,36 @@ if __name__ == "__main__":
             qcdmodel.addChannel(passCh)
             failCh.setObservation(fail_templ[recoilbin])
             passCh.setObservation(pass_templ[recoilbin])
+            qcdfail += failCh.getObservation().sum()
+            qcdpass += passCh.getObservation().sum()
+            
+        return qcdpass / qcdfail
+    
+    zjetspass_templ = []
+    for recoilbin in range(nrecoil):
+        zjetspass_templ.append(template(background, "Z+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True))
+        zjetsfail_templ.append(template(background, "Z+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True))
+    
+    zjetsmodel = rl.Model("zjetsmodel")
+    zjetseff = efficiency(zjetsmodel)
+    tf_MCtemplZ = rl.BernsteinPoly("tf_MCtemplZ", (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
+    tf_MCtemplZ_params = zjetseff * tf_MCtemplZ(recoilscaled, msdscaled)
+    
+    wjetspass_templ = []
+    for recoilbin in range(nrecoil):
+        wjetspass_templ.append(template(background, "W+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True))
+        wjetsfail_templ.append(template(background, "W+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True))
+        
+    wjetsmodel = rl.Model("wjetsmodel")
+    wjetseff = efficiency(wjetsmodel)
+    tf_MCtemplW = rl.BernsteinPoly("tf_MCtemplW", (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
+    tf_MCtemplW_params = wjetseff * tf_MCtemplW(recoilscaled, msdscaled)
+    
+    def rhalphabeth(pass_templ, fail_templ, qcdmodel, tf_MCtempl_params):
+        
+        for recoilbin in range(nrecoil):
+            failCh = qcdmodel['recoilbin%dfail' % recoilbin]
+            passCh = qcdmodel['recoilbin%dpass' % recoilbin]
             failObs = failCh.getObservation()
             qcdparams = np.array([rl.IndependentParameter('qcdparam_ptbin%d_msdbin%d' % (recoilbin, i), 0) for i in range(msd.nbins)])
             sigmascale = 10.
@@ -1286,8 +1298,8 @@ if __name__ == "__main__":
             
         return qcdmodel
     
-    zjetsmodel = rhalphabeth(zjetspass_templ, zjetsfail_templ, 'zjets', tf_MCtemplZ_params)
-    wjetsmodel = rhalphabeth(wjetspass_templ, wjetsfail_templ, 'wjets', tf_MCtemplW_params)
+    zjetsmodel = rhalphabeth(zjetspass_templ, zjetsfail_templ, zjetsmodel, tf_MCtemplZ_params)
+    wjetsmodel = rhalphabeth(wjetspass_templ, wjetsfail_templ, wjetsmodel, tf_MCtemplW_params)
     
     def fit(model):
         qcdfit_ws = ROOT.RooWorkspace('qcdfit_ws')
