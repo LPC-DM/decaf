@@ -1263,6 +1263,7 @@ if __name__ == "__main__":
         return qcdpass / qcdfail
     
     zjetspass_templ = []
+    zjetsfail_templ = []
     for recoilbin in range(nrecoil):
         zjetspass_templ.append(template(background, "Z+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True))
         zjetsfail_templ.append(template(background, "Z+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True))
@@ -1273,6 +1274,7 @@ if __name__ == "__main__":
     tf_MCtemplZ_params = zjetseff * tf_MCtemplZ(recoilscaled, msdscaled)
     
     wjetspass_templ = []
+    wjetsfail_templ = []
     for recoilbin in range(nrecoil):
         wjetspass_templ.append(template(background, "W+jets", "nominal", recoilbin, "sr", "pass", read_sumw2=True))
         wjetsfail_templ.append(template(background, "W+jets", "nominal", recoilbin, "sr", "fail", read_sumw2=True))
