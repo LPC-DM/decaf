@@ -1293,9 +1293,9 @@ if __name__ == "__main__":
             qcdparams = np.array([rl.IndependentParameter('qcdparam_ptbin%d_msdbin%d' % (recoilbin, i), 0) for i in range(msd.nbins)])
             sigmascale = 10.
             scaledparams = failObs * (1 + sigmascale/np.maximum(1., np.sqrt(failObs)))**qcdparams
-            fail_qcd = rl.ParametericSample('ptbin%dfail_'+model_name % recoilbin, rl.Sample.BACKGROUND, msd, scaledparams)
+            fail_qcd = rl.ParametericSample('ptbin%dfail_'+qcdmodel.name % recoilbin, rl.Sample.BACKGROUND, msd, scaledparams)
             failCh.addSample(fail_qcd)
-            pass_qcd = rl.TransferFactorSample('ptbin%dpass_'+model_name % recoilbin, rl.Sample.BACKGROUND, tf_MCtempl_params[recoilbin, :], fail_qcd)
+            pass_qcd = rl.TransferFactorSample('ptbin%dpass_'+qcdmodel.name % recoilbin, rl.Sample.BACKGROUND, tf_MCtempl_params[recoilbin, :], fail_qcd)
             passCh.addSample(pass_qcd)
             
         return qcdmodel
