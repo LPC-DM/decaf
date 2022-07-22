@@ -528,7 +528,7 @@ def model(year, recoil, category, s):
     else: ### TT process modeled by MC
         wmcr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
         #wmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
-        addBBliteSyst(wmcr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
+        #addBBliteSyst(wmcr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
         wmcr.addSample(wmcr_ttMC)
 
     ###
@@ -1315,8 +1315,8 @@ if __name__ == "__main__":
                             ROOT.RooFit.PrintLevel(-1),
                             )
         qcdfit_ws.add(qcdfit)
-        if "pytest" not in sys.modules:
-            qcdfit_ws.writeToFile(os.path.join(str(tmpdir), 'testModel_qcdfit.root'))
+        #if "pytest" not in sys.modules:
+        #    qcdfit_ws.writeToFile(os.path.join(str(tmpdir), 'testModel_qcdfit.root'))
         if qcdfit.status() != 0:
             raise RuntimeError('Could not fit qcd')
             
