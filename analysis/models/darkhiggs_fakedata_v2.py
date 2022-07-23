@@ -211,9 +211,17 @@ def remap_histograms(hists):
     return hists
 
 def get_mergedMC_stat_variations(dictionary, recoil, region, category, bkg_list):
+    if region == "sr":
+        if category == "pass":
+            if recoil == 4:
+                bkg_list.extend(["W+jets", "TT"])
+        elif category == "fail":
+            bkg_list.extend(["W+jets", "TT"])
+
     if region == "wmcr" or region == "wecr":
         if category == "fail":
             bkg_list.append("TT")
+
     MCbkg = {}
     MCbkg_map = OrderedDict()
     process = hist.Cat("process", "Process", sorting="placement")
@@ -263,7 +271,6 @@ def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     addSyst(dictionary, recoil, process, region, templ, category, qcd2, "qcd2")
     addSyst(dictionary, recoil, process, region, templ, category, qcd3, "qcd3")
 
-
 def model(year, recoil, category, s):
 
     model_id = year + category + "recoil" + str(recoil)
@@ -307,6 +314,12 @@ def model(year, recoil, category, s):
         sr_zjets = sr_zjetsFail
     sr.addSample(sr_zjets)
 
+    ### 
+    # Calculate the total statistical uncertainties with the MC modeled processes
+    ###
+    MC_bkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
+    sr_central, sr_error2 = get_mergedMC_stat_variations(background, recoil, "sr", category, MC_bkgList)
+
     ###
     # W(->lnu)+jets data-driven model
     ###
@@ -326,8 +339,7 @@ def model(year, recoil, category, s):
             sr_wjetsMC.setParamEffect(veto_tau, nveto_tau)
             sr_wjetsMC.setParamEffect(wjetsMC_norm, nVjets_norm)
             sr_wjetsMC.setParamEffect(jec, njec)
-            #addBBliteSyst(sr_wjetsMC, param, epsilon=1e-5) ### replace autoMCStats
-            #sr_wjetsMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+            addBBliteSyst(sr_wjetsMC, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
             addBtagSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
             addVJetsSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
             sr_wjets = sr_wjetsMC
@@ -385,8 +397,7 @@ def model(year, recoil, category, s):
         sr.addSample(sr_tt)
     else: ### TT process modeled by MC
         sr_ttMC.setParamEffect(ttMC_norm, nMinor_norm) ### ttMC should be applied for SR fail
-        #sr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
-        #addBBliteSyst(sr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
+        addBBliteSyst(sr_ttMC, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
         sr.addSample(sr_ttMC)
 
     ###
@@ -400,8 +411,7 @@ def model(year, recoil, category, s):
     sr_st.setParamEffect(veto_tau, nveto_tau)
     sr_st.setParamEffect(st_norm, nMinor_norm)
     sr_st.setParamEffect(jec, njec)
-    #addBBliteSyst(sr_st, param, epsilon=1e-5) ### replace autoMCStats
-    #sr_st.autoMCStats(epsilon=1e-5)
+    addBBliteSyst(sr_st, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoil, "ST", "sr", sr_st, category)
     sr.addSample(sr_st)
 
@@ -414,8 +424,7 @@ def model(year, recoil, category, s):
     sr_dyjets.setParamEffect(veto_tau, nveto_tau)
     sr_dyjets.setParamEffect(zjetsMC_norm, nVjets_norm)
     sr_dyjets.setParamEffect(jec, njec)
-    #addBBliteSyst(sr_dyjets, param, epsilon=1e-5) ### replace autoMCStats
-    #sr_dyjets.autoMCStats(epsilon=1e-5)
+    addBBliteSyst(sr_dyjets, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoil, "DY+jets", "sr", sr_dyjets, category)
     addVJetsSyst(background, recoil, "DY+jets", "sr", sr_dyjets, category)
     sr.addSample(sr_dyjets)
@@ -427,8 +436,7 @@ def model(year, recoil, category, s):
     sr_vv.setParamEffect(veto_tau, nveto_tau)
     sr_vv.setParamEffect(vv_norm, nMinor_norm)
     sr_vv.setParamEffect(jec, njec)
-    #addBBliteSyst(sr_vv, param, epsilon=1e-5) ### replace autoMCStats
-    #sr_vv.autoMCStats(epsilon=1e-5)
+    addBBliteSyst(sr_vv, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoil, "VV", "sr", sr_vv, category)
     sr.addSample(sr_vv)
 
@@ -439,8 +447,7 @@ def model(year, recoil, category, s):
     sr_hbb.setParamEffect(veto_tau, nveto_tau)
     sr_hbb.setParamEffect(hbb_norm, nMinor_norm)
     sr_hbb.setParamEffect(jec, njec)
-    #addBBliteSyst(sr_hbb, param, epsilon=1e-5) ### replace autoMCStats
-    #sr_hbb.autoMCStats(epsilon=1e-5)
+    addBBliteSyst(sr_hbb, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoil, "Hbb", "sr", sr_hbb, category)
     sr.addSample(sr_hbb)
 
@@ -451,8 +458,7 @@ def model(year, recoil, category, s):
     sr_qcd.setParamEffect(veto_tau, nveto_tau)
     sr_qcd.setParamEffect(qcdsig_norm, nqcd_norm)
     sr_qcd.setParamEffect(jec, njec)
-    #addBBliteSyst(sr_qcd, param, epsilon=1e-5) ### replace autoMCStats
-    #sr_qcd.autoMCStats(epsilon=1e-5)
+    addBBliteSyst(sr_qcd, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoil, "QCD", "sr", sr_qcd, category)
     sr.addSample(sr_qcd)
 
@@ -526,8 +532,7 @@ def model(year, recoil, category, s):
     # Calculate the total statistical uncertainties with the MC modeled processes
     # The region dominated by W+jets is needed to add TT for the fail category when calculate the total statistical uncertainty
     ###
-    wmcr_bkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
-    wmcr_central, wmcr_error2 = get_mergedMC_stat_variations(background, recoil, "wmcr", category, wmcr_bkgList)
+    wmcr_central, wmcr_error2 = get_mergedMC_stat_variations(background, recoil, "wmcr", category, MC_bkgList)
 
     ###
     # top-antitop model
@@ -702,8 +707,7 @@ def model(year, recoil, category, s):
     # Calculate the total statistical uncertainties with the MC modeled processes
     # The region dominated by W+jets is needed to add TT for the fail category when calculate the total statistical uncertainty
     ###
-    wecr_bkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
-    wecr_central, wecr_error2 = get_mergedMC_stat_variations(background, recoil, "wecr", category, wecr_bkgList)
+    wecr_central, wecr_error2 = get_mergedMC_stat_variations(background, recoil, "wecr", category, MC_bkgList)
 
     ###
     # top-antitop model
@@ -879,8 +883,7 @@ def model(year, recoil, category, s):
     ### 
     # Calculate the total statistical uncertainties with the MC modeled processes
     ###
-    tmcr_bkgList = ["W+jets", "ST", "DY+jets", "VV", "Hbb", "QCD"]
-    tmcr_central, tmcr_error2 = get_mergedMC_stat_variations(background, recoil, "tmcr", category, tmcr_bkgList)
+    tmcr_central, tmcr_error2 = get_mergedMC_stat_variations(background, recoil, "tmcr", category, MC_bkgList)
 
     tmcr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tmcr", category, read_sumw2=True)
     tmcr_wjets = rl.TemplateSample(
@@ -1037,8 +1040,7 @@ def model(year, recoil, category, s):
     ### 
     # Calculate the total statistical uncertainties with the MC modeled processes
     ###
-    tecr_bkgList = ["W+jets", "ST", "DY+jets", "VV", "Hbb", "QCD"]
-    tecr_central, tecr_error2 = get_mergedMC_stat_variations(background, recoil, "tecr", category, tecr_bkgList)
+    tecr_central, tecr_error2 = get_mergedMC_stat_variations(background, recoil, "tecr", category, MC_bkgList)
 
     tecr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tecr", category, read_sumw2=True)
     tecr_wjets = rl.TemplateSample(
@@ -1273,7 +1275,7 @@ if __name__ == "__main__":
     ptpts, msdpts = np.meshgrid(recoilbins[:-1] + 0.3 * np.diff(recoilbins), msdbins[:-1] + 0.5 * np.diff(msdbins), indexing='ij')
     recoilscaled = (ptpts - 250.) / (3000. - 250.)
     msdscaled = (msdpts - 40.) / (300.0 - 40.)
-    
+
     def efficiency(pass_templ, fail_templ, qcdmodel):
         qcdpass, qcdfail = 0., 0.
         for recoilbin in range(nrecoil):
@@ -1285,33 +1287,33 @@ if __name__ == "__main__":
             passCh.setObservation(pass_templ[recoilbin])
             qcdfail += failCh.getObservation().sum()
             qcdpass += passCh.getObservation().sum()
-            
+
         return qcdpass / qcdfail
-    
+
     zjetspass_templ = []
     zjetsfail_templ = []
     for recoilbin in range(nrecoil):
         zjetspass_templ.append(template(background, "Z+jets", "nominal", recoilbin, "sr", "pass"))
         zjetsfail_templ.append(template(background, "Z+jets", "nominal", recoilbin, "sr", "fail"))
-    
+
     zjetsmodel = rl.Model("zjetsmodel")
     zjetseff = efficiency(zjetspass_templ, zjetsfail_templ, zjetsmodel)
     tf_MCtemplZ = rl.BernsteinPoly("tf_MCtemplZ", (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_MCtemplZ_params = zjetseff * tf_MCtemplZ(recoilscaled, msdscaled)
-    
+
     wjetspass_templ = []
     wjetsfail_templ = []
     for recoilbin in range(nrecoil):
         wjetspass_templ.append(template(background, "W+jets", "nominal", recoilbin, "sr", "pass"))
         wjetsfail_templ.append(template(background, "W+jets", "nominal", recoilbin, "sr", "fail"))
-        
+
     wjetsmodel = rl.Model("wjetsmodel")
     wjetseff = efficiency(wjetspass_templ, wjetsfail_templ, wjetsmodel)
     tf_MCtemplW = rl.BernsteinPoly("tf_MCtemplW", (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_MCtemplW_params = wjetseff * tf_MCtemplW(recoilscaled, msdscaled)
-    
+
     def rhalphabeth(pass_templ, fail_templ, qcdmodel, tf_MCtempl_params):
-        
+
         for recoilbin in range(nrecoil):
             failCh = qcdmodel['recoilbin%dfail' % recoilbin]
             passCh = qcdmodel['recoilbin%dpass' % recoilbin]
@@ -1323,12 +1325,12 @@ if __name__ == "__main__":
             failCh.addSample(fail_qcd)
             pass_qcd = rl.TransferFactorSample('recoilbin'+str(recoilbin)+'pass_'+qcdmodel.name, rl.Sample.BACKGROUND, tf_MCtempl_params[recoilbin, :], fail_qcd)
             passCh.addSample(pass_qcd)
-            
+
         return qcdmodel
-    
+
     zjetsmodel = rhalphabeth(zjetspass_templ, zjetsfail_templ, zjetsmodel, tf_MCtemplZ_params)
     wjetsmodel = rhalphabeth(wjetspass_templ, wjetsfail_templ, wjetsmodel, tf_MCtemplW_params)
-    
+
     def fit(model):
         qcdfit_ws = ROOT.RooWorkspace('qcdfit_ws')
         simpdf, obs = model.renderRoofit(qcdfit_ws)
@@ -1345,24 +1347,24 @@ if __name__ == "__main__":
         #    qcdfit_ws.writeToFile(os.path.join(str(tmpdir), 'testModel_qcdfit.root'))
         if qcdfit.status() != 0:
             raise RuntimeError('Could not fit qcd')
-            
+
         return qcdfit
-    
+
     zjetsfit = fit(zjetsmodel)
     wjetsfit = fit(wjetsmodel)
-    
+
     def shape(fit, tf_MCtempl):
         param_names = [p.name for p in tf_MCtempl.parameters.reshape(-1)]
         decoVector = rl.DecorrelatedNuisanceVector.fromRooFitResult(tf_MCtempl.name + '_deco', fit, param_names)
         tf_MCtempl.parameters = decoVector.correlated_params.reshape(tf_MCtempl.parameters.shape)
         tf_MCtempl_params_final = tf_MCtempl(recoilscaled, msdscaled)
-        
+
         return tf_MCtempl_params_final
-    
+
     tf_MCtemplW_params_final = shape(wjetsfit, tf_MCtemplW)
     tf_dataResidualW = rl.BernsteinPoly("tf_dataResidualW"+year, (0, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_dataResidualW_params = tf_dataResidualW(recoilscaled, msdscaled)
-    
+
     tf_MCtemplZ_params_final = shape(zjetsfit, tf_MCtemplZ)
     tf_dataResidualZ = rl.BernsteinPoly("tf_dataResidualZ"+year, (0, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_dataResidualZ_params = tf_dataResidualZ(recoilscaled, msdscaled)
