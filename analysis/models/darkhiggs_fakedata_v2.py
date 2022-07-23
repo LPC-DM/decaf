@@ -211,6 +211,9 @@ def remap_histograms(hists):
     return hists
 
 def get_mergedMC_stat_variations(dictionary, recoil, region, category, bkg_list):
+    if region == "wmcr" or region == "wecr":
+        if category == "fail":
+            bkg_list.append("TT")
     MCbkg = {}
     MCbkg_map = OrderedDict()
     process = hist.Cat("process", "Process", sorting="placement")
@@ -519,6 +522,13 @@ def model(year, recoil, category, s):
     wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
     wmcr.addSample(wmcr_wjets)
 
+    ### 
+    # Calculate the total statistical uncertainties with the MC modeled processes
+    # The region dominated by W+jets is needed to add TT for the fail category when calculate the total statistical uncertainty
+    ###
+    wmcr_bkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
+    wmcr_central, wmcr_error2 = get_mergedMC_stat_variations(background, recoil, "wmcr", category, wmcr_bkgList)
+
     ###
     # top-antitop model
     ###
@@ -548,8 +558,7 @@ def model(year, recoil, category, s):
         wmcr.addSample(wmcr_tt)
     else: ### TT process modeled by MC
         wmcr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
-        #wmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
-        #addBBliteSyst(wmcr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
+        addBBliteSyst(wmcr_ttMC, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
         wmcr.addSample(wmcr_ttMC)
 
     ###
@@ -567,8 +576,7 @@ def model(year, recoil, category, s):
     wmcr_st.setParamEffect(jec, njec)
     wmcr_st.setParamEffect(id_mu, nlepton)
     wmcr_st.setParamEffect(iso_mu, nlepton)
-    #addBBliteSyst(wmcr_st, param, epsilon=1e-5) ### replace autoMCStats
-    #wmcr_st.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+    addBBliteSyst(wmcr_st, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "ST", "wmcr", wmcr_st, category)
     wmcr.addSample(wmcr_st)
 
@@ -583,8 +591,7 @@ def model(year, recoil, category, s):
     wmcr_dyjets.setParamEffect(jec, njec)
     wmcr_dyjets.setParamEffect(id_mu, nlepton)
     wmcr_dyjets.setParamEffect(iso_mu, nlepton)
-    #addBBliteSyst(wmcr_dyjets, param, epsilon=1e-5) ### replace autoMCStats
-    #wmcr_dyjets.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+    addBBliteSyst(wmcr_dyjets, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "DY+jets", "wmcr", wmcr_dyjets, category)
     addVJetsSyst(background, recoil, "DY+jets", "wmcr", wmcr_dyjets, category)
     wmcr.addSample(wmcr_dyjets)
@@ -600,8 +607,7 @@ def model(year, recoil, category, s):
     wmcr_vv.setParamEffect(jec, njec)
     wmcr_vv.setParamEffect(id_mu, nlepton)
     wmcr_vv.setParamEffect(iso_mu, nlepton)
-    #addBBliteSyst(wmcr_vv, param, epsilon=1e-5) ### replace autoMCStats
-    #wmcr_vv.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+    addBBliteSyst(wmcr_vv, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "VV", "wmcr", wmcr_vv, category)
     wmcr.addSample(wmcr_vv)
 
@@ -616,8 +622,7 @@ def model(year, recoil, category, s):
     wmcr_hbb.setParamEffect(jec, njec)
     wmcr_hbb.setParamEffect(id_mu, nlepton)
     wmcr_hbb.setParamEffect(iso_mu, nlepton)
-    #addBBliteSyst(wmcr_hbb, param, epsilon=1e-5) ### replace autoMCStats
-    #wmcr_hbb.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+    addBBliteSyst(wmcr_hbb, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "Hbb", "wmcr", wmcr_hbb, category)
     wmcr.addSample(wmcr_hbb)
 
@@ -632,8 +637,7 @@ def model(year, recoil, category, s):
     wmcr_qcd.setParamEffect(jec, njec)
     wmcr_qcd.setParamEffect(id_mu, nlepton)
     wmcr_qcd.setParamEffect(iso_mu, nlepton)
-    #addBBliteSyst(wmcr_qcd, param, epsilon=1e-5) ### replace autoMCStats
-    #wmcr_qcd.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
+    addBBliteSyst(wmcr_qcd, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "QCD", "wmcr", wmcr_qcd, category)
     wmcr.addSample(wmcr_qcd)
 
@@ -694,6 +698,13 @@ def model(year, recoil, category, s):
     )
     wecr.addSample(wecr_wjets)
 
+    ### 
+    # Calculate the total statistical uncertainties with the MC modeled processes
+    # The region dominated by W+jets is needed to add TT for the fail category when calculate the total statistical uncertainty
+    ###
+    wecr_bkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
+    wecr_central, wecr_error2 = get_mergedMC_stat_variations(background, recoil, "wecr", category, wecr_bkgList)
+
     ###
     # top-antitop model
     ###
@@ -723,19 +734,12 @@ def model(year, recoil, category, s):
         wecr.addSample(wecr_tt)
     else: ### TT process modeled by MC
         wecr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
-        #wecr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for transferfactorsample
-        #addBBliteSyst(wecr_ttMC, param, epsilon=1e-5) ### replace autoMCStats
+        addBBliteSyst(wecr_ttMC, param, wecr_central, wecr_error2, epsilon=1e-5) ### replace autoMCStats
         wecr.addSample(wecr_ttMC)
 
     ###
     # Other MC-driven processes
     ###
-
-    ### 
-    # Calculate the total statistical uncertainties with the MC modeled processes
-    ###
-    wecr_bkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
-    wecr_central, wecr_error2 = get_mergedMC_stat_variations(background, recoil, "wecr", category, wecr_bkgList)
 
     wecr_stTemplate = template(background, "ST", "nominal", recoil, "wecr", category, read_sumw2=True)
     wecr_st = rl.TemplateSample(
