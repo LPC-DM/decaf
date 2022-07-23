@@ -215,6 +215,7 @@ def remap_histograms(hists):
 
 def get_mergedMC_stat_variations(dictionary, recoil, region, category, bkg_list):
     MCbkg = {}
+    MCbkg_map = OrderedDict()
     process = hist.Cat("process", "Process", sorting="placement")
     cats = ("process",)
     for bkg in bkg_list:
@@ -224,7 +225,7 @@ def get_mergedMC_stat_variations(dictionary, recoil, region, category, bkg_list)
     merged_central, merged_error2 = merged_obj.integrate("systematic", "nominal").values(sumw2=True)[()]
     merged_central=merged_central[recoil, :, category_map[category]]
     merged_error2=merged_error2[recoil, :, category_map[category]]
-    
+
     return merged_central, merged_error2
 
 def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=0):
@@ -236,7 +237,7 @@ def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=0):
         effect_up[i] = 1.0 + sqrt(merged_error2[i])/merged_central[i]
         effect_down[i] = max(epsilon, 1.0 - sqrt(merged_error2[i])/merged_central[i])
         templ.setParamEffect(param[i], effect_up, effect_down)
-    
+
 def addBtagSyst(dictionary, recoil, process, region, templ, category):
     btagUp = template(dictionary, process, "btagUp", recoil, region, category)[0]
     btagDown = template(dictionary, process, "btagDown", recoil, region, category)[0]
@@ -1032,6 +1033,13 @@ def model(year, recoil, category, s):
     # Other MC-driven processes
     ###
 
+    ### 
+    # Calculate the total statistical uncertainties
+    # with the MC modeled processes
+    ###
+    tecr_bkgList = ["W+jets", "ST", "DY+jets", "VV", "Hbb". QCD]
+    tecr_central, tecr_error2 = get_mergedMC_stat_variations(background, recoil, "tecr", category, tecr_bkgList)
+
     tecr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tecr", category, read_sumw2=True)
     tecr_wjets = rl.TemplateSample(
         ch_name + "_wjetsMC", rl.Sample.BACKGROUND, tecr_wjetsTemplate
@@ -1044,6 +1052,7 @@ def model(year, recoil, category, s):
     tecr_wjets.setParamEffect(id_e, nlepton)
     tecr_wjets.setParamEffect(reco_e, nlepton)
     #addBBliteSyst(tecr_wjets, param, epsilon=1e-5) ### replace autoMCStats
+    addBBliteSyst(tecr_wjets, param, tecr_central, tecr_error2, epsilon=1e-5) ### replace autoMCStats
     #tecr_wjets.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
     addBtagSyst(background, recoilbin, "W+jets", "tecr", tecr_wjets, category)
     addVJetsSyst(background, recoil, "W+jets", "tecr", tecr_wjets, category)
