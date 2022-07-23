@@ -213,6 +213,30 @@ def remap_histograms(hists):
 
     return hists
 
+def get_mergedMC_stat_variations(dictionary, recoil, region, category, bkg_list):
+    MCbkg = {}
+    process = hist.Cat("process", "Process", sorting="placement")
+    cats = ("process",)
+    for bkg in bkg_list:
+        MCbkg_map[bkg] = (bkg,)
+    MCbkg=dictionary[region]['template'].group(cats, process, MCbkg_map)
+    merged_obj = MCbkg.integrate("process")
+    merged_central, merged_error2 = merged_obj.integrate("systematic", "nominal").values(sumw2=True)[()]
+    merged_central=merged_central[recoil, :, category_map[category]]
+    merged_error2=merged_error2[recoil, :, category_map[category]]
+    
+    return merged_central, merged_error2
+
+def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=0):
+    for i in range(templ.observable.nbins):
+        if merged_central[i] <= 0. or merged_error2[i] <= 0.:
+            continue
+        effect_up = np.ones_like(templ._nominal)
+        effect_down = np.ones_like(templ._nominal)
+        effect_up[i] = 1.0 + sqrt(merged_error2[i])/merged_central[i]
+        effect_down[i] = max(epsilon, 1.0 - sqrt(merged_error2[i])/merged_central[i])
+        templ.setParamEffect(param[i], effect_up, effect_down)
+    
 def addBtagSyst(dictionary, recoil, process, region, templ, category):
     btagUp = template(dictionary, process, "btagUp", recoil, region, category)[0]
     btagDown = template(dictionary, process, "btagDown", recoil, region, category)[0]
