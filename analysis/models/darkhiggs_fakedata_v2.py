@@ -1037,7 +1037,7 @@ def model(year, recoil, category, s):
     # Calculate the total statistical uncertainties
     # with the MC modeled processes
     ###
-    tecr_bkgList = ["W+jets", "ST", "DY+jets", "VV", "Hbb". QCD]
+    tecr_bkgList = ["W+jets", "ST", "DY+jets", "VV", "Hbb", "QCD"]
     tecr_central, tecr_error2 = get_mergedMC_stat_variations(background, recoil, "tecr", category, tecr_bkgList)
 
     tecr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tecr", category, read_sumw2=True)
