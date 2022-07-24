@@ -462,21 +462,13 @@ def model(year, recoil, category, s):
 
     dataTemplate = template(data, "MET", "data", recoil, "wmcr", category)
     wmcr.setObservation(dataTemplate)
-    nbins = len(dataTemplate[1]) - 1
-    param = [None for _ in range(nbins)]
-    for i in range(nbins):
-        param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
     ###
     # W(->lnu)+jets data-driven model
     ###
 
     wmcr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "wmcr", category, read_sumw2=True)
-    wmcr_wjetsMC = rl.TemplateSample(
-        "wmcr" + model_id + "_wjetsMC",
-        rl.Sample.BACKGROUND,
-        wmcr_wjetsTemplate
-    )
+    wmcr_wjetsMC = rl.TemplateSample("wmcr" + model_id + "_wjetsMC", rl.Sample.BACKGROUND, wmcr_wjetsTemplate)
     wmcr_wjetsMC.setParamEffect(lumi, nlumi)
     wmcr_wjetsMC.setParamEffect(trig_met, ntrig_met)
     wmcr_wjetsMC.setParamEffect(veto_tau, nveto_tau)
@@ -493,48 +485,54 @@ def model(year, recoil, category, s):
     wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
     wmcr.addSample(wmcr_wjets)
 
-    ### 
-    # Calculate the total statistical uncertainties with the MC modeled processes
-    # The region dominated by W+jets is needed to add TT for the fail category when calculate the total statistical uncertainty
     ###
-    wmcr_central, wmcr_error2 = get_mergedMC_stat_variations(background, recoil, "wmcr", category, MC_bkgList)
-
-    ###
-    # top-antitop model
+    # top-antitop data-driven model
     ###
 
     wmcr_ttTemplate = template(background, "TT", "nominal", recoil, "wmcr", category, read_sumw2=True)
-    wmcr_ttMC = rl.TemplateSample(
-        "wmcr" + model_id + "_ttMC",
-        rl.Sample.BACKGROUND,
-        wmcr_ttTemplate
-    )
+    wmcr_ttMC = rl.TemplateSample( "wmcr" + model_id + "_ttMC", rl.Sample.BACKGROUND, wmcr_ttTemplate)
     wmcr_ttMC.setParamEffect(lumi, nlumi)
     wmcr_ttMC.setParamEffect(trig_met, ntrig_met)
     wmcr_ttMC.setParamEffect(veto_tau, nveto_tau)
     wmcr_ttMC.setParamEffect(jec, njec)
     wmcr_ttMC.setParamEffect(id_mu, nlepton)
     wmcr_ttMC.setParamEffect(iso_mu, nlepton)
+    wmcr_ttMC.setParamEffect(tt_norm, nMinor_norm)
+    #wmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
     addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
 
-    if category == "pass":
-        #### Transfer Factor
-        wmcr_ttMC.setParamEffect(tt_norm, nMinor_norm)
-        #wmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
-        wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
-        wmcr_tt = rl.TransferFactorSample(
-            ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt
-        )
-        wmcr.addSample(wmcr_tt)
-    else: ### TT process modeled by MC
-        wmcr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
-        addBBliteSyst(wmcr_ttMC, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
-        wmcr.addSample(wmcr_ttMC)
-
+    #### Transfer Factor
+    wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
+    wmcr_tt = rl.TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt)
+    
     ###
     # Other MC-driven processes
     ###
 
+    nbins = len(dataTemplate[1]) - 1
+    param = [None for _ in range(nbins)]
+    for i in range(nbins):
+        param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
+
+    MCbkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
+    if not (category == "pass"): ["ST", "DY+jets", "VV", "Hbb", "QCD", "TT"]
+    wmcr_central, wmcr_error2 = get_mergedMC_stat_variations(background, recoil, "sr", category, MCbkgList)
+    
+    if not (category == "pass"): ### TT process modeled by MC
+        wmcr_ttTemplate = template(background, "TT", "nominal", recoil, "wmcr", category, read_sumw2=True)
+        wmcr_ttMC = rl.TemplateSample( "wmcr" + model_id + "_ttMC", rl.Sample.BACKGROUND, wmcr_ttTemplate)
+        wmcr_ttMC.setParamEffect(lumi, nlumi)
+        wmcr_ttMC.setParamEffect(trig_met, ntrig_met)
+        wmcr_ttMC.setParamEffect(veto_tau, nveto_tau)
+        wmcr_ttMC.setParamEffect(jec, njec)
+        wmcr_ttMC.setParamEffect(id_mu, nlepton)
+        wmcr_ttMC.setParamEffect(iso_mu, nlepton)
+        wmcr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
+        addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category
+        addBBliteSyst(wmcr_ttMC, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
+        wmcr_tt = wmcr_ttMC
+    wmcr.addSample(wmcr_tt)
+                    
     wmcr_stTemplate = template(background, "ST", "nominal", recoil, "wmcr", category, read_sumw2=True)
     wmcr_st = rl.TemplateSample(
         ch_name + "_stMC", rl.Sample.BACKGROUND, wmcr_stTemplate
