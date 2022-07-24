@@ -211,17 +211,6 @@ def remap_histograms(hists):
     return hists
 
 def get_mergedMC_stat_variations(dictionary, recoil, region, category, bkg_list):
-    if region == "sr":
-        if category == "pass":
-            if recoil == 4:
-                bkg_list.extend(["W+jets", "TT"])
-        elif category == "fail":
-            bkg_list.extend(["W+jets", "TT"])
-
-    if region == "wmcr" or region == "wecr":
-        if category == "fail":
-            bkg_list.append("TT")
-
     MCbkg = {}
     MCbkg_map = OrderedDict()
     process = hist.Cat("process", "Process", sorting="placement")
@@ -295,12 +284,7 @@ def model(year, recoil, category, s):
         dataTemplate = template(fake_data, "", "data", recoil, "sr", category, bkg=True)
     else:
         dataTemplate = template(data, "MET", "data", recoil, "sr", category)
-
     sr.setObservation(dataTemplate)
-    nbins = len(dataTemplate[1]) - 1
-    param = [None for _ in range(nbins)]
-    for i in range(nbins):
-        param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
     ###
     # Z(->nunu)+jets data-driven model
@@ -314,12 +298,6 @@ def model(year, recoil, category, s):
         sr_zjets = sr_zjetsFail
     sr.addSample(sr_zjets)
 
-    ### 
-    # Calculate the total statistical uncertainties with the MC modeled processes
-    ###
-    MC_bkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
-    sr_central, sr_error2 = get_mergedMC_stat_variations(background, recoil, "sr", category, MC_bkgList)
-
     ###
     # W(->lnu)+jets data-driven model
     ###
@@ -328,82 +306,69 @@ def model(year, recoil, category, s):
         sr_wjetsMC = sr_wjetsMCPass
         sr_wjetsTemplate = sr_wjetsMCPassTemplate
         sr_wjets = sr_wjetsPass
-        if not (recoil<4): ### W+jets modeled by MC instead of data-driven in the last recoil bin
-            sr_wjetsMC = rl.TemplateSample(
-                "sr" + model_id + "_wjetsMC",
-                rl.Sample.BACKGROUND,
-                sr_wjetsTemplate
-            )
-            sr_wjetsMC.setParamEffect(lumi, nlumi)
-            sr_wjetsMC.setParamEffect(trig_met, ntrig_met)
-            sr_wjetsMC.setParamEffect(veto_tau, nveto_tau)
-            sr_wjetsMC.setParamEffect(wjetsMC_norm, nVjets_norm)
-            sr_wjetsMC.setParamEffect(jec, njec)
-            addBBliteSyst(sr_wjetsMC, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
-            addBtagSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
-            addVJetsSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
-            sr_wjets = sr_wjetsMC
     else:
         sr_wjetsTemplate = sr_wjetsMCFailTemplate
         sr_wjetsMC = sr_wjetsMCFail
         sr_wjets = sr_wjetsFail
-
-    sr.addSample(sr_wjets)
-
+        
     ###
-    # top-antitop model
+    # top-antitop data-driven model
     ###
 
     sr_ttTemplate = template(background, "TT", "nominal", recoil, "sr", category, read_sumw2=True)
-    sr_ttMC = rl.TemplateSample(
-        "sr" + model_id + "_ttMC",
-        rl.Sample.BACKGROUND,
-        sr_ttTemplate
-    )
+    sr_ttMC = rl.TemplateSample("sr" + model_id + "_ttMC",rl.Sample.BACKGROUND,sr_ttTemplate)
     sr_ttMC.setParamEffect(lumi, nlumi)
     sr_ttMC.setParamEffect(trig_met, ntrig_met)
     sr_ttMC.setParamEffect(veto_tau, nveto_tau)
     sr_ttMC.setParamEffect(jec, njec)
+    sr_ttMC.setParamEffect(tt_norm, nMinor_norm)
+    #sr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
     addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
 
-    if category == "pass" and recoil<4:
-        sr_ttMC.setParamEffect(tt_norm, nMinor_norm)
-        #sr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
-        sigmascale={
-            '2016': 1000,
-            '2017': 1000,
-            '2018': 1000
-        }
-        sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
-        sr_ttParameters = np.array(
-            [
-                rl.IndependentParameter(
-                    "sr" + year + "_tt_" + category + "_recoil"+str(recoilbin)+"_mass%d" % i,
-                    0,
-                    -200,
-                    50,
-                )
-                for i in range(sr_ttObservable.nbins)
-            ]
-        )
-        #sr_ttBinYields = sr_ttTemplate[0] * (1 + (0.8/np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
-        #sr_ttBinYields = sr_ttTemplate[0] * (1 + (100./np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
-        #sr_ttBinYields = sr_ttTemplate[0] * (1 + (sigmascale[year]/np.maximum(1., np.sqrt(sr_ttTemplate[0]))))**sr_ttParameters
-        sr_ttBinYields = np.array([rl.IndependentParameter('tmp', b, 1e-5, sr_ttTemplate[0].max()*2) for b in sr_ttTemplate[0]])
-
-        sr_tt = rl.ParametericSample(
-            ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields
-        )
-        sr.addSample(sr_tt)
-    else: ### TT process modeled by MC
-        sr_ttMC.setParamEffect(ttMC_norm, nMinor_norm) ### ttMC should be applied for SR fail
-        addBBliteSyst(sr_ttMC, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
-        sr.addSample(sr_ttMC)
-
+    sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
+    sr_ttBinYields = np.array([rl.IndependentParameter('tmp', b, 1e-5, sr_ttTemplate[0].max()*2) for b in sr_ttTemplate[0]])
+    sr_tt = rl.ParametericSample(ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields)
+    
     ###
     # Other MC-driven processes
     ###
+    
+    nbins = len(dataTemplate[1]) - 1
+    param = [None for _ in range(nbins)]
+    for i in range(nbins):
+        param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
+    MCbkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
+    if not (category == "pass"): ["ST", "DY+jets", "VV", "Hbb", "QCD", "TT"]
+    if category == "pass" and not (recoil<4): ["ST", "DY+jets", "VV", "Hbb", "QCD", "TT", "W+jets"]
+    sr_central, sr_error2 = get_mergedMC_stat_variations(background, recoil, "sr", category, MCbkgList)
+    
+    if category == "pass" and not (recoil<4):
+        sr_wjetsMC = rl.TemplateSample( "sr" + model_id + "_wjetsMC", rl.Sample.BACKGROUND, sr_wjetsTemplate)
+        sr_wjetsMC.setParamEffect(lumi, nlumi)
+        sr_wjetsMC.setParamEffect(trig_met, ntrig_met)
+        sr_wjetsMC.setParamEffect(veto_tau, nveto_tau)
+        sr_wjetsMC.setParamEffect(wjetsMC_norm, nVjets_norm)
+        sr_wjetsMC.setParamEffect(jec, njec)
+        addBBliteSyst(sr_wjetsMC, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
+        addBtagSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
+        addVJetsSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
+        sr_wjets = sr_wjetsMC
+    sr.addSample(sr_wjets)
+
+    if not (category == "pass" and recoil<4): ### TT process modeled by MC
+        sr_ttTemplate = template(background, "TT", "nominal", recoil, "sr", category, read_sumw2=True)
+        sr_ttMC = rl.TemplateSample("sr" + model_id + "_ttMC",rl.Sample.BACKGROUND,sr_ttTemplate)
+        sr_ttMC.setParamEffect(lumi, nlumi)
+        sr_ttMC.setParamEffect(trig_met, ntrig_met)
+        sr_ttMC.setParamEffect(veto_tau, nveto_tau)
+        sr_ttMC.setParamEffect(jec, njec)
+        sr_ttMC.setParamEffect(ttMC_norm, nMinor_norm) ### ttMC should be applied for SR fail
+        addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
+        addBBliteSyst(sr_ttMC, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
+        sr_tt = sr_ttMC
+    sr.addSample(sr_tt)
+    
     sr_stTemplate = template(background, "ST", "nominal", recoil, "sr", category, read_sumw2=True)
     sr_st = rl.TemplateSample(ch_name + "_stMC", rl.Sample.BACKGROUND, sr_stTemplate)
     sr_st.setParamEffect(lumi, nlumi)
