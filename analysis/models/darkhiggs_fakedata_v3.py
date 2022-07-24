@@ -515,7 +515,7 @@ def model(year, recoil, category, s):
         wmcr_ttMC.setParamEffect(id_mu, nlepton)
         wmcr_ttMC.setParamEffect(iso_mu, nlepton)
         wmcr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
-        addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category
+        addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
         addBBliteSyst(wmcr_ttMC, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
         wmcr_tt = wmcr_ttMC
     wmcr.addSample(wmcr_tt)
