@@ -789,21 +789,13 @@ def model(year, recoil, category, s):
 
     dataTemplate = template(data, "MET", "data", recoil, "tmcr", category)
     tmcr.setObservation(dataTemplate)
-    nbins = len(dataTemplate[1]) - 1
-    param = [None for _ in range(nbins)]
-    for i in range(nbins):
-        param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
-
+                    
     ###
-    # top-antitop model
+    # top-antitop data-driven model
     ###
 
     tmcr_ttTemplate = template(background, "TT", "nominal", recoil, "tmcr", category, read_sumw2=True)
-    tmcr_ttMC = rl.TemplateSample(
-        "tmcr" + model_id + "_ttMC",
-        rl.Sample.BACKGROUND,
-        tmcr_ttTemplate
-    )
+    tmcr_ttMC = rl.TemplateSample("tmcr" + model_id + "_ttMC", rl.Sample.BACKGROUND, tmcr_ttTemplate)
     tmcr_ttMC.setParamEffect(lumi, nlumi)
     tmcr_ttMC.setParamEffect(trig_met, ntrig_met)
     tmcr_ttMC.setParamEffect(veto_tau, nveto_tau)
@@ -816,24 +808,22 @@ def model(year, recoil, category, s):
 
     #### Transfer Factor
     tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
-    tmcr_tt = rl.TransferFactorSample(
-        ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt
-    )
+    tmcr_tt = rl.TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt)
     tmcr.addSample(tmcr_tt)
 
     ###
     # Other MC-driven processes
     ###
 
-    ### 
-    # Calculate the total statistical uncertainties with the MC modeled processes
-    ###
-    tmcr_central, tmcr_error2 = get_mergedMC_stat_variations(background, recoil, "tmcr", category, MC_bkgList)
+    nbins = len(dataTemplate[1]) - 1
+    param = [None for _ in range(nbins)]
+    for i in range(nbins):
+        param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
+    tmcr_central, tmcr_error2 = get_mergedMC_stat_variations(background, recoil, "tmcr", category, ["ST", "DY+jets", "VV", "Hbb", "QCD", "W+jets"])
+                    
     tmcr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tmcr", category, read_sumw2=True)
-    tmcr_wjets = rl.TemplateSample(
-        ch_name + "_wjetsMC", rl.Sample.BACKGROUND, tmcr_wjetsTemplate
-    )
+    tmcr_wjets = rl.TemplateSample(ch_name + "_wjetsMC", rl.Sample.BACKGROUND, tmcr_wjetsTemplate)
     tmcr_wjets.setParamEffect(lumi, nlumi)
     tmcr_wjets.setParamEffect(trig_met, ntrig_met)
     tmcr_wjets.setParamEffect(veto_tau, nveto_tau)
@@ -847,9 +837,7 @@ def model(year, recoil, category, s):
     tmcr.addSample(tmcr_wjets)
 
     tmcr_stTemplate = template(background, "ST", "nominal", recoil, "tmcr", category, read_sumw2=True)
-    tmcr_st = rl.TemplateSample(
-        ch_name + "_stMC", rl.Sample.BACKGROUND, tmcr_stTemplate
-    )
+    tmcr_st = rl.TemplateSample(ch_name + "_stMC", rl.Sample.BACKGROUND, tmcr_stTemplate)
     tmcr_st.setParamEffect(lumi, nlumi)
     tmcr_st.setParamEffect(trig_met, ntrig_met)
     tmcr_st.setParamEffect(veto_tau, nveto_tau)
@@ -862,9 +850,7 @@ def model(year, recoil, category, s):
     tmcr.addSample(tmcr_st)
 
     tmcr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "tmcr", category, read_sumw2=True)
-    tmcr_dyjets = rl.TemplateSample(
-        ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, tmcr_dyjetsTemplate
-    )
+    tmcr_dyjets = rl.TemplateSample(ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, tmcr_dyjetsTemplate)
     tmcr_dyjets.setParamEffect(lumi, nlumi)
     tmcr_dyjets.setParamEffect(trig_met, ntrig_met)
     tmcr_dyjets.setParamEffect(veto_tau, nveto_tau)
@@ -878,9 +864,7 @@ def model(year, recoil, category, s):
     tmcr.addSample(tmcr_dyjets)
 
     tmcr_vvTemplate = template(background, "VV", "nominal", recoil, "tmcr", category, read_sumw2=True)
-    tmcr_vv = rl.TemplateSample(
-        ch_name + "_vvMC", rl.Sample.BACKGROUND, tmcr_vvTemplate
-    )
+    tmcr_vv = rl.TemplateSample(ch_name + "_vvMC", rl.Sample.BACKGROUND, tmcr_vvTemplate)
     tmcr_vv.setParamEffect(lumi, nlumi)
     tmcr_vv.setParamEffect(trig_met, ntrig_met)
     tmcr_vv.setParamEffect(veto_tau, nveto_tau)
@@ -893,9 +877,7 @@ def model(year, recoil, category, s):
     tmcr.addSample(tmcr_vv)
 
     tmcr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "tmcr", category, read_sumw2=True)
-    tmcr_hbb = rl.TemplateSample(
-        ch_name + "_hbbMC", rl.Sample.BACKGROUND, tmcr_hbbTemplate
-    )
+    tmcr_hbb = rl.TemplateSample(ch_name + "_hbbMC", rl.Sample.BACKGROUND, tmcr_hbbTemplate)
     tmcr_hbb.setParamEffect(lumi, nlumi)
     tmcr_hbb.setParamEffect(trig_met, ntrig_met)
     tmcr_hbb.setParamEffect(veto_tau, nveto_tau)
@@ -908,9 +890,7 @@ def model(year, recoil, category, s):
     tmcr.addSample(tmcr_hbb)
 
     tmcr_qcdTemplate = template(background, "QCD", "nominal", recoil, "tmcr", category, read_sumw2=True)
-    tmcr_qcd = rl.TemplateSample(
-        ch_name + "_qcdMC", rl.Sample.BACKGROUND, tmcr_qcdTemplate
-    )
+    tmcr_qcd = rl.TemplateSample(ch_name + "_qcdMC", rl.Sample.BACKGROUND, tmcr_qcdTemplate)
     tmcr_qcd.setParamEffect(lumi, nlumi)
     tmcr_qcd.setParamEffect(trig_met, ntrig_met)
     tmcr_qcd.setParamEffect(veto_tau, nveto_tau)
