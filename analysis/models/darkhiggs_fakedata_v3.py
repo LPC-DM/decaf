@@ -325,11 +325,11 @@ def model(year, recoil, category, s):
     for i in range(nbins):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
-    MCbkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
-    if not (category == "pass"): ["ST", "DY+jets", "VV", "Hbb", "QCD", "TT"]
-    if category == "pass" and not (recoil<4): ["ST", "DY+jets", "VV", "Hbb", "QCD", "TT", "W+jets"]
+    MCbkgList = ["ST", "DY+jets", "VV", "Hbb"]#, "QCD"]
+    if not (category == "pass"): ["ST", "DY+jets", "VV", "Hbb", "TT"]#, "QCD"]
+    if category == "pass" and not (recoil<4): ["ST", "DY+jets", "VV", "Hbb", "TT", "W+jets"]#, "QCD"]
     sr_central, sr_error2 = get_mergedMC_stat_variations(background, recoil, "sr", category, MCbkgList)
-    
+
     if category == "pass" and not (recoil<4):
         sr_wjetsMC = rl.TemplateSample( "sr" + model_id + "_wjetsMC", rl.Sample.BACKGROUND, sr_wjetsTemplate)
         sr_wjetsMC.setParamEffect(lumi, nlumi)
@@ -501,8 +501,8 @@ def model(year, recoil, category, s):
     for i in range(nbins):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
-    MCbkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
-    if not (category == "pass"): ["ST", "DY+jets", "VV", "Hbb", "QCD", "TT"]
+    MCbkgList = ["ST", "DY+jets", "VV", "Hbb"]#, "QCD"]
+    if not (category == "pass"): ["ST", "DY+jets", "VV", "Hbb", "TT"]#, "QCD"]
     wmcr_central, wmcr_error2 = get_mergedMC_stat_variations(background, recoil, "wmcr", category, MCbkgList)
     
     if not (category == "pass"): ### TT process modeled by MC
@@ -619,7 +619,7 @@ def model(year, recoil, category, s):
     else:
         dataTemplate = template(data, "SingleElectron", "data", recoil, "wecr", category)
     wecr.setObservation(dataTemplate)
-    
+
     ###
     # W(->lnu)+jets data-driven model
     ###
@@ -671,10 +671,10 @@ def model(year, recoil, category, s):
     for i in range(nbins):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
-    MCbkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
-    if not (category == "pass"): ["ST", "DY+jets", "VV", "Hbb", "QCD", "TT"]
+    MCbkgList = ["ST", "DY+jets", "VV", "Hbb"]#, "QCD"]
+    if not (category == "pass"): ["ST", "DY+jets", "VV", "Hbb", "TT"]#, "QCD"]
     wecr_central, wecr_error2 = get_mergedMC_stat_variations(background, recoil, "wecr", category, MCbkgList)
-    
+
     if not (category == "pass"): ### TT process modeled by MC
         wecr_ttTemplate = template(background, "TT", "nominal", recoil, "wecr", category, read_sumw2=True)
         wecr_ttMC = rl.TemplateSample("wecr" + model_id + "_ttMC", rl.Sample.BACKGROUND, wecr_ttTemplate)
@@ -689,7 +689,7 @@ def model(year, recoil, category, s):
         addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category)
         wecr_tt = wecr_ttMC
     wecr.addSample(wecr_tt)
-                    
+
     wecr_stTemplate = template(background, "ST", "nominal", recoil, "wecr", category, read_sumw2=True)
     wecr_st = rl.TemplateSample(
         ch_name + "_stMC", rl.Sample.BACKGROUND, wecr_stTemplate
@@ -789,7 +789,7 @@ def model(year, recoil, category, s):
 
     dataTemplate = template(data, "MET", "data", recoil, "tmcr", category)
     tmcr.setObservation(dataTemplate)
-                    
+
     ###
     # top-antitop data-driven model
     ###
@@ -820,8 +820,8 @@ def model(year, recoil, category, s):
     for i in range(nbins):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
-    tmcr_central, tmcr_error2 = get_mergedMC_stat_variations(background, recoil, "tmcr", category, ["ST", "DY+jets", "VV", "Hbb", "QCD", "W+jets"])
-                    
+    tmcr_central, tmcr_error2 = get_mergedMC_stat_variations(background, recoil, "tmcr", category, ["ST", "DY+jets", "VV", "Hbb", "W+jets"])#"QCD"
+
     tmcr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tmcr", category, read_sumw2=True)
     tmcr_wjets = rl.TemplateSample(ch_name + "_wjetsMC", rl.Sample.BACKGROUND, tmcr_wjetsTemplate)
     tmcr_wjets.setParamEffect(lumi, nlumi)
@@ -956,8 +956,8 @@ def model(year, recoil, category, s):
     for i in range(nbins):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
-    tecr_central, tecr_error2 = get_mergedMC_stat_variations(background, recoil, "tecr", category, ["ST", "DY+jets", "VV", "Hbb", "QCD", "W+jets"])
-    
+    tecr_central, tecr_error2 = get_mergedMC_stat_variations(background, recoil, "tecr", category, ["ST", "DY+jets", "VV", "Hbb", "W+jets"])#"QCD"
+
     tecr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tecr", category, read_sumw2=True)
     tecr_wjets = rl.TemplateSample(ch_name + "_wjetsMC", rl.Sample.BACKGROUND, tecr_wjetsTemplate)
     tecr_wjets.setParamEffect(lumi, nlumi)
