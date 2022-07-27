@@ -1282,21 +1282,24 @@ if __name__ == "__main__":
     if '40to' in mass:
         ttMC = True
         cut = mass.split('40to')[1]
-        index = mass_binning.index(int(cut)) +1
-        mass_binning = mass_binning[:index]
-        tf_MCtemplZ_params_final = tf_MCtemplZ_params_final[:, :index]
-        tf_dataResidualZ_params = tf_dataResidualZ_params[:, :index]
-        tf_MCtemplW_params_final = tf_MCtemplW_params_final[:, :index]
-        tf_dataResidualW_params = tf_dataResidualW_params[:, :index]
+        index = mass_binning.index(int(cut))
+        mass_binning = mass_binning[:(index+1)]
+        nmass = len(mass_binning) - 1
+        tf_MCtemplZ_params_final = tf_MCtemplZ_params_final[:, :nmass]
+        tf_dataResidualZ_params = tf_dataResidualZ_params[:, :nmass]
+        tf_MCtemplW_params_final = tf_MCtemplW_params_final[:, :nmass]
+        tf_dataResidualW_params = tf_dataResidualW_params[:, :nmass]
     if 'to300' in mass:
+        nmass = len(mass_binning) - 1
         ttMC = False
         cut = mass.split('to300')[0]
-        index = mass_binning.index(int(cut)) +1
+        index = mass_binning.index(int(cut))
         mass_binning = mass_binning[index:]
-        tf_MCtemplZ_params_final = tf_MCtemplZ_params_final[:, index:]
-        tf_dataResidualZ_params = tf_dataResidualZ_params[:, index:]
-        tf_MCtemplW_params_final = tf_MCtemplW_params_final[:, index:]
-        tf_dataResidualW_params = tf_dataResidualW_params[:, index:]
+        nmass = nmass - (len(mass_binning) - 1)
+        tf_MCtemplZ_params_final = tf_MCtemplZ_params_final[:, nmass:]
+        tf_dataResidualZ_params = tf_dataResidualZ_params[:, nmass:]
+        tf_MCtemplW_params_final = tf_MCtemplW_params_final[:, nmass:]
+        tf_dataResidualW_params = tf_dataResidualW_params[:, nmass:]
         
     ###
     # Reload and remap histograms 
