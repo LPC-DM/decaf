@@ -249,7 +249,7 @@ def addVJetsSyst(dictionary, recoil, process, region, templ, category):
 
 def model(year, recoil, category, s):
 
-    model_id = year + category + "recoil" + str(recoil)
+    model_id = year + category + "mass120to300recoil" + str(recoil)
     print(model_id)
     model = rl.Model(str(s) + model_id)
 
@@ -1314,7 +1314,7 @@ if __name__ == "__main__":
                         + year
                         + "-"
                         + category
-                        + "-recoil"
+                        + "-mass120to300recoil"
                         + str(recoilbin)
                         + ".model",
                         "wb",
