@@ -241,7 +241,7 @@ def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     addSyst(dictionary, recoil, process, region, templ, category, qcd2, "qcd2")
     addSyst(dictionary, recoil, process, region, templ, category, qcd3, "qcd3")
 
-def model(year, mass recoil, category, s):
+def model(year, mass, recoil, category, s):
 
     model_id = year + category + "mass" + mass+ "recoil" + str(recoil)
     print(model_id)
@@ -1049,7 +1049,7 @@ if __name__ == "__main__":
     (options, args) = parser.parse_args()
     year = options.year
     mass = options.mass
-    
+
     #####
     ###
     # Preparing Rhalphabeth
@@ -1062,14 +1062,14 @@ if __name__ == "__main__":
 
     hists = load("hists/darkhiggs" + year + ".scaled")
     hists = remap_histograms(hists)
-    
+
     ###
     # Preparing histograms for Rhalphabeth
     ###
 
     background = {}
-    for r in bkg_hists["template"].identifiers("region"):
-        background[str(r)] = bkg_hists["template"].integrate("region", r).sum("gentype")
+    for r in hists["bkg"]["template"].identifiers("region"):
+        background[str(r)] = hists["bkg"]["template"].integrate("region", r).sum("gentype")
     
     ###
     # Establishing 2D binning
@@ -1297,7 +1297,7 @@ if __name__ == "__main__":
 
     hists = load("hists/darkhiggs" + year + ".scaled")
     if year == '2018':
-        additional_hists = load("hists/signal" + year + ".scaled")
+        additional_hists = load("hists/missingSignal" + year + ".scaled")
         for key in hists["sig"].keys():
             hists["sig"][key] += additional_hists["sig"][key]
     hists = remap_histograms(hists)
@@ -1310,8 +1310,8 @@ if __name__ == "__main__":
     signal = {}
     for r in signal_hists["template"].identifiers("region"):
         signal[str(r)] = signal_hists["template"].integrate("region", r).sum("gentype")
-        signal[str(r)] += signal_tmphists["template"].integrate("region", r).sum("gentype")
-    
+        #signal[str(r)] += signal_tmphists["template"].integrate("region", r).sum("gentype")
+
     bkg_hists = hists["bkg"]
     background = {}
     for r in bkg_hists["template"].identifiers("region"):
