@@ -153,12 +153,16 @@ def remap_histograms(hists):
     data_map["SingleElectron"] = ("SingleElectron",)
     data_map["SinglePhoton"] = ("SinglePhoton",)
     data_map["EGamma"] = ("EGamma",)
-    fakedata_map['FakeData'] = (["ST", "DY+jets", "VV", "Hbb", "TT", "W+jets", "QCD", "Z+jets"],)
     
     for signal in hists['sig']['template'].identifiers('process'):
         if 'mhs' not in str(signal): continue
         sig_map[str(signal)] = (str(signal),)  ## signals
-
+        
+    fakedata_list = []
+    for bkg in hists['bkg']['template'].identifiers('process'):
+        fakedata_list.append(str(bkg))
+    fakedata_map['FakeData'] = (fakedata_list,)
+    
     for key in hists["data"].keys():
         bkg_hists[key] = hists["bkg"][key].group(cats, process, bkg_map)
         signal_hists[key] = hists["sig"][key].group(cats, process, sig_map)
