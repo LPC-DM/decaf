@@ -86,7 +86,7 @@ def signal_xsecScale(signal, s):
     signal["sr"].scale({s:xsec[str(s)]},axis='process')
 
 
-def template(dictionary, process, systematic, recoil, region, category, read_sumw2=False):
+def template(dictionary, process, systematic, recoil, region, category, min_value=1e-5, read_sumw2=False):
     histogram = dictionary[region].integrate("process", process)
     nominal, sumw2 = histogram.integrate("systematic", "nominal").values(sumw2=True)[()]
     nominal=nominal[recoil, :, category_map[category]]
@@ -94,21 +94,8 @@ def template(dictionary, process, systematic, recoil, region, category, read_sum
     zerobins = nominal <= 0.
     output = nominal
     if "data" not in systematic:
-        if "Z+" in str(process):
-            output[zerobins] = 1.
-            sumw2[zerobins] = 0.
-        elif "W+" in str(process) and "fail" in category:
-            output[zerobins] = 1.
-            sumw2[zerobins] = 0.
-        elif "W+" in str(process) and "pass" in category and recoil<4:
-            output[zerobins] = 1.
-            sumw2[zerobins] = 0.
-        elif "TT" in str(process) and "pass" in category  and recoil<4:
-            output[zerobins] = 1.
-            sumw2[zerobins] = 0.
-        else:
-            output[zerobins] = 1e-5
-            sumw2[zerobins] = 0.
+        output[zerobins] = min_value
+        sumw2[zerobins] = 0.
     if "nominal" not in systematic and "data" not in systematic:
         output = histogram.integrate("systematic", systematic).values()[()][recoil, :, category_map[category]]
         output[zerobins] = 1.
@@ -300,7 +287,7 @@ def model(year, mass, recoil, category, s):
     # top-antitop data-driven model
     ###
 
-    sr_ttTemplate = template(background, "TT", "nominal", recoil, "sr", category, read_sumw2=True)
+    sr_ttTemplate = template(background, "TT", "nominal", recoil, "sr", category, min_value=1., read_sumw2=True)
     sr_ttMC = rl.TemplateSample("sr" + model_id + "_ttMC",rl.Sample.BACKGROUND,sr_ttTemplate)
     sr_ttMC.setParamEffect(lumi, nlumi)
     sr_ttMC.setParamEffect(trig_met, ntrig_met)
@@ -452,7 +439,7 @@ def model(year, mass, recoil, category, s):
     # W(->lnu)+jets data-driven model
     ###
 
-    wmcr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "wmcr", category, read_sumw2=True)
+    wmcr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "wmcr", category, min_value=1., read_sumw2=True)
     wmcr_wjetsMC = rl.TemplateSample("wmcr" + model_id + "_wjetsMC", rl.Sample.BACKGROUND, wmcr_wjetsTemplate)
     wmcr_wjetsMC.setParamEffect(lumi, nlumi)
     wmcr_wjetsMC.setParamEffect(trig_met, ntrig_met)
@@ -474,7 +461,7 @@ def model(year, mass, recoil, category, s):
     # top-antitop data-driven model
     ###
 
-    wmcr_ttTemplate = template(background, "TT", "nominal", recoil, "wmcr", category, read_sumw2=True)
+    wmcr_ttTemplate = template(background, "TT", "nominal", recoil, "wmcr", category, min_value=1., read_sumw2=True)
     wmcr_ttMC = rl.TemplateSample( "wmcr" + model_id + "_ttMC", rl.Sample.BACKGROUND, wmcr_ttTemplate)
     wmcr_ttMC.setParamEffect(lumi, nlumi)
     wmcr_ttMC.setParamEffect(trig_met, ntrig_met)
@@ -622,7 +609,7 @@ def model(year, mass, recoil, category, s):
     # W(->lnu)+jets data-driven model
     ###
 
-    wecr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "wecr", category, read_sumw2=True)
+    wecr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "wecr", category, min_value=1., read_sumw2=True)
     wecr_wjetsMC = rl.TemplateSample("wecr" + model_id + "_wjetsMC", rl.Sample.BACKGROUND, wecr_wjetsTemplate)
     wecr_wjetsMC.setParamEffect(lumi, nlumi)
     wecr_wjetsMC.setParamEffect(trig_e, ntrig_e)
@@ -644,7 +631,7 @@ def model(year, mass, recoil, category, s):
     # top-antitop data-driven model
     ###
 
-    wecr_ttTemplate = template(background, "TT", "nominal", recoil, "wecr", category, read_sumw2=True)
+    wecr_ttTemplate = template(background, "TT", "nominal", recoil, "wecr", category, min_value=1., read_sumw2=True)
     wecr_ttMC = rl.TemplateSample("wecr" + model_id + "_ttMC", rl.Sample.BACKGROUND, wecr_ttTemplate)
     wecr_ttMC.setParamEffect(lumi, nlumi)
     wecr_ttMC.setParamEffect(trig_e, ntrig_e)
@@ -792,7 +779,7 @@ def model(year, mass, recoil, category, s):
     # top-antitop data-driven model
     ###
 
-    tmcr_ttTemplate = template(background, "TT", "nominal", recoil, "tmcr", category, read_sumw2=True)
+    tmcr_ttTemplate = template(background, "TT", "nominal", recoil, "tmcr", category, min_value=1., read_sumw2=True)
     tmcr_ttMC = rl.TemplateSample("tmcr" + model_id + "_ttMC", rl.Sample.BACKGROUND, tmcr_ttTemplate)
     tmcr_ttMC.setParamEffect(lumi, nlumi)
     tmcr_ttMC.setParamEffect(trig_met, ntrig_met)
@@ -928,7 +915,7 @@ def model(year, mass, recoil, category, s):
     # top-antitop data-driven model
     ###
 
-    tecr_ttTemplate = template(background, "TT", "nominal", recoil, "tecr", category, read_sumw2=True)
+    tecr_ttTemplate = template(background, "TT", "nominal", recoil, "tecr", category, min_value=1., read_sumw2=True)
     tecr_ttMC = rl.TemplateSample("tecr" + model_id + "_ttMC", rl.Sample.BACKGROUND, tecr_ttTemplate)
     tecr_ttMC.setParamEffect(lumi, nlumi)
     tecr_ttMC.setParamEffect(trig_e, ntrig_e)
