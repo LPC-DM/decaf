@@ -1298,7 +1298,7 @@ if __name__ == "__main__":
 
     hists = load("hists/darkhiggs" + year + ".scaled")
     if year == '2018':
-        additional_hists = load("hists/missingSignal" + year + ".scaled")
+        additional_hists = load("hists/signal" + year + ".scaled")
         for key in hists["sig"].keys():
             hists["sig"][key] += additional_hists["sig"][key]
     hists = remap_histograms(hists)
