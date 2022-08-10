@@ -233,7 +233,7 @@ def model(year, mass, recoil, category):
 
     model_id = year + category + "mass" + mass+ "recoil" + str(recoil)
     print(model_id)
-    model = rl.Model(str(s) + model_id)
+    model = rl.Model(model_id)
 
     ###
     ###
@@ -1434,8 +1434,7 @@ if __name__ == "__main__":
 
             with open(
                     "data/"
-                    + str(s).replace('_','')
-                    + "-"
+                    + "Darkhiggs"
                     + year
                     + "-"
                     + category
