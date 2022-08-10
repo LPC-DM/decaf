@@ -405,7 +405,7 @@ def model(year, mass, recoil, category):
         sr_signal.setParamEffect(jec, njec)
         sr_signal.autoMCStats(epsilon=1e-5)
         addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category)
-        sr.addSample(sr_signal)
+        if category=="pass": sr.addSample(sr_signal)
 
     ###
     # End of SR
