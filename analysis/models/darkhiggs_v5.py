@@ -243,7 +243,7 @@ def model(year, mass, recoil, category):
 
     ch_name = "sr" + model_id
     sr = rl.Channel(ch_name)
-    model.addChannel(sr)
+    #model.addChannel(sr)
 
     ###
     # Add data distribution to the channel
@@ -405,7 +405,13 @@ def model(year, mass, recoil, category):
         sr_signal.setParamEffect(jec, njec)
         sr_signal.autoMCStats(epsilon=1e-5)
         addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category)
-        if category=="pass": sr.addSample(sr_signal)
+        sr_pass = sr
+        sr_pass.name = sr.name+str(s).replace('_','')
+        print(sr_pass.name)
+        sr_pass.addSample(sr_signal)
+        if category=="pass": model.addChannel(sr_pass)
+    if category=="fail": model.addChannel(sr)
+        
 
     ###
     # End of SR
