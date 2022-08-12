@@ -396,21 +396,28 @@ def model(year, mass, recoil, category):
     addBtagSyst(background, recoil, "QCD", "sr", sr_qcd, category)
     sr.addSample(sr_qcd)
 
-    for s in signal["sr"].identifiers("process"):
-        sr_signalTemplate = template(signal, s, "nominal", recoil, "sr", category, read_sumw2=True)
-        sr_signal = rl.TemplateSample(ch_name + "_" + str(s), rl.Sample.SIGNAL, sr_signalTemplate)
-        sr_signal.setParamEffect(lumi, nlumi)
-        sr_signal.setParamEffect(trig_met, ntrig_met)
-        sr_signal.setParamEffect(veto_tau, nveto_tau)
-        sr_signal.setParamEffect(jec, njec)
-        sr_signal.autoMCStats(epsilon=1e-5)
-        addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category)
-        sr_pass = sr
-        sr_pass.name = sr.name+str(s).replace('_','')
-        print(sr_pass.name)
-        sr_pass.addSample(sr_signal)
-        if category=="pass": model.addChannel(sr_pass)
-    if category=="fail": model.addChannel(sr)
+    if category=="pass": 
+        for s in signal["sr"].identifiers("process"):
+            sr_signalTemplate = template(signal, s, "nominal", recoil, "sr", category, read_sumw2=True)
+            sr_signal = rl.TemplateSample(ch_name + "_" + str(s), rl.Sample.SIGNAL, sr_signalTemplate)
+            sr_signal.setParamEffect(lumi, nlumi)
+            sr_signal.setParamEffect(trig_met, ntrig_met)
+            sr_signal.setParamEffect(veto_tau, nveto_tau)
+            sr_signal.setParamEffect(jec, njec)
+            sr_signal.autoMCStats(epsilon=1e-5)
+            addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category)
+            sr = rl.Channel(ch_name+str(s).replace('_',''))
+            sr.addSample(sr_wjets)
+            sr.addSample(sr_tt)
+            sr.addSample(sr_st)
+            sr.addSample(sr_dyjets)
+            sr.addSample(sr_vv)
+            sr.addSample(sr_hbb)
+            sr.addSample(sr_qcd)
+            sr.addSample(sr_signal)
+            model.addChannel(sr)
+    else:
+        model.addChannel(sr)
         
 
     ###
