@@ -243,7 +243,7 @@ def model(year, mass, recoil, category):
 
     ch_name = "sr" + model_id
     sr = rl.Channel(ch_name)
-    #model.addChannel(sr)
+    model.addChannel(sr)
 
     ###
     # Add data distribution to the channel
@@ -396,29 +396,16 @@ def model(year, mass, recoil, category):
     addBtagSyst(background, recoil, "QCD", "sr", sr_qcd, category)
     sr.addSample(sr_qcd)
 
-    if category=="pass": 
-        for s in signal["sr"].identifiers("process"):
-            sr_signalTemplate = template(signal, s, "nominal", recoil, "sr", category, read_sumw2=True)
-            sr_signal = rl.TemplateSample(ch_name + "_" + str(s), rl.Sample.SIGNAL, sr_signalTemplate)
-            sr_signal.setParamEffect(lumi, nlumi)
-            sr_signal.setParamEffect(trig_met, ntrig_met)
-            sr_signal.setParamEffect(veto_tau, nveto_tau)
-            sr_signal.setParamEffect(jec, njec)
-            sr_signal.autoMCStats(epsilon=1e-5)
-            addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category)
-            sr = rl.Channel(ch_name+str(s).replace('_',''))
-            sr.addSample(sr_wjets)
-            sr.addSample(sr_tt)
-            sr.addSample(sr_st)
-            sr.addSample(sr_dyjets)
-            sr.addSample(sr_vv)
-            sr.addSample(sr_hbb)
-            sr.addSample(sr_qcd)
-            sr.addSample(sr_signal)
-            model.addChannel(sr)
-    else:
-        model.addChannel(sr)
-        
+    for s in signal["sr"].identifiers("process"):
+        sr_signalTemplate = template(signal, s, "nominal", recoil, "sr", category, read_sumw2=True)
+        sr_signal = rl.TemplateSample(str(s)  + "_" +  ch_name, rl.Sample.SIGNAL, sr_signalTemplate)
+        sr_signal.setParamEffect(lumi, nlumi)
+        sr_signal.setParamEffect(trig_met, ntrig_met)
+        sr_signal.setParamEffect(veto_tau, nveto_tau)
+        sr_signal.setParamEffect(jec, njec)
+        sr_signal.autoMCStats(epsilon=1e-5)
+        addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category)
+        if category=="pass": sr.addSample(sr_signal)
 
     ###
     # End of SR
