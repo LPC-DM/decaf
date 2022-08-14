@@ -398,7 +398,7 @@ def model(year, mass, recoil, category):
 
     for s in signal["sr"].identifiers("process"):
         sr_signalTemplate = template(signal, s, "nominal", recoil, "sr", category, read_sumw2=True)
-        sr_signal = rl.TemplateSample(str(s)  + "_" +  ch_name, rl.Sample.SIGNAL, sr_signalTemplate)
+        sr_signal = rl.TemplateSample(ch_name + "_" + str(s), rl.Sample.SIGNAL, sr_signalTemplate)
         sr_signal.setParamEffect(lumi, nlumi)
         sr_signal.setParamEffect(trig_met, ntrig_met)
         sr_signal.setParamEffect(veto_tau, nveto_tau)
