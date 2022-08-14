@@ -403,7 +403,16 @@ def model(year, mass, recoil, category):
         sr_signal.setParamEffect(trig_met, ntrig_met)
         sr_signal.setParamEffect(veto_tau, nveto_tau)
         sr_signal.setParamEffect(jec, njec)
-        sr_signal.autoMCStats(epsilon=1e-5)
+        #sr_signal.autoMCStats(epsilon=1e-5)
+        for i in range(sr_signal.observable.nbins):
+            if sr_signal._nominal[i] <= 0. or sr_signal._sumw2[i] <= 0.:
+                continue
+            effect_up = np.ones_like(sr_signal._nominal)
+            effect_down = np.ones_like(sr_signal._nominal)
+            effect_up[i] = (sr_signal._nominal[i] + np.sqrt(sr_signal._sumw2[i]))/sr_signal._nominal[i]
+            effect_down[i] = max((sr_signal._nominal[i] - np.sqrt(sr_signal._sumw2[i]))/sr_signal._nominal[i], 1e-5)
+            param = NuisanceParameter(str(s) + "_" + ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
+            self.setParamEffect(param, effect_up, effect_down)
         addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category)
         if category=="pass": sr.addSample(sr_signal)
 
