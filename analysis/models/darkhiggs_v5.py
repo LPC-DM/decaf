@@ -411,8 +411,8 @@ def model(year, mass, recoil, category):
             effect_down = np.ones_like(sr_signal._nominal)
             effect_up[i] = (sr_signal._nominal[i] + np.sqrt(sr_signal._sumw2[i]))/sr_signal._nominal[i]
             effect_down[i] = max((sr_signal._nominal[i] - np.sqrt(sr_signal._sumw2[i]))/sr_signal._nominal[i], 1e-5)
-            param = NuisanceParameter(str(s) + "_" + ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
-            self.setParamEffect(param, effect_up, effect_down)
+            param = rl.NuisanceParameter(str(s) + "_" + ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
+            sr_signal.setParamEffect(param, effect_up, effect_down)
         addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category)
         if category=="pass": sr.addSample(sr_signal)
 
