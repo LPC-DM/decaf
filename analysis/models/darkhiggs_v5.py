@@ -95,7 +95,7 @@ def template(dictionary, process, systematic, recoil, region, category, min_valu
         output = histogram.integrate("systematic", systematic).values()[()][recoil, :, category_map[category]]
         output[zerobins] = 1.
         output[~zerobins] /= nominal[~zerobins]
-        output[~zerobins] = max(output[~zerobins], 1e-5)
+        output[~zerobins] = np.maximum(output[~zerobins], 1e-5)
         output[np.isnan(output)] = 1.
     binning = (
         dictionary[region]
@@ -1445,6 +1445,7 @@ if __name__ == "__main__":
             with open(
                     "data/"
                     + "Darkhiggs"
+                    + "-"
                     + year
                     + "-"
                     + category
