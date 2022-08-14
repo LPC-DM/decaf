@@ -1444,7 +1444,7 @@ if __name__ == "__main__":
 
             with open(
                     "data/"
-                    + "Darkhiggs"
+                    + "darkhiggs"
                     + "-"
                     + year
                     + "-"
