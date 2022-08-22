@@ -207,12 +207,17 @@ sh stop_jupyter.sh
 
 ### Generating the model
 
-Taking as example the dark Higgs analysis, run the following command to generate the background model:
+Taking as example the dark Higgs analysis, run the following command to generate the background model, for example:
 
 ```
-python models/darkhiggs.py -y 2018
+python models/darkhiggs.py -y 2018 -f -m 40to120
 ```
-The ```models/darkhiggs.py``` module extracts coffea histgrams from the ```hists/darkhiggs201?.scaled``` files and utilize them to generate the different templates that will later be rendered into datacards/workspaces. It also defines transfer factors for the data-driven background models. It produces ```.model``` files that are saved into the ```data``` folder. More specifically, the ```models/darkhiggs.py``` module produces one ```.model``` file for each pass/fail and recoil bin. 
+The ```models/darkhiggs.py``` module extracts coffea histgrams from the ```hists/darkhiggs201?.scaled``` files and utilize them to generate the different templates that will later be rendered into datacards/workspaces. It also defines transfer factors for the data-driven background models. It produces ```.model``` files that are saved into the ```data``` folder. More specifically, the ```models/darkhiggs.py``` module produces one ```.model``` file for each pass/fail and recoil bin.
+
+Running the following command will generate all model files, and the outputs will store in the data directory:
+```
+./make_model.sh
+```
 
 ### Rendering the model
 
@@ -256,7 +261,8 @@ python render.py -m model_name
 the ```-m``` or ```--model``` options provide in input the name of the model to render, that corresponds to the name of the ```.model``` file where the model is stored. The ```render.py``` module launches python futures jobs to process in parallel the different control/signal regions that belongs to a single model. Different models can also be rendered in parallel, by using condor. In order to run rendering condor job, the following command should be ran:
 
 ```
-python render_condor.py -m model_name
+python render_condor.py -m <model_name> -c <server_name> -t -x
+python render_condor.py -m darkhiggs -c kisti -t -x
 ```
 
 this time, all the models stored into ```.model``` files whose name contains the sting passed via the  ```-m``` options are going to be rendered. 
@@ -270,14 +276,14 @@ datacards/model_name
 The ```render_condor.py``` module returns ```.tgz``` tarballs that contain the different datacards/workspaces, and are stored into the ```datacards``` folder. To untar them, simply do:
 
 ```
-python macros/untar_cards.py -a mhs 
+python macros/untar_cards.py -a darkhiggs 
 ```
 
 Where the ```-a``` or ```--analysis``` options correspond to the analysis name. The ```untar_cards.py``` script will untar all the tarballs that contain the string that is passed through the ```-a``` option.
 To merge the datacards, run the following script:
 
 ```
-python macros/combine_cards.py -a mhs
+python macros/combine_cards.py -a darkhiggs
 ```
 Where the ```-a``` or ```--analysis``` options correspond to the analysis name. The ```combine_datacards.py``` script will combine all the datacards whose name contains the string that is passed through the ```-a``` option. The script will create a folder inside ```datacards``` whose name corresponds to the string that is passed through the ```-a``` option, will move all the workspaces that correspond to the datacards it combined inside it, and will save in it the combined datacard, whose name will be set to the string that is passed through the ```-a``` option.
 
@@ -299,28 +305,16 @@ import ROOT
 ROOT.v5.TFormula.SetMaxima(5000000)
 ```
 
-Move inside the newly generated folder:
-
+In the datacards directory, the directory is created based on the <model_name>. We are using the "MultiSignalModel" method to have one datacard includes all signal mass points. Please submint text2workspace job to the condor by using the following command: 
 ```
-cd datacards/<mass point>
+python t2w_condor.py -a darkhiggs -c <server name> -t -x
 ```
-
-From here, to convert the datacard into the workspace you will use to run the fit, do:
-
-```
-text2workspace.py <mass point>.txt --channel-masks
-```
-
-To run all mass points over condor, do:
-```
-python t2w_condor.py -a mhs -c <server name> -t -x
-```
-Currently, \<server name\> is either `lpc` or `kisti`.
+Currently, \<server name\> is either `lpc` or `kisti`. The output will be saved in the same directory with the same name as the datacard.
 After you get workspace, you will be able to run fit over condor by doing:
 ```
-python combine_condor.py -a mhs -c <server name> -t -x
+python combine_condor.py -a darkhiggs -c <server name> -m <method> -t -x
+python combine_condor.py -a darkhiggs -c kisti -m cminfit -t -x
 ```
-Detail fit commands can be found from the file named `combine.sh`.
 
 <!-- COMMENT OUT
 make sure you edit your ```$CMSSW/src/HiggsAnalysis/CombinedLimit/scripts/text2workspace.py``` module as suggested below:
