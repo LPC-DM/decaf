@@ -58,7 +58,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         self._xsec = xsec
 
         self._samples = {
-            'sr':('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET','Mhs_50','Mhs_70','Mhs_90','MonoJet','MonoW','MonoZ','mhs'),
+            'sr':('ZJets','WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET','mhs'),
             'wmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET'),
             'tmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET'),
             'wecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','SingleElectron','EGamma'),
