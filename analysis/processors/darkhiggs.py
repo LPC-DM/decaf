@@ -10,7 +10,6 @@ np.seterr(divide='ignore', invalid='ignore', over='ignore')
 from coffea.arrays import Initialize
 from coffea import hist, processor
 from coffea.util import load, save
-from coffea.jetmet_tools import FactorizedJetCorrector, JetCorrectionUncertainty, JetTransformer, JetResolution, JetResolutionScaleFactor
 from optparse import OptionParser
 from uproot_methods import TVector2Array, TLorentzVectorArray
 
@@ -54,99 +53,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             
     def __init__(self, year, xsec, corrections, ids, common):
 
-        self._columns = """                                                                                                                    
-        AK15PuppiSubJet_eta
-        AK15PuppiSubJet_mass
-        AK15PuppiSubJet_phi
-        AK15PuppiSubJet_pt
-        AK15Puppi_eta
-        AK15Puppi_jetId
-        AK15Puppi_msoftdrop
-        AK15Puppi_phi
-        AK15Puppi_probHbb
-        AK15Puppi_probQCDb
-        AK15Puppi_probQCDbb
-        AK15Puppi_probQCDc
-        AK15Puppi_probQCDcc
-        AK15Puppi_probQCDothers
-        AK15Puppi_probZbb
-        AK15Puppi_pt
-        AK15Puppi_subJetIdx1
-        AK15Puppi_subJetIdx2
-        CaloMET_pt
-        CaloMET_phi
-        Electron_charge
-        Electron_cutBased
-        Electron_dxy
-        Electron_dz
-        Electron_eta
-        Electron_mass
-        Electron_phi
-        Electron_pt
-        Flag_BadPFMuonFilter
-        Flag_EcalDeadCellTriggerPrimitiveFilter
-        Flag_HBHENoiseFilter
-        Flag_HBHENoiseIsoFilter
-        Flag_globalSuperTightHalo2016Filter
-        Flag_goodVertices
-        GenPart_eta
-        GenPart_genPartIdxMother
-        GenPart_pdgIdGenPart_phi
-        GenPart_pt
-        GenPart_statusFlags
-        HLT_Ele115_CaloIdVT_GsfTrkIdT
-        HLT_Ele32_WPTight_Gsf
-        HLT_PFMETNoMu120_PFMHTNoMu120_IDTight
-        HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60
-        HLT_Photon200
-        Jet_btagDeepB
-        Jet_btagDeepFlavB
-        Jet_chEmEF
-        Jet_chHEF
-        Jet_eta
-        Jet_hadronFlavour
-        Jet_jetId
-        Jet_mass
-        Jet_neEmEF
-        Jet_neHEF
-        Jet_phi
-        Jet_pt
-        Jet_rawFactor
-        MET_phi
-        MET_pt
-        Muon_charge
-        Muon_eta
-        Muon_looseId
-        Muon_mass
-        Muon_pfRelIso04_all
-        Muon_phi
-        Muon_pt
-        Muon_tightId
-        PV_npvs
-        Photon_eta
-        Photon_phi
-        Photon_pt
-        Tau_eta
-        Tau_idDecayMode
-        Tau_idMVAoldDM2017v2
-        Tau_phi
-        Tau_pt
-        fixedGridRhoFastjetAll
-        genWeight
-        nAK15Puppi
-        nAK15PuppiSubJet
-        nElectron
-        nGenPart
-        nJet
-        nMuon
-        nPhoton
-        nTau
-        """.split()
-        
         self._year = year
-
         self._lumi = 1000.*float(AnalysisProcessor.lumis[year])
-
         self._xsec = xsec
 
         self._samples = {
@@ -155,9 +63,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             'tmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET'),
             'wecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','SingleElectron','EGamma'),
             'tecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','SingleElectron','EGamma'),
-            'zmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET'),
-            'zecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','SingleElectron','EGamma'),
-            'gcr':('GJets','QCD','SinglePhoton','EGamma')
         }
 
         self._gentype_map = {
@@ -199,19 +104,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             ]
         }
 
-        self._singlephoton_triggers = {
-            '2016': [
-                'Photon175',
-                'Photon165_HE10'
-            ],
-            '2017': [
-                'Photon200'
-            ],
-            '2018': [
-                'Photon200'
-            ]
-        }
-
         self._singleelectron_triggers = { #2017 and 2018 from monojet, applying dedicated trigger weights
             '2016': [
                 'Ele27_WPTight_Gsf',
@@ -226,78 +118,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'Ele32_WPTight_Gsf',
                 'Ele115_CaloIdVT_GsfTrkIdT',
                 'Photon200'
-            ]
-        }
-
-        self._jec = {
-        
-            '2016': [
-                'Summer16_07Aug2017_V11_MC_L1FastJet_AK4PFPuppi',
-                'Summer16_07Aug2017_V11_MC_L2L3Residual_AK4PFPuppi',
-                'Summer16_07Aug2017_V11_MC_L2Relative_AK4PFPuppi',
-                'Summer16_07Aug2017_V11_MC_L2Residual_AK4PFPuppi',
-                'Summer16_07Aug2017_V11_MC_L3Absolute_AK4PFPuppi'
-            ],
-            
-            '2017':[
-                'Fall17_17Nov2017_V32_MC_L1FastJet_AK4PFPuppi',
-                'Fall17_17Nov2017_V32_MC_L2L3Residual_AK4PFPuppi',
-                'Fall17_17Nov2017_V32_MC_L2Relative_AK4PFPuppi',
-                'Fall17_17Nov2017_V32_MC_L2Residual_AK4PFPuppi',
-                'Fall17_17Nov2017_V32_MC_L3Absolute_AK4PFPuppi'
-            ],
-
-            '2018':[
-                'Autumn18_V19_MC_L1FastJet_AK4PFPuppi',
-                'Autumn18_V19_MC_L2L3Residual_AK4PFPuppi',
-                'Autumn18_V19_MC_L2Relative_AK4PFPuppi', #currently broken
-                'Autumn18_V19_MC_L2Residual_AK4PFPuppi',  
-                'Autumn18_V19_MC_L3Absolute_AK4PFPuppi'  
-            ]
-        }
-
-        self._junc = {
-    
-            '2016':[
-                'Summer16_07Aug2017_V11_MC_Uncertainty_AK4PFPuppi'
-            ],
-
-            '2017':[
-                'Fall17_17Nov2017_V32_MC_Uncertainty_AK4PFPuppi'
-            ],
-
-            '2018':[
-                'Autumn18_V19_MC_Uncertainty_AK4PFPuppi'
-            ]
-        }
-
-        self._jr = {
-        
-            '2016': [
-                'Summer16_25nsV1b_MC_PtResolution_AK4PFPuppi'
-            ],
-        
-            '2017':[
-                'Fall17_V3b_MC_PtResolution_AK4PFPuppi'
-            ],
-
-            '2018':[
-                'Autumn18_V7b_MC_PtResolution_AK4PFPuppi'
-            ]
-        }
-
-        self._jersf = {
-    
-            '2016':[
-                'Summer16_25nsV1b_MC_SF_AK4PFPuppi'
-            ],
-
-            '2017':[
-                'Fall17_V3b_MC_SF_AK4PFPuppi'
-            ],
-
-            '2018':[
-                'Autumn18_V7b_MC_SF_AK4PFPuppi'
             ]
         }
 
@@ -574,20 +394,9 @@ class AnalysisProcessor(processor.ProcessorABC):
         isHEMJet        = self._ids['isHEMJet']        
         
         match = self._common['match']
-        sigmoid = self._common['sigmoid'] #to calculate photon trigger efficiency
         deepflavWPs = self._common['btagWPs']['deepflav'][self._year]
         deepcsvWPs = self._common['btagWPs']['deepcsv'][self._year]
 
-        ###
-        # Derive jet corrector for JEC/JER
-        ###
-        
-        JECcorrector = FactorizedJetCorrector(**{name: Jetevaluator[name] for name in self._jec[self._year]})
-        JECuncertainties = JetCorrectionUncertainty(**{name:Jetevaluator[name] for name in self._junc[self._year]})
-        JER = JetResolution(**{name:Jetevaluator[name] for name in self._jr[self._year]})
-        JERsf = JetResolutionScaleFactor(**{name:Jetevaluator[name] for name in self._jersf[self._year]})
-        Jet_transformer = JetTransformer(jec=JECcorrector,junc=JECuncertainties, jer = JER, jersf = JERsf)
-        
         ###
         #Initialize global quantities (MET ecc.)
         ###
@@ -1167,9 +976,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             btag['tmcr'], btagUp['tmcr'], btagDown['tmcr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'-1')
             btag['wecr'], btagUp['wecr'], btagDown['wecr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['tecr'], btagUp['tecr'], btagDown['tecr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'-1')
-            btag['zmcr'], btagUp['zmcr'], btagDown['zmcr'] = np.ones(events.size), np.ones(events.size), np.ones(events.size)
-            btag['zecr'], btagUp['zecr'], btagDown['zecr'] = np.ones(events.size), np.ones(events.size), np.ones(events.size)
-            btag['gcr'],  btagUp['gcr'],  btagDown['gcr']  = np.ones(events.size), np.ones(events.size), np.ones(events.size)
 
         ###
         # Selections
@@ -1233,9 +1039,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             'tmcr': ['isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'],
             'wecr': ['isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100'],
             'tecr': ['isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100'],
-            'zmcr': ['istwoM','fatjet','noHEMj','met_filters','met_triggers', 'dimu_mass','met120'],
-            'zecr': ['istwoE','fatjet','noHEMj','met_filters','singleelectron_triggers', 'diele_mass','met120','leading_e_pt'],
-            'gcr': ['isoneA','fatjet','noHEMj','met_filters','singlephoton_triggers']
         }
 
         isFilled = False
