@@ -43,7 +43,7 @@ Transfer_Input_Files = combine.sh, /tmp/x509up_u556950775
 Output = datacards/$ENV(FOLDER)/condor/$ENV(METHOD)/out/$ENV(METHOD)_$(Cluster)_$(Process).stdout
 Error = datacards/$ENV(FOLDER)/condor/$ENV(METHOD)/err/$ENV(METHOD)_$(Cluster)_$(Process).stderr
 Log = datacards/$ENV(FOLDER)/condor/$ENV(METHOD)/log/$ENV(FOLDER)_$(Cluster)_$(Process).log
-Arguments = $ENV(FOLDER) $ENV(CLUSTER) $ENV(USER) $ENV(METHOD) $ENV(SIG)
+Arguments = $ENV(FOLDER) $ENV(CLUSTER) $ENV(USER) $ENV(METHOD)
 accounting_group=group_cms
 JobBatchName = fit
 request_disk = 9000
@@ -57,29 +57,27 @@ Executable = combine.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = combine.sh
-Output = datacards/$ENV(FOLDER)/condor/combine/out/$(Cluster)_$(Process).stdout
-Error = datacards/$ENV(FOLDER)/condor/combine/err/$ENV(FOLDER)_$(Cluster)_$(Process).stderr
-Log = datacards/$ENV(FOLDER)/condor/combine/log/$ENV(FOLDER)_$(Cluster)_$(Process).log
-TransferOutputRemaps = "fitDiagnostics.root=$ENV(PWD)/datacards/$ENV(FOLDER)/fitDiagnostics.root"
-Arguments = $ENV(FOLDER) $ENV(CLUSTER) $ENV(USER)
-request_memory = 3000
+Output = datacards/$ENV(FOLDER)/condor/$ENV(METHOD)/out/$ENV(METHOD)_$(Cluster)_$(Process).stdout
+Error = datacards/$ENV(FOLDER)/condor/$ENV(METHOD)/err/$ENV(METHOD)_$(Cluster)_$(Process).stderr
+Log = datacards/$ENV(FOLDER)/condor/$ENV(METHOD)/log/$ENV(FOLDER)_$(Cluster)_$(Process).log
+Arguments = $ENV(FOLDER) $ENV(CLUSTER) $ENV(USER) $ENV(METHOD)
+JobBatchName = fit
+request_disk = 9000
+request_memory = 8000
 Queue 1"""
 
 jdl_file = open("combine.submit", "w")
 jdl_file.write(jdl)
 jdl_file.close()
 
-
-signals = ['Mz2500_mhs90_Mdm1250', 'Mz500_mhs70_Mdm150', 'Mz2000_mhs50_Mdm1000', 'Mz200_mhs50_Mdm150', 'Mz2000_mhs50_Mdm500', 'Mz2500_mhs50_Mdm750', 'Mz3000_mhs70_Mdm1000', 'Mz300_mhs70_Mdm100', 'Mz500_mhs90_Mdm150', 'Mz200_mhs90_Mdm100', 'Mz1000_mhs50_Mdm500', 'Mz3000_mhs90_Mdm1500', 'Mz200_mhs70_Mdm100', 'Mz2500_mhs90_Mdm750', 'Mz300_mhs50_Mdm150', 'Mz2500_mhs50_Mdm1250', 'Mz1000_mhs50_Mdm1000', 'Mz500_mhs50_Mdm150', 'Mz500_mhs90_Mdm500', 'Mz200_mhs70_Mdm150', 'Mz300_mhs50_Mdm100', 'Mz2000_mhs90_Mdm1500', 'Mz500_mhs70_Mdm500', 'Mz1000_mhs90_Mdm1000', 'Mz2000_mhs70_Mdm1500', 'Mz3000_mhs70_Mdm1500', 'Mz3000_mhs50_Mdm1500', 'Mz500_mhs50_Mdm250', 'Mz300_mhs90_Mdm150', 'Mz300_mhs70_Mdm150', 'Mz1000_mhs70_Mdm150', 'Mz2500_mhs70_Mdm1250', 'Mz3000_mhs50_Mdm1000', 'Mz2000_mhs90_Mdm500', 'Mz200_mhs50_Mdm100', 'Mz3000_mhs90_Mdm1000', 'Mz500_mhs90_Mdm250', 'Mz2000_mhs50_Mdm1500', 'Mz300_mhs90_Mdm100', 'Mz1000_mhs90_Mdm500', 'Mz1000_mhs90_Mdm150', 'Mz2000_mhs70_Mdm1000', 'Mz1000_mhs70_Mdm500', 'Mz500_mhs70_Mdm250', 'Mz2000_mhs70_Mdm500', 'Mz1000_mhs50_Mdm150', 'Mz2500_mhs70_Mdm750', 'Mz500_mhs50_Mdm500', 'Mz1000_mhs70_Mdm1000', 'Mz200_mhs90_Mdm150', 'Mz2000_mhs90_Mdm1000']
-
-for signal in signals:
-    folder = options.analysis
-    print('Preparing job for mass point', signal)
+for folder in os.listdir('datacards/'):
+    if options.analysis not in folder: continue
+    if '-' in folder: continue
+    print('Preparing job for folder', folder)
     os.system('mkdir -p datacards/'+folder+'/condor/'+options.method+'/err/')
     os.system('mkdir -p datacards/'+folder+'/condor/'+options.method+'/log/')
     os.system('mkdir -p datacards/'+folder+'/condor/'+options.method+'/out/')
-    os.environ['FOLDER'] = folder
-    os.environ['SIG'] = signal
+    os.environ['FOLDER']   = folder
     os.environ['CLUSTER'] = options.cluster
     os.environ['METHOD'] = options.method
     os.system('condor_submit combine.submit')
