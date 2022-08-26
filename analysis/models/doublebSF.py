@@ -75,15 +75,15 @@ def template(dictionary, process, gentype, category, read_sumw2=False):
 
     return (output, binning, "svmass")
 
-def addBBliteSyst(templ, param, epsilon=0):
+def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=0):
     for i in range(templ.observable.nbins):
-                if templ._nominal[i] <= 0. or templ._sumw2[i] <= 0.:
-                    continue
-                effect_up = np.ones_like(templ._nominal)
-                effect_down = np.ones_like(templ._nominal)
-                effect_up[i] = (templ._nominal[i] + np.sqrt(templ._sumw2[i]))/templ._nominal[i]
-                effect_down[i] = max((templ._nominal[i] - np.sqrt(templ._sumw2[i]))/templ._nominal[i], epsilon)
-                templ.setParamEffect(param[i], effect_up, effect_down)
+        if merged_central[i] <= 0. or merged_error2[i] <= 0.:
+            continue
+        effect_up = np.ones_like(templ._nominal)
+        effect_down = np.ones_like(templ._nominal)
+        effect_up[i] = 1.0 + np.sqrt(merged_error2[i])/merged_central[i]
+        effect_down[i] = max(epsilon, 1.0 - np.sqrt(merged_error2[i])/merged_central[i])
+        templ.setParamEffect(param[i], effect_up, effect_down)
 
 ### s: process in the signal region
 def model(year, category):
@@ -127,7 +127,7 @@ def model(year, category):
     sr_genbb.setParamEffect(sf_weight, weight[category])
     #sr_genbb.autoMCStats(shape=True)
     #sr_genbb.autoMCStats(name=ch_name)
-    addBBliteSyst(sr_genbb, param, epsilon=1e-5)
+    addBBliteSyst(sr_genbb, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genbb)
     ###########################################
 
@@ -155,7 +155,7 @@ def model(year, category):
     sr_genb.setParamEffect(frac, nfrac)
     #sr_genb.autoMCStats(shape=True)
     #sr_genb.autoMCStats(name=ch_name)
-    addBBliteSyst(sr_genb, param, epsilon=1e-5)
+    addBBliteSyst(sr_genb, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genb)
 
     sr_genc_Template = template(background, "QCD", "c", category, read_sumw2=True)
@@ -166,7 +166,7 @@ def model(year, category):
     sr_genc.setParamEffect(frac, nfrac)
     #sr_genc.autoMCStats(shape=True)
     #sr_genc.autoMCStats(name=ch_name)
-    addBBliteSyst(sr_genc, param, epsilon=1e-5)
+    addBBliteSyst(sr_genc, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genc)
 
     sr_gencc_Template = template(background, "QCD", "cc", category, read_sumw2=True)
@@ -177,7 +177,7 @@ def model(year, category):
     sr_gencc.setParamEffect(frac, nfrac)
     #sr_gencc.autoMCStats(shape=True)
     #sr_gencc.autoMCStats(name=ch_name)
-    addBBliteSyst(sr_gencc, param, epsilon=1e-5)
+    addBBliteSyst(sr_gencc, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_gencc)
 
     sr_genother_Template = template(background, "QCD", "other", category, read_sumw2=True)
@@ -188,7 +188,7 @@ def model(year, category):
     sr_genother.setParamEffect(frac, nfrac)
     #sr_genother.autoMCStats(shape=True)
     #sr_genother.autoMCStats(name=ch_name)
-    addBBliteSyst(sr_genother, param, epsilon=1e-5)
+    addBBliteSyst(sr_genother, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genother)
 
     return model
@@ -257,6 +257,7 @@ if __name__ == "__main__":
         frac_c = rl.NuisanceParameter("frac_c" + year + category, "lnN")
         frac_other = rl.NuisanceParameter("frac_other" + year + category, "lnN")
 
+
         ###
         # Rebin templates for fit 
         ##
@@ -264,6 +265,11 @@ if __name__ == "__main__":
         #bkg_hists["template"] = bkg_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", new_bins[year]))
         data_hists["svtemplate"] = data_hists["svtemplate"].rebin("svmass", hist.Bin("svmass", "svmass", new_bins[year]))
         bkg_hists["svtemplate"] = bkg_hists["svtemplate"].rebin("svmass", hist.Bin("svmass", "svmass", new_bins[year]))
+
+        #### Calculate total yields and errors
+        total_yields, total_error2 = bkg_hists['svtemplate'].integrate("gentype").integrate("process").values(sumw2=True)[()]
+        total_yields = total_yields[:, category_map[category]]
+        total_error2 = total_error2[:, category_map[category]]
 
         ###
         # Preparing histograms for fit
