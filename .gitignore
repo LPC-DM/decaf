@@ -11,3 +11,5 @@ docker_stderror
 *.reduced
 *.merged
 *.scaled
+*.model
+datacards/*
