@@ -302,33 +302,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('l1phi','Leading Lepton/Photon Phi',64,-3.2,3.2)
             ),
-            'dilepmass': hist.Hist(
-                'Events', 
-                hist.Cat('dataset', 'Dataset'), 
-                hist.Cat('region', 'Region'), 
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('dilepmass','Dilepton Mass',100,0,500)
-            ),
-            'dileppt': hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Cat('region', 'Region'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('dileppt','Dilepton Pt',150,0,800)
-            ),
             'ZHbbvsQCD': hist.Hist(
                 'Events', 
                 hist.Cat('dataset', 'Dataset'), 
                 hist.Cat('region', 'Region'), 
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1)
-            ),
-            'TvsQCD': hist.Hist(
-                'Events', 
-                hist.Cat('dataset', 'Dataset'), 
-                hist.Cat('region', 'Region'), 
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]),
-                hist.Bin('TvsQCD','TvsQCD',15,0,1)
             ),
         })
 
@@ -367,11 +346,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         get_met_trig_weight     = self._corrections['get_met_trig_weight'][self._year]    
         get_met_zmm_trig_weight = self._corrections['get_met_zmm_trig_weight'][self._year]
         get_ele_trig_weight     = self._corrections['get_ele_trig_weight'][self._year]    
-        get_pho_trig_weight     = self._corrections['get_pho_trig_weight'][self._year]    
         get_ele_loose_id_sf     = self._corrections['get_ele_loose_id_sf'][self._year]
         get_ele_tight_id_sf     = self._corrections['get_ele_tight_id_sf'][self._year]
-        get_pho_tight_id_sf     = self._corrections['get_pho_tight_id_sf'][self._year]
-        get_pho_csev_sf         = self._corrections['get_pho_csev_sf'][self._year]
         get_mu_tight_id_sf      = self._corrections['get_mu_tight_id_sf'][self._year]
         get_mu_loose_id_sf      = self._corrections['get_mu_loose_id_sf'][self._year]
         get_ele_reco_sf         = self._corrections['get_ele_reco_sf'][self._year]
@@ -380,7 +356,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         get_mu_loose_iso_sf     = self._corrections['get_mu_loose_iso_sf'][self._year]
         get_ecal_bad_calib      = self._corrections['get_ecal_bad_calib']
         get_deepflav_weight     = self._corrections['get_btag_weight']['deepflav'][self._year]
-        Jetevaluator            = self._corrections['Jetevaluator']
         
         isLooseElectron = self._ids['isLooseElectron'] 
         isTightElectron = self._ids['isTightElectron'] 
@@ -475,11 +450,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         probQCD=fj.probQCDbb+fj.probQCDcc+fj.probQCDb+fj.probQCDc+fj.probQCDothers
         probZHbb=fj.probZbb+fj.probHbb
         fj['ZHbbvsQCD'] = probZHbb/(probZHbb+probQCD)
-        probT=fj.probTbcq+fj.probTbqq
-        fj['TvsQCD'] = probT/(probT+probQCD)
-        probV=fj.probWcq+fj.probWqq+fj.probZbb+fj.probZcc+fj.probZqq
-        probX=probZHbb+probV
-        fj['XvsQCD'] = probX/(probX+probQCD)
         fj_good = fj[fj.isgood.astype(np.bool)]
         fj_clean = fj_good[fj_good.isclean.astype(np.bool)]
         fj_ntot = fj.counts
@@ -516,22 +486,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_j = leading_j[leading_j.isclean.astype(np.bool)]
 
         ###
-        #Calculating derivatives
-        ###
-
-        ele_pairs = e_loose.distincts()
-        diele = ele_pairs.i0+ele_pairs.i1
-        diele['T'] = TVector2Array.from_polar(diele.pt, diele.phi)
-        leading_ele_pair = ele_pairs[diele.pt.argmax()]
-        leading_diele = diele[diele.pt.argmax()]
-
-        mu_pairs = mu_loose.distincts()
-        dimu = mu_pairs.i0+mu_pairs.i1
-        dimu['T'] = TVector2Array.from_polar(dimu.pt, dimu.phi)
-        leading_mu_pair = mu_pairs[dimu.pt.argmax()]
-        leading_dimu = dimu[dimu.pt.argmax()]
-
-        ###
         # Calculate recoil and transverse mass
         ###
 
@@ -541,9 +495,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             'tecr'  : met.T+leading_e.T.sum(),
             'wmcr'  : met.T+leading_mu.T.sum(),
             'tmcr'  : met.T+leading_mu.T.sum(),
-            'zecr'  : met.T+leading_diele.T.sum(),
-            'zmcr'  : met.T+leading_dimu.T.sum(),
-            'gcr'   : met.T+leading_pho.T.sum()
         }
 
         mT = {
@@ -780,50 +731,15 @@ class AnalysisProcessor(processor.ProcessorABC):
                 
             gen['isW'] = (abs(gen.pdgId)==24)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             gen['isZ'] = (abs(gen.pdgId)==23)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
-            gen['isA'] = (abs(gen.pdgId)==22)&gen.hasFlags(['isPrompt', 'fromHardProcess', 'isLastCopy'])&(gen.status==1)
-
-            ###
-            # Calculating gen photon dynamic isolation as in https://arxiv.org/pdf/1705.04664.pdf
-            ###
-
-            epsilon_0_dyn = 0.1
-            n_dyn = 1
-            gen['R_dyn'] = (91.1876/(gen.pt * np.sqrt(epsilon_0_dyn)))*(gen.isA).astype(np.int) + (-999)*(~gen.isA).astype(np.int)
-            gen['R_0_dyn'] = gen.R_dyn*(gen.R_dyn<1.0).astype(np.int) + (gen.R_dyn>=1.0).astype(np.int)
-
-            def isolation(R):
-                hadrons = gen[ #Stable hadrons not in NanoAOD, using quarks/glouns instead
-                    ((abs(gen.pdgId)<=5)|(abs(gen.pdgId)==21)) &
-                    gen.hasFlags(['fromHardProcess', 'isFirstCopy'])
-                ]
-                genhadrons = gen.cross(hadrons, nested=True)
-                hadronic_et = genhadrons.i1[(genhadrons.i0.delta_r(genhadrons.i1) <= R)].pt.sum()
-                return (hadronic_et<=(epsilon_0_dyn * gen.pt * np.power((1 - np.cos(R)) / (1 - np.cos(gen.R_0_dyn)), n_dyn))) | (hadrons.counts==0)
-
-            isIsoA=gen.isA
-            iterations = 5.
-            for i in range(1, int(iterations) + 1):
-                isIsoA=isIsoA&isolation(gen.R_0_dyn*i/iterations)
-            gen['isIsoA']=isIsoA
-
-            #genWs = gen[gen.isW&(gen.pt>=100)]
+            
             genWs = gen[gen.isW] 
             genZs = gen[gen.isZ]
             genDYs = gen[gen.isZ&(gen.mass>30)]
-            genIsoAs = gen[gen.isIsoA] 
-
+            
             nnlo_nlo = {}
             nlo_qcd = np.ones(events.size)
             nlo_ewk = np.ones(events.size)
-            if('GJets' in dataset): 
-                if self._year=='2016':
-                    nlo_qcd = get_nlo_qcd_weight['a'](genIsoAs.pt.max())
-                    nlo_ewk = get_nlo_ewk_weight['a'](genIsoAs.pt.max())
-                for systematic in get_nnlo_nlo_weight['a']:
-                    nnlo_nlo[systematic] = get_nnlo_nlo_weight['a'][systematic](genIsoAs.pt.max())*((genIsoAs.counts>0)&(genIsoAs.pt.max()>=290)) + \
-                                           get_nnlo_nlo_weight['a'][systematic](290)*((genIsoAs.counts>0)&~(genIsoAs.pt.max()>=290)&(genIsoAs.pt.max()>=100)) + \
-                                           (~((genIsoAs.counts>0)&(genIsoAs.pt.max()>=100))).astype(np.int)
-            elif('WJets' in dataset): 
+            if('WJets' in dataset): 
                 nlo_qcd = get_nlo_qcd_weight['w'](genWs.pt.max())
                 nlo_ewk = get_nlo_ewk_weight['w'](genWs.pt.max())
                 for systematic in get_nnlo_nlo_weight['w']:
@@ -852,27 +768,12 @@ class AnalysisProcessor(processor.ProcessorABC):
             # Trigger efficiency weight
             ###
 
-            e1sf = get_ele_trig_weight(leading_ele_pair.i0.eta.sum()+leading_ele_pair.i0.deltaEtaSC.sum(),leading_ele_pair.i0.pt.sum())*(leading_ele_pair.i0.pt.sum()>40).astype(np.int)
-            e2sf = get_ele_trig_weight(leading_ele_pair.i1.eta.sum()+leading_ele_pair.i1.deltaEtaSC.sum(),leading_ele_pair.i1.pt.sum())*(leading_ele_pair.i1.pt.sum()>40).astype(np.int)
-
-            if self._year == '2016':
-                sf =  get_pho_trig_weight(leading_pho.pt.sum())
-            elif self._year == '2017': #Sigmoid used for 2017 and 2018, values from monojet
-                sf = sigmoid(leading_pho.pt.sum(),0.335,217.91,0.065,0.996) / sigmoid(leading_pho.pt.sum(),0.244,212.34,0.050,1.000)
-                sf[np.isnan(sf) | np.isinf(sf)] == 1
-            elif self._year == '2018':
-                sf = sigmoid(leading_pho.pt.sum(),1.022, 218.39, 0.086, 0.999) / sigmoid(leading_pho.pt.sum(), 0.301,212.83,0.062,1.000)
-                sf[np.isnan(sf) | np.isinf(sf)] == 1
-
             trig = {
                 'sr':   get_met_trig_weight(met.pt),
                 'wmcr': get_met_trig_weight(u['wmcr'].mag),
                 'tmcr': get_met_trig_weight(u['tmcr'].mag),
-                'zmcr': get_met_zmm_trig_weight(u['zmcr'].mag),
                 'wecr': get_ele_trig_weight(leading_e.eta.sum()+leading_e.deltaEtaSC.sum(), leading_e.pt.sum()),
                 'tecr': get_ele_trig_weight(leading_e.eta.sum()+leading_e.deltaEtaSC.sum(), leading_e.pt.sum()),
-                'zecr': 1 - (1 - e1sf)*(1 - e2sf),
-                'gcr':  sf
             }
 
             ### 
@@ -880,26 +781,14 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
 
             mueta = abs(leading_mu.eta.sum())
-            mu1eta=abs(leading_mu_pair.i0.eta.sum())
-            mu2eta=abs(leading_mu_pair.i1.eta.sum())
             if self._year=='2016':
                 mueta=leading_mu.eta.sum()
-                mu1eta=leading_mu_pair.i0.eta.sum()
-                mu2eta=leading_mu_pair.i1.eta.sum()
-            if self._year=='2016':
-                sf = get_pho_tight_id_sf(leading_pho.eta.sum(),leading_pho.pt.sum())
-            else: #2017/2018 monojet measurement depends only on abs(eta)
-                sf = get_pho_tight_id_sf(abs(leading_pho.eta.sum()))
-
             ids ={
                 'sr':  np.ones(events.size),
                 'wmcr': get_mu_tight_id_sf(mueta,leading_mu.pt.sum()),
                 'tmcr': get_mu_tight_id_sf(mueta,leading_mu.pt.sum()),
-                'zmcr': get_mu_loose_id_sf(mu1eta,leading_mu_pair.i0.pt.sum()) * get_mu_loose_id_sf(mu2eta,leading_mu_pair.i1.pt.sum()),
                 'wecr': get_ele_tight_id_sf(leading_e.eta.sum()+leading_e.deltaEtaSC.sum(),leading_e.pt.sum()),
                 'tecr': get_ele_tight_id_sf(leading_e.eta.sum()+leading_e.deltaEtaSC.sum(),leading_e.pt.sum()),
-                'zecr': get_ele_loose_id_sf(leading_ele_pair.i0.eta.sum()+leading_ele_pair.i0.deltaEtaSC.sum(),leading_ele_pair.i0.pt.sum()) * get_ele_loose_id_sf(leading_ele_pair.i1.eta.sum()+leading_ele_pair.i1.deltaEtaSC.sum(),leading_ele_pair.i1.pt.sum()),
-                'gcr':  sf
             }
 
             ###
@@ -918,11 +807,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'sr': np.ones(events.size),
                 'wmcr': np.ones(events.size),
                 'tmcr': np.ones(events.size),
-                'zmcr': np.ones(events.size),
                 'wecr': sf(leading_e.eta.sum()+leading_e.deltaEtaSC.sum(),leading_e.pt.sum()),
                 'tecr': sf(leading_e.eta.sum()+leading_e.deltaEtaSC.sum(),leading_e.pt.sum()),
-                'zecr': sf(leading_ele_pair.i0.eta.sum()+leading_ele_pair.i0.deltaEtaSC.sum(),leading_ele_pair.i0.pt.sum()) * sf(leading_ele_pair.i1.eta.sum()+leading_ele_pair.i1.deltaEtaSC.sum(),leading_ele_pair.i1.pt.sum()),
-                'gcr': np.ones(events.size)
             }
 
             ###
@@ -933,35 +819,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'sr'  : np.ones(events.size),
                 'wmcr': get_mu_tight_iso_sf(mueta,leading_mu.pt.sum()),
                 'tmcr': get_mu_tight_iso_sf(mueta,leading_mu.pt.sum()),
-                'zmcr': get_mu_loose_iso_sf(mu1eta,leading_mu_pair.i0.pt.sum()) * get_mu_loose_iso_sf(mu2eta,leading_mu_pair.i1.pt.sum()),
                 'wecr': np.ones(events.size),
                 'tecr': np.ones(events.size),
-                'zecr': np.ones(events.size),
-                'gcr':  np.ones(events.size)
-            }
-
-            ###
-            # CSEV weight for photons: https://twiki.cern.ch/twiki/bin/view/CMS/EgammaIDRecipesRun2#Electron_Veto_CSEV_or_pixel_seed
-            ###
-
-            if self._year == '2016':
-                csev_weight = get_pho_csev_sf(abs(leading_pho.eta.sum()), leading_pho.pt.sum())
-            elif self._year == '2017':
-                csev_sf_index = 0.5*(leading_pho.isScEtaEB.sum()).astype(np.int)+3.5*(~(leading_pho.isScEtaEB.sum())).astype(np.int)+1*(leading_pho.r9.sum()>0.94).astype(np.int)+2*(leading_pho.r9.sum()<=0.94).astype(np.int)
-                csev_weight = get_pho_csev_sf(csev_sf_index)
-            elif self._year == '2018':
-                csev_weight = get_pho_csev_sf(leading_pho.pt.sum(), abs(leading_pho.eta.sum()))
-            csev_weight[csev_weight==0] = 1
-
-            csev = {
-                'sr'  : np.ones(events.size),
-                'wmcr': np.ones(events.size),
-                'tmcr': np.ones(events.size),
-                'zmcr': np.ones(events.size),
-                'wecr': np.ones(events.size),
-                'tecr': np.ones(events.size),
-                'zecr': np.ones(events.size),
-                'gcr':  csev_weight
             }
 
             ###
@@ -999,12 +858,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             triggers = triggers | events.HLT[path]
         selection.add('singleelectron_triggers', triggers)
 
-        triggers = np.zeros(events.size, dtype=np.bool)
-        for path in self._singlephoton_triggers[self._year]:
-            if path not in events.HLT.columns: continue
-            triggers = triggers | events.HLT[path]
-        selection.add('singlephoton_triggers', triggers)
-
         noHEMj = np.ones(events.size, dtype=np.bool)
         if self._year=='2018': noHEMj = (j_nHEM==0)
 
@@ -1017,12 +870,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('iszeroL', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
         selection.add('isoneM', (e_nloose==0)&(mu_ntight==1)&(mu_nloose==1)&(tau_nloose==0)&(pho_nloose==0))
         selection.add('isoneE', (e_ntight==1)&(e_nloose==1)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
-        selection.add('istwoM', (e_nloose==0)&(mu_nloose==2)&(tau_nloose==0)&(pho_nloose==0))
-        selection.add('istwoE',(e_nloose==2)&(mu_nloose==0)&(tau_nloose==0)&(pho_nloose==0))
-        selection.add('isoneA', (e_nloose==0)&(mu_nloose==0)&(tau_nloose==0)&(pho_ntight==1)&(pho_nloose==1))
         selection.add('leading_e_pt',(e_loose.pt.max()>40))
-        selection.add('dimu_mass',(leading_dimu.mass.sum()>60)&(leading_dimu.mass.sum()<120))
-        selection.add('diele_mass',(leading_diele.mass.sum()>60)&(leading_diele.mass.sum()<120))
         selection.add('noextrab', (j_ndflvL==0))
         selection.add('extrab', (j_ndflvL>0))
         selection.add('fatjet', (fj_nclean>0))
@@ -1082,7 +930,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'ndflvL':                 j_ndflvL,
                 'nfjclean':               fj_nclean,
                 'ZHbbvsQCD':              leading_fj.ZHbbvsQCD,
-                'TvsQCD':                 leading_fj.TvsQCD,
             }
             if region in mT:
                 variables['mT']           = mT[region]
@@ -1090,20 +937,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                 variables['l1pt']      = leading_e.pt
                 variables['l1phi']     = leading_e.phi
                 variables['l1eta']     = leading_e.eta
-                if 'z' in region:
-                    variables['dilepmass']  = leading_diele.mass
-                    variables['dileppt']    = leading_diele.pt
             if 'm' in region:
                 variables['l1pt']      = leading_mu.pt
                 variables['l1phi']     = leading_mu.phi
                 variables['l1eta']     = leading_mu.eta
-                if 'z' in region:
-                    variables['dilepmass']  = leading_dimu.mass
-                    variables['dileppt']    = leading_dimu.pt
-            if 'g' in region:
-                variables['l1pt']      = leading_pho.pt
-                variables['l1phi']     = leading_pho.phi
-                variables['l1eta']     = leading_pho.eta
             print('Variables:',variables.keys())
 
             def fill(dataset, gentype, weight, cut):
@@ -1169,7 +1006,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights.add('ids', ids[region])
                 weights.add('reco', reco[region])
                 weights.add('isolation', isolation[region])
-                weights.add('csev', csev[region])
                 weights.add('btag',btag[region], btagUp[region], btagDown[region])
 
                 wgentype = {
@@ -1279,7 +1115,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 for gentype in self._gentype_map.keys():
                     vgentype += self._gentype_map[gentype]*wgentype[gentype]
 
-                if 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset or 'GJets' in dataset:
+                if 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset:
                     if not isFilled:
                         hout['sumw'].fill(dataset='HF--'+dataset, sumw=1, weight=events.genWeight.sum())
                         hout['sumw'].fill(dataset='LF--'+dataset, sumw=1, weight=events.genWeight.sum())
@@ -1363,8 +1199,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                                               recoil=u[region].mag,
                                               fjmass=leading_fj.msd_corr.sum(),
                                               ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                              #TvsQCD=leading_fj.TvsQCD.sum(),
-                                              #XvsQCD=leading_fj.XvsQCD.sum(),
                                               weight=weights.weight(modifier=systematic)*cut)
                     ## Cutflow loop
                     vcut=np.zeros(events.size, dtype=np.int)
