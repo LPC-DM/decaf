@@ -7,7 +7,7 @@ import numpy as np
 from collections import defaultdict, OrderedDict
 from coffea import hist, processor 
 from coffea.util import load, save
-from util.futures_patch import patch_mp_connection_bpo_17560
+from helpers.futures_patch import patch_mp_connection_bpo_17560
 
 def add(chunk_tmp_arr):
      print('Job started')

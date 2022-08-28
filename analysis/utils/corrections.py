@@ -472,6 +472,7 @@ get_btag_weight = {
     }
 }
 
+'''
 Jetext = extractor()
 for directory in ['jec', 'jersf', 'jr', 'junc']:
     directory='data/'+directory
@@ -486,7 +487,7 @@ for directory in ['jec', 'jersf', 'jr', 'junc']:
     print('All files in',directory,'loaded')
 Jetext.finalize()
 Jetevaluator = Jetext.make_evaluator()
-
+'''
 corrections = {
     'get_msd_weight':           get_msd_weight,
     'get_ttbar_weight':         get_ttbar_weight,
@@ -510,7 +511,7 @@ corrections = {
     'get_mu_loose_iso_sf':      get_mu_loose_iso_sf,
     'get_ecal_bad_calib':       get_ecal_bad_calib,
     'get_btag_weight':          get_btag_weight,
-    'Jetevaluator':             Jetevaluator,
+    #'Jetevaluator':             Jetevaluator,
 }
 save(corrections, 'data/corrections.coffea')
 
