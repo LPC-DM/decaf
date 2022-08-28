@@ -1,4 +1,4 @@
-# Decaf
+# **D**ark matter **E**xperience with the **C**offea **A**nalysis **F**ramework
 
 Following instructions are to run the generation of the histograms directly from NanoAOD. 
 
