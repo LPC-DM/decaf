@@ -25,9 +25,9 @@ fnaleos = "root://cmseos.fnal.gov/"
 #fnaleos = "root://cmsxrootd.fnal.gov/"
 
 beans={}
-beans['2016'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2016","/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2016/Signals/monohs"]
-beans['2017'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017","/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/Sandeep","/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/Signals/monohs"]
-beans['2018'] = ["/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018","/eos/uscms/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018/Signals/monohs"]
+beans['2016'] = ["/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2016","/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2016/Signals/monohs"]
+beans['2017'] = ["/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017","/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/Sandeep","/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/Signals/monohs"]
+beans['2018'] = ["/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018","/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018/Signals/monohs"]
                  
 
 def split(arr, size):
@@ -44,7 +44,7 @@ def find(path):
     command='xrdfs '+fnaleos+' ls '+path
     print('Executing command', command)
     files=os.popen(command).read()
-    if not '.root' in a:
+    if not '.root' in files:
         path=path+'/*'
         files=find(path)
     return files
@@ -71,10 +71,10 @@ for folder in beans[options.year]:
         xs = xsections[dataset]
         path=folder+'/'+dataset
         urllist = find(path).replace('/store/',fnaleos+'store/').split()
-        for path in urllist:
-            if 'failed' in urllist: urllist.remove(path)
-            if '.root' not in urllist: urllist.remove(path)
-            if 'nano' not in urllist: urllist.remove(path)
+        for url in urllist:
+            if 'failed' in url: urllist.remove(url)
+            if '.root' not in url: urllist.remove(url)
+            if 'nano' not in url: urllist.remove(url)
         print('list lenght:',len(urllist))
         if options.special:
              sdataset, spack = options.special.split(':')
