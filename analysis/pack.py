@@ -69,6 +69,7 @@ for folder in beans[options.year]:
     for dataset in xsections.keys():
         if options.dataset and options.dataset not in dataset: continue
         xs = xsections[dataset]
+        path=folder+'/'+dataset
         urllist = find(path).replace('/store/',fnaleos+'store/').split()
         for path in urllist:
             if 'failed' in urllist: urllist.remove(path)
