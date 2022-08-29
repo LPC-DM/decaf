@@ -39,41 +39,16 @@ def split(arr, size):
      arrs.append(arr)
      return arrs
 
-def parse_xsec(cfgfile):
-    xsec_dict = {}
-    with open(cfgfile) as f:
-        for l in f:
-            l = l.strip()
-            if l.startswith('#'):
-                continue
-            pieces = l.split()
-            samp = None
-            xsec = None
-            isData = False
-            for s in pieces:
-                if 'AOD' in s:
-                    samp = s.split('/')[1]
-                    if 'AODSIM' not in s:
-                        isData = True
-                        break
-                else:
-                    try:
-                        xsec = float(s)
-                    except ValueError:
-                        try:
-                            import numexpr
-                            xsec = numexpr.evaluate(s).item()
-                        except:
-                            pass
-            if samp is None:
-                print('Ignore line:\n%s' % l)
-            elif not isData and xsec is None:
-                print('Cannot find cross section:\n%s' % l)
-            else:
-                xsec_dict[samp] = xsec
-    return xsec_dict
-
-#xsections = parse_xsec("data/xsec.conf")
+def find(path):
+    print("Looking into",path)
+    command='xrdfs '+fnaleos+' ls '+path
+    print('Executing command', command)
+    files=os.popen(command).read()
+    if not '.root' in a:
+        path=path+'/*'
+        files=find(path)
+    return files
+  
 xsections={}
 for k,v in processes.items():
      if v[1]=='MC':
@@ -87,31 +62,18 @@ for k,v in processes.items():
      else:
           xsections[k] = -1
 print(xsections)
+
 datadef = {}
 for folder in beans[options.year]:
     print("Opening",folder)
     for dataset in xsections.keys():
         if options.dataset and options.dataset not in dataset: continue
-        print("Looking into",folder+"/"+dataset)
-        filenames = folder+"/"+dataset+" -name \'*nano*.root\'"
-        exist=False
-        for filename in os.listdir('metadata'):
-             if dataset+".txt" not in filename: continue
-             exist=True
-        if not exist:
-             os.system("find "+filenames+" > metadata/"+dataset+".txt")
-        with open("metadata/"+dataset+".txt") as flist:
-             new_content=flist.read().replace('/eos/uscms',fnaleos)
-        with open("metadata/"+dataset+".txt", 'w') as flist:
-             flist.write(new_content)
-        if options.keep and open("metadata/"+dataset+".txt").read(1): 
-             os.system("mkdir -p metadata/"+options.year)
-             os.system("cp metadata/"+dataset+".txt metadata/"+options.year)
-        urllist = []
         xs = xsections[dataset]
-        for path in open("metadata/"+dataset+".txt"):
-            eospath = path.strip()
-            if (not ('failed' in eospath)): urllist.append(eospath)
+        urllist = find(path).replace('/store/',fnaleos+'store/').split()
+        for path in urllist:
+            if 'failed' in urllist: urllist.remove(path)
+            if '.root' not in urllist: urllist.remove(path)
+            if 'nano' not in urllist: urllist.remove(path)
         print('list lenght:',len(urllist))
         if options.special:
              sdataset, spack = options.special.split(':')
@@ -128,8 +90,7 @@ for folder in beans[options.year]:
                       'files': urllists[i],
                       'xs': xs,
                       }
-        os.system("rm metadata/"+dataset+".txt")
-
+        
 folder = "metadata/"+options.metadata+".json"
 with open(folder, "w") as fout:
     json.dump(datadef, fout, indent=4)
