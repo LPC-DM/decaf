@@ -39,6 +39,7 @@ def split(arr, size):
      arrs.append(arr)
      return arrs
 
+<<<<<<< HEAD
 def find(path):
     print("Looking into",path)
     command='xrdfs '+fnaleos+' ls '+path
@@ -47,6 +48,17 @@ def find(path):
     if not '.root' in files:
         path=path+'/*'
         files=find(path)
+=======
+def find(_list):
+    files=[]
+    print('Looking into',_list)
+    for path in _list:
+        command='xrdfs '+fnaleos+' ls '+path
+        results=os.popen(command).read()
+        files.extend(results.split())
+    if not any('.root' in _file for _file in files):
+        files=find(files)
+>>>>>>> c8172bf6148fce70a1afe6e6953101402d666b86
     return files
   
 xsections={}
@@ -70,11 +82,20 @@ for folder in beans[options.year]:
         if options.dataset and options.dataset not in dataset: continue
         xs = xsections[dataset]
         path=folder+'/'+dataset
+<<<<<<< HEAD
         urllist = find(path).replace('/store/',fnaleos+'store/').split()
         for url in urllist:
             if 'failed' in url: urllist.remove(url)
             if '.root' not in url: urllist.remove(url)
             if 'nano' not in url: urllist.remove(url)
+=======
+        urllist = find([path])
+        for path in urllist:
+            if 'failed' in urllist: urllist.remove(path)
+            if '.root' not in urllist: urllist.remove(path)
+            if 'nano' not in urllist: urllist.remove(path)
+            path.replace('/store/',fnaleos+'store/')
+>>>>>>> c8172bf6148fce70a1afe6e6953101402d666b86
         print('list lenght:',len(urllist))
         if options.special:
              sdataset, spack = options.special.split(':')
