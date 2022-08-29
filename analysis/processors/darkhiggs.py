@@ -726,7 +726,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                       fjmass=leading_fj.msd_corr.sum(),
                                       ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                       weight=np.ones(events.size)*cut)
-                fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
+                fill(dataset, np.ones(events.size), cut)
             else:
                 weights = processor.Weights(len(events))
                 if 'L1PreFiringWeight' in events.columns: weights.add('prefiring',events.L1PreFiringWeight.Nom)
@@ -889,4 +889,4 @@ if __name__ == '__main__':
                                          ids=ids,
                                          common=common)
 
-    save(processor_instance, 'data/darkhiggs'+options.year+'.processor')
+    save(processor_instance, 'data/darkhiggs'+options.metadata+'.processor')

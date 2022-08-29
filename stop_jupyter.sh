@@ -1,3 +1,3 @@
 #!/bin/bash
-jupyter notebook stop 9100
+jupyter notebook stop 9101
 rm start_jupyter.log
