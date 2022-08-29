@@ -675,12 +675,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'metphi':                 met.phi,
                 'mindphimet':             abs(met.T.delta_phi(j_clean.T)).min(),
                 'minDphimet':             abs(met.T.delta_phi(fj_clean.T)).min(),
-                'j1pt':                   leading_j.pt,
-                'j1eta':                  leading_j.eta,
-                'j1phi':                  leading_j.phi,
-                'fj1pt':                  leading_fj.sd.pt,
-                'fj1eta':                 leading_fj.sd.eta,
-                'fj1phi':                 leading_fj.sd.phi,
+                'j1pt':                   leading_j.pt.sum(),
+                'j1eta':                  leading_j.eta.sum(),
+                'j1phi':                  leading_j.phi.sum(),
+                'fj1pt':                  leading_fj.sd.pt.sum(),
+                'fj1eta':                 leading_fj.sd.eta.sum(),
+                'fj1phi':                 leading_fj.sd.phi.sum(),
                 'njets':                  j_nclean,
                 'ndflvL':                 j_ndflvL,
                 'nfjclean':               fj_nclean,
@@ -688,13 +688,13 @@ class AnalysisProcessor(processor.ProcessorABC):
             if region in mT:
                 variables['mT']           = mT[region]
             if 'e' in region:
-                variables['l1pt']      = leading_e.pt
-                variables['l1phi']     = leading_e.phi
-                variables['l1eta']     = leading_e.eta
+                variables['l1pt']      = leading_e.pt.sum()
+                variables['l1phi']     = leading_e.phi.sum()
+                variables['l1eta']     = leading_e.eta.sum()
             if 'm' in region:
-                variables['l1pt']      = leading_mu.pt
-                variables['l1phi']     = leading_mu.phi
-                variables['l1eta']     = leading_mu.eta
+                variables['l1pt']      = leading_mu.pt.sum()
+                variables['l1phi']     = leading_mu.phi.sum()
+                variables['l1eta']     = leading_mu.eta.sum()
 
             def fill(dataset, weight, cut):
                 for histname, h in hout.items():
@@ -702,7 +702,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                         continue
                     if histname not in variables:
                         continue
-                    flat_variable = {histname: variables[histname].sum()}
+                    flat_variable = {histname: variables[histname]}
                     h.fill(dataset=dataset, 
                            region=region, 
                            **flat_variable, 
