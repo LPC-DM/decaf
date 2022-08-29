@@ -132,12 +132,11 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('fjmass','AK15 Jet Mass', [0,40,50,60,70,80,90,100,110,120,130,150,160,180,200,220,240,300]),#[0, 30, 60, 80, 120, 300]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
-            'recoil': hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Cat('region', 'Region'),
-                hist.Bin('recoil','Hadronic Recoil',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0, 3000]),
-                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
+            'ZHbbvsQCD': hist.Hist(
+                'Events', 
+                hist.Cat('dataset', 'Dataset'), 
+                hist.Cat('region', 'Region'), 
+                hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1)
             ),
             'mindphirecoil': hist.Hist(
                 'Events',
@@ -151,13 +150,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Cat('region', 'Region'),
                 hist.Bin('minDphirecoil','Min dPhi(Recoil,AK15s)',30,0,3.5),
-                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
-            ),
-            'fjmass': hist.Hist(
-                'Events', 
-                hist.Cat('dataset', 'Dataset'), 
-                hist.Cat('region', 'Region'), 
-                hist.Bin('fjmass','AK15 Jet Mass',30,0,300),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
             'CaloMinusPfOverRecoil': hist.Hist(
@@ -285,12 +277,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('region', 'Region'), 
                 hist.Bin('l1phi','Leading Lepton/Photon Phi',64,-3.2,3.2),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
-            ),
-            'ZHbbvsQCD': hist.Hist(
-                'Events', 
-                hist.Cat('dataset', 'Dataset'), 
-                hist.Cat('region', 'Region'), 
-                hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1)
             ),
         })
 
@@ -667,7 +653,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         #for region in selected_regions: 
         for region, cuts in regions.items():
             if region not in selected_regions: continue
-            print('Considering region:', region)
 
             ###
             # Adding recoil and minDPhi requirements
@@ -682,9 +667,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             regions[region].insert(3, 'mindphi_'+region)
             regions[region].insert(4, 'minDphi_'+region)
             regions[region].insert(5, 'calo_'+region)
-            print('Selection:',regions[region])
             variables = {
-                'recoil':                 u[region].mag,
                 'mindphirecoil':          abs(u[region].delta_phi(j_clean.T)).min(),
                 'minDphirecoil':          abs(u[region].delta_phi(fj_clean.T)).min(),
                 'CaloMinusPfOverRecoil':  abs(calomet.pt - met.pt) / u[region].mag,
@@ -698,7 +681,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'fj1pt':                  leading_fj.sd.pt,
                 'fj1eta':                 leading_fj.sd.eta,
                 'fj1phi':                 leading_fj.sd.phi,
-                'fjmass':                 leading_fj.msd_corr,
                 'njets':                  j_nclean,
                 'ndflvL':                 j_ndflvL,
                 'nfjclean':               fj_nclean,
@@ -713,26 +695,19 @@ class AnalysisProcessor(processor.ProcessorABC):
                 variables['l1pt']      = leading_mu.pt
                 variables['l1phi']     = leading_mu.phi
                 variables['l1eta']     = leading_mu.eta
-            print('Variables:',variables.keys())
 
             def fill(dataset, weight, cut):
-
-                flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
-                flat_ZHbbvsQCD = {k: (~np.isnan(v[cut])*leading_fj.ZHbbvsQCD[cut]).flatten() for k, v in variables.items()}
-                flat_weight = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
-            
                 for histname, h in hout.items():
                     if not isinstance(h, hist.Hist):
                         continue
                     if histname not in variables:
                         continue
-                    else:
-                        flat_variable = {histname: flat_variables[histname]}
-                        h.fill(dataset=dataset, 
-                               region=region, 
-                               **flat_variable, 
-                               ZHbbvsQCD=flat_ZHbbvsQCD[histname],
-                               weight=flat_weight[histname])
+                    flat_variable = {histname: variables[histname].sum()}
+                    h.fill(dataset=dataset, 
+                           region=region, 
+                           **flat_variable, 
+                           ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                           weight=weight*cut)
 
             if isData:
                 if not isFilled:
