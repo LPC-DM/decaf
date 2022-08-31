@@ -211,13 +211,10 @@ def model(year, mass, recoil, category):
     ###
 
     if category == "pass":
-        sr_wjetsMC = sr_wjetsMCPass
-        sr_wjetsTemplate = sr_wjetsMCPassTemplate
         sr_wjets = sr_wjetsPass
     else:
-        sr_wjetsTemplate = sr_wjetsMCFailTemplate
-        sr_wjetsMC = sr_wjetsMCFail
         sr_wjets = sr_wjetsFail
+    if not iswjetsMC: sr.addSample(sr_wjets)
         
     ###
     # top-antitop data-driven model
@@ -236,6 +233,7 @@ def model(year, mass, recoil, category):
     sr_ttObservable = rl.Observable("fjmass", sr_ttTemplate[1])
     sr_ttBinYields = np.array([rl.IndependentParameter('tmp', b, 1e-5, sr_ttTemplate[0].max()*2) for b in sr_ttTemplate[0]])
     sr_tt = rl.ParametericSample(ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields)
+    if not isttMC: sr.addSample(sr_tt)
     
     ###
     # Other MC-driven processes
@@ -247,35 +245,31 @@ def model(year, mass, recoil, category):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
     MCbkgList = ["ST", "DY+jets", "VV", "Hbb"]#, "QCD"]
-    if ttMC or not (category == "pass"): ["ST", "DY+jets", "VV", "Hbb", "TT"]#, "QCD"]
-    if category == "pass" and not (recoil<4): ["ST", "DY+jets", "VV", "Hbb", "TT", "W+jets"]#, "QCD"]
+    if isttMC: MCbkgList.append("TT")
+    if iswjetsMC: MCbkgList.append("W+jets")
     sr_central, sr_error2 = get_mergedMC_stat_variations(background, recoil, "sr", category, MCbkgList)
 
-    if category == "pass" and not (recoil<4):
-        sr_wjetsMC = rl.TemplateSample( "sr" + model_id + "_wjetsMC", rl.Sample.BACKGROUND, sr_wjetsTemplate)
-        sr_wjetsMC.setParamEffect(lumi, nlumi)
-        sr_wjetsMC.setParamEffect(trig_met, ntrig_met)
-        sr_wjetsMC.setParamEffect(veto_tau, nveto_tau)
-        sr_wjetsMC.setParamEffect(wjetsMC_norm, nVjets_norm)
-        sr_wjetsMC.setParamEffect(jec, njec)
-        addBBliteSyst(sr_wjetsMC, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
-        addBtagSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
-        addVJetsSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
-        sr_wjets = sr_wjetsMC
-    sr.addSample(sr_wjets)
+    sr_wjetsMC = rl.TemplateSample( "sr" + model_id + "_wjetsMC", rl.Sample.BACKGROUND, sr_wjetsTemplate)
+    sr_wjetsMC.setParamEffect(lumi, nlumi)
+    sr_wjetsMC.setParamEffect(trig_met, ntrig_met)
+    sr_wjetsMC.setParamEffect(veto_tau, nveto_tau)
+    sr_wjetsMC.setParamEffect(wjetsMC_norm, nVjets_norm)
+    sr_wjetsMC.setParamEffect(jec, njec)
+    addBBliteSyst(sr_wjetsMC, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
+    addBtagSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
+    addVJetsSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
+    if iswjetsMC: sr.addSample(sr_wjetsMC)
 
-    if ttMC or not (category == "pass" and recoil<4): ### TT process modeled by MC
-        sr_ttTemplate = template(background, "TT", "nominal", recoil, "sr", category, read_sumw2=True)
-        sr_ttMC = rl.TemplateSample("sr" + model_id + "_ttMC",rl.Sample.BACKGROUND,sr_ttTemplate)
-        sr_ttMC.setParamEffect(lumi, nlumi)
-        sr_ttMC.setParamEffect(trig_met, ntrig_met)
-        sr_ttMC.setParamEffect(veto_tau, nveto_tau)
-        sr_ttMC.setParamEffect(jec, njec)
-        sr_ttMC.setParamEffect(ttMC_norm, nMinor_norm) ### ttMC should be applied for SR fail
-        addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
-        addBBliteSyst(sr_ttMC, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
-        sr_tt = sr_ttMC
-    sr.addSample(sr_tt)
+    sr_ttTemplate = template(background, "TT", "nominal", recoil, "sr", category, read_sumw2=True)
+    sr_ttMC = rl.TemplateSample("sr" + model_id + "_ttMC",rl.Sample.BACKGROUND,sr_ttTemplate)
+    sr_ttMC.setParamEffect(lumi, nlumi)
+    sr_ttMC.setParamEffect(trig_met, ntrig_met)
+    sr_ttMC.setParamEffect(veto_tau, nveto_tau)
+    sr_ttMC.setParamEffect(jec, njec)
+    sr_ttMC.setParamEffect(ttMC_norm, nMinor_norm) ### ttMC should be applied for SR fail
+    addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
+    addBBliteSyst(sr_ttMC, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
+    if isttMC: sr.addSample(sr_tt)
     
     sr_stTemplate = template(background, "ST", "nominal", recoil, "sr", category, read_sumw2=True)
     sr_st = rl.TemplateSample(ch_name + "_stMC", rl.Sample.BACKGROUND, sr_stTemplate)
@@ -359,9 +353,6 @@ def model(year, mass, recoil, category):
     # End of SR
     ###
 
-    if category=="pass" and not (recoil<4):
-        return model
-
     ###
     ###
     # Single muon W control region
@@ -420,6 +411,7 @@ def model(year, mass, recoil, category):
     #### Transfer Factor
     wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     wmcr_tt = rl.TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt)
+    if not isttMC: sr.addSample(wmcr_tt)
     
     ###
     # Other MC-driven processes
@@ -431,28 +423,24 @@ def model(year, mass, recoil, category):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
     MCbkgList = ["ST", "DY+jets", "VV", "Hbb"]#, "QCD"]
-    if ttMC or not (category == "pass"): ["ST", "DY+jets", "VV", "Hbb", "TT"]#, "QCD"]
+    if isttMC: MCbkgList.append("TT")
     wmcr_central, wmcr_error2 = get_mergedMC_stat_variations(background, recoil, "wmcr", category, MCbkgList)
     
-    if ttMC or not (category == "pass"): ### TT process modeled by MC
-        wmcr_ttTemplate = template(background, "TT", "nominal", recoil, "wmcr", category, read_sumw2=True)
-        wmcr_ttMC = rl.TemplateSample( "wmcr" + model_id + "_ttMC", rl.Sample.BACKGROUND, wmcr_ttTemplate)
-        wmcr_ttMC.setParamEffect(lumi, nlumi)
-        wmcr_ttMC.setParamEffect(trig_met, ntrig_met)
-        wmcr_ttMC.setParamEffect(veto_tau, nveto_tau)
-        wmcr_ttMC.setParamEffect(jec, njec)
-        wmcr_ttMC.setParamEffect(id_mu, nlepton)
-        wmcr_ttMC.setParamEffect(iso_mu, nlepton)
-        wmcr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
-        addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
-        addBBliteSyst(wmcr_ttMC, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
-        wmcr_tt = wmcr_ttMC
-    wmcr.addSample(wmcr_tt)
+    wmcr_ttTemplate = template(background, "TT", "nominal", recoil, "wmcr", category, read_sumw2=True)
+    wmcr_ttMC = rl.TemplateSample( "wmcr" + model_id + "_ttMC", rl.Sample.BACKGROUND, wmcr_ttTemplate)
+    wmcr_ttMC.setParamEffect(lumi, nlumi)
+    wmcr_ttMC.setParamEffect(trig_met, ntrig_met)
+    wmcr_ttMC.setParamEffect(veto_tau, nveto_tau)
+    wmcr_ttMC.setParamEffect(jec, njec)
+    wmcr_ttMC.setParamEffect(id_mu, nlepton)
+    wmcr_ttMC.setParamEffect(iso_mu, nlepton)
+    wmcr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
+    addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
+    addBBliteSyst(wmcr_ttMC, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
+    if isttMC: wmcr.addSample(wmcr_ttMC)
                     
     wmcr_stTemplate = template(background, "ST", "nominal", recoil, "wmcr", category, read_sumw2=True)
-    wmcr_st = rl.TemplateSample(
-        ch_name + "_stMC", rl.Sample.BACKGROUND, wmcr_stTemplate
-        )
+    wmcr_st = rl.TemplateSample(ch_name + "_stMC", rl.Sample.BACKGROUND, wmcr_stTemplate)
     wmcr_st.setParamEffect(lumi, nlumi)
     wmcr_st.setParamEffect(trig_met, ntrig_met)
     wmcr_st.setParamEffect(veto_tau, nveto_tau)
@@ -465,9 +453,7 @@ def model(year, mass, recoil, category):
     wmcr.addSample(wmcr_st)
 
     wmcr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "wmcr", category, read_sumw2=True)
-    wmcr_dyjets = rl.TemplateSample(
-        ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, wmcr_dyjetsTemplate
-    )
+    wmcr_dyjets = rl.TemplateSample(ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, wmcr_dyjetsTemplate)
     wmcr_dyjets.setParamEffect(lumi, nlumi)
     wmcr_dyjets.setParamEffect(trig_met, ntrig_met)
     wmcr_dyjets.setParamEffect(veto_tau, nveto_tau)
@@ -481,9 +467,7 @@ def model(year, mass, recoil, category):
     wmcr.addSample(wmcr_dyjets)
 
     wmcr_vvTemplate = template(background, "VV", "nominal", recoil, "wmcr", category, read_sumw2=True)
-    wmcr_vv = rl.TemplateSample(
-        ch_name + "_vvMC", rl.Sample.BACKGROUND, wmcr_vvTemplate
-    )
+    wmcr_vv = rl.TemplateSample(ch_name + "_vvMC", rl.Sample.BACKGROUND, wmcr_vvTemplate)
     wmcr_vv.setParamEffect(lumi, nlumi)
     wmcr_vv.setParamEffect(trig_met, ntrig_met)
     wmcr_vv.setParamEffect(veto_tau, nveto_tau)
@@ -496,9 +480,7 @@ def model(year, mass, recoil, category):
     wmcr.addSample(wmcr_vv)
 
     wmcr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "wmcr", category, read_sumw2=True)
-    wmcr_hbb = rl.TemplateSample(
-        ch_name + "_hbbMC", rl.Sample.BACKGROUND, wmcr_hbbTemplate
-    )
+    wmcr_hbb = rl.TemplateSample(ch_name + "_hbbMC", rl.Sample.BACKGROUND, wmcr_hbbTemplate)
     wmcr_hbb.setParamEffect(lumi, nlumi)
     wmcr_hbb.setParamEffect(trig_met, ntrig_met)
     wmcr_hbb.setParamEffect(veto_tau, nveto_tau)
@@ -511,9 +493,7 @@ def model(year, mass, recoil, category):
     wmcr.addSample(wmcr_hbb)
 
     wmcr_qcdTemplate = template(background, "QCD", "nominal", recoil, "wmcr", category, read_sumw2=True)
-    wmcr_qcd = rl.TemplateSample(
-        ch_name + "_qcdMC", rl.Sample.BACKGROUND, wmcr_qcdTemplate
-    )
+    wmcr_qcd = rl.TemplateSample(ch_name + "_qcdMC", rl.Sample.BACKGROUND, wmcr_qcdTemplate)
     wmcr_qcd.setParamEffect(lumi, nlumi)
     wmcr_qcd.setParamEffect(trig_met, ntrig_met)
     wmcr_qcd.setParamEffect(veto_tau, nveto_tau)
@@ -590,6 +570,7 @@ def model(year, mass, recoil, category):
     #### Transfer Factor
     wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     wecr_tt = rl.TransferFactorSample( ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt)
+    if not isttMC: wecr.addSample(wecr_tt)
     
     ###
     # Other MC-driven processes
@@ -601,28 +582,24 @@ def model(year, mass, recoil, category):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
     MCbkgList = ["ST", "DY+jets", "VV", "Hbb"]#, "QCD"]
-    if not (category == "pass"): ["ST", "DY+jets", "VV", "Hbb", "TT"]#, "QCD"]
+    if isttMC: MCbkgList.append("TT")
     wecr_central, wecr_error2 = get_mergedMC_stat_variations(background, recoil, "wecr", category, MCbkgList)
 
-    if ttMC or not (category == "pass"): ### TT process modeled by MC
-        wecr_ttTemplate = template(background, "TT", "nominal", recoil, "wecr", category, read_sumw2=True)
-        wecr_ttMC = rl.TemplateSample("wecr" + model_id + "_ttMC", rl.Sample.BACKGROUND, wecr_ttTemplate)
-        wecr_ttMC.setParamEffect(lumi, nlumi)
-        wecr_ttMC.setParamEffect(trig_e, ntrig_e)
-        wecr_ttMC.setParamEffect(veto_tau, nveto_tau)
-        wecr_ttMC.setParamEffect(jec, njec)
-        wecr_ttMC.setParamEffect(id_e, nlepton)
-        wecr_ttMC.setParamEffect(reco_e, nlepton)
-        wecr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
-        addBBliteSyst(wecr_ttMC, param, wecr_central, wecr_error2, epsilon=1e-5) ### replace autoMCStats
-        addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category)
-        wecr_tt = wecr_ttMC
-    wecr.addSample(wecr_tt)
+    wecr_ttTemplate = template(background, "TT", "nominal", recoil, "wecr", category, read_sumw2=True)
+    wecr_ttMC = rl.TemplateSample("wecr" + model_id + "_ttMC", rl.Sample.BACKGROUND, wecr_ttTemplate)
+    wecr_ttMC.setParamEffect(lumi, nlumi)
+    wecr_ttMC.setParamEffect(trig_e, ntrig_e)
+    wecr_ttMC.setParamEffect(veto_tau, nveto_tau)
+    wecr_ttMC.setParamEffect(jec, njec)
+    wecr_ttMC.setParamEffect(id_e, nlepton)
+    wecr_ttMC.setParamEffect(reco_e, nlepton)
+    wecr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
+    addBBliteSyst(wecr_ttMC, param, wecr_central, wecr_error2, epsilon=1e-5) ### replace autoMCStats
+    addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category)
+    if isttMC: wecr.addSample(wecr_ttMC)
 
     wecr_stTemplate = template(background, "ST", "nominal", recoil, "wecr", category, read_sumw2=True)
-    wecr_st = rl.TemplateSample(
-        ch_name + "_stMC", rl.Sample.BACKGROUND, wecr_stTemplate
-    )
+    wecr_st = rl.TemplateSample(ch_name + "_stMC", rl.Sample.BACKGROUND, wecr_stTemplate)
     wecr_st.setParamEffect(lumi, nlumi)
     wecr_st.setParamEffect(trig_e, ntrig_e)
     wecr_st.setParamEffect(veto_tau, nveto_tau)
@@ -635,9 +612,7 @@ def model(year, mass, recoil, category):
     wecr.addSample(wecr_st)
 
     wecr_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "wecr", category, read_sumw2=True)
-    wecr_dyjets = rl.TemplateSample(
-        ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, wecr_dyjetsTemplate
-    )
+    wecr_dyjets = rl.TemplateSample(ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, wecr_dyjetsTemplate)
     wecr_dyjets.setParamEffect(lumi, nlumi)
     wecr_dyjets.setParamEffect(trig_e, ntrig_e)
     wecr_dyjets.setParamEffect(veto_tau, nveto_tau)
@@ -651,9 +626,7 @@ def model(year, mass, recoil, category):
     wecr.addSample(wecr_dyjets)
 
     wecr_vvTemplate = template(background, "VV", "nominal", recoil, "wecr", category, read_sumw2=True)
-    wecr_vv = rl.TemplateSample(
-        ch_name + "_vvMC", rl.Sample.BACKGROUND, wecr_vvTemplate
-    )
+    wecr_vv = rl.TemplateSample(ch_name + "_vvMC", rl.Sample.BACKGROUND, wecr_vvTemplate)
     wecr_vv.setParamEffect(lumi, nlumi)
     wecr_vv.setParamEffect(trig_e, ntrig_e)
     wecr_vv.setParamEffect(veto_tau, nveto_tau)
@@ -666,9 +639,7 @@ def model(year, mass, recoil, category):
     wecr.addSample(wecr_vv)
 
     wecr_hbbTemplate = template(background, "Hbb", "nominal", recoil, "wecr", category, read_sumw2=True)
-    wecr_hbb = rl.TemplateSample(
-        ch_name + "_hbbMC", rl.Sample.BACKGROUND, wecr_hbbTemplate
-    )
+    wecr_hbb = rl.TemplateSample(ch_name + "_hbbMC", rl.Sample.BACKGROUND, wecr_hbbTemplate)
     wecr_hbb.setParamEffect(lumi, nlumi)
     wecr_hbb.setParamEffect(trig_e, ntrig_e)
     wecr_hbb.setParamEffect(veto_tau, nveto_tau)
@@ -681,9 +652,7 @@ def model(year, mass, recoil, category):
     wecr.addSample(wecr_hbb)
 
     wecr_qcdTemplate = template(background, "QCD", "nominal", recoil, "wecr", category, read_sumw2=True)
-    wecr_qcd = rl.TemplateSample(
-        ch_name + "_qcdMC", rl.Sample.BACKGROUND, wecr_qcdTemplate
-    )
+    wecr_qcd = rl.TemplateSample(ch_name + "_qcdMC", rl.Sample.BACKGROUND, wecr_qcdTemplate)
     wecr_qcd.setParamEffect(lumi, nlumi)
     wecr_qcd.setParamEffect(trig_e, ntrig_e)
     wecr_qcd.setParamEffect(veto_tau, nveto_tau)
@@ -699,8 +668,7 @@ def model(year, mass, recoil, category):
     # End of single electron W control region
     ###
 
-    if ttMC or not (category=="pass"):
-        return model
+    if category=="fail": return model
 
     ###
     ###
@@ -1004,7 +972,7 @@ if __name__ == "__main__":
 
     background = {}
     for r in hists["bkg"]["template"].identifiers("region"):
-        background[str(r)] = hists["bkg"]["template"].integrate("region", r).sum("gentype")
+        background[str(r)] = hists["bkg"]["template"].integrate("region", r)
     
     ###
     # Establishing 2D binning
@@ -1153,7 +1121,6 @@ if __name__ == "__main__":
     lumi = rl.NuisanceParameter("lumi" + year, "lnN")
     zjets_norm = rl.NuisanceParameter("zjets_norm", "lnN")
     wjets_norm = rl.NuisanceParameter("wjets_norm", "lnN")
-    tt_norm = rl.NuisanceParameter("tt_norm", "lnN")
     id_e = rl.NuisanceParameter("id_e" + year, "lnN")
     id_mu = rl.NuisanceParameter("id_mu" + year, "lnN")
     id_pho = rl.NuisanceParameter("id_pho" + year, "lnN")
@@ -1164,7 +1131,6 @@ if __name__ == "__main__":
     trig_pho = rl.NuisanceParameter("trig_pho" + year, "lnN")
     veto_tau = rl.NuisanceParameter("veto_tau" + year, "lnN")
     jec = rl.NuisanceParameter("jec" + year, "lnN")
-    #btag = rl.NuisanceParameter("btag" + year, "shapeN")  # AK4 btag
     btag = rl.NuisanceParameter("btag" + year, "shape")  # AK4 btag
     ew1 = rl.NuisanceParameter("ew1", "lnN")
     #ew2G = rl.NuisanceParameter("ew2G", "lnN")
@@ -1181,8 +1147,7 @@ if __name__ == "__main__":
     qcd3 = rl.NuisanceParameter("qcd3", "lnN")
     whf_fraction = rl.NuisanceParameter("whf_fraction", "lnN")
     zhf_fraction = rl.NuisanceParameter("zhf_fraction", "lnN")
-    #ghf_fraction = rl.NuisanceParameter("ghf_fraction", "shapeN")
-
+    
     ###
     # Set lnN or shape numbers
     ###
@@ -1215,7 +1180,7 @@ if __name__ == "__main__":
     
     
     if '40to' in mass:
-        ttMC = True
+        isttMC = True
         cut = mass.split('40to')[1]
         index = mass_binning.index(int(cut))
         mass_binning = mass_binning[:(index+1)]
@@ -1226,7 +1191,7 @@ if __name__ == "__main__":
         tf_dataResidualW_params = tf_dataResidualW_params[:, :nmass]
     if 'to300' in mass:
         nmass = len(mass_binning) - 1
-        ttMC = False
+        isttMC = False
         cut = mass.split('to300')[0]
         index = mass_binning.index(int(cut))
         mass_binning = mass_binning[index:]
@@ -1241,10 +1206,6 @@ if __name__ == "__main__":
     ###
 
     hists = load("hists/darkhiggs" + year + ".scaled")
-    if year == '2018':
-        additional_hists = load("hists/signal" + year + ".scaled")
-        for key in hists["sig"].keys():
-            hists["sig"][key] += additional_hists["sig"][key]
     hists = remap_histograms(hists)
 
     ###
@@ -1254,18 +1215,17 @@ if __name__ == "__main__":
     signal_hists = hists["sig"]
     signal = {}
     for r in signal_hists["template"].identifiers("region"):
-        signal[str(r)] = signal_hists["template"].integrate("region", r).sum("gentype")
-        #signal[str(r)] += signal_tmphists["template"].integrate("region", r).sum("gentype")
-
+        signal[str(r)] = signal_hists["template"].integrate("region", r)
+        
     bkg_hists = hists["bkg"]
     background = {}
     for r in bkg_hists["template"].identifiers("region"):
-        background[str(r)] = bkg_hists["template"].integrate("region", r).sum("gentype")
+        background[str(r)] = bkg_hists["template"].integrate("region", r)
 
     data_hists = hists["data"]
     data = {}
     for r in data_hists["template"].identifiers("region"):
-        data[str(r)] = data_hists["template"].integrate("region", r).sum("gentype")
+        data[str(r)] = data_hists["template"].integrate("region", r)
 
     model_dict = {}
     for recoilbin in range(nrecoil):
@@ -1369,6 +1329,7 @@ if __name__ == "__main__":
         )
 
         for category in ["pass", "fail"]:
+            
             qcdpho_norm = rl.NuisanceParameter("qcdpho_norm" + year + category, "lnN")
             qcde_norm = rl.NuisanceParameter("qcde_norm" + year + category, "lnN")
             qcdmu_norm = rl.NuisanceParameter("qcdmu_norm" + year + category, "lnN")
@@ -1379,6 +1340,9 @@ if __name__ == "__main__":
             hbb_norm = rl.NuisanceParameter("hbb_norm" + year + category, "lnN")
             wjetsMC_norm = rl.NuisanceParameter("wjets_norm" + year + category, "lnN")
             zjetsMC_norm = rl.NuisanceParameter("zjets_norm" + year + category, "lnN")
+            
+            isttMC=isttMC|(recoilbin==4)|(category=='pass')
+            iswjetsMC=(recoilbin==4)&(category=='pass')
 
             with open(
                     "data/"
