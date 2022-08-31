@@ -80,8 +80,10 @@ with open('metadata/'+options.metadata+'.json') as fin:
     datadef = json.load(fin)
 
 for dataset, info in datadef.items():
-    if options.dataset and options.dataset not in dataset: continue
-    if options.exclude and options.exclude in dataset: continue
+    if options.dataset:
+        if not any(_dataset in dataset for _dataset in options.dataset.split(',')): continue
+    if options.exclude:
+        if any(_dataset in dataset for _dataset in options.exclude.split(',')): continue
     os.system('rm -rf hists/'+options.processor+'/run_condor/err/'+dataset+'*')
     os.system('rm -rf hists/'+options.processor+'/run_condor/log/'+dataset+'*')
     os.system('rm -rf hists/'+options.processor+'/run_condor/out/'+dataset+'*')

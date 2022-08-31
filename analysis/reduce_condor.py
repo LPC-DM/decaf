@@ -88,8 +88,10 @@ for filename in os.listdir(options.folder):
 
 variables=load(options.folder+'/'+futurefile).keys()
 for pdi in pd:
-    if options.dataset and options.dataset not in pdi: continue
-    if options.exclude and options.exclude in pdi: continue
+    if options.dataset:
+        if not any(_dataset in pdi for _dataset in options.dataset.split(',')): continue
+    if options.exclude:
+        if any(_dataset in pdi for _dataset in options.exclude.split(',')): continue
     for variable in variables:
         if options.variable and options.variable not in variable: continue
         os.environ['FOLDER'] = options.folder

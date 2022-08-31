@@ -33,7 +33,8 @@ with open("metadata/"+options.metadata+".json") as fin:
 
 for dataset, info in samplefiles.items():
     filelist = {}
-    if options.dataset and options.dataset not in dataset: continue
+    if options.dataset:
+        if not any(_dataset in dataset for _dataset in options.dataset.split(',')): continue
     print('Processing:',dataset)
     files = []
     for file in info['files'][fileslice]:

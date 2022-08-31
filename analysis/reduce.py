@@ -54,13 +54,15 @@ def reduce(folder,_dataset=None,variable=None):
           lists[filename.split("____")[0]].append(folder+'/'+filename)
           
      for pdi in lists.keys():
-          if _dataset is not None and _dataset not in pdi: continue
+          if _dataset is not None:
+               if not any(_d in pdi for _d in _dataset.split(',')): continue
           tmp={}
           for filename in lists[pdi]:
                print('Opening:',filename)
                hin = load(filename)
                for k in hin.keys():
-                    if variable is not None and k!=variable: continue
+                    if variable is not None:
+                         if not any(v==k for v in variable.split(',')): continue
                     print('Considering variable',k)
                     if k not in tmp: tmp[k]=[hin[k]]
                     else: tmp[k].append(hin[k])

@@ -14,6 +14,7 @@ processes =    {
     #'DoubleEG':('DoubleEG','Data',1),
     'SingleElectron':('SingleElectron','Data',1),
     'SinglePhoton':('SinglePhoton','Data',1),
+    'BTagMu':('BTagMu','Data',1),
     #'JetHT':('JetHT','Data',1),
     
     # inclusive NLO V+jets 

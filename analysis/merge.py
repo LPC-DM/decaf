@@ -54,8 +54,10 @@ def merge(folder,variable=None, exclude=None):
 
      for var in lists.keys():
           tmp={}
-          if variable is not None and var not in variable: continue
-          if exclude is not None and var in exclude: continue
+          if variable is not None:
+               if not any(v==var for v in variable.split(',')): continue
+          if exclude is not None:
+               if any(v==var for v in exclude.split(',')): continue
           print(lists[var])
           for filename in lists[var]:
                print('Opening:',filename)

@@ -129,7 +129,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('region', 'Region'),
                 hist.Cat('systematic', 'Systematic'),
                 hist.Bin('recoil','Hadronic Recoil',[250,310,370,470,590,840,1020,1250,3000]),
-                hist.Bin('fjmass','AK15 Jet Mass', [0,40,50,60,70,80,90,100,110,120,130,150,160,180,200,220,240,300]),#[0, 30, 60, 80, 120, 300]),
+                hist.Bin('fjmass','AK15 Jet Mass', [40,50,60,70,80,90,100,110,120,130,150,160,180,200,220,240,300]),#[0, 30, 60, 80, 120, 300]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
             'ZHbbvsQCD': hist.Hist(
@@ -637,15 +637,16 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('noHEMmet', noHEMmet)
         selection.add('met120',(met.pt<120))
         selection.add('met100',(met.pt>100))
+        selection.add('msd40',(leading_fj.msd_corr.sum()>40))
         #selection.add('mindphimet',(abs(met.T.delta_phi(j_clean.T)).min())>0.7)
 
         regions = {
             #'sr': ['iszeroL','fatjet','noextrab','noHEMmet','met_filters','met_triggers','noHEMj'],
-            'sr': ['fatjet', 'noHEMj', 'iszeroL', 'noextrab','met_filters','met_triggers','noHEMmet'],
-            'wmcr': ['isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers'],
-            'tmcr': ['isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'],
-            'wecr': ['isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100'],
-            'tecr': ['isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100'],
+            'sr': ['msd40','fatjet', 'noHEMj', 'iszeroL', 'noextrab','met_filters','met_triggers','noHEMmet'],
+            'wmcr': ['msd40','isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers'],
+            'tmcr': ['msd40','isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'],
+            'wecr': ['msd40','isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100'],
+            'tecr': ['msd40','isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100'],
         }
 
         isFilled = False
@@ -671,8 +672,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'mindphirecoil':          abs(u[region].delta_phi(j_clean.T)).min(),
                 'minDphirecoil':          abs(u[region].delta_phi(fj_clean.T)).min(),
                 'CaloMinusPfOverRecoil':  abs(calomet.pt - met.pt) / u[region].mag,
-                'met':                    met.pt,
-                'metphi':                 met.phi,
+                'met':                    met.pt.flatten(),
+                'metphi':                 met.phi.flatten(),
                 'mindphimet':             abs(met.T.delta_phi(j_clean.T)).min(),
                 'minDphimet':             abs(met.T.delta_phi(fj_clean.T)).min(),
                 'j1pt':                   leading_j.pt.sum(),

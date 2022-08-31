@@ -176,7 +176,7 @@ def scale(hists):
         data_hists[key] = hists[key].group(cats, process, data_map)
         sig_hists[key] = hists[key].group(cats, process, sig_map)
         for signal in sig_hists[key].identifiers('process'):
-            print('Scaling '+str(signal)+' by xsec '+xsec[str(signal)])
+            print('Scaling '+str(signal)+' by xsec '+str(xsec[str(signal)]))
             sig_hists[key].scale({signal:xsec[str(signal)]},axis='process')
         
     print('Histograms grouped')

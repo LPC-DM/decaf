@@ -82,6 +82,8 @@ for filename in os.listdir(options.folder):
 
 for variable in variables:
     if options.variable and options.variable not in variable: continue
+    if options.variable:
+        if not any(_variable==variable for _variable in options.variable.split(',')): continue
     os.environ['FOLDER'] = options.folder
     os.environ['VARIABLE'] = variable
     os.environ['CLUSTER'] = options.cluster
