@@ -37,7 +37,7 @@ Output = datacards/$ENV(FOLDER)/condor/t2w/out/$ENV(FOLDER)_$ENV(SIGNAL)_$(Clust
 Error = datacards/$ENV(FOLDER)/condor/t2w/err/$ENV(FOLDER)_$ENV(SIGNAL)_$(Cluster)_$(Process).stderr
 Log = datacards/$ENV(FOLDER)/condor/t2w/log/$ENV(FOLDER)_$ENV(SIGNAL)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(FOLDER)_$ENV(SIGNAL).root=$ENV(PWD)/datacards/$ENV(FOLDER)/$ENV(FOLDER)_$ENV(SIGNAL).root"
-Arguments = $ENV(SIGNAL) $ENV(FOLDER) $ENV(CLUSTER) $ENV(USER)
+Arguments = $ENV(SIGNALS) $ENV(SIGNAL) $ENV(FOLDER) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
 JobBatchName = $ENV(FOLDER)
 request_memory = 8000
@@ -81,7 +81,8 @@ for signal in signals:
     try:
         if not any(_signal in signal for _signal in options.signal.split(':')[1].split(',')): continue
     os.environ['FOLDER']   = options.folder
-    os.environ['SIGNAL']   = options.signal.split(':')[0]+':'+signal
+    os.environ['SIGNALS']  = options.signal.split(':')[0]
+    os.environ['SIGNAL']  = signal
     os.environ['CLUSTER'] = options.cluster
     os.system('condor_submit t2w.submit')
 os.system('rm t2w.submit')
