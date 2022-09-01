@@ -26,7 +26,7 @@ os.system('rm datacards/'+new_folder+'/*')
 
 command='combineCards.py '
 for card in txt_list:
-    if not any(_analysis+'-' in card for _analysis in options.analysis.split(':')): continue
+    if not all(_analysis+'-' in card for _analysis in options.analysis.split(':')): continue
     filename=card.strip()
     print(filename)
     os.system('cp '+filename+' .')
@@ -36,6 +36,6 @@ command=command+' > datacards/'+new_folder+'/'+new_folder+'.txt'
 os.system(command)
 os.system('rm *.txt')
 for rootfile in root_list:
-    if not any(_analysis+'-' in rootfile for _analysis in options.analysis.split(':')): continue
+    if not all(_analysis+'-' in rootfile for _analysis in options.analysis.split(':')): continue
     filename=rootfile.strip()
     os.system('cp '+filename+' datacards/'+new_folder)
