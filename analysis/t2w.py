@@ -10,4 +10,8 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
     
     for k,v in processes.items():
-      print(k)
+        process = k
+        if not isinstance(k, str):
+            process = k[0]
+        if options.signal not in process: continue
+        print(process)
