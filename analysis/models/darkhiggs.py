@@ -211,7 +211,9 @@ def model(year, mass, recoil, category):
     else:
         sr_wjets = sr_wjetsFail
     if not iswjetsMC: 
+        print('-----')
         print('W+Jets data-driven in',ch_name)
+        print('-----')
         sr.addSample(sr_wjets)
         
     ###
@@ -232,7 +234,9 @@ def model(year, mass, recoil, category):
     sr_ttBinYields = np.array([rl.IndependentParameter('tmp', b, 1e-5, sr_ttTemplate[0].max()*2) for b in sr_ttTemplate[0]])
     sr_tt = rl.ParametericSample(ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields)
     if not isttMC: 
+        print('-----')
         print('TT data-driven in',ch_name)
+        print('-----')
         sr.addSample(sr_tt)
     
     ###
@@ -247,7 +251,9 @@ def model(year, mass, recoil, category):
     MCbkgList = ["ST", "DY+jets", "VV", "Hbb"]#, "QCD"]
     if isttMC: MCbkgList.append("TT")
     if iswjetsMC: MCbkgList.append("W+jets")
+    print('-----')
     print('MCs for BBLite calculation in',ch_name,MCbkgList)
+    print('-----')
     sr_central, sr_error2 = get_mergedMC_stat_variations(background, recoil, "sr", category, MCbkgList)
 
     sr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "sr", category, read_sumw2=True)
@@ -261,7 +267,9 @@ def model(year, mass, recoil, category):
     addBtagSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "sr", sr_wjetsMC, category)
     if iswjetsMC: 
+        print('-----')
         print('W+Jets MC-driven in',ch_name)
+        print('-----')
         sr.addSample(sr_wjetsMC)
 
     sr_ttTemplate = template(background, "TT", "nominal", recoil, "sr", category, read_sumw2=True)
@@ -274,7 +282,9 @@ def model(year, mass, recoil, category):
     addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
     addBBliteSyst(sr_ttMC, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
     if isttMC: 
+        print('-----')
         print('TT MC-driven in',ch_name)
+        print('-----')
         sr.addSample(sr_tt)
     
     sr_stTemplate = template(background, "ST", "nominal", recoil, "sr", category, read_sumw2=True)
@@ -397,7 +407,9 @@ def model(year, mass, recoil, category):
     wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
     if not iswjetsMC:
+        print('-----')
         print('W+Jets data-driven in',ch_name)
+        print('-----')
         wmcr.addSample(wmcr_wjets)
 
     ###
@@ -420,7 +432,9 @@ def model(year, mass, recoil, category):
     wmcr_ttTransferFactor = wmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     wmcr_tt = rl.TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt)
     if not isttMC: 
+        print('-----')
         print('TT data-drive in',ch_name)
+        print('-----')
         wmcr.addSample(wmcr_tt)
     
     ###
@@ -435,7 +449,9 @@ def model(year, mass, recoil, category):
     MCbkgList = ["ST", "DY+jets", "VV", "Hbb"]#, "QCD"]
     if isttMC: MCbkgList.append("TT")
     if iswjetsMC: MCbkgList.append("W+jets")
+    print('-----')
     print('MCs for BBLite calculation in',ch_name,MCbkgList)
+    print('-----')
     wmcr_central, wmcr_error2 = get_mergedMC_stat_variations(background, recoil, "wmcr", category, MCbkgList)
     
     wmcr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "wmcr", category, min_value=1., read_sumw2=True)
@@ -451,7 +467,9 @@ def model(year, mass, recoil, category):
     addBtagSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
     if iswjetsMC:
+        print('-----')
         print('W+jets MC-driven in',ch_name)
+        print('-----')
         wmcr.addSample(wmcr_wjetsMC)
 
     wmcr_ttTemplate = template(background, "TT", "nominal", recoil, "wmcr", category, read_sumw2=True)
@@ -466,7 +484,9 @@ def model(year, mass, recoil, category):
     addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category)
     addBBliteSyst(wmcr_ttMC, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
     if isttMC: 
+        print('-----')
         print('TT MC-driven in',ch_name)
+        print('-----')
         wmcr.addSample(wmcr_ttMC)
                     
     wmcr_stTemplate = template(background, "ST", "nominal", recoil, "wmcr", category, read_sumw2=True)
@@ -580,7 +600,9 @@ def model(year, mass, recoil, category):
     wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
     wecr_wjets = rl.TransferFactorSample( ch_name + "_wjets", rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets)
     if not iswjetsMC:
+        print('-----')
         print('W+Jets data-driven in',ch_name)
+        print('-----')
         wecr.addSample(wecr_wjets)
 
     ###
@@ -603,7 +625,9 @@ def model(year, mass, recoil, category):
     wecr_ttTransferFactor = wecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     wecr_tt = rl.TransferFactorSample( ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt)
     if not isttMC: 
+        print('-----')
         print('TT data-driven in',ch_name)
+        print('-----')
         wecr.addSample(wecr_tt)
     
     ###
@@ -618,7 +642,9 @@ def model(year, mass, recoil, category):
     MCbkgList = ["ST", "DY+jets", "VV", "Hbb"]#, "QCD"]
     if isttMC: MCbkgList.append("TT")
     if iswjetsMC: MCbkgList.append("W+jets")
+    print('-----')
     print('MCs for BBLite calculation in',ch_name,MCbkgList)
+    print('-----')
     wecr_central, wecr_error2 = get_mergedMC_stat_variations(background, recoil, "wecr", category, MCbkgList)
 
     wecr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "wecr", category, min_value=1., read_sumw2=True)
@@ -626,7 +652,7 @@ def model(year, mass, recoil, category):
     wecr_wjetsMC.setParamEffect(lumi, nlumi)
     wecr_wjetsMC.setParamEffect(trig_e, ntrig_e)
     wecr_wjetsMC.setParamEffect(veto_tau, nveto_tau)
-    wecr_wjetsMC.setParamEffect(wjets_norm, nVjets_norm)
+    wecr_wjetsMC.setParamEffect(wjetsMC_norm, nVjets_norm)
     wecr_wjetsMC.setParamEffect(jec, njec)
     wecr_wjetsMC.setParamEffect(id_e, nlepton)
     wecr_wjetsMC.setParamEffect(reco_e, nlepton)
@@ -634,7 +660,9 @@ def model(year, mass, recoil, category):
     addBtagSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
     addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
     if iswjetsMC:
+        print('-----')
         print('W+Jets MC-driven in',ch_name)
+        print('-----')
         wecr.addSample(wecr_wjetsMC)
 
     wecr_ttTemplate = template(background, "TT", "nominal", recoil, "wecr", category, read_sumw2=True)
@@ -649,7 +677,9 @@ def model(year, mass, recoil, category):
     addBBliteSyst(wecr_ttMC, param, wecr_central, wecr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category)
     if isttMC: 
+        print('-----')
         print('TT MC-driven in',ch_name)
+        print('-----')
         wecr.addSample(wecr_ttMC)
 
     wecr_stTemplate = template(background, "ST", "nominal", recoil, "wecr", category, read_sumw2=True)
@@ -761,7 +791,9 @@ def model(year, mass, recoil, category):
     tmcr_ttTransferFactor = tmcr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     tmcr_tt = rl.TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt)
     if not isttMC:
+        print('-----')
         print('TT data-driven in',ch_name)
+        print('-----')
         tmcr.addSample(tmcr_tt)
 
     ###
@@ -773,7 +805,12 @@ def model(year, mass, recoil, category):
     for i in range(nbins):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
-    tmcr_central, tmcr_error2 = get_mergedMC_stat_variations(background, recoil, "tmcr", category, ["ST", "DY+jets", "VV", "Hbb", "W+jets"])#"QCD"
+    MCbkgList = ["ST", "DY+jets", "VV", "Hbb", "W+jets"]#, "QCD"]
+    if isttMC: MCbkgList.append("TT")
+    print('-----')
+    print('MCs for BBLite calculation in',ch_name,MCbkgList)
+    print('-----')
+    tmcr_central, tmcr_error2 = get_mergedMC_stat_variations(background, recoil, "tmcr", category, MCbkgList)
 
     tmcr_ttTemplate = template(background, "TT", "nominal", recoil, "tmcr", category, min_value=1., read_sumw2=True)
     tmcr_ttMC = rl.TemplateSample("tmcr" + model_id + "_ttMC", rl.Sample.BACKGROUND, tmcr_ttTemplate)
@@ -787,7 +824,9 @@ def model(year, mass, recoil, category):
     addBBliteSyst(tmcr_ttMC, param, tmcr_central, tmcr_error2, epsilon=1e-5)
     addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category)
     if isttMC:
+        print('-----')
         print('TT MC-driven in', ch_name)
+        print('-----')
         tmcr.addSample(tmcr_ttMC)
 
     tmcr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tmcr", category, read_sumw2=True)
@@ -914,7 +953,9 @@ def model(year, mass, recoil, category):
     tecr_ttTransferFactor = tecr_ttMC.getExpectation() / sr_ttMC.getExpectation()
     tecr_tt = rl.TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt)
     if not isttMC:
+        print('-----')
         print('TT data-driven in', ch_name)
+        print('-----')
         tecr.addSample(tecr_tt)
 
     ###
@@ -925,8 +966,14 @@ def model(year, mass, recoil, category):
     param = [None for _ in range(nbins)]
     for i in range(nbins):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
-    tecr_central, tecr_error2 = get_mergedMC_stat_variations(background, recoil, "tecr", category, ["ST", "DY+jets", "VV", "Hbb", "W+jets"])#"QCD"
-
+    
+    MCbkgList = ["ST", "DY+jets", "VV", "Hbb", "W+jets"]#, "QCD"]
+    if isttMC: MCbkgList.append("TT")
+    print('-----')
+    print('MCs for BBLite calculation in',ch_name,MCbkgList)
+    print('-----')
+    tecr_central, tecr_error2 = get_mergedMC_stat_variations(background, recoil, "tecr", category, MCbkgList)
+    
     tecr_ttTemplate = template(background, "TT", "nominal", recoil, "tecr", category, min_value=1., read_sumw2=True)
     tecr_ttMC = rl.TemplateSample("tecr" + model_id + "_ttMC", rl.Sample.BACKGROUND, tecr_ttTemplate)
     tecr_ttMC.setParamEffect(lumi, nlumi)
@@ -939,7 +986,9 @@ def model(year, mass, recoil, category):
     addBBliteSyst(tecr_ttMC, param, tecr_central, tecr_error2, epsilon=1e-5)
     addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category)
     if isttMC:
+        print('-----')
         print('TT MC-driven in', ch_name)
+        print('-----')
         tecr.addSample(tecr_ttMC)
 
     tecr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "tecr", category, read_sumw2=True)
