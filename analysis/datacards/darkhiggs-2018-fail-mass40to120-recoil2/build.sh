@@ -1,2 +1,0 @@
-combineCards.py sr2018failmass40to120recoil2=sr2018failmass40to120recoil2.txt > model_combined.txt
-text2workspace.py model_combined.txt

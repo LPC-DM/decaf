@@ -13,4 +13,4 @@ docker_stderror
 *.scaled
 *.model
 *.processor
-datacards/*
+datacards
