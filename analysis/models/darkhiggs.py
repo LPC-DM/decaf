@@ -281,8 +281,8 @@ def model(year, mass, recoil, category):
     sr_tt.setParamEffect(veto_tau, nveto_tau)
     sr_tt.setParamEffect(jec, njec)
     sr_tt.setParamEffect(ttMC_norm, nMinor_norm) ### ttMC should be applied for SR fail
-    addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category)
-    addBBliteSyst(sr_ttMC, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
+    addBtagSyst(background, recoil, "TT", "sr", sr_tt, category)
+    addBBliteSyst(sr_tt, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
     if isttMC: 
         print('-----')
         print('TT MC-driven in',ch_name)

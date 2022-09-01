@@ -1,0 +1,2 @@
+combineCards.py sr2018passmass120to300recoil4=sr2018passmass120to300recoil4.txt > model_combined.txt
+text2workspace.py model_combined.txt

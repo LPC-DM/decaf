@@ -1,0 +1,2 @@
+combineCards.py wmcr2018failmass40to120recoil4=wmcr2018failmass40to120recoil4.txt > model_combined.txt
+text2workspace.py model_combined.txt

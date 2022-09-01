@@ -1,0 +1,51 @@
+# Datacard for <Channel (tecr2017passmass120to300recoil2) instance at 0x2b423d054850> generated on 2022-09-01 15:08:07.706819
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 6 # number of samples minus 1
+kmax 40 # number of nuisance parameters
+shapes * tecr2017passmass120to300recoil2 tecr2017passmass120to300recoil2.root tecr2017passmass120to300recoil2:tecr2017passmass120to300recoil2_$PROCESS tecr2017passmass120to300recoil2:tecr2017passmass120to300recoil2_$PROCESS_$SYSTEMATIC
+bin tecr2017passmass120to300recoil2
+observation 603.000
+bin                                                tecr2017passmass120to300recoil2  tecr2017passmass120to300recoil2  tecr2017passmass120to300recoil2  tecr2017passmass120to300recoil2  tecr2017passmass120to300recoil2  tecr2017passmass120to300recoil2  tecr2017passmass120to300recoil2
+process                                                                         tt                          wjetsMC                             stMC                         dyjetsMC                             vvMC                            hbbMC                            qcdMC
+process                                                                          1                                2                                3                                4                                5                                6                                7
+rate                                                                         1.000                           27.080                           76.482                            0.378                            1.362                            1.284                            0.006
+btag2017 shape                                                                   -                           1.0000                           1.0000                           1.0000                           1.0000                           1.0000                           1.0000
+ew1 lnN                                                                          -                           1.0011                                -                           1.0009                                -                                -                                -
+ew2W lnN                                                                         -                           1.0077                                -                                -                                -                                -                                -
+ew2Z lnN                                                                         -                                -                                -                           1.0063                                -                                -                                -
+ew3W lnN                                                                         -                           1.0012                                -                                -                                -                                -                                -
+ew3Z lnN                                                                         -                                -                                -                           1.0026                                -                                -                                -
+hbb_norm2017pass lnN                                                             -                                -                                -                                -                                -                           1.2000                                -
+id_e2017 lnN                                                                     -                           1.0200                           1.0200                           1.0200                           1.0200                           1.0200                           1.0200
+jec2017 lnN                                                                      -                           1.0500                           1.0500                           1.0500                           1.0500                           1.0500                           1.0500
+lumi2017 lnN                                                                     -                           1.0270                           1.0270                           1.0270                           1.0270                           1.0270                           1.0270
+mix lnN                                                                          -                           1.0091                                -                           1.0036                                -                                -                                -
+qcd1 lnN                                                                         -                           1.0750                                -                           1.0665                                -                                -                                -
+qcd2 lnN                                                                         -                           0.9647                                -                           0.9710                                -                                -                                -
+qcd3 lnN                                                                         -                           1.0094                                -                                -                                -                                -                                -
+qcde_norm2017pass lnN                                                            -                                -                                -                                -                                -                                -                           2.0000
+reco_e2017 lnN                                                                   -                           1.0200                           1.0200                           1.0200                           1.0200                           1.0200                           1.0200
+st_norm2017pass lnN                                                              -                                -                           1.2000                                -                                -                                -                                -
+tecr2017passmass120to300recoil2_mcstat_bin0 shape                                -                           1.0000                           1.0000                           1.0000                           1.0000                           1.0000                           1.0000
+tecr2017passmass120to300recoil2_mcstat_bin1 shape                                -                           1.0000                           1.0000                           1.0000                           1.0000                           1.0000                           1.0000
+tecr2017passmass120to300recoil2_mcstat_bin2 shape                                -                           1.0000                           1.0000                           1.0000                           1.0000                           1.0000                           1.0000
+tecr2017passmass120to300recoil2_mcstat_bin3 shape                                -                           1.0000                           1.0000                           1.0000                           1.0000                           1.0000                           1.0000
+trig_e2017 lnN                                                                   -                           1.0100                           1.0100                           1.0100                           1.0100                           1.0100                           1.0100
+veto_tau2017 lnN                                                                 -                           1.0300                           1.0300                           1.0300                           1.0300                           1.0300                           1.0300
+vv_norm2017pass lnN                                                              -                                -                                -                                -                           1.2000                                -                                -
+wjets_norm2017pass lnN                                                           -                           1.4000                                -                                -                                -                                -                                -
+zjets_norm2017pass lnN                                                           -                                -                                -                           1.4000                                -                                -                                -
+sr2017passmass120to300recoil2_mcstat_bin0 param 0 1
+sr2017passmass120to300recoil2_mcstat_bin1 param 0 1
+sr2017passmass120to300recoil2_mcstat_bin2 param 0 1
+sr2017passmass120to300recoil2_mcstat_bin3 param 0 1
+sr2017passmass120to300recoil2_ttMC_mcstat_bin0 param 0 1
+sr2017passmass120to300recoil2_ttMC_mcstat_bin1 param 0 1
+sr2017passmass120to300recoil2_ttMC_mcstat_bin2 param 0 1
+sr2017passmass120to300recoil2_ttMC_mcstat_bin3 param 0 1
+tecr2017passmass120to300recoil2_ttMC_mcstat_bin0 param 0 1
+tecr2017passmass120to300recoil2_ttMC_mcstat_bin1 param 0 1
+tecr2017passmass120to300recoil2_ttMC_mcstat_bin2 param 0 1
+tecr2017passmass120to300recoil2_ttMC_mcstat_bin3 param 0 1
+trig_met2017 param 0 1
+tt_norm2017pass param 0 1

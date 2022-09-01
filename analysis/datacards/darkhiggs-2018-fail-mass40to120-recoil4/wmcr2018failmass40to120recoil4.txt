@@ -1,0 +1,63 @@
+# Datacard for <Channel (wmcr2018failmass40to120recoil4) instance at 0x2ac19a6e0f10> generated on 2022-09-01 15:08:16.021277
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 6 # number of samples minus 1
+kmax 52 # number of nuisance parameters
+shapes * wmcr2018failmass40to120recoil4 wmcr2018failmass40to120recoil4.root wmcr2018failmass40to120recoil4:wmcr2018failmass40to120recoil4_$PROCESS wmcr2018failmass40to120recoil4:wmcr2018failmass40to120recoil4_$PROCESS_$SYSTEMATIC
+bin wmcr2018failmass40to120recoil4
+observation 915.000
+bin                                               wmcr2018failmass40to120recoil4  wmcr2018failmass40to120recoil4  wmcr2018failmass40to120recoil4  wmcr2018failmass40to120recoil4  wmcr2018failmass40to120recoil4  wmcr2018failmass40to120recoil4  wmcr2018failmass40to120recoil4
+process                                                                    wjets                            ttMC                            stMC                        dyjetsMC                            vvMC                           hbbMC                           qcdMC
+process                                                                        1                               2                               3                               4                               5                               6                               7
+rate                                                                       1.000                          29.157                           8.801                           9.939                          90.371                           0.079                          34.311
+btag2018 shape                                                                 -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+ew1 lnN                                                                        -                               -                               -                          1.0035                               -                               -                               -
+ew2Z lnN                                                                       -                               -                               -                          1.0092                               -                               -                               -
+ew3Z lnN                                                                       -                               -                               -                          1.0077                               -                               -                               -
+hbb_norm2018fail lnN                                                           -                               -                               -                               -                               -                          1.2000                               -
+id_mu2018 lnN                                                                  -                          1.0200                          1.0200                          1.0200                          1.0200                          1.0200                          1.0200
+iso_mu2018 lnN                                                                 -                          1.0200                          1.0200                          1.0200                          1.0200                          1.0200                          1.0200
+jec2018 lnN                                                                    -                          1.0500                          1.0500                          1.0500                          1.0500                          1.0500                          1.0500
+lumi2018 lnN                                                                   -                          1.0270                          1.0270                          1.0270                          1.0270                          1.0270                          1.0270
+mix lnN                                                                        -                               -                               -                          1.0051                               -                               -                               -
+qcd1 lnN                                                                       -                               -                               -                          1.0659                               -                               -                               -
+qcd2 lnN                                                                       -                               -                               -                          1.0057                               -                               -                               -
+qcdmu_norm2018fail lnN                                                         -                               -                               -                               -                               -                               -                          2.0000
+st_norm2018fail lnN                                                            -                               -                          1.2000                               -                               -                               -                               -
+trig_met2018 lnN                                                               -                          1.0200                          1.0200                          1.0200                          1.0200                          1.0200                          1.0200
+tt_norm2018fail lnN                                                            -                          1.2000                               -                               -                               -                               -                               -
+veto_tau2018 lnN                                                               -                          1.0300                          1.0300                          1.0300                          1.0300                          1.0300                          1.0300
+vv_norm2018fail lnN                                                            -                               -                               -                               -                          1.2000                               -                               -
+wmcr2018failmass40to120recoil4_mcstat_bin0 shape                               -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+wmcr2018failmass40to120recoil4_mcstat_bin1 shape                               -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+wmcr2018failmass40to120recoil4_mcstat_bin2 shape                               -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+wmcr2018failmass40to120recoil4_mcstat_bin3 shape                               -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+wmcr2018failmass40to120recoil4_mcstat_bin4 shape                               -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+wmcr2018failmass40to120recoil4_mcstat_bin5 shape                               -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+wmcr2018failmass40to120recoil4_mcstat_bin6 shape                               -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+zjets_norm2018fail lnN                                                         -                               -                               -                          1.4000                               -                               -                               -
+ew2W param 0 1
+ew3W param 0 1
+qcd3 param 0 1
+sr2018failmass40to120recoil4_mcstat_bin0 param 0 1
+sr2018failmass40to120recoil4_mcstat_bin1 param 0 1
+sr2018failmass40to120recoil4_mcstat_bin2 param 0 1
+sr2018failmass40to120recoil4_mcstat_bin3 param 0 1
+sr2018failmass40to120recoil4_mcstat_bin4 param 0 1
+sr2018failmass40to120recoil4_mcstat_bin5 param 0 1
+sr2018failmass40to120recoil4_mcstat_bin6 param 0 1
+sr2018failmass40to120recoil4_wjetsMC_mcstat_bin0 param 0 1
+sr2018failmass40to120recoil4_wjetsMC_mcstat_bin1 param 0 1
+sr2018failmass40to120recoil4_wjetsMC_mcstat_bin2 param 0 1
+sr2018failmass40to120recoil4_wjetsMC_mcstat_bin3 param 0 1
+sr2018failmass40to120recoil4_wjetsMC_mcstat_bin4 param 0 1
+sr2018failmass40to120recoil4_wjetsMC_mcstat_bin5 param 0 1
+sr2018failmass40to120recoil4_wjetsMC_mcstat_bin6 param 0 1
+wjets_norm param 0 1
+wjets_norm2018fail param 0 1
+wmcr2018failmass40to120recoil4_wjetsMC_mcstat_bin0 param 0 1
+wmcr2018failmass40to120recoil4_wjetsMC_mcstat_bin1 param 0 1
+wmcr2018failmass40to120recoil4_wjetsMC_mcstat_bin2 param 0 1
+wmcr2018failmass40to120recoil4_wjetsMC_mcstat_bin3 param 0 1
+wmcr2018failmass40to120recoil4_wjetsMC_mcstat_bin4 param 0 1
+wmcr2018failmass40to120recoil4_wjetsMC_mcstat_bin5 param 0 1
+wmcr2018failmass40to120recoil4_wjetsMC_mcstat_bin6 param 0 1

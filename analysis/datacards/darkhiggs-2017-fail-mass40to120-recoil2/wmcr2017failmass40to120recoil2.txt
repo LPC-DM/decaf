@@ -1,0 +1,63 @@
+# Datacard for <Channel (wmcr2017failmass40to120recoil2) instance at 0x2ac0c1d08d90> generated on 2022-09-01 15:07:59.220029
+imax 1 # number of categories ('bins' but here we are using shape templates)
+jmax 6 # number of samples minus 1
+kmax 52 # number of nuisance parameters
+shapes * wmcr2017failmass40to120recoil2 wmcr2017failmass40to120recoil2.root wmcr2017failmass40to120recoil2:wmcr2017failmass40to120recoil2_$PROCESS wmcr2017failmass40to120recoil2:wmcr2017failmass40to120recoil2_$PROCESS_$SYSTEMATIC
+bin wmcr2017failmass40to120recoil2
+observation 5917.000
+bin                                               wmcr2017failmass40to120recoil2  wmcr2017failmass40to120recoil2  wmcr2017failmass40to120recoil2  wmcr2017failmass40to120recoil2  wmcr2017failmass40to120recoil2  wmcr2017failmass40to120recoil2  wmcr2017failmass40to120recoil2
+process                                                                    wjets                            ttMC                            stMC                        dyjetsMC                            vvMC                           hbbMC                           qcdMC
+process                                                                        1                               2                               3                               4                               5                               6                               7
+rate                                                                       1.000                         287.539                          83.854                          75.383                         251.869                           0.196                         177.340
+btag2017 shape                                                                 -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+ew1 lnN                                                                        -                               -                               -                          1.0007                               -                               -                               -
+ew2Z lnN                                                                       -                               -                               -                          1.0056                               -                               -                               -
+ew3Z lnN                                                                       -                               -                               -                          1.0020                               -                               -                               -
+hbb_norm2017fail lnN                                                           -                               -                               -                               -                               -                          1.2000                               -
+id_mu2017 lnN                                                                  -                          1.0200                          1.0200                          1.0200                          1.0200                          1.0200                          1.0200
+iso_mu2017 lnN                                                                 -                          1.0200                          1.0200                          1.0200                          1.0200                          1.0200                          1.0200
+jec2017 lnN                                                                    -                          1.0500                          1.0500                          1.0500                          1.0500                          1.0500                          1.0500
+lumi2017 lnN                                                                   -                          1.0270                          1.0270                          1.0270                          1.0270                          1.0270                          1.0270
+mix lnN                                                                        -                               -                               -                          1.0032                               -                               -                               -
+qcd1 lnN                                                                       -                               -                               -                          1.0631                               -                               -                               -
+qcd2 lnN                                                                       -                               -                               -                          0.9681                               -                               -                               -
+qcdmu_norm2017fail lnN                                                         -                               -                               -                               -                               -                               -                          2.0000
+st_norm2017fail lnN                                                            -                               -                          1.2000                               -                               -                               -                               -
+trig_met2017 lnN                                                               -                          1.0200                          1.0200                          1.0200                          1.0200                          1.0200                          1.0200
+tt_norm2017fail lnN                                                            -                          1.2000                               -                               -                               -                               -                               -
+veto_tau2017 lnN                                                               -                          1.0300                          1.0300                          1.0300                          1.0300                          1.0300                          1.0300
+vv_norm2017fail lnN                                                            -                               -                               -                               -                          1.2000                               -                               -
+wmcr2017failmass40to120recoil2_mcstat_bin0 shape                               -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+wmcr2017failmass40to120recoil2_mcstat_bin1 shape                               -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+wmcr2017failmass40to120recoil2_mcstat_bin2 shape                               -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+wmcr2017failmass40to120recoil2_mcstat_bin3 shape                               -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+wmcr2017failmass40to120recoil2_mcstat_bin4 shape                               -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+wmcr2017failmass40to120recoil2_mcstat_bin5 shape                               -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+wmcr2017failmass40to120recoil2_mcstat_bin6 shape                               -                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000                          1.0000
+zjets_norm2017fail lnN                                                         -                               -                               -                          1.4000                               -                               -                               -
+ew2W param 0 1
+ew3W param 0 1
+qcd3 param 0 1
+sr2017failmass40to120recoil2_mcstat_bin0 param 0 1
+sr2017failmass40to120recoil2_mcstat_bin1 param 0 1
+sr2017failmass40to120recoil2_mcstat_bin2 param 0 1
+sr2017failmass40to120recoil2_mcstat_bin3 param 0 1
+sr2017failmass40to120recoil2_mcstat_bin4 param 0 1
+sr2017failmass40to120recoil2_mcstat_bin5 param 0 1
+sr2017failmass40to120recoil2_mcstat_bin6 param 0 1
+sr2017failmass40to120recoil2_wjetsMC_mcstat_bin0 param 0 1
+sr2017failmass40to120recoil2_wjetsMC_mcstat_bin1 param 0 1
+sr2017failmass40to120recoil2_wjetsMC_mcstat_bin2 param 0 1
+sr2017failmass40to120recoil2_wjetsMC_mcstat_bin3 param 0 1
+sr2017failmass40to120recoil2_wjetsMC_mcstat_bin4 param 0 1
+sr2017failmass40to120recoil2_wjetsMC_mcstat_bin5 param 0 1
+sr2017failmass40to120recoil2_wjetsMC_mcstat_bin6 param 0 1
+wjets_norm param 0 1
+wjets_norm2017fail param 0 1
+wmcr2017failmass40to120recoil2_wjetsMC_mcstat_bin0 param 0 1
+wmcr2017failmass40to120recoil2_wjetsMC_mcstat_bin1 param 0 1
+wmcr2017failmass40to120recoil2_wjetsMC_mcstat_bin2 param 0 1
+wmcr2017failmass40to120recoil2_wjetsMC_mcstat_bin3 param 0 1
+wmcr2017failmass40to120recoil2_wjetsMC_mcstat_bin4 param 0 1
+wmcr2017failmass40to120recoil2_wjetsMC_mcstat_bin5 param 0 1
+wmcr2017failmass40to120recoil2_wjetsMC_mcstat_bin6 param 0 1
