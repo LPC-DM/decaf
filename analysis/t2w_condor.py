@@ -81,7 +81,7 @@ for signal in signals:
     try:
         if not any(_signal in signal for _signal in options.signal.split(':')[1].split(',')): continue
     os.environ['FOLDER']   = options.folder
-    os.environ['SIGNAL']   = signal
+    os.environ['SIGNAL']   = options.signal.split(':')[0]+':'+signal
     os.environ['CLUSTER'] = options.cluster
     os.system('condor_submit t2w.submit')
 os.system('rm t2w.submit')
