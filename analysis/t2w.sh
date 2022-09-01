@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-export USER=${3}
-echo "User is: ${3}"
+export USER=${4}
+echo "User is: ${4}"
 echo "Starting job on " `date` #Date/time of start of job
 echo "Running on: `uname -a`" #Condor job is running on this node
 echo "System software: `cat /etc/redhat-release`" #Operating System on that node
 echo $(hostname)
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 
-if [ "${2}" == "kisti" ]; then
+if [ "${3}" == "kisti" ]; then
     env
     /usr/bin/voms-proxy-info -exists
     if [ $? -eq 0 ]; then
@@ -32,6 +32,6 @@ cd CMSSW_10_2_13/src
 scramv1 b ProjectRename
 eval `scramv1 runtime -sh` # cmsenv is an alias not on the workers
 cd decaf/
-
-ls ${1}.root
-cp ${1}.root ${_CONDOR_SCRATCH_DIR}/${1}.root
+python t2w.py -s ${1} -f ${2}
+ls datacards/${2}/${2}_*.root
+cp datacards/${2}/${2}_*.root ${_CONDOR_SCRATCH_DIR}/datacards/${2}/${2}_*.root
