@@ -62,6 +62,7 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
     for filename in os.listdir('data'):
         if '.model' not in filename: continue
-        if options.model not in filename: continue    
+        if options.model:
+            if not any(model in filename for model in options.model.split(',')): continue
         os.system('mkdir -p datacards/'+filename.split('.')[0])
         render(filename.split('.')[0])

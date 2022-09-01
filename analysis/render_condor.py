@@ -21,7 +21,7 @@ parser.add_option('-x', '--copy', action='store_true', dest='copy')
 os.system('mkdir -p datacards/condor/out datacards/condor/err datacards/condor/log')
 
 if options.tar:
-    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../../../cmssw.tgz --exclude=\'src/decaf/analysis/hists/*\' --exclude=\'src/decaf/analysis/plots/*\' ../../../../CMSSW_10_2_13')
+    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../../../cmssw.tgz --exclude=\'src/decaf/analysis/hists/*\' --exclude=\'src/decaf/analysis/plots/*\' --exclude=\'src/decaf.tgz\' --exclude=\'src/pylocal.tgz\' ../../../../CMSSW_10_2_13')
 
 if options.cluster == 'kisti':
     if options.copy:
@@ -66,7 +66,8 @@ jdl_file.close()
 
 for filename in os.listdir('data'):
     if '.model' not in filename: continue
-    if options.model not in filename: continue
+    if options.model:
+        if not any(model in filename for model in options.model.split(',')): continue
     print('Preparing job for model', filename.split('.')[0])
     os.system('mkdir -p datacards/'+filename.split('.')[0])
     os.system('rm -rf datacards/condor/err/'+filename.split('.')[0]+'*')
