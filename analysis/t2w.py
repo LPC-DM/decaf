@@ -14,14 +14,21 @@ if __name__ == '__main__':
         process = k
         if not isinstance(k, str):
             process = k[0]
-        if options.signal not in process: continue
+        if options.signal.split(':')[0] not in process: continue
         signals.append(process)
     
     tmp = []
     for signal in signals:
-        label = ' --PO map=.*/'+signal+':r_'+signal+'[1,0,2]'
+        try:
+            if options.signal.split(':')[1] in signal:
+                label = ' --PO map=.*/'+signal+':'+signal+'_r[1,0,10]'
+            else:
+                label = ' --PO map=.*/'+signal+':0'
+        except:
+            label = ' --PO map=.*/'+signal+':'+signal+'_r[1,0,10]'
         tmp.append(label)
     option = ''.join(tmp)
     
-    command = "text2workspace.py -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel --PO verbose"+option+' '+options.datacard+' -o '+options.datacard.split(.)[0]+'.root'
-    print(command, '\n')
+    command = "text2workspace.py -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel --PO verbose"+option+' '+options.datacard+' -o '+options.datacard.split('.')[0]+'.root'
+    #print(command)
+    os.system(command)
