@@ -21,7 +21,7 @@ parser.add_option('-x', '--copy', action='store_true', dest='copy')
 (options, args) = parser.parse_args()
 
 if options.tar:
-    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../../../cmssw.tgz --exclude=\'src/decaf/analysis/hists/*\' --exclude=\'src/decaf/analysis/plots/*\' --exclude=\'src/decaf/analysis/datacards/*-*\' ../../../../CMSSW_10_2_13')
+    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../../../cmssw.tgz --exclude=\'src/decaf/analysis/hists/*\' --exclude=\'src/decaf/analysis/plots/*\' --exclude=\'src/decaf/analysis/datacards/*-*\' --exclude=\'src/decaf.tgz\' --exclude=\'src/pylocal.tgz\' ../../../../CMSSW_10_2_13')
 
 if options.cluster == 'kisti':
     if options.copy:
@@ -39,7 +39,7 @@ Log = datacards/$ENV(FOLDER)/condor/t2w/log/$ENV(FOLDER)_$ENV(SIGNAL)_$(Cluster)
 TransferOutputRemaps = "$ENV(FOLDER)_$ENV(SIGNAL).root=$ENV(PWD)/datacards/$ENV(FOLDER)/$ENV(FOLDER)_$ENV(SIGNAL).root"
 Arguments = $ENV(SIGNALS) $ENV(SIGNAL) $ENV(FOLDER) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
-JobBatchName = $ENV(FOLDER)
+JobBatchName = $ENV(FOLDER)_$ENV(SIGNALS)_$ENV(SIGNAL)
 request_memory = 8000
 Queue 1"""
 
@@ -63,12 +63,12 @@ jdl_file.write(jdl)
 jdl_file.close() 
 
 signals=[]
-    for k,v in processes.items():
-        process = k
-        if not isinstance(k, str):
-            process = k[0]
-        if options.signal.split(':')[0] not in process: continue
-        signals.append(process)
+for k,v in processes.items():
+    process = k
+    if not isinstance(k, str):
+        process = k[0]
+    if options.signal.split(':')[0] not in process: continue
+    if process not in signals: signals.append(process)
 
 os.system('mkdir -p datacards/'+options.folder+'/condor/t2w/err/')
 os.system('rm -rf datacards/'+options.folder+'/condor/t2w/err/*')
@@ -80,6 +80,8 @@ os.system('rm -rf datacards/'+options.folder+'/condor/t2w/out/*')
 for signal in signals:
     try:
         if not any(_signal in signal for _signal in options.signal.split(':')[1].split(',')): continue
+    except: 
+        pass
     os.environ['FOLDER']   = options.folder
     os.environ['SIGNALS']  = options.signal.split(':')[0]
     os.environ['SIGNAL']  = signal

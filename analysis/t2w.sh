@@ -31,7 +31,7 @@ export SCRAM_ARCH=slc7_amd64_gcc700
 cd CMSSW_10_2_13/src
 scramv1 b ProjectRename
 eval `scramv1 runtime -sh` # cmsenv is an alias not on the workers
-cd decaf/
+cd decaf/analysis
 python t2w.py -s ${1}:${2} -f ${3}
 ls datacards/${3}/${3}_${2}.root
-cp datacards/${3}/${3}_${2}.root ${_CONDOR_SCRATCH_DIR}/datacards/${3}/${3}_${2}.root
+cp datacards/${3}/${3}_${2}.root ${_CONDOR_SCRATCH_DIR}/${3}_${2}.root
