@@ -8,7 +8,7 @@ if __name__ == '__main__':
     parser.add_option('-s', '--signal', help='signal', dest='signal')
     parser.add_option('-f', '--folder', help='folder', dest='folder')
     (options, args) = parser.parse_args()
-    
+
     signals=[]
     for k,v in processes.items():
         process = k
