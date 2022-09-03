@@ -39,7 +39,7 @@ if __name__ == '__main__':
         return command
     
     
-    command = 'text2workspace.py datacards/'+options.folder+'/'+options.folder+'.txt -o datacards/'+options.folder+'/'+options.folder+name+'.root'
+    command = 'text2workspace.py datacards/'+options.folder+'/'+options.folder+'.txt -o datacards/'+options.folder+'/'+options.folder+'.root'
     if options.multiSignal: 
         command = multiSignalModel()
     print(command)
