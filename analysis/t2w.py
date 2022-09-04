@@ -10,6 +10,9 @@ if __name__ == '__main__':
     parser.add_option('-o', '--output', help='output', dest='output')
     (options, args) = parser.parse_args()
 
+    datacard = ' datacards/'+options.folder+'/'+options.folder+'.txt'
+    outfile = ' -o datacards/'+options.folder+'/'+options.output+'.root'
+
     process_list=[]
     for k,v in processes.items():
         process = k
@@ -18,15 +21,18 @@ if __name__ == '__main__':
         if process not in process_list:
             process_list.append(process)
 
+    command = 'text2workspace.py'+datacard+outfile
     option = ''
-    for signal in options.signal.split(';'):
-        if 'SIGNAL' in signal.split(':')[1]:
-            for process in process_list:
-                if signal.split(':')[0].replace('*','') not in process: continue
-                option += ' --PO map=.*/'+process+':'+signal.split(':')[1].replace('SIGNAL',process)
-        else:
-            option += ' --PO map=.*/'+signal.split(':')[0]+':'+signal.split(':')[1]
+    if options.signal:
+        command += ' -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel --PO verbose'
+        for signal in options.signal.split(';'):
+            if 'SIGNAL' in signal.split(':')[1]:
+                for process in process_list:
+                    if signal.split(':')[0].replace('*','') not in process: continue
+                    option += ' --PO map=.*/'+process+':'+signal.split(':')[1].replace('SIGNAL',process)
+            else:
+                option += ' --PO map=.*/'+signal.split(':')[0]+':'+signal.split(':')[1]
     
-    command = 'text2workspace.py -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel --PO verbose'+option+' datacards/'+options.folder+'/'+options.folder+'.txt -o datacards/'+options.folder+'/'+options.output+'.root'
+    command += option
     print(command)
     #os.system(command)
