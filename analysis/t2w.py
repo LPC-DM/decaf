@@ -5,9 +5,10 @@ from data.process import *
 
 if __name__ == '__main__':
     parser = OptionParser()
-    parser.add_option('-s', '--signal', help='signal', dest='signal')
-    parser.add_option('-f', '--folder', help='folder', dest='folder')
+    parser.add_option('-m', '--map', help='maps', dest='maps')
+    parser.add_option('-d', '--datacard', help='datacard', dest='datacard')
     parser.add_option('-o', '--output', help='output', dest='output')
+    parser.add_option('-p', '--process', help='process', dest='process')
     (options, args) = parser.parse_args()
 
     datacard = ' datacards/'+options.folder+'/'+options.folder+'.txt'
@@ -21,18 +22,25 @@ if __name__ == '__main__':
         if process not in process_list:
             process_list.append(process)
 
-    command = 'text2workspace.py'+datacard+outfile
-    option = ''
-    if options.signal:
-        command += ' -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel --PO verbose'
-        for signal in options.signal.split(';'):
-            if 'SIGNAL' in signal.split(':')[1]:
-                for process in process_list:
-                    if signal.split(':')[0].replace('*','') not in process: continue
-                    option += ' --PO map=.*/'+process+':'+signal.split(':')[1].replace('SIGNAL',process)
-            else:
-                option += ' --PO map=.*/'+signal.split(':')[0]+':'+signal.split(':')[1]
+    def write_command():
+        command = 'text2workspace.py'+datacard+outfile
+        option = ''
+        if options.maps:
+            command += ' -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel --PO verbose'
+            for _map in options.maps.split(';'):
+                if _map.split(':')[0].split('/')[1] in _map.split(':')[1]:
+                    for process in process_list:
+                        if _map.split(':')[0].split('/')[1].replace('*','') not in process: continue
+                        option += ' --PO map='+_map.replace(_map.split(':')[0].split('/')[1], process)
+                else:
+                    option += ' --PO map='+_map
     
-    command += option
-    print(command)
+        command += option
+        return command
+    
+    commands=[]
+    for process in process_list:
+        if process not in options.process: continue
+        commands.append(write_command().replace('PROCESS',process))
+    print(write_command())
     #os.system(command)
