@@ -18,7 +18,6 @@ parser.add_option('-d', '--dataset', help='dataset', dest='dataset')
 parser.add_option('-y', '--year', help='year', dest='year')
 parser.add_option('-m', '--metadata', help='metadata', dest='metadata')
 parser.add_option('-p', '--pack', help='pack', dest='pack')
-parser.add_option('-k', '--keep', action="store_true", dest="keep")
 parser.add_option('-s', '--special', help='special', dest='special')
 (options, args) = parser.parse_args()
 fnaleos = "root://cmseos.fnal.gov/"
