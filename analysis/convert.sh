@@ -25,17 +25,22 @@ else
     xrdcp -s root://cmseos.fnal.gov//store/user/$USER/cmssw.tgz .
     echo "cmssw correctly copied"
 fi
+echo "untar cmssw"
 tar -zxvf cmssw.tgz
+echo "cmssw untarred"
 rm cmssw.tgz
 export SCRAM_ARCH=slc7_amd64_gcc700
 cd CMSSW_10_2_13/src
 scramv1 b ProjectRename
 eval `scramv1 runtime -sh` # cmsenv is an alias not on the workers
 cd decaf/analysis
-if [ -z "${3}" ]; then
+if [ "${3}" == "None"  ]; then
+    echo "python convert.py -d ${1} -o ${2}"
     python convert.py -d ${1} -o ${2}
 else
-    python convert.py -d ${1} -o ${2} -m ${3}
+    export maps=$( echo ${3} | tr '+' ' ' )
+    echo "python convert.py -d ${1} -o ${2} -m \"$maps\""
+    python convert.py -d ${1} -o ${2} -m "$maps"
 fi
 ls ${2}
 cp ${2} ${_CONDOR_SCRATCH_DIR}/outfile.root

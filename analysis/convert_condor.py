@@ -12,6 +12,7 @@ import os
 from data.process import *
 from optparse import OptionParser
 
+parser = OptionParser()
 parser.add_option('-d', '--datacard', help='datacard', dest='datacard')
 parser.add_option('-o', '--outfile', help='outfile', dest='outfile')
 parser.add_option('-m', '--maps', help='maps', dest='maps')
@@ -21,7 +22,15 @@ parser.add_option('-x', '--copy', action='store_true', dest='copy')
 (options, args) = parser.parse_args()
 
 if options.tar:
-    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../../../cmssw.tgz --exclude=\'src/decaf/analysis/hists/*\' --exclude=\'src/decaf/analysis/plots/*\' --exclude=\'src/decaf/analysis/datacards/*-*\' --exclude=\'src/decaf.tgz\' --exclude=\'src/pylocal.tgz\' ../../../../CMSSW_10_2_13')
+    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../../../cmssw.tgz '
+              '--exclude=\'src/decaf/analysis/hists/*\' '
+              '--exclude=\'src/decaf/analysis/plots/*\' '
+              '--exclude=\'src/decaf/analysis/datacards/*-*\' '
+              '--exclude=\'src/decaf/analysis/datacards/*.tgz\' '
+              '--exclude=\'src/decaf/analysis/datacards/condor\' '
+              '--exclude=\'src/decaf.tgz\' '
+              '--exclude=\'src/pylocal.tgz\' '
+              '../../../../CMSSW_10_2_13')
 
 if options.cluster == 'kisti':
     if options.copy:
@@ -35,7 +44,7 @@ WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = convert.sh, /tmp/x509up_u556950957
 Output = datacards/condor/convert/out/$(Cluster)_$(Process).stdout
 Error = datacards/condor/convert/err/$(Cluster)_$(Process).stderr
-Log = datacards/condor/convert/log/$$(Cluster)_$(Process).log
+Log = datacards/condor/convert/log/$(Cluster)_$(Process).log
 TransferOutputRemaps = "outfile.root=$ENV(PWD)/$ENV(OUTFILE)"
 Arguments = $ENV(DATACARD) $ENV(OUTFILE) $ENV(MAPS) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
@@ -62,13 +71,12 @@ jdl_file.write(jdl)
 jdl_file.close() 
 
 datacard=open(options.datacard,'r')
-    process_lines=[]
-    for line in datacard.readlines():
-        if not line.startswith('process'): continue
-        process_lines.append(line.split())
-
-    signal_indices = [i for i in range(1, len(process_lines[1])) if int(process_lines[1][i]) <= 0]      
-    signals = set([process_lines[0][i] for i in signal_indices if process_lines[0][i]])
+process_lines=[]
+for line in datacard.readlines():
+    if not line.startswith('process'): continue
+    process_lines.append(line.split())
+signal_indices = [i for i in range(1, len(process_lines[1])) if int(process_lines[1][i]) <= 0]      
+signals = set([process_lines[0][i] for i in signal_indices if process_lines[0][i]])
 
 
 os.system('mkdir -p datacards/condor/convert/err/')
@@ -81,17 +89,21 @@ os.system('rm -rf datacards/condor/convert/out/*')
 if options.maps: 
         if 'SIGNAL:' in options.maps:
             for signal in signals:
-                $ENV(DATACARD) = options.datacard
-                $ENV(OUTFILE)  = options.outfile.replace('SIGNAL',signal)
-                $ENV(MAPS)     = options.maps.replace('SIGNAL',signal)
+                os.environ['CLUSTER'] = options.cluster
+                os.environ['DATACARD'] = options.datacard
+                os.environ['OUTFILE']  = options.outfile.replace('SIGNAL',signal)
+                os.environ['MAPS']     = options.maps.replace('SIGNAL',signal).replace(' ','+')
                 os.system('condor_submit convert.submit')
         else:
-            $ENV(DATACARD) = options.datacard
-            $ENV(OUTFILE)  = options.outfile
-            $ENV(MAPS)     = options.maps
+            os.environ['CLUSTER'] = options.cluster
+            os.environ['DATACARD'] = options.datacard
+            os.environ['OUTFILE']  = options.outfile
+            os.environ['MAPS']     = options.maps.replace(' ','+')
             os.system('condor_submit convert.submit')
 else:
-    $ENV(DATACARD) = options.datacard
-    $ENV(OUTFILE)  = options.outfile
+    os.environ['CLUSTER'] = options.cluster
+    os.environ['DATACARD'] = options.datacard
+    os.environ['OUTFILE']  = options.outfile
+    os.environ['MAPS']     = 'None'
     os.system('condor_submit convert.submit')
 os.system('rm convert.submit')

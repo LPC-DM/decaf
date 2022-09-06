@@ -46,5 +46,4 @@ if __name__ == '__main__':
         commands.append(command+' -o '+options.outfile)
 
     for command in commands:
-        print(command)
-    print(len(commands))
+        os.system(command)
