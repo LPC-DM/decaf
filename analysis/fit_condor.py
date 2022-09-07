@@ -46,7 +46,7 @@ Output = logs/condor/fit/out/$ENV(OUTFOLDER)_$(Cluster)_$(Process).stdout
 Error = logs/condor/fit/err/$ENV(OUTFOLDER)_$(Cluster)_$(Process).stderr
 Log = logs/condor/fit/log/$ENV(OUTFOLDER)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(OUTFOLDER).tgz=$ENV(PWD)/$ENV(OUTFOLDER).tgz"
-Arguments = $ENV(WORKSPACE) $ENV(METHOD) $ENV(ARGUMENTS) $ENV(CLUSTER) $ENV(USER)
+Arguments = $ENV(WORKSPACE) $ENV(METHOD) $ENV(ARGUMENTS) $ENV(CLUSTER) $ENV(USER) $ENV(OUTFOLDER)
 accounting_group=group_cms
 request_memory = 8000
 Queue 1"""
@@ -62,7 +62,7 @@ Output = logs/condor/fit/out/$ENV(OUTFOLDER)_$(Cluster)_$(Process).stdout
 Error = logs/condor/fit/err/$ENV(OUTFOLDER)_$(Cluster)_$(Process).stderr
 Log = logs/condor/fit/log/$ENV(OUTFOLDER)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(OUTFOLDER).tgz=$ENV(PWD)/$ENV(OUTFOLDER).tgz"
-Arguments = $ENV(WORKSPACE) $ENV(METHOD) $ENV(ARGUMENTS) $ENV(CLUSTER) $ENV(USER)
+Arguments = $ENV(WORKSPACE) $ENV(METHOD) $ENV(ARGUMENTS) $ENV(CLUSTER) $ENV(USER) $ENV(OUTFOLDER)
 request_memory = 8000
 Queue 1"""
 
