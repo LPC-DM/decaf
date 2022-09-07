@@ -97,7 +97,7 @@ for workspace in workspaces:
             for signal in signals:
                 if signal not in workspace: continue
                 outfolder = 'results/'+options.method+'Results_'+workspace.split('/')[-1].replace('.root','')
-                print 'outfolder is',outfolder
+                print(outfolder)
                 os.system('mkdir -p logs/condor/fit/err/')
                 os.system('rm -rf logs/condor/fit/err/*')
                 os.system('mkdir -p logs/condor/fit/log/')
@@ -106,6 +106,7 @@ for workspace in workspaces:
                 os.system('rm -rf logs/condor/fit/out/*')
                 os.environ['CLUSTER'] = options.cluster
                 os.environ['WORKSPACE'] = workspace
+                os.environ['METHOD'] = options.method
                 os.environ['OUTFOLDER']  = outfolder
                 os.environ['ARGUMENTS']     = options.arguments.replace('SIGNAL',signal).replace(' ','+')
                 #os.system('condor_submit fit.submit')
@@ -119,6 +120,7 @@ for workspace in workspaces:
             os.system('rm -rf logs/condor/fit/out/*')
             os.environ['CLUSTER'] = options.cluster
             os.environ['WORKSPACE'] = workspace
+            os.environ['METHOD'] = options.method
             os.environ['OUTFOLDER']  = outfolder
             os.environ['ARGUMENTS']     = options.arguments.replace(' ','+')
             #os.system('condor_submit fit.submit')
@@ -132,6 +134,7 @@ for workspace in workspaces:
         os.system('rm -rf logs/condor/fit/out/*')
         os.environ['CLUSTER'] = options.cluster
         os.environ['WORKSPACE'] = workspace
+        os.environ['METHOD'] = options.method
         os.environ['OUTFOLDER']  = outfolder
         os.environ['ARGUMENTS']  = 'None'
         #os.system('condor_submit fit.submit')
