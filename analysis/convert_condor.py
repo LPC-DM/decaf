@@ -60,7 +60,7 @@ WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = convert.sh, /tmp/x509up_u556950957
 Output = datacards/condor/convert/out/$(Cluster)_$(Process).stdout
 Error = datacards/condor/convert/err/$(Cluster)_$(Process).stderr
-Log = datacards/condor/convert/log/$$(Cluster)_$(Process).log
+Log = datacards/condor/convert/log/$(Cluster)_$(Process).log
 TransferOutputRemaps = "outfile.root=$ENV(PWD)/$ENV(OUTFILE)"
 Arguments = $ENV(DATACARD) $ENV(OUTFILE) $ENV(MAPS) $ENV(CLUSTER) $ENV(USER)
 request_memory = 8000
