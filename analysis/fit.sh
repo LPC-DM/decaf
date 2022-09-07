@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-export USER=${5}
-echo "User is: ${5}"
+export USER=${6}
+echo "User is: ${6}"
 echo "Starting job on " `date` #Date/time of start of job
 echo "Running on: `uname -a`" #Condor job is running on this node
 echo "System software: `cat /etc/redhat-release`" #Operating System on that node
 echo $(hostname)
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 
-if [ "${4}" == "kisti" ]; then
+if [ "${5}" == "kisti" ]; then
     env
     /usr/bin/voms-proxy-info -exists
     if [ $? -eq 0 ]; then
@@ -38,9 +38,10 @@ if [ "${3}" == "None"  ]; then
     echo "python fit.py -M ${2} -w ${1}"
     python fit.py -M ${2} -w ${1}
 else
-    export arguments=$( echo ${3} | tr '+' ' ' )
-    echo "python fit.py -M ${2} -w ${1} -a \'$arguments\'"
+    export spaces=$( echo ${3} | tr '+' ' ' )
+    export arguments=$( echo $spaces | tr 'X' '"')
+    echo "python fit.py -M ${2} -w ${1} -a '$arguments'"
     python fit.py -M ${2} -w ${1} -a '$arguments'
 fi
 ls ${2}
-tar -czvf ${_CONDOR_SCRATCH_DIR}/${6}.tgz results/${6}/*${2}*
+tar -czvf ${_CONDOR_SCRATCH_DIR}/${4}.tgz results/${4}/*${2}*

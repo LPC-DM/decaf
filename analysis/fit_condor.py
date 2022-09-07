@@ -45,8 +45,8 @@ Transfer_Input_Files = fit.sh, /tmp/x509up_u556950957
 Output = logs/condor/fit/out/$ENV(OUTFOLDER)_$(Cluster)_$(Process).stdout
 Error = logs/condor/fit/err/$ENV(OUTFOLDER)_$(Cluster)_$(Process).stderr
 Log = logs/condor/fit/log/$ENV(OUTFOLDER)_$(Cluster)_$(Process).log
-TransferOutputRemaps = "$ENV(OUTFOLDER).tgz=$ENV(PWD)/$ENV(OUTFOLDER).tgz"
-Arguments = $ENV(WORKSPACE) $ENV(METHOD) $ENV(ARGUMENTS) $ENV(CLUSTER) $ENV(USER) $ENV(OUTFOLDER)
+TransferOutputRemaps = "$ENV(OUTFOLDER).tgz=$ENV(PWD)/results/$ENV(OUTFOLDER).tgz"
+Arguments = $ENV(WORKSPACE) $ENV(METHOD) $ENV(ARGUMENTS) $ENV(OUTFOLDER) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
 request_memory = 8000
 Queue 1"""
@@ -61,8 +61,8 @@ Transfer_Input_Files = fit.sh, /tmp/x509up_u556950957
 Output = logs/condor/fit/out/$ENV(OUTFOLDER)_$(Cluster)_$(Process).stdout
 Error = logs/condor/fit/err/$ENV(OUTFOLDER)_$(Cluster)_$(Process).stderr
 Log = logs/condor/fit/log/$ENV(OUTFOLDER)_$(Cluster)_$(Process).log
-TransferOutputRemaps = "$ENV(OUTFOLDER).tgz=$ENV(PWD)/$ENV(OUTFOLDER).tgz"
-Arguments = $ENV(WORKSPACE) $ENV(METHOD) $ENV(ARGUMENTS) $ENV(CLUSTER) $ENV(USER) $ENV(OUTFOLDER)
+TransferOutputRemaps = "$ENV(OUTFOLDER).tgz=$ENV(PWD)/results/$ENV(OUTFOLDER).tgz"
+Arguments = $ENV(WORKSPACE) $ENV(METHOD) $ENV(ARGUMENTS) $ENV(OUTFOLDER) $ENV(CLUSTER) $ENV(USER)
 request_memory = 8000
 Queue 1"""
 
@@ -96,46 +96,46 @@ for workspace in workspaces:
         if 'SIGNAL' in options.arguments:
             for signal in signals:
                 if signal not in workspace: continue
-                outfolder = 'results/'+options.method+'Results_'+workspace.split('/')[-1].replace('.root','')
+                outfolder = options.method+'Results_'+workspace.split('/')[-1].replace('.root','')
                 print(outfolder)
                 os.system('mkdir -p logs/condor/fit/err/')
-                os.system('rm -rf logs/condor/fit/err/*')
+                os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
                 os.system('mkdir -p logs/condor/fit/log/')
-                os.system('rm -rf logs/condor/fit/log/*')
+                os.system('rm -rf logs/condor/fit/log/*'+outfolder+'*')
                 os.system('mkdir -p logs/condor/fit/out/')
-                os.system('rm -rf logs/condor/fit/out/*')
+                os.system('rm -rf logs/condor/fit/out/*'+outfolder+'*')
                 os.environ['CLUSTER'] = options.cluster
-                os.environ['WORKSPACE'] = workspace
+                os.environ['WORKSPACE'] = folder+'/'+workspace
                 os.environ['METHOD'] = options.method
                 os.environ['OUTFOLDER']  = outfolder
-                os.environ['ARGUMENTS']     = options.arguments.replace('SIGNAL',signal).replace(' ','+')
-                #os.system('condor_submit fit.submit')
+                os.environ['ARGUMENTS']     = options.arguments.replace('SIGNAL',signal).replace(' ','+').replace('"','X')
+                os.system('condor_submit fit.submit')
         else:
-            outfolder = 'results/'+options.method+'Results_'+workspace.split('/')[-1].replace('.root','')
+            outfolder = options.method+'Results_'+workspace.split('/')[-1].replace('.root','')
             os.system('mkdir -p logs/condor/fit/err/')
-            os.system('rm -rf logs/condor/fit/err/*')
+            os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
             os.system('mkdir -p logs/condor/fit/log/')
-            os.system('rm -rf logs/condor/fit/log/*')
+            os.system('rm -rf logs/condor/fit/log/*'+outfolder+'*')
             os.system('mkdir -p logs/condor/fit/out/')
-            os.system('rm -rf logs/condor/fit/out/*')
+            os.system('rm -rf logs/condor/fit/out/*'+outfolder+'*')
             os.environ['CLUSTER'] = options.cluster
-            os.environ['WORKSPACE'] = workspace
+            os.environ['WORKSPACE'] = folder+'/'+workspace
             os.environ['METHOD'] = options.method
             os.environ['OUTFOLDER']  = outfolder
-            os.environ['ARGUMENTS']     = options.arguments.replace(' ','+')
-            #os.system('condor_submit fit.submit')
+            os.environ['ARGUMENTS']     = options.arguments.replace(' ','+').replace('"','X')
+            os.system('condor_submit fit.submit')
     else:
-        outfolder = 'results/'+options.method+'Results_'+workspace.split('/')[-1].replace('.root','')
+        outfolder = options.method+'Results_'+workspace.split('/')[-1].replace('.root','')
         os.system('mkdir -p logs/condor/fit/err/')
-        os.system('rm -rf logs/condor/fit/err/*')
+        os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
         os.system('mkdir -p logs/condor/fit/log/')
-        os.system('rm -rf logs/condor/fit/log/*')
+        os.system('rm -rf logs/condor/fit/log/*'+outfolder+'*')
         os.system('mkdir -p logs/condor/fit/out/')
-        os.system('rm -rf logs/condor/fit/out/*')
+        os.system('rm -rf logs/condor/fit/out/*'+outfolder+'*')
         os.environ['CLUSTER'] = options.cluster
-        os.environ['WORKSPACE'] = workspace
+        os.environ['WORKSPACE'] = folder+'/'+workspace
         os.environ['METHOD'] = options.method
         os.environ['OUTFOLDER']  = outfolder
         os.environ['ARGUMENTS']  = 'None'
-        #os.system('condor_submit fit.submit')
-os.system('rm fit.submit')
+        os.system('condor_submit fit.submit')
+#os.system('rm fit.submit')
