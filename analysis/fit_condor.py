@@ -138,4 +138,4 @@ for workspace in workspaces:
         os.environ['OUTFOLDER']  = outfolder
         os.environ['ARGUMENTS']  = 'None'
         os.system('condor_submit fit.submit')
-#os.system('rm fit.submit')
+os.system('rm fit.submit')
