@@ -97,7 +97,6 @@ for workspace in workspaces:
             for signal in signals:
                 if signal not in workspace: continue
                 outfolder = options.method+'Results_'+workspace.split('/')[-1].replace('.root','')
-                print(outfolder)
                 os.system('mkdir -p logs/condor/fit/err/')
                 os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
                 os.system('mkdir -p logs/condor/fit/log/')
