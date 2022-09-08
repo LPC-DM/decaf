@@ -26,7 +26,14 @@ parser.add_option('-x', '--copy', action='store_true', dest='copy')
 (options, args) = parser.parse_args()
 
 if options.tar:
-    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*condor/*/*\' --exclude=\'analysis/hists/*/*.reduced\' --exclude=\'analysis/hists/*/*.merged\' --exclude=\'analysis/plots\' ../../decaf')
+    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz '
+              '--exclude=\'analysis/logs\' '
+              '--exclude=\'analysis/plots\' '
+              '--exclude=\'analysis/datacards\' '
+              '--exclude=\'analysis/results\' '
+              '--exclude=\'analysis/hists/*/*.reduced\' '
+              '--exclude=\'analysis/hists/*/*.merged\' '
+              '../../decaf')
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../pylocal.tgz -C ~/.local/lib/python3.6/ site-packages')
 
 if options.cluster == 'kisti':
@@ -42,9 +49,9 @@ Executable = reduce.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = reduce.sh, /tmp/x509up_u556950957
-Output = logs/condor/reduce/out/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stdout
-Error = logs/condor/reduce/err/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stderr
-Log = logs/condor/reduce/log/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).log
+Output = logs/condor/reduce/out/$ENV(TAG)_$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stdout
+Error = logs/condor/reduce/err/$ENV(TAG)_$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stderr
+Log = logs/condor/reduce/log/$ENV(TAG)_$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(VARIABLE)_$ENV(SAMPLE).reduced=$ENV(PWD)/$ENV(FOLDER)/$ENV(VARIABLE)--$ENV(SAMPLE).reduced"
 Arguments = $ENV(FOLDER) $ENV(VARIABLE) $ENV(SAMPLE) $ENV(CLUSTER) $ENV(USER)
 JobBatchName = $ENV(VARIABLE)
@@ -62,9 +69,9 @@ Executable = reduce.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = reduce.sh
-Output = logs/condor/reduce/out/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stdout
-Error = logs/condor/reduce/err/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stderr
-Log = logs/condor/reduce/log/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).log
+Output = logs/condor/reduce/out/$ENV(TAG)_$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stdout
+Error = logs/condor/reduce/err/$ENV(TAG)_$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stderr
+Log = logs/condor/reduce/log/$ENV(TAG)_$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(VARIABLE)_$ENV(SAMPLE).reduced=$ENV(PWD)/$ENV(FOLDER)/$ENV(VARIABLE)--$ENV(SAMPLE).reduced"
 Arguments = $ENV(FOLDER) $ENV(VARIABLE) $ENV(SAMPLE) $ENV(CLUSTER) $ENV(USER)
 request_cpus = 16
@@ -81,6 +88,7 @@ for filename in os.listdir(options.folder):
     futurefile=filename
     if filename.split("____")[0] not in pd: pd.append(filename.split("____")[0])
 
+tag=options.folder.split('/')[-1]
 variables=load(options.folder+'/'+futurefile).keys()
 for pdi in pd:
     if options.dataset:
@@ -89,6 +97,13 @@ for pdi in pd:
         if any(_dataset in pdi for _dataset in options.exclude.split(',')): continue
     for variable in variables:
         if options.variable and options.variable not in variable: continue
+        os.system('mkdir -p logs/condor/reduce/err/')
+        os.system('rm -rf logs/condor/reduce/err/*'+tag+'*'+pdi+'*'+variable+'*')
+        os.system('mkdir -p logs/condor/reduce/log/')
+        os.system('rm -rf logs/condor/reduce/run/*'+tag+'*'+pdi+'*'+variable+'*')
+        os.system('mkdir -p logs/condor/reduce/out/')
+        os.system('rm -rf logs/condor/reduce/out/*'+tag+'*'+pdi+'*'+variable+'*')
+        os.environ['TAG'] = tag
         os.environ['FOLDER'] = options.folder
         os.environ['SAMPLE'] = pdi
         os.environ['VARIABLE'] = variable
