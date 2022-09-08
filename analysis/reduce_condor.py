@@ -25,11 +25,6 @@ parser.add_option('-t', '--tar', action='store_true', dest='tar')
 parser.add_option('-x', '--copy', action='store_true', dest='copy')
 (options, args) = parser.parse_args()
 
-os.system('mkdir -p '+options.folder+'/reduce_condor/out '+options.folder+'/reduce_condor/err '+options.folder+'/reduce_condor/log')
-os.system('rm -rf '+options.folder+'/reduce_condor/err/'+options.dataset+'*')
-os.system('rm -rf '+options.folder+'/reduce_condor/log/'+options.dataset+'*')
-os.system('rm -rf '+options.folder+'/reduce_condor/out/'+options.dataset+'*')
-
 if options.tar:
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*condor/*/*\' --exclude=\'analysis/hists/*/*.reduced\' --exclude=\'analysis/hists/*/*.merged\' --exclude=\'analysis/plots\' ../../decaf')
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../pylocal.tgz -C ~/.local/lib/python3.6/ site-packages')
@@ -47,9 +42,9 @@ Executable = reduce.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = reduce.sh, /tmp/x509up_u556950957
-Output = $ENV(FOLDER)/reduce_condor/out/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stdout
-Error = $ENV(FOLDER)/reduce_condor/err/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stderr
-Log = $ENV(FOLDER)/reduce_condor/log/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).log
+Output = logs/condor/reduce/out/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stdout
+Error = logs/condor/reduce/err/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stderr
+Log = logs/condor/reduce/log/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(VARIABLE)_$ENV(SAMPLE).reduced=$ENV(PWD)/$ENV(FOLDER)/$ENV(VARIABLE)--$ENV(SAMPLE).reduced"
 Arguments = $ENV(FOLDER) $ENV(VARIABLE) $ENV(SAMPLE) $ENV(CLUSTER) $ENV(USER)
 JobBatchName = $ENV(VARIABLE)
@@ -67,9 +62,9 @@ Executable = reduce.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = reduce.sh
-Output = $ENV(FOLDER)/reduce_condor/out/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stdout
-Error = $ENV(FOLDER)/reduce_condor/err/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stderr
-Log = $ENV(FOLDER)/reduce_condor/log/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).log
+Output = logs/condor/reduce/out/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stdout
+Error = logs/condor/reduce/err/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).stderr
+Log = logs/condor/reduce/log/$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(VARIABLE)_$ENV(SAMPLE).reduced=$ENV(PWD)/$ENV(FOLDER)/$ENV(VARIABLE)--$ENV(SAMPLE).reduced"
 Arguments = $ENV(FOLDER) $ENV(VARIABLE) $ENV(SAMPLE) $ENV(CLUSTER) $ENV(USER)
 request_cpus = 16
