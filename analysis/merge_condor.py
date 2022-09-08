@@ -44,9 +44,9 @@ Executable = merge.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = merge.sh, /tmp/x509up_u556950957
-Output = $ENV(FOLDER)/merge_condor/out/$ENV(VARIABLE)_$(Cluster)_$(Process).stdout
-Error = $ENV(FOLDER)/merge_condor/err/$ENV(VARIABLE)_$(Cluster)_$(Process).stderr
-Log = $ENV(FOLDER)/merge_condor/log/$ENV(VARIABLE)_$(Cluster)_$(Process).log
+Output = logs/condor/merge/out/$ENV(TAG)_$ENV(VARIABLE)_$(Cluster)_$(Process).stdout
+Error = logs/condor/merge/err/$ENV(TAG)_$ENV(VARIABLE)_$(Cluster)_$(Process).stderr
+Log = logs/condor/merge/log/$ENV(TAG)_$ENV(VARIABLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(VARIABLE).merged=$ENV(PWD)/$ENV(FOLDER)/$ENV(VARIABLE).merged"
 Arguments = $ENV(FOLDER) $ENV(VARIABLE) $ENV(CLUSTER) $ENV(USER)
 JobBatchName = $ENV(VARIABLE)
@@ -63,9 +63,9 @@ Executable = merge.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = merge.sh
-Output = $ENV(FOLDER)/merge_condor/out/$ENV(VARIABLE)_$(Cluster)_$(Process).stdout
-Error = $ENV(FOLDER)/merge_condor/err/$ENV(VARIABLE)_$(Cluster)_$(Process).stderr
-Log = $ENV(FOLDER)/merge_condor/log/$ENV(VARIABLE)_$(Cluster)_$(Process).log
+Output = logs/condor/merge/out/$ENV(TAG)_$ENV(VARIABLE)_$(Cluster)_$(Process).stdout
+Error = logs/condor/merge/err/$ENV(TAG)_$ENV(VARIABLE)_$(Cluster)_$(Process).stderr
+Log = logs/condor/merge/log/$ENV(TAG)_$ENV(VARIABLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(VARIABLE).merged=$ENV(PWD)/$ENV(FOLDER)/$ENV(VARIABLE).merged"
 Arguments = $ENV(FOLDER) $ENV(VARIABLE) $ENV(CLUSTER) $ENV(USER)
 request_cpus = 16
@@ -74,6 +74,8 @@ Queue 1"""
 jdl_file = open("merge.submit", "w") 
 jdl_file.write(jdl) 
 jdl_file.close() 
+
+tag=options.folder.split('/')[-1]
 
 variables = []
 for filename in os.listdir(options.folder):
@@ -84,6 +86,13 @@ for variable in variables:
     if options.variable and options.variable not in variable: continue
     if options.variable:
         if not any(_variable==variable for _variable in options.variable.split(',')): continue
+    os.system('mkdir -p logs/condor/merge/err/')
+    os.system('rm -rf logs/condor/merge/err/*'+tag+'*'+variable+'*')
+    os.system('mkdir -p logs/condor/merge/log/')
+    os.system('rm -rf logs/condor/merge/run/*'+tag+'*'+variable+'*')
+    os.system('mkdir -p logs/condor/merge/out/')
+    os.system('rm -rf logs/condor/merge/out/*'+tag+'*'+variable+'*')
+    os.environ['TAG'] = tag
     os.environ['FOLDER'] = options.folder
     os.environ['VARIABLE'] = variable
     os.environ['CLUSTER'] = options.cluster
