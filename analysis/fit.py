@@ -40,11 +40,11 @@ if __name__ == '__main__':
                     if signal not in workspace: continue
                     commands.append(command+' -d '+folder+'/'+workspace+' '+
                                     '-n .'+options.method+'Results ' +
-                                    options.arguments.replace('SIGNAL',signal).replace('\"','\''))
+                                    options.arguments.replace('SIGNAL',signal).replace('\\"','\''))
             else:
                 commands.append(command+' -d '+folder+'/'+workspace+' '+
                                 '-n .'+options.method+'Results ' +
-                                options.arguments.replace('\"','\''))
+                                options.arguments.replace('\\"','\''))
         else:
             commands.append(command+' -d '+folder+'/'+workspace+' '+
                             '-n .'+options.method+'Results ')
