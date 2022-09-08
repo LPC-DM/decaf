@@ -43,9 +43,9 @@ Executable = run.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = run.sh, /tmp/x509up_u556950957
-Output = hists/$ENV(PROCESSOR)/run_condor/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
-Error = hists/$ENV(PROCESSOR)/run_condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
-Log = hists/$ENV(PROCESSOR)/run_condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
+Output = logs/condor/run/out/$ENV(PROCESSOR)_$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
+Error = logs/condor/run/err/$ENV(PROCESSOR)_$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
+Log = logs/condor/run/log/$ENV(PROCESSOR)_$ENV(SAMPLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(PROCESSOR)_$ENV(SAMPLE).futures=$ENV(PWD)/hists/$ENV(PROCESSOR)/$ENV(SAMPLE).futures"
 Arguments = $ENV(METADATA) $ENV(SAMPLE) $ENV(PROCESSOR) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
@@ -63,9 +63,9 @@ Executable = run.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = run.sh
-Output = hists/$ENV(PROCESSOR)/run_condor/out/$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
-Error = hists/$ENV(PROCESSOR)/run_condor/err/$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
-Log = hists/$ENV(PROCESSOR)/run_condor/log/$ENV(SAMPLE)_$(Cluster)_$(Process).log
+Output = logs/condor/run/out/$ENV(PROCESSOR)_$ENV(SAMPLE)_$(Cluster)_$(Process).stdout
+Error = logs/condor/run/err/$ENV(PROCESSOR)_$ENV(SAMPLE)_$(Cluster)_$(Process).stderr
+Log = logs/condor/run/log/$ENV(PROCESSOR)_$ENV(SAMPLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(PROCESSOR)_$ENV(SAMPLE).futures=$ENV(PWD)/hists/$ENV(PROCESSOR)/$ENV(SAMPLE).futures"
 Arguments = $ENV(METADATA) $ENV(SAMPLE) $ENV(PROCESSOR) $ENV(CLUSTER) $ENV(USER) 
 request_cpus = 8
@@ -84,9 +84,12 @@ for dataset, info in datadef.items():
         if not any(_dataset in dataset for _dataset in options.dataset.split(',')): continue
     if options.exclude:
         if any(_dataset in dataset for _dataset in options.exclude.split(',')): continue
-    os.system('rm -rf hists/'+options.processor+'/run_condor/err/'+dataset+'*')
-    os.system('rm -rf hists/'+options.processor+'/run_condor/log/'+dataset+'*')
-    os.system('rm -rf hists/'+options.processor+'/run_condor/out/'+dataset+'*')
+    os.system('mkdir -p logs/condor/run/err/')
+    os.system('rm -rf logs/condor/run/err/*'+options.processor+'*'+dataset+'*')
+    os.system('mkdir -p logs/condor/run/log/')
+    os.system('rm -rf logs/condor/fit/run/*'+options.processor+'*'+dataset+'*')
+    os.system('mkdir -p logs/condor/run/out/')
+    os.system('rm -rf logs/condor/run/out/*'+options.processor+'*'+dataset+'*')
     os.environ['SAMPLE'] = dataset
     os.environ['BTCN'] = dataset.split('____')[0]
     os.environ['PROCESSOR']   = options.processor
