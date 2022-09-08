@@ -22,13 +22,15 @@ parser.add_option('-t', '--tar', action='store_true', dest='tar')
 parser.add_option('-x', '--copy', action='store_true', dest='copy')
 (options, args) = parser.parse_args()
 
-os.system('mkdir -p '+options.folder+'/merge_condor/out '+options.folder+'/merge_condor/err '+options.folder+'/merge_condor/log')
-os.system('rm -rf '+options.folder+'/merge_condor/err/'+options.variable+'*')
-os.system('rm -rf '+options.folder+'/merge_condor/log/'+options.variable+'*')
-os.system('rm -rf '+options.folder+'/merge_condor/out/'+options.variable+'*')
-
 if options.tar:
-    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*condor/*/*\' --exclude=\'analysis/hists/*/*.futures\' --exclude=\'analysis/hists/*/*.merged\' --exclude=\'analysis/plots\' ../../decaf')
+    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz '
+              '--exclude=\'analysis/logs\' '
+              '--exclude=\'analysis/plots\' '
+              '--exclude=\'analysis/datacards\' '
+              '--exclude=\'analysis/results\' '
+              '--exclude=\'analysis/hists/*/*.futures\' '
+              '--exclude=\'analysis/hists/*/*.merged\' '
+              '../../decaf')
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../pylocal.tgz -C ~/.local/lib/python3.6/ site-packages')
 
 if options.cluster == 'kisti':
