@@ -24,10 +24,16 @@ parser.add_option('-t', '--tar', action='store_true', dest='tar')
 parser.add_option('-x', '--copy', action='store_true', dest='copy')
 (options, args) = parser.parse_args()
 
-os.system('mkdir -p hists/'+options.processor+'/run_condor/out hists/'+options.processor+'/run_condor/err hists/'+options.processor+'/run_condor/log')
-
 if options.tar:
-    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz --exclude=\'analysis/hists/*/*condor/*/*\' --exclude=\'analysis/hists/*/*.futures\' --exclude=\'analysis/hists/*/*.merged\' --exclude=\'analysis/hists/*/*.reduced\' --exclude=\'analysis/plots\' ../../decaf')
+    os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz '
+              '--exclude=\'analysis/logs\' '
+              '--exclude=\'analysis/plots\' '
+              '--exclude=\'analysis/datacards\' '
+              '--exclude=\'analysis/results\' '
+              '--exclude=\'analysis/hists/*/*.futures\' '
+              '--exclude=\'analysis/hists/*/*.merged\' '
+              '--exclude=\'analysis/hists/*/*.reduced\' '
+              '../../decaf')
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../pylocal.tgz -C ~/.local/lib/python3.6/ site-packages')
 
 if options.cluster == 'kisti':
