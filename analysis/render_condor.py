@@ -22,8 +22,11 @@ os.system('mkdir -p datacards/condor/out datacards/condor/err datacards/condor/l
 
 if options.tar:
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../../../cmssw.tgz '
-              '--exclude=\'src/decaf/analysis/hists/*\' '
-              '--exclude=\'src/decaf/analysis/plots/*\' '
+              '--exclude=\'src/decaf/analysis/logs\' '
+              '--exclude=\'src/decaf/analysis/plots\' '
+              '--exclude=\'src/decaf/analysis/hists\' '
+              '--exclude=\'src/decaf/analysis/results\' '
+              '--exclude=\'src/decaf/analysis/datacards/*\' '
               '--exclude=\'src/decaf.tgz\' '
               '--exclude=\'src/pylocal.tgz\' '
               '../../../../CMSSW_10_2_13')
@@ -38,9 +41,9 @@ Executable = render.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = render.sh, /tmp/x509up_u556950957
-Output = datacards/condor/render/out/$ENV(MODEL)_$(Cluster)_$(Process).stdout
-Error = datacards/condor/render/err/$ENV(MODEL)_$(Cluster)_$(Process).stderr
-Log = datacards/condor/render/log/$ENV(MODEL)_$(Cluster)_$(Process).log
+Output = logs/condor/reduce/out/$ENV(MODEL)_$(Cluster)_$(Process).stdout
+Error = logs/condor/reduce/err/$ENV(MODEL)_$(Cluster)_$(Process).stderr
+Log = logs/condor/reduce/log/$ENV(MODEL)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(MODEL).tgz=$ENV(PWD)/datacards/$ENV(MODEL).tgz"
 Arguments = $ENV(MODEL) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
@@ -56,9 +59,9 @@ Executable = render.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = render.sh
-Output = datacards/condor/render/out/$ENV(MODEL)_$(Cluster)_$(Process).stdout
-Error = datacards/condor/render/err/$ENV(MODEL)_$(Cluster)_$(Process).stderr
-Log = datacards/condor/render/log/$ENV(MODEL)_$(Cluster)_$(Process).log
+Output = logs/condor/reduce/out/$ENV(MODEL)_$(Cluster)_$(Process).stdout
+Error = logs/condor/reduce/err/$ENV(MODEL)_$(Cluster)_$(Process).stderr
+Log = logs/condor/reduce/log/$ENV(MODEL)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(MODEL).tgz=$ENV(PWD)/datacards/$ENV(MODEL).tgz"
 Arguments = $ENV(MODEL) $ENV(CLUSTER) $ENV(USER)
 request_memory = 8000
@@ -75,9 +78,12 @@ for filename in os.listdir('data'):
         if not any(model in filename for model in options.model.split(',')): continue
     print('Preparing job for model', filename.split('.')[0])
     os.system('mkdir -p datacards/'+filename.split('.')[0])
-    os.system('rm -rf datacards/condor/render/err/'+filename.split('.')[0]+'*')
-    os.system('rm -rf datacards/condor/render/log/'+filename.split('.')[0]+'*')
-    os.system('rm -rf datacards/condor/render/out/'+filename.split('.')[0]+'*')
+    os.system('mkdir -p logs/condor/reduce/err/')
+    os.system('rm -rf logs/condor/render/err/*'+filename.split('.')[0]+'*')
+    os.system('mkdir -p logs/condor/render/log/')
+    os.system('rm -rf logs/condor/render/run/*'+filename.split('.')[0]+'*')
+    os.system('mkdir -p logs/condor/render/out/')
+    os.system('rm -rf logs/condor/render/out/*'+filename.split('.')[0]+'*')
     os.environ['MODEL']   = filename.split('.')[0]
     os.environ['CLUSTER'] = options.cluster
     os.system('condor_submit render.submit')
