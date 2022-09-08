@@ -20,7 +20,7 @@ def futurerender(some_model, directory):
 
 def render(modelname):
     
-    with open('data/'+modelname+'.model') as fin:
+    with open('data/models/'+modelname+'.model') as fin:
         model = pickle.load(fin)
 
     model_arr = []
@@ -60,7 +60,7 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-m', '--model', help='model', dest='model', default='')
     (options, args) = parser.parse_args()
-    for filename in os.listdir('data'):
+    for filename in os.listdir('data/models'):
         if '.model' not in filename: continue
         if options.model:
             if not any(model in filename for model in options.model.split(',')): continue

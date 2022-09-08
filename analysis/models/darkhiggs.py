@@ -1433,7 +1433,7 @@ if __name__ == "__main__":
             iswjetsMC = (recoilbin==4) & (category=='pass')
 
             with open(
-                    "data/"
+                    "data/models/"
                     + "darkhiggs"
                     + "-"
                     + year

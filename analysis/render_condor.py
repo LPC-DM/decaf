@@ -18,8 +18,6 @@ parser.add_option('-t', '--tar', action='store_true', dest='tar')
 parser.add_option('-x', '--copy', action='store_true', dest='copy')
 (options, args) = parser.parse_args()
 
-os.system('mkdir -p datacards/condor/out datacards/condor/err datacards/condor/log')
-
 if options.tar:
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../../../cmssw.tgz '
               '--exclude=\'src/decaf/analysis/logs\' '
@@ -41,9 +39,9 @@ Executable = render.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = render.sh, /tmp/x509up_u556950957
-Output = logs/condor/reduce/out/$ENV(MODEL)_$(Cluster)_$(Process).stdout
-Error = logs/condor/reduce/err/$ENV(MODEL)_$(Cluster)_$(Process).stderr
-Log = logs/condor/reduce/log/$ENV(MODEL)_$(Cluster)_$(Process).log
+Output = logs/condor/render/out/$ENV(MODEL)_$(Cluster)_$(Process).stdout
+Error = logs/condor/render/err/$ENV(MODEL)_$(Cluster)_$(Process).stderr
+Log = logs/condor/render/log/$ENV(MODEL)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(MODEL).tgz=$ENV(PWD)/datacards/$ENV(MODEL).tgz"
 Arguments = $ENV(MODEL) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
@@ -59,9 +57,9 @@ Executable = render.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = render.sh
-Output = logs/condor/reduce/out/$ENV(MODEL)_$(Cluster)_$(Process).stdout
-Error = logs/condor/reduce/err/$ENV(MODEL)_$(Cluster)_$(Process).stderr
-Log = logs/condor/reduce/log/$ENV(MODEL)_$(Cluster)_$(Process).log
+Output = logs/condor/render/out/$ENV(MODEL)_$(Cluster)_$(Process).stdout
+Error = logs/condor/render/err/$ENV(MODEL)_$(Cluster)_$(Process).stderr
+Log = logs/condor/render/log/$ENV(MODEL)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(MODEL).tgz=$ENV(PWD)/datacards/$ENV(MODEL).tgz"
 Arguments = $ENV(MODEL) $ENV(CLUSTER) $ENV(USER)
 request_memory = 8000
@@ -72,13 +70,13 @@ jdl_file = open("render.submit", "w")
 jdl_file.write(jdl) 
 jdl_file.close() 
 
-for filename in os.listdir('data'):
+for filename in os.listdir('data/models'):
     if '.model' not in filename: continue
     if options.model:
         if not any(model in filename for model in options.model.split(',')): continue
     print('Preparing job for model', filename.split('.')[0])
     os.system('mkdir -p datacards/'+filename.split('.')[0])
-    os.system('mkdir -p logs/condor/reduce/err/')
+    os.system('mkdir -p logs/condor/render/err/')
     os.system('rm -rf logs/condor/render/err/*'+filename.split('.')[0]+'*')
     os.system('mkdir -p logs/condor/render/log/')
     os.system('rm -rf logs/condor/render/run/*'+filename.split('.')[0]+'*')
