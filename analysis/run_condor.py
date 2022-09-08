@@ -24,6 +24,8 @@ parser.add_option('-t', '--tar', action='store_true', dest='tar')
 parser.add_option('-x', '--copy', action='store_true', dest='copy')
 (options, args) = parser.parse_args()
 
+os.system("mkdir -p hists/"+options.processor)
+
 if options.tar:
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../decaf.tgz '
               '--exclude=\'analysis/logs\' '
