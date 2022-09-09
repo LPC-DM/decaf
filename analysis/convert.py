@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import os
 from optparse import OptionParser
-from data.process import *
 
 if __name__ == '__main__':
     parser = OptionParser()
@@ -22,7 +21,8 @@ if __name__ == '__main__':
     signals = set([process_lines[0][i] for i in signal_indices if process_lines[0][i]])
 
     def add_maps(command, options):
-        command += ' -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel --PO verbose'
+        #command += ' -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel --PO verbose'
+        command += ' -P HiggsAnalysis.CombinedLimit.PhysicsModel:multiSignalModel'
         maps= ''
         for option in options.split('--PO '):
             if not option: continue

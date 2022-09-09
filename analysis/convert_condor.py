@@ -9,7 +9,6 @@ import json
 import time
 import numexpr
 import os
-from data.process import *
 from optparse import OptionParser
 
 parser = OptionParser()
@@ -23,9 +22,10 @@ parser.add_option('-x', '--copy', action='store_true', dest='copy')
 
 if options.tar:
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../../../cmssw.tgz '
+              '--exclude=\'src/decaf/analysis/data\' '
               '--exclude=\'src/decaf/analysis/logs\' '
-              '--exclude=\'src/decaf/analysis/hists/*\' '
-              '--exclude=\'src/decaf/analysis/plots/*\' '
+              '--exclude=\'src/decaf/analysis/plots\' '
+              '--exclude=\'src/decaf/analysis/hists\' '
               '--exclude=\'src/decaf/analysis/results\' '
               '--exclude=\'src/decaf/analysis/datacards/*-*\' '
               '--exclude=\'src/decaf/analysis/datacards/*.tgz\' '
@@ -43,9 +43,9 @@ Executable = convert.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = convert.sh, /tmp/x509up_u556950957
-Output = datacards/condor/convert/out/$(Cluster)_$(Process).stdout
-Error = datacards/condor/convert/err/$(Cluster)_$(Process).stderr
-Log = datacards/condor/convert/log/$(Cluster)_$(Process).log
+Output = logs/condor/convert/out/$ENV(TAG)_$(Cluster)_$(Process).stdout
+Error = logs/condor/convert/err/$ENV(TAG)_$(Cluster)_$(Process).stderr
+Log = logs/condor/convert/log/$ENV(TAG)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "outfile.root=$ENV(PWD)/$ENV(OUTFILE)"
 Arguments = $ENV(DATACARD) $ENV(OUTFILE) $ENV(MAPS) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
@@ -59,9 +59,9 @@ Executable = convert.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
 Transfer_Input_Files = convert.sh, /tmp/x509up_u556950957
-Output = datacards/condor/convert/out/$(Cluster)_$(Process).stdout
-Error = datacards/condor/convert/err/$(Cluster)_$(Process).stderr
-Log = datacards/condor/convert/log/$(Cluster)_$(Process).log
+Output = logs/condor/convert/out/$ENV(TAG)_$(Cluster)_$(Process).stdout
+Error = logs/condor/convert/err/$ENV(TAG)_$(Cluster)_$(Process).stderr
+Log = logs/condor/convert/log/$ENV(TAG)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "outfile.root=$ENV(PWD)/$ENV(OUTFILE)"
 Arguments = $ENV(DATACARD) $ENV(OUTFILE) $ENV(MAPS) $ENV(CLUSTER) $ENV(USER)
 request_memory = 8000
@@ -79,29 +79,45 @@ for line in datacard.readlines():
 signal_indices = [i for i in range(1, len(process_lines[1])) if int(process_lines[1][i]) <= 0]      
 signals = set([process_lines[0][i] for i in signal_indices if process_lines[0][i]])
 
-
-os.system('mkdir -p datacards/condor/convert/err/')
-os.system('rm -rf datacards/condor/convert/err/*')
-os.system('mkdir -p datacards/condor/convert/log/')
-os.system('rm -rf datacards/condor/convert/log/*')
-os.system('mkdir -p datacards/condor/convert/out/')
-os.system('rm -rf datacards/condor/convert/out/*')
-
 if options.maps: 
         if 'SIGNAL:' in options.maps:
             for signal in signals:
+                tag = options.datacard.split('/')[-1].replace('.txt','')+'_'+signal
+                os.system('mkdir -p logs/condor/convert/err/')
+                os.system('rm -rf logs/condor/convert/err/*'+tag+'*')
+                os.system('mkdir -p logs/condor/convert/log/')
+                os.system('rm -rf logs/condor/convert/log/*'+tag+'*')
+                os.system('mkdir -p logs/condor/convert/out/')
+                os.system('rm -rf logs/condor/convert/out/*'+tag+'*')
+                os.environ['TAG'] = tag
                 os.environ['CLUSTER'] = options.cluster
                 os.environ['DATACARD'] = options.datacard
                 os.environ['OUTFILE']  = options.outfile.replace('SIGNAL',signal)
                 os.environ['MAPS']     = options.maps.replace('SIGNAL',signal).replace(' ','+')
                 os.system('condor_submit convert.submit')
         else:
+            tag = options.datacard.split('/')[-1].replace('.txt','')
+            os.system('mkdir -p logs/condor/convert/err/')
+            os.system('rm -rf logs/condor/convert/err/*'+tag+'*')
+            os.system('mkdir -p logs/condor/convert/log/')
+            os.system('rm -rf logs/condor/convert/log/*'+tag+'*')
+            os.system('mkdir -p logs/condor/convert/out/')
+            os.system('rm -rf logs/condor/convert/out/*'+tag+'*')
+            os.environ['TAG'] = tag
             os.environ['CLUSTER'] = options.cluster
             os.environ['DATACARD'] = options.datacard
             os.environ['OUTFILE']  = options.outfile
             os.environ['MAPS']     = options.maps.replace(' ','+')
             os.system('condor_submit convert.submit')
 else:
+    tag = options.datacard.split('/')[-1].replace('.txt','')
+    os.system('mkdir -p logs/condor/convert/err/')
+    os.system('rm -rf logs/condor/convert/err/*'+tag+'*')
+    os.system('mkdir -p logs/condor/convert/log/')
+    os.system('rm -rf logs/condor/convert/log/*'+tag+'*')
+    os.system('mkdir -p logs/condor/convert/out/')
+    os.system('rm -rf logs/condor/convert/out/*'+tag+'*')
+    os.environ['TAG'] = tag
     os.environ['CLUSTER'] = options.cluster
     os.environ['DATACARD'] = options.datacard
     os.environ['OUTFILE']  = options.outfile
