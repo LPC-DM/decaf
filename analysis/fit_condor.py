@@ -22,12 +22,13 @@ parser.add_option('-x', '--copy', action='store_true', dest='copy')
 
 if options.tar:
     os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../../../cmssw.tgz '
-              '--exclude=\'src/decaf/analysis/hists/*\' '
-              '--exclude=\'src/decaf/analysis/plots/*\' '
+              '--exclude=\'src/decaf/analysis/data\' '
+              '--exclude=\'src/decaf/analysis/logs\' '
+              '--exclude=\'src/decaf/analysis/plots\' '
+              '--exclude=\'src/decaf/analysis/hists\' '
+              '--exclude=\'src/decaf/analysis/results/*\' '
               '--exclude=\'src/decaf/analysis/datacards/*-*\' '
               '--exclude=\'src/decaf/analysis/datacards/*.tgz\' '
-              '--exclude=\'src/decaf/analysis/logs/*\' '
-              '--exclude=\'src/decaf/analysis/results/*\' '
               '--exclude=\'src/decaf.tgz\' '
               '--exclude=\'src/pylocal.tgz\' '
               '../../../../CMSSW_10_2_13')
