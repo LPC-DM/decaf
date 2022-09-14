@@ -28,7 +28,8 @@ if __name__ == '__main__':
             if not option: continue
             if 'SIGNAL' in option:
                 for signal in signals:
-                    if option.split(':')[0].split('/')[1].replace('*','') not in signal: continue
+                    if not all(piece in signal for piece in option.split(':')[0].split('/')[1].split('*')): continue
+                    #if option.split(':')[0].split('/')[1].replace('*','') not in signal: continue
                     maps += ' --PO '+option.replace(option.split(':')[0].split('/')[1],signal).replace('SIGNAL',signal)
             else:
                 maps += ' --PO '+option
@@ -46,4 +47,5 @@ if __name__ == '__main__':
         commands.append(command+' -o '+options.outfile)
 
     for command in commands:
+        #print(command)
         os.system(command)

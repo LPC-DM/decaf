@@ -31,7 +31,7 @@ if __name__ == '__main__':
         if '.root' not in workspace: continue
         if not all(piece in workspace for piece in rootfile.split('*')): continue
         workspaces.append(workspace)
-    
+
     commands=[]
     for workspace in workspaces:
         if options.arguments:
