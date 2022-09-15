@@ -32,6 +32,7 @@ if options.tar:
               '--exclude=\'analysis/plots\' '
               '--exclude=\'analysis/datacards\' '
               '--exclude=\'analysis/results\' '
+              '--exclude=\'analysis/data/models\' '
               '--exclude=\'analysis/hists/*/*.futures\' '
               '--exclude=\'analysis/hists/*/*.merged\' '
               '--exclude=\'analysis/hists/*/*.reduced\' '
