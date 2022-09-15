@@ -463,4 +463,4 @@ if __name__ == '__main__':
                                          ids=ids,
                                          common=common)
 
-    save(processor_instance, 'data/doublebSF'+options.year+'.processor')
+    save(processor_instance, 'data/doublebsf'+options.metadata+'.processor')
