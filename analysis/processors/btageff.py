@@ -81,13 +81,14 @@ class BTagEfficiency(processor.ProcessorABC):
 if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-y', '--year', help='year', dest='year')
+    parser.add_option('-m', '--metadata', help='metadata', dest='metadata')
     (options, args) = parser.parse_args()
 
 
-    with open('metadata/'+options.year+'.json') as fin:
+    with open('metadata/'+options.metadata+'.json') as fin:
         samplefiles = json.load(fin)
 
     common = load('data/common.coffea')
     processor_instance=BTagEfficiency(year=options.year,wp=common['btagWPs'])
 
-    save(processor_instance, 'data/btag'+options.year+'.processor')
+    save(processor_instance, 'data/btageff'+options.metadata+'.processor')
