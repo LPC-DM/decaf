@@ -24,9 +24,17 @@ fnaleos = "root://cmseos.fnal.gov/"
 #fnaleos = "root://cmsxrootd.fnal.gov/"
 
 beans={}
-beans['2016'] = ["/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2016","/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2016/Signals/monohs","/store/group/lpcmetx/coffeabeans/NanoAODv6/nano_2018"]
-beans['2017'] = ["/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017","/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/Sandeep","/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/Signals/monohs","/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/new_data","/store/group/lpcmetx/coffeabeans/NanoAODv6/nano_2017"]
-beans['2018'] = ["/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018","/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018/Signals/monohs","/store/group/lpcmetx/coffeabeans/NanoAODv6/nano_2016"]
+beans['2016'] = ["/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2016",
+                 "/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2016/Signals/monohs",
+                 "/store/group/lpcmetx/coffeabeans/NanoAODv6/nano_2016"]
+beans['2017'] = ["/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017",
+                 "/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/Sandeep",
+                 "/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/Signals/monohs",
+                 "/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/new_data",
+                 "/store/group/lpcmetx/coffeabeans/NanoAODv6/nano_2017"]
+beans['2018'] = ["/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018",
+                 "/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018/Signals/monohs",
+                 "/store/group/lpcmetx/coffeabeans/NanoAODv6/nano_2018"]
                  
 
 def split(arr, size):
