@@ -124,7 +124,7 @@ def model(year, category):
     sr_genbb.setParamEffect(lumi, nlumi)
     sr_genbb.setParamEffect(pu, npu)
     sr_genbb.setParamEffect(jes, njes)
-    sr_genbb.setParamEffect(frac, nfrac)
+    sr_genbb.setParamEffect(frac_bb, nfrac)
     sr_genbb.setParamEffect(sf_weight, weight[category])
     addBBliteSyst(sr_genbb, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genbb)
@@ -138,7 +138,7 @@ def model(year, category):
     sr_genb.setParamEffect(lumi, nlumi)
     sr_genb.setParamEffect(pu, npu)
     sr_genb.setParamEffect(jes, njes)
-    sr_genb.setParamEffect(frac, nfrac)
+    sr_genb.setParamEffect(frac_b, nfrac)
     addBBliteSyst(sr_genb, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genb)
 
@@ -147,7 +147,7 @@ def model(year, category):
     sr_genc.setParamEffect(lumi, nlumi)
     sr_genc.setParamEffect(pu, npu)
     sr_genc.setParamEffect(jes, njes)
-    sr_genc.setParamEffect(frac, nfrac)
+    sr_genc.setParamEffect(frac_c, nfrac)
     addBBliteSyst(sr_genc, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genc)
 
@@ -156,7 +156,7 @@ def model(year, category):
     sr_gencc.setParamEffect(lumi, nlumi)
     sr_gencc.setParamEffect(pu, npu)
     sr_gencc.setParamEffect(jes, njes)
-    sr_gencc.setParamEffect(frac, nfrac)
+    sr_gencc.setParamEffect(frac_cc, nfrac)
     addBBliteSyst(sr_gencc, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_gencc)
 
@@ -165,7 +165,7 @@ def model(year, category):
     sr_genother.setParamEffect(lumi, nlumi)
     sr_genother.setParamEffect(pu, npu)
     sr_genother.setParamEffect(jes, njes)
-    sr_genother.setParamEffect(frac, nfrac)
+    sr_genother.setParamEffect(frac_other, nfrac)
     addBBliteSyst(sr_genother, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genother)
 
@@ -190,7 +190,7 @@ if __name__ == "__main__":
     jes = rl.NuisanceParameter("jes" + year, "lnN")
 
     #### fractional systematics (assume 50%)
-    frac = rl.NuisanceParameter("frac" + year, "lnN")
+    frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
 
     ###
     # Set lnN or shape parameters
