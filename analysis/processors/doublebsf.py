@@ -303,30 +303,20 @@ class AnalysisProcessor(processor.ProcessorABC):
             'tau21':     leading_fj.tau21,
             'fjmass':    leading_fj.msd_corr,
             'fj1pt':     leading_fj.sd.pt,
-            #'svmass':    leading_SV.mass,
-            'svmass':    np.log(leading_SV.mass),
             'svdxysig':  leading_SV.dxySig
         }
 
         def fill(dataset, gentype, weight, cut):
-            flat_variables = {k: v[cut].flatten() for k, v in variables.items()}
-            flat_gentype = {k: (~np.isnan(v[cut])*gentype[cut]).flatten() for k, v in variables.items()}
-            flat_weight = {k: (~np.isnan(v[cut])*weight[cut]).flatten() for k, v in variables.items()}
-
-            #print('variables:', flat_variables)
-            for histname, h in hout.items():
-                if not isinstance(h, hist.Hist):
-                    continue
-                if histname not in variables:
-                    continue
-                elif histname == 'sumw':
-                    continue
-                elif histname == 'jptemplate' or histname == 'svtemplate':
-                    continue
-                else:
-                    flat_variable = {histname: flat_variables[histname]}
-                    h.fill(dataset=dataset, gentype=flat_gentype[histname], **flat_variable, weight=flat_weight[histname])
-
+                for histname, h in hout.items():
+                    if not isinstance(h, hist.Hist):
+                        continue
+                    if histname not in variables:
+                        continue
+                    flat_variable = {histname: variables[histname]}
+                    h.fill(dataset=dataset, 
+                           gentype=gentype, 
+                           **flat_variable, 
+                           weight=weight*cut)
         isFilled = False
         if isData:
             if not isFilled:
