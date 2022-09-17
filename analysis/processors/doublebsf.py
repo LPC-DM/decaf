@@ -298,12 +298,12 @@ class AnalysisProcessor(processor.ProcessorABC):
         print(selection.names, '\n')
 
         variables = {
-            'ZHbbvsQCD': leading_fj.ZHbbvsQCD,
-            'btagJP':    leading_fj.btagJP,
-            'tau21':     leading_fj.tau21,
-            'fjmass':    leading_fj.msd_corr,
-            'fj1pt':     leading_fj.sd.pt,
-            'svdxysig':  leading_SV.dxySig
+            'ZHbbvsQCD': leading_fj.ZHbbvsQCD.sum(),
+            'btagJP':    leading_fj.btagJP.sum(),
+            'tau21':     leading_fj.tau21.sum(),
+            'fjmass':    leading_fj.msd_corr.sum(),
+            'fj1pt':     leading_fj.sd.pt.sum(),
+            'svdxysig':  leading_SV.dxySig.sum()
         }
 
         def fill(dataset, gentype, weight, cut):
