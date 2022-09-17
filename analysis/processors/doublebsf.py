@@ -180,6 +180,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
 
         get_msd_weight  = self._corrections['get_msd_weight']
+        get_pu_weight   = self._corrections['get_pu_weight'][self._year]  
         isLooseMuon     = self._ids['isLooseMuon']
         isTightMuon     = self._ids['isTightMuon']
         isGoodFatJet    = self._ids['isGoodFatJet']
@@ -228,6 +229,13 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==2)&(gen[gen.isc].counts>0)
             fj['iscc']  = cmatch
+
+
+            ###
+            # Calculate PU weight and systematic variations
+            ###
+
+            pu = get_pu_weight(events.Pileup.nTrueInt)
 
         ##### axis=1 option to remove boundaries between fat-jets #####
         ##### copy (match jaggedness and shape of array) the contents of crossed array into the fat-jet subjets #####
@@ -356,6 +364,9 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         else:
             weights = processor.Weights(len(events))
+            if 'L1PreFiringWeight' in events.columns: weights.add('prefiring',events.L1PreFiringWeight.Nom)
+            weights.add('genw',events.genWeight)
+            weights.add('pileup',pu)
 
             wgentype = {
                 'bb' : (leading_fj.isbb).sum(),
