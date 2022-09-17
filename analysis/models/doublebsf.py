@@ -216,7 +216,7 @@ if __name__ == "__main__":
         ###
 
         print("Extracting histograms for", year, category)
-        hists = load("hists/doublebSF" + year + ".scaled")
+        hists = load("hists/doublebsf" + year + ".scaled")
         data_hists = hists["data"]
         bkg_hists = hists["bkg"]
 
@@ -244,7 +244,7 @@ if __name__ == "__main__":
             mc[str(gentype_map[i])] = bkg_hists["svtemplate"].integrate("gentype", i)
 
         with open(
-            "data/doublebSF-"
+            "data/doublebsf-"
             + year
             + "-"
             + category
