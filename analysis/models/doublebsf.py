@@ -244,7 +244,7 @@ if __name__ == "__main__":
             mc[str(gentype_map[i])] = bkg_hists["svtemplate"].integrate("gentype", i)
 
         with open(
-            "data/doublebsf-"
+            "data/models/doublebsf-"
             + year
             + "-"
             + category
