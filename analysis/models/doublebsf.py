@@ -75,17 +75,34 @@ def template(dictionary, process, gentype, category, read_sumw2=False):
 
     return (output, binning, "svmass")
 
+def get_mergedMC_stat_variations(dictionary, category, bkg_list):
+    templ=template(dictionary, 'QCD', bkg_list[0], category, read_sumw2=True)
+    merged_central=np.zeros_like(templ[0])
+    merged_error2=np.zeros_like(templ[3])
+    for bkg in bkg_list:
+        templ=template(dictionary, 'QCD', bkg, category, read_sumw2=True)
+        for i in range(len(templ[0])):
+            if templ[0][i] <= 1e-5 or templ[3][i] <= 0.:
+                continue
+            merged_central[i] += templ[0][i]
+            merged_error2[i]  += templ[3][i]
+    return merged_central, merged_error2
+
 def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=0):
     for i in range(templ.observable.nbins):
         if merged_central[i] <= 0. or merged_error2[i] <= 0.:
             continue
+        if templ._nominal[i] <= 1e-5:
+            continue
         effect_up = np.ones_like(templ._nominal)
         effect_down = np.ones_like(templ._nominal)
         effect_up[i] = 1.0 + np.sqrt(merged_error2[i])/merged_central[i]
+        print('Effect up = ',effect_up[i])
         effect_down[i] = max(epsilon, 1.0 - np.sqrt(merged_error2[i])/merged_central[i])
+        print('Effect down = ', effect_down[i])
+        print('Central value',templ._nominal[i])
         templ.setParamEffect(param[i], effect_up, effect_down)
-
-### s: process in the signal region
+        
 def model(year, category):
 
     #model_id = "btagJP" + year + category
@@ -265,11 +282,6 @@ if __name__ == "__main__":
         #bkg_hists["template"] = bkg_hists["template"].rebin("btagJP", hist.Bin("btagJP", "btagJP", new_bins[year]))
         data_hists["svtemplate"] = data_hists["svtemplate"].rebin("svmass", hist.Bin("svmass", "svmass", new_bins[year]))
         bkg_hists["svtemplate"] = bkg_hists["svtemplate"].rebin("svmass", hist.Bin("svmass", "svmass", new_bins[year]))
-
-        #### Calculate total yields and errors
-        total_yields, total_error2 = bkg_hists['svtemplate'].integrate("gentype").integrate("process").values(sumw2=True)[()]
-        total_yields = total_yields[:, category_map[category]]
-        total_error2 = total_error2[:, category_map[category]]
 
         ###
         # Preparing histograms for fit
