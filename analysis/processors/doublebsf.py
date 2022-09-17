@@ -401,7 +401,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                         #svmass=leading_SV.mass.sum(),
                         svmass=np.log(leading_SV.mass.sum()),
                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                        weight=np.ones(events.size)*cut
+                        weight=weights.weight()*cut
                         )
             else:
                 fill(dataset, vgentype, weights.weight(), np.ones(events.size, dtype=np.int))
@@ -420,7 +420,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                         #svmass=leading_SV.mass.sum(),
                         svmass=np.log(leading_SV.mass.sum()),
                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                        weight=np.ones(events.size)*cut
+                        weight=weights.weight()
                         )
 
         return hout
