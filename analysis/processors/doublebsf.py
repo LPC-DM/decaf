@@ -294,9 +294,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
         #selection.add('fjCoupledMu', (fj_nwithmu > 0) )
 
-        print('Selections')
-        print(selection.names, '\n')
-
         variables = {
             'ZHbbvsQCD': leading_fj.ZHbbvsQCD.sum(),
             'btagJP':    leading_fj.btagJP.sum(),
