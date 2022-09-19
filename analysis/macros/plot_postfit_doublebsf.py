@@ -4,6 +4,7 @@ from os import getenv
 from array import array
 from tdrStyle import *
 from optparse import OptionParser
+from os import system
 import sys
 import plotConfig
 setTDRStyle()
@@ -420,16 +421,16 @@ def plotPreFitPostFit(year, signalflag, blind=False):
             l.SetLineColor(0)
             l.Draw()
 
-    plotDir = plotConfig.plotDir
-    label = "svmass"+years[year]+signalprocess[signalflag]
 
     plotextralabel_ = plotextralabel
     if PRELIM:
         plotextralabel_ += '_prelim'
     #for ext in ['pdf','png','C']:
     for ext in ['png']:
+        plotDir = 'plots/doublebsf'+years[year]+'/postfit/'+signalprocess[signalflag]
         print('Directory is',plotDir)
-        c.SaveAs(plotDir+"stackedPostfit%s_"%plotextralabel_+label+"."+ext)
+        system('mkdir -p '+plotDir)
+        c.SaveAs(plotDir+'/stack_svmass.'+ext)
 
     #c.SaveAs("test.pdf")
     #del c

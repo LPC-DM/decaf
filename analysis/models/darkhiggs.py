@@ -133,7 +133,6 @@ def get_mergedMC_stat_variations(dictionary, recoil, region, category, bkg_list)
     return merged_central, merged_error2
 '''
 def get_mergedMC_stat_variations(dictionary, recoil, region, category, bkg_list):
-    print('')
     templ=template(dictionary, bkg_list[0], "nominal", recoil, region, category, read_sumw2=True)
     merged_central=np.zeros_like(templ[0])
     merged_error2=np.zeros_like(templ[3])
@@ -142,32 +141,20 @@ def get_mergedMC_stat_variations(dictionary, recoil, region, category, bkg_list)
         for i in range(len(templ[0])):
             if templ[0][i] <= 1e-5 or templ[3][i] <= 0.:
                 continue
-            print('Summing yield for process',bkg,'in bin',i,'in region',region,category,'recoil',recoil)
-            print('Central value',templ[0][i])
-            print('Squared error',templ[3][i])
             merged_central[i] += templ[0][i]
             merged_error2[i]  += templ[3][i]
     return merged_central, merged_error2
 
 def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=0):
-    print('')
-    print('Calculating BB Lite for template',templ.name)
     for i in range(templ.observable.nbins):
-        print('Bin number',i)
         if merged_central[i] <= 0. or merged_error2[i] <= 0.:
             continue
         if templ._nominal[i] <= 1e-5:
             continue
-        print('Relative error np.sqrt(merged_error2[i])/merged_central[i] = ',np.sqrt(merged_error2[i])/merged_central[i])
-        if np.sqrt(merged_error2[i])/merged_central[i]>1.:
-            print('Effect larger than 100%!!!')
         effect_up = np.ones_like(templ._nominal)
         effect_down = np.ones_like(templ._nominal)
         effect_up[i] = 1.0 + np.sqrt(merged_error2[i])/merged_central[i]
-        print('Effect up = ',effect_up[i])
         effect_down[i] = max(epsilon, 1.0 - np.sqrt(merged_error2[i])/merged_central[i])
-        print('Effect down = ', effect_down[i])
-        print('Central value',templ._nominal[i])
         templ.setParamEffect(param[i], effect_up, effect_down)
 
 def addBtagSyst(dictionary, recoil, process, region, templ, category):

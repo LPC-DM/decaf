@@ -124,7 +124,7 @@ def model(year, category):
     sr_genbb.setParamEffect(lumi, nlumi)
     sr_genbb.setParamEffect(pu, npu)
     sr_genbb.setParamEffect(jes, njes)
-    sr_genbb.setParamEffect(frac_bb, nfrac)
+    #sr_genbb.setParamEffect(frac_bb, nfrac)
     sr_genbb.setParamEffect(sf_weight, weight[category])
     addBBliteSyst(sr_genbb, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genbb)
@@ -190,7 +190,7 @@ if __name__ == "__main__":
     jes = rl.NuisanceParameter("jes" + year, "lnN")
 
     #### fractional systematics (assume 50%)
-    frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
+    #frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
 
     ###
     # Set lnN or shape parameters
