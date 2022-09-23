@@ -49,6 +49,7 @@ Log = logs/condor/fit/log/$ENV(OUTFOLDER)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(OUTFOLDER).tgz=$ENV(PWD)/results/$ENV(OUTFOLDER).tgz"
 Arguments = $ENV(WORKSPACE) $ENV(METHOD) $ENV(ARGUMENTS) $ENV(OUTFOLDER) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
+JobBatchName = $ENV(OUTFOLDER)
 request_memory = 8000
 Queue 1"""
 

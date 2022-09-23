@@ -49,7 +49,9 @@ Log = logs/condor/convert/log/$ENV(TAG)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "outfile.root=$ENV(PWD)/$ENV(OUTFILE)"
 Arguments = $ENV(DATACARD) $ENV(OUTFILE) $ENV(MAPS) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
+JobBatchName = $ENV(TAG)
 request_memory = 8000
+request_disk = 100G
 Queue 1"""
 
 if options.cluster == 'lpc':
