@@ -1,0 +1,54 @@
+[I 22:37:55.251 NotebookApp] Serving notebooks from local directory: /cms/scratch/matteoc/CMSSW_10_2_13/src/decaf
+[I 22:37:55.251 NotebookApp] The Jupyter Notebook is running at:
+[I 22:37:55.252 NotebookApp] http://127.0.0.1:9094/?token=a0e7b117aa2e545867d82e046d81a63c6b1cf1ba99b1d3f5
+[I 22:37:55.252 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 22:37:55.258 NotebookApp] 
+    
+    To access the notebook, open this file in a browser:
+        file:///run/user/556950957/jupyter/nbserver-1721870-open.html
+    Or copy and paste one of these URLs:
+        http://127.0.0.1:9094/?token=a0e7b117aa2e545867d82e046d81a63c6b1cf1ba99b1d3f5
+[I 22:38:06.468 NotebookApp] 302 GET /?token=a0e7b117aa2e545867d82e046d81a63c6b1cf1ba99b1d3f5 (127.0.0.1) 1.45ms
+[W 22:38:39.562 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 22:39:04.206 NotebookApp] Kernel started: 4f6dbb1a-b7db-49b5-9883-f21b99de869c
+[I 22:39:06.777 NotebookApp] Adapting to protocol v5.1 for kernel 4f6dbb1a-b7db-49b5-9883-f21b99de869c
+[I 22:41:23.796 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 22:41:23.800 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 22:45:03.124 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 22:45:03.128 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 22:48:37.258 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 22:48:37.263 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 22:55:41.529 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 22:55:41.533 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 22:59:06.244 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 22:59:06.249 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:02:35.414 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:02:35.419 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:06:04.846 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:06:04.852 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:09:34.954 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:09:34.958 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:13:04.294 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:13:04.298 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:16:33.994 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:16:33.999 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:20:37.251 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:20:37.255 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:24:03.407 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:24:03.411 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:27:33.551 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:27:33.553 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:31:07.580 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:31:07.585 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:34:33.950 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:34:33.956 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:38:03.155 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:38:03.159 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:41:32.316 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:41:32.321 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:45:01.895 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:45:01.899 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:48:36.156 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:48:36.161 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 23:52:04.284 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 23:52:04.288 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
