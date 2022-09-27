@@ -39,21 +39,23 @@ if __name__ == '__main__':
         if options.arguments:
             if 'SIGNAL' in options.arguments:
                 for signal in signals:
-                    if signal not in workspace: continue
-                    commands.append(command+' -d '+folder+'/'+workspace+' ' +
-                                    '-n .'+tag+' ' +
+                    if len(workspaces)>1 and signal not in workspace: continue
+                    commands.append(command+' -d '+folder+workspace+' ' +
+                                    '-n _'+signal+'_'+tag+' ' +
                                     options.arguments.replace('SIGNAL',signal).replace('\\"','\''))
             else:
-                commands.append(command+' -d '+folder+'/'+workspace+' ' +
-                                '-n .'+tag+' ' +
+                commands.append(command+' -d '+folder+workspace+' ' +
+                                '-n _'+tag+' ' +
                                 options.arguments.replace('\\"','\''))
         else:
-            commands.append(command+' -d '+folder+'/'+workspace+' ' +
-                            '-n .'+tag)
+            commands.append(command+' -d '+folder+workspace+' ' +
+                            '-n _'+tag)
                 
     for command in commands:
-        os.system(command)
-        folder='results/'+command.split('-d ')[1].split('.root')[0].split('/')[-1]+'_'+tag
-        os.system('mkdir -p '+folder)
-        os.system('mv *.'+tag+'.* '+folder)
+        #os.system(command)
+        print(command)
+        folder='results/'+command.split('-d ')[1].split('.root')[0].split('/')[-2]+command.split('-n ')[1].split(' ')[0]
+        print(folder)
+        #os.system('mkdir -p '+folder)
+        #os.system('mv *.'+tag+'.* '+folder)
     
