@@ -260,7 +260,7 @@ def model(year, mass, recoil, category):
     for i in range(nbins):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
-    MCbkgList = ["ST", "DY+jets", "VV", "Hbb"]#, "QCD"]
+    MCbkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
     if isttMC: MCbkgList.append("TT")
     if iswjetsMC: MCbkgList.append("W+jets")
     sr_central, sr_error2 = get_mergedMC_stat_variations(background, recoil, "sr", category, MCbkgList)
@@ -443,7 +443,7 @@ def model(year, mass, recoil, category):
     for i in range(nbins):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
-    MCbkgList = ["ST", "DY+jets", "VV", "Hbb"]#, "QCD"]
+    MCbkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
     if isttMC: MCbkgList.append("TT")
     if iswjetsMC: MCbkgList.append("W+jets")
     wmcr_central, wmcr_error2 = get_mergedMC_stat_variations(background, recoil, "wmcr", category, MCbkgList)
@@ -621,7 +621,7 @@ def model(year, mass, recoil, category):
     for i in range(nbins):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
-    MCbkgList = ["ST", "DY+jets", "VV", "Hbb"]#, "QCD"]
+    MCbkgList = ["ST", "DY+jets", "VV", "Hbb", "QCD"]
     if isttMC: MCbkgList.append("TT")
     if iswjetsMC: MCbkgList.append("W+jets")
     wecr_central, wecr_error2 = get_mergedMC_stat_variations(background, recoil, "wecr", category, MCbkgList)
@@ -775,7 +775,7 @@ def model(year, mass, recoil, category):
     for i in range(nbins):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
 
-    MCbkgList = ["ST", "DY+jets", "VV", "Hbb", "W+jets"]#, "QCD"]
+    MCbkgList = ["ST", "DY+jets", "VV", "Hbb", "W+jets", "QCD"]
     if isttMC: MCbkgList.append("TT")
     tmcr_central, tmcr_error2 = get_mergedMC_stat_variations(background, recoil, "tmcr", category, MCbkgList)
 
@@ -928,7 +928,7 @@ def model(year, mass, recoil, category):
     for i in range(nbins):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
     
-    MCbkgList = ["ST", "DY+jets", "VV", "Hbb", "W+jets"]#, "QCD"]
+    MCbkgList = ["ST", "DY+jets", "VV", "Hbb", "W+jets", "QCD"]
     if isttMC: MCbkgList.append("TT")
     tecr_central, tecr_error2 = get_mergedMC_stat_variations(background, recoil, "tecr", category, MCbkgList)
     
