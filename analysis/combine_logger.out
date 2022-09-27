@@ -1,0 +1,11 @@
+INFO: (function: improveOnce) CascadeMinimizer.cc: 184 -- Minimisation configured with Type=Minuit2, Algo=Migrad, strategy=1, tolerance=0.1
+INFO: (function: improveOnce) CascadeMinimizer.cc: 207 -- Minimisation finished with status=0
+INFO: (function: improveOnce) CascadeMinimizer.cc: 212 -- Minimization success! status=0
+INFO: (function: improveOnce) CascadeMinimizer.cc: 184 -- Minimisation configured with Type=Minuit2, Algo=Migrad, strategy=1, tolerance=0.1
+INFO: (function: improveOnce) CascadeMinimizer.cc: 207 -- Minimisation finished with status=0
+INFO: (function: improveOnce) CascadeMinimizer.cc: 212 -- Minimization success! status=0
+ERROR: (function: runSpecific) [WARNING]: Unable to determine uncertainties on all fit parameters in b-only fit. Have a look at https://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part3/nonstandard/#fit-parameter-uncertainties for more information.
+INFO: (function: improveOnce) CascadeMinimizer.cc: 184 -- Minimisation configured with Type=Minuit2, Algo=Migrad, strategy=1, tolerance=0.1
+INFO: (function: improveOnce) CascadeMinimizer.cc: 207 -- Minimisation finished with status=0
+INFO: (function: improveOnce) CascadeMinimizer.cc: 212 -- Minimization success! status=0
+ERROR: (function: runSpecific) [WARNING]: Unable to determine uncertainties on all fit parameters in s+b fit. Have a look at https://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part3/nonstandard/#fit-parameter-uncertainties for more information.

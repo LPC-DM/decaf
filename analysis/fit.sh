@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-export USER=${6}
-echo "User is: ${6}"
+export USER=${7}
+echo "User is: ${7}"
 echo "Starting job on " `date` #Date/time of start of job
 echo "Running on: `uname -a`" #Condor job is running on this node
 echo "System software: `cat /etc/redhat-release`" #Operating System on that node
 echo $(hostname)
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 
-if [ "${5}" == "kisti" ]; then
+if [ "${6}" == "kisti" ]; then
     env
     /usr/bin/voms-proxy-info -exists
     if [ $? -eq 0 ]; then
@@ -35,13 +35,12 @@ scramv1 b ProjectRename
 eval `scramv1 runtime -sh` # cmsenv is an alias not on the workers
 cd decaf/analysis
 if [ "${3}" == "None"  ]; then
-    echo "python fit.py -M ${2} -w ${1}"
-    python fit.py -M ${2} -w ${1}
+    echo "python fit.py -M ${2} -w ${1} -n ${5}"
+    python fit.py -M ${2} -w ${1} -n ${5}
 else
     export spaces=$( echo ${3} | tr '+' ' ' )
     export arguments=$( echo $spaces | tr 'X' '"')
     #echo "python fit.py -M ${2} -w ${1} -a '$arguments'"
-    python fit.py -M ${2} -w ${1} -a "$arguments"
+    python fit.py -M ${2} -w ${1} -a "$arguments" -n ${5}
 fi
-ls ${2}
-tar -czvf ${_CONDOR_SCRATCH_DIR}/${4}.tgz results/${4}/*${2}*
+tar -czvf ${_CONDOR_SCRATCH_DIR}/${4}.tgz results/${4}/*${2}${5}*

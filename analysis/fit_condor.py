@@ -14,6 +14,7 @@ from optparse import OptionParser
 parser = OptionParser()
 parser.add_option('-w', '--workspace', help='workspace', dest='workspace')
 parser.add_option('-M', '--method', help='method', dest='method')
+parser.add_option('-n', '--name', help='name', dest='name', default='Results')
 parser.add_option('-a', '--arguments', help='arguments', dest='arguments')
 parser.add_option('-c', '--cluster', help='cluster', dest='cluster', default='lpc')
 parser.add_option('-t', '--tar', action='store_true', dest='tar')
@@ -47,7 +48,7 @@ Output = logs/condor/fit/out/$ENV(OUTFOLDER)_$(Cluster)_$(Process).stdout
 Error = logs/condor/fit/err/$ENV(OUTFOLDER)_$(Cluster)_$(Process).stderr
 Log = logs/condor/fit/log/$ENV(OUTFOLDER)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(OUTFOLDER).tgz=$ENV(PWD)/results/$ENV(OUTFOLDER).tgz"
-Arguments = $ENV(WORKSPACE) $ENV(METHOD) $ENV(ARGUMENTS) $ENV(OUTFOLDER) $ENV(CLUSTER) $ENV(USER)
+Arguments = $ENV(WORKSPACE) $ENV(METHOD) $ENV(ARGUMENTS) $ENV(OUTFOLDER) $ENV(NAME) $ENV(CLUSTER) $ENV(USER)
 accounting_group=group_cms
 JobBatchName = $ENV(OUTFOLDER)
 request_memory = 8000
@@ -64,7 +65,7 @@ Output = logs/condor/fit/out/$ENV(OUTFOLDER)_$(Cluster)_$(Process).stdout
 Error = logs/condor/fit/err/$ENV(OUTFOLDER)_$(Cluster)_$(Process).stderr
 Log = logs/condor/fit/log/$ENV(OUTFOLDER)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(OUTFOLDER).tgz=$ENV(PWD)/results/$ENV(OUTFOLDER).tgz"
-Arguments = $ENV(WORKSPACE) $ENV(METHOD) $ENV(ARGUMENTS) $ENV(OUTFOLDER) $ENV(CLUSTER) $ENV(USER)
+Arguments = $ENV(WORKSPACE) $ENV(METHOD) $ENV(ARGUMENTS) $ENV(OUTFOLDER) $ENV(NAME) $ENV(CLUSTER) $ENV(USER)
 request_memory = 8000
 Queue 1"""
 
@@ -93,12 +94,13 @@ for workspace in os.listdir(folder):
     if not all(piece in workspace for piece in rootfile.split('*')): continue
     workspaces.append(workspace)
 
+tag=options.method+options.name
 for workspace in workspaces:
     if options.arguments:
         if 'SIGNAL' in options.arguments:
             for signal in signals:
                 if signal not in workspace: continue
-                outfolder = options.method+'Results_'+workspace.split('/')[-1].replace('.root','')
+                outfolder = workspace.split('/')[-1].replace('.root','')+'_'+tag
                 os.system('mkdir -p logs/condor/fit/err/')
                 os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
                 os.system('mkdir -p logs/condor/fit/log/')
@@ -108,11 +110,12 @@ for workspace in workspaces:
                 os.environ['CLUSTER'] = options.cluster
                 os.environ['WORKSPACE'] = folder+'/'+workspace
                 os.environ['METHOD'] = options.method
+                os.environ['NAME'] = options.name
                 os.environ['OUTFOLDER']  = outfolder
                 os.environ['ARGUMENTS']     = options.arguments.replace('SIGNAL',signal).replace(' ','+').replace('"','X')
                 os.system('condor_submit fit.submit')
         else:
-            outfolder = options.method+'Results_'+workspace.split('/')[-1].replace('.root','')
+            outfolder = workspace.split('/')[-1].replace('.root','')+'_'+tag
             os.system('mkdir -p logs/condor/fit/err/')
             os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
             os.system('mkdir -p logs/condor/fit/log/')
@@ -122,11 +125,12 @@ for workspace in workspaces:
             os.environ['CLUSTER'] = options.cluster
             os.environ['WORKSPACE'] = folder+'/'+workspace
             os.environ['METHOD'] = options.method
+            os.environ['NAME'] = options.name
             os.environ['OUTFOLDER']  = outfolder
             os.environ['ARGUMENTS']     = options.arguments.replace(' ','+').replace('"','X')
             os.system('condor_submit fit.submit')
     else:
-        outfolder = options.method+'Results_'+workspace.split('/')[-1].replace('.root','')
+        outfolder = workspace.split('/')[-1].replace('.root','')+'_'+tag
         os.system('mkdir -p logs/condor/fit/err/')
         os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
         os.system('mkdir -p logs/condor/fit/log/')
@@ -136,6 +140,7 @@ for workspace in workspaces:
         os.environ['CLUSTER'] = options.cluster
         os.environ['WORKSPACE'] = folder+'/'+workspace
         os.environ['METHOD'] = options.method
+        os.environ['NAME'] = options.name
         os.environ['OUTFOLDER']  = outfolder
         os.environ['ARGUMENTS']  = 'None'
         os.system('condor_submit fit.submit')

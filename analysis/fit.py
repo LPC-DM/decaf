@@ -6,6 +6,7 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-w', '--workspace', help='workspace', dest='workspace')
     parser.add_option('-M', '--method', help='method', dest='method')
+    parser.add_option('-n', '--name', help='name', dest='name', default='Results')
     parser.add_option('-a', '--arguments', help='arguments', dest='arguments')
     (options, args) = parser.parse_args()
     
@@ -33,24 +34,26 @@ if __name__ == '__main__':
         workspaces.append(workspace)
 
     commands=[]
+    tag=options.method+options.name
     for workspace in workspaces:
         if options.arguments:
             if 'SIGNAL' in options.arguments:
                 for signal in signals:
                     if signal not in workspace: continue
-                    commands.append(command+' -d '+folder+'/'+workspace+' '+
-                                    '-n .'+options.method+'Results ' +
+                    commands.append(command+' -d '+folder+'/'+workspace+' ' +
+                                    '-n .'+tag+' ' +
                                     options.arguments.replace('SIGNAL',signal).replace('\\"','\''))
             else:
-                commands.append(command+' -d '+folder+'/'+workspace+' '+
-                                '-n .'+options.method+'Results ' +
+                commands.append(command+' -d '+folder+'/'+workspace+' ' +
+                                '-n .'+tag+' ' +
                                 options.arguments.replace('\\"','\''))
         else:
-            commands.append(command+' -d '+folder+'/'+workspace+' '+
-                            '-n .'+options.method+'Results ')
+            commands.append(command+' -d '+folder+'/'+workspace+' ' +
+                            '-n .'+tag)
                 
     for command in commands:
         os.system(command)
-        os.system('mkdir -p results/'+options.method+'Results_'+command.split('-d ')[1].split('.root')[0].split('/')[-1])
-        os.system('mv *.'+options.method+'Results.* results/'+options.method+'Results_'+command.split('-d ')[1].split('.root')[0].split('/')[-1])
+        folder='results/'+command.split('-d ')[1].split('.root')[0].split('/')[-1]+'_'+tag
+        os.system('mkdir -p '+folder)
+        os.system('mv *.'+tag+'.* '+folder)
     
