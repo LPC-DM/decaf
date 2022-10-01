@@ -21,6 +21,12 @@ mass_binning = [40., 50., 60., 70., 80., 90., 100., 120., 150., 180., 240., 300.
 recoil_binning = [250., 310., 370., 470., 590., 3000.]
 category_map = {"pass": 1, "fail": 0}
 
+sf={
+    '2016': [0.76,1.09],
+    '2017': [0.85,1.04],
+    '2018': [0.91,1.08]
+}
+
 def template(dictionary, process, systematic, recoil, region, category, min_value=1e-5, read_sumw2=False):
     histogram = dictionary[region].integrate("process", process)
     nominal, sumw2 = histogram.integrate("systematic", "nominal").values(sumw2=True)[()]
@@ -89,6 +95,8 @@ def remap_histograms(hists):
     for key in hists["data"].keys():
         bkg_hists[key] = hists["bkg"][key].group(cats, process, bkg_map)
         signal_hists[key] = hists["sig"][key].group(cats, process, sig_map)
+        for signal in signal_hists[key].identifiers('process'):
+            signal_hists[key].scale({signal:sf_value},axis='process')
         data_hists[key] = hists["data"][key].group(cats, process, data_map)
         data_hists[key] += hists["bkg"][key].group(cats, process, fakedata_map)
     
@@ -355,6 +363,7 @@ def model(year, mass, recoil, category):
         sr_signal.setParamEffect(trig_met, ntrig_met)
         sr_signal.setParamEffect(veto_tau, nveto_tau)
         sr_signal.setParamEffect(jec, njec)
+        sr_signal.setParamEffect(doubleb_sf, sf_unc)
         #sr_signal.autoMCStats(epsilon=1e-5)
         for i in range(sr_signal.observable.nbins):
             if sr_signal._nominal[i] <= 0. or sr_signal._sumw2[i] <= 0.:
@@ -1044,6 +1053,13 @@ if __name__ == "__main__":
     year = options.year
     mass = options.mass
 
+    #####                                                                                                                                                                                           ###                                                                                                                                                                                             # Defining signal SF and uncertainty
+    ###
+    #####
+
+    sf_value=sf[year][0]
+    sf_unc  =sf[year][1]
+
     #####
     ###
     # Preparing Rhalphabeth
@@ -1238,6 +1254,7 @@ if __name__ == "__main__":
     qcd3 = rl.NuisanceParameter("qcd3", "lnN")
     whf_fraction = rl.NuisanceParameter("whf_fraction", "lnN")
     zhf_fraction = rl.NuisanceParameter("zhf_fraction", "lnN")
+    doubleb_sf = rl.NuisanceParameter("doubleb_sf" + year, "lnN")
     
     ###
     # Set lnN or shape numbers

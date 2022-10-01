@@ -6,7 +6,7 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-w', '--workspace', help='workspace', dest='workspace')
     parser.add_option('-M', '--method', help='method', dest='method')
-    parser.add_option('-n', '--name', help='name', dest='name', default='Results')
+    parser.add_option('-n', '--name', help='name', dest='name', default='')
     parser.add_option('-a', '--arguments', help='arguments', dest='arguments')
     (options, args) = parser.parse_args()
     
@@ -17,7 +17,7 @@ if __name__ == '__main__':
     
     datacard=''
     for filename in os.listdir(folder):
-        if '.txt' in filename: datacard=folder+'/'+filename
+        if '.txt' in filename: datacard=folder+filename
           
     process_lines=[]
     for line in open(datacard,'r').readlines():
@@ -34,7 +34,7 @@ if __name__ == '__main__':
         workspaces.append(workspace)
 
     commands=[]
-    tag=options.method+options.name
+    tag=options.name+options.method
     for workspace in workspaces:
         if options.arguments:
             if 'SIGNAL' in options.arguments:
@@ -52,10 +52,8 @@ if __name__ == '__main__':
                             '-n _'+tag)
                 
     for command in commands:
-        #os.system(command)
-        print(command)
+        os.system(command)
         folder='results/'+command.split('-d ')[1].split('.root')[0].split('/')[-2]+command.split('-n ')[1].split(' ')[0]
-        print(folder)
-        #os.system('mkdir -p '+folder)
-        #os.system('mv *.'+tag+'.* '+folder)
+        os.system('mkdir -p '+folder)
+        os.system('mv *'+tag+'* '+folder)
     

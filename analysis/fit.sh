@@ -40,7 +40,7 @@ if [ "${3}" == "None"  ]; then
 else
     export spaces=$( echo ${3} | tr '+' ' ' )
     export arguments=$( echo $spaces | tr 'X' '"')
-    #echo "python fit.py -M ${2} -w ${1} -a '$arguments'"
+    echo "python fit.py -M ${2} -w ${1} -a '$arguments' -n ${5}"
     python fit.py -M ${2} -w ${1} -a "$arguments" -n ${5}
 fi
-tar -czvf ${_CONDOR_SCRATCH_DIR}/${4}.tgz results/${4}/*${2}${5}*
+tar -czvf ${_CONDOR_SCRATCH_DIR}/${4}.tgz results/${4}/*${5}${2}*

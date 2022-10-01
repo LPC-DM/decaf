@@ -14,7 +14,7 @@ from optparse import OptionParser
 parser = OptionParser()
 parser.add_option('-w', '--workspace', help='workspace', dest='workspace')
 parser.add_option('-M', '--method', help='method', dest='method')
-parser.add_option('-n', '--name', help='name', dest='name', default='Results')
+parser.add_option('-n', '--name', help='name', dest='name', default='')
 parser.add_option('-a', '--arguments', help='arguments', dest='arguments')
 parser.add_option('-c', '--cluster', help='cluster', dest='cluster', default='lpc')
 parser.add_option('-t', '--tar', action='store_true', dest='tar')
@@ -78,7 +78,7 @@ folder = options.workspace.replace(rootfile, '')
 
 datacard=''
 for filename in os.listdir(folder):
-    if '.txt' in filename: datacard=folder+'/'+filename
+    if '.txt' in filename: datacard=folder+filename
 
 process_lines=[]
 for line in open(datacard,'r').readlines():
@@ -93,14 +93,15 @@ for workspace in os.listdir(folder):
     if '.root' not in workspace: continue
     if not all(piece in workspace for piece in rootfile.split('*')): continue
     workspaces.append(workspace)
-
-tag=options.method+options.name
+print(workspaces)
+tag=options.name+options.method
 for workspace in workspaces:
     if options.arguments:
         if 'SIGNAL' in options.arguments:
             for signal in signals:
                 if len(workspaces)>1 and signal not in workspace: continue
-                outfolder = workspace.split('/')[-1].replace('.root','')+'_'+tag
+                outfolder = workspace.replace('.root','')+'_'+tag
+                print(outfolder)
                 os.system('mkdir -p logs/condor/fit/err/')
                 os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
                 os.system('mkdir -p logs/condor/fit/log/')
@@ -108,14 +109,14 @@ for workspace in workspaces:
                 os.system('mkdir -p logs/condor/fit/out/')
                 os.system('rm -rf logs/condor/fit/out/*'+outfolder+'*')
                 os.environ['CLUSTER'] = options.cluster
-                os.environ['WORKSPACE'] = folder+'/'+workspace
+                os.environ['WORKSPACE'] = folder+workspace
                 os.environ['METHOD'] = options.method
-                os.environ['NAME'] = options.name
+                os.environ['NAME'] = signal+'_'+options.name
                 os.environ['OUTFOLDER']  = outfolder
                 os.environ['ARGUMENTS']     = options.arguments.replace('SIGNAL',signal).replace(' ','+').replace('"','X')
                 os.system('condor_submit fit.submit')
         else:
-            outfolder = workspace.split('/')[-1].replace('.root','')+'_'+tag
+            outfolder = workspace.replace('.root','')+'_'+tag
             os.system('mkdir -p logs/condor/fit/err/')
             os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
             os.system('mkdir -p logs/condor/fit/log/')
@@ -123,14 +124,14 @@ for workspace in workspaces:
             os.system('mkdir -p logs/condor/fit/out/')
             os.system('rm -rf logs/condor/fit/out/*'+outfolder+'*')
             os.environ['CLUSTER'] = options.cluster
-            os.environ['WORKSPACE'] = folder+'/'+workspace
+            os.environ['WORKSPACE'] = folder+workspace
             os.environ['METHOD'] = options.method
             os.environ['NAME'] = options.name
             os.environ['OUTFOLDER']  = outfolder
             os.environ['ARGUMENTS']     = options.arguments.replace(' ','+').replace('"','X')
             os.system('condor_submit fit.submit')
     else:
-        outfolder = workspace.split('/')[-1].replace('.root','')+'_'+tag
+        outfolder = workspace.replace('.root','')+'_'+tag
         os.system('mkdir -p logs/condor/fit/err/')
         os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
         os.system('mkdir -p logs/condor/fit/log/')
@@ -138,7 +139,7 @@ for workspace in workspaces:
         os.system('mkdir -p logs/condor/fit/out/')
         os.system('rm -rf logs/condor/fit/out/*'+outfolder+'*')
         os.environ['CLUSTER'] = options.cluster
-        os.environ['WORKSPACE'] = folder+'/'+workspace
+        os.environ['WORKSPACE'] = folder+workspace
         os.environ['METHOD'] = options.method
         os.environ['NAME'] = options.name
         os.environ['OUTFOLDER']  = outfolder
