@@ -72,3 +72,7 @@
 [W 01:25:12.801 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
 [I 01:28:33.133 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
 [W 01:28:33.138 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 01:49:27.257 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 01:49:27.262 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 02:27:03.986 NotebookApp] Starting buffering for f44a3c5a-88ad-48ab-bdf2-29f550dddbc9:543bbdd61e55485987bc675d7b81c628
+[IPKernelApp] WARNING | Parent appears to have exited, shutting down.
