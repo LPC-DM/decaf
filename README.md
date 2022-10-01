@@ -1,7 +1,7 @@
 # **D**ark matter **E**xperience with the **C**offea **A**nalysis **F**ramework
 
 Following instructions are to run the generation of the histograms directly from NanoAOD. 
-![logo](logo.png)
+![image](https://user-images.githubusercontent.com/10731328/193421390-bc8c0ce8-2689-4f70-85ea-71f0645f5934.png)
 
 ## Initial Setup
 
