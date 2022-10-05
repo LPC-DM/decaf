@@ -12,3 +12,5 @@
 [W 04:51:37.011 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
 [I 04:51:40.738 NotebookApp] Kernel started: 68f55885-7fab-413c-a51f-74f4d05c3564
 [I 04:51:43.488 NotebookApp] Adapting to protocol v5.1 for kernel 68f55885-7fab-413c-a51f-74f4d05c3564
+[I 04:54:00.791 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 04:54:00.794 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
