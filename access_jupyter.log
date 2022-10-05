@@ -1,21 +1,14 @@
-[I 18:59:02.048 NotebookApp] Serving notebooks from local directory: /cms/scratch/matteoc/CMSSW_10_2_13/src/decaf
-[I 18:59:02.048 NotebookApp] The Jupyter Notebook is running at:
-[I 18:59:02.049 NotebookApp] http://127.0.0.1:9094/?token=3772b7936637d7beb67300615b69e7b82df6d80e09e05cb7
-[I 18:59:02.049 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 18:59:02.057 NotebookApp] 
+[I 04:51:02.303 NotebookApp] Serving notebooks from local directory: /cms/scratch/matteoc/CMSSW_10_2_13/src/decaf
+[I 04:51:02.304 NotebookApp] The Jupyter Notebook is running at:
+[I 04:51:02.304 NotebookApp] http://127.0.0.1:9094/?token=42c6ec7df4c969f18dc298e1a19df98ddaf3c5de8d56cddc
+[I 04:51:02.304 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 04:51:02.312 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/556950957/jupyter/nbserver-3953316-open.html
+        file:///run/user/556950957/jupyter/nbserver-2482859-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=3772b7936637d7beb67300615b69e7b82df6d80e09e05cb7
-[I 18:59:13.124 NotebookApp] 302 GET /?token=3772b7936637d7beb67300615b69e7b82df6d80e09e05cb7 (127.0.0.1) 1.02ms
-[W 18:59:35.129 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
-[W 19:00:05.196 NotebookApp] 404 GET /nbextensions/widgets/notebook/js/extension.js?v=20221002185900 (127.0.0.1) 47.36ms referer=http://127.0.0.1:9094/notebooks/analysis/notebooks/darkhiggs.ipynb
-[I 19:00:37.948 NotebookApp] Kernel started: 557c35eb-23d9-45e4-b8fe-8c762ba25d79
-[I 19:00:40.417 NotebookApp] Adapting to protocol v5.1 for kernel 557c35eb-23d9-45e4-b8fe-8c762ba25d79
-[I 19:08:16.346 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[W 19:08:16.350 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
-[I 19:08:38.593 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[W 19:08:38.596 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
-[I 19:09:17.162 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[W 19:09:17.165 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+        http://127.0.0.1:9094/?token=42c6ec7df4c969f18dc298e1a19df98ddaf3c5de8d56cddc
+[I 04:51:17.094 NotebookApp] 302 GET /?token=42c6ec7df4c969f18dc298e1a19df98ddaf3c5de8d56cddc (127.0.0.1) 0.78ms
+[W 04:51:37.011 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 04:51:40.738 NotebookApp] Kernel started: 68f55885-7fab-413c-a51f-74f4d05c3564
+[I 04:51:43.488 NotebookApp] Adapting to protocol v5.1 for kernel 68f55885-7fab-413c-a51f-74f4d05c3564
