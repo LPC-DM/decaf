@@ -116,7 +116,7 @@ for workspace in workspaces:
                 os.environ['ARGUMENTS']     = options.arguments.replace('SIGNAL',signal).replace(' ','+').replace('"','X')
                 os.system('condor_submit fit.submit')
         else:
-            outfolder = workspace.replace('.root','')+'_'+tag
+            outfolder = options.workspace.split('/')[-2]+'_'+tag
             os.system('mkdir -p logs/condor/fit/err/')
             os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
             os.system('mkdir -p logs/condor/fit/log/')
@@ -131,7 +131,7 @@ for workspace in workspaces:
             os.environ['ARGUMENTS']     = options.arguments.replace(' ','+').replace('"','X')
             os.system('condor_submit fit.submit')
     else:
-        outfolder = workspace.replace('.root','')+'_'+tag
+        outfolder = options.workspace.split('/')[-2]+'_'+tag
         os.system('mkdir -p logs/condor/fit/err/')
         os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
         os.system('mkdir -p logs/condor/fit/log/')
