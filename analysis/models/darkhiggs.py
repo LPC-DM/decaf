@@ -357,6 +357,7 @@ def model(year, mass, recoil, category):
     sr.addSample(sr_qcd)
 
     for s in signal["sr"].identifiers("process"):
+        print(s)
         sr_signalTemplate = template(signal, s, "nominal", recoil, "sr", category, mass, read_sumw2=True)
         sr_signal = rl.TemplateSample(ch_name + "_" + str(s), rl.Sample.SIGNAL, sr_signalTemplate)
         sr_signal.setParamEffect(lumi, nlumi)
@@ -1134,7 +1135,6 @@ if __name__ == "__main__":
 
     zjetsmodel = rl.Model("zjetsmodel")
     zjetseff = efficiency(zjetspass_templ, zjetsfail_templ, zjetsmodel)
-    print(zjetseff)
     tf_MCtemplZ = rl.BernsteinPoly("tf_MCtemplZ", (0, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_MCtemplZ_params = zjetseff * tf_MCtemplZ(recoilscaled, msdscaled)
 
