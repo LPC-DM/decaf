@@ -33,7 +33,6 @@ beans['2017'] = ["/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017",
                  "/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/Signals/monohs",
                  "/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2017/new_data",
                  "/store/group/lpcmetx/coffeabeans/NanoAODv6/nano_2017",
-                 "/store/user/abdas/DarkHiggs/NanoAODv6/2017",
                  "/store/user/jongho/DarkHiggs/NanoAODv6/2017"]
 beans['2018'] = ["/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018",
                  "/store/group/lpccoffea/coffeabeans/NanoAODv6/nano_2018/Signals/monohs",
