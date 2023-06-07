@@ -16,6 +16,7 @@ parser.add_option('-w', '--workspace', help='workspace', dest='workspace')
 parser.add_option('-M', '--method', help='method', dest='method')
 parser.add_option('-n', '--name', help='name', dest='name', default='')
 parser.add_option('-a', '--arguments', help='arguments', dest='arguments')
+parser.add_option('-l', '--list', help='list', dest='list')
 parser.add_option('-c', '--cluster', help='cluster', dest='cluster', default='lpc')
 parser.add_option('-t', '--tar', action='store_true', dest='tar')
 parser.add_option('-x', '--copy', action='store_true', dest='copy')
@@ -93,15 +94,17 @@ for workspace in os.listdir(folder):
     if '.root' not in workspace: continue
     if not all(piece in workspace for piece in rootfile.split('*')): continue
     workspaces.append(workspace)
-print(workspaces)
+
 tag=options.name+options.method
 for workspace in workspaces:
     if options.arguments:
         if 'SIGNAL' in options.arguments:
             for signal in signals:
+                if options.list:
+                    if not any(_item in signal for _item in options.list.split(',')): continue
                 if len(workspaces)>1 and signal not in workspace: continue
                 outfolder = workspace.replace('.root','')+'_'+tag
-                print(outfolder)
+                #print(outfolder)
                 os.system('mkdir -p logs/condor/fit/err/')
                 os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
                 os.system('mkdir -p logs/condor/fit/log/')

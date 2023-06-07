@@ -15,6 +15,7 @@ parser = OptionParser()
 parser.add_option('-d', '--datacard', help='datacard', dest='datacard')
 parser.add_option('-o', '--outfile', help='outfile', dest='outfile')
 parser.add_option('-m', '--maps', help='maps', dest='maps')
+parser.add_option('-l', '--list', help='list', dest='list')
 parser.add_option('-c', '--cluster', help='cluster', dest='cluster', default='lpc')
 parser.add_option('-t', '--tar', action='store_true', dest='tar')
 parser.add_option('-x', '--copy', action='store_true', dest='copy')
@@ -84,7 +85,10 @@ signals = set([process_lines[0][i] for i in signal_indices if process_lines[0][i
 if options.maps: 
         if 'SIGNAL:' in options.maps:
             for signal in signals:
-                tag = options.datacard.split('/')[-1].replace('.txt','')+'_'+signal
+                if options.list:
+                    if not any(_item in signal for _item in options.list.split(',')): continue
+                tag = options.outfile.split('/')[-1].replace('.root','').replace('SIGNAL',signal)
+                print(tag)
                 os.system('mkdir -p logs/condor/convert/err/')
                 os.system('rm -rf logs/condor/convert/err/*'+tag+'*')
                 os.system('mkdir -p logs/condor/convert/log/')
@@ -98,7 +102,7 @@ if options.maps:
                 os.environ['MAPS']     = options.maps.replace('SIGNAL',signal).replace(' ','+')
                 os.system('condor_submit convert.submit')
         else:
-            tag = options.datacard.split('/')[-1].replace('.txt','')
+            tag = options.outfile.split('/')[-1].replace('.root','')
             os.system('mkdir -p logs/condor/convert/err/')
             os.system('rm -rf logs/condor/convert/err/*'+tag+'*')
             os.system('mkdir -p logs/condor/convert/log/')
@@ -112,7 +116,7 @@ if options.maps:
             os.environ['MAPS']     = options.maps.replace(' ','+')
             os.system('condor_submit convert.submit')
 else:
-    tag = options.datacard.split('/')[-1].replace('.txt','')
+    tag = options.outfile.split('/')[-1].replace('.root','')
     os.system('mkdir -p logs/condor/convert/err/')
     os.system('rm -rf logs/condor/convert/err/*'+tag+'*')
     os.system('mkdir -p logs/condor/convert/log/')
