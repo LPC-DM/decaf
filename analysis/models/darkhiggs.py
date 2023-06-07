@@ -189,6 +189,8 @@ def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     addSyst(dictionary, recoil, process, region, templ, category, qcd1, "qcd1")
     addSyst(dictionary, recoil, process, region, templ, category, qcd2, "qcd2")
     addSyst(dictionary, recoil, process, region, templ, category, qcd3, "qcd3")
+    addSyst(dictionary, recoil, process, region, templ, category, muF, "muF")
+    addSyst(dictionary, recoil, process, region, templ, category, muR, "muR")
 
 def model(year, mass, recoil, category):
 
