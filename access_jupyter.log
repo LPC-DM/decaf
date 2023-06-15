@@ -1,0 +1,18 @@
+[I 00:08:34.671 NotebookApp] Serving notebooks from local directory: /cms/scratch/matteoc/CMSSW_10_2_13/src/decaf
+[I 00:08:34.671 NotebookApp] The Jupyter Notebook is running at:
+[I 00:08:34.671 NotebookApp] http://127.0.0.1:9094/?token=d40d88e8b5ca5c9d164dadaf4a171bb6d1636839cb7a9f55
+[I 00:08:34.671 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 00:08:34.681 NotebookApp] 
+    
+    To access the notebook, open this file in a browser:
+        file:///run/user/556950957/jupyter/nbserver-4012237-open.html
+    Or copy and paste one of these URLs:
+        http://127.0.0.1:9094/?token=d40d88e8b5ca5c9d164dadaf4a171bb6d1636839cb7a9f55
+[I 00:08:46.295 NotebookApp] 302 GET /?token=d40d88e8b5ca5c9d164dadaf4a171bb6d1636839cb7a9f55 (127.0.0.1) 1.74ms
+[I 00:09:11.502 NotebookApp] Kernel started: 22d54aac-d627-4426-aa9b-c8a3e15dadb7
+[I 00:09:14.735 NotebookApp] Adapting to protocol v5.1 for kernel 22d54aac-d627-4426-aa9b-c8a3e15dadb7
+[I 00:11:14.101 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 00:13:13.059 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 00:15:15.462 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 00:17:13.605 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 00:23:13.128 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
