@@ -196,6 +196,8 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         j = events.Jet
         j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
+        j_HEM = j[j.isHEM.astype(np.bool)]
+        j_nHEM = j_HEM.counts
 
         fj = events.AK15Puppi
         fj['sd'] = fj.subjets.sum()
