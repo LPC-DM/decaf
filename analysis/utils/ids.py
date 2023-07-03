@@ -52,11 +52,11 @@ def isTightMuon(pt,eta,iso,tight_id,year):
 def isLooseTau(pt,eta,decayMode,_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
     if year=='2016':
-        mask = (pt>18)&(abs(eta)<2.3)&(decayMode)&((_id&2)==2)
+        mask = (pt>20)&(abs(eta)<2.3)&(decayMode)&((_id&2)==2)
     elif year=='2017':
-        mask = (pt>18)&(abs(eta)<2.3)&(decayMode)&((_id&2)==2)
+        mask = (pt>20)&(abs(eta)<2.3)&(decayMode)&((_id&2)==2)
     elif year=='2018':
-        mask = (pt>18)&(abs(eta)<2.3)&(decayMode)&((_id&2)==2)
+        mask = (pt>20)&(abs(eta)<2.3)&(decayMode)&((_id&2)==2)
     return mask
 
 #Photon_cutBased Int_t "cut-based spring16-V2p2 ID (0:fail, 1:loose, 2:medium, 3:tight" for 2016 NanoAOD
