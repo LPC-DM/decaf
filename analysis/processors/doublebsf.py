@@ -294,6 +294,10 @@ class AnalysisProcessor(processor.ProcessorABC):
         #fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
         #fj_nwithmu = fj_withmu.counts
 
+        noHEMj = np.ones(events.size, dtype=np.bool)
+        if self._year=='2018': noHEMj = (j_nHEM==0)
+
+        selection.add('noHEMj', noHEMj)
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 250) )
         selection.add('fj_mass', (leading_fj.msd_corr.sum() > 50) ) ## optionally also <130
         #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
