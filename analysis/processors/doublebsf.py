@@ -194,6 +194,9 @@ class AnalysisProcessor(processor.ProcessorABC):
         mu = events.Muon
         leading_mu = mu[mu.pt.argmax()]
 
+        j = events.Jet
+        j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
+
         fj = events.AK15Puppi
         fj['sd'] = fj.subjets.sum()
         fj['isgood'] = isGoodFatJet(fj.sd.pt, fj.sd.eta, fj.jetId)
