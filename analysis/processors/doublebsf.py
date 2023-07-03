@@ -16,7 +16,7 @@ from uproot_methods import TVector2Array, TLorentzVectorArray
 class AnalysisProcessor(processor.ProcessorABC):
 
     lumis = { #Values from https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable                                                      
-        '2016': 35.92,
+        '2016': 36.31,
         '2017': 41.53,
         '2018': 59.74
     }
