@@ -16,7 +16,7 @@ from uproot_methods import TVector2Array, TLorentzVectorArray
 class AnalysisProcessor(processor.ProcessorABC):
 
     lumis = { #Values from https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable                                                      
-        '2016': 35.92,
+        '2016': 36.31,
         '2017': 41.53,
         '2018': 59.74
     }
@@ -63,6 +63,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             'tmcr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','MET'),
             'wecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','SingleElectron','EGamma'),
             'tecr':('WJets','DY','TT','ST','WW','WZ','ZZ','QCD','HToBB','HTobb','SingleElectron','EGamma'),
+            'qcdcr':('ZJets','WJets','TT','ST','WW','WZ','ZZ','QCD','MET'),
         }
         
         self._ZHbbvsQCDwp = {
@@ -464,6 +465,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             'tecr'  : met.T+leading_e.T.sum(),
             'wmcr'  : met.T+leading_mu.T.sum(),
             'tmcr'  : met.T+leading_mu.T.sum(),
+            'qcdcr' : met.T,
         }
 
         mT = {
@@ -533,6 +535,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'tmcr': get_met_trig_weight(u['tmcr'].mag),
                 'wecr': get_ele_trig_weight(leading_e.eta.sum()+leading_e.deltaEtaSC.sum(), leading_e.pt.sum()),
                 'tecr': get_ele_trig_weight(leading_e.eta.sum()+leading_e.deltaEtaSC.sum(), leading_e.pt.sum()),
+                'qcdcr':   get_met_trig_weight(met.pt),
             }
 
             ### 
@@ -548,6 +551,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'tmcr': get_mu_tight_id_sf(mueta,leading_mu.pt.sum()),
                 'wecr': get_ele_tight_id_sf(leading_e.eta.sum()+leading_e.deltaEtaSC.sum(),leading_e.pt.sum()),
                 'tecr': get_ele_tight_id_sf(leading_e.eta.sum()+leading_e.deltaEtaSC.sum(),leading_e.pt.sum()),
+                'qcdcr':  np.ones(events.size),
             }
 
             ###
@@ -568,6 +572,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'tmcr': np.ones(events.size),
                 'wecr': sf(leading_e.eta.sum()+leading_e.deltaEtaSC.sum(),leading_e.pt.sum()),
                 'tecr': sf(leading_e.eta.sum()+leading_e.deltaEtaSC.sum(),leading_e.pt.sum()),
+                'qcdcr': np.ones(events.size),
             }
 
             ###
@@ -580,6 +585,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'tmcr': get_mu_tight_iso_sf(mueta,leading_mu.pt.sum()),
                 'wecr': np.ones(events.size),
                 'tecr': np.ones(events.size),
+                'qcdcr'  : np.ones(events.size),
             }
 
             ###
@@ -594,6 +600,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             btag['tmcr'], btagUp['tmcr'], btagDown['tmcr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'-1')
             btag['wecr'], btagUp['wecr'], btagDown['wecr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['tecr'], btagUp['tecr'], btagDown['tecr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'-1')
+            btag['sr'],   btagUp['sr'],   btagDown['sr']   = np.ones(events.size)
 
         ###
         # Selections
@@ -638,15 +645,20 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('met120',(met.pt<120))
         selection.add('met100',(met.pt>100))
         selection.add('msd40',(leading_fj.msd_corr.sum()>40))
+        selection.add('recoil_qcdcr', (u['qcdcr'].mag>250))
+        selection.add('mindphi_qcdcr', (abs(u['qcdcr'].delta_phi(j_clean.T)).min()<0.1))
+        selection.add('calo_qcdcr', ( (abs(calomet.pt - met.pt) / u['qcdcr'].mag)<0.5))
+            
         #selection.add('mindphimet',(abs(met.T.delta_phi(j_clean.T)).min())>0.7)
 
         regions = {
             #'sr': ['iszeroL','fatjet','noextrab','noHEMmet','met_filters','met_triggers','noHEMj'],
-            'sr': ['msd40','fatjet', 'noHEMj', 'iszeroL', 'noextrab','met_filters','met_triggers','noHEMmet'],
+            'sr': ['msd40','fatjet', 'noHEMj','iszeroL','noextrab','met_filters','met_triggers','noHEMmet'],
             'wmcr': ['msd40','isoneM','fatjet','noextrab','noHEMj','met_filters','met_triggers'],
             'tmcr': ['msd40','isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'],
             'wecr': ['msd40','isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100'],
             'tecr': ['msd40','isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100'],
+            'qcdcr': ['recoil_qcdcr','mindphi_qcdcr','calo_qcdcr','msd40','fatjet', 'noHEMj','iszeroL','met_filters','met_triggers','noHEMmet'],
         }
 
         isFilled = False
@@ -664,10 +676,11 @@ class AnalysisProcessor(processor.ProcessorABC):
             selection.add('minDphi_'+region, (abs(u[region].delta_phi(fj_clean.T)).min()>1.5))
             selection.add('calo_'+region, ( (abs(calomet.pt - met.pt) / u[region].mag) < 0.5))
             #regions[region].update({'recoil_'+region,'mindphi_'+region})
-            regions[region].insert(0, 'recoil_'+region)
-            regions[region].insert(3, 'mindphi_'+region)
-            regions[region].insert(4, 'minDphi_'+region)
-            regions[region].insert(5, 'calo_'+region)
+            if 'qcd' is not in region:
+                regions[region].insert(0, 'recoil_'+region)
+                regions[region].insert(3, 'mindphi_'+region)
+                regions[region].insert(4, 'minDphi_'+region)
+                regions[region].insert(5, 'calo_'+region)
             variables = {
                 'mindphirecoil':          abs(u[region].delta_phi(j_clean.T)).min(),
                 'minDphirecoil':          abs(u[region].delta_phi(fj_clean.T)).min(),

@@ -16,7 +16,7 @@ from uproot_methods import TVector2Array, TLorentzVectorArray
 class AnalysisProcessor(processor.ProcessorABC):
 
     lumis = { #Values from https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVAnalysisSummaryTable                                                      
-        '2016': 35.92,
+        '2016': 36.31,
         '2017': 41.53,
         '2018': 59.74
     }
@@ -194,6 +194,11 @@ class AnalysisProcessor(processor.ProcessorABC):
         mu = events.Muon
         leading_mu = mu[mu.pt.argmax()]
 
+        j = events.Jet
+        j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
+        j_HEM = j[j.isHEM.astype(np.bool)]
+        j_nHEM = j_HEM.counts
+
         fj = events.AK15Puppi
         fj['sd'] = fj.subjets.sum()
         fj['isgood'] = isGoodFatJet(fj.sd.pt, fj.sd.eta, fj.jetId)
@@ -289,6 +294,10 @@ class AnalysisProcessor(processor.ProcessorABC):
         #fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
         #fj_nwithmu = fj_withmu.counts
 
+        noHEMj = np.ones(events.size, dtype=np.bool)
+        if self._year=='2018': noHEMj = (j_nHEM==0)
+
+        selection.add('noHEMj', noHEMj)
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 250) )
         selection.add('fj_mass', (leading_fj.msd_corr.sum() > 50) ) ## optionally also <130
         #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
