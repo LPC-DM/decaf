@@ -600,7 +600,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             btag['tmcr'], btagUp['tmcr'], btagDown['tmcr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'-1')
             btag['wecr'], btagUp['wecr'], btagDown['wecr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['tecr'], btagUp['tecr'], btagDown['tecr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'-1')
-            btag['qcdcr'],   btagUp['qcdcr'],   btagDown['qcdcr']   = np.ones(events.size), np.ones(events.size), np.ones(events.size)
+            btag['qcdcr'],   btagUp['qcdcr'],   btagDown['qcdcr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
 
         ###
         # Selections
@@ -658,7 +658,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             'tmcr': ['msd40','isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'],
             'wecr': ['msd40','isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100'],
             'tecr': ['msd40','isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100'],
-            'qcdcr': ['recoil_qcdcr','mindphi_qcdcr','calo_qcdcr','msd40','fatjet', 'noHEMj','iszeroL','met_filters','met_triggers','noHEMmet'],
+            'qcdcr': ['recoil_qcdcr','mindphi_qcdcr','calo_qcdcr','msd40','fatjet', 'noHEMj','iszeroL','noextrab','met_filters','met_triggers','noHEMmet'],
         }
 
         isFilled = False
