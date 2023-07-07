@@ -75,6 +75,7 @@ Log = logs/condor/reduce/log/$ENV(TAG)_$ENV(SAMPLE)_$ENV(VARIABLE)_$(Cluster)_$(
 TransferOutputRemaps = "$ENV(VARIABLE)_$ENV(SAMPLE).reduced=$ENV(PWD)/$ENV(FOLDER)/$ENV(VARIABLE)--$ENV(SAMPLE).reduced"
 Arguments = $ENV(FOLDER) $ENV(VARIABLE) $ENV(SAMPLE) $ENV(CLUSTER) $ENV(USER)
 request_cpus = 16
+request_disk = 10G
 Queue 1"""
 
 jdl_file = open("reduce.submit", "w") 
@@ -100,7 +101,7 @@ for pdi in pd:
         os.system('mkdir -p logs/condor/reduce/err/')
         os.system('rm -rf logs/condor/reduce/err/*'+tag+'*'+pdi+'*'+variable+'*')
         os.system('mkdir -p logs/condor/reduce/log/')
-        os.system('rm -rf logs/condor/reduce/run/*'+tag+'*'+pdi+'*'+variable+'*')
+        os.system('rm -rf logs/condor/reduce/log/*'+tag+'*'+pdi+'*'+variable+'*')
         os.system('mkdir -p logs/condor/reduce/out/')
         os.system('rm -rf logs/condor/reduce/out/*'+tag+'*'+pdi+'*'+variable+'*')
         os.environ['TAG'] = tag

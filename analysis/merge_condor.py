@@ -91,7 +91,7 @@ for variable in variables:
     os.system('mkdir -p logs/condor/merge/err/')
     os.system('rm -rf logs/condor/merge/err/*'+tag+'*'+variable+'*')
     os.system('mkdir -p logs/condor/merge/log/')
-    os.system('rm -rf logs/condor/merge/run/*'+tag+'*'+variable+'*')
+    os.system('rm -rf logs/condor/merge/log/*'+tag+'*'+variable+'*')
     os.system('mkdir -p logs/condor/merge/out/')
     os.system('rm -rf logs/condor/merge/out/*'+tag+'*'+variable+'*')
     os.environ['TAG'] = tag

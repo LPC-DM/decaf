@@ -600,7 +600,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             btag['tmcr'], btagUp['tmcr'], btagDown['tmcr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'-1')
             btag['wecr'], btagUp['wecr'], btagDown['wecr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'0')
             btag['tecr'], btagUp['tecr'], btagDown['tecr'] = get_deepflav_weight['loose'](j_iso.pt,j_iso.eta,j_iso.hadronFlavour,'-1')
-            btag['sr'],   btagUp['sr'],   btagDown['sr']   = np.ones(events.size)
+            btag['qcdcr'],   btagUp['qcdcr'],   btagDown['qcdcr']   = np.ones(events.size), np.ones(events.size), np.ones(events.size)
 
         ###
         # Selections
@@ -676,7 +676,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             selection.add('minDphi_'+region, (abs(u[region].delta_phi(fj_clean.T)).min()>1.5))
             selection.add('calo_'+region, ( (abs(calomet.pt - met.pt) / u[region].mag) < 0.5))
             #regions[region].update({'recoil_'+region,'mindphi_'+region})
-            if 'qcd' is not in region:
+            if 'qcd' not in region:
                 regions[region].insert(0, 'recoil_'+region)
                 regions[region].insert(3, 'mindphi_'+region)
                 regions[region].insert(4, 'minDphi_'+region)

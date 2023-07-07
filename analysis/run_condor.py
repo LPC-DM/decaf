@@ -77,8 +77,9 @@ Error = logs/condor/run/err/$ENV(PROCESSOR)_$ENV(SAMPLE)_$(Cluster)_$(Process).s
 Log = logs/condor/run/log/$ENV(PROCESSOR)_$ENV(SAMPLE)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "$ENV(PROCESSOR)_$ENV(SAMPLE).futures=$ENV(PWD)/hists/$ENV(PROCESSOR)/$ENV(SAMPLE).futures"
 Arguments = $ENV(METADATA) $ENV(SAMPLE) $ENV(PROCESSOR) $ENV(CLUSTER) $ENV(USER) 
+JobBatchName = $ENV(BTCN)
 request_cpus = 8
-request_memory = 5700
+request_memory = 16000
 Queue 1"""
 
 jdl_file = open("run.submit", "w") 
@@ -96,7 +97,7 @@ for dataset, info in datadef.items():
     os.system('mkdir -p logs/condor/run/err/')
     os.system('rm -rf logs/condor/run/err/*'+options.processor+'*'+dataset+'*')
     os.system('mkdir -p logs/condor/run/log/')
-    os.system('rm -rf logs/condor/fit/run/*'+options.processor+'*'+dataset+'*')
+    os.system('rm -rf logs/condor/run/log/*'+options.processor+'*'+dataset+'*')
     os.system('mkdir -p logs/condor/run/out/')
     os.system('rm -rf logs/condor/run/out/*'+options.processor+'*'+dataset+'*')
     os.environ['SAMPLE'] = dataset
