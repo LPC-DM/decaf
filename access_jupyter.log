@@ -1,41 +1,11 @@
-[I 11:20:18.518 NotebookApp] Serving notebooks from local directory: /cms/scratch/matteoc/CMSSW_10_2_13/src/decaf
-[I 11:20:18.518 NotebookApp] The Jupyter Notebook is running at:
-[I 11:20:18.518 NotebookApp] http://127.0.0.1:9094/?token=55e9aec75c2945fdb1147bcd0251bd91d1b1ea0a921b5992
-[I 11:20:18.518 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 11:20:18.527 NotebookApp] 
+[I 20:36:14.256 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
+[I 20:36:17.256 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/decaf
+[I 20:36:17.257 NotebookApp] The Jupyter Notebook is running at:
+[I 20:36:17.257 NotebookApp] http://127.0.0.1:9094/?token=04437f429cfd746c2805f25b3033c26e3176600c81a63ffb
+[I 20:36:17.257 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 20:36:17.318 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/556950957/jupyter/nbserver-2696626-open.html
+        file:///run/user/45169/jupyter/nbserver-30556-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=55e9aec75c2945fdb1147bcd0251bd91d1b1ea0a921b5992
-[I 11:20:32.534 NotebookApp] 302 GET /?token=55e9aec75c2945fdb1147bcd0251bd91d1b1ea0a921b5992 (127.0.0.1) 1.32ms
-[I 11:20:53.166 NotebookApp] Kernel started: e71dadfb-1130-41e9-9e06-c0fc17fafaaa
-[I 11:20:56.321 NotebookApp] Adapting to protocol v5.1 for kernel e71dadfb-1130-41e9-9e06-c0fc17fafaaa
-[I 11:22:16.644 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:22:17.973 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:22:56.615 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:22:57.504 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:24:56.332 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:26:57.114 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:28:56.372 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:30:55.862 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:32:55.890 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:34:56.304 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:36:56.201 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:38:56.470 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:40:56.427 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:49:49.695 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:51:50.498 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:53:49.554 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 11:55:50.290 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 12:06:13.187 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 12:22:12.149 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 12:24:12.172 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 12:26:12.222 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 12:28:11.077 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 12:30:12.330 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 12:32:11.101 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 12:34:11.010 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 12:38:10.029 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 12:40:03.371 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 13:01:27.884 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
+        http://127.0.0.1:9094/?token=04437f429cfd746c2805f25b3033c26e3176600c81a63ffb

@@ -76,6 +76,7 @@ TransferOutputRemaps = "$ENV(VARIABLE)_$ENV(SAMPLE).reduced=$ENV(PWD)/$ENV(FOLDE
 Arguments = $ENV(FOLDER) $ENV(VARIABLE) $ENV(SAMPLE) $ENV(CLUSTER) $ENV(USER)
 request_cpus = 16
 request_disk = 10G
+request_memory = 4000
 Queue 1"""
 
 jdl_file = open("reduce.submit", "w") 
