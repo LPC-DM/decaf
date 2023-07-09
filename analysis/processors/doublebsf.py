@@ -219,6 +219,21 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             gen = events.GenPart
 
+            ###
+            # Fat-jet dark H->bb matching at decay level
+            ###
+            bFromHs = gen[
+                (abs(gen.pdgId) == 5) &
+                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
+                (abs(gen.distinctParent.pdgId) == 54)
+            ]
+            def hsbbmatch(hid, dR=1.5):
+                bFromSameHs = bFromHs[bFromHs.distinctParent.pdgId == hid]
+                jetgenb = fj.sd.cross(bFromSameHs, nested=True)
+                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameHs.counts>0)
+                return bbmatch
+            fj['isHsbb']  = hsbbmatch(54)|hsbbmatch(-54)
+
             gen['isb'] = (abs(gen.pdgId)==5)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             jetgenb = fj.sd.cross(gen[gen.isb], nested=True)
             bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==1)&(gen[gen.isb].counts>0)
@@ -365,6 +380,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             weights.add('pileup',pu)
 
             wgentype = {
+                'hs' : (leading_fj.isHsbb).sum(),
                 'bb' : (leading_fj.isbb).sum(),
                 'b'  : ( ~leading_fj.isbb & leading_fj.isb ).sum(),
                 'cc' : ( ~leading_fj.isbb & ~leading_fj.isb & leading_fj.iscc ).sum(),
