@@ -184,6 +184,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         isLooseMuon     = self._ids['isLooseMuon']
         isTightMuon     = self._ids['isTightMuon']
         isGoodFatJet    = self._ids['isGoodFatJet']
+        isHEMJet        = self._ids['isHEMJet']  
 
         match = self._common['match']
 
