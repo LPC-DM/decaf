@@ -1,11 +1,27 @@
-[I 20:36:14.256 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
-[I 20:36:17.256 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/decaf
-[I 20:36:17.257 NotebookApp] The Jupyter Notebook is running at:
-[I 20:36:17.257 NotebookApp] http://127.0.0.1:9094/?token=04437f429cfd746c2805f25b3033c26e3176600c81a63ffb
-[I 20:36:17.257 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 20:36:17.318 NotebookApp] 
+[I 09:05:09.404 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
+[I 09:05:25.953 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/decaf
+[I 09:05:25.953 NotebookApp] The Jupyter Notebook is running at:
+[I 09:05:25.953 NotebookApp] http://127.0.0.1:9094/?token=b4d87abc2ca47496ba88ed495ba7c17abbebada9a1f5b706
+[I 09:05:25.953 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 09:05:25.961 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/45169/jupyter/nbserver-30556-open.html
+        file:///run/user/45169/jupyter/nbserver-13804-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=04437f429cfd746c2805f25b3033c26e3176600c81a63ffb
+        http://127.0.0.1:9094/?token=b4d87abc2ca47496ba88ed495ba7c17abbebada9a1f5b706
+[I 09:06:19.437 NotebookApp] 302 GET /?token=b4d87abc2ca47496ba88ed495ba7c17abbebada9a1f5b706 (127.0.0.1) 0.58ms
+[I 09:06:19.605 NotebookApp] 302 GET /?token=b4d87abc2ca47496ba88ed495ba7c17abbebada9a1f5b706 (127.0.0.1) 0.27ms
+[I 09:07:48.417 NotebookApp] Kernel started: 08ba8e18-056d-40d7-917d-1a16fc29e016
+[I 09:07:54.718 NotebookApp] Adapting to protocol v5.1 for kernel 08ba8e18-056d-40d7-917d-1a16fc29e016
+[I 09:09:49.623 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 09:11:49.151 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 09:13:49.441 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 09:15:49.192 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 09:17:49.165 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 09:19:49.186 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 09:23:49.198 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 09:25:49.177 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 09:29:49.179 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 09:33:49.143 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 09:35:48.422 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 09:37:49.125 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb

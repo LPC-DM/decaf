@@ -58,7 +58,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             'b':        1,
             'cc' :      2,
             'c':        3,
-            'other':    4
+            'other':    4,
+            'hs':       5,
         }
 
         self._ZHbbvsQCDwp = {
@@ -104,56 +105,56 @@ class AnalysisProcessor(processor.ProcessorABC):
             'jptemplate': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('btagJP','btagJP', [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
             'ZHbbvsQCD': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1)
             ),
             'btagJP': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('btagJP','btagJP', [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5])
             ),
             'tau21': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('tau21','tau21', 20, 0, 1)
             ),
             'fjmass': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('fjmass','AK15 Jet Mass',30,0,300)
             ),
             'fj1pt': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('fj1pt','AK15 Leading SoftDrop Jet Pt',[340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0])
             ),
             'svmass': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('svmass','Leading Secondary Vertices (SV) mass',[-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1,  0.,   0.1,  0.2,  0.3,  0.4,  0.5, 0.6,  0.7,  0.8,  0.9,  1.,  1.1,  1.2,  1.3,  1.4,  1.5,  1.6,  1.7,  1.8,  1.9, 2.,  2.1,  2.2,  2.3,  2.4,  2.5,  2.6,  2.7,  2.8,  2.9,  3.,   3.1,  3.2])
             ),
             'svdxysig': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('svdxysig','Leading Secondary Vertices (SV) 2D decay length significance',100,0,3000)
             ),
             'svtemplate': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('svmass','Leading Secondary Vertices (SV) mass',[-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1,  0.,   0.1,  0.2,  0.3,  0.4,  0.5, 0.6,  0.7,  0.8,  0.9,  1.,  1.1,  1.2,  1.3,  1.4,  1.5,  1.6,  1.7,  1.8,  1.9, 2.,  2.1,  2.2,  2.3,  2.4,  2.5,  2.6,  2.7,  2.8,  2.9,  3.,   3.1,  3.2]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
@@ -381,12 +382,12 @@ class AnalysisProcessor(processor.ProcessorABC):
             weights.add('pileup',pu)
 
             wgentype = {
-                'hs' : (leading_fj.isHsbb).sum(),
                 'bb' : (leading_fj.isbb).sum(),
                 'b'  : ( ~leading_fj.isbb & leading_fj.isb ).sum(),
                 'cc' : ( ~leading_fj.isbb & ~leading_fj.isb & leading_fj.iscc ).sum(),
                 'c'  : ( ~leading_fj.isbb & ~leading_fj.isb & ~leading_fj.iscc & leading_fj.isc ).sum(),
                 'other' : ( ~leading_fj.isbb & ~leading_fj.isb & ~leading_fj.iscc & ~leading_fj.isc ).sum(),
+                'hs' : (leading_fj.isHsbb).sum(),
             }
             vgentype=np.zeros(events.size, dtype=np.int)
             for gentype in self._gentype_map.keys():
