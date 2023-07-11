@@ -647,6 +647,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('msd40',(leading_fj.msd_corr.sum()>40))
         selection.add('recoil_qcdcr', (u['qcdcr'].mag>250))
         selection.add('mindphi_qcdcr', (abs(u['qcdcr'].delta_phi(j_clean.T)).min()<0.1))
+        selection.add('minDphi_qcdcr', (abs(u['qcdcr'].delta_phi(fj_clean.T)).min()>1.5))
         selection.add('calo_qcdcr', ( (abs(calomet.pt - met.pt) / u['qcdcr'].mag)<0.5))
             
         #selection.add('mindphimet',(abs(met.T.delta_phi(j_clean.T)).min())>0.7)
@@ -658,7 +659,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             'tmcr': ['msd40','isoneM','fatjet','extrab','noHEMj','met_filters','met_triggers'],
             'wecr': ['msd40','isoneE','fatjet','noextrab','noHEMj','met_filters','singleelectron_triggers','met100'],
             'tecr': ['msd40','isoneE','fatjet','extrab','noHEMj','met_filters','singleelectron_triggers','met100'],
-            'qcdcr': ['recoil_qcdcr','mindphi_qcdcr','calo_qcdcr','msd40','fatjet', 'noHEMj','iszeroL','noextrab','met_filters','met_triggers','noHEMmet'],
+            'qcdcr': ['recoil_qcdcr','mindphi_qcdcr','minDphi_qcdcr','calo_qcdcr','msd40','fatjet', 'noHEMj','iszeroL','noextrab','met_filters','met_triggers','noHEMmet'],
         }
 
         isFilled = False
