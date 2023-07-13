@@ -237,7 +237,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         ##### fj.subjets is a TLorentzVectorArray #####
         mu = mu[mu.isGlobal] ## Use a global muon for QCD events
         jetmu = fj.subjets.flatten(axis=1).cross(mu, nested=True)
-        mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.15) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.6) & (jetmu.i1.pt > 7)).sum() == 1
+        mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7) & (jetmu.i1.pt > 7)).sum() == 1
 
         ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
         ##### Using the offset function to copy contents not the type of the array #####
@@ -288,8 +288,8 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         selection.add('noHEMj', noHEMj)
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 250) )
-        selection.add('fj_mass', (leading_fj.msd_corr.sum() > 70) ) ## optionally also <130
-        selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
+        selection.add('fj_mass', (leading_fj.msd_corr.sum() > 40) ) ## optionally also <130
+        #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
         variables = {
             'tau21':     leading_fj.tau21.sum(),
