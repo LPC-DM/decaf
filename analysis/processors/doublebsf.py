@@ -113,14 +113,14 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
-                hist.Bin('fjmass','AK15 Jet Mass',30,0,300),
+                hist.Bin('fjmass','AK15 Jet Mass',40,0,300),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
             'fj1pt': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
-                hist.Bin('fj1pt','AK15 Leading SoftDrop Jet Pt',[250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0]),
+                hist.Bin('fj1pt','AK15 Leading SoftDrop Jet Pt',[160.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
             'svtemplate': hist.Hist(
@@ -271,7 +271,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         #### ak15 jet selection ####
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
-        leading_fj = leading_fj[leading_fj.withmu.astype(np.bool)]
+        leading_fj = leading_fj[(leading_fj.msd_corr.sum() > 40)]
+       # leading_fj = leading_fj[leading_fj.withmu.astype(np.bool)]
 
         #### SV selection for matched with leading ak15 jet ####
         SV['ismatched'] = match(SV, leading_fj, 1.5)
@@ -288,7 +289,8 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         selection.add('noHEMj', noHEMj)
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 250) )
-        selection.add('fj_mass', (leading_fj.msd_corr.sum() > 40) ) ## optionally also <130
+        #selection.add('fj_mass', (leading_fj.msd_corr.sum() > 40) ) ## optionally also <130
+        selection.add('withmu', leading_fj.withmu.astype(np.bool))
         #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
         variables = {
