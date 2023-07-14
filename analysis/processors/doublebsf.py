@@ -199,29 +199,35 @@ class AnalysisProcessor(processor.ProcessorABC):
             bFromHs = gen[
                 (abs(gen.pdgId) == 5) &
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (abs(gen.distinctParent.pdgId) == 54)
+                (gen.distinctParent.pdgId == 54)
             ]
-            def hsbbmatch(hid, dR=1.5):
-                bFromSameHs = bFromHs[bFromHs.distinctParent.pdgId == hid]
-                jetgenb = fj.sd.cross(bFromSameHs, nested=True)
-                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromSameHs.counts>0)
+            #Hs =  = gen[
+            #    (gen.pdgId) == 54) &
+            #    gen.hasFlags(['fromHardProcess', 'isFirstCopy']))
+            #]
+            def hsbbmatch(dR=0.4):
+                jetgenb = fj.sd.cross(bFromHs, nested=True)
+                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromHs.counts>0)
                 return bbmatch
-            fj['isHsbb']  = hsbbmatch(54)|hsbbmatch(-54)
+            #def hsmatch(dR=1.5):
+            #    jetgenhs = fj.sd.cross(Hs, nested=True)
+            #    hsmatch = ((jetgenhs.i0.delta_r(jetgenhs.i1) < dR).sum()==1) & (Hs.counts>0)
+            fj['isHsbb']  = hsbbmatch()
 
             gen['isb'] = (abs(gen.pdgId)==5)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             jetgenb = fj.sd.cross(gen[gen.isb], nested=True)
-            bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==1)&(gen[gen.isb].counts>0)
+            bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 0.7).sum()==1)&(gen[gen.isb].counts>0)
             fj['isb']  = bmatch
 
-            bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==2)&(gen[gen.isb].counts>0)
+            bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 0.7).sum()==2)&(gen[gen.isb].counts>0)
             fj['isbb']  = bmatch
 
             gen['isc'] = (abs(gen.pdgId)==4)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             jetgenc = fj.sd.cross(gen[gen.isc], nested=True)
-            cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==1)&(gen[gen.isc].counts>0)
+            cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 0.7).sum()==1)&(gen[gen.isc].counts>0)
             fj['isc']  = cmatch
 
-            cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==2)&(gen[gen.isc].counts>0)
+            cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 0.7).sum()==2)&(gen[gen.isc].counts>0)
             fj['iscc']  = cmatch
 
 
@@ -271,12 +277,11 @@ class AnalysisProcessor(processor.ProcessorABC):
         #### ak15 jet selection ####
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
-        leading_fj = leading_fj[(leading_fj.msd_corr.sum() > 40)]
-       # leading_fj = leading_fj[leading_fj.withmu.astype(np.bool)]
+        leading_fj = leading_fj[(leading_fj.msd_corr > 40)]
+        #leading_fj = leading_fj[leading_fj.withmu.astype(np.bool)]
 
         #### SV selection for matched with leading ak15 jet ####
         SV['ismatched'] = match(SV, leading_fj, 1.5)
-        #leading_SV = SV[SV.pt.argmax()]
         leading_SV = SV[SV.dxySig.argmax()]
         leading_SV = leading_SV[leading_SV.ismatched.astype(np.bool)]
 
@@ -289,8 +294,8 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         selection.add('noHEMj', noHEMj)
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 250) )
-        #selection.add('fj_mass', (leading_fj.msd_corr.sum() > 40) ) ## optionally also <130
-        selection.add('withmu', leading_fj.withmu.astype(np.bool))
+        selection.add('fj_mass', (leading_fj.msd_corr.sum() > 40) ) ## optionally also <130
+        selection.add('withmu', leading_fj.withmu.sum().astype(np.bool))
         #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
         variables = {

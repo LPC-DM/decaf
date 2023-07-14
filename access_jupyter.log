@@ -1,104 +1,31 @@
-[I 09:40:38.414 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
-[I 09:40:40.781 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/decaf
-[I 09:40:40.781 NotebookApp] The Jupyter Notebook is running at:
-[I 09:40:40.781 NotebookApp] http://127.0.0.1:9094/?token=a820dda6723d850cf1dcf7810582de8b95b0e595cfcae6fe
-[I 09:40:40.781 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 09:40:40.799 NotebookApp] 
+[I 22:19:19.389 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
+[I 22:19:29.663 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/decaf
+[I 22:19:29.663 NotebookApp] The Jupyter Notebook is running at:
+[I 22:19:29.663 NotebookApp] http://127.0.0.1:9094/?token=a4e9e18335f4ef865cb59711e9b8150585ac09352ae30b67
+[I 22:19:29.663 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 22:19:29.669 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/45169/jupyter/nbserver-19438-open.html
+        file:///run/user/45169/jupyter/nbserver-11443-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=a820dda6723d850cf1dcf7810582de8b95b0e595cfcae6fe
-[I 09:41:18.613 NotebookApp] 302 GET /?token=a820dda6723d850cf1dcf7810582de8b95b0e595cfcae6fe (127.0.0.1) 0.53ms
-[I 09:41:43.306 NotebookApp] Kernel started: 516b1ff9-46a8-4061-bb45-4c6e38dd1cc4
-[I 09:41:46.802 NotebookApp] Adapting to protocol v5.1 for kernel 516b1ff9-46a8-4061-bb45-4c6e38dd1cc4
-[I 09:43:43.283 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 09:45:43.275 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 09:47:43.287 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 09:49:43.317 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 09:51:43.287 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 10:55:54.646 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 10:57:54.638 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 10:59:54.657 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:03:54.661 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:05:54.597 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:07:54.645 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:09:54.603 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:11:54.690 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:13:54.783 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:27:05.607 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:29:05.607 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:31:05.598 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:33:05.608 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:35:05.598 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:37:05.608 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:39:05.599 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:41:05.635 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:43:05.621 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:45:05.638 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:49:05.752 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:51:05.669 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:53:05.676 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:55:05.570 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:57:05.628 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 11:59:05.619 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 12:01:05.623 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 12:03:05.617 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 12:05:06.187 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 12:07:06.294 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 12:09:06.116 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 12:11:06.150 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 12:13:06.231 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 12:15:05.813 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 12:17:05.877 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 12:19:05.863 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[W 12:31:46.805 NotebookApp] WebSocket ping timeout after 119951 ms.
-[I 12:31:51.809 NotebookApp] Starting buffering for 516b1ff9-46a8-4061-bb45-4c6e38dd1cc4:22c67e81d7734df48cf7e4bd4c4d77ae
-[I 12:46:43.362 NotebookApp] 302 GET /?token=7baaa7839577066265d0a1c46d73f0b7568fb1d51a6c9b21 (127.0.0.1) 0.69ms
-[I 12:55:36.518 NotebookApp] Kernel restarted: 516b1ff9-46a8-4061-bb45-4c6e38dd1cc4
-[I 12:55:39.609 NotebookApp] Adapting to protocol v5.1 for kernel 516b1ff9-46a8-4061-bb45-4c6e38dd1cc4
-[I 12:55:39.609 NotebookApp] Restoring connection for 516b1ff9-46a8-4061-bb45-4c6e38dd1cc4:22c67e81d7734df48cf7e4bd4c4d77ae
-[I 12:55:39.609 NotebookApp] Replaying 10 buffered messages
-[I 12:56:20.867 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 12:58:20.974 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:00:20.961 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:02:21.006 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:04:20.990 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:06:20.992 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:10:20.906 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:12:20.969 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:14:21.033 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:18:20.963 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:20:21.113 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:22:20.924 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:24:20.907 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:26:21.023 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:35:20.897 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:37:20.908 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 13:49:10.453 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 14:00:33.318 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 14:03:12.197 NotebookApp] Starting buffering for 516b1ff9-46a8-4061-bb45-4c6e38dd1cc4:22c67e81d7734df48cf7e4bd4c4d77ae
-[I 14:03:26.693 NotebookApp] Kernel started: 0dd7506a-0cb7-4d5a-a4c5-6906d170afd8
-[I 14:03:28.892 NotebookApp] Adapting to protocol v5.1 for kernel 0dd7506a-0cb7-4d5a-a4c5-6906d170afd8
-[I 14:05:29.822 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[W 15:40:58.896 NotebookApp] WebSocket ping timeout after 119918 ms.
-[I 15:41:03.898 NotebookApp] Starting buffering for 0dd7506a-0cb7-4d5a-a4c5-6906d170afd8:7c7847cb0c8349f2aad431b04cbe3709
-[I 17:22:25.222 NotebookApp] Adapting to protocol v5.1 for kernel 516b1ff9-46a8-4061-bb45-4c6e38dd1cc4
-[I 17:24:25.518 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 17:26:25.673 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 17:28:25.476 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 17:30:25.473 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 17:45:17.883 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 17:47:17.884 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 17:49:17.904 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 17:51:17.898 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 17:57:35.635 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 18:01:35.547 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 18:03:35.502 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 18:05:35.552 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 18:07:35.566 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 18:09:35.555 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 18:11:35.613 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 18:13:35.569 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 18:15:35.558 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 18:17:35.601 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+        http://127.0.0.1:9094/?token=a4e9e18335f4ef865cb59711e9b8150585ac09352ae30b67
+[I 22:20:34.889 NotebookApp] 302 GET /?token=a4e9e18335f4ef865cb59711e9b8150585ac09352ae30b67 (127.0.0.1) 0.68ms
+[I 22:21:10.205 NotebookApp] Kernel started: 3935c75a-10e4-43d6-a8c3-96c765b1515c
+[I 22:21:14.337 NotebookApp] Adapting to protocol v5.1 for kernel 3935c75a-10e4-43d6-a8c3-96c765b1515c
+[I 22:23:10.159 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 22:25:10.151 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 22:27:10.684 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 22:35:10.230 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 22:37:10.156 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 22:41:10.194 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 22:45:10.238 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 22:47:10.244 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 23:19:47.508 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 23:21:47.477 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 23:23:47.422 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 23:25:47.414 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 00:13:47.435 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 00:15:47.362 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[W 01:37:44.341 NotebookApp] WebSocket ping timeout after 119945 ms.
+[I 01:37:49.344 NotebookApp] Starting buffering for 3935c75a-10e4-43d6-a8c3-96c765b1515c:a81453e70c604e59819c8ae6ce5c2453
+[IPKernelApp] WARNING | Parent appears to have exited, shutting down.
