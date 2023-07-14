@@ -96,38 +96,26 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('sumw', 'Weight value', [0.])
             ),
+            'svtemplate': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('svmass','Leading Secondary Vertices (SV) mass',[-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1,  0.,   0.1,  0.2,  0.3,  0.4,  0.5, 0.6,  0.7,  0.8,  0.9,  1.,  1.1,  1.2,  1.3,  1.4,  1.5,  1.6,  1.7,  1.8,  1.9, 2.,  2.1,  2.2,  2.3,  2.4,  2.5,  2.6,  2.7,  2.8,  2.9,  3.,   3.1,  3.2]),
+                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
+            ),
             'ZHbbvsQCD': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1)
-            ),
-            'tau21': hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
-                hist.Bin('tau21','tau21', 20, 0, 1),
-                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
-            ),
-            'fjmass': hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
-                hist.Bin('fjmass','AK15 Jet Mass',40,0,300),
-                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
+                hist.Bin('fjmass','AK15 Jet Mass',52,40,300),
             ),
             'fj1pt': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('fj1pt','AK15 Leading SoftDrop Jet Pt',[160.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0]),
-                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
-            ),
-            'svtemplate': hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
-                hist.Bin('svmass','Leading Secondary Vertices (SV) mass',[-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1,  0.,   0.1,  0.2,  0.3,  0.4,  0.5, 0.6,  0.7,  0.8,  0.9,  1.,  1.1,  1.2,  1.3,  1.4,  1.5,  1.6,  1.7,  1.8,  1.9, 2.,  2.1,  2.2,  2.3,  2.4,  2.5,  2.6,  2.7,  2.8,  2.9,  3.,   3.1,  3.2]),
+                hist.Bin('fjmass','AK15 Jet Mass',52,40,300),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
         })
@@ -205,7 +193,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             #    (gen.pdgId) == 54) &
             #    gen.hasFlags(['fromHardProcess', 'isFirstCopy']))
             #]
-            def hsbbmatch(dR=0.4):
+            def hsbbmatch(dR=1.5):
                 jetgenb = fj.sd.cross(bFromHs, nested=True)
                 bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromHs.counts>0)
                 return bbmatch
@@ -216,18 +204,18 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             gen['isb'] = (abs(gen.pdgId)==5)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             jetgenb = fj.sd.cross(gen[gen.isb], nested=True)
-            bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 0.7).sum()==1)&(gen[gen.isb].counts>0)
+            bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==1)&(gen[gen.isb].counts>0)
             fj['isb']  = bmatch
 
-            bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 0.7).sum()==2)&(gen[gen.isb].counts>0)
+            bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==2)&(gen[gen.isb].counts>0)
             fj['isbb']  = bmatch
 
             gen['isc'] = (abs(gen.pdgId)==4)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             jetgenc = fj.sd.cross(gen[gen.isc], nested=True)
-            cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 0.7).sum()==1)&(gen[gen.isc].counts>0)
+            cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==1)&(gen[gen.isc].counts>0)
             fj['isc']  = cmatch
 
-            cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 0.7).sum()==2)&(gen[gen.isc].counts>0)
+            cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==2)&(gen[gen.isc].counts>0)
             fj['iscc']  = cmatch
 
 
@@ -298,24 +286,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('withmu', leading_fj.withmu.sum().astype(np.bool))
         #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
-        variables = {
-            'tau21':     leading_fj.tau21.sum(),
-            'fjmass':    leading_fj.msd_corr.sum(),
-            'fj1pt':     leading_fj.sd.pt.sum()
-        }
-
-        def fill(dataset, gentype, weight, cut):
-                for histname, h in hout.items():
-                    if not isinstance(h, hist.Hist):
-                        continue
-                    if histname not in variables:
-                        continue
-                    flat_variable = {histname: variables[histname]}
-                    h.fill(dataset=dataset, 
-                           gentype=gentype, 
-                           **flat_variable,
-                           ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                           weight=weight*cut)
         isFilled = False
         if isData:
             if not isFilled:
@@ -332,8 +302,14 @@ class AnalysisProcessor(processor.ProcessorABC):
             hout['ZHbbvsQCD'].fill(dataset=dataset,
                                    gentype=np.zeros(events.size, dtype=np.int),
                                    ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                   fjmass=leading_fj.msd_corr.sum(),
                                    weight=np.ones(events.size)*cut)
-            fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), cut)
+            hout['fj1pt'].fill(dataset=dataset,
+                                   gentype=np.zeros(events.size, dtype=np.int),
+                                   fj1pt=leading_fj.sd.pt.sum(),
+                                   fjmass=leading_fj.msd_corr.sum(),
+                                   ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                   weight=np.ones(events.size)*cut)
 
         else:
             weights = processor.Weights(len(events))
@@ -368,8 +344,14 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hout['ZHbbvsQCD'].fill(dataset=dataset,
                                        gentype=vgentype,
                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                       fjmass=leading_fj.msd_corr.sum(),
                                        weight=weights.weight()*cut)
-                fill(dataset, vgentype, weights.weight(), cut)
+                hout['fj1pt'].fill(dataset=dataset,
+                                       gentype=vgentype,
+                                       fj1pt=leading_fj.sd.pt.sum(),
+                                       fjmass=leading_fj.msd_corr.sum(),
+                                       ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                       weight=weights.weight()*cut)
             else:
                 ##### template for bb SF #####
                 hout['svtemplate'].fill(dataset=dataset,
@@ -380,8 +362,14 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hout['ZHbbvsQCD'].fill(dataset=dataset,
                                        gentype=vgentype,
                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                       fjmass=leading_fj.msd_corr.sum(),
                                        weight=weights.weight())
-                fill(dataset, vgentype, weights.weight(), np.ones(events.size, dtype=np.int))
+                hout['fj1pt'].fill(dataset=dataset,
+                                       gentype=vgentype,
+                                       fj1pt=leading_fj.sd.pt.sum(),
+                                       fjmass=leading_fj.msd_corr.sum(),
+                                       ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                       weight=weights.weight())
 
         return hout
 
