@@ -107,7 +107,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
-                hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1)
+                hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1),
                 hist.Bin('fjmass','AK15 Jet Mass',52,40,300),
             ),
             'fj1pt': hist.Hist(
