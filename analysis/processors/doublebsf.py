@@ -180,48 +180,99 @@ class AnalysisProcessor(processor.ProcessorABC):
         if not isData:
 
             gen = events.GenPart
-
+            
+            #####
             ###
             # Fat-jet dark H->bb matching at decay level
             ###
+            #####
+            
+            ##### Get b's from dark Higgs decay
             bFromHs = gen[
                 (abs(gen.pdgId) == 5) &
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
                 (gen.distinctParent.pdgId == 54)
             ]
-            #Hs =  = gen[
-            #    (gen.pdgId) == 54) &
-            #    gen.hasFlags(['fromHardProcess', 'isFirstCopy']))
-            #]
-            def hsbbmatch(dR=1.5):
-                jetgenb = fj.sd.cross(bFromHs, nested=True)
-                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < dR).sum()==2) & (bFromHs.counts>0)
-                return bbmatch
-            #def hsmatch(dR=1.5):
-            #    jetgenhs = fj.sd.cross(Hs, nested=True)
-            #    hsmatch = ((jetgenhs.i0.delta_r(jetgenhs.i1) < dR).sum()==1) & (Hs.counts>0)
-            fj['isHsbb']  = hsbbmatch()
+            
+            ##### Mix fatjet subjets and gen level b's
+            ##### axis=1 option to remove boundaries between fat-jets
+            jetgenb = fj.subjets.flatten(axis=1).cross(bFromHs, nested=True)
+            
+            ##### Match subjets to b's
+            mask = (bFromHs.counts>0) & ((jetgenb.i0.delta_r(jetgenb.i1) < 0.4).sum() == 1)
+    
+            ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
+            ##### Using the offset function to copy contents not the type of the array #####
+            step1 = fj.subjets.flatten()
+            step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
+            step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
+            step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
+    
+            ##### fatjet with two subjets matched to dark Higgs b's
+            fj['isHsbb'] = (step3.sum() == 2)
 
+            
+            #####
+            ###
+            # Fat-jet matching to one or two b's
+            ###
+            #####
+
+            ##### Get gen b's
             gen['isb'] = (abs(gen.pdgId)==5)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
-            jetgenb = fj.sd.cross(gen[gen.isb], nested=True)
-            bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==1)&(gen[gen.isb].counts>0)
-            fj['isb']  = bmatch
 
-            bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==2)&(gen[gen.isb].counts>0)
-            fj['isbb']  = bmatch
+            ##### Mix fatjet subjets and gen level b's
+            ##### axis=1 option to remove boundaries between fat-jets
+            jetgenb = fj.subjets.flatten(axis=1).cross(gen['isb'], nested=True)
 
+            ##### Match subjets to b's
+            mask = (gen[gen.isb].counts>0) & ((jetgenb.i0.delta_r(jetgenb.i1) < 0.4).sum() == 1)
+            
+            ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
+            ##### Using the offset function to copy contents not the type of the array #####
+            step1 = fj.subjets.flatten()
+            step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
+            step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
+            step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
+    
+            ##### fatjet with two subjets matched to dark Higgs b's
+            fj['isb']  = (step3.sum() == 1)
+            fj['isbb']  = (step3.sum() == 2)
+
+
+            #####
+            ###
+            # Fat-jet matching to one or two c's
+            ###
+            #####
+
+            ##### Get gen b's
             gen['isc'] = (abs(gen.pdgId)==4)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
-            jetgenc = fj.sd.cross(gen[gen.isc], nested=True)
-            cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==1)&(gen[gen.isc].counts>0)
-            fj['isc']  = cmatch
 
-            cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==2)&(gen[gen.isc].counts>0)
-            fj['iscc']  = cmatch
+            ##### Mix fatjet subjets and gen level c's
+            ##### axis=1 option to remove boundaries between fat-jets
+            jetgenc = fj.subjets.flatten(axis=1).cross(gen[gen.isc], nested=True)
 
+            ##### Match subjets to b's
+            mask = (gen[gen.isc].counts>0) & ((jetgenc.i0.delta_r(jetgenc.i1) < 0.4).sum() == 1)
+            
+            ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
+            ##### Using the offset function to copy contents not the type of the array #####
+            step1 = fj.subjets.flatten()
+            step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
+            step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
+            step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
+    
+            ##### fatjet with two subjets matched to dark Higgs b's
+            fj['isc']  = (step3.sum() == 1)
+            fj['iscc']  = (step3.sum() == 2)
+            
 
+            #####
             ###
             # Calculate PU weight and systematic variations
             ###
+            #####
 
             pu = get_pu_weight(events.Pileup.nTrueInt)
 
@@ -265,7 +316,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         #### ak15 jet selection ####
         leading_fj = fj[fj.sd.pt.argmax()]
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
-        leading_fj = leading_fj[(leading_fj.msd_corr > 40)]
+        #leading_fj = leading_fj[(leading_fj.msd_corr > 40)]
         #leading_fj = leading_fj[leading_fj.withmu.astype(np.bool)]
 
         #### SV selection for matched with leading ak15 jet ####
