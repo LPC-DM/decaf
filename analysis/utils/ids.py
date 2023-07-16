@@ -48,6 +48,17 @@ def isTightMuon(pt,eta,iso,tight_id,year):
         mask = (pt>20)&(abs(eta)<2.4)&(tight_id)&(iso<0.15)
     return mask
 
+def isSoftMuon(pt,eta,iso,tight_id,year):
+    #dxy and dz cuts are baked on tight_id; tight isolation is 0.15
+    mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
+    if year=='2016':
+        mask = (pt>5)&(abs(eta)<2.4)&(tight_id)&(iso>0.15)
+    elif year=='2017':
+        mask = (pt>5)&(abs(eta)<2.4)&(tight_id)&(iso>0.15)
+    elif year=='2018':
+        mask = (pt>5)&(abs(eta)<2.4)&(tight_id)&(iso>0.15)
+    return mask
+
 #bitmask 1 = VVLoose, 2 = VLoose, 4 = Loose, 8 = Medium, 16 = Tight, 32 = VTight, 64 = VVTight
 def isLooseTau(pt,eta,decayMode,_id,year):
     mask = ~(pt==np.nan)#just a complicated way to initialize a jagged array with the needed shape to True
