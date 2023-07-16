@@ -100,7 +100,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
-                hist.Bin('svmass','Leading Secondary Vertices (SV) mass',[-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1,  0.,   0.1,  0.2,  0.3,  0.4,  0.5, 0.6,  0.7,  0.8,  0.9,  1.,  1.1,  1.2,  1.3,  1.4,  1.5,  1.6,  1.7,  1.8,  1.9, 2.,  2.1,  2.2,  2.3,  2.4,  2.5,  2.6,  2.7,  2.8,  2.9,  3.,   3.1,  3.2]),
+                hist.Bin('svmass','Secondary Vertices (SV) mass',[-1.2, -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
             'ZHbbvsQCD': hist.Hist(
@@ -108,15 +108,20 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1),
-                hist.Bin('fjmass','AK15 Jet Mass',52,40,300),
+                hist.Bin('tau21','tau21', [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.]),
             ),
             'fj1pt': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
-                hist.Bin('fj1pt','AK15 Leading SoftDrop Jet Pt',[160.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0]),
+                hist.Bin('fj1pt','Leading AK15 Jet SoftDrop Pt',[160.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0]),
+                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
+            ),
+            'fjmass': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('fjmass','AK15 Jet Mass',52,40,300),
-                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
         })
 
@@ -142,8 +147,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         get_msd_weight  = self._corrections['get_msd_weight']
         get_pu_weight   = self._corrections['get_pu_weight'][self._year]  
-        isLooseMuon     = self._ids['isLooseMuon']
-        isTightMuon     = self._ids['isTightMuon']
+        isSoftMuon      = self._ids['isSoftMuon']
         isGoodFatJet    = self._ids['isGoodFatJet']
         isHEMJet        = self._ids['isHEMJet']  
 
@@ -154,7 +158,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
 
         mu = events.Muon
-        leading_mu = mu[mu.pt.argmax()]
+        mu['issoft'] = isSoftMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.looseId,self._year)
+        mu_soft=mu[mu.issoft.astype(np.bool)]
 
         j = events.Jet
         j['isHEM'] = isHEMJet(j.pt, j.eta, j.phi)
@@ -171,9 +176,33 @@ class AnalysisProcessor(processor.ProcessorABC):
         probZHbb=fj.probZbb+fj.probHbb
         fj['ZHbbvsQCD'] = probZHbb/(probZHbb+probQCD)
         fj['tau21'] = fj.tau2/fj.tau1
+        jetmu = fj.sd.cross(mu_soft, nested=True)
+        fj['withmu'] = (mu_soft.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 1.5).sum()>0)
+        fj_good = fj[fj.isgood.astype(np.bool)]
+        fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
+        fj_ngood = fj_good.counts
+        fj_nwithmu = fj_withmu.counts
+        ##### axis=1 option to remove boundaries between fat-jets #####
+        ##### copy (match jaggedness and shape of array) the contents of crossed array into the fat-jet subjets #####
+        ##### we're not use copy since it keeps the original array type #####
+        ##### fj.subjets is a TLorentzVectorArray #####
+        #mu = mu[mu.isGlobal] ## Use a global muon for QCD events
+        #jetmu = fj.subjets.flatten(axis=1).cross(mu_soft, nested=True)
+        #mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7) & (jetmu.i1.pt > 7)).sum() == 1
+
+        ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
+        ##### Using the offset function to copy contents not the type of the array #####
+        #step1 = fj.subjets.flatten()
+        #step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
+        #step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
+        #step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
+
+        ##### fatjet with two subjets matched with muons
+        #fj['withmu'] = step3.sum() == 2
 
         SV = events.SV
-
+        SV['ismatched'] = match(SV, fj, 1.5)
+        
         ###
         # Calculating weights
         ###
@@ -187,85 +216,56 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
             
-            ##### Get b's from dark Higgs decay
-            bFromHs = gen[
-                (abs(gen.pdgId) == 5) &
-                gen.hasFlags(['fromHardProcess', 'isFirstCopy']) &
-                (gen.distinctParent.pdgId == 54)
+            ##### Get dark Higgs boson
+            Hs = gen[
+                (abs(gen.pdgId) == 54) &
+                gen.hasFlags(['fromHardProcess', 'isFirstCopy'])
             ]
-            
-            ##### Mix fatjet subjets and gen level b's
-            ##### axis=1 option to remove boundaries between fat-jets
-            jetgenb = fj.subjets.flatten(axis=1).cross(bFromHs, nested=True)
-            
-            ##### Match subjets to b's
-            mask = (bFromHs.counts>0) & ((jetgenb.i0.delta_r(jetgenb.i1) < 0.4).sum() == 1)
-    
-            ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
-            ##### Using the offset function to copy contents not the type of the array #####
-            step1 = fj.subjets.flatten()
-            step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
-            step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
-            step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
-    
-            ##### fatjet with two subjets matched to dark Higgs b's
-            fj['isHsbb'] = (step3.sum() == 2)
+            hsmatch = match(fj.sd, Hs, 1.5)
+            fj['isHsbb'] = hsmatch & (nBHadrons > 1)
 
             
             #####
             ###
-            # Fat-jet matching to one or two b's
+            # Fat-jet matching to two b's
             ###
             #####
 
-            ##### Get gen b's
-            gen['isb'] = (abs(gen.pdgId)==5)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
-
-            ##### Mix fatjet subjets and gen level b's
-            ##### axis=1 option to remove boundaries between fat-jets
-            jetgenb = fj.subjets.flatten(axis=1).cross(gen['isb'], nested=True)
-
-            ##### Match subjets to b's
-            mask = (gen[gen.isb].counts>0) & ((jetgenb.i0.delta_r(jetgenb.i1) < 0.4).sum() == 1)
-            
-            ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
-            ##### Using the offset function to copy contents not the type of the array #####
-            step1 = fj.subjets.flatten()
-            step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
-            step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
-            step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
-    
-            ##### fatjet with two subjets matched to dark Higgs b's
-            fj['isb']  = (step3.sum() == 1)
-            fj['isbb']  = (step3.sum() == 2)
+            fj['isbb']  = (nCHadrons == 0) & (nBHadrons > 1)
 
 
             #####
             ###
-            # Fat-jet matching to one or two c's
+            # Fat-jet matching to two c's
             ###
             #####
 
-            ##### Get gen b's
-            gen['isc'] = (abs(gen.pdgId)==4)&gen.hasFlags(['fromHardProcess', 'isLastCopy'])
+            fj['iscc']  = (nCHadrons > 1) & (nBHadrons == 0)
 
-            ##### Mix fatjet subjets and gen level c's
-            ##### axis=1 option to remove boundaries between fat-jets
-            jetgenc = fj.subjets.flatten(axis=1).cross(gen[gen.isc], nested=True)
+            #####
+            ###
+            # Fat-jet matching to one b
+            ###
+            #####
 
-            ##### Match subjets to b's
-            mask = (gen[gen.isc].counts>0) & ((jetgenc.i0.delta_r(jetgenc.i1) < 0.4).sum() == 1)
-            
-            ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
-            ##### Using the offset function to copy contents not the type of the array #####
-            step1 = fj.subjets.flatten()
-            step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
-            step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
-            step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
-    
-            ##### fatjet with two subjets matched to dark Higgs b's
-            fj['isc']  = (step3.sum() == 1)
-            fj['iscc']  = (step3.sum() == 2)
+            fj['isb']  = (nCHadrons == 0) & (nBHadrons == 1)
+
+
+            #####
+            ###
+            # Fat-jet matching to one c
+            ###
+            #####
+
+            fj['isc']  = (nCHadrons == 1) & (nBHadrons == 0)
+
+            #####
+            ###
+            # Light-flavor fat-jet
+            ###
+            #####
+
+            fj['isl']  = (nCHadrons == 0) & (nBHadrons == 0)
             
 
             #####
@@ -276,23 +276,14 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             pu = get_pu_weight(events.Pileup.nTrueInt)
 
-        ##### axis=1 option to remove boundaries between fat-jets #####
-        ##### copy (match jaggedness and shape of array) the contents of crossed array into the fat-jet subjets #####
-        ##### we're not use copy since it keeps the original array type #####
-        ##### fj.subjets is a TLorentzVectorArray #####
-        mu = mu[mu.isGlobal] ## Use a global muon for QCD events
-        jetmu = fj.subjets.flatten(axis=1).cross(mu, nested=True)
-        mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7) & (jetmu.i1.pt > 7)).sum() == 1
+        #### ak15 jet selection ####
+        leading_fj = fj[fj.sd.pt.argmax()]
+        leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
 
-        ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
-        ##### Using the offset function to copy contents not the type of the array #####
-        step1 = fj.subjets.flatten()
-        step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
-        step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
-        step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
-
-        ##### fatjet with two subjets matched with muons
-        fj['withmu'] = step3.sum() == 2
+        #### SV selection for matched with leading ak15 jet ####
+        leading_SV = SV[SV.dxySig.argmax()]
+        leading_SV = leading_SV[leading_SV.ismatched.astype(np.bool)]
+        SV_mass = SV[SV.ismatched.astype(np.bool)].sum().mass
 
         ###
         # Selections
@@ -313,28 +304,14 @@ class AnalysisProcessor(processor.ProcessorABC):
             met_filters = met_filters & events.Flag[flag]
         selection.add('met_filters',met_filters)
 
-        #### ak15 jet selection ####
-        leading_fj = fj[fj.sd.pt.argmax()]
-        leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
-        #leading_fj = leading_fj[(leading_fj.msd_corr > 40)]
-        #leading_fj = leading_fj[leading_fj.withmu.astype(np.bool)]
-
-        #### SV selection for matched with leading ak15 jet ####
-        SV['ismatched'] = match(SV, leading_fj, 1.5)
-        leading_SV = SV[SV.dxySig.argmax()]
-        leading_SV = leading_SV[leading_SV.ismatched.astype(np.bool)]
-
-        #fj_good = fj[fj.isgood.astype(np.bool)]
-        #fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
-        #fj_nwithmu = fj_withmu.counts
-
         noHEMj = np.ones(events.size, dtype=np.bool)
         if self._year=='2018': noHEMj = (j_nHEM==0)
 
         selection.add('noHEMj', noHEMj)
         selection.add('fj_pt', (leading_fj.sd.pt.max() > 250) )
         selection.add('fj_mass', (leading_fj.msd_corr.sum() > 40) ) ## optionally also <130
-        selection.add('withmu', leading_fj.withmu.sum().astype(np.bool))
+        selection.add('fj_good', (fj_ngood==1))
+        selection.add('fj_withmu', (fj_nwithmu==1))
         #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
         isFilled = False
@@ -347,17 +324,22 @@ class AnalysisProcessor(processor.ProcessorABC):
             ##### template for bb SF #####
             hout['svtemplate'].fill(dataset=dataset,
                                     gentype=np.zeros(events.size, dtype=np.int),
-                                    svmass=np.log(leading_SV.mass.sum()),
+                                    #svmass=np.log(leading_SV.mass.sum()),
+                                    svmass=np.log(SV_mass.sum()),
                                     ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                     weight=np.ones(events.size)*cut)
             hout['ZHbbvsQCD'].fill(dataset=dataset,
                                    gentype=np.zeros(events.size, dtype=np.int),
                                    ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                   fjmass=leading_fj.msd_corr.sum(),
+                                   tau21=leading_fj.tau21.sum(),
                                    weight=np.ones(events.size)*cut)
             hout['fj1pt'].fill(dataset=dataset,
                                    gentype=np.zeros(events.size, dtype=np.int),
                                    fj1pt=leading_fj.sd.pt.sum(),
+                                   ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                   weight=np.ones(events.size)*cut)
+            hout['fjmass'].fill(dataset=dataset,
+                                   gentype=np.zeros(events.size, dtype=np.int),
                                    fjmass=leading_fj.msd_corr.sum(),
                                    ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                    weight=np.ones(events.size)*cut)
@@ -370,10 +352,10 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             wgentype = {
                 'bb' : (leading_fj.isbb).sum(),
-                'b'  : ( ~leading_fj.isbb & leading_fj.isb ).sum(),
-                'cc' : ( ~leading_fj.isbb & ~leading_fj.isb & leading_fj.iscc ).sum(),
-                'c'  : ( ~leading_fj.isbb & ~leading_fj.isb & ~leading_fj.iscc & leading_fj.isc ).sum(),
-                'other' : ( ~leading_fj.isbb & ~leading_fj.isb & ~leading_fj.iscc & ~leading_fj.isc ).sum(),
+                'b'  : (leading_fj.isb).sum(),
+                'cc' : (leading_fj.iscc).sum(),
+                'c'  : (leading_fj.isc).sum(),
+                'other' : (leading_fj.isl).sum(),
                 'hs' : (leading_fj.isHsbb).sum(),
             }
             vgentype=np.zeros(events.size, dtype=np.int)
@@ -389,17 +371,22 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ##### template for bb SF #####
                 hout['svtemplate'].fill(dataset=dataset,
                                         gentype=vgentype,
-                                        svmass=np.log(leading_SV.mass.sum()),
+                                        #svmass=np.log(leading_SV.mass.sum()),
+                                        svmass=np.log(SV_mass.sum()),
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                         weight=weights.weight()*cut)
                 hout['ZHbbvsQCD'].fill(dataset=dataset,
                                        gentype=vgentype,
                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                       fjmass=leading_fj.msd_corr.sum(),
+                                       tau21=leading_fj.tau21.sum(),
                                        weight=weights.weight()*cut)
                 hout['fj1pt'].fill(dataset=dataset,
                                        gentype=vgentype,
                                        fj1pt=leading_fj.sd.pt.sum(),
+                                       ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                       weight=weights.weight()*cut)
+                hout['fjmass'].fill(dataset=dataset,
+                                       gentype=vgentype,
                                        fjmass=leading_fj.msd_corr.sum(),
                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                        weight=weights.weight()*cut)
@@ -407,17 +394,22 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ##### template for bb SF #####
                 hout['svtemplate'].fill(dataset=dataset,
                                         gentype=vgentype,
-                                        svmass=np.log(leading_SV.mass.sum()),
+                                        #svmass=np.log(leading_SV.mass.sum()),
+                                        svmass=np.log(SV_mass.sum()),
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                         weight=weights.weight())
                 hout['ZHbbvsQCD'].fill(dataset=dataset,
                                        gentype=vgentype,
                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                       fjmass=leading_fj.msd_corr.sum(),
+                                       tau21=leading_fj.tau21.sum(),
                                        weight=weights.weight())
                 hout['fj1pt'].fill(dataset=dataset,
                                        gentype=vgentype,
                                        fj1pt=leading_fj.sd.pt.sum(),
+                                       ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                       weight=weights.weight())
+                 hout['fjmass'].fill(dataset=dataset,
+                                       gentype=vgentype,
                                        fjmass=leading_fj.msd_corr.sum(),
                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                        weight=weights.weight())
