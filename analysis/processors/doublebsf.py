@@ -223,7 +223,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             ##### Mix fatjet subjets and gen level b's
             ##### axis=1 option to remove boundaries between fat-jets
-            jetgenb = fj.subjets.flatten(axis=1).cross(gen['isb'], nested=True)
+            jetgenb = fj.subjets.flatten(axis=1).cross(gen[gen.isb], nested=True)
 
             ##### Match subjets to b's
             mask = (gen[gen.isb].counts>0) & ((jetgenb.i0.delta_r(jetgenb.i1) < 0.4).sum() == 1)
