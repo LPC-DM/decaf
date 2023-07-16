@@ -117,6 +117,7 @@ ids['isLooseElectron'] = isLooseElectron
 ids['isTightElectron'] = isTightElectron
 ids['isLooseMuon']     = isLooseMuon
 ids['isTightMuon']     = isTightMuon
+ids['isSoftMuon']     = isSoftMuon
 ids['isLooseTau']      = isLooseTau
 ids['isLoosePhoton']   = isLoosePhoton
 ids['isTightPhoton']   = isTightPhoton

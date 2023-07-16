@@ -222,7 +222,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 gen.hasFlags(['fromHardProcess', 'isFirstCopy'])
             ]
             hsmatch = match(fj.sd, Hs, 1.5)
-            fj['isHsbb'] = hsmatch & (nBHadrons > 1)
+            fj['isHsbb'] = hsmatch & (fj.nBHadrons > 1)
+            #fj['isHsbb'] = (fj.nBHadrons > 1)     
 
             
             #####
@@ -231,7 +232,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
-            fj['isbb']  = (nCHadrons == 0) & (nBHadrons > 1)
+            fj['isbb']  = (fj.nBHadrons > 1)
 
             #####
             ###
@@ -239,7 +240,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
-            fj['iscc']  = (nCHadrons > 1) & (nBHadrons == 0)
+            fj['iscc']  = (fj.nCHadrons > 1) & (fj.nBHadrons == 0)
 
             #####
             ###
@@ -247,7 +248,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
-            fj['isb']  = (nCHadrons == 0) & (nBHadrons == 1)
+            fj['isb']  = (fj.nBHadrons == 1)
 
 
             #####
@@ -256,7 +257,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
-            fj['isc']  = (nCHadrons == 1) & (nBHadrons == 0)
+            fj['isc']  = (fj.nCHadrons == 1) & (fj.nBHadrons == 0)
 
             #####
             ###
@@ -264,7 +265,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
-            fj['isl']  = (nCHadrons == 0) & (nBHadrons == 0)
+            fj['isl']  = (fj.nCHadrons == 0) & (fj.nBHadrons == 0)
             
 
             #####
@@ -340,7 +341,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             hout['fjmass'].fill(dataset=dataset,
                                    gentype=np.zeros(events.size, dtype=np.int),
                                    fjmass=leading_fj.msd_corr.sum(),
-                                   ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                    weight=np.ones(events.size)*cut)
 
         else:
@@ -387,7 +387,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hout['fjmass'].fill(dataset=dataset,
                                        gentype=vgentype,
                                        fjmass=leading_fj.msd_corr.sum(),
-                                       ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                        weight=weights.weight()*cut)
             else:
                 ##### template for bb SF #####
@@ -407,10 +406,9 @@ class AnalysisProcessor(processor.ProcessorABC):
                                        fj1pt=leading_fj.sd.pt.sum(),
                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                        weight=weights.weight())
-                 hout['fjmass'].fill(dataset=dataset,
+                hout['fjmass'].fill(dataset=dataset,
                                        gentype=vgentype,
                                        fjmass=leading_fj.msd_corr.sum(),
-                                       ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                        weight=weights.weight())
 
         return hout
@@ -436,6 +434,7 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-y', '--year', help='year', dest='year')
     parser.add_option('-m', '--metadata', help='metadata', dest='metadata')
+    parser.add_option('-n', '--name', help='name', dest='name')
     (options, args) = parser.parse_args()
 
 
@@ -453,4 +452,4 @@ if __name__ == '__main__':
                                          ids=ids,
                                          common=common)
 
-    save(processor_instance, 'data/doublebsf'+options.metadata+'.processor')
+    save(processor_instance, 'data/doublebsf'+options.name+'.processor')
