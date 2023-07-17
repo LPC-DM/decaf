@@ -96,7 +96,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('sumw', 'Weight value', [0.])
             ),
-            'svtemplate': hist.Hist(
+            'template': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
@@ -109,13 +109,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1),
-            ),
-            'fj1pt': hist.Hist(
-                'Events',
-                hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
-                hist.Bin('fj1pt','Leading AK15 Jet SoftDrop Pt',[160.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 600.0, 1250.0]),
-                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
             ),
         })
 
@@ -314,19 +307,15 @@ class AnalysisProcessor(processor.ProcessorABC):
 
             cut = selection.all(*selection.names)
             ##### template for bb SF #####
-            hout['svtemplate'].fill(dataset=dataset,
+            hout['template'].fill(dataset=dataset,
                                     gentype=np.zeros(events.size, dtype=np.int),
                                     #svmass=np.log(leading_SV.mass.sum()),
                                     svmass=np.log(SV_mass.sum()),
+                                    fj1pt=leading_fj.sd.pt.sum(),
                                     ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                     weight=np.ones(events.size)*cut)
             hout['ZHbbvsQCD'].fill(dataset=dataset,
                                    gentype=np.zeros(events.size, dtype=np.int),
-                                   ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                   weight=np.ones(events.size)*cut)
-            hout['fj1pt'].fill(dataset=dataset,
-                                   gentype=np.zeros(events.size, dtype=np.int),
-                                   fj1pt=leading_fj.sd.pt.sum(),
                                    ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                    weight=np.ones(events.size)*cut)
         else:
@@ -354,37 +343,29 @@ class AnalysisProcessor(processor.ProcessorABC):
             cut = selection.all(*selection.names)
             if 'QCD' in dataset:
                 ##### template for bb SF #####
-                hout['svtemplate'].fill(dataset=dataset,
+                hout['template'].fill(dataset=dataset,
                                         gentype=vgentype,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV_mass.sum()),
+                                        fj1pt=leading_fj.sd.pt.sum(),
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                         weight=weights.weight()*cut)
                 hout['ZHbbvsQCD'].fill(dataset=dataset,
                                        gentype=vgentype,
                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                        weight=weights.weight()*cut)
-                hout['fj1pt'].fill(dataset=dataset,
-                                       gentype=vgentype,
-                                       fj1pt=leading_fj.sd.pt.sum(),
-                                       ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                       weight=weights.weight()*cut)
                 
             else:
                 ##### template for bb SF #####
-                hout['svtemplate'].fill(dataset=dataset,
+                hout['template'].fill(dataset=dataset,
                                         gentype=vgentype,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV_mass.sum()),
+                                        fj1pt=leading_fj.sd.pt.sum(),
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                         weight=weights.weight())
                 hout['ZHbbvsQCD'].fill(dataset=dataset,
                                        gentype=vgentype,
-                                       ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                       weight=weights.weight())
-                hout['fj1pt'].fill(dataset=dataset,
-                                       gentype=vgentype,
-                                       fj1pt=leading_fj.sd.pt.sum(),
                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                        weight=weights.weight())
                
