@@ -205,7 +205,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             # Fat-jet dark H->bb matching at decay level
             ###
-            Hs = = gen[
+            Hs = gen[
                 (gen.pdgId == 54) &
                 gen.hasFlags(['fromHardProcess', 'isLastCopy'])
             ]
