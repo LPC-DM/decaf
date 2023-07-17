@@ -107,7 +107,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1),
-                hist.Bin('tau21','tau21', [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.]),
+                hist.Bin('tau21','tau21', [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.]),
             ),
             'fj1pt': hist.Hist(
                 'Events',
@@ -175,29 +175,21 @@ class AnalysisProcessor(processor.ProcessorABC):
         probZHbb=fj.probZbb+fj.probHbb
         fj['ZHbbvsQCD'] = probZHbb/(probZHbb+probQCD)
         fj['tau21'] = fj.tau2/fj.tau1
+        jetmu = fj.subjets.flatten(axis=1).cross(mu_soft, nested=True)
+        #mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7) & (jetmu.i1.pt > 7)).sum() == 1
+        #mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4).sum() == 1)
+        #step1 = fj.subjets.flatten()
+        #step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
+        #step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
+        #step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
+        #fj['withmu'] = step3.sum() == 2
         jetmu = fj.sd.cross(mu_soft, nested=True)
         fj['withmu'] = (mu_soft.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 1.5).sum()>0)
         fj_good = fj[fj.isgood.astype(np.bool)]
         fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
         fj_ngood = fj_good.counts
         fj_nwithmu = fj_withmu.counts
-        ##### axis=1 option to remove boundaries between fat-jets #####
-        ##### copy (match jaggedness and shape of array) the contents of crossed array into the fat-jet subjets #####
-        ##### we're not use copy since it keeps the original array type #####
-        ##### fj.subjets is a TLorentzVectorArray #####
-        #mu = mu[mu.isGlobal] ## Use a global muon for QCD events
-        #jetmu = fj.subjets.flatten(axis=1).cross(mu_soft, nested=True)
-        #mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7) & (jetmu.i1.pt > 7)).sum() == 1
-
-        ##### Three steps to match the jaggedness of the mask array to the fj.subjets array #####
-        ##### Using the offset function to copy contents not the type of the array #####
-        #step1 = fj.subjets.flatten()
-        #step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
-        #step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
-        #step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
-
-        ##### fatjet with two subjets matched with muons
-        #fj['withmu'] = step3.sum() == 2
+        
 
         SV = events.SV
         SV['ismatched'] = match(SV, fj, 1.5)
