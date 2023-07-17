@@ -58,7 +58,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             'b':        1,
             'cc' :      2,
             'c':        3,
-            'other':    4
+            'other':    4,
+            'hs':       5,
         }
 
         self._ZHbbvsQCDwp = {
@@ -98,28 +99,28 @@ class AnalysisProcessor(processor.ProcessorABC):
             'svtemplate': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('svmass','Secondary Vertices (SV) mass',[-1.2, -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
             ),
             'ZHbbvsQCD': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1),
                 hist.Bin('tau21','tau21', [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.]),
             ),
             'fj1pt': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('fj1pt','Leading AK15 Jet SoftDrop Pt',[160.0, 250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
             ),
             'fjmass': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5]),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('fjmass','AK15 Jet Mass',52,40,300),
             ),
         })
@@ -200,6 +201,28 @@ class AnalysisProcessor(processor.ProcessorABC):
         if not isData:
 
             gen = events.GenPart
+
+            ###
+            # Fat-jet dark H->bb matching at decay level
+            ###
+            Hs = = gen[
+                (gen.pdgId == 54) &
+                gen.hasFlags(['fromHardProcess', 'isLastCopy'])
+            ]
+            bFromHs = gen[
+                (abs(gen.pdgId) == 5) &
+                gen.hasFlags(['fromHardProcess', 'isLastCopy']) &
+                (gen.distinctParent.pdgId == 54)
+            ]
+            def bbmatch():
+                jetgenb = fj.sd.cross(bFromHs, nested=True)
+                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==2) & (bFromHs.counts>0)
+                return bbmatch
+            def hsmatch():
+                jetgenhs = fj.sd.cross(Hs, nested=True)
+                hsmatch = ((jetgenhs.i0.delta_r(jetgenhs.i1) < 1.5).sum()==1) & (Hs.counts>0)
+                return hsmatch
+            fj['isHsbb']  = bbmatch()&hsmatch()
             
             #####
             ###
@@ -325,11 +348,12 @@ class AnalysisProcessor(processor.ProcessorABC):
             weights.add('pileup',pu)
 
             wgentype = {
-                'bb' : (leading_fj.isbb).sum(),
-                'b'  : (leading_fj.isb).sum(),
-                'cc' : (leading_fj.iscc).sum(),
-                'c'  : (leading_fj.isc).sum(),
-                'other' : (leading_fj.isl).sum(),
+                'bb' : (~leading_fj.isHsbb&leading_fj.isbb).sum(),
+                'b'  : (~leading_fj.isHsbb&leading_fj.isb).sum(),
+                'cc' : (~leading_fj.isHsbb&leading_fj.iscc).sum(),
+                'c'  : (~leading_fj.isHsbb&leading_fj.isc).sum(),
+                'other' : (~leading_fj.isHsbb&leading_fj.isl).sum(),
+                'hs'    : (leading_fj.isHsbb).sum()
             }
             vgentype=np.zeros(events.size, dtype=np.int)
             for gentype in self._gentype_map.keys():
