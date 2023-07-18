@@ -396,7 +396,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         fj1pt=leading_fj.sd.pt.sum(),
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                         weight=weights.weight())
-               fill(dataset, vgentype, weights.weight(), np.ones(events.size, dtype=np.int))
+                fill(dataset, vgentype, weights.weight(), np.ones(events.size, dtype=np.int))
         return hout
 
     def postprocess(self, accumulator):
