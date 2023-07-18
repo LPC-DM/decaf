@@ -110,6 +110,24 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD',15,0,1),
             ),
+            'tau21': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('tau21','tau21', 20, 0, 1),
+            ),
+            'fj1pt': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('fj1pt','AK15 Leading SoftDrop Jet Pt',25,250,1250),
+            ),
+            'fj1eta': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('fj1eta','AK15 Leading SoftDrop Jet Eta',30,-3.5,3.5),
+            ),
         })
 
     @property
@@ -298,6 +316,28 @@ class AnalysisProcessor(processor.ProcessorABC):
         selection.add('fj_withmu', (fj_nwithmu==1))
         selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
+        variables = {
+            'ZHbbvsQCD': leading_fj.ZHbbvsQCD.sum(),
+            'tau21':     leading_fj.tau21.sum(),
+            'fj1pt':     leading_fj.sd.pt.sum(),
+            'fj1eta':    leading_fj.sd.eta.sum(),
+        }
+
+        def fill(dataset, gentype, weight, selection):
+                for histname, h in hout.items():
+                    if not isinstance(h, hist.Hist):
+                        continue
+                    if histname not in variables:
+                        continue
+                    if 'tau21' in histname:
+                        selection.names.remove('fj_tau21')
+                    cut = selection.all(*selection.names)
+                    flat_variable = {histname: variables[histname]}
+                    h.fill(dataset=dataset, 
+                           gentype=gentype, 
+                           **flat_variable, 
+                           weight=weight*cut)
+                    
         isFilled = False
         if isData:
             if not isFilled:
@@ -313,10 +353,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                     fj1pt=leading_fj.sd.pt.sum(),
                                     ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                     weight=np.ones(events.size)*cut)
-            hout['ZHbbvsQCD'].fill(dataset=dataset,
-                                   gentype=np.zeros(events.size, dtype=np.int),
-                                   ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                   weight=np.ones(events.size)*cut)
+            fill(dataset, np.zeros(events.size, dtype=np.int), np.ones(events.size), selection)
         else:
             weights = processor.Weights(len(events))
             if 'L1PreFiringWeight' in events.columns: weights.add('prefiring',events.L1PreFiringWeight.Nom)
@@ -349,11 +386,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         fj1pt=leading_fj.sd.pt.sum(),
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                         weight=weights.weight()*cut)
-                hout['ZHbbvsQCD'].fill(dataset=dataset,
-                                       gentype=vgentype,
-                                       ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                       weight=weights.weight()*cut)
-                
+                fill(dataset, vgentype, weights.weight(), selection)
             else:
                 ##### template for bb SF #####
                 hout['template'].fill(dataset=dataset,
@@ -363,11 +396,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         fj1pt=leading_fj.sd.pt.sum(),
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                         weight=weights.weight())
-                hout['ZHbbvsQCD'].fill(dataset=dataset,
-                                       gentype=vgentype,
-                                       ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                       weight=weights.weight())
-               
+               fill(dataset, vgentype, weights.weight(), np.ones(events.size, dtype=np.int))
         return hout
 
     def postprocess(self, accumulator):
