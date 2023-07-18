@@ -266,9 +266,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         leading_fj = leading_fj[leading_fj.isgood.astype(np.bool)]
 
         #### SV selection for matched with leading ak15 jet ####
-        leading_SV = SV[SV.dxySig.argmax()]
-        leading_SV = leading_SV[leading_SV.ismatched.astype(np.bool)]
-        SV_mass = SV[SV.ismatched.astype(np.bool)].sum().mass
+        #leading_SV = SV[SV.dxySig.argmax()]
+        #leading_SV = leading_SV[leading_SV.ismatched.astype(np.bool)]
 
         ###
         # Selections
@@ -310,7 +309,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             hout['template'].fill(dataset=dataset,
                                     gentype=np.zeros(events.size, dtype=np.int),
                                     #svmass=np.log(leading_SV.mass.sum()),
-                                    svmass=np.log(SV_mass.sum()),
+                                    svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
                                     fj1pt=leading_fj.sd.pt.sum(),
                                     ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                     weight=np.ones(events.size)*cut)
@@ -346,7 +345,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hout['template'].fill(dataset=dataset,
                                         gentype=vgentype,
                                         #svmass=np.log(leading_SV.mass.sum()),
-                                        svmass=np.log(SV_mass.sum()),
+                                        svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
                                         fj1pt=leading_fj.sd.pt.sum(),
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                         weight=weights.weight()*cut)
@@ -360,7 +359,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hout['template'].fill(dataset=dataset,
                                         gentype=vgentype,
                                         #svmass=np.log(leading_SV.mass.sum()),
-                                        svmass=np.log(SV_mass.sum()),
+                                        svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
                                         fj1pt=leading_fj.sd.pt.sum(),
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                         weight=weights.weight())

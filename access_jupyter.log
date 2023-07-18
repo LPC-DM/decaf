@@ -1,20 +1,21 @@
-[I 09:44:08.274 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
-[I 09:44:10.752 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/decaf
-[I 09:44:10.752 NotebookApp] The Jupyter Notebook is running at:
-[I 09:44:10.752 NotebookApp] http://127.0.0.1:9094/?token=0efce98166faef915ef462b6e7580d6ada82dcd8f02462b8
-[I 09:44:10.752 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 09:44:10.762 NotebookApp] 
+[I 08:37:59.955 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
+[I 08:38:11.997 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/decaf
+[I 08:38:11.997 NotebookApp] The Jupyter Notebook is running at:
+[I 08:38:11.997 NotebookApp] http://127.0.0.1:9094/?token=491fe89ca067d424554b3a459a68dd6d0554768ebdb6ba4a
+[I 08:38:11.997 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 08:38:12.026 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/45169/jupyter/nbserver-18756-open.html
+        file:///run/user/45169/jupyter/nbserver-3819-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=0efce98166faef915ef462b6e7580d6ada82dcd8f02462b8
-[I 09:44:54.998 NotebookApp] 302 GET /?token=0efce98166faef915ef462b6e7580d6ada82dcd8f02462b8 (127.0.0.1) 1.03ms
-[I 09:45:18.825 NotebookApp] Kernel started: cf08ab0b-d1b1-499c-aefb-9b367052d252
-[I 09:45:22.435 NotebookApp] Adapting to protocol v5.1 for kernel cf08ab0b-d1b1-499c-aefb-9b367052d252
-[I 09:47:18.967 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 09:49:19.000 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 09:51:18.942 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 09:53:18.943 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 09:55:18.973 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
-[I 09:57:19.060 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+        http://127.0.0.1:9094/?token=491fe89ca067d424554b3a459a68dd6d0554768ebdb6ba4a
+[I 08:39:08.939 NotebookApp] 302 GET /?token=491fe89ca067d424554b3a459a68dd6d0554768ebdb6ba4a (127.0.0.1) 0.89ms
+[I 08:41:14.884 NotebookApp] Kernel started: 1b8b6cf4-8cd4-453b-814b-d2bb481e7f97
+[I 08:41:19.386 NotebookApp] Adapting to protocol v5.1 for kernel 1b8b6cf4-8cd4-453b-814b-d2bb481e7f97
+[I 08:43:14.910 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 08:45:14.881 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 08:47:14.812 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 08:49:14.817 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 08:51:14.813 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 08:53:14.820 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
+[I 08:59:14.829 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-doublebtag-postfit.ipynb
