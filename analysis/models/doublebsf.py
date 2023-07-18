@@ -72,6 +72,31 @@ def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=0):
         print('Effect down = ', effect_down[i])
         print('Central value',templ._nominal[i])
         templ.setParamEffect(param[i], effect_up, effect_down)
+
+def addLumiSyst(templ, year):
+    vlumi={
+        '2016': 1.01,
+        '2017': 1.02,
+        '2018': 1.015,
+    }
+    vlumi_corr={
+        '2016': 1.006,
+        '2017': 1.009,
+        '2018': 1.02,
+    }
+    vlumi_1718={
+        '2017': 1.006,
+        '2018': 1.002,
+    }
+    templ.setParamEffect(lumi, vlumi[year])
+    templ.setParamEffect(lumi_corr, vlumi_corr[year])
+    if '2016' not in year: templ.setParamEffect(lumi_1718, vlumi_1718[year])
+
+def addPileupSyst(templ):
+    templ.setParamEffect(pu, 1.01)
+
+def addPrefiringSyst(templ, year):
+    if '2018' not in year: templ.setParamEffect(prefiring, 1.01)
         
 def model(year, category, pt):
 
@@ -114,8 +139,9 @@ def model(year, category, pt):
     ##### Template to use bb stat uncertainties
     sr_genbb_Template = template(mc, "QCD", "bb", category, pt, read_sumw2=True)
     sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
-    sr_genbb.setParamEffect(lumi, 1.05)
-    sr_genbb.setParamEffect(pu, 1.02)
+    addLumiSyst(sr_genbb, year)
+    addPileupSyst(sr_genbb)
+    addPrefiringSyst(sr_genbb, year)
     sr_genbb.setParamEffect(jes, 1.04)
     sr_genbb.setParamEffect(frac_b, 1.2)
     sr_genbb.setParamEffect(sf_weight['bb'], weight['bb'][category])
@@ -128,8 +154,9 @@ def model(year, category, pt):
 
     sr_genb_Template = template(mc, "QCD", "b", category, pt, read_sumw2=True)
     sr_genb = rl.TemplateSample(ch_name + "_genb", rl.Sample.BACKGROUND, sr_genb_Template)
-    sr_genb.setParamEffect(lumi, 1.05)
-    sr_genb.setParamEffect(pu, 1.02)
+    addLumiSyst(sr_genb, year)
+    addPileupSyst(sr_genb)
+    addPrefiringSyst(sr_genb, year)
     sr_genb.setParamEffect(jes, 1.04)
     sr_genb.setParamEffect(frac_b, 1.2)
     sr_genbb.setParamEffect(sf_weight['b'], weight['b'][category])
@@ -138,8 +165,9 @@ def model(year, category, pt):
 
     sr_genc_Template = template(mc, "QCD", "c", category, pt, read_sumw2=True)
     sr_genc = rl.TemplateSample(ch_name + "_genc", rl.Sample.BACKGROUND, sr_genc_Template)
-    sr_genc.setParamEffect(lumi, 1.05)
-    sr_genc.setParamEffect(pu, 1.02)
+    addLumiSyst(sr_genc, year)
+    addPileupSyst(sr_genc)
+    addPrefiringSyst(sr_genc, year)
     sr_genc.setParamEffect(jes, 1.04)
     sr_genc.setParamEffect(frac_c, 1.2)
     sr_genbb.setParamEffect(sf_weight['c'], weight['c'][category])
@@ -148,8 +176,9 @@ def model(year, category, pt):
 
     sr_gencc_Template = template(mc, "QCD", "cc", category, pt, read_sumw2=True)
     sr_gencc = rl.TemplateSample(ch_name + "_gencc", rl.Sample.BACKGROUND, sr_gencc_Template)
-    sr_gencc.setParamEffect(lumi, 1.05)
-    sr_gencc.setParamEffect(pu, 1.02)
+    addLumiSyst(sr_gencc, year)
+    addPileupSyst(sr_gencc)
+    addPrefiringSyst(sr_gencc, year)
     sr_gencc.setParamEffect(jes, 1.04)
     sr_gencc.setParamEffect(frac_c, 1.2)
     sr_genbb.setParamEffect(sf_weight['cc'], weight['cc'][category])
@@ -158,8 +187,9 @@ def model(year, category, pt):
 
     sr_genother_Template = template(mc, "QCD", "other", category, pt, read_sumw2=True)
     sr_genother = rl.TemplateSample(ch_name + "_genother", rl.Sample.BACKGROUND, sr_genother_Template)
-    sr_genother.setParamEffect(lumi, 1.05)
-    sr_genother.setParamEffect(pu, 1.02)
+    addLumiSyst(sr_genother, year)
+    addPileupSyst(sr_genother)
+    addPrefiringSyst(sr_genother, year)
     sr_genother.setParamEffect(jes, 1.04)
     sr_genother.setParamEffect(frac_other, 1.2)
     sr_genbb.setParamEffect(sf_weight['other'], weight['other'][category])
@@ -209,7 +239,10 @@ if __name__ == "__main__":
     ###
 
     lumi = rl.NuisanceParameter("lumi" + year, "lnN")
+    lumi_corr = rl.NuisanceParameter("lumi_corr", "lnN")
+    lumi_1718 = rl.NuisanceParameter("lumi_1718", "lnN")
     pu = rl.NuisanceParameter("pu" + year, "lnN")
+    prefiring = rl.NuisanceParameter("prefiring" + year, "lnN")
     jes = rl.NuisanceParameter("jes" + year, "lnN")
     #qcd_norm = rl.NuisanceParameter("qcd_norm", "lnN")
     frac_b = rl.NuisanceParameter("frac_b" + year, "lnN")
