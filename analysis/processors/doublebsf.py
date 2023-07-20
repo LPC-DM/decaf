@@ -72,17 +72,19 @@ class AnalysisProcessor(processor.ProcessorABC):
             '2016': [
                 'BTagMu_AK4Jet300_Mu5',
                 'BTagMu_AK8Jet300_Mu5',
-                'BTagMu_AK4DiJet170_Mu5'
+                #'BTagMu_AK4DiJet170_Mu5'
                 ],
             '2017': [
                 'BTagMu_AK4Jet300_Mu5',
                 'BTagMu_AK8Jet300_Mu5',
-                'BTagMu_AK4DiJet170_Mu5'
+                #'BTagMu_AK4DiJet170_Mu5'
                 ],
             '2018': [
                 'BTagMu_AK4Jet300_Mu5',
                 'BTagMu_AK8Jet300_Mu5',
-                'BTagMu_AK4DiJet170_Mu5'
+                'BTagMu_AK8Jet300_Mu5_noalgo'
+                'HLT_BTagMu_AK4Jet300_Mu5_noalgo'
+                #'BTagMu_AK4DiJet170_Mu5'
                 ]
         }
 
@@ -128,6 +130,30 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('fj1eta','AK15 Leading SoftDrop Jet Eta',30,-3.5,3.5),
             ),
+            'fj1phi': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('fj1phi','AK15 Leading SoftDrop Jet Phi',30,-3.5,3.5),
+            ),
+            'fj1mass': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('fj1mass','AK15 Leading SoftDrop Jet Mass',[40,50,60,70,80,90,100,110,120,130,150,160,180,200,220,240,300]),
+            ),
+            'met': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('met','MET',30,0,600),
+            ),
+            'metphi': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
+                hist.Bin('metphi','MET phi',35,-3.5,3.5),
+            ),
         })
 
     @property
@@ -161,6 +187,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
         #Initialize physics objects
         ###
+        met = events.MET
+        if self._year == '2017': events.METFixEE2017#Recommended for 2017
 
         mu = events.Muon
         mu['issoft'] = isSoftMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.looseId,self._year)
@@ -198,7 +226,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         
 
         SV = events.SV
-        SV['ismatched'] = match(SV, fj, 1.5)
         
         ###
         # Calculating weights
@@ -286,6 +313,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         #### SV selection for matched with leading ak15 jet ####
         #leading_SV = SV[SV.dxySig.argmax()]
         #leading_SV = leading_SV[leading_SV.ismatched.astype(np.bool)]
+        SV['ismatched'] = match(SV, leading_fj, 1.5)
 
         ###
         # Selections
@@ -300,8 +328,8 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         #### MET filters ####
         met_filters =  np.ones(events.size, dtype=np.bool)
-        if isData:
-            met_filters = met_filters & events.Flag['eeBadScFilter'] #this filter is recommended for data only
+        #if isData:
+        met_filters = met_filters & events.Flag['eeBadScFilter'] #this filter is recommended for data only
         for flag in AnalysisProcessor.met_filter_flags[self._year]:
             met_filters = met_filters & events.Flag[flag]
         selection.add('met_filters',met_filters)
@@ -310,10 +338,11 @@ class AnalysisProcessor(processor.ProcessorABC):
         if self._year=='2018': noHEMj = (j_nHEM==0)
 
         selection.add('noHEMj', noHEMj)
-        selection.add('fj_pt', (leading_fj.sd.pt.max() > 250) )
+        selection.add('fj_pt', (leading_fj.sd.pt.max() > 350) )
         selection.add('fj_mass', (leading_fj.msd_corr.sum() > 40) ) ## optionally also <130
-        selection.add('fj_good', (fj_ngood==1))
-        selection.add('fj_withmu', (fj_nwithmu==1))
+        #selection.add('fj_good', (fj_ngood>0))
+        selection.add('nwithmu', (fj_nwithmu>0))
+        selection.add('fj_withmu', (leading_fj.withmu.sum().astype(np.bool)))
         selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
         variables = {
@@ -321,6 +350,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             'tau21':     leading_fj.tau21.sum(),
             'fj1pt':     leading_fj.sd.pt.sum(),
             'fj1eta':    leading_fj.sd.eta.sum(),
+            'fj1phi':    leading_fj.sd.phi.sum(),
+            'fj1mass':   leading_fj.msd_corr.sum(),
+            'met':       met.pt.flatten(),
+            'metphi':    met.phi.flatten(),
         }
 
         def fill(dataset, gentype, weight, selection):
@@ -329,9 +362,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                         continue
                     if histname not in variables:
                         continue
-                    if 'tau21' in histname:
-                        selection.names.remove('fj_tau21')
-                    cut = selection.all(*selection.names)
+                    if selection is not None:
+                        if 'tau21' in histname:
+                            selection.names.remove('fj_tau21')
+                        cut = selection.all(*selection.names)
+                    else:
+                        cut = np.ones(events.size, dtype=np.int)
                     flat_variable = {histname: variables[histname]}
                     h.fill(dataset=dataset, 
                            gentype=gentype, 
@@ -396,7 +432,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         fj1pt=leading_fj.sd.pt.sum(),
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                         weight=weights.weight())
-                fill(dataset, vgentype, weights.weight(), np.ones(events.size, dtype=np.int))
+                fill(dataset, vgentype, weights.weight(), None)
         return hout
 
     def postprocess(self, accumulator):

@@ -24,9 +24,9 @@ category_map = {
         "fail": 0
         }
 pt_binning = {
-        "2016": [450, 500, 600, 1250],
-        "2017": [450, 500, 600, 1250],
-        "2018": [450, 500, 600, 1250]
+        "2016": [250, 300, 400, 500, 1250],
+        "2017": [250, 300, 400, 500, 1250],
+        "2018": [250, 300, 400, 500, 1250]
         }
 
 ### category: pass/fail flag
@@ -67,10 +67,7 @@ def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=0):
         effect_up = np.ones_like(templ._nominal)
         effect_down = np.ones_like(templ._nominal)
         effect_up[i] = 1.0 + np.sqrt(merged_error2[i])/merged_central[i]
-        print('Effect up = ',effect_up[i])
         effect_down[i] = max(epsilon, 1.0 - np.sqrt(merged_error2[i])/merged_central[i])
-        print('Effect down = ', effect_down[i])
-        print('Central value',templ._nominal[i])
         templ.setParamEffect(param[i], effect_up, effect_down)
 
 def addLumiSyst(templ, year):
@@ -159,7 +156,7 @@ def model(year, category, pt):
     addPrefiringSyst(sr_genb, year)
     sr_genb.setParamEffect(jes, 1.04)
     sr_genb.setParamEffect(frac_b, 1.2)
-    sr_genbb.setParamEffect(sf_weight['b'], weight['b'][category])
+    sr_genb.setParamEffect(sf_weight['b'], weight['b'][category])
     addBBliteSyst(sr_genb, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genb)
 
@@ -170,7 +167,7 @@ def model(year, category, pt):
     addPrefiringSyst(sr_genc, year)
     sr_genc.setParamEffect(jes, 1.04)
     sr_genc.setParamEffect(frac_c, 1.2)
-    sr_genbb.setParamEffect(sf_weight['c'], weight['c'][category])
+    sr_genc.setParamEffect(sf_weight['c'], weight['c'][category])
     addBBliteSyst(sr_genc, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genc)
 
@@ -181,7 +178,7 @@ def model(year, category, pt):
     addPrefiringSyst(sr_gencc, year)
     sr_gencc.setParamEffect(jes, 1.04)
     sr_gencc.setParamEffect(frac_c, 1.2)
-    sr_genbb.setParamEffect(sf_weight['cc'], weight['cc'][category])
+    sr_gencc.setParamEffect(sf_weight['cc'], weight['cc'][category])
     addBBliteSyst(sr_gencc, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_gencc)
 
@@ -192,7 +189,7 @@ def model(year, category, pt):
     addPrefiringSyst(sr_genother, year)
     sr_genother.setParamEffect(jes, 1.04)
     sr_genother.setParamEffect(frac_other, 1.2)
-    sr_genbb.setParamEffect(sf_weight['other'], weight['other'][category])
+    sr_genother.setParamEffect(sf_weight['other'], weight['other'][category])
     addBBliteSyst(sr_genother, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genother)
 
@@ -255,7 +252,7 @@ if __name__ == "__main__":
     ptbins = np.array(pt_binning[year])
     npt = len(ptbins) - 1
     for ptbin in range(npt):
-
+        print(ptbin)
         ###
         # Calculating efficiencies
         ###
@@ -265,6 +262,8 @@ if __name__ == "__main__":
             num=mc[str(gentype_map[i])].integrate('svmass').integrate('process').values()[()][ptbin,1]
             den=mc[str(gentype_map[i])].integrate('svmass').integrate('process').sum('ZHbbvsQCD').values()[()][ptbin]
             eff[str(gentype_map[i])] = np.nan_to_num(num/den)
+            print(gentype_map[i],eff[str(gentype_map[i])])
+            print(num,den)
 
 
         #### SF weight (TemplateSample version) ####
