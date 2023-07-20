@@ -28,10 +28,17 @@ pt_binning = {
         "2017": [250, 300, 400, 500, 1250],
         "2018": [250, 300, 400, 500, 1250]
         }
+weight_dict={
+    '2016':[0.80982663, 0.85100921, 0.86931336, 0.89259707, 0.7907999 ],
+    '2017':[0.86549006, 0.90644119, 0.93265111, 0.9682362,  0.87836352],
+    '2018':[0.70589636, 0.9585072,  1.02255474, 1.07915829, 1.00106306]
+}
 
 ### category: pass/fail flag
 def template(dictionary, process, gentype, category, pt, read_sumw2=False):
     histogram = dictionary[gentype].integrate("process", process)
+    if "data" not in gentype:
+        histogram.scale(weight[pt])
     nominal, sumw2 = histogram.values(sumw2=True)[()]
     nominal = nominal[:, pt, category_map[category]]
     sumw2 = sumw2[:, pt, category_map[category]]
@@ -210,6 +217,9 @@ if __name__ == "__main__":
     #print("Extracting histograms for", year, category)
     hists = load("hists/doublebsf" + year + ".scaled")
     data_hists = hists["data"]
+    if year == '2018':
+        for k in data_hists:
+                data_hists[k].scale(2.)
     bkg_hists = hists["bkg"]
 
 
@@ -241,11 +251,7 @@ if __name__ == "__main__":
     pu = rl.NuisanceParameter("pu" + year, "lnN")
     prefiring = rl.NuisanceParameter("prefiring" + year, "lnN")
     jes = rl.NuisanceParameter("jes" + year, "lnN")
-    #qcd_norm = rl.NuisanceParameter("qcd_norm", "lnN")
-    frac_b = rl.NuisanceParameter("frac_b" + year, "lnN")
-    frac_c = rl.NuisanceParameter("frac_c" + year, "lnN")
-    frac_other = rl.NuisanceParameter("frac_other" + year, "lnN")
-
+    
     #### fractional systematics (assume 50%)
     #frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
 
@@ -253,6 +259,11 @@ if __name__ == "__main__":
     npt = len(ptbins) - 1
     for ptbin in range(npt):
         print(ptbin)
+
+        frac_b = rl.NuisanceParameter("frac_b_pt" + ptbin, "lnN")
+        frac_c = rl.NuisanceParameter("frac_c_pt" + ptbin, "lnN")
+        frac_other = rl.NuisanceParameter("frac_other_pt" + ptbin, "lnN")
+
         ###
         # Calculating efficiencies
         ###
@@ -271,12 +282,12 @@ if __name__ == "__main__":
         weight={}
         sf_weight={}
         for i in range(5):
-            sf[str(gentype_map[i])] = rl.IndependentParameter("sf"+ str(gentype_map[i]) + year, 1.0, 0.01, 1.0 / eff[str(gentype_map[i])])
+            sf[str(gentype_map[i])] = rl.IndependentParameter("sf"+ str(gentype_map[i]) + year + 'pt' + ptbin, 1.0, 0.01, 1.0 / eff[str(gentype_map[i])])
             weight[str(gentype_map[i])] = {
                 "pass": rl.DependentParameter("weight"+str(gentype_map[i]), "{0}", sf[str(gentype_map[i])]),
                 "fail": rl.DependentParameter("weight"+str(gentype_map[i]), "(1-({0}*%f))/(1-%f)" % (eff[str(gentype_map[i])], eff[str(gentype_map[i])]), sf[str(gentype_map[i])])
             }
-            sf_weight[str(gentype_map[i])] = rl.IndependentParameter("sf_weight"+ str(gentype_map[i]) + year, 1.0)
+            sf_weight[str(gentype_map[i])] = rl.IndependentParameter("sf_weight"+ str(gentype_map[i]) + year + 'pt' + ptbin, 1.0)
         
         for category in ["pass", "fail"]:
 
