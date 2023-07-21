@@ -163,16 +163,16 @@ class AnalysisProcessor(processor.ProcessorABC):
         probZHbb=fj.probZbb+fj.probHbb
         fj['ZHbbvsQCD'] = probZHbb/(probZHbb+probQCD)
         fj['tau21'] = fj.tau2/fj.tau1
-        #jetmu = fj.subjets.flatten(axis=1).cross(mu_soft, nested=True)
+        jetmu = fj.subjets.flatten(axis=1).cross(mu_soft, nested=True)
         #mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4) & ((jetmu.i1.pt/jetmu.i0.pt) < 0.7) & (jetmu.i1.pt > 7)).sum() == 1
-        #mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4).sum() == 1)
-        #step1 = fj.subjets.flatten()
-        #step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
-        #step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
-        #step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
-        #fj['withmu'] = step3.sum() == 2
+        mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4).sum() == 1)
+        step1 = fj.subjets.flatten()
+        step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
+        step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
+        step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
+        fj['withmu'] = step3.sum() == 2
         jetmu = fj.sd.cross(mu_soft, nested=True)
-        fj['withmu'] = (mu_soft.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 1.5).sum()>0)
+        #fj['withmu'] = (mu_soft.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 1.5).sum()>0)
         fj_good = fj[fj.isgood.astype(np.bool)]
         fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
         fj_ngood = fj_good.counts
@@ -224,8 +224,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 jetgenb = fj.sd.cross(bquarks, nested=True)
                 bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()>1) & (bquarks.counts>0)
                 return bbmatch
-            fj['isbb']  = bbmatch
-            #fj['isbb']  = (fj.nBHadrons > 1)
+            #fj['isbb']  = bbmatch()
+            fj['isbb']  = (fj.nBHadrons > 1)
 
             #####
             ###
@@ -237,8 +237,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 jetgenb = fj.sd.cross(bquarks, nested=True)
                 bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==1) & (bquarks.counts>0)
                 return bmatch
-            fj['isb']  = bmatch
-            #fj['isb']  = (fj.nBHadrons == 1)
+            #fj['isb']  = bmatch()
+            fj['isb']  = (fj.nBHadrons == 1)
 
             
             #####
@@ -259,8 +259,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 jetgenc = fj.sd.cross(cquarks, nested=True)
                 ccmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()>1) & (cquarks.counts>0)
                 return ccmatch
-            fj['iscc']  = ccmatch()&zerobmatch()
-            #fj['iscc']  = (fj.nCHadrons > 1) & (fj.nBHadrons == 0)
+            #fj['iscc']  = ccmatch()&zerobmatch()
+            fj['iscc']  = (fj.nCHadrons > 1) & (fj.nBHadrons == 0)
 
             #####
             ###
@@ -272,8 +272,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 jetgenc = fj.sd.cross(cquarks, nested=True)
                 cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==1) & (cquarks.counts>0)
                 return cmatch
-            fj['isc']  = cmatch()&zerobmatch()
-            #fj['isc']  = (fj.nCHadrons == 1) & (fj.nBHadrons == 0)
+            #fj['isc']  = cmatch()&zerobmatch()
+            fj['isc']  = (fj.nCHadrons == 1) & (fj.nBHadrons == 0)
 
             #####
             ###
@@ -285,8 +285,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 jetgenc = fj.sd.cross(cquarks, nested=True)
                 zerocmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==0) & (cquarks.counts>0)
                 return zerocmatch
-            fj['isl']  = zerocmatch()&zerobmatch()
-            #fj['isl']  = (fj.nCHadrons == 0) & (fj.nBHadrons == 0)
+            #fj['isl']  = zerocmatch()&zerobmatch()
+            fj['isl']  = (fj.nCHadrons == 0) & (fj.nBHadrons == 0)
             
 
             #####
