@@ -170,13 +170,14 @@ class AnalysisProcessor(processor.ProcessorABC):
         step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
         step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
         step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
-        fj['withmu'] = step3.sum() == 2
+        #fj['withmu'] = step3.sum() == 2
         jetmu = fj.sd.cross(mu_soft, nested=True)
-        #fj['withmu'] = (mu_soft.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 1.5).sum()>0)
+        fj['withmu'] = (mu_soft.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 1.5).sum()>0)
         fj_good = fj[fj.isgood.astype(np.bool)]
         fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
         fj_ngood = fj_good.counts
         fj_nwithmu = fj_withmu.counts
+        fj['nsubjets'] = fj.subjets.counts
         
 
         SV = events.SV
@@ -225,7 +226,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()>1) & (bquarks.counts>0)
                 return bbmatch
             #fj['isbb']  = bbmatch()
-            fj['isbb']  = (fj.nBHadrons > 1)
+            #fj['isbb']  = (fj.nBHadrons > 1)
+            fj['isbb']  = (fj.subjets.nBHadrons>0).all()
 
             #####
             ###
@@ -238,8 +240,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==1) & (bquarks.counts>0)
                 return bmatch
             #fj['isb']  = bmatch()
-            fj['isb']  = (fj.nBHadrons == 1)
-
+            #fj['isb']  = (fj.nBHadrons == 1)
+            fj['isb']  = ~fj.isbb & (fj.nBHadrons > 0)       
             
             #####
             ###
@@ -260,8 +262,9 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ccmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()>1) & (cquarks.counts>0)
                 return ccmatch
             #fj['iscc']  = ccmatch()&zerobmatch()
-            fj['iscc']  = (fj.nCHadrons > 1) & (fj.nBHadrons == 0)
-
+            #fj['iscc']  = (fj.nCHadrons > 1) & (fj.nBHadrons == 0)
+            fj['iscc']  = ~fj.isbb & ~fj.isb & (fj.subjets.nCHadrons>0).all()
+            
             #####
             ###
             # Fat-jet matching to one c
@@ -273,7 +276,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==1) & (cquarks.counts>0)
                 return cmatch
             #fj['isc']  = cmatch()&zerobmatch()
-            fj['isc']  = (fj.nCHadrons == 1) & (fj.nBHadrons == 0)
+            #fj['isc']  = (fj.nCHadrons == 1) & (fj.nBHadrons == 0)
+            fj['isc']  = ~fj.isbb & ~fj.isb & ~fj.iscc & (fj.nCHadrons == 1)
 
             #####
             ###
@@ -286,7 +290,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 zerocmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==0) & (cquarks.counts>0)
                 return zerocmatch
             #fj['isl']  = zerocmatch()&zerobmatch()
-            fj['isl']  = (fj.nCHadrons == 0) & (fj.nBHadrons == 0)
+            #fj['isl']  = (fj.nCHadrons == 0) & (fj.nBHadrons == 0)
+            fj['isl']  = ~fj.isbb & ~fj.isb & ~fj.iscc & ~fj.isc
             
 
             #####
@@ -334,6 +339,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         #selection.add('fj_good', (fj_ngood>0))
         selection.add('nwithmu', (fj_nwithmu>0))
         selection.add('fj_withmu', (leading_fj.withmu.sum().astype(np.bool)))
+        selection.add('fj_nsubjets', (leading_fj.nsubjets == 2))
         #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
         isFilled = False
