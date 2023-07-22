@@ -177,7 +177,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
         fj_ngood = fj_good.counts
         fj_nwithmu = fj_withmu.counts
-        fj['nsubjets'] = fj.subjets.counts
+        fj['nsubjets'] = (fj.subjets.pt>0).astype(np.int).sum()
         
 
         SV = events.SV
@@ -203,11 +203,11 @@ class AnalysisProcessor(processor.ProcessorABC):
             ]
             def bbmatch():
                 jetgenb = fj.sd.cross(bFromHs, nested=True)
-                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==2) & (bFromHs.counts>0)
+                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).astype(np.int).sum()==2) & (bFromHs.counts>0)
                 return bbmatch
             def hsmatch():
                 jetgenhs = fj.sd.cross(Hs, nested=True)
-                hsmatch = ((jetgenhs.i0.delta_r(jetgenhs.i1) < 1.5).sum()==1) & (Hs.counts>0)
+                hsmatch = ((jetgenhs.i0.delta_r(jetgenhs.i1) < 1.5).astype(np.int).sum()==1) & (Hs.counts>0)
                 return hsmatch
             fj['isHsbb']  = bbmatch()&hsmatch()
             
@@ -227,7 +227,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 return bbmatch
             #fj['isbb']  = bbmatch()
             #fj['isbb']  = (fj.nBHadrons > 1)
-            fj['isbb']  = (fj.subjets.nBHadrons>0).all()
+            fj['isbb']  = ((fj.subjets.nBHadrons>0).astype(np.int).sum()>1)
 
             #####
             ###
@@ -263,7 +263,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 return ccmatch
             #fj['iscc']  = ccmatch()&zerobmatch()
             #fj['iscc']  = (fj.nCHadrons > 1) & (fj.nBHadrons == 0)
-            fj['iscc']  = ~fj.isbb & ~fj.isb & (fj.subjets.nCHadrons>0).all()
+            fj['iscc']  = ~fj.isbb & ~fj.isb & ((fj.subjets.nCHadrons>0).astype(np.int).sum()>1)
             
             #####
             ###
@@ -339,8 +339,8 @@ class AnalysisProcessor(processor.ProcessorABC):
         #selection.add('fj_good', (fj_ngood>0))
         selection.add('nwithmu', (fj_nwithmu>0))
         selection.add('fj_withmu', (leading_fj.withmu.sum().astype(np.bool)))
-        selection.add('fj_nsubjets', (leading_fj.nsubjets == 2))
-        #selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
+        #selection.add('fj_nsubjets', ((leading_fj.nsubjets == 2).sum().astype(np.bool)))
+        selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
         isFilled = False
         if isData:
