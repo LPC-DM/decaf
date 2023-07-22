@@ -101,7 +101,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             'template': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('gentype', 'Gen Type', [0, 1, 2, 3, 4, 5, 6]),
                 hist.Bin('svmass','Secondary Vertices (SV) mass',[-1.2, -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2]),
                 hist.Bin('fj1pt','Leading AK15 Jet SoftDrop Pt',[350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 700.0, 800.0, 900.0, 2500.0]),
                 hist.Bin('fj1eta','Leading AK15 Jet SoftDrop Eta',[-5.0, -2.0, -1.75, -1.5, -1.25, -1.0, -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 5.0]),
@@ -217,15 +216,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
-            bquarks = gen[
-                (abs(gen.pdgId) == 5) &
-                gen.hasFlags(['fromHardProcess', 'isLastCopy'])
-            ]
-            def bbmatch():
-                jetgenb = fj.sd.cross(bquarks, nested=True)
-                bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()>1) & (bquarks.counts>0)
-                return bbmatch
-            #fj['isbb']  = bbmatch()
             #fj['isbb']  = (fj.nBHadrons > 1)
             fj['isbb']  = ((fj.subjets.nBHadrons>0).astype(np.int).sum()>1)
 
@@ -235,11 +225,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
-            def bmatch():
-                jetgenb = fj.sd.cross(bquarks, nested=True)
-                bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==1) & (bquarks.counts>0)
-                return bmatch
-            #fj['isb']  = bmatch()
             #fj['isb']  = (fj.nBHadrons == 1)
             fj['isb']  = ~fj.isbb & (fj.nBHadrons > 0)       
             
@@ -249,19 +234,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
-            def zerobmatch():
-                jetgenb = fj.sd.cross(bquarks, nested=True)
-                zerobmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).sum()==0) & (bquarks.counts>0)
-                return zerobmatch
-            cquarks = gen[
-                (abs(gen.pdgId) == 4) &
-                gen.hasFlags(['fromHardProcess', 'isLastCopy'])
-            ]
-            def ccmatch():
-                jetgenc = fj.sd.cross(cquarks, nested=True)
-                ccmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()>1) & (cquarks.counts>0)
-                return ccmatch
-            #fj['iscc']  = ccmatch()&zerobmatch()
             #fj['iscc']  = (fj.nCHadrons > 1) & (fj.nBHadrons == 0)
             fj['iscc']  = ~fj.isbb & ~fj.isb & ((fj.subjets.nCHadrons>0).astype(np.int).sum()>1)
             
@@ -271,13 +243,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
-            def cmatch():
-                jetgenc = fj.sd.cross(cquarks, nested=True)
-                cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==1) & (cquarks.counts>0)
-                return cmatch
-            #fj['isc']  = cmatch()&zerobmatch()
             #fj['isc']  = (fj.nCHadrons == 1) & (fj.nBHadrons == 0)
-            fj['isc']  = ~fj.isbb & ~fj.isb & ~fj.iscc & (fj.nCHadrons == 1)
+            fj['isc']  = ~fj.isbb & ~fj.isb & ~fj.iscc & (fj.nCHadrons > 0)
 
             #####
             ###
@@ -285,12 +252,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
-            def zerocmatch():
-                jetgenc = fj.sd.cross(cquarks, nested=True)
-                zerocmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).sum()==0) & (cquarks.counts>0)
-                return zerocmatch
-            #fj['isl']  = zerocmatch()&zerobmatch()
-            #fj['isl']  = (fj.nCHadrons == 0) & (fj.nBHadrons == 0)
             fj['isl']  = ~fj.isbb & ~fj.isb & ~fj.iscc & ~fj.isc
             
 
@@ -351,7 +312,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             cut = selection.all(*selection.names)
             ##### template for bb SF #####
             hout['template'].fill(dataset=dataset,
-                                    gentype=np.zeros(events.size, dtype=np.int),
                                     #svmass=np.log(leading_SV.mass.sum()),
                                     svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
                                     fj1pt=leading_fj.sd.pt.sum(),
@@ -365,26 +325,14 @@ class AnalysisProcessor(processor.ProcessorABC):
             weights.add('genw',events.genWeight)
             weights.add('pileup',pu)
 
-            wgentype = {
-                'bb' : (~leading_fj.isHsbb&leading_fj.isbb).sum(),
-                'b'  : (~leading_fj.isHsbb&leading_fj.isb).sum(),
-                'cc' : (~leading_fj.isHsbb&leading_fj.iscc).sum(),
-                'c'  : (~leading_fj.isHsbb&leading_fj.isc).sum(),
-                'other' : (~leading_fj.isHsbb&leading_fj.isl).sum(),
-                'hs'    : (leading_fj.isHsbb).sum()
-            }
-            vgentype=np.zeros(events.size, dtype=np.int)
-            for gentype in self._gentype_map.keys():
-                vgentype += self._gentype_map[gentype]*wgentype[gentype]
-
             if not isFilled:
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
                 isFilled=True
 
             cut = selection.all(*selection.names)
             if 'QCD' in dataset:
-                ##### template for bb SF #####
-                hout['template'].fill(dataset=dataset,
+                wbb=leading_fj.isbb.sum().astype(np.int)
+                hout['template'].fill(dataset='bb--'+dataset,
                                         gentype=vgentype,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
@@ -392,9 +340,50 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         fj1eta=leading_fj.sd.eta.sum(),
                                         tau21=leading_fj.tau21.sum(),
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                        weight=weights.weight()*cut)
+                                        weight=wbb*weights.weight()*cut)
+                wb=leading_fj.isb.sum().astype(np.int)
+                hout['template'].fill(dataset='b--'+dataset,
+                                        gentype=vgentype,
+                                        #svmass=np.log(leading_SV.mass.sum()),
+                                        svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
+                                        fj1pt=leading_fj.sd.pt.sum(),
+                                        fj1eta=leading_fj.sd.eta.sum(),
+                                        tau21=leading_fj.tau21.sum(),
+                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                        weight=wb*weights.weight()*cut)
+                wcc=leading_fj.iscc.sum().astype(np.int)
+                hout['template'].fill(dataset='cc--'+dataset,
+                                        gentype=vgentype,
+                                        #svmass=np.log(leading_SV.mass.sum()),
+                                        svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
+                                        fj1pt=leading_fj.sd.pt.sum(),
+                                        fj1eta=leading_fj.sd.eta.sum(),
+                                        tau21=leading_fj.tau21.sum(),
+                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                        weight=wcc*weights.weight()*cut)
+                wc=leading_fj.isc.sum().astype(np.int)
+                hout['template'].fill(dataset='c--'+dataset,
+                                        gentype=vgentype,
+                                        #svmass=np.log(leading_SV.mass.sum()),
+                                        svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
+                                        fj1pt=leading_fj.sd.pt.sum(),
+                                        fj1eta=leading_fj.sd.eta.sum(),
+                                        tau21=leading_fj.tau21.sum(),
+                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                        weight=wc*weights.weight()*cut)
+                wl=leading_fj.isl.sum().astype(np.int)
+                hout['template'].fill(dataset='l--'+dataset,
+                                        gentype=vgentype,
+                                        #svmass=np.log(leading_SV.mass.sum()),
+                                        svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
+                                        fj1pt=leading_fj.sd.pt.sum(),
+                                        fj1eta=leading_fj.sd.eta.sum(),
+                                        tau21=leading_fj.tau21.sum(),
+                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
+                                        weight=wl*weights.weight()*cut)
             else:
                 ##### template for bb SF #####
+                whs=leading_fj.isHsbb.sum().astype(np.int)
                 hout['template'].fill(dataset=dataset,
                                         gentype=vgentype,
                                         #svmass=np.log(leading_SV.mass.sum()),
@@ -403,7 +392,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         fj1eta=leading_fj.sd.eta.sum(),
                                         tau21=leading_fj.tau21.sum(),
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                        weight=weights.weight())
+                                        weight=whs*weights.weight())
         return hout
 
     def postprocess(self, accumulator):
