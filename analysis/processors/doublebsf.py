@@ -320,20 +320,23 @@ class AnalysisProcessor(processor.ProcessorABC):
                                     ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                     weight=np.ones(events.size)*cut)
         else:
+
             weights = processor.Weights(len(events))
             if 'L1PreFiringWeight' in events.columns: weights.add('prefiring',events.L1PreFiringWeight.Nom)
             weights.add('genw',events.genWeight)
             weights.add('pileup',pu)
-
-            if not isFilled:
-                hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
-                isFilled=True
-
             cut = selection.all(*selection.names)
+
             if 'QCD' in dataset:
+                if not isFilled:
+                    hout['sumw'].fill(dataset='bb--'+dataset, sumw=1, weight=events.genWeight.sum())
+                    hout['sumw'].fill(dataset='b--'+dataset, sumw=1, weight=events.genWeight.sum())
+                    hout['sumw'].fill(dataset='cc--'+dataset, sumw=1, weight=events.genWeight.sum())
+                    hout['sumw'].fill(dataset='c--'+dataset, sumw=1, weight=events.genWeight.sum())
+                    hout['sumw'].fill(dataset='l--'+dataset, sumw=1, weight=events.genWeight.sum())
+                    isFilled=True
                 wbb=leading_fj.isbb.sum().astype(np.int)
                 hout['template'].fill(dataset='bb--'+dataset,
-                                        gentype=vgentype,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
                                         fj1pt=leading_fj.sd.pt.sum(),
@@ -343,7 +346,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         weight=wbb*weights.weight()*cut)
                 wb=leading_fj.isb.sum().astype(np.int)
                 hout['template'].fill(dataset='b--'+dataset,
-                                        gentype=vgentype,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
                                         fj1pt=leading_fj.sd.pt.sum(),
@@ -353,7 +355,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         weight=wb*weights.weight()*cut)
                 wcc=leading_fj.iscc.sum().astype(np.int)
                 hout['template'].fill(dataset='cc--'+dataset,
-                                        gentype=vgentype,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
                                         fj1pt=leading_fj.sd.pt.sum(),
@@ -363,7 +364,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         weight=wcc*weights.weight()*cut)
                 wc=leading_fj.isc.sum().astype(np.int)
                 hout['template'].fill(dataset='c--'+dataset,
-                                        gentype=vgentype,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
                                         fj1pt=leading_fj.sd.pt.sum(),
@@ -373,7 +373,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         weight=wc*weights.weight()*cut)
                 wl=leading_fj.isl.sum().astype(np.int)
                 hout['template'].fill(dataset='l--'+dataset,
-                                        gentype=vgentype,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
                                         fj1pt=leading_fj.sd.pt.sum(),
@@ -383,9 +382,11 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         weight=wl*weights.weight()*cut)
             else:
                 ##### template for bb SF #####
+                if not isFilled:
+                    hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
+                    isFilled=True
                 whs=leading_fj.isHsbb.sum().astype(np.int)
                 hout['template'].fill(dataset=dataset,
-                                        gentype=vgentype,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
                                         fj1pt=leading_fj.sd.pt.sum(),
