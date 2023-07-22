@@ -1,24 +1,17 @@
-[I 20:53:36.542 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
-[I 20:53:37.941 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/CMSSW_10_2_13/src/decaf
-[I 20:53:37.941 NotebookApp] The Jupyter Notebook is running at:
-[I 20:53:37.941 NotebookApp] http://127.0.0.1:9094/?token=ea95348a82c3cd281b02d8bd157b75c387b0c96374a75f91
-[I 20:53:37.941 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 20:53:37.947 NotebookApp] 
+[I 19:42:34.613 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
+[I 19:42:36.455 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/CMSSW_10_2_13/src/decaf
+[I 19:42:36.455 NotebookApp] The Jupyter Notebook is running at:
+[I 19:42:36.455 NotebookApp] http://127.0.0.1:9094/?token=fca3385ef6444d991b4475eafd9305c98fdfc147ee53d022
+[I 19:42:36.455 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 19:42:36.461 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/45169/jupyter/nbserver-26414-open.html
+        file:///run/user/45169/jupyter/nbserver-21596-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=ea95348a82c3cd281b02d8bd157b75c387b0c96374a75f91
-[I 20:53:55.268 NotebookApp] 302 GET /?token=ea95348a82c3cd281b02d8bd157b75c387b0c96374a75f91 (127.0.0.1) 0.63ms
-[I 20:54:22.720 NotebookApp] Kernel started: 53664e70-b2d6-4b91-9f07-d0fc41515bc0
-[I 20:54:25.097 NotebookApp] Adapting to protocol v5.1 for kernel 53664e70-b2d6-4b91-9f07-d0fc41515bc0
-[I 20:56:23.747 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 20:58:23.756 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 21:00:23.793 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 21:02:23.800 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 21:04:23.372 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 21:06:23.111 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 21:08:23.081 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 21:10:23.208 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 21:41:27.258 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 21:43:27.549 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+        http://127.0.0.1:9094/?token=fca3385ef6444d991b4475eafd9305c98fdfc147ee53d022
+[I 19:42:52.292 NotebookApp] 302 GET /?token=fca3385ef6444d991b4475eafd9305c98fdfc147ee53d022 (127.0.0.1) 0.57ms
+[I 19:43:13.653 NotebookApp] Kernel started: e01b4ab8-1486-4a84-9441-f433f68cbb53
+[I 19:43:16.040 NotebookApp] Adapting to protocol v5.1 for kernel e01b4ab8-1486-4a84-9441-f433f68cbb53
+[I 19:45:14.357 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 19:47:15.087 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 19:49:15.006 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
