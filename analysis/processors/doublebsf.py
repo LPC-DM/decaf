@@ -155,6 +155,7 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         get_msd_weight  = self._corrections['get_msd_weight']
         get_pu_weight   = self._corrections['get_pu_weight'][self._year]  
+        get_reweighting = self._corrections['get_reweighting'][self._year]
         isSoftMuon      = self._ids['isSoftMuon']
         isGoodFatJet    = self._ids['isGoodFatJet']
         isHEMJet        = self._ids['isHEMJet']  
@@ -413,6 +414,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             if 'L1PreFiringWeight' in events.columns: weights.add('prefiring',events.L1PreFiringWeight.Nom)
             weights.add('genw',events.genWeight)
             weights.add('pileup',pu)
+            weights.add('reweighting', get_reweighting(leading_fj.tau21, leading_fj.sd.pt, leading_fj.sd.eta)
             cut = selection.all(*selection.names)
 
             if 'QCD' in dataset:
