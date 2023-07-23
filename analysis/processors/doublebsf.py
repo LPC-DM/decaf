@@ -103,18 +103,33 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('svmass','Secondary Vertices (SV) mass',[-1.2, -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2]),
+                hist.Bin('fj1pt','Leading AK15 Jet SoftDrop Pt',[350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0, 850.0, 900.0, 950, 1000.0, 2500.0]),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
-                hist.Bin('tau21','tau21', [0.0, 0.2, 0.25, 0.3]),
-                hist.Bin('fj1pt','Leading AK15 Jet SoftDrop Pt',[350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 700.0, 800.0, 900.0, 2500.0]),
-                hist.Bin('fj1eta','Leading AK15 Jet SoftDrop Eta',[-5.0, -2.0, -1.75, -1.5, -1.25, -1.0, -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 5.0]),
             ),
             'ZHbbvsQCD': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.50, 0.55, 0.60, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1]),
-                hist.Bin('tau21','tau21', [0.0, 0.2, 0.25, 0.3]),
-                hist.Bin('fj1pt','Leading AK15 Jet SoftDrop Pt',[350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 700.0, 800.0, 900.0, 2500.0]),
+            ),
+            'tau21': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('tau21','tau21', [0.0, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 1.0]),
+            ),
+            'fj1pt': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('fj1pt','Leading AK15 Jet SoftDrop Pt',[350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0, 850.0, 900.0, 950, 1000.0, 2500.0]),
+            ),
+            'fj1eta': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
                 hist.Bin('fj1eta','Leading AK15 Jet SoftDrop Eta',[-5.0, -2.0, -1.75, -1.5, -1.25, -1.0, -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 5.0]),
+            ),
+            'fj1mass': hist.Hist(
+                'Events',
+                hist.Cat('dataset', 'Dataset'),
+                hist.Bin('fj1mass','AK15 Leading SoftDrop Jet Mass',[40,50,60,70,80,90,100,110,120,130,150,160,180,200,220,240,300]),
             ),
         })
 
@@ -149,8 +164,6 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
         #Initialize physics objects
         ###
-        met = events.MET
-        if self._year == '2017': events.METFixEE2017#Recommended for 2017
 
         mu = events.Muon
         mu['issoft'] = isSoftMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.looseId,self._year)
@@ -353,6 +366,33 @@ class AnalysisProcessor(processor.ProcessorABC):
         #selection.add('fj_nsubjets', ((leading_fj.nsubjets == 2).sum().astype(np.bool)))
         selection.add('fj_tau21', (leading_fj.tau21.sum() < 0.3) )
 
+        variables = {
+            'ZHbbvsQCD': leading_fj.ZHbbvsQCD.sum(),
+            'tau21':     leading_fj.tau21.sum(),
+            'fj1pt':     leading_fj.sd.pt.sum(),
+            'fj1eta':    leading_fj.sd.eta.sum(),
+            'fj1phi':    leading_fj.sd.phi.sum(),
+            'fj1mass':   leading_fj.msd_corr.sum(),
+        }
+
+        def fill(dataset, weight, selection):
+                for histname, h in hout.items():
+                    if not isinstance(h, hist.Hist):
+                        continue
+                    if histname not in variables:
+                        continue
+                    if selection is not None:
+                        selection_names=copy.deepcopy(selection.names)
+                        if 'tau21' in histname:
+                            selection_names.remove('fj_tau21')
+                        cut = selection.all(*selection_names)
+                    else:
+                        cut = np.ones(events.size, dtype=np.int)
+                    flat_variable = {histname: variables[histname]}
+                    h.fill(dataset=dataset, 
+                           **flat_variable,
+                           weight=weight*cut)
+                    
         isFilled = False
         if isData:
             if not isFilled:
@@ -364,17 +404,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             hout['template'].fill(dataset=dataset,
                                     #svmass=np.log(leading_SV.mass.sum()),
                                     svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
-                                    ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                    tau21=leading_fj.tau21.sum(),
                                     fj1pt=leading_fj.sd.pt.sum(),
-                                    fj1eta=leading_fj.sd.eta.sum(),
-                                    weight=np.ones(events.size)*cut)
-            hout['ZHbbvsQCD'].fill(dataset=dataset,
                                     ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                    tau21=leading_fj.tau21.sum(),
-                                    fj1pt=leading_fj.sd.pt.sum(),
-                                    fj1eta=leading_fj.sd.eta.sum(),
                                     weight=np.ones(events.size)*cut)
+            fill(dataset, np.ones(events.size), selection)
         else:
             weights = processor.Weights(len(events))
             if 'L1PreFiringWeight' in events.columns: weights.add('prefiring',events.L1PreFiringWeight.Nom)
@@ -394,81 +427,46 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hout['template'].fill(dataset='bb--'+dataset,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
-                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                        tau21=leading_fj.tau21.sum(),
                                         fj1pt=leading_fj.sd.pt.sum(),
-                                        fj1eta=leading_fj.sd.eta.sum(),
-                                        weight=wbb*weights.weight()*cut)
-                hout['ZHbbvsQCD'].fill(dataset='bb--'+dataset,
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                        tau21=leading_fj.tau21.sum(),
-                                        fj1pt=leading_fj.sd.pt.sum(),
-                                        fj1eta=leading_fj.sd.eta.sum(),
                                         weight=wbb*weights.weight()*cut)
+                fill('bb--'+dataset, wbb*weights.weight(), selection)
                 
                 wb=leading_fj.isb.sum().astype(np.int)
                 hout['template'].fill(dataset='b--'+dataset,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
-                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                        tau21=leading_fj.tau21.sum(),
                                         fj1pt=leading_fj.sd.pt.sum(),
-                                        fj1eta=leading_fj.sd.eta.sum(),
-                                        weight=wb*weights.weight()*cut)
-                hout['ZHbbvsQCD'].fill(dataset='b--'+dataset,
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                        tau21=leading_fj.tau21.sum(),
-                                        fj1pt=leading_fj.sd.pt.sum(),
-                                        fj1eta=leading_fj.sd.eta.sum(),
                                         weight=wb*weights.weight()*cut)
+                fill('b--'+dataset, wb*weights.weight(), selection)
                 
                 wcc=leading_fj.iscc.sum().astype(np.int)
                 hout['template'].fill(dataset='cc--'+dataset,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
-                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                        tau21=leading_fj.tau21.sum(),
                                         fj1pt=leading_fj.sd.pt.sum(),
-                                        fj1eta=leading_fj.sd.eta.sum(),
-                                        weight=wcc*weights.weight()*cut)
-                hout['ZHbbvsQCD'].fill(dataset='cc--'+dataset,
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                        tau21=leading_fj.tau21.sum(),
-                                        fj1pt=leading_fj.sd.pt.sum(),
-                                        fj1eta=leading_fj.sd.eta.sum(),
                                         weight=wcc*weights.weight()*cut)
+                fill('cc--'+dataset, wcc*weights.weight(), selection)
                 
                 wc=leading_fj.isc.sum().astype(np.int)
                 hout['template'].fill(dataset='c--'+dataset,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
-                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                        tau21=leading_fj.tau21.sum(),
                                         fj1pt=leading_fj.sd.pt.sum(),
-                                        fj1eta=leading_fj.sd.eta.sum(),
-                                        weight=wc*weights.weight()*cut)
-                hout['ZHbbvsQCD'].fill(dataset='c--'+dataset,
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                        tau21=leading_fj.tau21.sum(),
-                                        fj1pt=leading_fj.sd.pt.sum(),
-                                        fj1eta=leading_fj.sd.eta.sum(),
                                         weight=wc*weights.weight()*cut)
+                fill('c--'+dataset, wc*weights.weight(), selection)
                 
                 wl=leading_fj.isl.sum().astype(np.int)
                 hout['template'].fill(dataset='l--'+dataset,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
-                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                        tau21=leading_fj.tau21.sum(),
                                         fj1pt=leading_fj.sd.pt.sum(),
-                                        fj1eta=leading_fj.sd.eta.sum(),
-                                        weight=wl*weights.weight()*cut)
-                hout['ZHbbvsQCD'].fill(dataset='l--'+dataset,
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                        tau21=leading_fj.tau21.sum(),
-                                        fj1pt=leading_fj.sd.pt.sum(),
-                                        fj1eta=leading_fj.sd.eta.sum(),
                                         weight=wl*weights.weight()*cut)
+                fill('l--'+dataset, wl*weights.weight(), selection)
             else:
                 ##### template for bb SF #####
                 if not isFilled:
@@ -478,17 +476,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                 hout['template'].fill(dataset=dataset,
                                         #svmass=np.log(leading_SV.mass.sum()),
                                         svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
-                                        ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                        tau21=leading_fj.tau21.sum(),
                                         fj1pt=leading_fj.sd.pt.sum(),
-                                        fj1eta=leading_fj.sd.eta.sum(),
-                                        weight=whs*weights.weight())
-                hout['ZHbbvsQCD'].fill(dataset=dataset,
                                         ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
-                                        tau21=leading_fj.tau21.sum(),
-                                        fj1pt=leading_fj.sd.pt.sum(),
-                                        fj1eta=leading_fj.sd.eta.sum(),
                                         weight=whs*weights.weight())
+                fill(dataset, whs*weights.weight(), None)
         return hout
 
     def postprocess(self, accumulator):
