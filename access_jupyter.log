@@ -1,25 +1,22 @@
-[I 01:25:04.657 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
-[I 01:25:23.339 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/CMSSW_10_2_13/src/decaf
-[I 01:25:23.339 NotebookApp] The Jupyter Notebook is running at:
-[I 01:25:23.340 NotebookApp] http://127.0.0.1:9094/?token=a61c8932640e77b131e466769d9c38a984e1632569957134
-[I 01:25:23.340 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 01:25:23.351 NotebookApp] 
+[I 14:03:44.215 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
+[I 14:03:45.652 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/CMSSW_10_2_13/src/decaf
+[I 14:03:45.652 NotebookApp] The Jupyter Notebook is running at:
+[I 14:03:45.652 NotebookApp] http://127.0.0.1:9094/?token=3628f786415df8df08baae700b72ad2e3fc0983ad628287e
+[I 14:03:45.652 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 14:03:45.657 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/45169/jupyter/nbserver-7229-open.html
+        file:///run/user/45169/jupyter/nbserver-31584-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=a61c8932640e77b131e466769d9c38a984e1632569957134
-[I 01:26:17.341 NotebookApp] 302 GET /?token=a61c8932640e77b131e466769d9c38a984e1632569957134 (127.0.0.1) 0.88ms
-[I 01:26:57.149 NotebookApp] Kernel started: eeeca529-3d9b-4637-91a7-f8b41f10dc1a
-[I 01:27:00.866 NotebookApp] Adapting to protocol v5.1 for kernel eeeca529-3d9b-4637-91a7-f8b41f10dc1a
-[I 01:28:57.541 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 01:30:57.378 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 01:32:57.522 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 01:38:57.550 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 01:40:57.596 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 01:42:57.529 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 01:51:02.450 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 01:53:02.456 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[W 02:11:30.871 NotebookApp] WebSocket ping timeout after 119837 ms.
-[I 02:11:35.877 NotebookApp] Starting buffering for eeeca529-3d9b-4637-91a7-f8b41f10dc1a:f3b5f76b444a4e278bbabc61d5c5f50d
-[IPKernelApp] WARNING | Parent appears to have exited, shutting down.
+        http://127.0.0.1:9094/?token=3628f786415df8df08baae700b72ad2e3fc0983ad628287e
+[I 14:03:54.022 NotebookApp] 302 GET /?token=3628f786415df8df08baae700b72ad2e3fc0983ad628287e (127.0.0.1) 0.50ms
+[I 14:04:12.413 NotebookApp] Kernel started: 1ce9ab1a-3b2b-4257-83b2-6d4bad8511c3
+[I 14:04:18.227 NotebookApp] Adapting to protocol v5.1 for kernel 1ce9ab1a-3b2b-4257-83b2-6d4bad8511c3
+[I 14:06:12.829 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 14:16:12.653 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 14:18:12.638 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 14:20:12.525 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 14:22:12.609 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 14:24:12.576 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 14:49:47.046 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 15:00:45.795 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb

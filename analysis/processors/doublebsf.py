@@ -414,10 +414,10 @@ class AnalysisProcessor(processor.ProcessorABC):
             if 'L1PreFiringWeight' in events.columns: weights.add('prefiring',events.L1PreFiringWeight.Nom)
             weights.add('genw',events.genWeight)
             weights.add('pileup',pu)
-            weights.add('reweighting', get_reweighting(leading_fj.tau21, leading_fj.sd.pt, leading_fj.sd.eta)
             cut = selection.all(*selection.names)
 
             if 'QCD' in dataset:
+                weights.add('reweighting', get_reweighting(leading_fj.tau21.sum(), leading_fj.sd.pt.sum(), leading_fj.sd.eta.sum()))
                 if not isFilled:
                     hout['sumw'].fill(dataset='bb--'+dataset, sumw=1, weight=events.genWeight.sum())
                     hout['sumw'].fill(dataset='b--'+dataset, sumw=1, weight=events.genWeight.sum())

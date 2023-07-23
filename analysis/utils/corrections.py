@@ -492,7 +492,6 @@ class Reweighting:
         self.reweighting = lookup_tools.dense_lookup.dense_lookup(reweighting, [ax.edges() for ax in hists['data']['reweighting'].axes()[1:]])
 
     def weight(self, tau21, pt, eta):
-        
         weight = self.reweighting(tau21, pt, eta)
         return weight
 
