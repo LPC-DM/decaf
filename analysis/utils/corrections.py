@@ -472,6 +472,35 @@ get_btag_weight = {
     }
 }
 
+class Reweighting:
+
+    def __init__(self, year):
+        self._year = year
+        files = {
+            '2016': 'reweighting2016.scaled',
+            '2017': 'reweighting2017.scaled',
+            '2018': 'reweighting2018.scaled',
+        }
+        filename = 'hists/'+files[year]
+        reweighting = load(filename)
+        hists = load(filename)
+        if year == '2018':
+            hists['data']['reweighting'].scale(2.)
+        num=hists['data']['reweighting'].integrate('process').values()[()]
+        den=hists['bkg']['reweighting'].integrate('process').values()[()]
+        reweighting = num / np.maximum(den, 1.)
+        self.reweighting = lookup_tools.dense_lookup.dense_lookup(reweighting, [ax.edges() for ax in hists['data']['reweighting'].axes()[1:]])
+
+    def weight(self, tau21, pt, eta):
+        
+        weight = self.reweighting(tau21, pt, eta)
+        return weight
+
+get_reweighting = {
+    '2016': Reweighting('2016').weight,
+    '2017': Reweighting('2017').weight,
+    '2018': Reweighting('2018').weight,
+}
 '''
 Jetext = extractor()
 for directory in ['jec', 'jersf', 'jr', 'junc']:
@@ -511,6 +540,7 @@ corrections = {
     'get_mu_loose_iso_sf':      get_mu_loose_iso_sf,
     'get_ecal_bad_calib':       get_ecal_bad_calib,
     'get_btag_weight':          get_btag_weight,
+    'get_reweighting':          get_reweighting,
     #'Jetevaluator':             Jetevaluator,
 }
 save(corrections, 'data/corrections.coffea')
