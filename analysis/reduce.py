@@ -18,7 +18,7 @@ def futuresum(tmp_arr):
           chunk_sum=[]
           chunk_tmp_arr = np.array_split(tmp_arr, int(np.size(tmp_arr)/2))
           if len(chunk_tmp_arr)>1:
-               with concurrent.futures.ProcessPoolExecutor(max_workers=16) as executor:
+               with concurrent.futures.ProcessPoolExecutor(max_workers=32) as executor:
                     futures = set()
                     futures.update(executor.submit(add,chunk_tmp_arr[i]) for i in range(0,len(chunk_tmp_arr)))
                     if(len(futures)==0): continue
@@ -45,7 +45,7 @@ def futuresum(tmp_arr):
      return tmp_arr
 
 
-def reduce(folder,_dataset=None,variable=None):
+def reduce(folder,_dataset=None,_exclude=None,variable=None):
 
      lists = {}
      for filename in os.listdir(folder):
@@ -56,6 +56,9 @@ def reduce(folder,_dataset=None,variable=None):
      for pdi in lists.keys():
           if _dataset is not None:
                if not any(_d in pdi for _d in _dataset.split(',')): continue
+          if _exclude is not None:
+               if any(_d in pdi for _d in _exclude.split(',')): continue
+          print(pdi)
           tmp={}
           for filename in lists[pdi]:
                print('Opening:',filename)
@@ -85,8 +88,9 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-f', '--folder', help='folder', dest='folder')
     parser.add_option('-d', '--dataset', help='dataset', dest='dataset', default=None)
+    parser.add_option('-e', '--exclude', help='exclude', dest='exclude', default=None)
     parser.add_option('-v', '--variable', help='variable', dest='variable', default=None)
     (options, args) = parser.parse_args()
 
     patch_mp_connection_bpo_17560()    
-    reduce(options.folder,options.dataset,options.variable)
+    reduce(options.folder,options.dataset,options.exclude,options.variable)
