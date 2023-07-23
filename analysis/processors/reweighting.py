@@ -145,6 +145,8 @@ class AnalysisProcessor(processor.ProcessorABC):
 
         fj = events.AK15Puppi
         fj['sd'] = fj.subjets.sum()
+        fj['msd_raw'] = (fj.subjets * (1 - fj.subjets.rawFactor)).sum().mass
+        fj['msd_corr'] = fj.msd_raw * awkward.JaggedArray.fromoffsets(fj.array.offsets, np.maximum(1e-5, get_msd_weight(fj.sd.pt.flatten(),fj.sd.eta.flatten())))
         fj['isgood'] = isGoodFatJet(fj.sd.pt, fj.sd.eta, fj.jetId)
         fj['tau21'] = fj.tau2/fj.tau1
         jetmu = fj.sd.cross(mu_soft, nested=True)
@@ -212,7 +214,6 @@ class AnalysisProcessor(processor.ProcessorABC):
             weights.add('pileup',pu)
             cut = selection.all(*selection.names)
 
-            if 'QCD' in dataset:
             if not isFilled:
                 hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
                 isFilled=True

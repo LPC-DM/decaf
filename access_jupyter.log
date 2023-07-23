@@ -22,3 +22,4 @@
 [I 01:53:02.456 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
 [W 02:11:30.871 NotebookApp] WebSocket ping timeout after 119837 ms.
 [I 02:11:35.877 NotebookApp] Starting buffering for eeeca529-3d9b-4637-91a7-f8b41f10dc1a:f3b5f76b444a4e278bbabc61d5c5f50d
+[IPKernelApp] WARNING | Parent appears to have exited, shutting down.
