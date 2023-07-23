@@ -3,6 +3,7 @@ import lz4.frame as lz4f
 import cloudpickle
 import json
 import pprint
+import copy
 import numpy as np
 import math
 import awkward
@@ -102,7 +103,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
                 hist.Bin('svmass','Secondary Vertices (SV) mass',[-1.2, -1.0, -0.8, -0.6, -0.4, -0.2, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8, 5.0, 5.2]),
-                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1])
+                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, self._ZHbbvsQCDwp[self._year], 1]),
                 hist.Bin('fj1pt','Leading AK15 Jet SoftDrop Pt',[350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 700.0, 800.0, 900.0, 2500.0]),
                 hist.Bin('fj1eta','Leading AK15 Jet SoftDrop Eta',[-5.0, -2.0, -1.75, -1.5, -1.25, -1.0, -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 5.0]),
             ),
@@ -116,7 +117,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             'ZHbbvsQCD': hist.Hist(
                 'Events',
                 hist.Cat('dataset', 'Dataset'),
-                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.50, 0.55, 0.60, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1])
+                hist.Bin('ZHbbvsQCD','ZHbbvsQCD', [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.50, 0.55, 0.60, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1]),
                 hist.Bin('fj1pt','Leading AK15 Jet SoftDrop Pt',[350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 700.0, 800.0, 900.0, 2500.0]),
                 hist.Bin('fj1eta','Leading AK15 Jet SoftDrop Eta',[-5.0, -2.0, -1.75, -1.5, -1.25, -1.0, -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 5.0]),
             ),
@@ -176,14 +177,14 @@ class AnalysisProcessor(processor.ProcessorABC):
         fj['ZHbbvsQCD'] = probZHbb/(probZHbb+probQCD)
         fj['tau21'] = fj.tau2/fj.tau1
         jetmu = fj.subjets.flatten(axis=1).cross(mu_soft, nested=True)
-        mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4).sum() == 1)
+        mask = (mu.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 0.4).astype(np.int).sum() > 0)
         step1 = fj.subjets.flatten()
         step2 = awkward.JaggedArray.fromoffsets(step1.offsets, mask.content)
         step2 = step2.pad(1).fillna(0) ##### Fill None for empty arrays and convert None to False
         step3 = awkward.JaggedArray.fromoffsets(fj.subjets.offsets, step2)
-        #fj['withmu'] = step3.sum() == 2
+        #fj['withmu'] = (step3.astype(np.int).sum() > 1)
         jetmu = fj.sd.cross(mu_soft, nested=True)
-        fj['withmu'] = (mu_soft.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 1.5).sum()>0)
+        fj['withmu'] = (mu_soft.counts>0) & ((jetmu.i0.delta_r(jetmu.i1) < 1.5).astype(np.int).sum()>0)
         fj_good = fj[fj.isgood.astype(np.bool)]
         fj_withmu = fj_good[fj_good.withmu.astype(np.bool)]
         fj_ngood = fj_good.counts
@@ -228,6 +229,19 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
+            #Retrieve b quarks
+            bquarks = gen[
+                (abs(gen.pdgId) == 5) &
+                gen.hasFlags(['fromHardProcess', 'isLastCopy'])
+            ]
+
+            #Match fatjet to two b quarks
+            def bbmatch():
+                 jetgenb = fj.sd.cross(bquarks, nested=True)
+                 bbmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).astype(np.int).sum()>1) & (bquarks.counts>0)
+                 return bbmatch
+
+            #fj['isbb']  = bbmatch()
             #fj['isbb']  = (fj.nBHadrons > 1)
             fj['isbb']  = ((fj.subjets.nBHadrons>0).astype(np.int).sum()>1)
 
@@ -237,6 +251,13 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
+            #Match fatjet to one b quarks                                                                                                                      
+            def bmatch():
+                 jetgenb = fj.sd.cross(bquarks, nested=True)
+                 bmatch = ((jetgenb.i0.delta_r(jetgenb.i1) < 1.5).astype(np.int).sum()==1) & (bquarks.counts>0)
+                 return bmatch
+
+            #fj['isb']  = bmatch()
             #fj['isb']  = (fj.nBHadrons == 1)
             fj['isb']  = ~fj.isbb & (fj.nBHadrons > 0)       
             
@@ -246,6 +267,19 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
+            #Retrieve c quarks
+            cquarks = gen[
+                (abs(gen.pdgId) == 4) &
+                gen.hasFlags(['fromHardProcess', 'isLastCopy'])
+            ]
+            
+            #Match fatjet to two c quarks
+            def ccmatch():
+                 jetgenc = fj.sd.cross(cquarks, nested=True)
+                 ccmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).astype(np.int).sum()>1) & (cquarks.counts>0)
+                 return ccmatch
+
+            #fj['iscc']  = ccmatch() & ~bmatch() & ~bbmatch()
             #fj['iscc']  = (fj.nCHadrons > 1) & (fj.nBHadrons == 0)
             fj['iscc']  = ~fj.isbb & ~fj.isb & ((fj.subjets.nCHadrons>0).astype(np.int).sum()>1)
             
@@ -255,6 +289,13 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
+            #Match fatjet to one c quarks
+            def cmatch():
+                 jetgenc = fj.sd.cross(cquarks, nested=True)
+                 cmatch = ((jetgenc.i0.delta_r(jetgenc.i1) < 1.5).astype(np.int).sum()==1) & (cquarks.counts>0)
+                 return cmatch
+
+            #fj['isc']  = cmatch() & ~bmatch() & ~bbmatch()
             #fj['isc']  = (fj.nCHadrons == 1) & (fj.nBHadrons == 0)
             fj['isc']  = ~fj.isbb & ~fj.isb & ~fj.iscc & (fj.nCHadrons > 0)
 
@@ -264,6 +305,8 @@ class AnalysisProcessor(processor.ProcessorABC):
             ###
             #####
 
+            #fj['isl']  = ~cmatch() & ~ccmatch() & ~bmatch()& ~bbmatch()
+            #fj['isl']  = (fj.nCHadrons == 0) & (fj.nBHadrons == 0)
             fj['isl']  = ~fj.isbb & ~fj.isb & ~fj.iscc & ~fj.isc
             
 
@@ -327,9 +370,12 @@ class AnalysisProcessor(processor.ProcessorABC):
                     if histname not in variables:
                         continue
                     if selection is not None:
+                        selection_names=copy.deepcopy(selection.names)
+                        #print('Before',dataset,histname,selection_names)
                         if 'tau21' in histname:
-                            selection.names.remove('fj_tau21')
-                        cut = selection.all(*selection.names)
+                            selection_names.remove('fj_tau21')
+                        #print('After',dataset,histname,selection_names)
+                        cut = selection.all(*selection_names)
                     else:
                         cut = np.ones(events.size, dtype=np.int)
                     flat_variable = {histname: variables[histname]}
@@ -350,10 +396,9 @@ class AnalysisProcessor(processor.ProcessorABC):
             hout['template'].fill(dataset=dataset,
                                     #svmass=np.log(leading_SV.mass.sum()),
                                     svmass=np.log(SV[SV.ismatched.astype(np.bool)].sum().mass),
+                                    ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                     fj1pt=leading_fj.sd.pt.sum(),
                                     fj1eta=leading_fj.sd.eta.sum(),
-                                    tau21=leading_fj.tau21.sum(),
-                                    ZHbbvsQCD=leading_fj.ZHbbvsQCD.sum(),
                                     weight=np.ones(events.size)*cut)
             fill(dataset, np.ones(events.size), selection)
         else:
@@ -379,7 +424,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         fj1pt=leading_fj.sd.pt.sum(),
                                         fj1eta=leading_fj.sd.eta.sum(),
                                         weight=wbb*weights.weight()*cut)
-                fill('bb--'+dataset, weights.weight(), selection)
+                fill('bb--'+dataset, wbb*weights.weight(), selection)
                 wb=leading_fj.isb.sum().astype(np.int)
                 hout['template'].fill(dataset='b--'+dataset,
                                         #svmass=np.log(leading_SV.mass.sum()),
@@ -388,7 +433,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         fj1pt=leading_fj.sd.pt.sum(),
                                         fj1eta=leading_fj.sd.eta.sum(),
                                         weight=wb*weights.weight()*cut)
-                fill('b--'+dataset, weights.weight(), selection)
+                fill('b--'+dataset, wb*weights.weight(), selection)
                 wcc=leading_fj.iscc.sum().astype(np.int)
                 hout['template'].fill(dataset='cc--'+dataset,
                                         #svmass=np.log(leading_SV.mass.sum()),
@@ -397,7 +442,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         fj1pt=leading_fj.sd.pt.sum(),
                                         fj1eta=leading_fj.sd.eta.sum(),
                                         weight=wcc*weights.weight()*cut)
-                fill('cc--'+dataset, weights.weight(), selection)
+                fill('cc--'+dataset, wcc*weights.weight(), selection)
                 wc=leading_fj.isc.sum().astype(np.int)
                 hout['template'].fill(dataset='c--'+dataset,
                                         #svmass=np.log(leading_SV.mass.sum()),
@@ -406,7 +451,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         fj1pt=leading_fj.sd.pt.sum(),
                                         fj1eta=leading_fj.sd.eta.sum(),
                                         weight=wc*weights.weight()*cut)
-                fill('c--'+dataset, weights.weight(), selection)
+                fill('c--'+dataset, wc*weights.weight(), selection)
                 wl=leading_fj.isl.sum().astype(np.int)
                 hout['template'].fill(dataset='l--'+dataset,
                                         #svmass=np.log(leading_SV.mass.sum()),
@@ -415,7 +460,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         fj1pt=leading_fj.sd.pt.sum(),
                                         fj1eta=leading_fj.sd.eta.sum(),
                                         weight=wl*weights.weight()*cut)
-                fill('l--'+dataset, weights.weight(), selection)
+                fill('l--'+dataset, wl*weights.weight(), selection)
             else:
                 ##### template for bb SF #####
                 if not isFilled:
@@ -429,7 +474,7 @@ class AnalysisProcessor(processor.ProcessorABC):
                                         fj1pt=leading_fj.sd.pt.sum(),
                                         fj1eta=leading_fj.sd.eta.sum(),
                                         weight=whs*weights.weight())
-                fill(dataset, weights.weight(), None)
+                fill(dataset, whs*weights.weight(), None)
         return hout
 
     def postprocess(self, accumulator):

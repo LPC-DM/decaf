@@ -1,17 +1,225 @@
-[I 19:42:34.613 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
-[I 19:42:36.455 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/CMSSW_10_2_13/src/decaf
-[I 19:42:36.455 NotebookApp] The Jupyter Notebook is running at:
-[I 19:42:36.455 NotebookApp] http://127.0.0.1:9094/?token=fca3385ef6444d991b4475eafd9305c98fdfc147ee53d022
-[I 19:42:36.455 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 19:42:36.461 NotebookApp] 
+[I 09:54:40.195 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
+[I 09:54:43.094 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/CMSSW_10_2_13/src/decaf
+[I 09:54:43.094 NotebookApp] The Jupyter Notebook is running at:
+[I 09:54:43.094 NotebookApp] http://127.0.0.1:9094/?token=f10d95bd3932d6a764ad5be92987727185633e67dae6f8b1
+[I 09:54:43.094 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 09:54:43.105 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/45169/jupyter/nbserver-21596-open.html
+        file:///run/user/45169/jupyter/nbserver-8327-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=fca3385ef6444d991b4475eafd9305c98fdfc147ee53d022
-[I 19:42:52.292 NotebookApp] 302 GET /?token=fca3385ef6444d991b4475eafd9305c98fdfc147ee53d022 (127.0.0.1) 0.57ms
-[I 19:43:13.653 NotebookApp] Kernel started: e01b4ab8-1486-4a84-9441-f433f68cbb53
-[I 19:43:16.040 NotebookApp] Adapting to protocol v5.1 for kernel e01b4ab8-1486-4a84-9441-f433f68cbb53
-[I 19:45:14.357 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 19:47:15.087 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 19:49:15.006 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+        http://127.0.0.1:9094/?token=f10d95bd3932d6a764ad5be92987727185633e67dae6f8b1
+[I 09:55:15.691 NotebookApp] 302 GET /?token=f10d95bd3932d6a764ad5be92987727185633e67dae6f8b1 (127.0.0.1) 1.19ms
+[I 09:56:26.124 NotebookApp] Kernel started: c0a33754-0015-4d06-8761-8848f3b0f4c0
+[I 09:56:30.063 NotebookApp] Adapting to protocol v5.1 for kernel c0a33754-0015-4d06-8761-8848f3b0f4c0
+[I 09:58:26.475 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:00:26.603 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:02:26.877 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:04:33.485 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:06:27.461 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:08:26.803 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:10:26.774 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:12:26.753 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:14:26.740 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:16:26.748 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[W 10:16:29.043 NotebookApp] IOPub data rate exceeded.
+    The notebook server will temporarily stop sending output
+    to the client in order to avoid crashing it.
+    To change this limit, set the config variable
+    `--NotebookApp.iopub_data_rate_limit`.
+    
+    Current values:
+    NotebookApp.iopub_data_rate_limit=1000000.0 (bytes/sec)
+    NotebookApp.rate_limit_window=3.0 (secs)
+    
+[W 10:16:29.973 NotebookApp] iopub messages resumed
+[W 10:16:32.871 NotebookApp] IOPub data rate exceeded.
+    The notebook server will temporarily stop sending output
+    to the client in order to avoid crashing it.
+    To change this limit, set the config variable
+    `--NotebookApp.iopub_data_rate_limit`.
+    
+    Current values:
+    NotebookApp.iopub_data_rate_limit=1000000.0 (bytes/sec)
+    NotebookApp.rate_limit_window=3.0 (secs)
+    
+[W 10:16:33.582 NotebookApp] iopub messages resumed
+[W 10:16:36.507 NotebookApp] IOPub data rate exceeded.
+    The notebook server will temporarily stop sending output
+    to the client in order to avoid crashing it.
+    To change this limit, set the config variable
+    `--NotebookApp.iopub_data_rate_limit`.
+    
+    Current values:
+    NotebookApp.iopub_data_rate_limit=1000000.0 (bytes/sec)
+    NotebookApp.rate_limit_window=3.0 (secs)
+    
+[W 10:16:37.482 NotebookApp] iopub messages resumed
+[W 10:16:40.342 NotebookApp] IOPub data rate exceeded.
+    The notebook server will temporarily stop sending output
+    to the client in order to avoid crashing it.
+    To change this limit, set the config variable
+    `--NotebookApp.iopub_data_rate_limit`.
+    
+    Current values:
+    NotebookApp.iopub_data_rate_limit=1000000.0 (bytes/sec)
+    NotebookApp.rate_limit_window=3.0 (secs)
+    
+[W 10:16:41.047 NotebookApp] iopub messages resumed
+[W 10:16:43.913 NotebookApp] IOPub data rate exceeded.
+    The notebook server will temporarily stop sending output
+    to the client in order to avoid crashing it.
+    To change this limit, set the config variable
+    `--NotebookApp.iopub_data_rate_limit`.
+    
+    Current values:
+    NotebookApp.iopub_data_rate_limit=1000000.0 (bytes/sec)
+    NotebookApp.rate_limit_window=3.0 (secs)
+    
+[W 10:16:44.953 NotebookApp] iopub messages resumed
+[W 10:16:47.830 NotebookApp] IOPub data rate exceeded.
+    The notebook server will temporarily stop sending output
+    to the client in order to avoid crashing it.
+    To change this limit, set the config variable
+    `--NotebookApp.iopub_data_rate_limit`.
+    
+    Current values:
+    NotebookApp.iopub_data_rate_limit=1000000.0 (bytes/sec)
+    NotebookApp.rate_limit_window=3.0 (secs)
+    
+[W 10:16:48.602 NotebookApp] iopub messages resumed
+[W 10:16:51.595 NotebookApp] IOPub data rate exceeded.
+    The notebook server will temporarily stop sending output
+    to the client in order to avoid crashing it.
+    To change this limit, set the config variable
+    `--NotebookApp.iopub_data_rate_limit`.
+    
+    Current values:
+    NotebookApp.iopub_data_rate_limit=1000000.0 (bytes/sec)
+    NotebookApp.rate_limit_window=3.0 (secs)
+    
+[W 10:16:52.608 NotebookApp] iopub messages resumed
+[W 10:16:55.319 NotebookApp] IOPub data rate exceeded.
+    The notebook server will temporarily stop sending output
+    to the client in order to avoid crashing it.
+    To change this limit, set the config variable
+    `--NotebookApp.iopub_data_rate_limit`.
+    
+    Current values:
+    NotebookApp.iopub_data_rate_limit=1000000.0 (bytes/sec)
+    NotebookApp.rate_limit_window=3.0 (secs)
+    
+[W 10:16:56.356 NotebookApp] iopub messages resumed
+[W 10:16:59.223 NotebookApp] IOPub data rate exceeded.
+    The notebook server will temporarily stop sending output
+    to the client in order to avoid crashing it.
+    To change this limit, set the config variable
+    `--NotebookApp.iopub_data_rate_limit`.
+    
+    Current values:
+    NotebookApp.iopub_data_rate_limit=1000000.0 (bytes/sec)
+    NotebookApp.rate_limit_window=3.0 (secs)
+    
+[W 10:17:00.242 NotebookApp] iopub messages resumed
+[W 10:17:03.090 NotebookApp] IOPub data rate exceeded.
+    The notebook server will temporarily stop sending output
+    to the client in order to avoid crashing it.
+    To change this limit, set the config variable
+    `--NotebookApp.iopub_data_rate_limit`.
+    
+    Current values:
+    NotebookApp.iopub_data_rate_limit=1000000.0 (bytes/sec)
+    NotebookApp.rate_limit_window=3.0 (secs)
+    
+[W 10:17:04.042 NotebookApp] iopub messages resumed
+[W 10:17:06.950 NotebookApp] IOPub data rate exceeded.
+    The notebook server will temporarily stop sending output
+    to the client in order to avoid crashing it.
+    To change this limit, set the config variable
+    `--NotebookApp.iopub_data_rate_limit`.
+    
+    Current values:
+    NotebookApp.iopub_data_rate_limit=1000000.0 (bytes/sec)
+    NotebookApp.rate_limit_window=3.0 (secs)
+    
+[W 10:17:07.938 NotebookApp] iopub messages resumed
+[W 10:17:10.627 NotebookApp] IOPub data rate exceeded.
+    The notebook server will temporarily stop sending output
+    to the client in order to avoid crashing it.
+    To change this limit, set the config variable
+    `--NotebookApp.iopub_data_rate_limit`.
+    
+    Current values:
+    NotebookApp.iopub_data_rate_limit=1000000.0 (bytes/sec)
+    NotebookApp.rate_limit_window=3.0 (secs)
+    
+[W 10:17:11.614 NotebookApp] iopub messages resumed
+[W 10:17:14.493 NotebookApp] IOPub data rate exceeded.
+    The notebook server will temporarily stop sending output
+    to the client in order to avoid crashing it.
+    To change this limit, set the config variable
+    `--NotebookApp.iopub_data_rate_limit`.
+    
+    Current values:
+    NotebookApp.iopub_data_rate_limit=1000000.0 (bytes/sec)
+    NotebookApp.rate_limit_window=3.0 (secs)
+    
+[W 10:17:15.457 NotebookApp] iopub messages resumed
+[I 10:17:17.313 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:17:18.345 NotebookApp] Kernel interrupted: c0a33754-0015-4d06-8761-8848f3b0f4c0
+[W 10:17:18.357 NotebookApp] IOPub data rate exceeded.
+    The notebook server will temporarily stop sending output
+    to the client in order to avoid crashing it.
+    To change this limit, set the config variable
+    `--NotebookApp.iopub_data_rate_limit`.
+    
+    Current values:
+    NotebookApp.iopub_data_rate_limit=1000000.0 (bytes/sec)
+    NotebookApp.rate_limit_window=3.0 (secs)
+    
+[I 10:18:26.798 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:20:26.778 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:22:26.772 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:24:34.322 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:26:27.173 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:28:27.141 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:30:26.789 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:32:26.724 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:34:26.785 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:36:26.929 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:42:38.778 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:44:38.592 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:46:38.793 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:48:38.975 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:50:38.982 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:52:38.978 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:54:38.976 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 10:58:38.929 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 11:00:38.959 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 11:02:39.510 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 12:06:36.903 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 12:08:36.920 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 12:10:36.870 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 12:12:36.863 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 12:46:20.060 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 12:48:20.764 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 12:54:33.534 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 12:56:34.255 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 18:32:34.504 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 18:34:34.058 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 18:36:33.787 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 18:38:33.819 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 18:40:33.788 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 18:42:33.963 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 18:44:34.554 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 18:52:46.441 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 18:54:46.258 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 18:56:46.274 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 18:58:46.301 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 19:00:46.337 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 19:02:46.318 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 19:04:46.244 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 19:06:46.286 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 19:08:46.249 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 19:10:46.377 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+[I 19:14:46.299 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
