@@ -326,6 +326,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         get_mu_loose_iso_sf     = self._corrections['get_mu_loose_iso_sf'][self._year]
         get_ecal_bad_calib      = self._corrections['get_ecal_bad_calib']
         get_deepflav_weight     = self._corrections['get_btag_weight']['deepflav'][self._year]
+        get_doublebtag_weight   = self._corrections['get_doublebtag_weight'][self._year]
         
         isLooseElectron = self._ids['isLooseElectron'] 
         isTightElectron = self._ids['isTightElectron'] 
@@ -769,6 +770,14 @@ class AnalysisProcessor(processor.ProcessorABC):
                 weights.add('isolation', isolation[region])
                 weights.add('btag',btag[region], btagUp[region], btagDown[region])
 
+                ###
+                # AK15 doubleb-tagging weights
+                ###
+                
+                if('mhs' in dataset):
+                    doublebtag, doublebtagUp, doublebtagDown = get_doublebtag_weight(leadingfj.sd.pt.sum())
+                    weights.add('doublebtag',doublebtag, doublebtagUp, doublebtagDown)
+
                 if 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset:
                     if not isFilled:
                         hout['sumw'].fill(dataset='HF--'+dataset, sumw=1, weight=events.genWeight.sum())
@@ -849,7 +858,9 @@ class AnalysisProcessor(processor.ProcessorABC):
                         hout['sumw'].fill(dataset=dataset, sumw=1, weight=events.genWeight.sum())
                         isFilled=True
                     cut = selection.all(*regions[region])
-                    for systematic in [None, 'btagUp', 'btagDown']:
+                    systematics = [None, 'btagUp', 'btagDown']
+                    if('mhs' in dataset): systematics = [None, 'btagUp', 'btagDown', 'doublebtagUp', 'doublebtagDown']
+                    for systematic in systematics:
                         sname = 'nominal' if systematic is None else systematic
                         hout['template'].fill(dataset=dataset,
                                               region=region,
