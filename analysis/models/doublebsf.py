@@ -24,10 +24,18 @@ category_map = {
         "fail": 0
         }
 pt_binning = {
-        "2016": [350, 450, 500, 600, 1250],
-        "2017": [350, 450, 500, 600, 1250],
-        "2018": [350, 450, 500, 600, 1250]
+        "2016": [350, 450, 500, 600, 2500],
+        "2017": [350, 450, 500, 600, 2500],
+        "2018": [350, 450, 500, 600, 2500]
         }
+labels = {
+    'QCD-$\mu$ (bb)':'bb',
+    'QCD-$\mu$ (cc)':'cc',
+    'QCD-$\mu$ (b)':'b',
+    'QCD-$\mu$ (c)':'c',
+    'QCD-$\mu$ (l)':'other',
+}
+
 
 ### category: pass/fail flag
 def template(dictionary, process, category, pt, read_sumw2=False):
@@ -40,7 +48,7 @@ def template(dictionary, process, category, pt, read_sumw2=False):
     if "data" not in process:
         output[zerobins] = 1e-5
         sumw2[zerobins] = 0.
-    binning = (dictionary[gentype].integrate("process", process).axis("svmass").edges())
+    binning = (dictionary[process].axis("svmass").edges())
     if read_sumw2:
         return (output, binning, "svmass", sumw2)
     return (output, binning, "svmass")
@@ -141,7 +149,7 @@ def model(year, category, pt):
     addPrefiringSyst(sr_genbb, year)
     sr_genbb.setParamEffect(jes, 1.04)
     sr_genbb.setParamEffect(frac_bb, 1.2)
-    sr_genbb.setParamEffect(doublebtag_weight['bb'], weight['bb'][category])
+    sr_genbb.setParamEffect(doublebtag_weight['QCD-$\mu$ (bb)'], weight['QCD-$\mu$ (bb)'][category])
     addBBliteSyst(sr_genbb, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genbb)
 
@@ -156,7 +164,7 @@ def model(year, category, pt):
     addPrefiringSyst(sr_genb, year)
     sr_genb.setParamEffect(jes, 1.04)
     sr_genb.setParamEffect(frac_b, 1.2)
-    sr_genb.setParamEffect(doublebtag_weight['b'], weight['b'][category])
+    sr_genb.setParamEffect(doublebtag_weight['QCD-$\mu$ (b)'], weight['QCD-$\mu$ (b)'][category])
     addBBliteSyst(sr_genb, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genb)
 
@@ -167,7 +175,7 @@ def model(year, category, pt):
     addPrefiringSyst(sr_gencc, year)
     sr_gencc.setParamEffect(jes, 1.04)
     sr_gencc.setParamEffect(frac_cc, 1.2)
-    sr_gencc.setParamEffect(doublebtag_weight['cc'], weight['cc'][category])
+    sr_gencc.setParamEffect(doublebtag_weight['QCD-$\mu$ (cc)'], weight['QCD-$\mu$ (cc)'][category])
     addBBliteSyst(sr_gencc, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_gencc)
 
@@ -178,7 +186,7 @@ def model(year, category, pt):
     addPrefiringSyst(sr_genc, year)
     sr_genc.setParamEffect(jes, 1.04)
     sr_genc.setParamEffect(frac_c, 1.2)
-    sr_genc.setParamEffect(doublebtag_weight['c'], weight['c'][category])
+    sr_genc.setParamEffect(doublebtag_weight['QCD-$\mu$ (c)'], weight['QCD-$\mu$ (c)'][category])
     addBBliteSyst(sr_genc, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genc)
 
@@ -189,7 +197,7 @@ def model(year, category, pt):
     addPrefiringSyst(sr_genother, year)
     sr_genother.setParamEffect(jes, 1.04)
     sr_genother.setParamEffect(frac_other, 1.2)
-    sr_genother.setParamEffect(doublebtag_weight['other'], weight['other'][category])
+    sr_genother.setParamEffect(doublebtag_weight['QCD-$\mu$ (l)'], weight['QCD-$\mu$ (l)'][category])
     addBBliteSyst(sr_genother, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genother)
 
@@ -226,11 +234,11 @@ if __name__ == "__main__":
     # Preparing histograms for fit
     ##
     data = {}
-    data['data'] = data_hists["template"].identifiers('process','BTagMu')
+    data['data'] = data_hists["template"].integrate('process','BTagMu')
 
     mc = {}
     for process in bkg_hists["template"].identifiers('process'):
-        mc[process] = bkg_hists["template"].integrate('process', process)
+        mc[str(process)] = bkg_hists["template"].integrate('process', process)
 
     ###
     ###
@@ -255,8 +263,8 @@ if __name__ == "__main__":
 
         frac_b = rl.NuisanceParameter("frac_b_pt" + str(ptbin) + year, "lnN")
         frac_c = rl.NuisanceParameter("frac_c_pt" + str(ptbin) + year, "lnN")
-        frac_b = rl.NuisanceParameter("frac_bb_pt" + str(ptbin) + year, "lnN")
-        frac_c = rl.NuisanceParameter("frac_cc_pt" + str(ptbin) + year, "lnN")
+        frac_bb = rl.NuisanceParameter("frac_bb_pt" + str(ptbin) + year, "lnN")
+        frac_cc = rl.NuisanceParameter("frac_cc_pt" + str(ptbin) + year, "lnN")
         frac_other = rl.NuisanceParameter("frac_other_pt" + str(ptbin) + year, "lnN")
 
         ###
@@ -268,7 +276,7 @@ if __name__ == "__main__":
             num=mc[k].integrate('svmass').values()[()][ptbin,1]
             den=mc[k].integrate('svmass').sum('ZHbbvsQCD').values()[()][ptbin]
             eff[k] = np.nan_to_num(num/den)
-            print(num,den)
+            print(k,num,den)
 
 
         #### SF weight (TemplateSample version) ####
@@ -276,12 +284,12 @@ if __name__ == "__main__":
         weight={}
         doublebtag_weight={}
         for k in mc:
-            sf[k] = rl.IndependentParameter("sf"+ k + year + 'pt' + str(ptbin), 1.0, 0.01, 1.0 / eff[k])
+            sf[k] = rl.IndependentParameter("sf"+ labels[k] + year + 'pt' + str(ptbin), 1.0, 0.01, 1.0 / eff[k])
             weight[k] = {
-                "pass": rl.DependentParameter("weight"+k, "{0}", sf[k]),
-                "fail": rl.DependentParameter("weight"+k, "(1-({0}*%f))/(1-%f)" % (eff[k], eff[k]), sf[k])
+                "pass": rl.DependentParameter("weight"+labels[k], "{0}", sf[k]),
+                "fail": rl.DependentParameter("weight"+labels[k], "(1-({0}*%f))/(1-%f)" % (eff[k], eff[k]), sf[k])
             }
-            doublebtag_weight[str(gentype_map[i])] = rl.IndependentParameter("doublebtag_weight"+ k + year + 'pt' + str(ptbin), 1.0)
+            doublebtag_weight[k] = rl.IndependentParameter("doublebtag_weight"+ labels[k] + year + 'pt' + str(ptbin), 1.0)
         
         for category in ["pass", "fail"]:
 
