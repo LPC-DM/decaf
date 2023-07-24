@@ -479,36 +479,40 @@ class DoubleBTagCorrector:
         sf = {
             '2018': {
                 'value': np.array([1.0037e+00,1.0037e+00,7.3346e-01,6.9716e-01,1.1972e+00]),
-                'unc': np.array([2*6.72e-02,6.72e-02,6.98e-02,7.06e-02,1.06e-01])
+                'unc': np.array([2*6.72e-02,6.72e-02,6.98e-02,7.06e-02,1.06e-01]),
                 'edges': np.array([160, 350, 450, 500, 2500])
             },
             '2017': {
                 'value': np.array([9.9331e-01,9.9331e-01,9.3711e-01,9.5658e-01,8.3033e-01]),
-                'unc': np.array([2*3.96e-02,3.96e-02,5.05e-02,4.63e-02,4.61e-02])
+                'unc': np.array([2*3.96e-02,3.96e-02,5.05e-02,4.63e-02,4.61e-02]),
                 'edges': np.array([160, 350, 450, 500, 2500])
             },
             '2016': {
                 'value': np.array([8.8300e-01,8.8300e-01,1.0384e+00,8.0800e-01,7.1766e-01]),
-                'unc': np.array([2*4.46e-02,4.46e-02,8.21e-02,9.48e-02,1.48e-01])
+                'unc': np.array([2*4.46e-02,4.46e-02,8.21e-02,9.48e-02,1.48e-01]),
                 'edges': np.array([160, 350, 450, 500, 2500])
             },
         }
-        self.sf_nom, self.sf_up, self.sf_down = {}
+        self.sf_nom={}
+        self.sf_up={} 
+        self.sf_down={}
         
-        for i in len(sf[year]['value']):
+        for i in range(len(sf[year]['value'])):
             
             nom = np.ones_like(sf[year]['value'])
             nom[i] = sf[year]['value'][i]
             unc = np.zeros_like(sf[year]['value'])
             unc[i] = sf[year]['unc'][i]
-            print(i,nom[i])
+            print(i,nom)
             self.sf_nom['Pt'+str(i)] = lookup_tools.dense_lookup.dense_lookup(nom, sf[year]['edges'])
             self.sf_up['Pt'+str(i)] = lookup_tools.dense_lookup.dense_lookup(nom+unc, sf[year]['edges'])
             self.sf_down['Pt'+str(i)] = lookup_tools.dense_lookup.dense_lookup(nom-unc, sf[year]['edges'])
         
 
     def doublebtag_weight(self, pt):
-        sf_nom, sf_up, sf_down = {}
+        sf_nom={} 
+        sf_up={} 
+        sf_down={}
         for k in self.sf_nom:
             sf_nom[k], sf_up[k], sf_down[k] = self.sf_nom[k](pt), self.sf_up[k](pt), self.sf_down[k](pt)
         return sf_nom, sf_up, sf_down
