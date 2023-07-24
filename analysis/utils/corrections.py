@@ -478,24 +478,25 @@ class DoubleBTagCorrector:
         self._year = year
         sf = {
             '2018': {
-                'value': [1.0037e+00,1.0037e+00,7.3346e-01,6.9716e-01,1.1972e+00],
-                'unc': [2*6.72e-02,6.72e-02,6.98e-02,7.06e-02,1.06e-01]
+                'value': np.array([1.0037e+00,1.0037e+00,7.3346e-01,6.9716e-01,1.1972e+00]),
+                'unc': np.array([2*6.72e-02,6.72e-02,6.98e-02,7.06e-02,1.06e-01])
             },
             '2017': {
-                'value': [9.9331e-01,9.9331e-01,9.3711e-01,9.5658e-01,8.3033e-01],
-                'unc': [2*3.96e-02,3.96e-02,5.05e-02,4.63e-02,4.61e-02]
+                'value': np.array([9.9331e-01,9.9331e-01,9.3711e-01,9.5658e-01,8.3033e-01]),
+                'unc': np.array([2*3.96e-02,3.96e-02,5.05e-02,4.63e-02,4.61e-02])
             },
-            '2018': {
-                'value': [8.8300e-01,8.8300e-01,1.0384e+00,8.0800e-01,7.1766e-01],
-                'unc': [2*4.46e-02,4.46e-02,8.21e-02,9.48e-02,1.48e-01]
+            '2016': {
+                'value': np.array([8.8300e-01,8.8300e-01,1.0384e+00,8.0800e-01,7.1766e-01]),
+                'unc': np.array([2*4.46e-02,4.46e-02,8.21e-02,9.48e-02,1.48e-01])
             },
         }
-        self.sf_nom = lookup_tools.dense_lookup.dense_lookup(sf[year][values], [250, 350, 450, 500, 600, 2500])
-        self.sf_up = lookup_tools.dense_lookup.dense_lookup(sf[year][values]+sf[year][unc], [250, 350, 450, 500, 600, 2500])
-        self.sf_down = lookup_tools.dense_lookup.dense_lookup(sf[year][values]+sf[year][unc], [250, 350, 450, 500, 600, 2500])
+        self.sf_nom = lookup_tools.dense_lookup.dense_lookup(sf[year]['value'], np.array([160, 350, 450, 500, 600, 2500]))
+        self.sf_up = lookup_tools.dense_lookup.dense_lookup(sf[year]['value']+sf[year]['unc'], np.array([160, 350, 450, 500, 600, 2500]))
+        self.sf_down = lookup_tools.dense_lookup.dense_lookup(sf[year]['value']-sf[year]['unc'], np.array([160, 350, 450, 500, 600, 2500]))
 
     def doublebtag_weight(self, pt):
-        return self.sf_nom(pt), self.sf_up(pt), self.sf_down(pt)
+        sf_nom, sf_up, sf_down = self.sf_nom(pt), self.sf_up(pt), self.sf_down(pt)
+        return sf_nom, sf_up, sf_down
 
 get_doublebtag_weight = {
     '2016': DoubleBTagCorrector('2016').doublebtag_weight,
