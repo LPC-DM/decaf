@@ -775,11 +775,9 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ###
                 
                 if('mhs' in dataset):
-                    doublebtagPt0, doublebtagPt0Up, doublebtagPt0Down = np.ones(events.size), np.ones(events.size), np.ones(events.size)
-                    if 160.<= leading_fj.sd.pt < 350.:
-                        doublebtagPt0, doublebtagPt0Up, doublebtagPt0Down = get_doublebtag_weight(leading_fj.sd.pt.sum())
-                    print(doublebtagPt0, doublebtagPt0Up, doublebtagPt0Down)
-                    weights.add('doublebtagPt0',doublebtagPt0, doublebtagPt0Up, doublebtagPt0Down)
+                    for k in get_doublebtag_weight(leading_fj.sd.pt.sum())[0][k]:
+                        doublebtag, doublebtagUp, doublebtagDown = get_doublebtag_weight(leading_fj.sd.pt.sum())[0][k], get_doublebtag_weight(leading_fj.sd.pt.sum())[1][k], get_doublebtag_weight(leading_fj.sd.pt.sum())[2][k]
+                        weights.add('doublebtag'+k,doublebtag, doublebtagUp, doublebtagDown)
 
                 if 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset:
                     if not isFilled:
@@ -862,7 +860,10 @@ class AnalysisProcessor(processor.ProcessorABC):
                         isFilled=True
                     cut = selection.all(*regions[region])
                     systematics = [None, 'btagUp', 'btagDown']
-                    if('mhs' in dataset): systematics = [None, 'btagUp', 'btagDown', 'doublebtagUp', 'doublebtagDown']
+                    if('mhs' in dataset):
+                        for k in get_doublebtag_weight(leading_fj.sd.pt.sum())[0][k]:
+                            systematics.append('doublebtag'+k+'Up')
+                            systematics.append('doublebtag'+k+'Down')
                     for systematic in systematics:
                         sname = 'nominal' if systematic is None else systematic
                         hout['template'].fill(dataset=dataset,
