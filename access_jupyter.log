@@ -37,3 +37,5 @@
 [I 21:42:14.088 NotebookApp] Starting buffering for 1ce9ab1a-3b2b-4257-83b2-6d4bad8511c3:4ab01f280f14476694024e30ddfecc83
 [I 21:42:17.680 NotebookApp] Adapting to protocol v5.1 for kernel 1ce9ab1a-3b2b-4257-83b2-6d4bad8511c3
 [I 21:42:17.681 NotebookApp] Restoring connection for 1ce9ab1a-3b2b-4257-83b2-6d4bad8511c3:4ab01f280f14476694024e30ddfecc83
+[W 01:00:47.684 NotebookApp] WebSocket ping timeout after 119705 ms.
+[I 01:00:52.688 NotebookApp] Starting buffering for 1ce9ab1a-3b2b-4257-83b2-6d4bad8511c3:4ab01f280f14476694024e30ddfecc83

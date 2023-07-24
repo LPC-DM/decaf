@@ -775,8 +775,11 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ###
                 
                 if('mhs' in dataset):
-                    doublebtag, doublebtagUp, doublebtagDown = get_doublebtag_weight(leadingfj.sd.pt.sum())
-                    weights.add('doublebtag',doublebtag, doublebtagUp, doublebtagDown)
+                    doublebtagPt0, doublebtagPt0Up, doublebtagPt0Down = np.ones(events.size), np.ones(events.size), np.ones(events.size)
+                    if 160.<= leading_fj.sd.pt < 350.:
+                        doublebtagPt0, doublebtagPt0Up, doublebtagPt0Down = get_doublebtag_weight(leading_fj.sd.pt.sum())
+                    print(doublebtagPt0, doublebtagPt0Up, doublebtagPt0Down)
+                    weights.add('doublebtagPt0',doublebtagPt0, doublebtagPt0Up, doublebtagPt0Down)
 
                 if 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset:
                     if not isFilled:
@@ -908,6 +911,7 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-y', '--year', help='year', dest='year')
     parser.add_option('-m', '--metadata', help='metadata', dest='metadata')
+    parser.add_option('-n', '--name', help='name', dest='name')
     (options, args) = parser.parse_args()
 
 
@@ -925,4 +929,4 @@ if __name__ == '__main__':
                                          ids=ids,
                                          common=common)
 
-    save(processor_instance, 'data/darkhiggs'+options.metadata+'.processor')
+    save(processor_instance, 'data/darkhiggs'+options.name+'.processor')

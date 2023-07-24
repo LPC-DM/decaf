@@ -571,6 +571,7 @@ corrections = {
     'get_mu_loose_iso_sf':      get_mu_loose_iso_sf,
     'get_ecal_bad_calib':       get_ecal_bad_calib,
     'get_btag_weight':          get_btag_weight,
+    'get_doublebtag_weight':    get_doublebtag_weight,
     'get_reweighting':          get_reweighting,
     #'Jetevaluator':             Jetevaluator,
 }
