@@ -89,8 +89,6 @@ def remap_histograms(hists):
     for key in hists["data"].keys():
         bkg_hists[key] = hists["bkg"][key].group(cats, process, bkg_map)
         signal_hists[key] = hists["sig"][key].group(cats, process, sig_map)
-        for signal in signal_hists[key].identifiers('process'):
-            signal_hists[key].scale({signal:sf_value},axis='process')
         data_hists[key] = hists["data"][key].group(cats, process, data_map)
         data_hists[key] += hists["bkg"][key].group(cats, process, fakedata_map)
     
@@ -165,15 +163,13 @@ def addBtagSyst(dictionary, recoil, process, region, templ, category, mass):
     templ.setParamEffect(btag, btagUp, btagDown)
 
 def addDoubleBtagSyst(dictionary, recoil, process, region, templ, category, mass):
-    for syst in dictionary[region].identifiers("systematic")
+    for syst in dictionary[region].identifiers("systematic"):
         if 'doublebtag' not in str(syst): continue
-        label=''
-        if 'Up' in str(syst):
-            doublebtagUp = template(dictionary, process, str(syst), recoil, region, category, mass)[0]
-            label=str(syst).replace('Up','')
-        if 'Down' in str(syst):
-            doublebtagDown = template(dictionary, process, str(syst), recoil, region, category, mass)[0]
-        templ.setParamEffect(doublebtag[label], doublebtagUp, doublebtagDown)
+        if 'Down' in str(syst): continue
+        print(str(syst))
+        doublebtagUp = template(dictionary, process, str(syst), recoil, region, category, mass)[0]
+        doublebtagDown = template(dictionary, process, str(syst).replace('Up','Down'), recoil, region, category, mass)[0]
+        templ.setParamEffect(doublebtag[str(syst).replace('Up','')], doublebtagUp, doublebtagDown)
 
 def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     def addSyst(dictionary, recoil, process, region, templ, category, syst, string):
@@ -410,7 +406,6 @@ def model(year, mass, recoil, category):
         sr_signal.setParamEffect(trig_met, ntrig_met)
         sr_signal.setParamEffect(veto_tau, nveto_tau)
         sr_signal.setParamEffect(jec, njec)
-        sr_signal.setParamEffect(doubleb_sf, sf_unc)
         #sr_signal.autoMCStats(epsilon=1e-5)
         for i in range(sr_signal.observable.nbins):
             if sr_signal._nominal[i] <= 0. or sr_signal._sumw2[i] <= 0.:

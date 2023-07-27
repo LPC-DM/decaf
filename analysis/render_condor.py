@@ -51,7 +51,8 @@ request_cpus = 16
 Queue 1"""
 
 if options.cluster == 'lpc':
-    os.system('xrdcp -f ../../../../cmssw.tgz root://cmseos.fnal.gov//store/user/'+os.environ['USER']+'/cmssw.tgz')
+    if options.copy:
+        os.system('xrdcp -f ../../../../cmssw.tgz root://cmseos.fnal.gov//store/user/'+os.environ['USER']+'/cmssw.tgz')
     jdl = """universe = vanilla
 Executable = render.sh
 Should_Transfer_Files = YES
