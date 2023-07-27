@@ -65,7 +65,7 @@ if options.cluster == 'lpc':
 Executable = convert.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
-Transfer_Input_Files = convert.sh, /tmp/x509up_u556950957
+Transfer_Input_Files = convert.sh
 Output = logs/condor/convert/out/$ENV(TAG)_$(Cluster)_$(Process).stdout
 Error = logs/condor/convert/err/$ENV(TAG)_$(Cluster)_$(Process).stderr
 Log = logs/condor/convert/log/$ENV(TAG)_$(Cluster)_$(Process).log
