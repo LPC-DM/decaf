@@ -51,8 +51,11 @@ request_cpus = 16
 Queue 1"""
 
 if options.cluster == 'lpc':
+    if options.tar:
+        os.system('tar --exclude-caches-all --exclude-vcs -czvf ../../py2local.tgz -C ~/.local/lib/python2.7/ site-packages')
     if options.copy:
         os.system('xrdcp -f ../../../../cmssw.tgz root://cmseos.fnal.gov//store/user/'+os.environ['USER']+'/cmssw.tgz')
+        os.system('xrdcp -f ../../py2local.tgz root://cmseos.fnal.gov//store/user/'+os.environ['USER']+'/py2local.tgz')
     jdl = """universe = vanilla
 Executable = render.sh
 Should_Transfer_Files = YES
