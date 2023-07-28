@@ -71,7 +71,7 @@ Error = logs/condor/convert/err/$ENV(TAG)_$(Cluster)_$(Process).stderr
 Log = logs/condor/convert/log/$ENV(TAG)_$(Cluster)_$(Process).log
 TransferOutputRemaps = "outfile.root=$ENV(PWD)/$ENV(OUTFILE)"
 Arguments = $ENV(DATACARD) $ENV(OUTFILE) $ENV(MAPS) $ENV(CLUSTER) $ENV(USER)
-request_memory = 8000
+request_memory = 32000
 Queue 1"""
 
 jdl_file = open("convert.submit", "w") 
