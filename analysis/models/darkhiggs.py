@@ -865,7 +865,6 @@ def model(year, mass, recoil, category):
         tmcr_tt.setParamEffect(trig_met, ntrig_met)
         tmcr_tt.setParamEffect(veto_tau, nveto_tau)
         tmcr_tt.setParamEffect(ttMC_norm, nMinor_norm)
-        tmcr_tt.setParamEffect(jec, njec)
         tmcr_tt.setParamEffect(id_mu, nlepton)
         tmcr_tt.setParamEffect(iso_mu, nlepton)
         addBBliteSyst(tmcr_tt, param, tmcr_central, tmcr_error2, epsilon=1e-5)
@@ -881,7 +880,6 @@ def model(year, mass, recoil, category):
     tmcr_wjets.setParamEffect(trig_met, ntrig_met)
     tmcr_wjets.setParamEffect(veto_tau, nveto_tau)
     tmcr_wjets.setParamEffect(wjetsMC_norm, nVjets_norm)
-    tmcr_wjets.setParamEffect(jec, njec)
     tmcr_wjets.setParamEffect(id_mu, nlepton)
     tmcr_wjets.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(tmcr_wjets, param, tmcr_central, tmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -898,7 +896,6 @@ def model(year, mass, recoil, category):
     tmcr_st.setParamEffect(trig_met, ntrig_met)
     tmcr_st.setParamEffect(veto_tau, nveto_tau)
     tmcr_st.setParamEffect(st_norm, nMinor_norm)
-    tmcr_st.setParamEffect(jec, njec)
     tmcr_st.setParamEffect(id_mu, nlepton)
     tmcr_st.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(tmcr_st, param, tmcr_central, tmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -914,7 +911,6 @@ def model(year, mass, recoil, category):
     tmcr_dyjets.setParamEffect(trig_met, ntrig_met)
     tmcr_dyjets.setParamEffect(veto_tau, nveto_tau)
     tmcr_dyjets.setParamEffect(zjetsMC_norm, nVjets_norm)
-    tmcr_dyjets.setParamEffect(jec, njec)
     tmcr_dyjets.setParamEffect(id_mu, nlepton)
     tmcr_dyjets.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(tmcr_dyjets, param, tmcr_central, tmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -931,7 +927,6 @@ def model(year, mass, recoil, category):
     tmcr_vv.setParamEffect(trig_met, ntrig_met)
     tmcr_vv.setParamEffect(veto_tau, nveto_tau)
     tmcr_vv.setParamEffect(vv_norm, nMinor_norm)
-    tmcr_vv.setParamEffect(jec, njec)
     tmcr_vv.setParamEffect(id_mu, nlepton)
     tmcr_vv.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(tmcr_vv, param, tmcr_central, tmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -947,7 +942,6 @@ def model(year, mass, recoil, category):
     tmcr_hbb.setParamEffect(trig_met, ntrig_met)
     tmcr_hbb.setParamEffect(veto_tau, nveto_tau)
     tmcr_hbb.setParamEffect(hbb_norm, nMinor_norm)
-    tmcr_hbb.setParamEffect(jec, njec)
     tmcr_hbb.setParamEffect(id_mu, nlepton)
     tmcr_hbb.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(tmcr_hbb, param, tmcr_central, tmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -963,7 +957,6 @@ def model(year, mass, recoil, category):
     tmcr_qcd.setParamEffect(trig_met, ntrig_met)
     tmcr_qcd.setParamEffect(veto_tau, nveto_tau)
     tmcr_qcd.setParamEffect(qcdmu_norm, nqcd_norm)
-    tmcr_qcd.setParamEffect(jec, njec)
     tmcr_qcd.setParamEffect(id_mu, nlepton)
     tmcr_qcd.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(tmcr_qcd, param, tmcr_central, tmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -1036,7 +1029,6 @@ def model(year, mass, recoil, category):
         tecr_tt.setParamEffect(trig_e, ntrig_e)
         tecr_tt.setParamEffect(veto_tau, nveto_tau)
         tecr_tt.setParamEffect(ttMC_norm, nMinor_norm)
-        tecr_tt.setParamEffect(jec, njec)
         tecr_tt.setParamEffect(id_e, nlepton)
         tecr_tt.setParamEffect(reco_e, nlepton)
         addBBliteSyst(tecr_tt, param, tecr_central, tecr_error2, epsilon=1e-5)
@@ -1052,7 +1044,6 @@ def model(year, mass, recoil, category):
     tecr_wjets.setParamEffect(trig_e, ntrig_e)
     tecr_wjets.setParamEffect(veto_tau, nveto_tau)
     tecr_wjets.setParamEffect(wjetsMC_norm, nVjets_norm)
-    tecr_wjets.setParamEffect(jec, njec)
     tecr_wjets.setParamEffect(id_e, nlepton)
     tecr_wjets.setParamEffect(reco_e, nlepton)
     addBBliteSyst(tecr_wjets, param, tecr_central, tecr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -1069,7 +1060,6 @@ def model(year, mass, recoil, category):
     tecr_st.setParamEffect(trig_e, ntrig_e)
     tecr_st.setParamEffect(veto_tau, nveto_tau)
     tecr_st.setParamEffect(st_norm, nMinor_norm)
-    tecr_st.setParamEffect(jec, njec)
     tecr_st.setParamEffect(id_e, nlepton)
     tecr_st.setParamEffect(reco_e, nlepton)
     addBBliteSyst(tecr_st, param, tecr_central, tecr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -1085,7 +1075,6 @@ def model(year, mass, recoil, category):
     tecr_dyjets.setParamEffect(trig_e, ntrig_e)
     tecr_dyjets.setParamEffect(veto_tau, nveto_tau)
     tecr_dyjets.setParamEffect(zjetsMC_norm, nVjets_norm)
-    tecr_dyjets.setParamEffect(jec, njec)
     tecr_dyjets.setParamEffect(id_e, nlepton)
     tecr_dyjets.setParamEffect(reco_e, nlepton)
     addBBliteSyst(tecr_dyjets, param, tecr_central, tecr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -1102,7 +1091,6 @@ def model(year, mass, recoil, category):
     tecr_vv.setParamEffect(trig_e, ntrig_e)
     tecr_vv.setParamEffect(veto_tau, nveto_tau)
     tecr_vv.setParamEffect(vv_norm, nMinor_norm)
-    tecr_vv.setParamEffect(jec, njec)
     tecr_vv.setParamEffect(id_e, nlepton)
     tecr_vv.setParamEffect(reco_e, nlepton)
     addBBliteSyst(tecr_vv, param, tecr_central, tecr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -1118,7 +1106,6 @@ def model(year, mass, recoil, category):
     tecr_hbb.setParamEffect(trig_e, ntrig_e)
     tecr_hbb.setParamEffect(veto_tau, nveto_tau)
     tecr_hbb.setParamEffect(hbb_norm, nMinor_norm)
-    tecr_hbb.setParamEffect(jec, njec)
     tecr_hbb.setParamEffect(id_e, nlepton)
     tecr_hbb.setParamEffect(reco_e, nlepton)
     addBBliteSyst(tecr_hbb, param, tecr_central, tecr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -1134,7 +1121,6 @@ def model(year, mass, recoil, category):
     tecr_qcd.setParamEffect(trig_e, ntrig_e)
     tecr_qcd.setParamEffect(veto_tau, nveto_tau)
     tecr_qcd.setParamEffect(qcde_norm, nqcd_norm)
-    tecr_qcd.setParamEffect(jec, njec)
     tecr_qcd.setParamEffect(id_e, nlepton)
     tecr_qcd.setParamEffect(reco_e, nlepton)
     addBBliteSyst(tecr_qcd, param, tecr_central, tecr_error2, epsilon=1e-5) ### replace autoMCStats
