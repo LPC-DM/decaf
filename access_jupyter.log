@@ -1,62 +1,21 @@
-[I 08:44:19.348 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
-[I 08:44:21.773 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/CMSSW_10_2_13/src/decaf
-[I 08:44:21.773 NotebookApp] The Jupyter Notebook is running at:
-[I 08:44:21.773 NotebookApp] http://127.0.0.1:9094/?token=e5a7b180eaafcbf2cd20799bac0904ff225afbef3949201a
-[I 08:44:21.773 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 08:44:21.782 NotebookApp] 
+[I 10:36:10.949 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
+[I 10:36:14.279 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/CMSSW_10_2_13/src/decaf
+[I 10:36:14.279 NotebookApp] The Jupyter Notebook is running at:
+[I 10:36:14.279 NotebookApp] http://127.0.0.1:9094/?token=eeef4612aa79d56b9f81c8e694122e5bd56e517916582789
+[I 10:36:14.279 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 10:36:14.288 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/45169/jupyter/nbserver-28045-open.html
+        file:///run/user/45169/jupyter/nbserver-5524-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=e5a7b180eaafcbf2cd20799bac0904ff225afbef3949201a
-[I 08:45:45.731 NotebookApp] 302 GET /?token=e5a7b180eaafcbf2cd20799bac0904ff225afbef3949201a (127.0.0.1) 0.80ms
-[I 08:46:17.584 NotebookApp] Kernel started: 3675ec2b-a500-444e-8b57-ca2ab4f37ab5
-[I 08:46:21.035 NotebookApp] Adapting to protocol v5.1 for kernel 3675ec2b-a500-444e-8b57-ca2ab4f37ab5
-[I 08:46:21.224 NotebookApp] Kernel started: e665f1bf-64c4-48ca-ace6-d92aa716ff1d
-[I 08:46:24.075 NotebookApp] Adapting to protocol v5.1 for kernel e665f1bf-64c4-48ca-ace6-d92aa716ff1d
-[I 08:52:32.470 NotebookApp] Starting buffering for e665f1bf-64c4-48ca-ace6-d92aa716ff1d:ff5070ebc7234bbc8995b4df35bbc803
-[W 08:52:44.616 NotebookApp] Notebook analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb is not trusted
-[I 08:52:46.594 NotebookApp] Kernel started: 11b3a823-ce98-4319-9b60-5d220e3b1165
-[I 08:52:49.704 NotebookApp] Adapting to protocol v5.1 for kernel 11b3a823-ce98-4319-9b60-5d220e3b1165
-[I 08:58:18.608 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:00:18.778 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:02:18.802 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:04:18.781 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:06:18.792 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:08:18.926 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:10:18.983 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:12:18.957 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:14:18.424 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:16:18.457 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:18:18.486 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:20:18.524 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:22:18.548 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:24:18.551 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:32:18.361 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:34:18.552 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:36:18.580 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:44:18.607 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:48:18.465 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:50:18.633 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:52:18.637 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:54:18.580 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:56:18.582 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 09:58:18.655 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 10:00:18.778 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 10:02:18.783 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 10:04:18.780 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 10:06:18.383 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 10:08:18.386 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 10:10:18.806 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 10:12:18.815 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 10:18:18.826 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 10:19:08.674 NotebookApp] Adapting to protocol v5.1 for kernel e665f1bf-64c4-48ca-ace6-d92aa716ff1d
-[I 10:20:18.843 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 10:22:18.841 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 10:23:39.595 NotebookApp] Starting buffering for e665f1bf-64c4-48ca-ace6-d92aa716ff1d:210d6fab9deb455d8a7719a5a750907e
-[I 10:23:41.614 NotebookApp] Starting buffering for 11b3a823-ce98-4319-9b60-5d220e3b1165:8bd38519858e49d1aba62a9cdac20be7
-[I 10:24:18.819 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 10:26:18.251 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 10:28:05.389 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 16:22:50.824 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
-[I 16:25:12.895 NotebookApp] Saving file at /analysis/notebooks/doublebsf.ipynb
+        http://127.0.0.1:9094/?token=eeef4612aa79d56b9f81c8e694122e5bd56e517916582789
+[I 10:37:12.027 NotebookApp] 302 GET /?token=eeef4612aa79d56b9f81c8e694122e5bd56e517916582789 (127.0.0.1) 1.30ms
+[I 10:37:12.875 NotebookApp] 302 GET /?token=eeef4612aa79d56b9f81c8e694122e5bd56e517916582789 (127.0.0.1) 0.53ms
+[I 10:38:02.065 NotebookApp] Kernel started: c98c2a22-c45f-4d08-9135-99b6ec030497
+[I 10:38:06.035 NotebookApp] Adapting to protocol v5.1 for kernel c98c2a22-c45f-4d08-9135-99b6ec030497
+[I 10:40:05.433 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 10:48:04.090 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 11:10:24.296 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 11:12:24.149 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 11:14:24.785 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[I 11:16:24.154 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
