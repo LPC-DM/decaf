@@ -224,6 +224,38 @@ def addJESSyst(templ):
 def addPrefiringSyst(templ, year):
     if '2018' not in year: templ.setParamEffect(prefiring, 1.01)
 
+def addSingleTopNormSyst(templ):
+    templ.setParamEffect(st_norm, 1.1)
+
+def addTTbarNormSyst(templ):
+    templ.setParamEffect(ttMC_norm, 1.1)
+
+def addHbbNormSyst(templ):
+    templ.setParamEffect(hbb_norm, 1.2)
+
+def addDibosonNormSyst(templ):
+    templ.setParamEffect(vv_norm, 1.2)
+
+def addDrellYanNormSyst(templ):
+    templ.setParamEffect(zjetsMC_norm, 1.2)
+
+def addWjetsNormSyst(templ):
+    templ.setParamEffect(wjetsMC_norm, 1.4)
+
+def addMETTrigSyst(templ, year):
+    if '2016' in year:
+        templ.setParamEffect(trig_met, 1.02)
+    else:
+        templ.setParamEffect(trig_met, 1.01)
+
+def addEleIDSyst(templ, year):
+    if '2016' in year:
+        templ.setParamEffect(id_e, 1.02)
+    else:
+        templ.setParamEffect(id_e, 1.03)
+
+
+    
 def model(year, mass, recoil, category):
 
     model_id = year + category + "mass" + mass+ "recoil" + str(recoil)
@@ -280,8 +312,7 @@ def model(year, mass, recoil, category):
     if not isttMC:
         sr_ttTemplate = template(background, "TT", "nominal", recoil, "sr", category, mass, min_value=1., read_sumw2=True)
         sr_ttMC = rl.TemplateSample("sr" + model_id + "_ttMC",rl.Sample.BACKGROUND,sr_ttTemplate)
-        sr_ttMC.setParamEffect(trig_met, ntrig_met)
-        #sr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
+        addMETTrigSyst(sr_ttMC, year)
         sr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category, mass)
 
@@ -312,9 +343,9 @@ def model(year, mass, recoil, category):
         addPrefiringSyst(sr_wjets, year)
         addMETSyst(sr_wjets)
         addJESSyst(sr_wjets)
-        sr_wjets.setParamEffect(trig_met, ntrig_met)
+        addMETTrigSyst(sr_wjets, year)
         sr_wjets.setParamEffect(veto_tau, nveto_tau)
-        sr_wjets.setParamEffect(wjetsMC_norm, nVjets_norm)
+        addWjetsNormSyst(sr_wjets)
         addBBliteSyst(sr_wjets, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
         addBtagSyst(background, recoil, "W+jets", "sr", sr_wjets, category, mass)
         addVJetsSyst(background, recoil, "W+jets", "sr", sr_wjets, category)
@@ -328,9 +359,9 @@ def model(year, mass, recoil, category):
         addPrefiringSyst(sr_tt, year)
         addMETSyst(sr_tt)
         addJESSyst(sr_tt)
-        sr_tt.setParamEffect(trig_met, ntrig_met)
+        addMETTrigSyst(sr_tt, year)
         sr_tt.setParamEffect(veto_tau, nveto_tau)
-        sr_tt.setParamEffect(ttMC_norm, nMinor_norm) ### ttMC should be applied for SR fail
+        addTTbarNormSyst(sr_tt)
         addBtagSyst(background, recoil, "TT", "sr", sr_tt, category, mass)
         addBBliteSyst(sr_tt, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
         sr.addSample(sr_tt)
@@ -342,9 +373,9 @@ def model(year, mass, recoil, category):
     addPrefiringSyst(sr_st, year)
     addMETSyst(sr_st)
     addJESSyst(sr_st)
-    sr_st.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(sr_st, year)
     sr_st.setParamEffect(veto_tau, nveto_tau)
-    sr_st.setParamEffect(st_norm, nMinor_norm)
+    addSingleTopNormSyst(sr_st)
     addBBliteSyst(sr_st, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoil, "ST", "sr", sr_st, category, mass)
     sr.addSample(sr_st)
@@ -356,9 +387,9 @@ def model(year, mass, recoil, category):
     addPrefiringSyst(sr_dyjets, year)
     addMETSyst(sr_dyjets)
     addJESSyst(sr_dyjets)
-    sr_dyjets.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(sr_dyjets, year)
     sr_dyjets.setParamEffect(veto_tau, nveto_tau)
-    sr_dyjets.setParamEffect(zjetsMC_norm, nVjets_norm)
+    addDrellYanNormSyst(sr_dyjets)
     addBBliteSyst(sr_dyjets, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoil, "DY+jets", "sr", sr_dyjets, category, mass)
     addVJetsSyst(background, recoil, "DY+jets", "sr", sr_dyjets, category)
@@ -371,9 +402,9 @@ def model(year, mass, recoil, category):
     addPrefiringSyst(sr_vv, year)
     addMETSyst(sr_vv)
     addJESSyst(sr_vv)
-    sr_vv.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(sr_vv, year)
     sr_vv.setParamEffect(veto_tau, nveto_tau)
-    sr_vv.setParamEffect(vv_norm, nMinor_norm)
+    addDibosonNormSyst(sr_vv)
     addBBliteSyst(sr_vv, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoil, "VV", "sr", sr_vv, category, mass)
     sr.addSample(sr_vv)
@@ -385,9 +416,9 @@ def model(year, mass, recoil, category):
     addPrefiringSyst(sr_hbb, year)
     addMETSyst(sr_hbb)
     addJESSyst(sr_hbb)
-    sr_hbb.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(sr_hbb, year)
     sr_hbb.setParamEffect(veto_tau, nveto_tau)
-    sr_hbb.setParamEffect(hbb_norm, nMinor_norm)
+    addHbbNormSyst(sr_hbb)
     addBBliteSyst(sr_hbb, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoil, "Hbb", "sr", sr_hbb, category, mass)
     sr.addSample(sr_hbb)
@@ -399,7 +430,7 @@ def model(year, mass, recoil, category):
     addPrefiringSyst(sr_qcd, year)
     addMETSyst(sr_qcd)
     addJESSyst(sr_qcd)
-    sr_qcd.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(sr_qcd, year)
     sr_qcd.setParamEffect(veto_tau, nveto_tau)
     sr_qcd.setParamEffect(qcdsig_norm, nqcd_norm)
     addBBliteSyst(sr_qcd, param, sr_central, sr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -415,7 +446,7 @@ def model(year, mass, recoil, category):
         addPrefiringSyst(sr_signal, year)
         addMETSyst(sr_signal)
         addJESSyst(sr_signal)
-        sr_signal.setParamEffect(trig_met, ntrig_met)
+        addMETTrigSyst(sr_signal, year)
         sr_signal.setParamEffect(veto_tau, nveto_tau)
         #sr_signal.autoMCStats(epsilon=1e-5)
         for i in range(sr_signal.observable.nbins):
@@ -459,12 +490,10 @@ def model(year, mass, recoil, category):
     if not iswjetsMC:
         wmcr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "wmcr", category, mass, min_value=1., read_sumw2=True)
         wmcr_wjetsMC = rl.TemplateSample("wmcr" + model_id + "_wjetsMC", rl.Sample.BACKGROUND, wmcr_wjetsTemplate)
-        wmcr_wjetsMC.setParamEffect(trig_met, ntrig_met)
-        #wmcr_wjetsMC.setParamEffect(wjets_norm, nVjets_norm)
+        addMETTrigSyst(wmcr_wjetsMC, year)
         wmcr_wjetsMC.setParamEffect(id_mu, nlepton)
         wmcr_wjetsMC.setParamEffect(iso_mu, nlepton)
         wmcr_wjetsMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
-        addBtagSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category, mass)
         addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
 
         #### Transfer Factor
@@ -479,10 +508,9 @@ def model(year, mass, recoil, category):
     if not isttMC:
         wmcr_ttTemplate = template(background, "TT", "nominal", recoil, "wmcr", category, mass, min_value=1., read_sumw2=True)
         wmcr_ttMC = rl.TemplateSample( "wmcr" + model_id + "_ttMC", rl.Sample.BACKGROUND, wmcr_ttTemplate)
-        wmcr_ttMC.setParamEffect(trig_met, ntrig_met)
+        addMETTrigSyst(wmcr_ttMC, year)
         wmcr_ttMC.setParamEffect(id_mu, nlepton)
         wmcr_ttMC.setParamEffect(iso_mu, nlepton)
-        #wmcr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
         wmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category, mass)
 
@@ -512,9 +540,9 @@ def model(year, mass, recoil, category):
         addPileupSyst(wmcr_wjets)
         addPrefiringSyst(wmcr_wjets, year)
         addJESSyst(wmcr_wjets)
-        wmcr_wjets.setParamEffect(trig_met, ntrig_met)
+        addMETTrigSyst(wmcr_wjets, year)
         wmcr_wjets.setParamEffect(veto_tau, nveto_tau)
-        wmcr_wjets.setParamEffect(wjetsMC_norm, nVjets_norm)
+        addWjetsNormSyst(wmcr_wjets)
         wmcr_wjets.setParamEffect(id_mu, nlepton)
         wmcr_wjets.setParamEffect(iso_mu, nlepton)
         addBBliteSyst(wmcr_wjets, param, wmcr_central, wmcr_error2, epsilon=1e-5)
@@ -529,11 +557,11 @@ def model(year, mass, recoil, category):
         addPileupSyst(wmcr_tt)
         addPrefiringSyst(wmcr_tt, year)
         addJESSyst(wmcr_tt)
-        wmcr_tt.setParamEffect(trig_met, ntrig_met)
+        addMETTrigSyst(wmcr_tt, year)
         wmcr_tt.setParamEffect(veto_tau, nveto_tau)
         wmcr_tt.setParamEffect(id_mu, nlepton)
         wmcr_tt.setParamEffect(iso_mu, nlepton)
-        wmcr_tt.setParamEffect(ttMC_norm, nMinor_norm)
+        addTTbarNormSyst(wmcr_tt)
         addBtagSyst(background, recoil, "TT", "wmcr", wmcr_tt, category, mass)
         addBBliteSyst(wmcr_tt, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
         wmcr.addSample(wmcr_tt)
@@ -544,9 +572,9 @@ def model(year, mass, recoil, category):
     addPileupSyst(wmcr_st)
     addPrefiringSyst(wmcr_st, year)
     addJESSyst(wmcr_st)
-    wmcr_st.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(wmcr_st, year)
     wmcr_st.setParamEffect(veto_tau, nveto_tau)
-    wmcr_st.setParamEffect(st_norm, nMinor_norm)
+    addSingleTopNormSyst(wmcr_st)
     wmcr_st.setParamEffect(id_mu, nlepton)
     wmcr_st.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(wmcr_st, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -559,9 +587,9 @@ def model(year, mass, recoil, category):
     addPileupSyst(wmcr_dyjets)
     addPrefiringSyst(wmcr_dyjets, year)
     addJESSyst(wmcr_dyjets)
-    wmcr_dyjets.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(wmcr_dyjets, year)
     wmcr_dyjets.setParamEffect(veto_tau, nveto_tau)
-    wmcr_dyjets.setParamEffect(zjetsMC_norm, nVjets_norm)
+    addDrellYanNormSyst(wmcr_dyjets)
     wmcr_dyjets.setParamEffect(id_mu, nlepton)
     wmcr_dyjets.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(wmcr_dyjets, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -575,9 +603,9 @@ def model(year, mass, recoil, category):
     addPileupSyst(wmcr_vv)
     addPrefiringSyst(wmcr_vv, year)
     addJESSyst(wmcr_vv)
-    wmcr_vv.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(wmcr_vv, year)
     wmcr_vv.setParamEffect(veto_tau, nveto_tau)
-    wmcr_vv.setParamEffect(vv_norm, nMinor_norm)
+    addDibosonNormSyst(wmcr_vv)
     wmcr_vv.setParamEffect(id_mu, nlepton)
     wmcr_vv.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(wmcr_vv, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -590,9 +618,9 @@ def model(year, mass, recoil, category):
     addPileupSyst(wmcr_hbb)
     addPrefiringSyst(wmcr_hbb, year)
     addJESSyst(wmcr_hbb)
-    wmcr_hbb.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(wmcr_hbb, year)
     wmcr_hbb.setParamEffect(veto_tau, nveto_tau)
-    wmcr_hbb.setParamEffect(hbb_norm, nMinor_norm)
+    addHbbNormSyst(wmcr_hbb)
     wmcr_hbb.setParamEffect(id_mu, nlepton)
     wmcr_hbb.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(wmcr_hbb, param, wmcr_central, wmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -605,7 +633,7 @@ def model(year, mass, recoil, category):
     addPileupSyst(wmcr_qcd)
     addPrefiringSyst(wmcr_qcd, year)
     addJESSyst(wmcr_qcd)
-    wmcr_qcd.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(wmcr_qcd, year)
     wmcr_qcd.setParamEffect(veto_tau, nveto_tau)
     wmcr_qcd.setParamEffect(qcdmu_norm, nqcd_norm)
     wmcr_qcd.setParamEffect(id_mu, nlepton)
@@ -646,11 +674,9 @@ def model(year, mass, recoil, category):
         wecr_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "wecr", category, mass, min_value=1., read_sumw2=True)
         wecr_wjetsMC = rl.TemplateSample("wecr" + model_id + "_wjetsMC", rl.Sample.BACKGROUND, wecr_wjetsTemplate)
         wecr_wjetsMC.setParamEffect(trig_e, ntrig_e)
-        #wecr_wjetsMC.setParamEffect(wjets_norm, nVjets_norm)
-        wecr_wjetsMC.setParamEffect(id_e, nlepton)
+        addEleIDSyst(wecr_wjetsMC, year)
         wecr_wjetsMC.setParamEffect(reco_e, nlepton)
         wecr_wjetsMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
-        addBtagSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category, mass)
         addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
 
         #### Transfer Factor
@@ -666,9 +692,8 @@ def model(year, mass, recoil, category):
         wecr_ttTemplate = template(background, "TT", "nominal", recoil, "wecr", category, mass, min_value=1., read_sumw2=True)
         wecr_ttMC = rl.TemplateSample("wecr" + model_id + "_ttMC", rl.Sample.BACKGROUND, wecr_ttTemplate)
         wecr_ttMC.setParamEffect(trig_e, ntrig_e)
-        wecr_ttMC.setParamEffect(id_e, nlepton)
+        addEleIDSyst(wecr_ttMC, year)
         wecr_ttMC.setParamEffect(reco_e, nlepton)
-        #wecr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
         wecr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for transferfactorsample
         addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category, mass)
 
@@ -698,9 +723,9 @@ def model(year, mass, recoil, category):
         addPileupSyst(wecr_wjets)
         addPrefiringSyst(wecr_wjets, year)
         addJESSyst(wecr_wjets)
-        wecr_wjets.setParamEffect(trig_e, ntrig_e)
+        addEleIDSyst(wecr_wjets, year)
         wecr_wjets.setParamEffect(veto_tau, nveto_tau)
-        wecr_wjets.setParamEffect(wjetsMC_norm, nVjets_norm)
+        addWjetsNormSyst(wecr_wjets)
         wecr_wjets.setParamEffect(id_e, nlepton)
         wecr_wjets.setParamEffect(reco_e, nlepton)
         addBBliteSyst(wecr_wjets, param, wecr_central, wecr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -717,9 +742,9 @@ def model(year, mass, recoil, category):
         addJESSyst(wecr_tt)
         wecr_tt.setParamEffect(trig_e, ntrig_e)
         wecr_tt.setParamEffect(veto_tau, nveto_tau)
-        wecr_tt.setParamEffect(id_e, nlepton)
+        addEleIDSyst(wecr_tt, year)
         wecr_tt.setParamEffect(reco_e, nlepton)
-        wecr_tt.setParamEffect(ttMC_norm, nMinor_norm)
+        addTTbarNormSyst(wecr_tt)
         addBBliteSyst(wecr_tt, param, wecr_central, wecr_error2, epsilon=1e-5) ### replace autoMCStats
         addBtagSyst(background, recoil, "TT", "wecr", wecr_tt, category, mass)
         wecr.addSample(wecr_tt)
@@ -732,8 +757,8 @@ def model(year, mass, recoil, category):
     addJESSyst(wecr_st)
     wecr_st.setParamEffect(trig_e, ntrig_e)
     wecr_st.setParamEffect(veto_tau, nveto_tau)
-    wecr_st.setParamEffect(st_norm, nMinor_norm)
-    wecr_st.setParamEffect(id_e, nlepton)
+    addSingleTopNormSyst(wecr_st)
+    addEleIDSyst(wecr_st, year)
     wecr_st.setParamEffect(reco_e, nlepton)
     addBBliteSyst(wecr_st, param, wecr_central, wecr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "ST", "wecr", wecr_st, category, mass)
@@ -747,8 +772,8 @@ def model(year, mass, recoil, category):
     addJESSyst(wecr_dyjets)
     wecr_dyjets.setParamEffect(trig_e, ntrig_e)
     wecr_dyjets.setParamEffect(veto_tau, nveto_tau)
-    wecr_dyjets.setParamEffect(zjetsMC_norm, nVjets_norm)
-    wecr_dyjets.setParamEffect(id_e, nlepton)
+    addDrellYanNormSyst(wecr_dyjets)
+    addEleIDSyst(wecr_dyjets, year)
     wecr_dyjets.setParamEffect(reco_e, nlepton)
     addBBliteSyst(wecr_dyjets, param, wecr_central, wecr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "DY+jets", "wecr", wecr_dyjets, category, mass)
@@ -763,8 +788,8 @@ def model(year, mass, recoil, category):
     addJESSyst(wecr_vv)
     wecr_vv.setParamEffect(trig_e, ntrig_e)
     wecr_vv.setParamEffect(veto_tau, nveto_tau)
-    wecr_vv.setParamEffect(vv_norm, nMinor_norm)
-    wecr_vv.setParamEffect(id_e, nlepton)
+    addDibosonNormSyst(wecr_vv)
+    addEleIDSyst(wecr_vv, year)
     wecr_vv.setParamEffect(reco_e, nlepton)
     addBBliteSyst(wecr_vv, param, wecr_central, wecr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "VV", "wecr", wecr_vv, category, mass)
@@ -778,8 +803,8 @@ def model(year, mass, recoil, category):
     addJESSyst(wecr_hbb)
     wecr_hbb.setParamEffect(trig_e, ntrig_e)
     wecr_hbb.setParamEffect(veto_tau, nveto_tau)
-    wecr_hbb.setParamEffect(hbb_norm, nMinor_norm)
-    wecr_hbb.setParamEffect(id_e, nlepton)
+    addHbbNormSyst(wecr_hbb)
+    addEleIDSyst(wecr_hbb, year)
     wecr_hbb.setParamEffect(reco_e, nlepton)
     addBBliteSyst(wecr_hbb, param, wecr_central, wecr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "Hbb", "wecr", wecr_hbb, category, mass)
@@ -794,7 +819,7 @@ def model(year, mass, recoil, category):
     wecr_qcd.setParamEffect(trig_e, ntrig_e)
     wecr_qcd.setParamEffect(veto_tau, nveto_tau)
     wecr_qcd.setParamEffect(qcde_norm, nqcd_norm)
-    wecr_qcd.setParamEffect(id_e, nlepton)
+    addEleIDSyst(wecr_qcd, year)
     wecr_qcd.setParamEffect(reco_e, nlepton)
     addBBliteSyst(wecr_qcd, param, wecr_central, wecr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "QCD", "wecr", wecr_qcd, category, mass)
@@ -830,8 +855,7 @@ def model(year, mass, recoil, category):
     if not isttMC:
         tmcr_ttTemplate = template(background, "TT", "nominal", recoil, "tmcr", category, mass, min_value=1., read_sumw2=True)
         tmcr_ttMC = rl.TemplateSample("tmcr" + model_id + "_ttMC", rl.Sample.BACKGROUND, tmcr_ttTemplate)
-        tmcr_ttMC.setParamEffect(trig_met, ntrig_met)
-        #tmcr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
+        addMETTrigSyst(tmcr_ttMC, year)
         tmcr_ttMC.setParamEffect(id_mu, nlepton)
         tmcr_ttMC.setParamEffect(iso_mu, nlepton)
         tmcr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
@@ -862,9 +886,9 @@ def model(year, mass, recoil, category):
         addPileupSyst(tmcr_tt)
         addPrefiringSyst(tmcr_tt, year)
         addJESSyst(tmcr_tt)
-        tmcr_tt.setParamEffect(trig_met, ntrig_met)
+        addMETTrigSyst(tmcr_tt, year)
         tmcr_tt.setParamEffect(veto_tau, nveto_tau)
-        tmcr_tt.setParamEffect(ttMC_norm, nMinor_norm)
+        addTTbarNormSyst(tmcr_tt)
         tmcr_tt.setParamEffect(id_mu, nlepton)
         tmcr_tt.setParamEffect(iso_mu, nlepton)
         addBBliteSyst(tmcr_tt, param, tmcr_central, tmcr_error2, epsilon=1e-5)
@@ -877,9 +901,9 @@ def model(year, mass, recoil, category):
     addPileupSyst(tmcr_wjets)
     addPrefiringSyst(tmcr_wjets, year)
     addJESSyst(tmcr_wjets)
-    tmcr_wjets.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(tmcr_wjets, year)
     tmcr_wjets.setParamEffect(veto_tau, nveto_tau)
-    tmcr_wjets.setParamEffect(wjetsMC_norm, nVjets_norm)
+    addWjetsNormSyst(tmcr_wjets)
     tmcr_wjets.setParamEffect(id_mu, nlepton)
     tmcr_wjets.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(tmcr_wjets, param, tmcr_central, tmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -893,9 +917,9 @@ def model(year, mass, recoil, category):
     addPileupSyst(tmcr_st)
     addPrefiringSyst(tmcr_st, year)
     addJESSyst(tmcr_st)
-    tmcr_st.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(tmcr_st, year)
     tmcr_st.setParamEffect(veto_tau, nveto_tau)
-    tmcr_st.setParamEffect(st_norm, nMinor_norm)
+    addSingleTopNormSyst(tmcr_st)
     tmcr_st.setParamEffect(id_mu, nlepton)
     tmcr_st.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(tmcr_st, param, tmcr_central, tmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -908,9 +932,9 @@ def model(year, mass, recoil, category):
     addPileupSyst(tmcr_dyjets)
     addPrefiringSyst(tmcr_dyjets, year)
     addJESSyst(tmcr_dyjets)
-    tmcr_dyjets.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(tmcr_dyjets, year)
     tmcr_dyjets.setParamEffect(veto_tau, nveto_tau)
-    tmcr_dyjets.setParamEffect(zjetsMC_norm, nVjets_norm)
+    addDrellYanNormSyst(tmcr_dyjets)
     tmcr_dyjets.setParamEffect(id_mu, nlepton)
     tmcr_dyjets.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(tmcr_dyjets, param, tmcr_central, tmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -924,9 +948,9 @@ def model(year, mass, recoil, category):
     addPileupSyst(tmcr_vv)
     addPrefiringSyst(tmcr_vv, year)
     addJESSyst(tmcr_vv)
-    tmcr_vv.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(tmcr_vv, year)
     tmcr_vv.setParamEffect(veto_tau, nveto_tau)
-    tmcr_vv.setParamEffect(vv_norm, nMinor_norm)
+    addDibosonNormSyst(tmcr_vv)
     tmcr_vv.setParamEffect(id_mu, nlepton)
     tmcr_vv.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(tmcr_vv, param, tmcr_central, tmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -939,9 +963,9 @@ def model(year, mass, recoil, category):
     addPileupSyst(tmcr_hbb)
     addPrefiringSyst(tmcr_hbb, year)
     addJESSyst(tmcr_hbb)
-    tmcr_hbb.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(tmcr_hbb, year)
     tmcr_hbb.setParamEffect(veto_tau, nveto_tau)
-    tmcr_hbb.setParamEffect(hbb_norm, nMinor_norm)
+    addHbbNormSyst(tmcr_hbb)
     tmcr_hbb.setParamEffect(id_mu, nlepton)
     tmcr_hbb.setParamEffect(iso_mu, nlepton)
     addBBliteSyst(tmcr_hbb, param, tmcr_central, tmcr_error2, epsilon=1e-5) ### replace autoMCStats
@@ -954,7 +978,7 @@ def model(year, mass, recoil, category):
     addPileupSyst(tmcr_qcd)
     addPrefiringSyst(tmcr_qcd, year)
     addJESSyst(tmcr_qcd)
-    tmcr_qcd.setParamEffect(trig_met, ntrig_met)
+    addMETTrigSyst(tmcr_qcd, year)
     tmcr_qcd.setParamEffect(veto_tau, nveto_tau)
     tmcr_qcd.setParamEffect(qcdmu_norm, nqcd_norm)
     tmcr_qcd.setParamEffect(id_mu, nlepton)
@@ -995,8 +1019,7 @@ def model(year, mass, recoil, category):
         tecr_ttTemplate = template(background, "TT", "nominal", recoil, "tecr", category, mass, min_value=1., read_sumw2=True)
         tecr_ttMC = rl.TemplateSample("tecr" + model_id + "_ttMC", rl.Sample.BACKGROUND, tecr_ttTemplate)
         tecr_ttMC.setParamEffect(trig_e, ntrig_e)
-        #tecr_ttMC.setParamEffect(ttMC_norm, nMinor_norm)
-        tecr_ttMC.setParamEffect(id_e, nlepton)
+        addEleIDSyst(tecr_ttMC, year)
         tecr_ttMC.setParamEffect(reco_e, nlepton)
         tecr_ttMC.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category, mass)
@@ -1028,8 +1051,8 @@ def model(year, mass, recoil, category):
         addJESSyst(tecr_tt)
         tecr_tt.setParamEffect(trig_e, ntrig_e)
         tecr_tt.setParamEffect(veto_tau, nveto_tau)
-        tecr_tt.setParamEffect(ttMC_norm, nMinor_norm)
-        tecr_tt.setParamEffect(id_e, nlepton)
+        addTTbarNormSyst(tecr_tt)
+        addEleIDSyst(tecr_tt, year)
         tecr_tt.setParamEffect(reco_e, nlepton)
         addBBliteSyst(tecr_tt, param, tecr_central, tecr_error2, epsilon=1e-5)
         addBtagSyst(background, recoil, "TT", "tecr", tecr_tt, category, mass)
@@ -1043,8 +1066,8 @@ def model(year, mass, recoil, category):
     addJESSyst(tecr_wjets)
     tecr_wjets.setParamEffect(trig_e, ntrig_e)
     tecr_wjets.setParamEffect(veto_tau, nveto_tau)
-    tecr_wjets.setParamEffect(wjetsMC_norm, nVjets_norm)
-    tecr_wjets.setParamEffect(id_e, nlepton)
+    addWjetsNormSyst(tecr_wjets)
+    addEleIDSyst(tecr_wjets, year)
     tecr_wjets.setParamEffect(reco_e, nlepton)
     addBBliteSyst(tecr_wjets, param, tecr_central, tecr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "W+jets", "tecr", tecr_wjets, category, mass)
@@ -1059,8 +1082,8 @@ def model(year, mass, recoil, category):
     addJESSyst(tecr_st)
     tecr_st.setParamEffect(trig_e, ntrig_e)
     tecr_st.setParamEffect(veto_tau, nveto_tau)
-    tecr_st.setParamEffect(st_norm, nMinor_norm)
-    tecr_st.setParamEffect(id_e, nlepton)
+    addSingleTopNormSyst(tecr_st)
+    addEleIDSyst(tecr_st, year)
     tecr_st.setParamEffect(reco_e, nlepton)
     addBBliteSyst(tecr_st, param, tecr_central, tecr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "ST", "tecr", tecr_st, category, mass)
@@ -1074,8 +1097,8 @@ def model(year, mass, recoil, category):
     addJESSyst(tecr_dyjets)
     tecr_dyjets.setParamEffect(trig_e, ntrig_e)
     tecr_dyjets.setParamEffect(veto_tau, nveto_tau)
-    tecr_dyjets.setParamEffect(zjetsMC_norm, nVjets_norm)
-    tecr_dyjets.setParamEffect(id_e, nlepton)
+    addDrellYanNormSyst(tecr_dyjets)
+    addEleIDSyst(tecr_dyjets, year)
     tecr_dyjets.setParamEffect(reco_e, nlepton)
     addBBliteSyst(tecr_dyjets, param, tecr_central, tecr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "DY+jets", "tecr", tecr_dyjets, category, mass)
@@ -1090,8 +1113,8 @@ def model(year, mass, recoil, category):
     addJESSyst(tecr_vv)
     tecr_vv.setParamEffect(trig_e, ntrig_e)
     tecr_vv.setParamEffect(veto_tau, nveto_tau)
-    tecr_vv.setParamEffect(vv_norm, nMinor_norm)
-    tecr_vv.setParamEffect(id_e, nlepton)
+    addDibosonNormSyst(tecr_vv)
+    addEleIDSyst(tecr_vv, year)
     tecr_vv.setParamEffect(reco_e, nlepton)
     addBBliteSyst(tecr_vv, param, tecr_central, tecr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "VV", "tecr", tecr_vv, category, mass)
@@ -1105,8 +1128,8 @@ def model(year, mass, recoil, category):
     addJESSyst(tecr_hbb)
     tecr_hbb.setParamEffect(trig_e, ntrig_e)
     tecr_hbb.setParamEffect(veto_tau, nveto_tau)
-    tecr_hbb.setParamEffect(hbb_norm, nMinor_norm)
-    tecr_hbb.setParamEffect(id_e, nlepton)
+    addHbbNormSyst(tecr_hbb)
+    addEleIDSyst(tecr_hbb, year)
     tecr_hbb.setParamEffect(reco_e, nlepton)
     addBBliteSyst(tecr_hbb, param, tecr_central, tecr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "Hbb", "tecr", tecr_hbb, category, mass)
@@ -1121,7 +1144,7 @@ def model(year, mass, recoil, category):
     tecr_qcd.setParamEffect(trig_e, ntrig_e)
     tecr_qcd.setParamEffect(veto_tau, nveto_tau)
     tecr_qcd.setParamEffect(qcde_norm, nqcd_norm)
-    tecr_qcd.setParamEffect(id_e, nlepton)
+    addEleIDSyst(tecr_qcd, year)
     tecr_qcd.setParamEffect(reco_e, nlepton)
     addBBliteSyst(tecr_qcd, param, tecr_central, tecr_error2, epsilon=1e-5) ### replace autoMCStats
     addBtagSyst(background, recoilbin, "QCD", "tecr", tecr_qcd, category, mass)
@@ -1380,8 +1403,6 @@ if __name__ == "__main__":
     lumi_1718 = rl.NuisanceParameter("lumi_1718", "lnN")
     pu = rl.NuisanceParameter("pu" + year, "lnN")
     prefiring = rl.NuisanceParameter("prefiring" + year, "lnN")
-    #zjets_norm = rl.NuisanceParameter("zjets_norm", "lnN")
-    #wjets_norm = rl.NuisanceParameter("wjets_norm", "lnN")
     id_e = rl.NuisanceParameter("id_e" + year, "lnN")
     id_mu = rl.NuisanceParameter("id_mu" + year, "lnN")
     id_pho = rl.NuisanceParameter("id_pho" + year, "lnN")
@@ -1407,8 +1428,6 @@ if __name__ == "__main__":
     qcd1 = rl.NuisanceParameter("qcd1", "lnN")
     qcd2 = rl.NuisanceParameter("qcd2", "lnN")
     qcd3 = rl.NuisanceParameter("qcd3", "lnN")
-    #whf_fraction = rl.NuisanceParameter("whf_fraction", "lnN")
-    #zhf_fraction = rl.NuisanceParameter("zhf_fraction", "lnN")
     doublebtag={}
     for syst in signal['sr'].identifiers('systematic'):
         if 'doublebtag' not in str(syst): continue
@@ -1416,17 +1435,12 @@ if __name__ == "__main__":
         doublebtag[str(syst).replace('Up','')]=rl.NuisanceParameter(str(syst).replace('Up','') + year, "shape")
         
     ###
-    # Set lnN or shape numbers
+    # Set lnN numbers
     ###
 
-    nlumi = 1.027
-    ntrig_met = 1.02
     ntrig_e = 1.01
     nveto_tau = 1.03
-    njec = 1.05
-    nlepton = 1.02 ## id_mu, iso_mu, id_e, reco_e
-    nVjets_norm = 1.4 ## wjetsMC_norm, wjets_norm, zjetsMC_norm, zjets_norm, whf_fraction, zhf_fraction
-    nMinor_norm = 1.2 ## tt_norm, ttMC_norm, st_norm, vv_norm, hbb_norm
+    nlepton = 1.01 ## id_mu, iso_mu, reco_e
     nqcd_norm = 2.0 ## qcdsig_norm, qcde_norm, qcdmu_norm
 
     ###
@@ -1447,7 +1461,6 @@ if __name__ == "__main__":
         #sr_zjetsMCFail.setParamEffect(zjets_norm, nVjets_norm)
         sr_zjetsMCFail.setParamEffect(trig_met, ntrig_met)
         sr_zjetsMCFail.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
-        addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail", mass)
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
 
         sr_zjetsObservable = rl.Observable("fjmass"+mass, sr_zjetsMCFailTemplate[1])
@@ -1469,7 +1482,6 @@ if __name__ == "__main__":
         #sr_wjetsMCFail.setParamEffect(wjets_norm, nVjets_norm)
         sr_wjetsMCFail.setParamEffect(trig_met, ntrig_met)
         sr_wjetsMCFail.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
-        addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail", mass)
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
 
         sr_wjetsFailTransferFactor = sr_wjetsMCFail.getExpectation() / sr_zjetsMCFail.getExpectation()
@@ -1489,7 +1501,6 @@ if __name__ == "__main__":
         #sr_zjetsMCPass.setParamEffect(zjets_norm, nVjets_norm)
         sr_zjetsMCPass.setParamEffect(trig_met, ntrig_met)
         sr_zjetsMCPass.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
-        addBtagSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass", mass)
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
 
         #tf_paramsZdeco = sr_zjetsMCPassTemplate[0] / sr_zjetsMCFailTemplate[0]
@@ -1511,7 +1522,6 @@ if __name__ == "__main__":
         #sr_wjetsMCPass.setParamEffect(wjets_norm, nVjets_norm)
         sr_wjetsMCPass.setParamEffect(trig_met, ntrig_met)
         sr_wjetsMCPass.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
-        addBtagSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass", mass)
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
 
         #tf_paramsWdeco = sr_wjetsMCPassTemplate[0] / sr_wjetsMCFailTemplate[0]
