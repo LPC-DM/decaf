@@ -14,3 +14,4 @@ docker_stderror
 *.model
 *.processor
 datacards
+results
