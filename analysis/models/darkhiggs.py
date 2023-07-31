@@ -1459,7 +1459,7 @@ if __name__ == "__main__":
             sr_zjetsMCFailTemplate
         )
         #sr_zjetsMCFail.setParamEffect(zjets_norm, nVjets_norm)
-        sr_zjetsMCFail.setParamEffect(trig_met, ntrig_met)
+        addMETTrigSyst(sr_zjetsMCFail, year)
         sr_zjetsMCFail.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
 
@@ -1480,7 +1480,7 @@ if __name__ == "__main__":
             sr_wjetsMCFailTemplate
         )
         #sr_wjetsMCFail.setParamEffect(wjets_norm, nVjets_norm)
-        sr_wjetsMCFail.setParamEffect(trig_met, ntrig_met)
+        addMETTrigSyst(sr_wjetsMCFail, year)
         sr_wjetsMCFail.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
 
@@ -1499,7 +1499,7 @@ if __name__ == "__main__":
             sr_zjetsMCPassTemplate
         )
         #sr_zjetsMCPass.setParamEffect(zjets_norm, nVjets_norm)
-        sr_zjetsMCPass.setParamEffect(trig_met, ntrig_met)
+        addMETTrigSyst(sr_zjetsMCPass, year)
         sr_zjetsMCPass.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
 
@@ -1520,7 +1520,7 @@ if __name__ == "__main__":
             sr_wjetsMCPassTemplate
         )
         #sr_wjetsMCPass.setParamEffect(wjets_norm, nVjets_norm)
-        sr_wjetsMCPass.setParamEffect(trig_met, ntrig_met)
+        addMETTrigSyst(sr_wjetsMCPass, year)
         sr_wjetsMCPass.autoMCStats(epsilon=1e-5) ### autoMCStats is used for TransferFactorSample
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
 
