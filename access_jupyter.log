@@ -1,19 +1,16 @@
-[I 11:07:12.802 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
-[I 11:07:14.520 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/CMSSW_10_2_13/src/decaf
-[I 11:07:14.520 NotebookApp] The Jupyter Notebook is running at:
-[I 11:07:14.520 NotebookApp] http://127.0.0.1:9094/?token=2c6d8190f93f7d9ad275623b22ffc6f4d0067b27457647be
-[I 11:07:14.520 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 11:07:14.527 NotebookApp] 
+[I 08:20:47.709 NotebookApp] Serving notebooks from local directory: /cms/scratch/matteoc/CMSSW_10_2_13/src/decaf
+[I 08:20:47.709 NotebookApp] The Jupyter Notebook is running at:
+[I 08:20:47.709 NotebookApp] http://127.0.0.1:9094/?token=a7e1f51bb083ae6d1fe2ed7e6a1de5726ccd26991583ae2e
+[I 08:20:47.709 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 08:20:47.716 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/45169/jupyter/nbserver-12245-open.html
+        file:///run/user/556950957/jupyter/nbserver-930949-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=2c6d8190f93f7d9ad275623b22ffc6f4d0067b27457647be
-[I 11:08:30.702 NotebookApp] 302 GET /?token=2c6d8190f93f7d9ad275623b22ffc6f4d0067b27457647be (127.0.0.1) 0.58ms
-[I 11:10:00.541 NotebookApp] Kernel started: cb1f39e2-5449-40cc-8b0f-9ba7f4ab9d47
-[I 11:10:03.588 NotebookApp] Adapting to protocol v5.1 for kernel cb1f39e2-5449-40cc-8b0f-9ba7f4ab9d47
-[I 11:12:01.350 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 11:14:01.100 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 11:16:01.098 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 11:18:01.145 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 11:20:01.066 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+        http://127.0.0.1:9094/?token=a7e1f51bb083ae6d1fe2ed7e6a1de5726ccd26991583ae2e
+[I 08:22:51.435 NotebookApp] 302 GET /?token=a7e1f51bb083ae6d1fe2ed7e6a1de5726ccd26991583ae2e (127.0.0.1) 1.01ms
+[I 08:23:40.637 NotebookApp] Kernel started: 39744823-aa71-405c-ba5f-ca213fab784c
+[I 08:23:43.043 NotebookApp] Adapting to protocol v5.1 for kernel 39744823-aa71-405c-ba5f-ca213fab784c
+[I 08:25:46.992 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
+[I 08:27:46.467 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
+[I 08:29:45.510 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
