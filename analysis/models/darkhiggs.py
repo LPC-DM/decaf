@@ -1242,7 +1242,7 @@ if __name__ == "__main__":
 
     zjetsmodel = rl.Model("zjetsmodel")
     zjetseff = efficiency(zjetspass_templ, zjetsfail_templ, zjetsmodel)
-    tf_MCtemplZ = rl.BernsteinPoly("tf_MCtemplZ", (0, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
+    tf_MCtemplZ = rl.BernsteinPoly("tf_MCtemplZ"+year, (0, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_MCtemplZ_params = zjetseff * tf_MCtemplZ(recoilscaled, msdscaled)
 
     wjetspass_templ = []
@@ -1253,7 +1253,7 @@ if __name__ == "__main__":
 
     wjetsmodel = rl.Model("wjetsmodel")
     wjetseff = efficiency(wjetspass_templ, wjetsfail_templ, wjetsmodel)
-    tf_MCtemplW = rl.BernsteinPoly("tf_MCtemplW", (0, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
+    tf_MCtemplW = rl.BernsteinPoly("tf_MCtemplW"+year, (0, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_MCtemplW_params = wjetseff * tf_MCtemplW(recoilscaled, msdscaled)
     
     ###

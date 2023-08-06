@@ -15,17 +15,13 @@ if __name__ == '__main__':
     rootfile = options.workspace.split('/')[-1]
     folder = options.workspace.replace(rootfile, '')
     
-    datacard=''
+    datacards=[]
     for filename in os.listdir(folder):
-        if '.txt' in filename: datacard=folder+filename
-          
-    process_lines=[]
-    for line in open(datacard,'r').readlines():
-        if not line.startswith('process'): continue
-        process_lines.append(line.split())
+        if '_' in filename and '.root' in filename: 
+            #print(filename.split('_',1)[1].replace('.root',''))
+            datacards.append(filename.split('_',1)[1].replace('.root',''))
 
-    signal_indices = [i for i in range(1, len(process_lines[1])) if int(process_lines[1][i]) <= 0]      
-    signals = set([process_lines[0][i] for i in signal_indices if process_lines[0][i]])
+    signals = set(datacards)
     
     workspaces=[]
     for workspace in os.listdir(folder):
@@ -56,4 +52,3 @@ if __name__ == '__main__':
         folder='results/'+command.split('-d ')[1].split('.root')[0].split('/')[-2]+command.split('-n ')[1].split(' ')[0]
         os.system('mkdir -p '+folder)
         os.system('mv *'+tag+'* '+folder)
-    

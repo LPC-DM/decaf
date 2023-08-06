@@ -1,32 +1,16 @@
-[I 12:08:36.461 NotebookApp] Writing notebook server cookie secret to /run/user/45169/jupyter/notebook_cookie_secret
-[I 12:08:39.571 NotebookApp] Serving notebooks from local directory: /uscms_data/d3/matteoc/CMSSW_10_2_13/src/decaf
-[I 12:08:39.571 NotebookApp] The Jupyter Notebook is running at:
-[I 12:08:39.571 NotebookApp] http://127.0.0.1:9094/?token=a3f3679fa0a3a8c2681a02b4cec7ffd8898a75ee1bca0866
-[I 12:08:39.571 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 12:08:39.581 NotebookApp] 
+[I 08:20:47.709 NotebookApp] Serving notebooks from local directory: /cms/scratch/matteoc/CMSSW_10_2_13/src/decaf
+[I 08:20:47.709 NotebookApp] The Jupyter Notebook is running at:
+[I 08:20:47.709 NotebookApp] http://127.0.0.1:9094/?token=a7e1f51bb083ae6d1fe2ed7e6a1de5726ccd26991583ae2e
+[I 08:20:47.709 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 08:20:47.716 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/45169/jupyter/nbserver-3720-open.html
+        file:///run/user/556950957/jupyter/nbserver-930949-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=a3f3679fa0a3a8c2681a02b4cec7ffd8898a75ee1bca0866
-[I 12:09:26.593 NotebookApp] 302 GET /?token=a3f3679fa0a3a8c2681a02b4cec7ffd8898a75ee1bca0866 (127.0.0.1) 1.30ms
-[I 12:10:01.598 NotebookApp] Kernel started: a3c1667d-3870-4390-9cd0-db8ee6a7bdaf
-[I 12:10:06.722 NotebookApp] Adapting to protocol v5.1 for kernel a3c1667d-3870-4390-9cd0-db8ee6a7bdaf
-[I 12:12:11.635 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 12:14:10.872 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 12:16:10.847 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 12:18:10.856 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 12:20:10.805 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 12:22:10.918 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 12:24:10.957 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 12:26:10.990 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 12:28:11.017 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 13:15:13.610 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 13:21:14.035 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 13:23:16.431 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 13:25:19.010 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 13:27:21.675 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[I 13:29:22.524 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
-[W 18:30:06.727 NotebookApp] WebSocket ping timeout after 119951 ms.
-[I 18:30:11.731 NotebookApp] Starting buffering for a3c1667d-3870-4390-9cd0-db8ee6a7bdaf:d6c82d405a4942c687768451745419a0
-[IPKernelApp] WARNING | Parent appears to have exited, shutting down.
+        http://127.0.0.1:9094/?token=a7e1f51bb083ae6d1fe2ed7e6a1de5726ccd26991583ae2e
+[I 08:22:51.435 NotebookApp] 302 GET /?token=a7e1f51bb083ae6d1fe2ed7e6a1de5726ccd26991583ae2e (127.0.0.1) 1.01ms
+[I 08:23:40.637 NotebookApp] Kernel started: 39744823-aa71-405c-ba5f-ca213fab784c
+[I 08:23:43.043 NotebookApp] Adapting to protocol v5.1 for kernel 39744823-aa71-405c-ba5f-ca213fab784c
+[I 08:25:46.992 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
+[I 08:27:46.467 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
+[I 08:29:45.510 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
