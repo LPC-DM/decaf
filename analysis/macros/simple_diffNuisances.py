@@ -56,6 +56,7 @@ pulls = []
 
 nuis_p_i=0
 data_fitb = {}
+data_fits = {}
 data_prefit = {}
 
 # loop over all fitted parameters
@@ -65,7 +66,7 @@ if not os.path.exists(plotsDir):
 
 if options.writeText:
     fout = open(options.outdir+'/'+options.writeText, 'w')
-    my_list = ["name", "val", "err"]
+    my_list = ["name", "val", "err", "flag"]
     result_string = ",".join(my_list) + "\n"
     fout.write(result_string)
 
@@ -99,10 +100,14 @@ for i in range(fpf_s.getSize()):
             if fit_name=='b':
                 data_fitb[name] = {'val':nuis_x.getVal(), 'err':nuis_x.getError()}
                 if options.writeText:
-                    my_list = [name, str(nuis_x.getVal()), str(nuis_x.getError())]
+                    my_list = [name, str(nuis_x.getVal()), str(nuis_x.getError()), "fitb"]
                     result_string = ",".join(my_list) + "\n"
                     fout.write(result_string)
             if fit_name=='s':
+                if options.writeText:
+                    my_list = [name, str(nuis_x.getVal()), str(nuis_x.getError()), "fits"]
+                    result_string = ",".join(my_list) + "\n"
+                    fout.write(result_string)
                 data_prefit[name] = {'val':mean_p, 'err':sigma_p}
 
             if sigma_p>0:
@@ -150,7 +155,6 @@ def getGraph(hist,shift):
         e = hist.GetBinError(j+1)
         gr.SetPoint(j,x,y)
         gr.SetPointError(j,float(abs(shift))*0.8,e)
-
     return gr
 
 fname = plotsDir+'/plots.root'
