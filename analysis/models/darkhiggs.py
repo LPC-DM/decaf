@@ -155,7 +155,7 @@ def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=0):
         effect_down = np.ones_like(templ._nominal)
         effect_up[i] = 1.0 + np.sqrt(merged_error2[i])/merged_central[i]
         effect_down[i] = max(epsilon, 1.0 - np.sqrt(merged_error2[i])/merged_central[i])
-        templ.setParamEffect(param[i], effect_up, effect_down)
+        #templ.setParamEffect(param[i], effect_up, effect_down)
 
 def addBtagSyst(dictionary, recoil, process, region, templ, category, mass):
     btagUp = template(dictionary, process, "btagUp", recoil, region, category, mass)[0]

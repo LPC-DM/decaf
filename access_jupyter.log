@@ -1,16 +1,41 @@
-[I 08:20:47.709 NotebookApp] Serving notebooks from local directory: /cms/scratch/matteoc/CMSSW_10_2_13/src/decaf
-[I 08:20:47.709 NotebookApp] The Jupyter Notebook is running at:
-[I 08:20:47.709 NotebookApp] http://127.0.0.1:9094/?token=a7e1f51bb083ae6d1fe2ed7e6a1de5726ccd26991583ae2e
-[I 08:20:47.709 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 08:20:47.716 NotebookApp] 
+[I 09:14:03.135 NotebookApp] Serving notebooks from local directory: /cms/scratch/matteoc/CMSSW_10_2_13/src/decaf
+[I 09:14:03.135 NotebookApp] The Jupyter Notebook is running at:
+[I 09:14:03.135 NotebookApp] http://127.0.0.1:9094/?token=18b12f72e8857d074556a0381ee022cef96e89b2d09f8870
+[I 09:14:03.135 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 09:14:03.142 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/556950957/jupyter/nbserver-930949-open.html
+        file:///run/user/556950957/jupyter/nbserver-2216747-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=a7e1f51bb083ae6d1fe2ed7e6a1de5726ccd26991583ae2e
-[I 08:22:51.435 NotebookApp] 302 GET /?token=a7e1f51bb083ae6d1fe2ed7e6a1de5726ccd26991583ae2e (127.0.0.1) 1.01ms
-[I 08:23:40.637 NotebookApp] Kernel started: 39744823-aa71-405c-ba5f-ca213fab784c
-[I 08:23:43.043 NotebookApp] Adapting to protocol v5.1 for kernel 39744823-aa71-405c-ba5f-ca213fab784c
-[I 08:25:46.992 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 08:27:46.467 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
-[I 08:29:45.510 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
+        http://127.0.0.1:9094/?token=18b12f72e8857d074556a0381ee022cef96e89b2d09f8870
+[I 09:14:17.816 NotebookApp] 302 GET /?token=18b12f72e8857d074556a0381ee022cef96e89b2d09f8870 (127.0.0.1) 1.02ms
+[W 09:14:45.184 NotebookApp] Notebook analysis/notebooks/draw_pulls.ipynb is not trusted
+[I 09:14:45.627 NotebookApp] Kernel started: 0060445a-0714-4400-a6f2-fe2cff7becee
+[I 09:14:48.411 NotebookApp] Adapting to protocol v5.1 for kernel 0060445a-0714-4400-a6f2-fe2cff7becee
+[I 09:15:44.399 NotebookApp] Kernel started: b8f34213-8c4d-42d4-9ba6-e6b3352b7afe
+[I 09:15:46.935 NotebookApp] Adapting to protocol v5.1 for kernel b8f34213-8c4d-42d4-9ba6-e6b3352b7afe
+[I 09:16:47.364 NotebookApp] Saving file at /analysis/notebooks/draw_pulls.ipynb
+[I 09:17:48.536 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
+[I 09:18:52.088 NotebookApp] Saving file at /analysis/notebooks/draw_pulls.ipynb
+[I 09:19:54.789 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
+[I 09:25:53.317 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
+[I 09:27:52.007 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
+[W 09:29:12.663 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 09:29:31.193 NotebookApp] Kernel started: cb148ccf-553f-4c1c-a9c1-0feee33ae577
+[I 09:29:33.733 NotebookApp] Adapting to protocol v5.1 for kernel cb148ccf-553f-4c1c-a9c1-0feee33ae577
+[I 09:29:55.043 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
+[I 09:32:19.559 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 09:32:19.563 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 09:37:49.896 NotebookApp] Saving file at /analysis/notebooks/draw_pulls.ipynb
+[I 09:39:49.908 NotebookApp] Saving file at /analysis/notebooks/draw_pulls.ipynb
+[I 09:41:28.798 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 09:41:28.802 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 10:06:29.554 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 10:06:29.559 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 10:14:50.000 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 10:14:50.005 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 10:24:09.495 NotebookApp] Saving file at /analysis/notebooks/darkhiggs.ipynb
+[W 10:24:09.500 NotebookApp] Notebook analysis/notebooks/darkhiggs.ipynb is not trusted
+[I 10:35:40.481 NotebookApp] Starting buffering for 0060445a-0714-4400-a6f2-fe2cff7becee:2f26aefaad944bd68f337023f1a48176
+[I 10:35:40.482 NotebookApp] Starting buffering for b8f34213-8c4d-42d4-9ba6-e6b3352b7afe:20ee7e9c3cd44c1d8feead439d686e51
+[I 10:35:40.482 NotebookApp] Starting buffering for cb148ccf-553f-4c1c-a9c1-0feee33ae577:199e8cea388949c08c968f206567cff1

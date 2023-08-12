@@ -93,7 +93,7 @@ for i in range(fpf_s.getSize()):
         # nuisance parameter
         mean_p, sigma_p = (nuis_p.getVal(), nuis_p.getError())
 
-        if not sigma_p > 0: sigma_p = (nuis_p.getMax()-nuis_p.getMin())/2
+        if not sigma_p > 0: sigma_p = 1. #(nuis_p.getMax()-nuis_p.getMin())/2
 
     for fit_name, nuis_x in [('b', nuis_b), ('s',nuis_s)]:
         if nuis_p != None:
@@ -114,7 +114,7 @@ for i in range(fpf_s.getSize()):
                 # calculate the difference of the nuisance parameter
                 # w.r.t to the prefit value in terms of the uncertainty
                 # on the prefit value
-                valShift = (nuis_x.getVal() - mean_p)/sigma_p
+                valShift = (nuis_x.getVal() - mean_p)/sigma_p #sqrt( (sigma_p*sigma_p) - (nuis_x.getError()*nuis_x.getError() )
 
                 # ratio of the nuisance parameter's uncertainty
                 # w.r.t the prefit uncertainty
@@ -128,79 +128,3 @@ for i in range(fpf_s.getSize()):
 if options.writeText:
     fout.close()
 
-ndata = len(data_prefit.keys())
-# Also make histograms for pull distributions:
-hist_fit_b  = ROOT.TH1F("prefit_fit_b"   ,"B-only fit Nuisances;;#theta ",ndata,0,ndata)
-hist_empty  = ROOT.TH1F("empty"   ,"empty ",ndata,0,ndata)
-hist_fit_s  = ROOT.TH1F("prefit_fit_s"   ,"S+B fit Nuisances   ;;#theta ",ndata,0,ndata)
-hist_prefit = ROOT.TH1F("prefit_nuisancs","Prefit Nuisances    ;;#theta ",ndata,0,ndata)
-
-sorted_data_prefit = collections.OrderedDict(sorted(data_prefit.items()))
-
-for i, key in enumerate(sorted_data_prefit.keys()):
-    hist_empty.GetXaxis().SetBinLabel(i+1, key)
-    hist_fit_b.SetBinContent(i+1, data_fitb[key]['val'])
-    hist_fit_b.SetBinError(i+1, data_fitb[key]['err'])
-    hist_fit_b.GetXaxis().SetBinLabel(i+1, key)
-    hist_prefit.SetBinContent(i+1, data_prefit[key]['val'])
-    hist_prefit.SetBinError(i+1, data_prefit[key]['err'])
-    hist_prefit.GetXaxis().SetBinLabel(i+1, key)
-
-def getGraph(hist,shift):
-    gr = ROOT.TGraphErrors()
-    gr.SetName(hist.GetName())
-    for j in range(hist.GetNbinsX()):
-        x = hist.GetBinCenter(j+1)+shift
-        y = hist.GetBinContent(j+1)
-        e = hist.GetBinError(j+1)
-        gr.SetPoint(j,x,y)
-        gr.SetPointError(j,float(abs(shift))*0.8,e)
-    return gr
-
-fname = plotsDir+'/plots.root'
-fout = ROOT.TFile(fname,"RECREATE")
-ROOT.gROOT.SetStyle("Plain")
-
-canvas_nuis = ROOT.TCanvas("nuisances", "nuisances", 2500, 750)
-gr_fit_b = getGraph(hist_fit_b, 0.1)
-gr_fit_b.SetLineColor(ROOT.kBlue)
-gr_fit_b.SetMarkerColor(ROOT.kBlue)
-gr_fit_b.SetMarkerStyle(20)
-gr_fit_b.SetMarkerSize(1.0)
-gr_fit_b.SetLineWidth(2)
-
-hist_empty.SetTitle("")
-hist_empty.SetNdivisions(-550,"x")
-hist_empty.SetStats(0)
-hist_empty.GetYaxis().SetRangeUser(-3, 3)
-hist_empty.Draw("histsame")
-
-hist_prefit.SetLineWidth(2)
-hist_prefit.SetTitle("")
-hist_prefit.SetLineColor(ROOT.kBlack)
-hist_prefit.SetFillColor(ROOT.kGray)
-hist_prefit.SetMaximum(1)
-hist_prefit.SetMinimum(-1)
-hist_prefit.SetStats(0)
-hist_prefit.SetNdivisions(-550,"x")
-hist_prefit.Draw("AE2same")
-hist_prefit.Draw("Ahistsame")
-gr_fit_b.Draw("EPsame")
-
-canvas_nuis.SetTopMargin(0.02)
-canvas_nuis.SetBottomMargin(0.3)
-canvas_nuis.SetLeftMargin(0.07)
-canvas_nuis.SetRightMargin(0.03)
-canvas_nuis.SetGridx()
-canvas_nuis.RedrawAxis()
-canvas_nuis.RedrawAxis('g')
-leg=ROOT.TLegend(0.8,0.87,0.96,0.97)
-leg.SetFillColor(0)
-leg.SetTextFont(42)
-leg.AddEntry(hist_prefit,"Prefit","FL")
-leg.AddEntry(gr_fit_b,"B-only fit","EPL")
-leg.Draw()
-fout.WriteTObject(canvas_nuis)
-
-canvas_nuis.SaveAs(plotsDir+"/pulls.pdf")
-canvas_nuis.SaveAs(plotsDir+"/pulls.png")
