@@ -166,7 +166,6 @@ def addDoubleBtagSyst(dictionary, recoil, process, region, templ, category, mass
     for syst in dictionary[region].identifiers("systematic"):
         if 'doublebtag' not in str(syst): continue
         if 'Down' in str(syst): continue
-        print(str(syst))
         doublebtagUp = template(dictionary, process, str(syst), recoil, region, category, mass)[0]
         doublebtagDown = template(dictionary, process, str(syst).replace('Up','Down'), recoil, region, category, mass)[0]
         templ.setParamEffect(doublebtag[str(syst).replace('Up','')], doublebtagUp, doublebtagDown)
@@ -438,7 +437,6 @@ def model(year, mass, recoil, category):
     sr.addSample(sr_qcd)
 
     for s in signal["sr"].identifiers("process"):
-        print(s)
         sr_signalTemplate = template(signal, s, "nominal", recoil, "sr", category, mass, read_sumw2=True)
         sr_signal = rl.TemplateSample(ch_name + "_" + str(s), rl.Sample.SIGNAL, sr_signalTemplate)
         addLumiSyst(sr_signal, year)
