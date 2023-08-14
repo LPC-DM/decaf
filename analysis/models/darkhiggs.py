@@ -147,17 +147,17 @@ def get_mergedMC_stat_variations(dictionary, recoil, region, category, mass, bkg
 
 def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=0):
 
-    print(param[0]._name)
+    name=param[0]._name.split('mass')[0]+'recoil'+param[0]._name.split('recoil')[1].split('_')[0]
     _nom_rate = np.sum(merged_central)
-        if _nom_rate < .0001:
-            effect = 1.0
-        else:
-            _down_rate = np.sum(np.nan_to_num(merged_central - np.sqrt(merged_error2), 0.0))
-            _up_rate = np.sum(np.nan_to_num(merged_central + np.sqrt(merged_error2), 0.0))
-            _diff = np.abs(_up_rate-_nom_rate) + np.abs(_down_rate-_nom_rate)
-            effect = 1.0 + _diff / (2. * _nom_rate)
-        param = NuisanceParameter(name + '_mcstat', 'lnN')
-        templ.setParamEffect(param, effect)
+    if _nom_rate < .0001:
+        effect = 1.0
+    else:
+        _down_rate = np.sum(np.nan_to_num(merged_central - np.sqrt(merged_error2), 0.0))
+        _up_rate = np.sum(np.nan_to_num(merged_central + np.sqrt(merged_error2), 0.0))
+        _diff = np.abs(_up_rate-_nom_rate) + np.abs(_down_rate-_nom_rate)
+        effect = 1.0 + _diff / (2. * _nom_rate)
+    lnNparam = rl.NuisanceParameter(name + '_mcstat', 'lnN')
+    templ.setParamEffect(lnNparam, effect)
 
     for i in range(templ.observable.nbins):
         if merged_central[i] <= 0. or merged_error2[i] <= 0.:
@@ -267,7 +267,9 @@ def addEleIDSyst(templ, year):
         templ.setParamEffect(id_e, 1.03)
 
 def addAutoMCStats(templ):
-    templ.autoMCStats(lnN=True, epsilon=1e-5)
+    name=templ._name.split('mass')[0]+'recoil'+templ._name.split('recoil')[1]
+    name=name.split('_',1)[1]+'_'+name.split('_',1)[0]
+    templ.autoMCStats(lnN=True, name=name, epsilon=1e-5)
 
 
     
@@ -462,6 +464,7 @@ def model(year, mass, recoil, category):
         addJESSyst(sr_signal)
         addMETTrigSyst(sr_signal, year)
         sr_signal.setParamEffect(veto_tau, nveto_tau)
+        '''
         for i in range(sr_signal.observable.nbins):
             if sr_signal._nominal[i] <= 0. or sr_signal._sumw2[i] <= 0.:
                 continue
@@ -471,6 +474,8 @@ def model(year, mass, recoil, category):
             effect_down[i] = max((sr_signal._nominal[i] - np.sqrt(sr_signal._sumw2[i]))/sr_signal._nominal[i], 1e-5)
             param = rl.NuisanceParameter(str(s) + "_" + ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
             sr_signal.setParamEffect(param, effect_up, effect_down)
+        '''
+        addAutoMCStats(sr_signal)
         addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category, mass)
         addDoubleBtagSyst(signal, recoil, str(s), "sr", sr_signal, category, mass)
         if category=="pass": sr.addSample(sr_signal)
@@ -1255,7 +1260,7 @@ if __name__ == "__main__":
 
     zjetsmodel = rl.Model("zjetsmodel")
     zjetseff = efficiency(zjetspass_templ, zjetsfail_templ, zjetsmodel)
-    tf_MCtemplZ = rl.BernsteinPoly("tf_MCtemplZ"+year, (0, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
+    tf_MCtemplZ = rl.BernsteinPoly("tf_MCtemplZ"+year, (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_MCtemplZ_params = zjetseff * tf_MCtemplZ(recoilscaled, msdscaled)
 
     wjetspass_templ = []
@@ -1266,7 +1271,7 @@ if __name__ == "__main__":
 
     wjetsmodel = rl.Model("wjetsmodel")
     wjetseff = efficiency(wjetspass_templ, wjetsfail_templ, wjetsmodel)
-    tf_MCtemplW = rl.BernsteinPoly("tf_MCtemplW"+year, (0, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
+    tf_MCtemplW = rl.BernsteinPoly("tf_MCtemplW"+year, (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_MCtemplW_params = wjetseff * tf_MCtemplW(recoilscaled, msdscaled)
     
     ###
@@ -1337,9 +1342,9 @@ if __name__ == "__main__":
     # Create Bernstein polynomials that represent the correction to the MC ratio
     ###
     
-    tf_dataResidualW = rl.BernsteinPoly("tf_dataResidualW"+year, (0, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
+    tf_dataResidualW = rl.BernsteinPoly("tf_dataResidualW"+year, (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_dataResidualW_params = tf_dataResidualW(recoilscaled, msdscaled)
-    tf_dataResidualZ = rl.BernsteinPoly("tf_dataResidualZ"+year, (0, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
+    tf_dataResidualZ = rl.BernsteinPoly("tf_dataResidualZ"+year, (1, 1), ['recoil', 'fjmass'], limits=(1e-5, 10))
     tf_dataResidualZ_params = tf_dataResidualZ(recoilscaled, msdscaled)
 
     #####

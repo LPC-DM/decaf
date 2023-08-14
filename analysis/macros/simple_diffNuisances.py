@@ -93,8 +93,8 @@ for i in range(fpf_s.getSize()):
         # nuisance parameter
         mean_p, sigma_p = (nuis_p.getVal(), nuis_p.getError())
 
-        if not sigma_p > 0: sigma_p = 1. #(nuis_p.getMax()-nuis_p.getMin())/2
-
+        if not sigma_p > 0: sigma_p = (nuis_p.getMax()-nuis_p.getMin())/2
+    print(mean_p, sigma_p)
     for fit_name, nuis_x in [('b', nuis_b), ('s',nuis_s)]:
         if nuis_p != None:
             if fit_name=='b':
