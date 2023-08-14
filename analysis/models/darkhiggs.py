@@ -146,6 +146,12 @@ def get_mergedMC_stat_variations(dictionary, recoil, region, category, mass, bkg
     return merged_central, merged_error2
 
 def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=0):
+    name=templ._name.split('mass')[0]+'recoil'+templ._name.split('recoil')[1]
+    name=name.split('_',1)[1]+'_'+name.split('_',1)[0]
+    templ.autoMCStats(lnN=True, name=name, epsilon=1e-5)
+
+'''
+def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=0):
 
     name=param[0]._name.split('mass')[0]+'recoil'+param[0]._name.split('recoil')[1].split('_')[0]
     _nom_rate = np.sum(merged_central)
@@ -169,7 +175,7 @@ def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=0):
         effect_up[i] = 1.0 + np.sqrt(merged_error2[i])/merged_central[i]
         effect_down[i] = max(epsilon, 1.0 - np.sqrt(merged_error2[i])/merged_central[i])
         #templ.setParamEffect(param[i], effect_up, effect_down)
-
+'''
 def addBtagSyst(dictionary, recoil, process, region, templ, category, mass):
     btagUp = template(dictionary, process, "btagUp", recoil, region, category, mass)[0]
     btagDown = template(dictionary, process, "btagDown", recoil, region, category, mass)[0]
