@@ -1434,6 +1434,13 @@ if __name__ == "__main__":
     model_dict = {}
     for recoilbin in range(nrecoil):
 
+        
+        #####
+        ###
+        # Z+jets "fail"
+        ###  
+        #####
+        
         sr_zjetsMCFailTemplate = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail", mass, min_value=1., read_sumw2=True)
 
         ch_name_pass = "sr" + year + "pass" + "mass" + mass+ "recoil" + str(recoilbin)
@@ -1485,6 +1492,7 @@ if __name__ == "__main__":
 
         sr_wjetsFailTransferFactor = sr_wjetsMCFail.getExpectation() / sr_zjetsMCFail.getExpectation()
         sr_wjetsFailBinYields = sr_zjetsFailBinYields*sr_wjetsFailTransferFactor
+        
         sr_wjetsFail = rl.ParametericSample(
             "sr" + year + "fail" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
@@ -1501,8 +1509,11 @@ if __name__ == "__main__":
         )
         '''
 
-        #####           
-        ###                                                                                                                                                         # Z+jets "pass"                                                                                                                                             ###                                                                                                                                                         #####   
+        #####
+        ###
+        # Z+jets "pass"
+        ###  
+        #####                                                                                                                                                         # Z+jets "pass"                                                                                                                                             ###                                                                                                                                                         #####   
 
         sr_zjetsMCPassTemplate = template(background, "Z+jets", "nominal", recoilbin, "sr", "pass", mass, min_value=1., read_sumw2=True)
         sr_zjetsMCPass = rl.TemplateSample(
@@ -1516,13 +1527,13 @@ if __name__ == "__main__":
         tf_MCtemplZ = sr_zjetsMCPass.getExpectation() / sr_zjetsMCFail.getExpectation()
         #tf_paramsZ = zjetseff *tf_MCtemplZ_params_final[recoilbin, :] * tf_dataResidualZ_params[recoilbin, :]
         tf_paramsZ = tf_MCtemplZ * tf_dataResidualZ_params[recoilbin, :]
-
         sr_zjetsPassBinYields=sr_zjetsFailBinYields*tf_paramsZ
+        
         sr_zjetsPass = rl.ParametericSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_zjets",
             rl.Sample.BACKGROUND,
             sr_zjetsObservable,
-            sr_zjetsFailBinYields
+            sr_zjetsPassBinYields
         )
         addBBliteSyst(sr_zjetsPass, param_pass, sr_central_pass, sr_error2_pass, epsilon=1e-5) ### replace autoMCStats
         '''
@@ -1552,8 +1563,8 @@ if __name__ == "__main__":
         tf_MCtemplW = sr_wjetsMCPass.getExpectation() / sr_wjetsMCFail.getExpectation()
         #tf_paramsW = wjetseff * tf_MCtemplW_params_final[recoilbin, :] * tf_dataResidualW_params[recoilbin, :]
         tf_paramsW = tf_MCtemplW * tf_dataResidualW_params[recoilbin, :]
-
-        sr_wjetsPassBinYields = sr_zjetsFailBinYields*sr_wjetsFailTransferFactor*tf_paramsW
+        sr_wjetsPassBinYields = sr_wjetsFailBinYields*tf_paramsW
+        
         sr_wjetsPass = rl.ParametericSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
