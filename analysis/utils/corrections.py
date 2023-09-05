@@ -382,6 +382,7 @@ class BTagCorrector:
         self._year = year
         common = load('data/common.coffea')
         self._wp = common['btagWPs'][tagger][year][workingpoint]
+        '''
         files = {
             'deepflav': {
                 '2016': 'DeepJet_2016LegacySF_V1.csv',
@@ -396,6 +397,7 @@ class BTagCorrector:
         }
         filename = 'data/'+files[tagger][year]
         self.sf_light = BTagScaleFactor(filename, workingpoint)
+        '''
         files = {
             'deepflav': {
                 '2016': 'DeepJet_2016LegacySF_V1_YearCorrelation-V1.csv',
@@ -409,7 +411,7 @@ class BTagCorrector:
                 }
         }
         filename = 'data/'+files[tagger][year]
-        self.sf_bc = BTagScaleFactor(filename, workingpoint)
+        self.sf = BTagScaleFactor(filename, workingpoint)
         files = {
             '2016': 'btageff2016.merged',
             '2017': 'btageff2017.merged',
@@ -430,19 +432,11 @@ class BTagCorrector:
             return (1 - eff).prod()
 
         eff = self.eff(flavor, pt, abseta)
-
-        if flavor != 0:
-            sf_nom = self.sf_bc.eval('central', flavor, abseta, pt)
-            sf_up_correlated = self.sf_bc.eval('up_correlated', flavor, abseta, pt)
-            sf_down_correlated = self.sf_bc.eval('down_correlated', flavor, abseta, pt)
-            sf_up_uncorrelated = self.sf_bc.eval('up_uncorrelated', flavor, abseta, pt)
-            sf_down_uncorrelated = self.sf_bc.eval('down_uncorrelated', flavor, abseta, pt)
-        else:
-            sf_nom = self.sf_light.eval('central', flavor, abseta, pt)
-            sf_up_correlated = self.sf_light.eval('up_correlated', flavor, abseta, pt)
-            sf_down_correlated = self.sf_light.eval('down_correlated', flavor, abseta, pt)
-            sf_up_uncorrelated = self.sf_light.eval('up_uncorrelated', flavor, abseta, pt)
-            sf_down_uncorrelated = self.sf_light.eval('down_uncorrelated', flavor, abseta, pt)
+        sf_nom = self.sf.eval('central', flavor, abseta, pt)
+        sf_up_correlated = self.sf.eval('up_correlated', flavor, abseta, pt)
+        sf_down_correlated = self.sf.eval('down_correlated', flavor, abseta, pt)
+        sf_up_uncorrelated = self.sf.eval('up_uncorrelated', flavor, abseta, pt)
+        sf_down_uncorrelated = self.sf.eval('down_uncorrelated', flavor, abseta, pt)
 
         eff_data_nom  = np.minimum(1., sf_nom*eff)
         eff_data_up_correlated   = np.minimum(1., sf_up_correlated*eff)
