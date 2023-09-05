@@ -1,38 +1,19 @@
-[I 11:05:22.559 NotebookApp] Serving notebooks from local directory: /cms/scratch/matteoc/CMSSW_10_2_13/src/decaf
-[I 11:05:22.560 NotebookApp] The Jupyter Notebook is running at:
-[I 11:05:22.560 NotebookApp] http://127.0.0.1:9094/?token=b8c39e85fdf3cc797ccb39d22e101e17b5f437512390b70a
-[I 11:05:22.560 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 11:05:22.567 NotebookApp] 
+[I 23:53:20.889 NotebookApp] Serving notebooks from local directory: /cms/scratch/matteoc/CMSSW_10_2_13/src/decaf
+[I 23:53:20.889 NotebookApp] The Jupyter Notebook is running at:
+[I 23:53:20.889 NotebookApp] http://127.0.0.1:9094/?token=4b7103a03ff504571816076377b4e623a1452775c1d4189a
+[I 23:53:20.889 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 23:53:20.895 NotebookApp] 
     
     To access the notebook, open this file in a browser:
-        file:///run/user/556950957/jupyter/nbserver-1586630-open.html
+        file:///run/user/556950957/jupyter/nbserver-1903996-open.html
     Or copy and paste one of these URLs:
-        http://127.0.0.1:9094/?token=b8c39e85fdf3cc797ccb39d22e101e17b5f437512390b70a
-[I 11:05:31.359 NotebookApp] 302 GET /?token=b8c39e85fdf3cc797ccb39d22e101e17b5f437512390b70a (127.0.0.1) 1.81ms
-[I 11:06:36.843 NotebookApp] Kernel started: ffd83116-91ca-46f8-8c4c-f9331b979636
-[I 11:06:40.547 NotebookApp] Adapting to protocol v5.1 for kernel ffd83116-91ca-46f8-8c4c-f9331b979636
-[I 11:08:46.859 NotebookApp] Saving file at /analysis/notebooks/draw_pulls.ipynb
-[I 11:26:34.887 NotebookApp] Starting buffering for ffd83116-91ca-46f8-8c4c-f9331b979636:99df278ec0fd45e8855439a1fd455425
-[I 11:26:50.739 NotebookApp] Adapting to protocol v5.1 for kernel ffd83116-91ca-46f8-8c4c-f9331b979636
-[I 11:26:50.741 NotebookApp] Restoring connection for ffd83116-91ca-46f8-8c4c-f9331b979636:99df278ec0fd45e8855439a1fd455425
-[I 11:29:49.123 NotebookApp] Starting buffering for ffd83116-91ca-46f8-8c4c-f9331b979636:99df278ec0fd45e8855439a1fd455425
-[I 11:30:04.589 NotebookApp] Adapting to protocol v5.1 for kernel ffd83116-91ca-46f8-8c4c-f9331b979636
-[I 11:30:04.591 NotebookApp] Restoring connection for ffd83116-91ca-46f8-8c4c-f9331b979636:99df278ec0fd45e8855439a1fd455425
-[I 11:40:52.781 NotebookApp] Starting buffering for ffd83116-91ca-46f8-8c4c-f9331b979636:99df278ec0fd45e8855439a1fd455425
-[I 11:41:08.391 NotebookApp] Adapting to protocol v5.1 for kernel ffd83116-91ca-46f8-8c4c-f9331b979636
-[I 11:41:08.393 NotebookApp] Restoring connection for ffd83116-91ca-46f8-8c4c-f9331b979636:99df278ec0fd45e8855439a1fd455425
-[I 11:44:01.979 NotebookApp] Starting buffering for ffd83116-91ca-46f8-8c4c-f9331b979636:99df278ec0fd45e8855439a1fd455425
-[I 11:44:33.655 NotebookApp] Adapting to protocol v5.1 for kernel ffd83116-91ca-46f8-8c4c-f9331b979636
-[I 11:44:33.656 NotebookApp] Restoring connection for ffd83116-91ca-46f8-8c4c-f9331b979636:99df278ec0fd45e8855439a1fd455425
-[I 11:58:44.862 NotebookApp] Kernel started: fdbdec0a-6cf4-42e9-83b6-8852c762dad1
-[I 11:58:47.541 NotebookApp] Adapting to protocol v5.1 for kernel fdbdec0a-6cf4-42e9-83b6-8852c762dad1
-[W 14:20:47.546 NotebookApp] WebSocket ping timeout after 119788 ms.
-[I 14:20:52.555 NotebookApp] Starting buffering for fdbdec0a-6cf4-42e9-83b6-8852c762dad1:7ca81442efab42e48fb449470083c0ee
-[W 14:21:03.657 NotebookApp] WebSocket ping timeout after 119755 ms.
-[I 14:21:08.661 NotebookApp] Starting buffering for ffd83116-91ca-46f8-8c4c-f9331b979636:99df278ec0fd45e8855439a1fd455425
-[I 15:51:10.751 NotebookApp] Adapting to protocol v5.1 for kernel ffd83116-91ca-46f8-8c4c-f9331b979636
-[I 15:51:10.754 NotebookApp] Restoring connection for ffd83116-91ca-46f8-8c4c-f9331b979636:99df278ec0fd45e8855439a1fd455425
-[I 15:51:10.839 NotebookApp] Adapting to protocol v5.1 for kernel fdbdec0a-6cf4-42e9-83b6-8852c762dad1
-[I 15:51:10.841 NotebookApp] Restoring connection for fdbdec0a-6cf4-42e9-83b6-8852c762dad1:7ca81442efab42e48fb449470083c0ee
-[I 15:52:25.735 NotebookApp] Starting buffering for ffd83116-91ca-46f8-8c4c-f9331b979636:99df278ec0fd45e8855439a1fd455425
-[I 15:52:25.736 NotebookApp] Starting buffering for fdbdec0a-6cf4-42e9-83b6-8852c762dad1:7ca81442efab42e48fb449470083c0ee
+        http://127.0.0.1:9094/?token=4b7103a03ff504571816076377b4e623a1452775c1d4189a
+[I 23:54:05.191 NotebookApp] 302 GET /?token=4b7103a03ff504571816076377b4e623a1452775c1d4189a (127.0.0.1) 1.53ms
+[I 23:54:56.337 NotebookApp] Kernel started: 8d7f89bd-974c-4d0d-a447-9b426becd25a
+[I 23:54:58.796 NotebookApp] Adapting to protocol v5.1 for kernel 8d7f89bd-974c-4d0d-a447-9b426becd25a
+[I 23:56:59.050 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
+[I 23:58:58.845 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
+[I 00:00:58.780 NotebookApp] Saving file at /analysis/notebooks/darkhiggs-postfit-with-uncertainties.ipynb
+[W 01:01:58.800 NotebookApp] WebSocket ping timeout after 119596 ms.
+[I 01:02:03.805 NotebookApp] Starting buffering for 8d7f89bd-974c-4d0d-a447-9b426becd25a:c87986f36a594e968519c55ab5f72c48
+[IPKernelApp] WARNING | Parent appears to have exited, shutting down.

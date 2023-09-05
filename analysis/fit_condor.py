@@ -107,7 +107,6 @@ for workspace in workspaces:
                     if not any(_item in signal for _item in options.list.split(',')): continue
                 if len(workspaces)>1 and signal not in workspace: continue
                 outfolder = workspace.replace('.root','')+'_'+tag
-                #print(outfolder)
                 os.system('mkdir -p logs/condor/fit/err/')
                 os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
                 os.system('mkdir -p logs/condor/fit/log/')
@@ -117,12 +116,13 @@ for workspace in workspaces:
                 os.environ['CLUSTER'] = options.cluster
                 os.environ['WORKSPACE'] = folder+workspace
                 os.environ['METHOD'] = options.method
-                os.environ['NAME'] = signal+'_'+options.name
+                os.environ['NAME'] = options.name
                 os.environ['OUTFOLDER']  = outfolder
                 os.environ['ARGUMENTS']     = options.arguments.replace('SIGNAL',signal).replace(' ','+').replace('"','X')
                 os.system('condor_submit fit.submit')
         else:
-            outfolder = options.workspace.split('/')[-2]+'_'+tag
+            #outfolder = options.workspace.split('/')[-2]+'_'+tag
+            outfolder = workspace.replace('.root','')+'_'+tag
             os.system('mkdir -p logs/condor/fit/err/')
             os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
             os.system('mkdir -p logs/condor/fit/log/')
@@ -137,7 +137,8 @@ for workspace in workspaces:
             os.environ['ARGUMENTS']     = options.arguments.replace(' ','+').replace('"','X')
             os.system('condor_submit fit.submit')
     else:
-        outfolder = options.workspace.split('/')[-2]+'_'+tag
+        #outfolder = options.workspace.split('/')[-2]+'_'+tag
+        outfolder = workspace.replace('.root','')+'_'+tag
         os.system('mkdir -p logs/condor/fit/err/')
         os.system('rm -rf logs/condor/fit/err/*'+outfolder+'*')
         os.system('mkdir -p logs/condor/fit/log/')

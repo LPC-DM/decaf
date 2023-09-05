@@ -37,15 +37,15 @@ if __name__ == '__main__':
                 for signal in signals:
                     if len(workspaces)>1 and signal not in workspace: continue
                     commands.append(command+' -d '+folder+workspace+' ' +
-                                    '-n _'+signal+'_'+tag+' ' +
+                                    '-n _'+workspace.replace('.root','')+'_'+tag+' ' +
                                     options.arguments.replace('SIGNAL',signal).replace('\\"','\''))
             else:
                 commands.append(command+' -d '+folder+workspace+' ' +
-                                '-n _'+tag+' ' +
+                                '-n _'+workspace.replace('.root','')+'_'+tag+' ' +
                                 options.arguments.replace('\\"','\''))
         else:
             commands.append(command+' -d '+folder+workspace+' ' +
-                            '-n _'+tag)
+                            '-n _'+workspace.replace('.root','')+'_'+tag)
                 
     for command in commands:
         os.system(command)
