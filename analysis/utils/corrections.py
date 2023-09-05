@@ -382,11 +382,25 @@ class BTagCorrector:
         self._year = year
         common = load('data/common.coffea')
         self._wp = common['btagWPs'][tagger][year][workingpoint]
+        '''
         files = {
             'deepflav': {
                 '2016': 'DeepJet_2016LegacySF_V1.csv',
                 '2017': 'DeepFlavour_94XSF_V4_B_F.csv',
                 '2018': 'DeepJet_102XSF_V1.csv'
+                },
+            'deepcsv': {
+                '2016': 'DeepCSV_2016LegacySF_V1.csv',
+                '2017': 'DeepCSV_94XSF_V5_B_F.csv',
+                '2018': 'DeepCSV_102XSF_V1.csv'      
+                }
+        }
+        '''
+        files = {
+            'deepflav': {
+                '2016': 'DeepJet_2016LegacySF_V1_YearCorrelation-V1.csv',
+                '2017': 'DeepFlavour_94XSF_V3_B_F_comb_YearCorrelation-V1.csv',
+                '2018': 'DeepJet_102XSF_V1_YearCorrelation-V1.csv'
                 },
             'deepcsv': {
                 '2016': 'DeepCSV_2016LegacySF_V1.csv',
@@ -417,23 +431,53 @@ class BTagCorrector:
 
         eff = self.eff(flavor, pt, abseta)
         sf_nom = self.sf.eval('central', flavor, abseta, pt)
-        sf_up = self.sf.eval('up', flavor, abseta, pt)
-        sf_down = self.sf.eval('down', flavor, abseta, pt)
+        sf_up_correlated = self.sf.eval('up_correlated', flavor, abseta, pt)
+        sf_down_correlated = self.sf.eval('down_correlated', flavor, abseta, pt)
+        sf_up_uncorrelated = self.sf.eval('up_uncorrelated', flavor, abseta, pt)
+        sf_down_uncorrelated = self.sf.eval('down_uncorrelated', flavor, abseta, pt)
 
         eff_data_nom  = np.minimum(1., sf_nom*eff)
-        eff_data_up   = np.minimum(1., sf_up*eff)
-        eff_data_down = np.minimum(1., sf_down*eff)
+        eff_data_up_correlated   = np.minimum(1., sf_up_correlated*eff)
+        eff_data_down_correlated = np.minimum(1., sf_down_correlated*eff)
+        eff_data_up_uncorrelated   = np.minimum(1., sf_up_uncorrelated*eff)
+        eff_data_down_uncorrelated = np.minimum(1., sf_down_uncorrelated*eff)
+
+        
+        bc_up_correlated = 1
+        bc_down_correlated = 1
+        bc_up_uncorrelated = 1
+        bc_down_uncorrelated = 1
+        light_up_correlated = 1
+        light_down_correlated = 1
+        light_up_uncorrelated = 1
+        light_down_uncorrelated = 1
 
         nom = zerotag(eff_data_nom)/zerotag(eff)
-        up = zerotag(eff_data_up)/zerotag(eff)
-        down = zerotag(eff_data_down)/zerotag(eff)
+        if flavor != 0:
+            bc_up_correlated = zerotag(eff_data_up_correlated)/zerotag(eff)
+            bc_down_correlated = zerotag(eff_data_down_correlated)/zerotag(eff)
+            bc_up_uncorrelated = zerotag(eff_data_up_uncorrelated)/zerotag(eff)
+            bc_down_uncorrelated = zerotag(eff_data_down_uncorrelated)/zerotag(eff)
+        else:
+            light_up_correlated = zerotag(eff_data_up_correlated)/zerotag(eff)
+            light_down_correlated = zerotag(eff_data_down_correlated)/zerotag(eff)
+            light_up_uncorrelated = zerotag(eff_data_up_uncorrelated)/zerotag(eff)
+            light_down_uncorrelated = zerotag(eff_data_down_uncorrelated)/zerotag(eff)
 
         if '-1' in tag: 
             nom = (1 - zerotag(eff_data_nom)) / (1 - zerotag(eff))
-            up = (1 - zerotag(eff_data_up)) / (1 - zerotag(eff))
-            down = (1 - zerotag(eff_data_down)) / (1 - zerotag(eff))
+            if flavor != 0:
+                bc_up_correlated = (1 - zerotag(eff_data_up_correlated)) / (1 - zerotag(eff))
+                bc_down_correlated = (1 - zerotag(eff_data_down_correlated)) / (1 - zerotag(eff))
+                bc_up_uncorrelated = (1 - zerotag(eff_data_up_uncorrelated)) / (1 - zerotag(eff))
+                bc_down_uncorrelated = (1 - zerotag(eff_data_down_uncorrelated)) / (1 - zerotag(eff))
+            else:
+                light_up_correlated = (1 - zerotag(eff_data_up_correlated)) / (1 - zerotag(eff))
+                light_down_correlated = (1 - zerotag(eff_data_down_correlated)) / (1 - zerotag(eff))
+                light_up_uncorrelated = (1 - zerotag(eff_data_up_uncorrelated)) / (1 - zerotag(eff))
+                light_down_uncorrelated = (1 - zerotag(eff_data_down_uncorrelated)) / (1 - zerotag(eff))
 
-        return np.nan_to_num(nom), np.nan_to_num(up), np.nan_to_num(down)
+        return np.nan_to_num(nom), np.nan_to_num(bc_up_correlated), np.nan_to_num(bc_down_correlated), np.nan_to_num(bc_up_uncorrelated), np.nan_to_num(bc_down_uncorrelated), np.nan_to_num(light_up_correlated), np.nan_to_num(light_down_correlated), np.nan_to_num(light_up_uncorrelated), np.nan_to_num(light_down_uncorrelated)
 
 get_btag_weight = {
     'deepflav': {
