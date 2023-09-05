@@ -420,23 +420,22 @@ class BTagCorrector:
         
         eff = self.eff(flavor, pt, abseta)
         sf_nom = self.sf.eval('central', flavor, abseta, pt)
-        
-        bc_sf_up_correlated = 1.
-        bc_sf_up_correlated[bc] = self.sf.eval('up_correlated', flavor, abseta, pt)[bc]
-        bc_sf_down_correlated = 1.
-        bc_sf_down_correlated[bc] = self.sf.eval('down_correlated', flavor, abseta, pt)[bc]
-        bc_sf_up_uncorrelated = 1.
-        bc_sf_up_uncorrelated[bc] = self.sf.eval('up_uncorrelated', flavor, abseta, pt)[bc]
-        bc_sf_down_uncorrelated = 1.
-        bc_sf_down_uncorrelated[bc] = self.sf.eval('down_uncorrelated', flavor, abseta, pt)[bc]
+        bc_sf_up_correlated = sf_nom
+        bc_sf_up_correlated[bc] = self.sf.eval('up_correlated', flavor, eta, pt)[bc]
+        bc_sf_down_correlated = sf_nom
+        bc_sf_down_correlated[bc] = self.sf.eval('down_correlated', flavor, eta, pt)[bc]
+        bc_sf_up_uncorrelated = sf_nom
+        bc_sf_up_uncorrelated[bc] = self.sf.eval('up_uncorrelated', flavor, eta, pt)[bc]
+        bc_sf_down_uncorrelated = sf_nom
+        bc_sf_down_uncorrelated[bc] = self.sf.eval('down_uncorrelated', flavor, eta, pt)[bc]
 
-        light_sf_up_correlated = 1.
+        light_sf_up_correlated = sf_nom
         light_sf_up_correlated[light] = self.sf.eval('up_correlated', flavor, abseta, pt)[light]
-        light_sf_down_correlated = 1.
+        light_sf_down_correlated = sf_nom
         light_sf_down_correlated[light] = self.sf.eval('down_correlated', flavor, abseta, pt)[light]
-        light_sf_up_uncorrelated = 1.
+        light_sf_up_uncorrelated = sf_nom
         light_sf_up_uncorrelated[light] = self.sf.eval('up_uncorrelated', flavor, abseta, pt)[light]
-        light_sf_down_uncorrelated = 1.
+        light_sf_down_uncorrelated = sf_nom
         light_sf_down_uncorrelated[light] = self.sf.eval('down_uncorrelated', flavor, abseta, pt)[light]
 
         eff_data_nom  = np.minimum(1., sf_nom*eff)
@@ -449,6 +448,7 @@ class BTagCorrector:
         light_eff_data_up_uncorrelated   = np.minimum(1., light_sf_up_uncorrelated*eff)
         light_eff_data_down_uncorrelated = np.minimum(1., light_sf_down_uncorrelated*eff)
         
+        nom = zerotag(eff_data_nom)/zerotag(eff)
         bc_up_correlated = zerotag(bc_eff_data_up_correlated)/zerotag(eff)
         bc_down_correlated = zerotag(bc_eff_data_down_correlated)/zerotag(eff)
         bc_up_uncorrelated = zerotag(bc_eff_data_up_uncorrelated)/zerotag(eff)
@@ -469,7 +469,7 @@ class BTagCorrector:
             light_up_uncorrelated = (1 - zerotag(light_eff_data_up_uncorrelated)) / (1 - zerotag(eff))
             light_down_uncorrelated = (1 - zerotag(light_eff_data_down_uncorrelated)) / (1 - zerotag(eff))
 
-       return np.nan_to_num(nom), np.nan_to_num(bc_up_correlated), np.nan_to_num(bc_down_correlated), np.nan_to_num(bc_up_uncorrelated), np.nan_to_num(bc_down_uncorrelated), np.nan_to_num(light_up_correlated), np.nan_to_num(light_down_correlated), np.nan_to_num(light_up_uncorrelated), np.nan_to_num(light_down_uncorrelated)
+        return np.nan_to_num(nom), np.nan_to_num(bc_up_correlated), np.nan_to_num(bc_down_correlated), np.nan_to_num(bc_up_uncorrelated), np.nan_to_num(bc_down_uncorrelated), np.nan_to_num(light_up_correlated), np.nan_to_num(light_down_correlated), np.nan_to_num(light_up_uncorrelated), np.nan_to_num(light_down_uncorrelated)
 
 get_btag_weight = {
     'deepflav': {
