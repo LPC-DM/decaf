@@ -327,6 +327,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         get_ecal_bad_calib      = self._corrections['get_ecal_bad_calib']
         get_deepflav_weight     = self._corrections['get_btag_weight']['deepflav'][self._year]
         get_doublebtag_weight   = self._corrections['get_doublebtag_weight'][self._year]
+        get_mu_rochester_sf     = self._corrections['get_mu_rochester_sf'][self._year]
         
         isLooseElectron = self._ids['isLooseElectron'] 
         isTightElectron = self._ids['isTightElectron'] 
@@ -589,6 +590,24 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'qcdcr'  : np.ones(events.size),
             }
 
+            ###
+            # Scale and resolution weights for muons (i.e. Rochester)
+            ###
+
+            _gpt = mu.matched_gen.pt
+            # for backup w/o gen
+            _nl = m.nTrackerLayers
+            _u = JaggedArray.fromoffsets(_muon_offsets, np.random.rand(*_pt.flatten().shape))
+            _hasgen = (_gpt.fillna(-1) > 0)
+            _kspread = rochester.kSpreadMC(_charge[_hasgen], _pt[_hasgen], _eta[_hasgen], _phi[_hasgen],
+                                           _gpt[_hasgen])
+            _ksmear = rochester.kSmearMC(_charge[~_hasgen], _pt[~_hasgen], _eta[~_hasgen], _phi[~_hasgen],
+                                         _nl[~_hasgen], _u[~_hasgen])
+            _k = np.ones_like(_pt.flatten())
+            _k[_hasgen.flatten()] = _kspread.flatten()
+            _k[~_hasgen.flatten()] = _ksmear.flatten()
+            _k = JaggedArray.fromoffsets(_muon_offsets, _k)
+            
             ###
             # AK4 b-tagging weights
             ###
