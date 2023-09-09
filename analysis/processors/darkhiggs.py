@@ -359,6 +359,33 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
 
         mu = events.Muon
+        rochester = get_mu_rochester_sf
+        _muon_offsets = mu.pt.offsets
+        _charge = mu.charge
+        _pt = mu.pt
+        _eta = mu.eta
+        _phi = mu.phi
+        if isData:
+            _k = rochester.kScaleDT(_charge, _pt, _eta, _phi)
+        else:
+            # for default if gen present
+            _gpt = mu.matched_gen.pt
+            # for backup w/o gen
+            _nl = mu.nTrackerLayers
+            _u = JaggedArray.fromoffsets(_muon_offsets, np.random.rand(*_pt.flatten().shape))
+            _hasgen = (_gpt.fillna(-1) > 0)
+            _kspread = rochester.kSpreadMC(_charge[_hasgen], _pt[_hasgen], _eta[_hasgen], _phi[_hasgen],
+                                           _gpt[_hasgen])
+            _ksmear = rochester.kSmearMC(_charge[~_hasgen], _pt[~_hasgen], _eta[~_hasgen], _phi[~_hasgen],
+                                         _nl[~_hasgen], _u[~_hasgen])
+            _k = np.ones_like(_pt.flatten())
+            _k[_hasgen.flatten()] = _kspread.flatten()
+            _k[~_hasgen.flatten()] = _ksmear.flatten()
+            _k = JaggedArray.fromoffsets(_muon_offsets, _k)
+        mask = _pt.flatten() < 200
+        rochester_pt = _pt.flatten()
+        rochester_pt[mask] = (_k * _pt).flatten()[mask]
+        mu['pt'] = JaggedArray.fromoffsets(_muon_offsets, rochester_pt)
         mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.looseId,self._year)
         mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.tightId,self._year)
         mu['T'] = TVector2Array.from_polar(mu.pt, mu.phi)
@@ -590,24 +617,6 @@ class AnalysisProcessor(processor.ProcessorABC):
                 'qcdcr'  : np.ones(events.size),
             }
 
-            ###
-            # Scale and resolution weights for muons (i.e. Rochester)
-            ###
-
-            _gpt = mu.matched_gen.pt
-            # for backup w/o gen
-            _nl = m.nTrackerLayers
-            _u = JaggedArray.fromoffsets(_muon_offsets, np.random.rand(*_pt.flatten().shape))
-            _hasgen = (_gpt.fillna(-1) > 0)
-            _kspread = rochester.kSpreadMC(_charge[_hasgen], _pt[_hasgen], _eta[_hasgen], _phi[_hasgen],
-                                           _gpt[_hasgen])
-            _ksmear = rochester.kSmearMC(_charge[~_hasgen], _pt[~_hasgen], _eta[~_hasgen], _phi[~_hasgen],
-                                         _nl[~_hasgen], _u[~_hasgen])
-            _k = np.ones_like(_pt.flatten())
-            _k[_hasgen.flatten()] = _kspread.flatten()
-            _k[~_hasgen.flatten()] = _ksmear.flatten()
-            _k = JaggedArray.fromoffsets(_muon_offsets, _k)
-            
             ###
             # AK4 b-tagging weights
             ###
