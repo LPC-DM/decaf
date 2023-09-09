@@ -641,6 +641,7 @@ corrections = {
     'get_btag_weight':          get_btag_weight,
     'get_doublebtag_weight':    get_doublebtag_weight,
     'get_reweighting':          get_reweighting,
+    'get_mu_rochester_sf':      get_mu_rochester_sf,
     #'Jetevaluator':             Jetevaluator,
 }
 save(corrections, 'data/corrections.coffea')
