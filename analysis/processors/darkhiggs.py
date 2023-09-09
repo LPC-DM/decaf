@@ -372,7 +372,7 @@ class AnalysisProcessor(processor.ProcessorABC):
             _gpt = mu.matched_gen.pt
             # for backup w/o gen
             _nl = mu.nTrackerLayers
-            _u = JaggedArray.fromoffsets(_muon_offsets, np.random.rand(*_pt.flatten().shape))
+            _u = awkward.JaggedArray.fromoffsets(_muon_offsets, np.random.rand(*_pt.flatten().shape))
             _hasgen = (_gpt.fillna(-1) > 0)
             _kspread = rochester.kSpreadMC(_charge[_hasgen], _pt[_hasgen], _eta[_hasgen], _phi[_hasgen],
                                            _gpt[_hasgen])
@@ -381,11 +381,11 @@ class AnalysisProcessor(processor.ProcessorABC):
             _k = np.ones_like(_pt.flatten())
             _k[_hasgen.flatten()] = _kspread.flatten()
             _k[~_hasgen.flatten()] = _ksmear.flatten()
-            _k = JaggedArray.fromoffsets(_muon_offsets, _k)
+            _k = awkward.JaggedArray.fromoffsets(_muon_offsets, _k)
         mask = _pt.flatten() < 200
         rochester_pt = _pt.flatten()
         rochester_pt[mask] = (_k * _pt).flatten()[mask]
-        mu['pt'] = JaggedArray.fromoffsets(_muon_offsets, rochester_pt)
+        mu['pt'] = awkward.JaggedArray.fromoffsets(_muon_offsets, rochester_pt)
         mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.looseId,self._year)
         mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.tightId,self._year)
         mu['T'] = TVector2Array.from_polar(mu.pt, mu.phi)
