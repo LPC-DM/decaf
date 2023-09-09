@@ -193,6 +193,19 @@ get_mu_loose_iso_sf = {}
 for year in ['2016','2017','2018']:
     get_mu_tight_iso_sf[year] = lookup_tools.dense_lookup.dense_lookup(mu_iso_tight_hist[year].values, mu_iso_tight_hist[year].edges)
     get_mu_loose_iso_sf[year] = lookup_tools.dense_lookup.dense_lookup(mu_iso_loose_hist[year].values, mu_iso_loose_hist[year].edges)
+
+###
+# Muon scale and resolution (i.e. Rochester)
+###
+
+tag = 'roccor.Run2.v5'
+get_mu_rochester_sf = {}
+for year in ['2016','2017','2018']:
+    fname = f'data/{tag}/RoccoR{year}.txt'
+    sfs = lookup_tools.txt_converters.convert_rochester_file(fname,loaduncs=True)
+    get_mu_rochester_sf[year] = lookup_tools.rochester_lookup.rochester_lookup(sfs)
+
+
 ###
 # V+jets NLO k-factors
 ###
