@@ -349,7 +349,7 @@ class AnalysisProcessor(processor.ProcessorABC):
         ###
 
         met = events.MET
-        if self._year == '2017': events.METFixEE2017#Recommended for 2017
+        if self._year == '2017': met = events.METFixEE2017#Recommended for 2017
         met['T']  = TVector2Array.from_polar(met.pt, met.phi)
         calomet = events.CaloMET
         puppimet = events.PuppiMET
@@ -378,14 +378,14 @@ class AnalysisProcessor(processor.ProcessorABC):
                                            _gpt[_hasgen])
             _ksmear = rochester.kSmearMC(_charge[~_hasgen], _pt[~_hasgen], _eta[~_hasgen], _phi[~_hasgen],
                                          _nl[~_hasgen], _u[~_hasgen])
-            _k = np.ones_like(_pt.flatten())
-            _k[_hasgen.flatten()] = _kspread.flatten()
-            _k[~_hasgen.flatten()] = _ksmear.flatten()
-            _k = awkward.JaggedArray.fromoffsets(_muon_offsets, _k)
-        mask = _pt.flatten() < 200
-        rochester_pt = _pt.flatten()
-        rochester_pt[mask] = (_k * _pt).flatten()[mask]
-        mu['pt'] = awkward.JaggedArray.fromoffsets(_muon_offsets, rochester_pt)
+            _k = _pt.ones_like()
+            _k[_hasgen] = _kspread
+            _k[~_hasgen] = _ksmear
+        mask = _pt < 200
+        rochester_pt = _pt.ones_like()
+        rochester_pt[~mask] = _pt[~mask]
+        rochester_pt[mask] = (_k * _pt)[mask]
+        mu['pt'] = rochester_pt
         mu['isloose'] = isLooseMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.looseId,self._year)
         mu['istight'] = isTightMuon(mu.pt,mu.eta,mu.pfRelIso04_all,mu.tightId,self._year)
         mu['T'] = TVector2Array.from_polar(mu.pt, mu.phi)
