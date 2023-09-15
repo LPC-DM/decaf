@@ -17,8 +17,6 @@ import ROOT
 rl.util.install_roofit_helpers()
 rl.ParametericSample.PreferRooParametricHist = False
 
-gentype_map = ['bb', 'b', 'cc', 'c', 'other']
-
 category_map = {
         "pass": 1,
         "fail": 0
@@ -148,8 +146,8 @@ def model(year, category, pt):
     addPileupSyst(sr_genbb)
     addPrefiringSyst(sr_genbb, year)
     sr_genbb.setParamEffect(jes, 1.04)
-    sr_genbb.setParamEffect(frac_bb, 1.2)
-    sr_genbb.setParamEffect(doublebtag_weight['QCD-$\mu$ (bb)'], weight['QCD-$\mu$ (bb)'][category])
+    sr_genbb.setParamEffect(frac_bs, 1.2)
+    sr_genbb.setParamEffect(doublebtag_weight['bs'], weight['bs'][category])
     addBBliteSyst(sr_genbb, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genbb)
 
@@ -163,8 +161,8 @@ def model(year, category, pt):
     addPileupSyst(sr_genb)
     addPrefiringSyst(sr_genb, year)
     sr_genb.setParamEffect(jes, 1.04)
-    sr_genb.setParamEffect(frac_b, 1.2)
-    sr_genb.setParamEffect(doublebtag_weight['QCD-$\mu$ (b)'], weight['QCD-$\mu$ (b)'][category])
+    sr_genb.setParamEffect(frac_bs, 1.2)
+    sr_genb.setParamEffect(doublebtag_weight['bs'], weight['bs'][category])
     addBBliteSyst(sr_genb, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genb)
 
@@ -174,8 +172,8 @@ def model(year, category, pt):
     addPileupSyst(sr_gencc)
     addPrefiringSyst(sr_gencc, year)
     sr_gencc.setParamEffect(jes, 1.04)
-    sr_gencc.setParamEffect(frac_cc, 1.2)
-    sr_gencc.setParamEffect(doublebtag_weight['QCD-$\mu$ (cc)'], weight['QCD-$\mu$ (cc)'][category])
+    sr_gencc.setParamEffect(frac_cs, 1.2)
+    sr_gencc.setParamEffect(doublebtag_weight['cs'], weight['cs'][category])
     addBBliteSyst(sr_gencc, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_gencc)
 
@@ -185,8 +183,8 @@ def model(year, category, pt):
     addPileupSyst(sr_genc)
     addPrefiringSyst(sr_genc, year)
     sr_genc.setParamEffect(jes, 1.04)
-    sr_genc.setParamEffect(frac_c, 1.2)
-    sr_genc.setParamEffect(doublebtag_weight['QCD-$\mu$ (c)'], weight['QCD-$\mu$ (c)'][category])
+    sr_genc.setParamEffect(frac_cs, 1.2)
+    sr_genc.setParamEffect(doublebtag_weight['cs'], weight['cs)'][category])
     addBBliteSyst(sr_genc, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genc)
 
@@ -197,7 +195,7 @@ def model(year, category, pt):
     addPrefiringSyst(sr_genother, year)
     sr_genother.setParamEffect(jes, 1.04)
     sr_genother.setParamEffect(frac_other, 1.2)
-    sr_genother.setParamEffect(doublebtag_weight['QCD-$\mu$ (l)'], weight['QCD-$\mu$ (l)'][category])
+    sr_genother.setParamEffect(doublebtag_weight['other)'], weight['other'][category])
     addBBliteSyst(sr_genother, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genother)
 
@@ -261,10 +259,10 @@ if __name__ == "__main__":
     for ptbin in range(npt):
         print(ptbin)
 
-        frac_b = rl.NuisanceParameter("frac_b_pt" + str(ptbin) + year, "lnN")
-        frac_c = rl.NuisanceParameter("frac_c_pt" + str(ptbin) + year, "lnN")
-        frac_bb = rl.NuisanceParameter("frac_bb_pt" + str(ptbin) + year, "lnN")
-        frac_cc = rl.NuisanceParameter("frac_cc_pt" + str(ptbin) + year, "lnN")
+        frac_bs = rl.NuisanceParameter("frac_bs_pt" + str(ptbin) + year, "lnN")
+        frac_cs = rl.NuisanceParameter("frac_cs_pt" + str(ptbin) + year, "lnN")
+        #frac_bb = rl.NuisanceParameter("frac_bb_pt" + str(ptbin) + year, "lnN")
+        #frac_cc = rl.NuisanceParameter("frac_cc_pt" + str(ptbin) + year, "lnN")
         frac_other = rl.NuisanceParameter("frac_other_pt" + str(ptbin) + year, "lnN")
 
         ###
@@ -272,24 +270,30 @@ if __name__ == "__main__":
         ###
 
         eff={}
-        for k in mc:
-            num=mc[k].integrate('svmass').values()[()][ptbin,1]
-            den=mc[k].integrate('svmass').sum('ZHbbvsQCD').values()[()][ptbin]
-            eff[k] = np.nan_to_num(num/den)
-            print(k,num,den)
+        
+        num=mc['QCD-$\mu$ (bb)'].integrate('svmass').values()[()][ptbin,1]+mc['QCD-$\mu$ (b)'].integrate('svmass').values()[()][ptbin,1]
+        den=mc['QCD-$\mu$ (bb)'].integrate('svmass').sum('ZHbbvsQCD').values()[()][ptbin]+mc['QCD-$\mu$ (b)'].integrate('svmass').sum('ZHbbvsQCD').values()[()][ptbin]
+        eff['bs'] = np.nan_to_num(num/den)
 
+        num=mc['QCD-$\mu$ (cc)'].integrate('svmass').values()[()][ptbin,1]+mc['QCD-$\mu$ (c)'].integrate('svmass').values()[()][ptbin,1]
+        den=mc['QCD-$\mu$ (cc)'].integrate('svmass').sum('ZHbbvsQCD').values()[()][ptbin]+mc['QCD-$\mu$ (c)'].integrate('svmass').sum('ZHbbvsQCD').values()[()][ptbin]
+        eff['cs'] = np.nan_to_num(num/den)
+
+        num=mc['QCD-$\mu$ (l)'].integrate('svmass').values()[()][ptbin,1]
+        den=mc['QCD-$\mu$ (l)'].integrate('svmass').sum('ZHbbvsQCD').values()[()][ptbin]
+        eff['other'] = np.nan_to_num(num/den)
 
         #### SF weight (TemplateSample version) ####
         sf={}
         weight={}
         doublebtag_weight={}
-        for k in mc:
-            sf[k] = rl.IndependentParameter("sf"+ labels[k] + year + 'pt' + str(ptbin), 1.0, 0.01, 1.0 / eff[k])
+        for k in eff:
+            sf[k] = rl.IndependentParameter("sf"+ k + year + 'pt' + str(ptbin), 1.0, 0.01, 1.0 / eff[k])
             weight[k] = {
-                "pass": rl.DependentParameter("weight"+labels[k], "{0}", sf[k]),
-                "fail": rl.DependentParameter("weight"+labels[k], "(1-({0}*%f))/(1-%f)" % (eff[k], eff[k]), sf[k])
+                "pass": rl.DependentParameter("weight"+k, "{0}", sf[k]),
+                "fail": rl.DependentParameter("weight"+k, "(1-({0}*%f))/(1-%f)" % (eff[k], eff[k]), sf[k])
             }
-            doublebtag_weight[k] = rl.IndependentParameter("doublebtag_weight"+ labels[k] + year + 'pt' + str(ptbin), 1.0)
+            doublebtag_weight[k] = rl.IndependentParameter("doublebtag_weight"+ k + year + 'pt' + str(ptbin), 1.0)
         
         for category in ["pass", "fail"]:
 
