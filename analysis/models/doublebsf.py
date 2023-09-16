@@ -184,7 +184,7 @@ def model(year, category, pt):
     addPrefiringSyst(sr_genc, year)
     sr_genc.setParamEffect(jes, 1.04)
     sr_genc.setParamEffect(frac_cs, 1.2)
-    sr_genc.setParamEffect(doublebtag_weight['cs'], weight['cs)'][category])
+    sr_genc.setParamEffect(doublebtag_weight['cs'], weight['cs'][category])
     addBBliteSyst(sr_genc, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genc)
 
@@ -195,7 +195,7 @@ def model(year, category, pt):
     addPrefiringSyst(sr_genother, year)
     sr_genother.setParamEffect(jes, 1.04)
     sr_genother.setParamEffect(frac_other, 1.2)
-    sr_genother.setParamEffect(doublebtag_weight['other)'], weight['other'][category])
+    sr_genother.setParamEffect(doublebtag_weight['other'], weight['other'][category])
     addBBliteSyst(sr_genother, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genother)
 
