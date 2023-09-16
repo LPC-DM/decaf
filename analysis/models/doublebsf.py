@@ -22,18 +22,10 @@ category_map = {
         "fail": 0
         }
 pt_binning = {
-        "2016": [350, 450, 500, 600, 2500],
-        "2017": [350, 450, 500, 600, 2500],
-        "2018": [350, 450, 500, 600, 2500]
+        "2016": [350, 400, 500, 2500],
+        "2017": [350, 400, 500, 2500],
+        "2018": [350, 400, 500, 2500]
         }
-labels = {
-    'QCD-$\mu$ (bb)':'bb',
-    'QCD-$\mu$ (cc)':'cc',
-    'QCD-$\mu$ (b)':'b',
-    'QCD-$\mu$ (c)':'c',
-    'QCD-$\mu$ (l)':'other',
-}
-
 
 ### category: pass/fail flag
 def template(dictionary, process, category, pt, read_sumw2=False):
@@ -132,69 +124,39 @@ def model(year, category, pt):
     for i in range(nbins):
         param[i] = rl.NuisanceParameter(ch_name + '_mcstat_bin%i' % i, combinePrior='shape')
         
-    mc_list = ['QCD-$\mu$ (bb)', 'QCD-$\mu$ (b)', 'QCD-$\mu$ (cc)', 'QCD-$\mu$ (c)', 'QCD-$\mu$ (l)']
+    mc_list = ['QCD-$\mu$ (b+bb)', 'QCD-$\mu$ (c+cc)', 'QCD-$\mu$ (l)']
     total_yields, total_error2 = get_mergedMC_stat_variations(mc, category, pt, mc_list)
 
     ###
-    # QCD sig process
+    # QCD processes
     ###
 
-    ##### Template to use bb stat uncertainties
-    sr_genbb_Template = template(mc, 'QCD-$\mu$ (bb)', category, pt, read_sumw2=True)
+    sr_genbb_Template = template(mc, 'QCD-$\mu$ (b+bb)', category, pt, read_sumw2=True)
     sr_genbb = rl.TemplateSample(ch_name + "_genbb", rl.Sample.SIGNAL, sr_genbb_Template)
     addLumiSyst(sr_genbb, year)
     addPileupSyst(sr_genbb)
     addPrefiringSyst(sr_genbb, year)
     sr_genbb.setParamEffect(jes, 1.04)
-    sr_genbb.setParamEffect(frac_bs, 1.2)
     sr_genbb.setParamEffect(doublebtag_weight['bs'], weight['bs'][category])
     addBBliteSyst(sr_genbb, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genbb)
 
-    ###
-    # QCD bkg processes
-    ###
-
-    sr_genb_Template = template(mc, 'QCD-$\mu$ (b)', category, pt, read_sumw2=True)
-    sr_genb = rl.TemplateSample(ch_name + "_genb", rl.Sample.BACKGROUND, sr_genb_Template)
-    addLumiSyst(sr_genb, year)
-    addPileupSyst(sr_genb)
-    addPrefiringSyst(sr_genb, year)
-    sr_genb.setParamEffect(jes, 1.04)
-    sr_genb.setParamEffect(frac_bs, 1.2)
-    sr_genb.setParamEffect(doublebtag_weight['bs'], weight['bs'][category])
-    addBBliteSyst(sr_genb, param, total_yields, total_error2, epsilon=1e-5)
-    sr.addSample(sr_genb)
-
-    sr_gencc_Template = template(mc, 'QCD-$\mu$ (cc)', category, pt, read_sumw2=True)
-    sr_gencc = rl.TemplateSample(ch_name + "_gencc", rl.Sample.BACKGROUND, sr_gencc_Template)
+    sr_gencc_Template = template(mc, 'QCD-$\mu$ (c+cc)', category, pt, read_sumw2=True)
+    sr_gencc = rl.TemplateSample(ch_name + "_gencc", rl.Sample.SIGNAL, sr_gencc_Template)
     addLumiSyst(sr_gencc, year)
     addPileupSyst(sr_gencc)
     addPrefiringSyst(sr_gencc, year)
     sr_gencc.setParamEffect(jes, 1.04)
-    sr_gencc.setParamEffect(frac_cs, 1.2)
     sr_gencc.setParamEffect(doublebtag_weight['cs'], weight['cs'][category])
     addBBliteSyst(sr_gencc, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_gencc)
 
-    sr_genc_Template = template(mc, 'QCD-$\mu$ (c)', category, pt, read_sumw2=True)
-    sr_genc = rl.TemplateSample(ch_name + "_genc", rl.Sample.BACKGROUND, sr_genc_Template)
-    addLumiSyst(sr_genc, year)
-    addPileupSyst(sr_genc)
-    addPrefiringSyst(sr_genc, year)
-    sr_genc.setParamEffect(jes, 1.04)
-    sr_genc.setParamEffect(frac_cs, 1.2)
-    sr_genc.setParamEffect(doublebtag_weight['cs'], weight['cs'][category])
-    addBBliteSyst(sr_genc, param, total_yields, total_error2, epsilon=1e-5)
-    sr.addSample(sr_genc)
-
     sr_genother_Template = template(mc, 'QCD-$\mu$ (l)', category, pt, read_sumw2=True)
-    sr_genother = rl.TemplateSample(ch_name + "_genother", rl.Sample.BACKGROUND, sr_genother_Template)
+    sr_genother = rl.TemplateSample(ch_name + "_genother", rl.Sample.SIGNAL, sr_genother_Template)
     addLumiSyst(sr_genother, year)
     addPileupSyst(sr_genother)
     addPrefiringSyst(sr_genother, year)
     sr_genother.setParamEffect(jes, 1.04)
-    sr_genother.setParamEffect(frac_other, 1.2)
     sr_genother.setParamEffect(doublebtag_weight['other'], weight['other'][category])
     addBBliteSyst(sr_genother, param, total_yields, total_error2, epsilon=1e-5)
     sr.addSample(sr_genother)
@@ -225,7 +187,18 @@ if __name__ == "__main__":
     ###
     # Rebin templates for fit 
     ##
+        
     data_hists["template"] = data_hists["template"].rebin("fj1pt", hist.Bin("fj1pt", "fj1pt", pt_binning[year]))
+    
+    process = hist.Cat("process", "Process", sorting='placement')
+    cats = ("dataset",)
+    bkg_map = OrderedDict()
+    bkg_map['QCD-$\mu$ (b+bb)'] = (['bb--QCD*','b--QCD*'],)
+    bkg_map['QCD-$\mu$ (c+cc)'] = (['cc--QCD*','c--QCD*'],)
+    bkg_map['QCD-$\mu$ (l)'] = ('l--QCD*')
+    bkg_hists={}
+    for key in hists.keys():
+        bkg_hists[key] = hists[key].group(cats, process, bkg_map)
     bkg_hists["template"] = bkg_hists["template"].rebin("fj1pt", hist.Bin("fj1pt", "fj1pt", pt_binning[year]))
 
     ###
@@ -251,19 +224,10 @@ if __name__ == "__main__":
     prefiring = rl.NuisanceParameter("prefiring" + year, "lnN")
     jes = rl.NuisanceParameter("jes" + year, "lnN")
     
-    #### fractional systematics (assume 50%)
-    #frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
-
     ptbins = np.array(pt_binning[year])
     npt = len(ptbins) - 1
     for ptbin in range(npt):
         print(ptbin)
-
-        frac_bs = rl.NuisanceParameter("frac_bs_pt" + str(ptbin) + year, "lnN")
-        frac_cs = rl.NuisanceParameter("frac_cs_pt" + str(ptbin) + year, "lnN")
-        #frac_bb = rl.NuisanceParameter("frac_bb_pt" + str(ptbin) + year, "lnN")
-        #frac_cc = rl.NuisanceParameter("frac_cc_pt" + str(ptbin) + year, "lnN")
-        frac_other = rl.NuisanceParameter("frac_other_pt" + str(ptbin) + year, "lnN")
 
         ###
         # Calculating efficiencies
@@ -271,12 +235,12 @@ if __name__ == "__main__":
 
         eff={}
         
-        num=mc['QCD-$\mu$ (bb)'].integrate('svmass').values()[()][ptbin,1]+mc['QCD-$\mu$ (b)'].integrate('svmass').values()[()][ptbin,1]
-        den=mc['QCD-$\mu$ (bb)'].integrate('svmass').sum('ZHbbvsQCD').values()[()][ptbin]+mc['QCD-$\mu$ (b)'].integrate('svmass').sum('ZHbbvsQCD').values()[()][ptbin]
+        num=mc['QCD-$\mu$ (b+bb)'].integrate('svmass').values()[()][ptbin,1]
+        den=mc['QCD-$\mu$ (b+bb)'].integrate('svmass').sum('ZHbbvsQCD').values()[()][ptbin]
         eff['bs'] = np.nan_to_num(num/den)
 
-        num=mc['QCD-$\mu$ (cc)'].integrate('svmass').values()[()][ptbin,1]+mc['QCD-$\mu$ (c)'].integrate('svmass').values()[()][ptbin,1]
-        den=mc['QCD-$\mu$ (cc)'].integrate('svmass').sum('ZHbbvsQCD').values()[()][ptbin]+mc['QCD-$\mu$ (c)'].integrate('svmass').sum('ZHbbvsQCD').values()[()][ptbin]
+        num=mc['QCD-$\mu$ (c+cc)'].integrate('svmass').values()[()][ptbin,1]
+        den=mc['QCD-$\mu$ (c+cc)'].integrate('svmass').sum('ZHbbvsQCD').values()[()][ptbin]
         eff['cs'] = np.nan_to_num(num/den)
 
         num=mc['QCD-$\mu$ (l)'].integrate('svmass').values()[()][ptbin,1]
