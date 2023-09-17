@@ -7,6 +7,7 @@ if __name__ == '__main__':
     parser.add_option('-d', '--datacard', help='datacard', dest='datacard')
     parser.add_option('-o', '--outfile', help='outfile', dest='outfile')
     parser.add_option('-m', '--maps', help='maps', dest='maps')
+    parser.add_option('-a', '--arguments', help='arguments', dest='arguments', default='')
     (options, args) = parser.parse_args()
     
     command = 'text2workspace.py '+options.datacard
@@ -40,11 +41,11 @@ if __name__ == '__main__':
     if options.maps: 
         if 'SIGNAL:' in options.maps:
             for signal in signals:
-                commands.append(add_maps(command, options.maps.replace('SIGNAL',signal))+' -o '+options.outfile.replace('SIGNAL',signal))
+                commands.append(add_maps(command, options.maps.replace('SIGNAL',signal))+' -o '+options.outfile.replace('SIGNAL',signal)+' '+options.arguments)
         else:
-            commands.append(add_maps(command, options.maps)+' -o '+options.outfile)
+            commands.append(add_maps(command, options.maps)+' -o '+options.outfile+' '+options.arguments)
     else:
-        commands.append(command+' -o '+options.outfile)
+        commands.append(command+' -o '+options.outfile+' '+options.arguments)
 
     for command in commands:
         #print(command)

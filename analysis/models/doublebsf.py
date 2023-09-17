@@ -136,6 +136,7 @@ def model(year, category, pt):
     addLumiSyst(sr_genbb, year)
     addPileupSyst(sr_genbb)
     addPrefiringSyst(sr_genbb, year)
+    #sr_genbb.setParamEffect(frac_bb, 1.2)
     sr_genbb.setParamEffect(jes, 1.04)
     sr_genbb.setParamEffect(doublebtag_weight['bs'], weight['bs'][category])
     addBBliteSyst(sr_genbb, param, total_yields, total_error2, epsilon=1e-5)
@@ -146,6 +147,7 @@ def model(year, category, pt):
     addLumiSyst(sr_gencc, year)
     addPileupSyst(sr_gencc)
     addPrefiringSyst(sr_gencc, year)
+    #sr_gencc.setParamEffect(frac_cc, 1.2)
     sr_gencc.setParamEffect(jes, 1.04)
     sr_gencc.setParamEffect(doublebtag_weight['cs'], weight['cs'][category])
     addBBliteSyst(sr_gencc, param, total_yields, total_error2, epsilon=1e-5)
@@ -156,6 +158,7 @@ def model(year, category, pt):
     addLumiSyst(sr_genother, year)
     addPileupSyst(sr_genother)
     addPrefiringSyst(sr_genother, year)
+    #sr_genother.setParamEffect(frac_other, 1.2)
     sr_genother.setParamEffect(jes, 1.04)
     sr_genother.setParamEffect(doublebtag_weight['other'], weight['other'][category])
     addBBliteSyst(sr_genother, param, total_yields, total_error2, epsilon=1e-5)
@@ -191,14 +194,12 @@ if __name__ == "__main__":
     data_hists["template"] = data_hists["template"].rebin("fj1pt", hist.Bin("fj1pt", "fj1pt", pt_binning[year]))
     
     process = hist.Cat("process", "Process", sorting='placement')
-    cats = ("dataset",)
+    cats = ("process",)
     bkg_map = OrderedDict()
-    bkg_map['QCD-$\mu$ (b+bb)'] = (['bb--QCD*','b--QCD*'],)
-    bkg_map['QCD-$\mu$ (c+cc)'] = (['cc--QCD*','c--QCD*'],)
-    bkg_map['QCD-$\mu$ (l)'] = ('l--QCD*')
-    bkg_hists={}
-    for key in hists.keys():
-        bkg_hists[key] = hists[key].group(cats, process, bkg_map)
+    bkg_map['QCD-$\mu$ (b+bb)'] = (['QCD-$\mu$ (bb)','QCD-$\mu$ (b)'],)
+    bkg_map['QCD-$\mu$ (c+cc)'] = (['QCD-$\mu$ (cc)','QCD-$\mu$ (c)'],)
+    bkg_map['QCD-$\mu$ (l)'] = ('QCD-$\mu$ (l)',)
+    bkg_hists["template"] = bkg_hists["template"].group(cats, process, bkg_map)
     bkg_hists["template"] = bkg_hists["template"].rebin("fj1pt", hist.Bin("fj1pt", "fj1pt", pt_binning[year]))
 
     ###
@@ -223,6 +224,9 @@ if __name__ == "__main__":
     pu = rl.NuisanceParameter("pu" + year, "lnN")
     prefiring = rl.NuisanceParameter("prefiring" + year, "lnN")
     jes = rl.NuisanceParameter("jes" + year, "lnN")
+    frac_bb = rl.NuisanceParameter("frac_bb" + year, "lnN")
+    frac_cc = rl.NuisanceParameter("frac_cc" + year, "lnN")
+    frac_other = rl.NuisanceParameter("frac_other" + year, "lnN")
     
     ptbins = np.array(pt_binning[year])
     npt = len(ptbins) - 1
