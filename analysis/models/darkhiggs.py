@@ -1581,11 +1581,18 @@ if __name__ == "__main__":
         )
         addMETTrigSyst(sr_zjetsMCPass, year)
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
-        #addMCStatsTFSyst(sr_zjetsMCPass, sr_zjetsMCPassTemplate, sr_zjetsMCFailTemplate, epsilon=1e-5)
+       
+        sr_zjetsPassStatsTFSystTemplate = (np.ones_like(sr_zjetsMCPass._nominal), sr_zjetsMCPass._observable._binning, sr_zjetsMCPass._observable._name)
+        sr_zjetsPassStatsTFSyst = rl.TemplateSample(
+            "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_zjetsStatsTFSyst", 
+            rl.Sample.BACKGROUND, 
+            sr_zjetsPassStatsTFSystTemplate
+        )
+        addMCStatsTFSyst(sr_zjetsPassStatsTFSyst, sr_zjetsMCPassTemplate, sr_zjetsMCFailTemplate, epsilon=1e-5)
 
-        #tf_MCtemplZ = sr_zjetsMCPass.getExpectation() / sr_zjetsMCFail.getExpectation()
-        #tf_paramsZ = tf_MCtemplZ * tf_dataResidualZ_params[recoilbin, :]
-        tf_paramsZ = zjetseff *tf_MCtemplZ_params_final[recoilbin, :] * tf_dataResidualZ_params[recoilbin, :]
+        tf_MCtemplZ = sr_zjetsMCPass.getExpectation() / sr_zjetsMCFail.getExpectation() * sr_zjetsPassStatsTFSyst.getExpectation()
+        tf_paramsZ = tf_MCtemplZ * tf_dataResidualZ_params[recoilbin, :]
+        #tf_paramsZ = zjetseff *tf_MCtemplZ_params_final[recoilbin, :] * tf_dataResidualZ_params[recoilbin, :]
         sr_zjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_zjets",
             rl.Sample.BACKGROUND,
@@ -1607,11 +1614,18 @@ if __name__ == "__main__":
         )
         addMETTrigSyst(sr_wjetsMCPass, year)
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
-        #addMCStatsTFSyst(sr_wjetsMCPass, sr_wjetsMCPassTemplate, sr_wjetsMCFailTemplate, epsilon=1e-5)
         
-        #tf_MCtemplW = sr_wjetsMCPass.getExpectation() / sr_wjetsMCFail.getExpectation()
-        #tf_paramsW = tf_MCtemplW * tf_dataResidualW_params[recoilbin, :]
-        tf_paramsW = wjetseff * tf_MCtemplW_params_final[recoilbin, :] * tf_dataResidualW_params[recoilbin, :]
+        sr_wjetsPassStatsTFSystTemplate = (np.ones_like(sr_wjetsMCPass._nominal), sr_wjetsMCPass._observable._binning, sr_wjetsMCPass._observable._name)
+        sr_wjetsPassStatsTFSyst = rl.TemplateSample(
+            "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_wjetsStatsTFSyst", 
+            rl.Sample.BACKGROUND, 
+            sr_wjetsPassStatsTFSystTemplate
+        )
+        addMCStatsTFSyst(sr_wjetsPassStatsTFSyst, sr_wjetsMCPassTemplate, sr_wjetsMCFailTemplate, epsilon=1e-5)
+        
+        tf_MCtemplW = sr_wjetsMCPass.getExpectation() / sr_wjetsMCFail.getExpectation() * sr_wjetsPassStatsTFSyst.getExpectation()
+        tf_paramsW = tf_MCtemplW * tf_dataResidualW_params[recoilbin, :]
+        #tf_paramsW = wjetseff * tf_MCtemplW_params_final[recoilbin, :] * tf_dataResidualW_params[recoilbin, :]
         sr_wjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
