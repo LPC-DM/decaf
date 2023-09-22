@@ -498,7 +498,7 @@ class BTagCorrector:
             light_up_uncorrelated = (1 - zerotag(light_eff_data_up_uncorrelated)) / (1 - zerotag(eff))
             light_down_uncorrelated = (1 - zerotag(light_eff_data_down_uncorrelated)) / (1 - zerotag(eff))
 
-        return np.nan_to_num(nom), np.nan_to_num(bc_up_correlated), np.nan_to_num(bc_down_correlated), np.nan_to_num(bc_up_uncorrelated), np.nan_to_num(bc_down_uncorrelated), np.nan_to_num(light_up_correlated), np.nan_to_num(light_down_correlated), np.nan_to_num(light_up_uncorrelated), np.nan_to_num(light_down_uncorrelated)
+        return np.nan_to_num(nom, nan=1.), np.nan_to_num(bc_up_correlated, nan=1.), np.nan_to_num(bc_down_correlated, nan=1.), np.nan_to_num(bc_up_uncorrelated, nan=1.), np.nan_to_num(bc_down_uncorrelated, nan=1.), np.nan_to_num(light_up_correlated, nan=1.), np.nan_to_num(light_down_correlated, nan=1.), np.nan_to_num(light_up_uncorrelated, nan=1.), np.nan_to_num(light_down_uncorrelated, nan=1.)
 
 get_btag_weight = {
     'deepflav': {
@@ -543,19 +543,19 @@ class DoubleBTagCorrector:
         self._year = year
         sf = {
             '2018': {
-                'value': np.array([1.0037e+00,1.0037e+00,7.3346e-01,6.9716e-01,1.1972e+00]),
-                'unc': np.array([2*6.72e-02,6.72e-02,6.98e-02,7.06e-02,1.06e-01]),
-                'edges': np.array([160, 350, 450, 500, 2500])
+                'value': np.array([0.82, 0.82, 0.75, 0.81]),
+                'unc': np.array([2*np.sqrt(0.07**2 + 0.11**2), np.sqrt(0.07**2 + 0.11**2), np.sqrt(0.06**2 + 0.06**2), np.sqrt(0.05**2 + 0.01**2)]),
+                'edges': np.array([160, 350, 400, 500, 2500])
             },
             '2017': {
-                'value': np.array([9.9331e-01,9.9331e-01,9.3711e-01,9.5658e-01,8.3033e-01]),
-                'unc': np.array([2*3.96e-02,3.96e-02,5.05e-02,4.63e-02,4.61e-02]),
-                'edges': np.array([160, 350, 450, 500, 2500])
+                'value': np.array([0.84, 0.84, 0.98, 0.86]),
+                'unc': np.array([2*np.sqrt(0.05**2 + 0.13**2), np.sqrt(0.05**2 + 0.13**2), np.sqrt(0.05**2 + 0.12**2), np.sqrt(0.05**2 + 0.05**2)]),
+                'edges': np.array([160, 350, 400, 500, 2500])
             },
             '2016': {
-                'value': np.array([8.8300e-01,8.8300e-01,1.0384e+00,8.0800e-01,7.1766e-01]),
-                'unc': np.array([2*4.46e-02,4.46e-02,8.21e-02,9.48e-02,1.48e-01]),
-                'edges': np.array([160, 350, 450, 500, 2500])
+                'value': np.array([1.01, 1.01, 0.95, 0.99]),
+                'unc': np.array([2*np.sqrt(0.06**2 + 0.02**2), np.sqrt(0.06**2 + 0.02**2), np.sqrt(0.05**2 + 0.09**2), np.sqrt(0.06**2 + 0.00**2)]),
+                'edges': np.array([160, 350, 400, 500, 2500])
             },
         }
         self.sf_nom={}
