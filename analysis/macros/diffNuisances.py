@@ -163,7 +163,7 @@ if options.sortBy not in ["correlation", "impact"]:
     exit("choose one of [ %s ] for --sortBy" % (",".join()["correlation", "impact"]))
 
 if options.regex != ".*":
-    print("Including only nuisance parameters not following this regex query:")
+    print("Including only nuisance parameters following this regex query:")
     print((options.regex))
 
 setUpString = "diffNuisances run on %s, at %s with the following options ... " % (
@@ -216,21 +216,12 @@ def getGraph(hist,shift):
 regex_NP_obj = re.compile(options.regex)
 
 np_count = 0
-'''
 for i in range(fpf_s.getSize()):
     nuis_s = fpf_s.at(i)
     name = nuis_s.GetName()
-    if not bool(regex_NP_obj.match(name)):
+    if bool(regex_NP_obj.match(name)):
         np_count += 1
-        print(name)
-'''
-for i in range(fpf_b.getSize()):
-    nuis_b = fpf_b.at(i)
-    name = nuis_b.GetName()
-    if not bool(regex_NP_obj.match(name)):
-        np_count += 1
-        print(name)
-print(np_count)
+
 # Also make histograms for pull distributions:
 hist_fit_b = ROOT.TH1F("fit_b", "B-only fit Nuisances;;%s " % title, np_count, 0, np_count)
 hist_fit_s = ROOT.TH1F("fit_s", "S+B fit Nuisances   ;;%s " % title, np_count, 0, np_count)
@@ -253,7 +244,7 @@ for i in range(fpf_s.getSize()):
     # Skip this nuisance parameter if its name does not match the regex pattern.
     # The default pattern is .*
     # which will always match any name.
-    if bool(regex_NP_obj.match(name)):
+    if not bool(regex_NP_obj.match(name)):
         continue
 
     # keeps information to be printed about the nuisance parameter
@@ -271,14 +262,13 @@ for i in range(fpf_s.getSize()):
     else:
         # get best-fit value and uncertainty at prefit for this
         # nuisance parameter
-        print('get best-fit value and uncertainty at prefit for this nuisance parameter')
         if nuis_p.getErrorLo() == 0:
             nuis_p.setError(nuis_p.getErrorHi())
         mean_p, sigma_p, sigma_pu, sigma_pd = (
             nuis_p.getVal(),
-            1.,#nuis_p.getError(),
-            1.,#nuis_p.getErrorHi(),
-            1.,#nuis_p.getErrorLo(),
+            nuis_p.getError(),
+            nuis_p.getErrorHi(),
+            nuis_p.getErrorLo(),
         )
 
         if not sigma_p > 0:
@@ -300,8 +290,6 @@ for i in range(fpf_s.getSize()):
             nuiselo = abs(nuis_x.getErrorLo()) if nuis_x.getErrorLo() > 0 else nuis_x.getError()
             nuisehi = nuis_x.getErrorHi()
             if options.pullDef and nuis_p != None:
-                print('nuis_x.getVal(),mean_p,nuisehi,sigma_pu,abs(nuiselo),abs(sigma_pd)')
-                print(nuis_x.getVal(),mean_p,nuisehi,sigma_pu,abs(nuiselo),abs(sigma_pd))
                 nx, ned, neu = CP.returnPullAsym(
                     options.pullDef,
                     nuis_x.getVal(),
