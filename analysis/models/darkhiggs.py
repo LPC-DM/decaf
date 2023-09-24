@@ -158,8 +158,9 @@ def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=1e-5, thr
         effect_down = np.ones_like(templ._nominal)
         if (np.sqrt(merged_error2[i]) / (merged_central[i] + 1e-12)) < threshold:
             continue
-        effect_up[i] = 1.0 + np.sqrt(merged_error2[i])/merged_central[i]
-        effect_down[i] = max(epsilon, 1.0 - np.sqrt(merged_error2[i])/merged_central[i])
+        effect = np.sqrt(merged_error2[i])/merged_central[i]
+        effect_up[i] = 1.0 + min(1.0, effect)
+        effect_down[i] = max(epsilon, 1.0 - min(1.0, effect))
         templ.setParamEffect(param[i], effect_up, effect_down)
 
 def addMCStatsTFSyst(templ, num, den, epsilon=1e-5, threshold=0.01):
@@ -172,9 +173,10 @@ def addMCStatsTFSyst(templ, num, den, epsilon=1e-5, threshold=0.01):
         effect_down = np.ones_like(templ._nominal)
         if unumpy.std_devs(tf)[i]/unumpy.nominal_values(tf)[i] < threshold:
             continue
-        effect_up[i] = 1.0 + unumpy.std_devs(tf)[i]/unumpy.nominal_values(tf)[i]
-        effect_down[i] = max(epsilon, 1.0 - unumpy.std_devs(tf)[i]/unumpy.nominal_values(tf)[i])
-        print(templ._name, i, effect_up[i], effect_down[i], tf[i])
+        effect = unumpy.std_devs(tf)[i]/unumpy.nominal_values(tf)[i]
+        effect_up[i] = 1.0 + min(1.0, effect)
+        effect_down[i] = max(epsilon, 1.0 - min(1.0, effect))
+        print(templ._name, i, effect_up[i], effect_down[i], tf[i], num[i], den[i])
         param = rl.NuisanceParameter(templ._name + '_mcstat_bin%i' % i, combinePrior='shape')
         templ.setParamEffect(param, effect_up, effect_down)
 
