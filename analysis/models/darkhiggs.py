@@ -493,7 +493,7 @@ def model(year, mass, recoil, category):
             sr_signal.setParamEffect(veto_tau, nveto_tau)
             #addBBliteSyst(sr_signal, param, sr_central, sr_error2, epsilon=1e-5)
             addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category, mass)
-            addDoubleBtagSyst(signal, recoil, str(s), "sr", sr_signal, category, mass)
+            #addDoubleBtagSyst(signal, recoil, str(s), "sr", sr_signal, category, mass)
             sr.addSample(sr_signal)
 
     ###
