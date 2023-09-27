@@ -1592,9 +1592,9 @@ if __name__ == "__main__":
         )
         addMCStatsTFSyst(sr_zjetsPassStatsTFSyst, sr_zjetsMCPassTemplate, sr_zjetsMCFailTemplate, epsilon=1e-5)
 
-        tf_MCtemplZ = sr_zjetsMCPass.getExpectation() / sr_zjetsMCFail.getExpectation() * sr_zjetsPassStatsTFSyst.getExpectation()
-        tf_paramsZ = tf_MCtemplZ * tf_dataResidualZ_params[recoilbin, :]
-        #tf_paramsZ = zjetseff *tf_MCtemplZ_params_final[recoilbin, :] * tf_dataResidualZ_params[recoilbin, :]
+        #tf_MCtemplZ = sr_zjetsMCPass.getExpectation() / sr_zjetsMCFail.getExpectation() * sr_zjetsPassStatsTFSyst.getExpectation()
+        #tf_paramsZ = tf_MCtemplZ * tf_dataResidualZ_params[recoilbin, :]
+        tf_paramsZ = zjetseff *tf_MCtemplZ_params_final[recoilbin, :] * tf_dataResidualZ_params[recoilbin, :]
         sr_zjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_zjets",
             rl.Sample.BACKGROUND,
@@ -1625,9 +1625,9 @@ if __name__ == "__main__":
         )
         addMCStatsTFSyst(sr_wjetsPassStatsTFSyst, sr_wjetsMCPassTemplate, sr_wjetsMCFailTemplate, epsilon=1e-5)
         
-        tf_MCtemplW = sr_wjetsMCPass.getExpectation() / sr_wjetsMCFail.getExpectation() * sr_wjetsPassStatsTFSyst.getExpectation()
-        tf_paramsW = tf_MCtemplW * tf_dataResidualW_params[recoilbin, :]
-        #tf_paramsW = wjetseff * tf_MCtemplW_params_final[recoilbin, :] * tf_dataResidualW_params[recoilbin, :]
+        #tf_MCtemplW = sr_wjetsMCPass.getExpectation() / sr_wjetsMCFail.getExpectation() * sr_wjetsPassStatsTFSyst.getExpectation()
+        #tf_paramsW = tf_MCtemplW * tf_dataResidualW_params[recoilbin, :]
+        tf_paramsW = wjetseff * tf_MCtemplW_params_final[recoilbin, :] * tf_dataResidualW_params[recoilbin, :]
         sr_wjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
