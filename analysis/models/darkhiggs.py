@@ -119,66 +119,74 @@ def remap_histograms(hists):
 
     return hists
 
-'''
-def get_mergedMC_stat_variations(dictionary, recoil, region, category, bkg_list):
-    MCbkg = {}
-    MCbkg_map = OrderedDict()
-    process = hist.Cat("process", "Process", sorting="placement")
-    cats = ("process",)
-    for bkg in bkg_list:
-        MCbkg_map[bkg] = (bkg,)
-    MCbkg=dictionary[region].group(cats, process, MCbkg_map)
-    merged_obj = MCbkg.integrate("process")
-    merged_central, merged_error2 = merged_obj.integrate("systematic", "nominal").values(sumw2=True)[()]
-    merged_central=merged_central[recoil, :, category_map[category]]
-    merged_error2=merged_error2[recoil, :, category_map[category]]
+def calculateBBliteSyst(channel, epsilon=1e-5, threshold=0, include_signal=0, channel_name=None):
+    '''
+    Barlow-Beeston-lite method i.e. single stats parameter for all processes per bin.
+    Same general algorithm as described in 
+    https://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part2/bin-wise-stats/
+    but *without the analytic minimisation*.
+    '''
+    if not len(channel._samples):
+        raise RuntimeError('Channel %r has no samples for which to run autoMCStats' % (self))
+    
+    ntot, etot2 = np.zeros_like(channel._samples[0]._nominal), np.zeros_like(channel._samples[0]._sumw2)
+    for sample in channel._samples:
+        if not include_signal and sample._sampletype == Sample.SIGNAL:
+            continue
+        ntot += sample._nominal
+        etot2 += sample._sumw2
+    return ntot, etot2
 
-    return merged_central, merged_error2
-'''
-def get_mergedMC_stat_variations(dictionary, recoil, region, category, mass, bkg_list):
-    templ=template(dictionary, bkg_list[0], "nominal", recoil, region, category, mass, read_sumw2=True)
-    merged_central=np.zeros_like(templ[0])
-    merged_error2=np.zeros_like(templ[3])
-    for bkg in bkg_list:
-        templ=template(dictionary, bkg, "nominal", recoil, region, category, mass, read_sumw2=True)
-        for i in range(len(templ[0])):
-            if templ[0][i] <= 1e-5 or templ[3][i] <= 0.:
-                continue
-            merged_central[i] += templ[0][i]
-            merged_error2[i]  += templ[3][i]
-    return merged_central, merged_error2
+def addBBliteSyst(channel, ntot, etot2, epsilon=1e-5, threshold=0.01, channel_name=None):
+    '''
+    Barlow-Beeston-lite method i.e. single stats parameter for all processes per bin.
+    Same general algorithm as described in 
+    https://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/part2/bin-wise-stats/
+    but *without the analytic minimisation*.
+    '''
 
-def addBBliteSyst(templ, param, merged_central, merged_error2, epsilon=1e-5, threshold=0.01):
-    for i in range(templ.observable.nbins):
-        if merged_central[i] <= 0. or merged_error2[i] <= 0.:
+    name = self._name if channel_name is None else channel_name
+    param = [None for _ in range(channel._samples[0].observable.nbins)]
+    for i in range(channel._samples[0].observable.nbins):
+        if ntot[i] <= 0. or etot2[i] <= 0.:
             continue
         if isinstance(templ, rl.TemplateSample) and templ._nominal[i] <= 1e-5:
             continue
-        effect_up = np.ones_like(templ._nominal)
-        effect_down = np.ones_like(templ._nominal)
-        if (np.sqrt(merged_error2[i]) / (merged_central[i] + 1e-12)) < threshold:
+        effect_up = np.ones_like(self._samples[0]._nominal)
+        effect_down = np.ones_like(self._samples[0]._nominal)
+
+        if (np.sqrt(etot2[i]) / (ntot[i] + 1e-12)) < threshold:
             continue
-        effect = np.sqrt(merged_error2[i])/merged_central[i]
+        effect = np.sqrt(etot2[i])/ntot[i]
+        
         effect_up[i] = 1.0 + min(1.0, effect)
         effect_down[i] = max(epsilon, 1.0 - min(1.0, effect))
-        templ.setParamEffect(param[i], effect_up, effect_down)
 
-def addMCStatsTFSyst(templ, num, den, epsilon=1e-5, threshold=0.01):
+        param[i] = NuisanceParameter(name + '_mcstat_bin%i' % i, combinePrior='shape')
+
+        for sample in self._samples:
+            sample.setParamEffect(param, effect_up, effect_down) 
+    return param
+
+def calculateMCStatsTFSyst(num, den):
     num=unumpy.uarray(( num[0], np.sqrt(num[3]) ))  
     den=unumpy.uarray(( den[0], np.sqrt(den[3]) ))  
     tf=num/den
-    #err=unumpy.std_devs(tf)  
+    err=unumpy.std_devs(tf)/unumpy.nominal_values(tf)
+    return err**2
+        
+def addMCStatsTFSyst(templ, param, ntot, etot2, epsilon=1e-5, threshold=0.01):
     for i in range(templ.observable.nbins):
+        if ntot[i] <= 0. or etot2[i] <= 0.:
+            continue
         effect_up = np.ones_like(templ._nominal)
         effect_down = np.ones_like(templ._nominal)
-        if unumpy.std_devs(tf)[i]/unumpy.nominal_values(tf)[i] < threshold:
+        if (np.sqrt(etot2[i]) / (ntot[i] + 1e-12)) < threshold:
             continue
-        effect = unumpy.std_devs(tf)[i]/unumpy.nominal_values(tf)[i]
+        effect = np.sqrt(etot2[i])/ntot[i]
         effect_up[i] = 1.0 + min(1.0, effect)
         effect_down[i] = max(epsilon, 1.0 - min(1.0, effect))
-        print(templ._name, i, effect_up[i], effect_down[i], tf[i], num[i], den[i])
-        param = rl.NuisanceParameter(templ._name + '_mcstat_bin%i' % i, combinePrior='shape')
-        templ.setParamEffect(param, effect_up, effect_down)
+        templ.setParamEffect(param[i], effect_up, effect_down)
 
 def addBtagSyst(dictionary, recoil, process, region, templ, category, mass):
     btagUp = template(dictionary, process, "btagSFbc_correlatedUp", recoil, region, category, mass)[0]
