@@ -813,11 +813,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                 ###
                 
                 if('mhs' in dataset):
-                    for k in get_doublebtag_weight(leading_fj.sd.pt.sum())[0]:
-                        doublebtag = get_doublebtag_weight(leading_fj.sd.pt.sum())[0][k]
-                        doublebtagUp = get_doublebtag_weight(leading_fj.sd.pt.sum())[1][k]
-                        doublebtagDown = get_doublebtag_weight(leading_fj.sd.pt.sum())[2][k]
-                        weights.add('doublebtag'+k,doublebtag, doublebtagUp, doublebtagDown)
+                    doublebtag, doublebtagUp,  doublebtagDown= get_doublebtag_weight(leading_fj.sd.pt.sum())
+                    weights.add('doublebtag',doublebtag, doublebtagUp, doublebtagDown)
 
                 if 'WJets' in dataset or 'ZJets' in dataset or 'DY' in dataset:
                     if not isFilled:
@@ -916,9 +913,8 @@ class AnalysisProcessor(processor.ProcessorABC):
                                    'btagSFlight_uncorrelatedDown',
                                ]
                     if('mhs' in dataset):
-                        for k in get_doublebtag_weight(leading_fj.sd.pt.sum())[0]:
-                            systematics.append('doublebtag'+k+'Up')
-                            systematics.append('doublebtag'+k+'Down')
+                        systematics.append('doublebtagUp')
+                        systematics.append('doublebtagDown')
                     for systematic in systematics:
                         sname = 'nominal' if systematic is None else systematic
                         hout['template'].fill(dataset=dataset,
