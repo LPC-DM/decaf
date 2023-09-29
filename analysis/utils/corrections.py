@@ -544,43 +544,27 @@ class DoubleBTagCorrector:
         sf = {
             '2018': {
                 'value': np.array([0.82, 0.82, 0.75, 0.81]),
-                'unc': np.array([2*np.sqrt(0.07**2 + 0.11**2), np.sqrt(0.07**2 + 0.11**2), np.sqrt(0.06**2 + 0.06**2), np.sqrt(0.05**2 + 0.01**2)]),
+                'unc': np.array([np.sqrt(0.07**2 + 0.11**2), np.sqrt(0.07**2 + 0.11**2), np.sqrt(0.06**2 + 0.06**2), np.sqrt(0.05**2 + 0.01**2)]),
                 'edges': np.array([160, 350, 400, 500, 2500])
             },
             '2017': {
                 'value': np.array([0.84, 0.84, 0.98, 0.86]),
-                'unc': np.array([2*np.sqrt(0.05**2 + 0.13**2), np.sqrt(0.05**2 + 0.13**2), np.sqrt(0.05**2 + 0.12**2), np.sqrt(0.05**2 + 0.05**2)]),
+                'unc': np.array([np.sqrt(0.05**2 + 0.13**2), np.sqrt(0.05**2 + 0.13**2), np.sqrt(0.05**2 + 0.12**2), np.sqrt(0.05**2 + 0.05**2)]),
                 'edges': np.array([160, 350, 400, 500, 2500])
             },
             '2016': {
                 'value': np.array([1.01, 1.01, 0.95, 0.99]),
-                'unc': np.array([2*np.sqrt(0.06**2 + 0.02**2), np.sqrt(0.06**2 + 0.02**2), np.sqrt(0.05**2 + 0.09**2), np.sqrt(0.06**2 + 0.00**2)]),
+                'unc': np.array([np.sqrt(0.06**2 + 0.02**2), np.sqrt(0.06**2 + 0.02**2), np.sqrt(0.05**2 + 0.09**2), np.sqrt(0.06**2 + 0.00**2)]),
                 'edges': np.array([160, 350, 400, 500, 2500])
             },
         }
-        self.sf_nom={}
-        self.sf_up={} 
-        self.sf_down={}
-        
-        for i in range(len(sf[year]['value'])):
-            
-            nom = np.ones_like(sf[year]['value'])
-            nom[i] = sf[year]['value'][i]
-            unc = np.zeros_like(sf[year]['value'])
-            unc[i] = sf[year]['unc'][i]
-            print(i,nom)
-            self.sf_nom['Pt'+str(i)] = lookup_tools.dense_lookup.dense_lookup(nom, sf[year]['edges'])
-            self.sf_up['Pt'+str(i)] = lookup_tools.dense_lookup.dense_lookup(nom+unc, sf[year]['edges'])
-            self.sf_down['Pt'+str(i)] = lookup_tools.dense_lookup.dense_lookup(nom-unc, sf[year]['edges'])
+        self.sf_nom=lookup_tools.dense_lookup.dense_lookup(sf[year]['value'], sf[year]['edges'])
+        self.sf_up=lookup_tools.dense_lookup.dense_lookup(sf[year]['value']+sf[year]['unc'], sf[year]['edges'])
+        self.sf_down=lookup_tools.dense_lookup.dense_lookup(sf[year]['value']-sf[year]['unc'], sf[year]['edges'])
         
 
     def doublebtag_weight(self, pt):
-        sf_nom={} 
-        sf_up={} 
-        sf_down={}
-        for k in self.sf_nom:
-            sf_nom[k], sf_up[k], sf_down[k] = self.sf_nom[k](pt), self.sf_up[k](pt), self.sf_down[k](pt)
-        return sf_nom, sf_up, sf_down
+        return  self.sf_nom(pt), self.sf_up(pt), self.sf_down(pt)
 
 get_doublebtag_weight = {
     '2016': DoubleBTagCorrector('2016').doublebtag_weight,
