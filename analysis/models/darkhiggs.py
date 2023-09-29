@@ -128,12 +128,11 @@ def calculateBBliteSyst(channel, epsilon=1e-5, threshold=0, include_signal=0, ch
     '''
     if not len(channel._samples):
         raise RuntimeError('Channel %r has no samples for which to run autoMCStats' % (self))
-    
-    ntot, etot2 = np.zeros_like(channel._samples[0]._nominal), np.zeros_like(channel._samples[0]._sumw2)
-    for sample in channel._samples:
-        if not include_signal and sample._sampletype == Sample.SIGNAL:
+    ntot, etot2 = np.zeros_like(list(channel._samples.values())[0]._nominal), np.zeros_like(list(channel._samples.values())[0]._sumw2)
+    for sample in list(channel._samples.values()):
+        if not include_signal and sample._sampletype == rl.Sample.SIGNAL:
             continue
-        if not isinstance(templ, rl.TemplateSample):
+        if not isinstance(sample, rl.TemplateSample):
             continue
         ntot += sample._nominal
         etot2 += sample._sumw2
@@ -147,17 +146,14 @@ def addBBliteSyst(channel, ntot, etot2, epsilon=1e-5, threshold=0.01, channel_na
     but *without the analytic minimisation*.
     '''
 
-    name = self._name if channel_name is None else channel_name
-    param = [None for _ in range(channel._samples[0].observable.nbins)]
-    for i in range(channel._samples[0].observable.nbins):
+    name = channel._name if channel_name is None else channel_name
+    param = [None for _ in range(list(channel._samples.values())[0].observable.nbins)]
+
+    for i in range(list(channel._samples.values())[0].observable.nbins):
         if ntot[i] <= 0. or etot2[i] <= 0.:
             continue
-        if isinstance(templ, rl.TemplateSample) and templ._nominal[i] <= 1e-5:
-            continue
-        if not isinstance(templ, rl.TemplateSample):
-            continue
-        effect_up = np.ones_like(self._samples[0]._nominal)
-        effect_down = np.ones_like(self._samples[0]._nominal)
+        effect_up = np.ones_like(list(channel._samples.values())[0]._nominal)
+        effect_down = np.ones_like(list(channel._samples.values())[0]._nominal)
 
         if (np.sqrt(etot2[i]) / (ntot[i] + 1e-12)) < threshold:
             continue
@@ -166,9 +162,14 @@ def addBBliteSyst(channel, ntot, etot2, epsilon=1e-5, threshold=0.01, channel_na
         effect_up[i] = 1.0 + min(1.0, effect)
         effect_down[i] = max(epsilon, 1.0 - min(1.0, effect))
 
-        param[i] = NuisanceParameter(name + '_mcstat_bin%i' % i, combinePrior='shape')
+        param[i] = rl.NuisanceParameter(name + '_mcstat_bin%i' % i, combinePrior='shape')
 
-        for sample in self._samples:
+        for sample in list(channel._samples.values()):
+            if isinstance(sample, rl.TemplateSample) and sample._nominal[i] <= 1e-5:
+                continue
+            if not isinstance(sample, rl.TemplateSample):
+                continue
+            print(sample._name, i, effect_up[i], effect_down[i])
             sample.setParamEffect(param[i], effect_up, effect_down) 
     return param
 
@@ -190,6 +191,7 @@ def addMCStatsTFSyst(templ, param, ntot, etot2, epsilon=1e-5, threshold=0.01):
         effect = np.sqrt(etot2[i])/ntot[i]
         effect_up[i] = 1.0 + min(1.0, effect)
         effect_down[i] = max(epsilon, 1.0 - min(1.0, effect))
+        print(templ._name, i, effect_up[i], effect_down[i])
         templ.setParamEffect(param[i], effect_up, effect_down)
 
 def addBtagSyst(dictionary, recoil, process, region, templ, category, mass):
@@ -326,21 +328,6 @@ def model(year, mass, recoil, category):
     sr.setObservation(dataTemplate)
 
     ###
-    # top-antitop data-driven model
-    ###
-
-    if not isttMC:
-        sr_ttTemplate = template(background, "TT", "nominal", recoil, "sr", category, mass, min_value=1., read_sumw2=True)
-        sr_ttMC = rl.TemplateSample("sr" + model_id + "_ttMC",rl.Sample.BACKGROUND,sr_ttTemplate)
-        addMETTrigSyst(sr_ttMC, year)
-        addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category, mass)
-        
-        sr_ttObservable = rl.Observable("fjmass"+mass, sr_ttTemplate[1])
-        sr_ttBinYields = np.array([rl.IndependentParameter(ch_name + "_tt_mu"+str(b), sr_ttTemplate[0][b], 1e-5, sr_ttTemplate[0].max()*2) for b in range(len(sr_ttTemplate[0]))])
-        sr_tt = rl.ParametericSample(ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields)
-        sr.addSample(sr_tt)
-    
-    ###
     # Other MC-driven processes
     ###
     
@@ -446,13 +433,29 @@ def model(year, mass, recoil, category):
     ntot, etot2 = calculateBBliteSyst(sr)
 
     ###
+    # top-antitop data-driven model
+    ###
+
+    if not isttMC:
+        sr_ttTemplate = template(background, "TT", "nominal", recoil, "sr", category, mass, min_value=1., read_sumw2=True)
+        sr_ttMC = rl.TemplateSample("sr" + model_id + "_ttMC",rl.Sample.BACKGROUND,sr_ttTemplate)
+        addMETTrigSyst(sr_ttMC, year)
+        addBtagSyst(background, recoil, "TT", "sr", sr_ttMC, category, mass)
+        
+        sr_ttObservable = rl.Observable("fjmass"+mass, sr_ttTemplate[1])
+        sr_ttBinYields = np.array([rl.IndependentParameter(ch_name + "_tt_mu"+str(b), sr_ttTemplate[0][b], 1e-5, sr_ttTemplate[0].max()*2) for b in range(len(sr_ttTemplate[0]))])
+        sr_tt = rl.ParametericSample(ch_name + "_tt", rl.Sample.BACKGROUND, sr_ttObservable, sr_ttBinYields)
+        sr.addSample(sr_tt)
+    
+    ###
     # Z(->nunu)+jets data-driven model
     ###
 
     if category == "pass":
         sr_zjets = sr_zjetsPass
-        ntot += sr_zjetsPassMC._nominal
-        etot2 += sr_zjets_err2
+        sr_zjetsMC = sr_zjetsMCPass
+        ntot += sr_zjetsMC._nominal
+        etot2 += sr_zjets_pass_err2
     else:
         sr_zjets = sr_zjetsFail
         sr.addSample(sr_zjets)
@@ -1640,7 +1643,7 @@ if __name__ == "__main__":
             sr_wjetsFail
         )
 
-        sr_zjets_pass_err2 = calculateMCStatsTFSyst(sr_wjetsMCPassTemplate, sr_wjetsMCFailTemplate)
+        sr_wjets_pass_err2 = calculateMCStatsTFSyst(sr_wjetsMCPassTemplate, sr_wjetsMCFailTemplate)
         
         
         for category in ["pass", "fail"]:

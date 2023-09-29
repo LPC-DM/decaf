@@ -38,7 +38,7 @@ if options.cluster == 'kisti':
 Executable = render.sh
 Should_Transfer_Files = YES
 WhenToTransferOutput = ON_EXIT
-Transfer_Input_Files = render.sh, /tmp/x509up_u556950957
+Transfer_Input_Files = render.sh, /tmp/x509up_u556950957, /cvmfs/cms.cern.ch/cmsset_default.sh
 Output = logs/condor/render/out/$ENV(MODEL)_$(Cluster)_$(Process).stdout
 Error = logs/condor/render/err/$ENV(MODEL)_$(Cluster)_$(Process).stderr
 Log = logs/condor/render/log/$ENV(MODEL)_$(Cluster)_$(Process).log

@@ -22,6 +22,7 @@ if [ "${2}" == "kisti" ]; then
     xrdcp -s root://cms-xrdr.private.lo:2094//xrd/store/user/$USER/cmssw.tgz .
     echo "cmssw correctly copied"
 else
+    source /cvmfs/cms.cern.ch/cmsset_default.sh
     xrdcp -s root://cmseos.fnal.gov//store/user/$USER/cmssw.tgz .
     echo "cmssw correctly copied"
     xrdcp -s root://cmseos.fnal.gov//store/user/$USER/py2local.tgz .
