@@ -209,12 +209,9 @@ def addBtagSyst(dictionary, recoil, process, region, templ, category, mass):
     templ.setParamEffect(btagSFlight, btagUp, btagDown)
 
 def addDoubleBtagSyst(dictionary, recoil, process, region, templ, category, mass):
-    for syst in dictionary[region].identifiers("systematic"):
-        if 'doublebtag' not in str(syst): continue
-        if 'Down' in str(syst): continue
-        doublebtagUp = template(dictionary, process, str(syst), recoil, region, category, mass)[0]
-        doublebtagDown = template(dictionary, process, str(syst).replace('Up','Down'), recoil, region, category, mass)[0]
-        templ.setParamEffect(doublebtag[str(syst).replace('Up','')], doublebtagUp, doublebtagDown)
+    doublebtagUp = template(dictionary, process, 'doublebtagUp', recoil, region, category, mass)[0]
+    doublebtagDown = template(dictionary, process, 'doublebtagDown', recoil, region, category, mass)[0]
+    templ.setParamEffect(doublebtag, doublebtagUp, doublebtagDown)
 
 def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     def addSyst(dictionary, recoil, process, region, templ, category, syst, string):
@@ -505,9 +502,8 @@ def model(year, mass, recoil, category):
             addJESSyst(sr_signal)
             addMETTrigSyst(sr_signal, year)
             sr_signal.setParamEffect(veto_tau, nveto_tau)
-            #addBBliteSyst(sr_signal, param, sr_central, sr_error2, epsilon=1e-5)
             addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category, mass)
-            #addDoubleBtagSyst(signal, recoil, str(s), "sr", sr_signal, category, mass)
+            addDoubleBtagSyst(signal, recoil, str(s), "sr", sr_signal, category, mass)
             sr.addSample(sr_signal)
 
     ###
@@ -1514,11 +1510,7 @@ if __name__ == "__main__":
     qcd1 = rl.NuisanceParameter("qcd1", "lnN")
     qcd2 = rl.NuisanceParameter("qcd2", "lnN")
     qcd3 = rl.NuisanceParameter("qcd3", "lnN")
-    doublebtag={}
-    for syst in signal['sr'].identifiers('systematic'):
-        if 'doublebtag' not in str(syst): continue
-        if 'Up' not in str(syst): continue
-        doublebtag[str(syst).replace('Up','')]=rl.NuisanceParameter(str(syst).replace('Up','') + year, "shape")
+    doublebtag = rl.NuisanceParameter("doublebtag_" + year, "shape")
         
     ###
     # Set lnN numbers
