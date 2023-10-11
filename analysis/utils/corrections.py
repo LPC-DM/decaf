@@ -421,12 +421,16 @@ class BTagCorrector:
         nom = bpass / np.maximum(ball, 1.)
         self.eff = lookup_tools.dense_lookup.dense_lookup(nom, [ax.edges() for ax in btag[tagger].axes()[3:]])
 
-    def btag_weight(self, pt, eta, flavor, tag):
+    def btag_weight(self, pt, eta, flavor, score):
         abseta = abs(eta)
         
         #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagSFMethods#1b_Event_reweighting_using_scale
-        def zerotag(eff):
-            return (1 - eff).prod()
+        def P(eff, score):
+            tagged = score > self._wp
+            weight = eff.ones_like()
+            weight[tagged] = eff[tagged]
+            weight[~tagged] = (1 - eff[~tagged])
+            return weight.prod()
 
         bc = flavor > 0
         light = ~bc
@@ -477,26 +481,15 @@ class BTagCorrector:
         light_eff_data_up_uncorrelated   = np.minimum(1., light_sf_up_uncorrelated*eff)
         light_eff_data_down_uncorrelated = np.minimum(1., light_sf_down_uncorrelated*eff)
        
-        nom = zerotag(eff_data_nom)/zerotag(eff)
-        bc_up_correlated = zerotag(bc_eff_data_up_correlated)/zerotag(eff)
-        bc_down_correlated = zerotag(bc_eff_data_down_correlated)/zerotag(eff)
-        bc_up_uncorrelated = zerotag(bc_eff_data_up_uncorrelated)/zerotag(eff)
-        bc_down_uncorrelated = zerotag(bc_eff_data_down_uncorrelated)/zerotag(eff)
-        light_up_correlated = zerotag(light_eff_data_up_correlated)/zerotag(eff)
-        light_down_correlated = zerotag(light_eff_data_down_correlated)/zerotag(eff)
-        light_up_uncorrelated = zerotag(light_eff_data_up_uncorrelated)/zerotag(eff)
-        light_down_uncorrelated = zerotag(light_eff_data_down_uncorrelated)/zerotag(eff)
-        
-        if '-1' in tag: 
-            nom = (1 - zerotag(eff_data_nom)) / (1 - zerotag(eff))
-            bc_up_correlated = (1 - zerotag(bc_eff_data_up_correlated)) / (1 - zerotag(eff))
-            bc_down_correlated = (1 - zerotag(bc_eff_data_down_correlated)) / (1 - zerotag(eff))
-            bc_up_uncorrelated = (1 - zerotag(bc_eff_data_up_uncorrelated)) / (1 - zerotag(eff))
-            bc_down_uncorrelated = (1 - zerotag(bc_eff_data_down_uncorrelated)) / (1 - zerotag(eff))
-            light_up_correlated = (1 - zerotag(light_eff_data_up_correlated)) / (1 - zerotag(eff))
-            light_down_correlated = (1 - zerotag(light_eff_data_down_correlated)) / (1 - zerotag(eff))
-            light_up_uncorrelated = (1 - zerotag(light_eff_data_up_uncorrelated)) / (1 - zerotag(eff))
-            light_down_uncorrelated = (1 - zerotag(light_eff_data_down_uncorrelated)) / (1 - zerotag(eff))
+        nom = P(eff_data_nom)/P(eff)
+        bc_up_correlated = P(bc_eff_data_up_correlated)/P(eff)
+        bc_down_correlated = P(bc_eff_data_down_correlated)/P(eff)
+        bc_up_uncorrelated = P(bc_eff_data_up_uncorrelated)/P(eff)
+        bc_down_uncorrelated = P(bc_eff_data_down_uncorrelated)/P(eff)
+        light_up_correlated = P(light_eff_data_up_correlated)/P(eff)
+        light_down_correlated = P(light_eff_data_down_correlated)/P(eff)
+        light_up_uncorrelated = P(light_eff_data_up_uncorrelated)/P(eff)
+        light_down_uncorrelated = P(light_eff_data_down_uncorrelated)/P(eff)
 
         return np.nan_to_num(nom, nan=1.), np.nan_to_num(bc_up_correlated, nan=1.), np.nan_to_num(bc_down_correlated, nan=1.), np.nan_to_num(bc_up_uncorrelated, nan=1.), np.nan_to_num(bc_down_uncorrelated, nan=1.), np.nan_to_num(light_up_correlated, nan=1.), np.nan_to_num(light_down_correlated, nan=1.), np.nan_to_num(light_up_uncorrelated, nan=1.), np.nan_to_num(light_down_uncorrelated, nan=1.)
 
