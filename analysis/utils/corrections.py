@@ -421,15 +421,14 @@ class BTagCorrector:
         nom = bpass / np.maximum(ball, 1.)
         self.eff = lookup_tools.dense_lookup.dense_lookup(nom, [ax.edges() for ax in btag[tagger].axes()[3:]])
 
-    def btag_weight(self, pt, eta, flavor, score):
+    def btag_weight(self, pt, eta, flavor, istag):
         abseta = abs(eta)
         
         #https://twiki.cern.ch/twiki/bin/viewauth/CMS/BTagSFMethods#1b_Event_reweighting_using_scale
-        def P(eff, score):
-            tagged = score > self._wp
+        def P(eff):
             weight = eff.ones_like()
-            weight[tagged] = eff[tagged]
-            weight[~tagged] = (1 - eff[~tagged])
+            weight[istag] = eff[istag]
+            weight[~istag] = (1 - eff[~istag])
             return weight.prod()
 
         bc = flavor > 0
