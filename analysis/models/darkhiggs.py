@@ -655,7 +655,7 @@ def model(year, mass, recoil, category):
         wmcr_wjetsTransferFactor = wmcr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
         wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjetsTF", rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
 
-        wmcr_wjets_err2 = calculateMCStatsTFSyst(wmcr_wjetsTemplate, sr_wjetsTemplate)
+        wmcr_wjets_err2 = calculateMCStatsTFSyst(wmcr_wjetsTemplate, sr_zjetsMCFailTemplate)
         ntot += wmcr_wjetsMC._nominal
         etot2 += wmcr_wjets_err2
 
@@ -848,7 +848,7 @@ def model(year, mass, recoil, category):
         wecr_wjetsTransferFactor = wecr_wjetsMC.getExpectation() / sr_wjetsMC.getExpectation()
         wecr_wjets = rl.TransferFactorSample( ch_name + "_wjetsTF", rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets)
 
-        wecr_wjets_err2 = calculateMCStatsTFSyst(wecr_wjetsTemplate, sr_wjetsTemplate)
+        wecr_wjets_err2 = calculateMCStatsTFSyst(wecr_wjetsTemplate, sr_zjetsMCFailTemplate)
         ntot += wecr_wjetsMC._nominal
         etot2 += wecr_wjets_err2
         
@@ -1635,7 +1635,7 @@ if __name__ == "__main__":
             sr_wjetsFail
         )
 
-        sr_wjets_pass_err2 = calculateMCStatsTFSyst(sr_wjetsMCPassTemplate, sr_wjetsMCFailTemplate)
+        sr_wjets_pass_err2 = calculateMCStatsTFSyst(sr_wjetsMCPassTemplate, sr_zjetsMCFailTemplate)
         
         
         for category in ["pass", "fail"]:
