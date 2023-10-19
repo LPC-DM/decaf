@@ -418,6 +418,7 @@ class BTagCorrector:
         btag = load(filename)
         bpass = btag[tagger].integrate('dataset').integrate('wp',workingpoint).integrate('btag', 'pass').values()[()]
         ball = btag[tagger].integrate('dataset').integrate('wp',workingpoint).integrate('btag').values()[()]
+        ball[ball<=0.]=1.
         nom = bpass / np.maximum(ball, 1.)
         self.eff = lookup_tools.dense_lookup.dense_lookup(nom, [ax.edges() for ax in btag[tagger].axes()[3:]])
 
@@ -489,7 +490,17 @@ class BTagCorrector:
         light_down_correlated = P(light_eff_data_down_correlated)/P(eff)
         light_up_uncorrelated = P(light_eff_data_up_uncorrelated)/P(eff)
         light_down_uncorrelated = P(light_eff_data_down_uncorrelated)/P(eff)
-
+        '''
+        print('nom',sf_nom)
+        print('bc_up_correlated',bc_sf_up_correlated)
+        print('bc_down_correlated',bc_sf_down_correlated)
+        print('bc_up_uncorrelated',bc_sf_up_uncorrelated)
+        print('bc_down_uncorrelated',bc_sf_down_uncorrelated)
+        print('light_up_correlated',light_sf_up_correlated)
+        print('light_down_correlated',light_sf_down_correlated)
+        print('light_up_uncorrelated',light_sf_up_uncorrelated)
+        print('light_down_uncorrelated',light_sf_down_uncorrelated)
+        '''
         return np.nan_to_num(nom, nan=1.), np.nan_to_num(bc_up_correlated, nan=1.), np.nan_to_num(bc_down_correlated, nan=1.), np.nan_to_num(bc_up_uncorrelated, nan=1.), np.nan_to_num(bc_down_uncorrelated, nan=1.), np.nan_to_num(light_up_correlated, nan=1.), np.nan_to_num(light_down_correlated, nan=1.), np.nan_to_num(light_up_uncorrelated, nan=1.), np.nan_to_num(light_down_uncorrelated, nan=1.)
 
 get_btag_weight = {
@@ -536,17 +547,17 @@ class DoubleBTagCorrector:
         sf = {
             '2018': {
                 'value': np.array([0.82, 0.82, 0.75, 0.81]),
-                'unc': np.array([2*np.sqrt(0.07**2 + 0.11**2), np.sqrt(0.07**2 + 0.11**2), np.sqrt(0.06**2 + 0.06**2), np.sqrt(0.05**2 + 0.01**2)]),
+                'unc': np.array([np.sqrt(0.07**2 + 0.11**2), np.sqrt(0.07**2 + 0.11**2), np.sqrt(0.06**2 + 0.06**2), np.sqrt(0.05**2 + 0.01**2)]),
                 'edges': np.array([160, 350, 400, 500, 2500])
             },
             '2017': {
                 'value': np.array([0.84, 0.84, 0.98, 0.86]),
-                'unc': np.array([2*np.sqrt(0.05**2 + 0.13**2), np.sqrt(0.05**2 + 0.13**2), np.sqrt(0.05**2 + 0.12**2), np.sqrt(0.05**2 + 0.05**2)]),
+                'unc': np.array([np.sqrt(0.05**2 + 0.13**2), np.sqrt(0.05**2 + 0.13**2), np.sqrt(0.05**2 + 0.12**2), np.sqrt(0.05**2 + 0.05**2)]),
                 'edges': np.array([160, 350, 400, 500, 2500])
             },
             '2016': {
                 'value': np.array([1.01, 1.01, 0.95, 0.99]),
-                'unc': np.array([2*np.sqrt(0.06**2 + 0.02**2), np.sqrt(0.06**2 + 0.02**2), np.sqrt(0.05**2 + 0.09**2), np.sqrt(0.06**2 + 0.00**2)]),
+                'unc': np.array([np.sqrt(0.06**2 + 0.02**2), np.sqrt(0.06**2 + 0.02**2), np.sqrt(0.05**2 + 0.09**2), np.sqrt(0.06**2 + 0.00**2)]),
                 'edges': np.array([160, 350, 400, 500, 2500])
             },
         }

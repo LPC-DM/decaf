@@ -4,13 +4,15 @@ import json
 from coffea import processor, hist, util
 from coffea.util import save, load
 from optparse import OptionParser
+import numpy as np
 from coffea.lookup_tools.dense_lookup import dense_lookup
 
 class BTagEfficiency(processor.ProcessorABC):
 
-    def __init__(self, year,wp):
+    def __init__(self, year, wp, ids):
         self._year = year
         self._btagWPs = wp
+        self._ids = ids
         self._accumulator = processor.dict_accumulator({
             'deepflav' :
             hist.Hist(
@@ -41,13 +43,12 @@ class BTagEfficiency(processor.ProcessorABC):
     def process(self, events):
         
         dataset = events.metadata['dataset']
+        isGoodJet = self._ids['isGoodJet']
 
-        jets = events.Jet[
-            (events.Jet.pt > 30.)
-            & (abs(events.Jet.eta) < 2.5)
-            & (events.Jet.jetId & 2)  # tight id
-        ]
-        
+        j = events.Jet
+        j['isgood'] = isGoodJet(j.pt, j.eta, j.jetId, j.puId, j.neHEF, j.chHEF)
+        j_good = j[j.isgood.astype(np.bool)]
+
         name = {}
         name['deepflav']= 'btagDeepFlavB'
         name['deepcsv']= 'btagDeepB'
@@ -56,22 +57,22 @@ class BTagEfficiency(processor.ProcessorABC):
 
         for wp in ['loose','medium','tight']:
             for tagger in ['deepflav','deepcsv']:
-                passbtag = jets[name[tagger]] > self._btagWPs[tagger][self._year][wp]
+                passbtag = j_good[name[tagger]] > self._btagWPs[tagger][self._year][wp]
                 out[tagger].fill(
                     dataset=dataset,
                     wp=wp,
                     btag='pass',
-                    flavor=jets[passbtag].hadronFlavour.flatten(),
-                    pt=jets[passbtag].pt.flatten(),
-                    abseta=abs(jets[passbtag].eta.flatten()),
+                    flavor=j_good[passbtag].hadronFlavour.flatten(),
+                    pt=j_good[passbtag].pt.flatten(),
+                    abseta=abs(j_good[passbtag].eta.flatten()),
                 )
                 out[tagger].fill(
                     dataset=dataset,
                     wp=wp,
                     btag='fail',
-                    flavor=jets[~passbtag].hadronFlavour.flatten(),
-                    pt=jets[~passbtag].pt.flatten(),
-                    abseta=abs(jets[~passbtag].eta.flatten()),
+                    flavor=j_good[~passbtag].hadronFlavour.flatten(),
+                    pt=j_good[~passbtag].pt.flatten(),
+                    abseta=abs(j_good[~passbtag].eta.flatten()),
                 )
         return out
 
@@ -82,6 +83,7 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-y', '--year', help='year', dest='year')
     parser.add_option('-m', '--metadata', help='metadata', dest='metadata')
+    parser.add_option('-n', '--name', help='name', dest='name')
     (options, args) = parser.parse_args()
 
 
@@ -89,6 +91,7 @@ if __name__ == '__main__':
         samplefiles = json.load(fin)
 
     common = load('data/common.coffea')
-    processor_instance=BTagEfficiency(year=options.year,wp=common['btagWPs'])
+    ids    = load('data/ids.coffea')
+    processor_instance=BTagEfficiency(year=options.year,wp=common['btagWPs'],ids=ids)
 
-    save(processor_instance, 'data/btageff'+options.metadata+'.processor')
+    save(processor_instance, 'data/btageff'+options.name+'.processor')

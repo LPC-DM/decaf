@@ -48,8 +48,7 @@ if __name__ == '__main__':
                             '-n _'+workspace.replace('.root','')+'_'+tag)
                 
     for command in commands:
-        print(command)
-        #os.system(command)
-        #folder='results/'+command.split('-n ')[1].split(' ')[0].split('_',1)[1]
-        #os.system('mkdir -p '+folder)
-        #os.system('mv *'+tag+'* '+folder)
+        os.system(command)
+        folder='results/'+command.split('-n ')[1].split(' ')[0].split('_',1)[1]
+        os.system('mkdir -p '+folder)
+        os.system('mv *'+tag+'* '+folder)

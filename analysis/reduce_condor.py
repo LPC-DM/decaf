@@ -98,7 +98,7 @@ for pdi in pd:
     if options.exclude:
         if any(_dataset in pdi for _dataset in options.exclude.split(',')): continue
     for variable in variables:
-        if options.variable and options.variable not in variable: continue
+        if options.variable and options.variable != variable: continue
         os.system('mkdir -p logs/condor/reduce/err/')
         os.system('rm -rf logs/condor/reduce/err/*'+tag+'*'+pdi+'*'+variable+'*')
         os.system('mkdir -p logs/condor/reduce/log/')
