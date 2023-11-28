@@ -170,7 +170,7 @@ def addBBliteSyst(channel, ntot, etot2, epsilon=1e-5, threshold=0.01, channel_na
             if not isinstance(sample, rl.TemplateSample):
                 continue
             print(sample._name, i, effect_up[i], effect_down[i])
-            sample.setParamEffect(param[i], effect_up, effect_down) 
+            #sample.setParamEffect(param[i], effect_up, effect_down) 
     return param
 
 def calculateMCStatsTFSyst(num, den):
@@ -192,7 +192,7 @@ def addMCStatsTFSyst(templ, param, ntot, etot2, epsilon=1e-5, threshold=0.01):
         effect_up[i] = 1.0 + min(1.0, effect)
         effect_down[i] = max(epsilon, 1.0 - min(1.0, effect))
         print(templ._name, i, effect_up[i], effect_down[i])
-        templ.setParamEffect(param[i], effect_up, effect_down)
+        #templ.setParamEffect(param[i], effect_up, effect_down)
 
 def addBtagSyst(dictionary, recoil, process, region, templ, category, mass):
     btagUp = template(dictionary, process, "btagSFbc_correlatedUp", recoil, region, category, mass)[0]
