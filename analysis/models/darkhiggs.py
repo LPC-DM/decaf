@@ -132,7 +132,7 @@ class TransferFactorSample(rl.ParametericSample):
         """
         if not isinstance(transferfactor, np.ndarray):
             raise ValueError("Transfer factor is not a numpy array")
-        if not isinstance(dependentsample, Sample):
+        if not isinstance(dependentsample, rl.Sample):
             raise ValueError("Dependent sample does not inherit from Sample")
         if len(transferfactor.shape) == 2:
             if observable is None:
