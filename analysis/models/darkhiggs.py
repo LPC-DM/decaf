@@ -1568,7 +1568,7 @@ if __name__ == "__main__":
         #    nominal=sr_wjetsMCFail._nominal,
         #    sumw2=(unc*sr_wjetsMCFail._nominal)**2
         #)
-        print('Nominal',sr_wjetsFail._nominal)
+        print('Nominal',sr_wjetsFail.nominal)
 
         
 
