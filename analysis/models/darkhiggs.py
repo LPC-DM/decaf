@@ -174,6 +174,7 @@ class TransferFactorSample(rl.ParametericSample):
         else:
             raise ValueError("Transfer factor has invalid dimension")
         super(TransferFactorSample, self).__init__(samplename, sampletype, observable, params)
+        print(super(TransferFactorSample, self).__init__(samplename, sampletype, observable, params))
         self._transferfactor = transferfactor
         self._dependentsample = dependentsample
         self._nominal = nominal
@@ -1626,10 +1627,10 @@ if __name__ == "__main__":
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
             tf_paramsW,
-            sr_wjetsFail)#,
-       #     nominal=sr_wjetsMCPass._nominal,
-       #     sumw2=(unc*sr_wjetsMCPass._nominal)**2
-       # )
+            sr_wjetsFail,
+            nominal=sr_wjetsMCPass._nominal,
+            sumw2=(unc*sr_wjetsMCPass._nominal)**2
+        )
         
         
         for category in ["pass", "fail"]:
