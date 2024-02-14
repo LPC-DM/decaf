@@ -1623,7 +1623,7 @@ if __name__ == "__main__":
         tf, unc = makeTF(sr_wjetsMCPass, sr_wjetsMCFail)
         tf_paramsW = tf * tf_dataResidualW_params[recoilbin, :]
         #tf_paramsW = wjetseff * tf_MCtemplW_params_final[recoilbin, :] * tf_dataResidualW_params[recoilbin, :]
-        sr_wjetsPass = rl.TransferFactorSample(
+        sr_wjetsPass = TransferFactorSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
             tf_paramsW,
