@@ -1211,7 +1211,7 @@ def model(year, mass, recoil, category):
         addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category, mass)
 
         tf, unc = makeTF(tecr_ttMC, sr_ttMC)
-        tecr_tt = rl.TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal=tecr_ttMC._nominal, sumw2=(unc*tecr_ttMC._nominal)**2)
+        tecr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal=tecr_ttMC._nominal, sumw2=(unc*tecr_ttMC._nominal)**2)
         tecr.addSample(tecr_tt)
 
     ###
@@ -1565,7 +1565,7 @@ if __name__ == "__main__":
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
 
         tf, unc = makeTF(sr_wjetsMCFail, sr_zjetsMCFail)
-        sr_wjetsFail = rl.TransferFactorSample(
+        sr_wjetsFail = TransferFactorSample(
             "sr" + year + "fail" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
             tf,
@@ -1594,7 +1594,7 @@ if __name__ == "__main__":
         tf, unc = makeTF(sr_zjetsMCPass, sr_zjetsMCFail)
         tf_paramsZ = tf * tf_dataResidualZ_params[recoilbin, :]
         #tf_paramsZ = zjetseff *tf_MCtemplZ_params_final[recoilbin, :] * tf_dataResidualZ_params[recoilbin, :]
-        sr_zjetsPass = rl.TransferFactorSample(
+        sr_zjetsPass = TransferFactorSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_zjets",
             rl.Sample.BACKGROUND,
             tf_paramsZ,
@@ -1621,7 +1621,7 @@ if __name__ == "__main__":
         tf, unc = makeTF(sr_wjetsMCPass, sr_wjetsMCFail)
         tf_paramsW = tf * tf_dataResidualW_params[recoilbin, :]
         #tf_paramsW = wjetseff * tf_MCtemplW_params_final[recoilbin, :] * tf_dataResidualW_params[recoilbin, :]
-        sr_wjetsPass = rl.TransferFactorSample(
+        sr_wjetsPass = TransferFactorSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
             tf_paramsW,
