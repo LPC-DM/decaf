@@ -10,6 +10,7 @@ import pickle
 import cloudpickle
 import ROOT
 import gzip
+from libs.myrhalphalib import TransferFactorSample
 sys.setrecursionlimit(1500)
 rl.util.install_roofit_helpers()
 rl.ParametericSample.PreferRooParametricHist = False
