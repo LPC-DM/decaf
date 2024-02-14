@@ -120,7 +120,7 @@ def remap_histograms(hists):
     return hists
 
 class TransferFactorSample(rl.ParametericSample):
-    def __init__(self, samplename, sampletype, transferfactor, dependentsample, nominal=None, sumw2=None, observable=None, min_val=None, epsilon=1e-5, effect_threshold=0.01, addMCStat=False, channel_name=None):
+    def __init__(self, samplename, sampletype, transferfactor, dependentsample, unc=None, observable=None, min_val=None, epsilon=1e-5, effect_threshold=0.01, addMCStat=False, channel_name=None):
         """
         Create a sample that depends on another Sample by some transfer factor.
         The transfor factor can be a constant, an array of parameters of same length
@@ -145,23 +145,19 @@ class TransferFactorSample(rl.ParametericSample):
             observable = dependentsample.observable
             if addMCStat:
                 name = samplename if channel_name is None else channel_name
-                MCStatTemplate = (np.ones_like(nominal), observable._binning, observable._name)
+                MCStatTemplate = (np.ones_like(unc), observable._binning, observable._name)
                 MCStat = rl.TemplateSample(name+'_mcstat', rl.Sample.BACKGROUND, MCStatTemplate)
                 for i in range(MCStat.observable.nbins):
                     effect_up = np.ones_like(MCStat._nominal)
                     effect_down = np.ones_like(MCStat._nominal)
-                    if sumw2 is None:
-                        raise ValueError("To add MC stat uncertainties, please provide a sumw2")
-                    if nominal is None:
-                        raise ValueError("To add MC stat uncertainties, please provide a nominal")
-                    if sumw2[i] <= 0.0:
-                        continue
-                    effect = np.sqrt(sumw2[i])/nominal[i]
+                    if unc is None:
+                        raise ValueError("To add MC stat, please provide uncertainties")
+                    effect = unc
                     if effect < effect_threshold:
                         continue
                     effect_up[i] = 1.0 + min(1.0, effect)
                     effect_down[i] = max(epsilon, 1.0 - min(1.0, effect))
-                    print(samplname, i, nominal, effect_up[i], effect_down[i])
+                    print(samplname, i, ntot, effect_up[i], effect_down[i])
                     param = rl.NuisanceParameter(name + '_mcstat_bin%i' % i, combinePrior='shape')
                     MCStat.setParamEffect(param, effect_up, effect_down)
                 params = transferfactor * MCStat.getExpectation() * dependentsample.getExpectation()
@@ -172,13 +168,10 @@ class TransferFactorSample(rl.ParametericSample):
                     params[i] = p.max(min_val)
         else:
             raise ValueError("Transfer factor has invalid dimension")
-        #super(TransferFactorSample, self).__init__(samplename, sampletype, observable, params)
-        #rl.ParametericSample.__init__(self, samplename, sampletype, observable, params)
-        super().__init__(samplename, sampletype, observable, params)
+        super(TransferFactorSample, self).__init__(samplename, sampletype, observable, params)
         self._transferfactor = transferfactor
         self._dependentsample = dependentsample
-        self._nominal = nominal
-        self._sumw2 = sumw2
+        self._sumw2 = unc**2
 
     @property
     def transferfactor(self):
@@ -189,8 +182,8 @@ class TransferFactorSample(rl.ParametericSample):
         return self._dependentsample
 
     @property
-    def nominal(self):
-        return self._nominal
+    def ntot(self):
+        return self._ntot
         
     @property
     def sumw2(self):
@@ -1567,14 +1560,15 @@ if __name__ == "__main__":
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
 
         tf, unc = makeTF(sr_wjetsMCFail, sr_zjetsMCFail)
-        sr_wjetsFail = TransferFactorSample(
+        sr_wjetsFail = rl.TransferFactorSample(
             "sr" + year + "fail" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
             tf,
-            sr_zjetsFail,
-            nominal=sr_wjetsMCFail._nominal,
-            sumw2=(unc*sr_wjetsMCFail._nominal)**2
-        )
+            sr_zjetsFail)#,
+        #    nominal=sr_wjetsMCFail._nominal,
+        #    sumw2=(unc*sr_wjetsMCFail._nominal)**2
+        #)
+        print('Nominal',sr_wjetsFail._nominal)
 
         
 
@@ -1596,14 +1590,14 @@ if __name__ == "__main__":
         tf, unc = makeTF(sr_zjetsMCPass, sr_zjetsMCFail)
         tf_paramsZ = tf * tf_dataResidualZ_params[recoilbin, :]
         #tf_paramsZ = zjetseff *tf_MCtemplZ_params_final[recoilbin, :] * tf_dataResidualZ_params[recoilbin, :]
-        sr_zjetsPass = rl.TransferFactorSample(
+        sr_zjetsPass = TransferFactorSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_zjets",
             rl.Sample.BACKGROUND,
             tf_paramsZ,
-            sr_zjetsFail)#,
-        #    nominal=sr_zjetsMCPass._nominal,
-        #    sumw2=(unc*sr_zjetsMCPass._nominal)**2
-        #)
+            sr_zjetsFail,
+            nominal=sr_zjetsMCPass._nominal,
+            sumw2=(unc*sr_zjetsMCPass._nominal)**2
+        )
         print('sr_zjetsPass.getExpectation(nominal=True) = ',sr_zjetsPass.getExpectation(nominal=True))
         
         #####
