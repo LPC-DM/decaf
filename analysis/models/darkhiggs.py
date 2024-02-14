@@ -174,7 +174,8 @@ class TransferFactorSample(rl.ParametericSample):
         else:
             raise ValueError("Transfer factor has invalid dimension")
         #super(TransferFactorSample, self).__init__(samplename, sampletype, observable, params)
-        rl.ParametericSample.__init__(self, samplename, sampletype, observable, params)
+        #rl.ParametericSample.__init__(self, samplename, sampletype, observable, params)
+        super().__init__(samplename, sampletype, observable, params)
         self._transferfactor = transferfactor
         self._dependentsample = dependentsample
         self._nominal = nominal
