@@ -126,12 +126,12 @@ def makeTF(num, den, epsilon=1e-5, effect_threshold=0.01, addMCStat=True):
         return tf
     
     tfSystTemplate = (np.ones_like(num._nominal), num._observable._binning, num._observable._name)
-    tfSyst = rl.TemplateSample(num._name+'TF', rl.Sample.BACKGROUND, tfSystTemplate)
+    tfSyst = rl.TemplateSample(num._name.replace('MC','TF'), rl.Sample.BACKGROUND, tfSystTemplate)
 
-    num=unumpy.uarray(( num._nominal, np.sqrt(num._sumw2) ))  
-    den=unumpy.uarray(( den._nominal, np.sqrt(den._sumw2) ))  
+    num=unumpy.uarray(( num._nominal, np.minimum(np.sqrt(num._sumw2),num._nominal) ))  
+    den=unumpy.uarray(( den._nominal, np.minimum(np.sqrt(den._sumw2),den._nominal) ))  
     ratio=num/den
-    for i in range(templ.observable.nbins):
+    for i in range(tfSyst.observable.nbins):
         effect_up = np.ones_like(tfSyst._nominal)
         effect_down = np.ones_like(tfSyst._nominal)
         effect = unumpy.std_devs(ratio)[i]/unumpy.nominal_values(ratio)[i]
@@ -139,7 +139,7 @@ def makeTF(num, den, epsilon=1e-5, effect_threshold=0.01, addMCStat=True):
             continue
         effect_up[i] = 1.0 + min(1.0, effect)
         effect_down[i] = max(epsilon, 1.0 - min(1.0, effect))
-        print(tfSyst._name, i, tf[i], effect_up[i], effect_down[i])
+        print(tfSyst._name, i, ratio[i], effect_up[i], effect_down[i])
         param = rl.NuisanceParameter(tfSyst._name + '_mcstat_bin%i' % i, combinePrior='shape')
         tfSyst.setParamEffect(param, effect_up, effect_down)
 
@@ -170,7 +170,7 @@ def addBBLiteSyst(channel, epsilon=1e-5, effect_threshold=0.01, threshold=0, inc
             ntot += sample._nominal[i]
             etot2 += sample._sumw2[i]
     
-            if not include_signal and sample._sampletype == Sample.SIGNAL:
+            if not include_signal and sample._sampletype == rl.Sample.SIGNAL:
                 continue
     
             ntot_bb += sample._nominal[i]
@@ -181,7 +181,7 @@ def addBBLiteSyst(channel, epsilon=1e-5, effect_threshold=0.01, threshold=0, inc
         elif etot2_bb <= 0:
             # this means there is signal but no background, so create stats unc. for signal only
             for sample in channel._samples.values():
-                if sample._sampletype == Sample.SIGNAL:
+                if sample._sampletype == rl.Sample.SIGNAL:
                     sample_name = None if channel_name is None else channel_name + "_" + sample._name[sample._name.find("_") + 1 :]
                     sample.autoMCStats(epsilon=epsilon, sample_name=sample_name, bini=i)
     
@@ -202,7 +202,7 @@ def addBBLiteSyst(channel, epsilon=1e-5, effect_threshold=0.01, threshold=0, inc
             effect_up[i] = 1.0 + min(1.0, effect)
             effect_down[i] = max(epsilon, 1.0 - min(1.0, effect))
     
-            param = NuisanceParameter(name + "_mcstat_bin%i" % i, combinePrior="shape")
+            param = rl.NuisanceParameter(name + "_mcstat_bin%i" % i, combinePrior="shape")
     
             for sample in channel._samples.values():
                 if sample._nominal[i] <= 1e-5:
@@ -224,10 +224,21 @@ def addBtagSyst(dictionary, recoil, process, region, templ, category, mass):
     btagDown = template(dictionary, process, "btagSFlight_uncorrelatedDown", recoil, region, category, mass)[0]
     templ.setParamEffect(btagSFlight, btagUp, btagDown)
 
-def addDoubleBtagSyst(dictionary, recoil, process, region, templ, category, mass):
-    doublebtagUp = template(dictionary, process, 'doublebtagUp', recoil, region, category, mass)[0]
-    doublebtagDown = template(dictionary, process, 'doublebtagDown', recoil, region, category, mass)[0]
-    templ.setParamEffect(doublebtag, doublebtagUp, doublebtagDown)
+#def addDoubleBtagSyst(dictionary, recoil, process, region, templ, category, mass):
+#    doublebtagUp = template(dictionary, process, 'doublebtagUp', recoil, region, category, mass)[0]
+#    doublebtagDown = template(dictionary, process, 'doublebtagDown', recoil, region, category, mass)[0]
+#    templ.setParamEffect(doublebtag, doublebtagUp, doublebtagDown)
+
+def addDoubleBtagSyst(dictionary, process, region, templ, category): 
+    def addSyst(dictionary, process, region, templ, category, syst, string):
+        histogram = dictionary[region].integrate("process", process)
+        nominal=histogram.integrate("systematic", "nominal").sum('recoil','fjmass').values()[()][category_map[category]]
+        up=histogram.integrate("systematic", string+"Up").sum('recoil','fjmass').values()[()][category_map[category]]
+        systUp = up / nominal
+        systUp = np.nan_to_num(systUp, nan=1.)
+        print(templ._name,systUp)
+        templ.setParamEffect(syst, systUp)
+    addSyst(dictionary, process, region, templ, category, doublebtag, "doublebtag")
 
 def addVJetsSyst(dictionary, recoil, process, region, templ, category):
     def addSyst(dictionary, recoil, process, region, templ, category, syst, string):
@@ -443,7 +454,7 @@ def model(year, mass, recoil, category):
     # Add BB-lite
     ###
 
-    addBBliteSyst(sr)
+    addBBLiteSyst(sr)
 
     ###
     # top-antitop data-driven model
@@ -481,7 +492,7 @@ def model(year, mass, recoil, category):
         else:
             sr_wjets = sr_wjetsFail
             sr_wjetsMC = sr_wjetsMCFail
-    sr.addSample(sr_wjets)
+        sr.addSample(sr_wjets)
 
     ###
     # Signal
@@ -499,7 +510,7 @@ def model(year, mass, recoil, category):
             addMETTrigSyst(sr_signal, year)
             sr_signal.setParamEffect(veto_tau, nveto_tau)
             addBtagSyst(signal, recoil, str(s), "sr", sr_signal, category, mass)
-            addDoubleBtagSyst(signal, recoil, str(s), "sr", sr_signal, category, mass)
+            addDoubleBtagSyst(signal, str(s), "sr", sr_signal, category)
             sr.addSample(sr_signal)
 
     ###
@@ -634,7 +645,7 @@ def model(year, mass, recoil, category):
     # Add BB-lite
     ###
 
-    addBBliteSyst(wmcr)
+    addBBLiteSyst(wmcr)
 
     ###
     # W(->lnu)+jets data-driven model
@@ -803,7 +814,7 @@ def model(year, mass, recoil, category):
     # Add BB-lite
     ###
 
-    addBBliteSyst(wecr)
+    addBBLiteSyst(wecr)
 
     ###
     # W(->lnu)+jets data-driven model
@@ -971,7 +982,7 @@ def model(year, mass, recoil, category):
     # Add BB-lite
     ###
 
-    addBBliteSyst(tmcr)
+    addBBLiteSyst(tmcr)
 
     ###
     # top-antitop data-driven model
@@ -1124,7 +1135,7 @@ def model(year, mass, recoil, category):
     # Add BB-lite
     ###
 
-    addBBliteSyst(tecr)
+    addBBLiteSyst(tecr)
 
     ###
     # top-antitop data-driven model
@@ -1423,7 +1434,8 @@ if __name__ == "__main__":
     qcd1 = rl.NuisanceParameter("qcd1", "lnN")
     qcd2 = rl.NuisanceParameter("qcd2", "lnN")
     qcd3 = rl.NuisanceParameter("qcd3", "lnN")
-    doublebtag = rl.NuisanceParameter("doublebtag_" + year, "shape")
+    #doublebtag = rl.NuisanceParameter("doublebtag_" + year, "shape")
+    doublebtag = rl.NuisanceParameter("doublebtag_" + year, "lnN")
         
     ###
     # Set lnN numbers
@@ -1486,7 +1498,7 @@ if __name__ == "__main__":
 
         sr_wjetsFailTransferFactor = makeTF(sr_wjetsMCFail, sr_zjetsMCFail)
         sr_wjetsFail = rl.TransferFactorSample(
-            "sr" + year + "fail" + "mass" + mass + "recoil" + str(recoilbin) + "_wjetsTF",
+            "sr" + year + "fail" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
             sr_wjetsFailTransferFactor,
             sr_zjetsFail
@@ -1513,7 +1525,7 @@ if __name__ == "__main__":
         tf_paramsZ = tf_MCtemplZ * tf_dataResidualZ_params[recoilbin, :]
         #tf_paramsZ = zjetseff *tf_MCtemplZ_params_final[recoilbin, :] * tf_dataResidualZ_params[recoilbin, :]
         sr_zjetsPass = rl.TransferFactorSample(
-            "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_zjetsTF",
+            "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_zjets",
             rl.Sample.BACKGROUND,
             tf_paramsZ,
             sr_zjetsFail
@@ -1538,7 +1550,7 @@ if __name__ == "__main__":
         tf_paramsW = tf_MCtemplW * tf_dataResidualW_params[recoilbin, :]
         #tf_paramsW = wjetseff * tf_MCtemplW_params_final[recoilbin, :] * tf_dataResidualW_params[recoilbin, :]
         sr_wjetsPass = rl.TransferFactorSample(
-            "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_wjetsTF",
+            "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
             tf_paramsW,
             sr_wjetsFail
