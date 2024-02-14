@@ -166,6 +166,7 @@ class TransferFactorSample(rl.ParametericSample):
                     MCStat.setParamEffect(param, effect_up, effect_down)
                 params = transferfactor * MCStat.getExpectation() * dependentsample.getExpectation()
             else:
+                print(dependentsample)
                 params = transferfactor * dependentsample.getExpectation()
             if min_val is not None:
                 for i, p in enumerate(params):
