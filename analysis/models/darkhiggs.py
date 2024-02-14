@@ -119,31 +119,90 @@ def remap_histograms(hists):
 
     return hists
 
-def makeTF(num, den, epsilon=1e-5, effect_threshold=0.01, addMCStat=True):
+class TransferFactorSample(rl.ParametericSample):
+    def __init__(self, samplename, sampletype, transferfactor, dependentsample, nominal=None, sumw2=None, observable=None, min_val=None, epsilon=1e-5, effect_threshold=0.01, addMCStat=False, channel_name=None):
+        """
+        Create a sample that depends on another Sample by some transfer factor.
+        The transfor factor can be a constant, an array of parameters of same length
+        as the dependent sample binning, or a matrix of parameters where the second
+        dimension matches the sample binning, i.e. expectation = tf @ dependent_expectation.
+        The latter requires an additional observable argument to specify the definition of the first dimension.
+        In all cases, please use numpy object arrays of Parameter types.
+        Passing in a ``min_val`` means param values will be clipped at the min_val.
+        """
+        if not isinstance(transferfactor, np.ndarray):
+            raise ValueError("Transfer factor is not a numpy array")
+        if not isinstance(dependentsample, Sample):
+            raise ValueError("Dependent sample does not inherit from Sample")
+        if len(transferfactor.shape) == 2:
+            if observable is None:
+                raise ValueError("Transfer factor is 2D array, please provide an observable")
+            params = np.dot(transferfactor, dependentsample.getExpectation())
+            if min_val is not None:
+                for idx, p in np.ndenumerate(params):
+                    params[idx] = p.max(min_val)
+        elif len(transferfactor.shape) <= 1:
+            observable = dependentsample.observable
+            if addMCStat:
+                name = samplename if channel_name is None else channel_name
+                MCStatTemplate = (np.ones_like(nominal), observable._binning, observable._name)
+                MCStat = rl.TemplateSample(name+'_mcstat', rl.Sample.BACKGROUND, MCStatTemplate)
+                for i in range(MCStat.observable.nbins):
+                    effect_up = np.ones_like(MCStat._nominal)
+                    effect_down = np.ones_like(MCStat._nominal)
+                    if sumw2 is None:
+                        raise ValueError("To add MC stat uncertainties, please provide a sumw2")
+                    if nominal is None:
+                        raise ValueError("To add MC stat uncertainties, please provide a nominal")
+                    if sumw2[i] <= 0.0:
+                        continue
+                    effect = np.sqrt(sumw2[i])/nominal[i]
+                    if effect < effect_threshold:
+                        continue
+                    effect_up[i] = 1.0 + min(1.0, effect)
+                    effect_down[i] = max(epsilon, 1.0 - min(1.0, effect))
+                    param = rl.NuisanceParameter(name + '_mcstat_bin%i' % i, combinePrior='shape')
+                    MCStat.setParamEffect(param, effect_up, effect_down)
+                params = transferfactor * MCStat.getExpectation() * dependentsample.getExpectation()
+            else:
+                params = transferfactor * dependentsample.getExpectation()
+            if min_val is not None:
+                for i, p in enumerate(params):
+                    params[i] = p.max(min_val)
+        else:
+            raise ValueError("Transfer factor has invalid dimension")
+        super(TransferFactorSample, self).__init__(samplename, sampletype, observable, params)
+        self._transferfactor = transferfactor
+        self._dependentsample = dependentsample
+        self._nominal = nominal
+        self._sumw2 = sumw2
+
+    @property
+    def transferfactor(self):
+        return self._transferfactor
+
+    @property
+    def dependentsample(self):
+        return self._dependentsample
+
+    @property
+    def nominal(self):
+        return self._nominal
+        
+    @property
+    def sumw2(self):
+        return self._sumw2
+
+def makeTF(num, den):
 
     tf = num.getExpectation()/den.getExpectation()
-    if not addMCStat:
-        return tf
-    
-    tfSystTemplate = (np.ones_like(num._nominal), num._observable._binning, num._observable._name)
-    tfSyst = rl.TemplateSample(num._name.replace('MC','TF'), rl.Sample.BACKGROUND, tfSystTemplate)
-
     num=unumpy.uarray(( num._nominal, np.minimum(np.sqrt(num._sumw2),num._nominal) ))  
     den=unumpy.uarray(( den._nominal, np.minimum(np.sqrt(den._sumw2),den._nominal) ))  
     ratio=num/den
-    for i in range(tfSyst.observable.nbins):
-        effect_up = np.ones_like(tfSyst._nominal)
-        effect_down = np.ones_like(tfSyst._nominal)
-        effect = unumpy.std_devs(ratio)[i]/unumpy.nominal_values(ratio)[i]
-        if effect < effect_threshold:
-            continue
-        effect_up[i] = 1.0 + min(1.0, effect)
-        effect_down[i] = max(epsilon, 1.0 - min(1.0, effect))
-        print(tfSyst._name, i, ratio[i], effect_up[i], effect_down[i])
-        param = rl.NuisanceParameter(tfSyst._name + '_mcstat_bin%i' % i, combinePrior='shape')
-        tfSyst.setParamEffect(param, effect_up, effect_down)
-
-    return tf*tfSyst.getExpectation() 
+    effect = unumpy.std_devs(ratio)/unumpy.nominal_values(ratio)
+    sumw2 = effect**2
+    
+    return tf, sumw2
 
 
 def addBBLiteSyst(channel, epsilon=1e-5, effect_threshold=0.01, threshold=0, include_signal=0, channel_name=None):
@@ -160,22 +219,25 @@ def addBBLiteSyst(channel, epsilon=1e-5, effect_threshold=0.01, threshold=0, inc
     name = channel._name if channel_name is None else channel_name
     
     first_sample = channel._samples[list(channel._samples.keys())[0]]
+
+    ntot_bb, etot2_bb = np.zeros_like(first_sample._nominal), np.zeros_like(first_sample._sumw2)
+    ntot, etot2 = np.zeros_like(first_sample._nominal), np.zeros_like(first_sample._sumw2)
     
+    for sample in channel._samples.values():
+        ntot += sample._nominal
+        etot2 += sample._sumw2
+        if not include_signal and sample._sampletype == rl.Sample.SIGNAL:
+            continue
+        ntot_bb += sample._nominal
+        etot2_bb += sample._sumw2
+
+    for sample in channel._samples.values():
+        if not isinstance(sample, TransferFactorSample):
+            continue
+        channel._samples[sample.name] = TransferFactorSample(sample.name, rl.Sample.BACKGROUND, sample.transferfactor, sample.dependentsample, nominal=ntot, sumw2=etot2, addMCStat=True, channel_name=name)
+            
+        
     for i in range(first_sample.observable.nbins):
-        ntot_bb, etot2_bb = 0, 0  # for the decision to use bblite or not
-        ntot, etot2 = 0, 0  # for the bblite uncertainty
-    
-        # check if neff = ntot^2 / etot2 > threshold
-        for sample in channel._samples.values():
-            ntot += sample._nominal[i]
-            etot2 += sample._sumw2[i]
-    
-            if not include_signal and sample._sampletype == rl.Sample.SIGNAL:
-                continue
-    
-            ntot_bb += sample._nominal[i]
-            etot2_bb += sample._sumw2[i]
-    
         if etot2 <= 0.0:
             continue
         elif etot2_bb <= 0:
@@ -186,7 +248,7 @@ def addBBLiteSyst(channel, epsilon=1e-5, effect_threshold=0.01, threshold=0, inc
                     sample.autoMCStats(epsilon=epsilon, sample_name=sample_name, bini=i)
     
             continue
-    
+
         neff_bb = ntot_bb**2 / etot2_bb
         if neff_bb <= threshold:
             for sample in channel._samples.values():
@@ -206,6 +268,8 @@ def addBBLiteSyst(channel, epsilon=1e-5, effect_threshold=0.01, threshold=0, inc
     
             for sample in channel._samples.values():
                 if sample._nominal[i] <= 1e-5:
+                    continue
+                if isinstance(sample, TransferFactorSample):
                     continue
                 print(sample._name, i, sample._nominal[i], effect_up[i], effect_down[i])
                 sample.setParamEffect(param, effect_up, effect_down)
