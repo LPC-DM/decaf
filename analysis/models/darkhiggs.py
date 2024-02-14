@@ -199,10 +199,9 @@ def makeTF(num, den):
     num=unumpy.uarray(( num._nominal, np.minimum(np.sqrt(num._sumw2),num._nominal) ))  
     den=unumpy.uarray(( den._nominal, np.minimum(np.sqrt(den._sumw2),den._nominal) ))  
     ratio=num/den
-    effect = unumpy.std_devs(ratio)/unumpy.nominal_values(ratio)
-    sumw2 = effect**2
+    unc = unumpy.std_devs(ratio)/unumpy.nominal_values(ratio)
     
-    return tf, sumw2
+    return tf, unc
 
 
 def addBBLiteSyst(channel, epsilon=1e-5, effect_threshold=0.01, threshold=0, include_signal=0, channel_name=None):
@@ -269,7 +268,7 @@ def addBBLiteSyst(channel, epsilon=1e-5, effect_threshold=0.01, threshold=0, inc
             for sample in channel._samples.values():
                 if sample._nominal[i] <= 1e-5:
                     continue
-                if isinstance(sample, TransferFactorSample):
+                if not isinstance(sample, rl.TemplateSample):
                     continue
                 print(sample._name, i, sample._nominal[i], effect_up[i], effect_down[i])
                 sample.setParamEffect(param, effect_up, effect_down)
@@ -515,12 +514,6 @@ def model(year, mass, recoil, category):
     sr.addSample(sr_qcd)
 
     ###
-    # Add BB-lite
-    ###
-
-    addBBLiteSyst(sr)
-
-    ###
     # top-antitop data-driven model
     ###
 
@@ -557,6 +550,13 @@ def model(year, mass, recoil, category):
             sr_wjets = sr_wjetsFail
             sr_wjetsMC = sr_wjetsMCFail
         sr.addSample(sr_wjets)
+
+    ###
+    # Add BB-lite
+    ###
+
+    addBBLiteSyst(sr)
+
 
     ###
     # Signal
@@ -706,12 +706,6 @@ def model(year, mass, recoil, category):
     wmcr.addSample(wmcr_qcd)
 
     ###
-    # Add BB-lite
-    ###
-
-    addBBLiteSyst(wmcr)
-
-    ###
     # W(->lnu)+jets data-driven model
     ###
 
@@ -723,8 +717,8 @@ def model(year, mass, recoil, category):
         wmcr_wjetsMC.setParamEffect(iso_mu, nlepton)
         addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
         
-        wmcr_wjetsTransferFactor = makeTF(wmcr_wjetsMC, sr_wjetsMC)
-        wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, wmcr_wjetsTransferFactor, sr_wjets)
+        tf, unc = makeTF(wmcr_wjetsMC, sr_wjetsMC)
+        wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, tf, sr_wjets, nominal=wmcr_wjetsMC._nominal, sumw2=(unc*wmcr_wjetsMC._nominal)**2)
         wmcr.addSample(wmcr_wjets)
 
     ###
@@ -739,9 +733,17 @@ def model(year, mass, recoil, category):
         wmcr_ttMC.setParamEffect(iso_mu, nlepton)
         addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category, mass)
 
-        wmcr_ttTransferFactor = makeTF(wmcr_ttMC, sr_ttMC)
-        wmcr_tt = rl.TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, wmcr_ttTransferFactor, sr_tt)
+        tf, unc = makeTF(wmcr_ttMC, sr_ttMC)
+        wmcr_tt = rl.TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal=wmcr_ttMC._nominal, sumw2=(unc*wmcr_ttMC._nominal)**2)
         wmcr.addSample(wmcr_tt)
+
+    ###
+    # Add BB-lite
+    ###
+
+    addBBLiteSyst(wmcr)
+
+    
     
     ###
     # End of single muon W control region
