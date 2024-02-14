@@ -161,6 +161,7 @@ class TransferFactorSample(rl.ParametericSample):
                         continue
                     effect_up[i] = 1.0 + min(1.0, effect)
                     effect_down[i] = max(epsilon, 1.0 - min(1.0, effect))
+                    print(samplname, i, nominal, effect_up[i], effect_down[i])
                     param = rl.NuisanceParameter(name + '_mcstat_bin%i' % i, combinePrior='shape')
                     MCStat.setParamEffect(param, effect_up, effect_down)
                 params = transferfactor * MCStat.getExpectation() * dependentsample.getExpectation()
@@ -718,7 +719,7 @@ def model(year, mass, recoil, category):
         addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
         
         tf, unc = makeTF(wmcr_wjetsMC, sr_wjetsMC)
-        wmcr_wjets = rl.TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, tf, sr_wjets, nominal=wmcr_wjetsMC._nominal, sumw2=(unc*wmcr_wjetsMC._nominal)**2)
+        wmcr_wjets = TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, tf, sr_wjets, nominal=wmcr_wjetsMC._nominal, sumw2=(unc*wmcr_wjetsMC._nominal)**2)
         wmcr.addSample(wmcr_wjets)
 
     ###
@@ -734,7 +735,7 @@ def model(year, mass, recoil, category):
         addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category, mass)
 
         tf, unc = makeTF(wmcr_ttMC, sr_ttMC)
-        wmcr_tt = rl.TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal=wmcr_ttMC._nominal, sumw2=(unc*wmcr_ttMC._nominal)**2)
+        wmcr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal=wmcr_ttMC._nominal, sumw2=(unc*wmcr_ttMC._nominal)**2)
         wmcr.addSample(wmcr_tt)
 
     ###
@@ -877,12 +878,6 @@ def model(year, mass, recoil, category):
 
 
     ###
-    # Add BB-lite
-    ###
-
-    addBBLiteSyst(wecr)
-
-    ###
     # W(->lnu)+jets data-driven model
     ###
 
@@ -894,8 +889,8 @@ def model(year, mass, recoil, category):
         wecr_wjetsMC.setParamEffect(reco_e, nlepton)
         addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
 
-        wecr_wjetsTransferFactor = makeTF(wecr_wjetsMC, sr_wjetsMC)
-        wecr_wjets = rl.TransferFactorSample( ch_name + "_wjets", rl.Sample.BACKGROUND, wecr_wjetsTransferFactor, sr_wjets)
+        tf, unc = makeTF(wecr_wjetsMC, sr_wjetsMC)
+        wecr_wjets = TransferFactorSample( ch_name + "_wjets", rl.Sample.BACKGROUND, tf, sr_wjets, nominal=wecr_wjetsMC._nominal, sumw2=(unc*wecr_wjetsMC._nominal)**2)
         wecr.addSample(wecr_wjets)
         
 
@@ -911,11 +906,17 @@ def model(year, mass, recoil, category):
         wecr_ttMC.setParamEffect(reco_e, nlepton)
         addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category, mass)
 
-        wecr_ttTransferFactor = makeTF(wecr_ttMC, sr_ttMC)
-        wecr_tt = rl.TransferFactorSample( ch_name + "_tt", rl.Sample.BACKGROUND, wecr_ttTransferFactor, sr_tt)
+        tf, unc = makeTF(wecr_ttMC, sr_ttMC)
+        wecr_tt = TransferFactorSample( ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal=wecr_ttMC._nominal, sumw2=(unc*wecr_ttMC._nominal)**2)
         wecr.addSample(wecr_tt)
 
+    ###
+    # Add BB-lite
+    ###
 
+    addBBLiteSyst(wecr)
+
+    
     ###
     # End of single electron W control region
     ###
@@ -1045,12 +1046,6 @@ def model(year, mass, recoil, category):
     tmcr.addSample(tmcr_qcd)
 
     ###
-    # Add BB-lite
-    ###
-
-    addBBLiteSyst(tmcr)
-
-    ###
     # top-antitop data-driven model
     ###
 
@@ -1062,9 +1057,15 @@ def model(year, mass, recoil, category):
         tmcr_ttMC.setParamEffect(iso_mu, nlepton)
         addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category, mass)
 
-        tmcr_ttTransferFactor = makeTF(tmcr_ttMC, sr_ttMC)
-        tmcr_tt = rl.TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tmcr_ttTransferFactor, sr_tt)  
+        tf, unc = makeTF(tmcr_ttMC, sr_ttMC)
+        tmcr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal=tmcr_ttMC._nominal, sumw2=(unc*tmcr_ttMC._nominal)**2)  
         tmcr.addSample(tmcr_tt)
+
+    ###
+    # Add BB-lite
+    ###
+
+    addBBLiteSyst(tmcr)
 
     
 
@@ -1198,12 +1199,6 @@ def model(year, mass, recoil, category):
     tecr.addSample(tecr_qcd)
 
     ###
-    # Add BB-lite
-    ###
-
-    addBBLiteSyst(tecr)
-
-    ###
     # top-antitop data-driven model
     ###
 
@@ -1215,10 +1210,17 @@ def model(year, mass, recoil, category):
         tecr_ttMC.setParamEffect(reco_e, nlepton)
         addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category, mass)
 
-        tecr_ttTransferFactor = makeTF(tecr_ttMC, sr_ttMC)
-        tecr_tt = rl.TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tecr_ttTransferFactor, sr_tt)
+        tf, unc = makeTF(tecr_ttMC, sr_ttMC)
+        tecr_tt = rl.TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal=tecr_ttMC._nominal, sumw2=(unc*tecr_ttMC._nominal)**2)
         tecr.addSample(tecr_tt)
 
+    ###
+    # Add BB-lite
+    ###
+
+    addBBLiteSyst(tecr)
+
+    
     ###
     # End of single electron top control region
     ###
@@ -1562,12 +1564,14 @@ if __name__ == "__main__":
         addMETTrigSyst(sr_wjetsMCFail, year)
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
 
-        sr_wjetsFailTransferFactor = makeTF(sr_wjetsMCFail, sr_zjetsMCFail)
+        tf, unc = makeTF(sr_wjetsMCFail, sr_zjetsMCFail)
         sr_wjetsFail = rl.TransferFactorSample(
             "sr" + year + "fail" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
-            sr_wjetsFailTransferFactor,
-            sr_zjetsFail
+            tf,
+            sr_zjetsFail,
+            nominal=sr_wjetsMCFail._nominal,
+            sumw2=(unc*sr_wjetsMCFail._nominal)**2
         )
 
         
@@ -1587,14 +1591,16 @@ if __name__ == "__main__":
         addMETTrigSyst(sr_zjetsMCPass, year)
         addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
 
-        tf_MCtemplZ = makeTF(sr_zjetsMCPass, sr_zjetsMCFail)
-        tf_paramsZ = tf_MCtemplZ * tf_dataResidualZ_params[recoilbin, :]
+        tf, unc = makeTF(sr_zjetsMCPass, sr_zjetsMCFail)
+        tf_paramsZ = tf * tf_dataResidualZ_params[recoilbin, :]
         #tf_paramsZ = zjetseff *tf_MCtemplZ_params_final[recoilbin, :] * tf_dataResidualZ_params[recoilbin, :]
         sr_zjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_zjets",
             rl.Sample.BACKGROUND,
             tf_paramsZ,
-            sr_zjetsFail
+            sr_zjetsFail,
+            nominal=sr_zjetsMCPass._nominal,
+            sumw2=(unc*sr_zjetsMCPass._nominal)**2
         )
         
         #####
@@ -1612,14 +1618,16 @@ if __name__ == "__main__":
         addMETTrigSyst(sr_wjetsMCPass, year)
         addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
 
-        tf_MCtemplW = makeTF(sr_wjetsMCPass, sr_wjetsMCFail)
-        tf_paramsW = tf_MCtemplW * tf_dataResidualW_params[recoilbin, :]
+        tf, unc = makeTF(sr_wjetsMCPass, sr_wjetsMCFail)
+        tf_paramsW = tf * tf_dataResidualW_params[recoilbin, :]
         #tf_paramsW = wjetseff * tf_MCtemplW_params_final[recoilbin, :] * tf_dataResidualW_params[recoilbin, :]
         sr_wjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
             tf_paramsW,
-            sr_wjetsFail
+            sr_wjetsFail,
+            nominal=sr_wjetsMCPass._nominal,
+            sumw2=(unc*sr_wjetsMCPass._nominal)**2
         )
         
         
