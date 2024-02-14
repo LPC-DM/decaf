@@ -166,7 +166,6 @@ class TransferFactorSample(rl.ParametericSample):
                     MCStat.setParamEffect(param, effect_up, effect_down)
                 params = transferfactor * MCStat.getExpectation() * dependentsample.getExpectation()
             else:
-                print(dependentsample)
                 params = transferfactor * dependentsample.getExpectation()
             if min_val is not None:
                 for i, p in enumerate(params):
@@ -176,7 +175,6 @@ class TransferFactorSample(rl.ParametericSample):
         #super(TransferFactorSample, self).__init__(samplename, sampletype, observable, params)
         #rl.ParametericSample.__init__(self, samplename, sampletype, observable, params)
         super().__init__(samplename, sampletype, observable, params)
-        print(self)
         self._transferfactor = transferfactor
         self._dependentsample = dependentsample
         self._nominal = nominal
@@ -1598,14 +1596,15 @@ if __name__ == "__main__":
         tf, unc = makeTF(sr_zjetsMCPass, sr_zjetsMCFail)
         tf_paramsZ = tf * tf_dataResidualZ_params[recoilbin, :]
         #tf_paramsZ = zjetseff *tf_MCtemplZ_params_final[recoilbin, :] * tf_dataResidualZ_params[recoilbin, :]
-        sr_zjetsPass = TransferFactorSample(
+        sr_zjetsPass = rl.TransferFactorSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_zjets",
             rl.Sample.BACKGROUND,
             tf_paramsZ,
-            sr_zjetsFail,
-            nominal=sr_zjetsMCPass._nominal,
-            sumw2=(unc*sr_zjetsMCPass._nominal)**2
-        )
+            sr_zjetsFail)#,
+        #    nominal=sr_zjetsMCPass._nominal,
+        #    sumw2=(unc*sr_zjetsMCPass._nominal)**2
+        #)
+        print('sr_zjetsPass.getExpectation(nominal=True) = ',sr_zjetsPass.getExpectation(nominal=True))
         
         #####
         ###
