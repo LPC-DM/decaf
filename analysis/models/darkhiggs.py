@@ -120,7 +120,7 @@ def remap_histograms(hists):
     return hists
 
 class TransferFactorSample(rl.ParametericSample):
-    def __init__(self, samplename, sampletype, transferfactor, dependentsample, unc=None, observable=None, min_val=None, epsilon=1e-5, effect_threshold=0.01, addMCStat=False, channel_name=None):
+    def __init__(self, samplename, sampletype, transferfactor, dependentsample, nominal_values=None, stat_unc=None, observable=None, min_val=None, epsilon=1e-5, effect_threshold=0.01, channel_name=None):
         """
         Create a sample that depends on another Sample by some transfer factor.
         The transfor factor can be a constant, an array of parameters of same length
@@ -143,20 +143,17 @@ class TransferFactorSample(rl.ParametericSample):
                     params[idx] = p.max(min_val)
         elif len(transferfactor.shape) <= 1:
             observable = dependentsample.observable
-            if addMCStat:
+            if stat_unc is not None:
                 name = samplename if channel_name is None else channel_name
                 MCStatTemplate = (np.ones_like(unc), observable._binning, observable._name)
                 MCStat = rl.TemplateSample(name+'_mcstat', rl.Sample.BACKGROUND, MCStatTemplate)
                 for i in range(MCStat.observable.nbins):
                     effect_up = np.ones_like(MCStat._nominal)
                     effect_down = np.ones_like(MCStat._nominal)
-                    if unc is None:
-                        raise ValueError("To add MC stat, please provide uncertainties")
-                    effect = unc
-                    if effect < effect_threshold:
+                    if stat_unc < effect_threshold:
                         continue
-                    effect_up[i] = 1.0 + min(1.0, effect)
-                    effect_down[i] = max(epsilon, 1.0 - min(1.0, effect))
+                    effect_up[i] = 1.0 + min(1.0, stat_unc)
+                    effect_down[i] = max(epsilon, 1.0 - min(1.0, stat_unc))
                     print(samplname, i, ntot, effect_up[i], effect_down[i])
                     param = rl.NuisanceParameter(name + '_mcstat_bin%i' % i, combinePrior='shape')
                     MCStat.setParamEffect(param, effect_up, effect_down)
@@ -171,7 +168,8 @@ class TransferFactorSample(rl.ParametericSample):
         super(TransferFactorSample, self).__init__(samplename, sampletype, observable, params)
         self._transferfactor = transferfactor
         self._dependentsample = dependentsample
-        self._sumw2 = unc**2
+        self._stat_unc = stat_unc
+        self._nominal_values = nominal_values
 
     @property
     def transferfactor(self):
@@ -182,12 +180,12 @@ class TransferFactorSample(rl.ParametericSample):
         return self._dependentsample
 
     @property
-    def ntot(self):
-        return self._ntot
-        
+    def stat_unc(self):
+        return self._stat_unc
+
     @property
-    def sumw2(self):
-        return self._sumw2
+    def nominal_values(self):
+        return self._nominal_values
 
 def makeTF(num, den):
 
@@ -219,8 +217,12 @@ def addBBLiteSyst(channel, epsilon=1e-5, effect_threshold=0.01, threshold=0, inc
     ntot, etot2 = np.zeros_like(first_sample._nominal), np.zeros_like(first_sample._sumw2)
     
     for sample in channel._samples.values():
-        ntot += sample._nominal
-        etot2 += sample._sumw2
+        if isinstance(sample, TransferFactorSample):
+            ntot += sample._nominal_values
+            etot2 += (sample._stat_unc*sample._nominal_values)**2
+        else:
+            ntot += sample._nominal
+            etot2 += sample._sumw2
         if not include_signal and sample._sampletype == rl.Sample.SIGNAL:
             continue
         ntot_bb += sample._nominal
@@ -229,13 +231,13 @@ def addBBLiteSyst(channel, epsilon=1e-5, effect_threshold=0.01, threshold=0, inc
     for sample in channel._samples.values():
         if not isinstance(sample, TransferFactorSample):
             continue
-        channel._samples[sample.name] = TransferFactorSample(sample.name, rl.Sample.BACKGROUND, sample.transferfactor, sample.dependentsample, nominal=ntot, sumw2=etot2, addMCStat=True, channel_name=name)
+        channel._samples[sample.name] = TransferFactorSample(sample.name, rl.Sample.BACKGROUND, sample.transferfactor, sample.dependentsample, nominal_values=sample.nominal_values, sumw2=np.sqrt(etot2)/ntot, channel_name=name)
             
         
     for i in range(first_sample.observable.nbins):
-        if etot2 <= 0.0:
+        if etot2[i] <= 0.0:
             continue
-        elif etot2_bb <= 0:
+        elif etot2_bb[i] <= 0:
             # this means there is signal but no background, so create stats unc. for signal only
             for sample in channel._samples.values():
                 if sample._sampletype == rl.Sample.SIGNAL:
@@ -244,7 +246,7 @@ def addBBLiteSyst(channel, epsilon=1e-5, effect_threshold=0.01, threshold=0, inc
     
             continue
 
-        neff_bb = ntot_bb**2 / etot2_bb
+        neff_bb = ntot_bb[i]**2 / etot2_bb[i]
         if neff_bb <= threshold:
             for sample in channel._samples.values():
                 sample_name = None if channel_name is None else channel_name + "_" + sample._name[sample._name.find("_") + 1 :]
@@ -253,7 +255,7 @@ def addBBLiteSyst(channel, epsilon=1e-5, effect_threshold=0.01, threshold=0, inc
             effect_up = np.ones_like(first_sample._nominal)
             effect_down = np.ones_like(first_sample._nominal)
 
-            effect = np.sqrt(etot2)/ntot
+            effect = np.sqrt(etot2[i])/ntot[i]
             if effect < effect_threshold:
                 continue
             effect_up[i] = 1.0 + min(1.0, effect)
@@ -714,7 +716,7 @@ def model(year, mass, recoil, category):
         addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
         
         tf, unc = makeTF(wmcr_wjetsMC, sr_wjetsMC)
-        wmcr_wjets = TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, tf, sr_wjets, nominal=wmcr_wjetsMC._nominal, sumw2=(unc*wmcr_wjetsMC._nominal)**2)
+        wmcr_wjets = TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, tf, sr_wjets, nominal_values=wmcr_wjetsMC._nominal, stat_unc=unc)
         wmcr.addSample(wmcr_wjets)
 
     ###
@@ -730,7 +732,7 @@ def model(year, mass, recoil, category):
         addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category, mass)
 
         tf, unc = makeTF(wmcr_ttMC, sr_ttMC)
-        wmcr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal=wmcr_ttMC._nominal, sumw2=(unc*wmcr_ttMC._nominal)**2)
+        wmcr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal_values=wmcr_ttMC._nominal, stat_unc=unc)
         wmcr.addSample(wmcr_tt)
 
     ###
@@ -885,7 +887,7 @@ def model(year, mass, recoil, category):
         addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
 
         tf, unc = makeTF(wecr_wjetsMC, sr_wjetsMC)
-        wecr_wjets = TransferFactorSample( ch_name + "_wjets", rl.Sample.BACKGROUND, tf, sr_wjets, nominal=wecr_wjetsMC._nominal, sumw2=(unc*wecr_wjetsMC._nominal)**2)
+        wecr_wjets = TransferFactorSample( ch_name + "_wjets", rl.Sample.BACKGROUND, tf, sr_wjets, nominal_values=wecr_wjetsMC._nominal, stat_unc=unc)
         wecr.addSample(wecr_wjets)
         
 
@@ -902,7 +904,7 @@ def model(year, mass, recoil, category):
         addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category, mass)
 
         tf, unc = makeTF(wecr_ttMC, sr_ttMC)
-        wecr_tt = TransferFactorSample( ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal=wecr_ttMC._nominal, sumw2=(unc*wecr_ttMC._nominal)**2)
+        wecr_tt = TransferFactorSample( ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal_values=wecr_ttMC._nominal, stat_unc=unc)
         wecr.addSample(wecr_tt)
 
     ###
@@ -1053,7 +1055,7 @@ def model(year, mass, recoil, category):
         addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category, mass)
 
         tf, unc = makeTF(tmcr_ttMC, sr_ttMC)
-        tmcr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal=tmcr_ttMC._nominal, sumw2=(unc*tmcr_ttMC._nominal)**2)  
+        tmcr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal_values=tmcr_ttMC._nominal, stat_unc=unc)  
         tmcr.addSample(tmcr_tt)
 
     ###
@@ -1206,7 +1208,7 @@ def model(year, mass, recoil, category):
         addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category, mass)
 
         tf, unc = makeTF(tecr_ttMC, sr_ttMC)
-        tecr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal=tecr_ttMC._nominal, sumw2=(unc*tecr_ttMC._nominal)**2)
+        tecr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal_values=tecr_ttMC._nominal, stat_unc=unc)
         tecr.addSample(tecr_tt)
 
     ###
@@ -1565,10 +1567,9 @@ if __name__ == "__main__":
             rl.Sample.BACKGROUND,
             tf,
             sr_zjetsFail)#,
-        #    nominal=sr_wjetsMCFail._nominal,
-        #    sumw2=(unc*sr_wjetsMCFail._nominal)**2
-        #)
-        print('Nominal',sr_wjetsFail.nominal)
+            nominal_values=sr_wjetsMCFail._nominal,
+            stat_unc=unc
+        )
 
         
 
@@ -1595,10 +1596,9 @@ if __name__ == "__main__":
             rl.Sample.BACKGROUND,
             tf_paramsZ,
             sr_zjetsFail,
-            nominal=sr_zjetsMCPass._nominal,
-            sumw2=(unc*sr_zjetsMCPass._nominal)**2
+            nominal_values=sr_zjetsMCPass._nominal,
+            stat_unc=unc
         )
-        print('sr_zjetsPass.getExpectation(nominal=True) = ',sr_zjetsPass.getExpectation(nominal=True))
         
         #####
         ###
@@ -1623,8 +1623,8 @@ if __name__ == "__main__":
             rl.Sample.BACKGROUND,
             tf_paramsW,
             sr_wjetsFail,
-            nominal=sr_wjetsMCPass._nominal,
-            sumw2=(unc*sr_wjetsMCPass._nominal)**2
+            nominal_values=sr_wjetsMCPass._nominal,
+            stat_unc=unc
         )
         
         
