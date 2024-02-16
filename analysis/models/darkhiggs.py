@@ -466,7 +466,7 @@ def add_crs(year, mass, recoil, model, category):
         addVJetsSyst(background, recoil, "W+jets", "wmcr", wmcr_wjetsMC, category)
         
         tf, unc = makeTF(wmcr_wjetsMC, sr_wjetsMC)
-        wmcr_wjets = TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, tf, sr_wjets, nominal_values=wmcr_wjetsMC._nominal, stat_unc=unc)
+        wmcr_wjets = TransferFactorSample(ch_name + "_wjets", rl.Sample.BACKGROUND, tf, sr._samples[sr_wjets.name], nominal_values=wmcr_wjetsMC._nominal, stat_unc=unc)
         wmcr.addSample(wmcr_wjets)
 
     ###
@@ -482,7 +482,7 @@ def add_crs(year, mass, recoil, model, category):
         addBtagSyst(background, recoil, "TT", "wmcr", wmcr_ttMC, category, mass)
 
         tf, unc = makeTF(wmcr_ttMC, sr_ttMC)
-        wmcr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal_values=wmcr_ttMC._nominal, stat_unc=unc)
+        wmcr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr._samples[sr_tt.name], nominal_values=wmcr_ttMC._nominal, stat_unc=unc)
         wmcr.addSample(wmcr_tt)
 
     ###
@@ -637,7 +637,7 @@ def add_crs(year, mass, recoil, model, category):
         addVJetsSyst(background, recoil, "W+jets", "wecr", wecr_wjetsMC, category)
 
         tf, unc = makeTF(wecr_wjetsMC, sr_wjetsMC)
-        wecr_wjets = TransferFactorSample( ch_name + "_wjets", rl.Sample.BACKGROUND, tf, sr_wjets, nominal_values=wecr_wjetsMC._nominal, stat_unc=unc)
+        wecr_wjets = TransferFactorSample( ch_name + "_wjets", rl.Sample.BACKGROUND, tf, sr._samples[sr_wjets.name], nominal_values=wecr_wjetsMC._nominal, stat_unc=unc)
         wecr.addSample(wecr_wjets)
         
 
@@ -654,7 +654,7 @@ def add_crs(year, mass, recoil, model, category):
         addBtagSyst(background, recoil, "TT", "wecr", wecr_ttMC, category, mass)
 
         tf, unc = makeTF(wecr_ttMC, sr_ttMC)
-        wecr_tt = TransferFactorSample( ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal_values=wecr_ttMC._nominal, stat_unc=unc)
+        wecr_tt = TransferFactorSample( ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr._samples[sr_tt.name], nominal_values=wecr_ttMC._nominal, stat_unc=unc)
         wecr.addSample(wecr_tt)
 
     ###
@@ -805,7 +805,7 @@ def add_crs(year, mass, recoil, model, category):
         addBtagSyst(background, recoil, "TT", "tmcr", tmcr_ttMC, category, mass)
 
         tf, unc = makeTF(tmcr_ttMC, sr_ttMC)
-        tmcr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal_values=tmcr_ttMC._nominal, stat_unc=unc)  
+        tmcr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr._samples[sr_tt.name], nominal_values=tmcr_ttMC._nominal, stat_unc=unc)  
         tmcr.addSample(tmcr_tt)
 
     ###
@@ -958,7 +958,7 @@ def add_crs(year, mass, recoil, model, category):
         addBtagSyst(background, recoil, "TT", "tecr", tecr_ttMC, category, mass)
 
         tf, unc = makeTF(tecr_ttMC, sr_ttMC)
-        tecr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr_tt, nominal_values=tecr_ttMC._nominal, stat_unc=unc)
+        tecr_tt = TransferFactorSample(ch_name + "_tt", rl.Sample.BACKGROUND, tf, sr._samples[sr_tt.name], nominal_values=tecr_ttMC._nominal, stat_unc=unc)
         tecr.addSample(tecr_tt)
 
     ###
@@ -1439,7 +1439,7 @@ if __name__ == "__main__":
             "sr" + year + "fail" + "mass" + mass + "recoil" + str(recoil) + "_wjets",
             rl.Sample.BACKGROUND,
             tf,
-            sr_fail._samples["sr" + year + "fail" + "mass" + mass + "recoil" + str(recoil) + "_zjets"],
+            sr_fail._samples[sr_fail_zjets.name],
             nominal_values=sr_fail_wjetsMC._nominal,
             stat_unc=unc
         )
@@ -1454,6 +1454,8 @@ if __name__ == "__main__":
         sr_zjets = sr_fail_zjets
         sr_wjets = sr_fail_wjets
         sr_wjetsMC = sr_fail_wjetsMC
+
+        sr = sr_fail
             
         with open(
                 "data/models/"
@@ -1650,7 +1652,7 @@ if __name__ == "__main__":
                 "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoil) + "_wjets",
                 rl.Sample.BACKGROUND,
                 tf_paramsW,
-                sr_fail._samples["sr" + year + "fail" + "mass" + mass + "recoil" + str(recoil) + "wjets"],
+                sr_fail._samples[sr_fail_wjets.name],
                 nominal_values=sr_pass_wjetsMC._nominal,
                 stat_unc=unc
             )
@@ -1678,7 +1680,7 @@ if __name__ == "__main__":
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoil) + "_zjets",
             rl.Sample.BACKGROUND,
             tf_paramsZ,
-            sr_fail._samples["sr" + year + "fail" + "mass" + mass + "recoil" + str(recoil) + "_zjets"],
+            sr_fail._samples[sr_fail_zjets.name],
             nominal_values=sr_pass_zjetsMC._nominal,
             stat_unc=unc
         )
@@ -1716,6 +1718,8 @@ if __name__ == "__main__":
         if not isttMC:
             sr_tt = sr_pass_tt
             sr_ttMC = sr_pass_ttMC
+        
+        sr = sr_pass
             
         with open(
                 "data/models/"
