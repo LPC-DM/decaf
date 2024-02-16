@@ -320,11 +320,9 @@ def addEleIDSyst(templ, year):
 
 
     
-def model(year, mass, recoil, category):
+def add_crs(year, mass, recoil, model, category):
 
-    model_id = year + category + "mass" + mass+ "recoil" + str(recoil)
-    #print(model_id)
-    model = rl.Model(model_id)
+    model_id = model.name
 
     ###
     ###
@@ -1451,86 +1449,364 @@ if __name__ == "__main__":
     ###
     ###
 
-    model_dict = {}
     for recoilbin in range(nrecoil):
 
-        
+        isttMC = True
+        iswjetsMC = False
+
         #####
         ###
-        # Z+jets "fail"
+        # Signal region "fail"
         ###  
         #####
+
+        model_id = year + "fail" + "mass" + mass+ "recoil" + str(recoil)
+        model_fail = rl.Model(model_id)
+    
+        ch_name = "sr" + model_id
+        sr_fail = rl.Channel(ch_name)
+        model_fail.addChannel(sr_fail)
+    
+        ###
+        # Add data distribution to the channel
+        ###
+    
+        dataTemplate = template(data, "MET", "data", recoil, "sr", "fail", mass)
+        sr_fail.setObservation(dataTemplate)
+    
+        ###
+        # Other MC-driven processes
+        ###
         
-        sr_zjetsMCFailTemplate = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail", mass, min_value=1., read_sumw2=True)
-        sr_zjetsMCFail = rl.TemplateSample(
+        sr_fail_ttTemplate = template(background, "TT", "nominal", recoil, "sr", "fail", mass, read_sumw2=True)
+        sr_fail_tt = rl.TemplateSample("sr" + model_id + "_ttMC",rl.Sample.BACKGROUND, sr_fail_ttTemplate)
+        addLumiSyst(sr_fail_tt, year)
+        addPileupSyst(sr_fail_tt)
+        addPrefiringSyst(sr_fail_tt, year)
+        addMETSyst(sr_fail_tt)
+        addJESSyst(sr_fail_tt)
+        addMETTrigSyst(sr_fail_tt, year)
+        sr_fail_tt.setParamEffect(veto_tau, nveto_tau)
+        addTTbarNormSyst(sr_fail_tt)
+        addBtagSyst(background, recoil, "TT", "sr", sr_fail_tt, "fail", mass)
+        sr_fail.addSample(sr_fail_tt)
+        
+        sr_fail_stTemplate = template(background, "ST", "nominal", recoil, "sr", "fail", mass, read_sumw2=True)
+        sr_fail_st = rl.TemplateSample(ch_name + "_stMC", rl.Sample.BACKGROUND, sr_fail_stTemplate)
+        addLumiSyst(sr_fail_st, year)
+        addPileupSyst(sr_fail_st)
+        addPrefiringSyst(sr_fail_st, year)
+        addMETSyst(sr_fail_st)
+        addJESSyst(sr_fail_st)
+        addMETTrigSyst(sr_fail_st, year)
+        sr_fail_st.setParamEffect(veto_tau, nveto_tau)
+        addSingleTopNormSyst(sr_fail_st)
+        addBtagSyst(background, recoil, "ST", "sr", sr_fail_st, "fail", mass)
+        sr_fail.addSample(sr_fail_st)
+    
+        sr_fail_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "sr", "fail", mass, read_sumw2=True)
+        sr_fail_dyjets = rl.TemplateSample(ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, sr_fail_dyjetsTemplate)
+        addLumiSyst(sr_fail_dyjets, year)
+        addPileupSyst(sr_fail_dyjets)
+        addPrefiringSyst(sr_fail_dyjets, year)
+        addMETSyst(sr_fail_dyjets)
+        addJESSyst(sr_fail_dyjets)
+        addMETTrigSyst(sr_fail_dyjets, year)
+        sr_fail_dyjets.setParamEffect(veto_tau, nveto_tau)
+        addDrellYanNormSyst(sr_fail_dyjets)
+        addBtagSyst(background, recoil, "DY+jets", "sr", sr_fail_dyjets, "fail", mass)
+        addVJetsSyst(background, recoil, "DY+jets", "sr", sr_fail_dyjets, "fail")
+        sr_fail.addSample(sr_fail_dyjets)
+    
+        sr__fail_vvTemplate = template(background, "VV", "nominal", recoil, "sr", "fail", mass, read_sumw2=True)
+        sr_fail_vv = rl.TemplateSample(ch_name + "_vvMC", rl.Sample.BACKGROUND, sr__fail_vvTemplate)
+        addLumiSyst(sr_fail_vv, year)
+        addPileupSyst(sr_fail_vv)
+        addPrefiringSyst(sr_fail_vv, year)
+        addMETSyst(sr_fail_vv)
+        addJESSyst(sr_fail_vv)
+        addMETTrigSyst(sr_fail_vv, year)
+        sr_fail_vv.setParamEffect(veto_tau, nveto_tau)
+        addDibosonNormSyst(sr_fail_vv)
+        addBtagSyst(background, recoil, "VV", "sr", sr_fail_vv, "fail", mass)
+        sr_fail.addSample(sr_fail_vv)
+    
+        sr_fail_hbbTemplate = template(background, "Hbb", "nominal", recoil, "sr", "fail", mass, read_sumw2=True)
+        sr_fail_hbb = rl.TemplateSample(ch_name + "_hbbMC", rl.Sample.BACKGROUND, sr_fail_hbbTemplate)
+        addLumiSyst(sr_fail_hbb, year)
+        addPileupSyst(sr_fail_hbb)
+        addPrefiringSyst(sr_fail_hbb, year)
+        addMETSyst(sr_fail_hbb)
+        addJESSyst(sr_fail_hbb)
+        addMETTrigSyst(sr_fail_hbb, year)
+        sr_fail_hbb.setParamEffect(veto_tau, nveto_tau)
+        addHbbNormSyst(sr_fail_hbb)
+        addBtagSyst(background, recoil, "Hbb", "sr", sr_fail_hbb, "fail", mass)
+        sr_fail.addSample(sr_fail_hbb)
+    
+        sr_fail_qcdTemplate = template(background, "QCD", "nominal", recoil, "sr", "fail", mass, read_sumw2=True)
+        sr_fail_qcd = rl.TemplateSample(ch_name + "_qcdMC", rl.Sample.BACKGROUND, sr_fail_qcdTemplate)
+        addLumiSyst(sr_fail_qcd, year)
+        addPileupSyst(sr_fail_qcd)
+        addPrefiringSyst(sr_fail_qcd, year)
+        addMETSyst(sr_fail_qcd)
+        addJESSyst(sr_fail_qcd)
+        addMETTrigSyst(sr_fail_qcd, year)
+        sr_fail_qcd.setParamEffect(veto_tau, nveto_tau)
+        sr_fail_qcd.setParamEffect(qcdsig_norm, nqcd_norm)
+        addBtagSyst(background, recoil, "QCD", "sr", sr_fail_qcd, "fail", mass)
+        sr_fail.addSample(sr_fail_qcd)
+    
+        ###
+        # Z+jets data-driven model
+        ###
+    
+        sr_fail_zjetsMCTemplate = template(background, "Z+jets", "nominal", recoilbin, "sr", "fail", mass, min_value=1., read_sumw2=True)
+        sr_fail_zjetsMC = rl.TemplateSample(
             "sr" + year + "fail" + "mass" + mass + "recoil" + str(recoilbin) + "_zjetsMC",
             rl.Sample.BACKGROUND,
-            sr_zjetsMCFailTemplate
+            sr_fail_zjetsMCTemplate
         )
-        addMETTrigSyst(sr_zjetsMCFail, year)
-        addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCFail, "fail")
+        addMETTrigSyst(sr_fail_zjetsMC, year)
+        addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_fail_zjetsMC, "fail")
 
-        sr_zjetsObservable = rl.Observable("fjmass"+mass, sr_zjetsMCFailTemplate[1])
-        sr_zjetsFailBinYields = np.array([rl.IndependentParameter("sr" + year + "fail" + "mass" + mass + "recoil" + str(recoilbin) + "_zjets_mu"+str(b), sr_zjetsMCFailTemplate[0][b], 1e-5, sr_zjetsMCFailTemplate[0].max()*2) for b in range(len(sr_zjetsMCFailTemplate[0]))])
+        sr_fail_zjetsObservable = rl.Observable("fjmass"+mass, sr_fail_zjetsMCTemplate[1])
+        sr_fail_zjetsBinYields = np.array([rl.IndependentParameter("sr" + year + "fail" + "mass" + mass + "recoil" + str(recoilbin) + "_zjets_mu"+str(b), 
+                                                                   sr_fail_zjetsMCTemplate[0][b], 1e-5, sr_fail_zjetsMCTemplate[0].max()*2) for b in range(len(sr_fail_zjetsMCTemplate[0]))])
 
-        sr_zjetsFail = rl.ParametericSample(
+        sr_fail_zjets = rl.ParametericSample(
             "sr" + year + "fail" + "mass" + mass + "recoil" + str(recoilbin) + "_zjets",
             rl.Sample.BACKGROUND,
-            sr_zjetsObservable,
-            sr_zjetsFailBinYields
+            sr_fail_zjetsObservable,
+            sr_fail_zjetsBinYields
         )
 
-        #####
         ###
-        # W+jets "fail"
-        ###  
-        #####
+        # W+jets data-driven model
+        ###
       
-        sr_wjetsMCFailTemplate = template(background, "W+jets", "nominal", recoilbin, "sr", "fail", mass, min_value=1., read_sumw2=True)
-        sr_wjetsMCFail = rl.TemplateSample(
+        sr_fail_wjetsMCTemplate = template(background, "W+jets", "nominal", recoilbin, "sr", "fail", mass, min_value=1., read_sumw2=True)
+        sr_fail_wjetsMC = rl.TemplateSample(
             "sr" + year + "fail" + "mass" + mass + "recoil" + str(recoilbin) + "_wjetsMC",
             rl.Sample.BACKGROUND,
-            sr_wjetsMCFailTemplate
+            sr_fail_wjetsMCTemplate
         )
-        addMETTrigSyst(sr_wjetsMCFail, year)
-        addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCFail, "fail")
+        addMETTrigSyst(sr_fail_wjetsMC, year)
+        addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_fail_wjetsMC, "fail")
 
-        tf, unc = makeTF(sr_wjetsMCFail, sr_zjetsMCFail)
-        sr_wjetsFail = TransferFactorSample(
+        tf, unc = makeTF(sr_fail_wjetsMC, sr_fail_zjetsMC)
+        sr_fail_wjets = TransferFactorSample(
             "sr" + year + "fail" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
             tf,
-            sr_zjetsFail,
-            nominal_values=sr_wjetsMCFail._nominal,
+            sr_fail_zjets,
+            nominal_values=sr_fail_wjetsMC._nominal,
             stat_unc=unc
         )
 
-        
+        ###
+        # Add BB-lite
+        ###
 
+        addBBLiteSyst(sr_fail)
+
+        qcdpho_norm = rl.NuisanceParameter("qcdpho_norm" + year + "fail", "lnN")
+        qcde_norm = rl.NuisanceParameter("qcde_norm" + year + "fail", "lnN")
+        qcdmu_norm = rl.NuisanceParameter("qcdmu_norm" + year + "fail", "lnN")
+        qcdsig_norm = rl.NuisanceParameter("qcdsig_norm" + year + "fail", "lnN")
+        st_norm = rl.NuisanceParameter("st_norm" + year + "fail", "lnN")
+        ttMC_norm = rl.NuisanceParameter("tt_norm" + year + "fail", "lnN")
+        vv_norm = rl.NuisanceParameter("vv_norm" + year + "fail", "lnN")
+        hbb_norm = rl.NuisanceParameter("hbb_norm" + year + "fail", "lnN")
+        wjetsMC_norm = rl.NuisanceParameter("wjets_norm" + year + "fail", "lnN")
+        zjetsMC_norm = rl.NuisanceParameter("zjets_norm" + year + "fail", "lnN")
+
+        sr_zjets = sr_fail_zjets
+        sr_wjets = sr_fail_wjets
+        sr_wjetsMC = sr_fail_wjetsMC
+            
+        with open(
+                "data/models/"
+                + "darkhiggs"
+                + "-"
+                + year
+                + "-"
+                + category
+                + "-mass"
+                + mass
+                + "-recoil"
+                + str(recoilbin)
+                + ".model",
+                "wb",
+        ) as fout:
+            pickle.dump(add_crs(year, mass, recoilbin, model_fail, "fail"), fout, protocol=2)
+
+
+        isttMC = ('40to' in mass and not 'to300' in mass) | (recoilbin==4)
+        iswjetsMC = (recoilbin==4)
+        
+        #####
+        ###
+        # Signal region "pass"
+        ###  
+        #####
+
+        model_id = year + "pass" + "mass" + mass+ "recoil" + str(recoil)
+        model_pass = rl.Model(model_id)
+    
+        ch_name = "sr" + model_id
+        sr_pass = rl.Channel(ch_name)
+        model_pass.addChannel(sr_pass)
+    
+        ###
+        # Add data distribution to the channel
+        ###
+
+        if options.fakedata:
+            dataTemplate = template(data, "FakeData", "data", recoil, "sr_pass", "pass", mass)
+        else:
+            dataTemplate = template(data, "MET", "data", recoil, "sr_pass", "pass", mass)
+        sr_pass.setObservation(dataTemplate)
+    
+        ###
+        # Other MC-driven processes
+        ###
+        
+        if iswjetsMC: 
+            sr_pass_wjetsTemplate = template(background, "W+jets", "nominal", recoil, "sr", "pass", mass, read_sumw2=True)
+            sr_pass_wjets = rl.TemplateSample( "sr" + model_id + "_wjetsMC", rl.Sample.BACKGROUND, sr_pass_wjetsTemplate)
+            addLumiSyst(sr_pass_wjets, year)
+            addPileupSyst(sr_pass_wjets)
+            addPrefiringSyst(sr_pass_wjets, year)
+            addMETSyst(sr_pass_wjets)
+            addJESSyst(sr_pass_wjets)
+            addMETTrigSyst(sr_pass_wjets, year)
+            sr_pass_wjets.setParamEffect(veto_tau, nveto_tau)
+            addWjetsNormSyst(sr_pass_wjets)
+            addBtagSyst(background, recoil, "W+jets", "sr", sr_pass_wjets, "pass", mass)
+            addVJetsSyst(background, recoil, "W+jets", "sr", sr_pass_wjets, "pass")
+            sr_pass.addSample(sr_pass_wjets)
+    
+        if isttMC: 
+            sr_pass_ttTemplate = template(background, "TT", "nominal", recoil, "sr", "pass", mass, read_sumw2=True)
+            sr_pass_tt = rl.TemplateSample("sr" + model_id + "_ttMC",rl.Sample.BACKGROUND, sr_pass_ttTemplate)
+            addLumiSyst(sr_pass_tt, year)
+            addPileupSyst(sr_pass_tt)
+            addPrefiringSyst(sr_pass_tt, year)
+            addMETSyst(sr_pass_tt)
+            addJESSyst(sr_pass_tt)
+            addMETTrigSyst(sr_pass_tt, year)
+            sr_pass_tt.setParamEffect(veto_tau, nveto_tau)
+            addTTbarNormSyst(sr_pass_tt)
+            addBtagSyst(background, recoil, "TT", "sr", sr_pass_tt, "pass", mass)
+            sr_pass.addSample(sr_pass_tt)
+        
+        sr_pass_stTemplate = template(background, "ST", "nominal", recoil, "sr", "pass", mass, read_sumw2=True)
+        sr_pass_st = rl.TemplateSample(ch_name + "_stMC", rl.Sample.BACKGROUND, sr_pass_stTemplate)
+        addLumiSyst(sr_pass_st, year)
+        addPileupSyst(sr_pass_st)
+        addPrefiringSyst(sr_pass_st, year)
+        addMETSyst(sr_pass_st)
+        addJESSyst(sr_pass_st)
+        addMETTrigSyst(sr_pass_st, year)
+        sr_pass_st.setParamEffect(veto_tau, nveto_tau)
+        addSingleTopNormSyst(sr_pass_st)
+        addBtagSyst(background, recoil, "ST", "sr", sr_pass_st, "pass", mass)
+        sr_pass.addSample(sr_pass_st)
+    
+        sr_pass_dyjetsTemplate = template(background, "DY+jets", "nominal", recoil, "sr", "pass", mass, read_sumw2=True)
+        sr_pass_dyjets = rl.TemplateSample(ch_name + "_dyjetsMC", rl.Sample.BACKGROUND, sr_pass_dyjetsTemplate)
+        addLumiSyst(sr_pass_dyjets, year)
+        addPileupSyst(sr_pass_dyjets)
+        addPrefiringSyst(sr_pass_dyjets, year)
+        addMETSyst(sr_pass_dyjets)
+        addJESSyst(sr_pass_dyjets)
+        addMETTrigSyst(sr_pass_dyjets, year)
+        sr_pass_dyjets.setParamEffect(veto_tau, nveto_tau)
+        addDrellYanNormSyst(sr_pass_dyjets)
+        addBtagSyst(background, recoil, "DY+jets", "sr", sr_pass_dyjets, "pass", mass)
+        addVJetsSyst(background, recoil, "DY+jets", "sr", sr_pass_dyjets, "pass")
+        sr_pass.addSample(sr_pass_dyjets)
+    
+        sr_pass_vvTemplate = template(background, "VV", "nominal", recoil, "sr", "pass", mass, read_sumw2=True)
+        sr_pass_vv = rl.TemplateSample(ch_name + "_vvMC", rl.Sample.BACKGROUND, sr_pass_vvTemplate)
+        addLumiSyst(sr_pass_vv, year)
+        addPileupSyst(sr_pass_vv)
+        addPrefiringSyst(sr_pass_vv, year)
+        addMETSyst(sr_pass_vv)
+        addJESSyst(sr_pass_vv)
+        addMETTrigSyst(sr_pass_vv, year)
+        sr_pass_vv.setParamEffect(veto_tau, nveto_tau)
+        addDibosonNormSyst(sr_pass_vv)
+        addBtagSyst(background, recoil, "VV", "sr", sr_pass_vv, "pass", mass)
+        sr_pass.addSample(sr_pass_vv)
+    
+        sr_pass_hbbTemplate = template(background, "Hbb", "nominal", recoil, "sr", "pass", mass, read_sumw2=True)
+        sr_pass_hbb = rl.TemplateSample(ch_name + "_hbbMC", rl.Sample.BACKGROUND, sr_pass_hbbTemplate)
+        addLumiSyst(sr_pass_hbb, year)
+        addPileupSyst(sr_pass_hbb)
+        addPrefiringSyst(sr_pass_hbb, year)
+        addMETSyst(sr_pass_hbb)
+        addJESSyst(sr_pass_hbb)
+        addMETTrigSyst(sr_pass_hbb, year)
+        sr_pass_hbb.setParamEffect(veto_tau, nveto_tau)
+        addHbbNormSyst(sr_pass_hbb)
+        addBtagSyst(background, recoil, "Hbb", "sr", sr_pass_hbb, "pass", mass)
+        sr_pass.addSample(sr_pass_hbb)
+    
+        sr_pass_qcdTemplate = template(background, "QCD", "nominal", recoil, "sr", "pass", mass, read_sumw2=True)
+        sr_pass_qcd = rl.TemplateSample(ch_name + "_qcdMC", rl.Sample.BACKGROUND, sr_pass_qcdTemplate)
+        addLumiSyst(sr_pass_qcd, year)
+        addPileupSyst(sr_pass_qcd)
+        addPrefiringSyst(sr_pass_qcd, year)
+        addMETSyst(sr_pass_qcd)
+        addJESSyst(sr_pass_qcd)
+        addMETTrigSyst(sr_pass_qcd, year)
+        sr_pass_qcd.setParamEffect(veto_tau, nveto_tau)
+        sr_pass_qcd.setParamEffect(qcdsig_norm, nqcd_norm)
+        addBtagSyst(background, recoil, "QCD", "sr", sr_pass_qcd, "pass", mass)
+        sr_pass.addSample(sr_pass_qcd)
+    
+        ###
+        # top-antitop data-driven model
+        ###
+    
+        if not isttMC:
+            sr_pass_ttTemplate = template(background, "TT", "nominal", recoil, "sr", "pass", mass, min_value=1., read_sumw2=True)
+            sr_pass_ttMC = rl.TemplateSample("sr" + model_id + "_ttMC",rl.Sample.BACKGROUND, sr_pass_ttTemplate)
+            addMETTrigSyst(sr_pass_ttMC, year)
+            addBtagSyst(background, recoil, "TT", "sr", sr_pass_ttMC, "pass", mass)
+            
+            sr_pass_ttObservable = rl.Observable("fjmass"+mass, sr_pass_ttTemplate[1])
+            sr_pass_ttBinYields = np.array([rl.IndependentParameter(ch_name + "_tt_mu"+str(b), sr_pass_ttTemplate[0][b], 1e-5, sr_pass_ttTemplate[0].max()*2) for b in range(len(sr_pass_ttTemplate[0]))])
+            sr_pass_tt = rl.ParametericSample(ch_name + "_tt", rl.Sample.BACKGROUND, sr_pass_ttObservable, sr_pass_ttBinYields)
+            sr_pass.addSample(sr_pass_tt)
+        
+        
         #####
         ###
         # Z+jets "pass"
         ###  
         ##### 
 
-        sr_zjetsMCPassTemplate = template(background, "Z+jets", "nominal", recoilbin, "sr", "pass", mass, min_value=1., read_sumw2=True)
-        sr_zjetsMCPass = rl.TemplateSample(
+        sr_pass_zjetsMCTemplate = template(background, "Z+jets", "nominal", recoilbin, "sr", "pass", mass, min_value=1., read_sumw2=True)
+        sr_pass_zjetsMC = rl.TemplateSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_zjetsMC",
             rl.Sample.BACKGROUND,
-            sr_zjetsMCPassTemplate
+            sr_pass_zjetsMCTemplate
         )
-        addMETTrigSyst(sr_zjetsMCPass, year)
-        addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_zjetsMCPass, "pass")
+        addMETTrigSyst(sr_pass_zjetsMC, year)
+        addVJetsSyst(background, recoilbin, "Z+jets", "sr", sr_pass_zjetsMC, "pass")
 
-        tf, unc = makeTF(sr_zjetsMCPass, sr_zjetsMCFail)
+        tf, unc = makeTF(sr_pass_zjetsMC, sr_fail_zjetsMC)
         tf_paramsZ = tf * tf_dataResidualZ_params[recoilbin, :]
         #tf_paramsZ = zjetseff *tf_MCtemplZ_params_final[recoilbin, :] * tf_dataResidualZ_params[recoilbin, :]
-        sr_zjetsPass = TransferFactorSample(
+        sr_pass_zjets = TransferFactorSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_zjets",
             rl.Sample.BACKGROUND,
             tf_paramsZ,
-            sr_zjetsFail,
-            nominal_values=sr_zjetsMCPass._nominal,
+            sr_fail_zjets,
+            nominal_values=sr_pass_zjetsMC._nominal,
             stat_unc=unc
         )
         
@@ -1540,57 +1816,84 @@ if __name__ == "__main__":
         ###
         #####
 
-        sr_wjetsMCPassTemplate = template(background, "W+jets", "nominal", recoilbin, "sr", "pass", mass, min_value=1., read_sumw2=True)
-        sr_wjetsMCPass = rl.TemplateSample(
+        sr_pass_wjetsMCTemplate = template(background, "W+jets", "nominal", recoilbin, "sr", "pass", mass, min_value=1., read_sumw2=True)
+        sr_pass_wjetsMC = rl.TemplateSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_wjetsMC",
             rl.Sample.BACKGROUND,
-            sr_wjetsMCPassTemplate
+            sr_pass_wjetsMCTemplate
         )
-        addMETTrigSyst(sr_wjetsMCPass, year)
-        addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_wjetsMCPass, "pass")
+        addMETTrigSyst(sr_pass_wjetsMC, year)
+        addVJetsSyst(background, recoilbin, "W+jets", "sr", sr_pass_wjetsMC, "pass")
 
-        tf, unc = makeTF(sr_wjetsMCPass, sr_wjetsMCFail)
+        tf, unc = makeTF(sr_pass_wjetsMC, sr_fail_wjetsMC)
         tf_paramsW = tf * tf_dataResidualW_params[recoilbin, :]
         #tf_paramsW = wjetseff * tf_MCtemplW_params_final[recoilbin, :] * tf_dataResidualW_params[recoilbin, :]
-        sr_wjetsPass = TransferFactorSample(
+        sr_pass_wjets = TransferFactorSample(
             "sr" + year + "pass" + "mass" + mass + "recoil" + str(recoilbin) + "_wjets",
             rl.Sample.BACKGROUND,
             tf_paramsW,
-            sr_wjetsFail,
-            nominal_values=sr_wjetsMCPass._nominal,
+            sr_fail_wjets,
+            nominal_values=sr_pass_wjetsMC._nominal,
             stat_unc=unc
         )
-        
-        
-        for category in ["pass", "fail"]:
-            
-            qcdpho_norm = rl.NuisanceParameter("qcdpho_norm" + year + category, "lnN")
-            qcde_norm = rl.NuisanceParameter("qcde_norm" + year + category, "lnN")
-            qcdmu_norm = rl.NuisanceParameter("qcdmu_norm" + year + category, "lnN")
-            qcdsig_norm = rl.NuisanceParameter("qcdsig_norm" + year + category, "lnN")
-            st_norm = rl.NuisanceParameter("st_norm" + year + category, "lnN")
-            ttMC_norm = rl.NuisanceParameter("tt_norm" + year + category, "lnN")
-            vv_norm = rl.NuisanceParameter("vv_norm" + year + category, "lnN")
-            hbb_norm = rl.NuisanceParameter("hbb_norm" + year + category, "lnN")
-            wjetsMC_norm = rl.NuisanceParameter("wjets_norm" + year + category, "lnN")
-            zjetsMC_norm = rl.NuisanceParameter("zjets_norm" + year + category, "lnN")
-            
-            isttMC = ('40to' in mass and not 'to300' in mass) | (category=='fail') | (recoilbin==4)
-            iswjetsMC = (recoilbin==4) & (category=='pass')
 
-            with open(
-                    "data/models/"
-                    + "darkhiggs"
-                    + "-"
-                    + year
-                    + "-"
-                    + category
-                    + "-mass"
-                    + mass
-                    + "-recoil"
-                    + str(recoilbin)
-                    + ".model",
-                    "wb",
-            ) as fout:
-                pickle.dump(model(year, mass, recoilbin, category), fout, protocol=2)
+        ###
+        # Add BB-lite
+        ###
+    
+        addBBLiteSyst(sr)
+    
+    
+        ###
+        # Signal
+        ###
+    
+        
+        for s in signal["sr"].identifiers("process"):
+            sr_pass_signalTemplate = template(signal, s, "nominal", recoil, "sr", "pass", mass, read_sumw2=True)
+            sr_pass_signal = rl.TemplateSample(ch_name + "_" + str(s), rl.Sample.SIGNAL, sr_pass_signalTemplate)
+            addLumiSyst(sr_pass_signal, year)
+            addPileupSyst(sr_pass_signal)
+            addPrefiringSyst(sr_pass_signal, year)
+            addMETSyst(sr_pass_signal)
+            addJESSyst(sr_pass_signal)
+            addMETTrigSyst(sr_pass_signal, year)
+            sr_pass_signal.setParamEffect(veto_tau, nveto_tau)
+            addBtagSyst(signal, recoil, str(s), "sr", sr_pass_signal, category, mass)
+            addDoubleBtagSyst(signal, str(s), "sr", sr_pass_signal, category)
+            sr_pass.addSample(sr_pass_signal)
+        
+        
+        qcdpho_norm = rl.NuisanceParameter("qcdpho_norm" + year + "pass", "lnN")
+        qcde_norm = rl.NuisanceParameter("qcde_norm" + year + "pass", "lnN")
+        qcdmu_norm = rl.NuisanceParameter("qcdmu_norm" + year + "pass", "lnN")
+        qcdsig_norm = rl.NuisanceParameter("qcdsig_norm" + year + "pass", "lnN")
+        st_norm = rl.NuisanceParameter("st_norm" + year + "pass", "lnN")
+        ttMC_norm = rl.NuisanceParameter("tt_norm" + year + "pass", "lnN")
+        vv_norm = rl.NuisanceParameter("vv_norm" + year + "pass", "lnN")
+        hbb_norm = rl.NuisanceParameter("hbb_norm" + year + "pass", "lnN")
+        wjetsMC_norm = rl.NuisanceParameter("wjets_norm" + year + "pass", "lnN")
+        zjetsMC_norm = rl.NuisanceParameter("zjets_norm" + year + "pass", "lnN")
+
+        sr_zjets = sr_pass_zjets
+        sr_wjets = sr_pass_wjets
+        sr_wjetsMC = sr_pass_wjetsMC
+        sr_tt = sr_pass_tt
+        sr_ttMC = sr_pass_ttMC
+            
+        with open(
+                "data/models/"
+                + "darkhiggs"
+                + "-"
+                + year
+                + "-"
+                + category
+                + "-mass"
+                + mass
+                + "-recoil"
+                + str(recoilbin)
+                + ".model",
+                "wb",
+        ) as fout:
+            pickle.dump(add_crs(year, mass, recoilbin, model_pass, "pass"), fout, protocol=2)
 
