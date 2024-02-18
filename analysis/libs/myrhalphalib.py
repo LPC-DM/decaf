@@ -3,7 +3,18 @@ import rhalphalib as rl
 import numpy as np
 
 class TransferFactorSample(rl.ParametericSample):
-    def __init__(self, samplename, sampletype, transferfactor, dependentsample, nominal_values=None, stat_unc=None, observable=None, min_val=None, epsilon=1e-5, effect_threshold=0.01, channel_name=None):
+    def __init__(self, 
+                 samplename, 
+                 sampletype, 
+                 transferfactor, 
+                 dependentsample, 
+                 nominal_values=None, 
+                 stat_unc=None, 
+                 observable=None, 
+                 min_val=None, 
+                 epsilon=1e-5, 
+                 effect_threshold=0.01, 
+                 channel_name=None):
         """
         Create a sample that depends on another Sample by some transfer factor.
         The transfor factor can be a constant, an array of parameters of same length
