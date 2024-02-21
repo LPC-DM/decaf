@@ -66,12 +66,11 @@ def merge(folder,variable=None, exclude=None):
                else: tmp[var].append(hin[var])
                del hin
           print(tmp)
-          for k in tmp:
-               tmp_arr=futuresum(np.array(tmp[k]))
-               hists = {}
-               hists[k]=tmp_arr[0]
-               print(hists)
-               save(hists, folder+'/'+k+'.merged')
+          tmp_arr=futuresum(np.array(tmp[var]))
+          hists = {}
+          hists[var]=tmp_arr[0]
+          print(hists)
+          save(hists, folder+'/'+var+'.merged')
 
 
 def postprocess(folder):
