@@ -20,21 +20,36 @@ file_TH = ROOT.TFile.Open(process + ".root")
 def K_TH(QCD_ORDER, EW_ORDER, e_QCD=[], e_EW=[], e_MIX=0.0):
     # Kappa_EW = file_TH.Get(process+"_pTV_kappa_"+EW_ORDER+"_EW").Clone()+file_TH.Get(process+"_pTV_kappa_NNLO_Sud").Clone()
     Kappa_EW = file_TH.Get(process + "_pTV_kappa_EW").Clone()
+    if not Kappa_EW:
+        print "error"
+        exit()
     for i, e in enumerate(e_EW):
         dKappa_EW = file_TH.Get(process + "_pTV_d" + str(i + 1) + "kappa_EW").Clone()
+        if not dKappa_EW:
+            print "error"
+            exit()
         dKappa_EW.Scale(e)
         Kappa_EW = Kappa_EW + dKappa_EW
     for i in range(Kappa_EW.GetNbinsX()):
         Kappa_EW.SetBinContent(i, 1.0 + Kappa_EW.GetBinContent(i))
     K_QCD = file_TH.Get(process + "_pTV_K_" + QCD_ORDER).Clone()
+    if not K_QCD:
+        print "error"
+        exit()
     for i, e in enumerate(e_QCD):
         # dK_QCD = file_TH.Get(process+"_pTV_d"+str(i+1)+"K_"+QCD_ORDER).Clone()
         dK_QCD = file_TH.Get(process + "_pTV_d" + str(i + 1) + "K_" + "NLO").Clone()
+        if not dK_QCD:
+            print "error"
+            exit()
         dK_QCD.Scale(e)
         K_QCD = K_QCD + dK_QCD
     prod = K_QCD * Kappa_EW
     # dK_MIX = file_TH.Get(process+"_pTV_dK_"+QCD_ORDER+"_mix").Clone()
     dK_MIX = file_TH.Get(process + "_pTV_dK_NLO_mix").Clone()
+    if not dK_MIX:
+        print "error"
+        exit()
     dK_MIX.Scale(e_MIX)
     return prod + dK_MIX
 
@@ -78,7 +93,7 @@ def sigma_TH(QCD_ORDER, EW_ORDER, e_QCD=[], e_EW=[], e_MIX=0.0):
         + "_"
         + str_MIX
     )
-    # scale the theory prediction with 2 if the process is W->lv since the theory histograms only include one flavor (e or mu)
+    # scale the theory prediction with 3 if the process is W->lv since the theory histograms only include one flavor (e or mu)
     if process == "evj" or process == "eej":
         sigma_TH.Scale(3.0)
     return sigma_TH

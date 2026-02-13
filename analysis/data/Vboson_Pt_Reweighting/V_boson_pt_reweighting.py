@@ -114,6 +114,7 @@ count = 0
 
 # loop over files
 for filename in filenames:
+    print(filename)
     # cross section weights
     weight_xs = 1.0
     if boson == "Zvv":
@@ -251,7 +252,7 @@ for filename in filenames:
         elif boson == "G":
             epsilon_0_dyn = 0.1
             n_dyn = 1
-            iterations = 2.0
+            iterations = 5.0
             for photon in photons:
                 isolated = True
                 R_dyn = 91.1876 / (photon.pt() * sqrt(epsilon_0_dyn))

@@ -1,0 +1,3 @@
+python run_condor.py -p doublebsf2018 -m full_2018 -d Mz500_mhs50_Mdm150,Mz500_mhs70_Mdm150,Mz500_mhs90_Mdm150,Mz500_mhs110_Mdm150,Mz500_mhs130_Mdm150,Mz500_mhs150_Mdm150,QCD -e 100to200,200to300 -c kisti -t -x
+python run_condor.py -p doublebsf2017 -m full_2017 -d Mz500_mhs50_Mdm150,Mz500_mhs70_Mdm150,Mz500_mhs90_Mdm150,Mz500_mhs110_Mdm150,Mz500_mhs130_Mdm150,Mz500_mhs150_Mdm150,QCD -e 100to200,200to300 -c kisti
+python run_condor.py -p doublebsf2016 -m full_2016 -d Mz500_mhs50_Mdm150,Mz500_mhs70_Mdm150,Mz500_mhs90_Mdm150,Mz500_mhs110_Mdm150,Mz500_mhs130_Mdm150,Mz500_mhs150_Mdm150,QCD -e 100to200,200to300 -c kisti
